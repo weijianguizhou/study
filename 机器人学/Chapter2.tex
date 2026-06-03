@@ -1,0 +1,240 @@
+\chapter{Rigid-Body Motions 刚体运动}
+
+\section{引言与基础概念}
+在三维空间中，描述刚体的位姿（Configuration）需要 6 个自由度（3个旋转，3个平移）。本书采用隐式表示法，即通过 $4 \times 4$ 的矩阵来表示，这可以在 16 维矩阵空间中通过 10 个约束条件得到 6 个自由度。
+
+\begin{defbox}{核心概念：自由向量与坐标系}
+\begin{itemize}
+    \item \textbf{自由向量 (Free Vector)}: 具有长度和方向，但不固定在某一点的几何量（如速度 $\mathbf{v}$）。
+    \item \textbf{坐标系约定}:
+    \begin{itemize}
+        \item 固定坐标系 $\{s\}$ (Space Frame)：相对静止的参考系。也就是所谓的世界系。
+        \item 物体坐标系 $\{b\}$ (Body Frame)：附着在刚体上的参考系。在本书中，计算时通常将其视为瞬时与物体重合的静止坐标系。有的时候我们也叫连体坐标系，本体坐标系。
+    \end{itemize}
+\end{itemize}
+\end{defbox}
+
+\section{平面内的刚体运动}
+平面刚体运动具有 3 个自由度（2个平移 $p_x, p_y$，1个旋转 $\theta$）。
+
+\begin{formulabox}{平面旋转矩阵 $P \in SO(2)$}
+物体坐标系 $\{b\}$ 相对于固定系 $\{s\}$ 的姿态由旋转矩阵表示：
+\begin{equation}
+P = \begin{bmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{bmatrix} \in SO(2)
+\end{equation}
+\end{formulabox}
+
+\begin{mybox}{位姿复合推导}
+若 $\{c\}$ 相对 $\{b\}$ 的位姿为 $(Q, q)$，$\{b\}$ 相对 $\{s\}$ 为 $(P, p)$，则 $\{c\}$ 相对 $\{s\}$ 的总位姿 $(R, r)$ 为：
+\begin{align}
+R &= PQ \quad \text{(旋转合成)} \\
+r &= Pq + p \quad \text{(平移变换)}
+\end{align}
+\end{mybox}
+
+\section{旋转矩阵与角速度}
+\subsection{旋转矩阵 $SO(3)$}
+\begin{defbox}{特殊正交群 $SO(3)$}
+$R \in \mathbb{R}^{3 \times 3}$ 是旋转矩阵，当且仅当满足：
+\begin{enumerate}
+    \item $R^T R = I$ (正交性：列向量相互正交且为单位向量)。
+    \item $\det R = 1$ (右手坐标系约束)。
+\end{enumerate}
+\end{defbox}
+
+
+\subsection{角速度与反对称矩阵}
+角速度 $\omega = (\omega_1, \omega_2, \omega_3)$ 的矩阵表示形式被称为反对称矩阵 $[\omega]$：
+\begin{formulabox}{反对称矩阵与算子 $so(3)$}
+\begin{equation}
+[\omega] = \begin{bmatrix} 0 & -\omega_3 & \omega_2 \\ \omega_3 & 0 & -\omega_1 \\ -\omega_2 & \omega_1 & 0 \end{bmatrix} \in so(3)
+\end{equation}
+性质：$[\omega]x = \omega \times x$。\\
+我认为现有运算再有算符其实。
+\end{formulabox}
+
+\begin{mybox}{旋转的时间导数推导}
+对于随时间变化的旋转矩阵 $R(t)$，其时间导数满足：
+\begin{itemize}
+    \item $\dot{R} = [\omega_s] R \implies [\omega_s] = \dot{R}R^T$ (空间角速度)
+    \item $\dot{R} = R [\omega_b] \implies [\omega_b] = R^T \dot{R}$ (物体角速度)
+    \item 转换关系：$\omega_s = R \omega_b$ 
+\end{itemize}
+\end{mybox}
+
+\begin{mybox}{旋转矩阵时间导数的详细推导步骤}
+
+\textbf{1. 从正交性定义出发} \\
+由于旋转矩阵 $R(t) \in SO(3)$，对于任意时刻 $t$，均满足正交性约束：
+\begin{equation}
+    R(t)R^T(t) = I
+\end{equation}
+
+\textbf{2. 对时间求导} \\
+对上述等式两边关于时间 $t$ 求导，根据乘积法则（Leibniz rule）：
+\begin{equation}
+    \dot{R}R^T + R\dot{R}^T = 0
+\end{equation}
+整理得：
+\begin{equation}
+    \dot{R}R^T = -(R\dot{R}^T) = -(\dot{R}R^T)^T
+\end{equation}
+根据反对称矩阵的定义（若 $M = -M^T$，则 $M$ 为反对称矩阵），可知 \textbf{$\dot{R}R^T$ 是一个反对称矩阵}。
+
+\textbf{3. 空间角速度的引入 ($\omega_s$)} \\
+令这个反对称矩阵为 $[\omega_s]$，即：
+\begin{equation}
+    [\omega_s] = \dot{R}R^T \quad \implies \quad \dot{R} = [\omega_s]R
+\end{equation}
+这里的 $\omega_s \in \mathbb{R}^3$ 被称为\textbf{空间角速度}（Spatial Angular Velocity），因为它是在固定坐标系（Space Frame）下描述的。
+
+\textbf{4. 物体角速度的引入 ($\omega_b$)} \\
+同样地，我们考察 $R^T\dot{R}$。由于 $\dot{R} = [\omega_s]R$，代入得：
+\begin{equation}
+    R^T\dot{R} = R^T([\omega_s]R)
+\end{equation}
+由于 $R^T\dot{R}$ 同样满足反对称性（可以通过对 $R^T R = I$ 求导证明），令其为 $[\omega_b]$：
+\begin{equation}
+    [\omega_b] = R^T\dot{R} \quad \implies \quad \dot{R} = R[\omega_b]
+\end{equation}
+这里的 $\omega_b \in \mathbb{R}^3$ 被称为\textbf{物体角速度}（Body Angular Velocity），它是相对于随动坐标系描述的。
+
+
+
+\textbf{5. 两者转换关系的推导} \\
+利用上述两个等式：
+\begin{equation}
+    \dot{R} = [\omega_s]R = R[\omega_b]
+\end{equation}
+两边同时右乘 $R^T$：
+\begin{equation}
+    [\omega_s] = R[\omega_b]R^T
+\end{equation}
+根据反对称矩阵的伴随性质（对于任意 $R \in SO(3)$，$R[\omega]R^T = [R\omega]$），可得：
+\begin{equation}
+    [R\omega_b] = [\omega_s]
+\end{equation}
+去符号化，即得到最终变换关系：
+\begin{equation}
+    \omega_s = R\omega_b \quad \text{或} \quad \omega_b = R^T\omega_s
+\end{equation}
+
+\end{mybox}
+
+\subsection{旋转的指数坐标}
+基于线性微分方程 $\dot{p} = [\hat{\omega}]p$ 的解，旋转矩阵可以表示为矩阵指数：
+\begin{formulabox}{罗德里格斯公式 (Rodrigues' Formula)}
+绕单位轴 $\hat{\omega}$ 旋转 $\theta$ 的旋转矩阵为：
+\begin{equation}
+R = e^{[\hat{\omega}]\theta} = I + \sin\theta [\hat{\omega}] + (1 - \cos\theta) [\hat{\omega}]^2
+\end{equation}
+其中 $\hat{\omega}\theta \in \mathbb{R}^3$ 被称为旋转的指数坐标。
+\end{formulabox}
+
+\section{齐次变换矩阵与运动旋量}
+\subsection{齐次变换矩阵 $SE(3)$}
+\begin{defbox}{特殊欧几里得群 $SE(3)$}
+\begin{equation}
+T = \begin{bmatrix} R & p \\ 0 & 1 \end{bmatrix} = \begin{bmatrix} r_{11} & r_{12} & r_{13} & p_1 \\ r_{21} & r_{22} & r_{23} & p_2 \\ r_{31} & r_{32} & r_{33} & p_3 \\ 0 & 0 & 0 & 1 \end{bmatrix} \in SE(3)
+\end{equation}
+逆矩阵公式：$T^{-1} = \begin{bmatrix} R^T & -R^T p \\ 0 & 1 \end{bmatrix}$。
+\end{defbox}
+
+\subsection{运动旋量 (Twist)}
+运动旋量 $\mathcal{V}$ 结合了角速度 $\omega$ 和线速度 $v$：
+\begin{formulabox}{运动旋量定义}
+\begin{equation}
+\mathcal{V} = \begin{bmatrix} \omega \\ v \end{bmatrix} \in \mathbb{R}^6
+\end{equation}
+其矩阵表示为 $[\mathcal{V}] = \begin{bmatrix} [\omega] & v \\ 0 & 0 \end{bmatrix} \in se(3)$。
+\end{formulabox}
+
+\begin{mybox}{伴随表示 (Adjoint Mapping)}
+变换不同坐标系下的运动旋量：
+\begin{equation}
+\mathcal{V}_s = [Ad_T] \mathcal{V}_b \quad \text{其中} \quad [Ad_T] = \begin{bmatrix} R & 0 \\ [p]R & R \end{bmatrix} \in \mathbb{R}^{6 \times 6}
+\end{equation}
+\end{mybox}
+
+\begin{mybox}{运动旋量 (Twist) 的深入解析}
+
+\textbf{1. 物理意义：为什么需要 Twist？} \\
+在经典力学中，我们习惯分别描述角速度 $\omega$ 和线速度 $v$。但在机器人学中，刚体上的每一点线速度都取决于其相对于转轴的位置。运动旋量 $\mathcal{V}$ 将这两者统一为一个 6 维向量，它完整地描述了刚体作为一个整体的瞬时运动状态，而不必指定刚体上的特定点。
+
+\textbf{2. 空间旋量与物体旋量 (Spatial vs. Body Twist)} \\
+根据参考坐标系的选择，Twist 分为两种：
+\begin{itemize}
+    \item \textbf{物体运动旋量 $\mathcal{V}_b = (\omega_b, v_b)$}:
+    其中 $\omega_b$ 是物体坐标系 $\{b\}$ 下的角速度，$v_b$ 是 $\{b\}$ 系原点的线速度（同样在 $\{b\}$ 系下表达）。它可以看作是“坐在机器人末端感受到的速度”。
+    \item \textbf{空间运动旋量 $\mathcal{V}_s = (\omega_s, v_s)$}:
+    其中 $\omega_s$ 是固定坐标系 $\{s\}$ 下的角速度，$v_s$ 是 $\{s\}$ 系原点处一个“虚拟点”（瞬时与 $\{s\}$ 重合且随刚体运动的点）的线速度。
+\end{itemize}
+
+
+
+\textbf{3. 几何解释：螺旋轴 (Screw Axis)} \\
+根据 \textbf{Chasles-Mozzi 定理}，任何刚体速度都可以表示为绕空间中某条轴的转动加上沿该轴的平移。运动旋量 $\mathcal{V}$ 实际上就是这种“螺旋运动”的参数化：
+\begin{equation}
+    \mathcal{V} = \mathcal{S} \dot{\theta}
+\end{equation}
+其中 $\mathcal{S}$ 是单位螺旋轴，$\dot{\theta}$ 是绕该轴旋转的速率。
+
+\textbf{4. 矩阵表示 $[\mathcal{V}]$ 的数学背景} \\
+正如反对称矩阵 $[\omega]$ 是旋转矩阵 $R$ 的导数项，$[\mathcal{V}] \in se(3)$ 是变换矩阵 $T$ 的导数项。它们的关系满足：
+\begin{equation}
+    \dot{T} T^{-1} = [\mathcal{V}_s], \quad T^{-1} \dot{T} = [\mathcal{V}_b]
+\end{equation}
+这种表示法允许我们将复杂的齐次变换微分运算简化为矩阵乘法。
+
+\textbf{5. 伴随变换 $[Ad_T]$ 的直观理解} \\
+伴随矩阵的作用是改变 Twist 的“观察视角”。当你从一个坐标系 $\{b\}$ 移动到 $\{s\}$ 时：
+\begin{itemize}
+    \item 旋转部分 $R$ 改变了角速度和线速度的方向。
+    \item 交叉项 $[p]R$ 反映了由于杠杆效应（线速度 $v = \omega \times r$）产生的额外线速度。
+\end{itemize}
+\end{mybox}
+
+\section{力旋量 (Wrench)}
+力旋量 $\mathcal{F}$ 将力矩 $m$ 和力 $f$ 整合为一个 6 维向量：
+\begin{equation}
+\mathcal{F} = \begin{bmatrix} m \\ f \end{bmatrix} \in \mathbb{R}^6
+\end{equation}
+在不同坐标系下的变换规律遵循：$\mathcal{F}_b = [Ad_{T_{sb}}]^T \mathcal{F}_s$。
+\begin{mybox}{力旋量 (Wrench) 的深入解析}
+
+\textbf{1. 物理意义：功与功率的对偶性} \\
+运动旋量 $\mathcal{V}$ 描述的是运动，而力旋量 $\mathcal{F}$ 描述的是施加在刚体上的作用。它们之间最核心的关系是：\textbf{功率（Power）是一个与坐标系选取无关的标量}。
+\begin{equation}
+    \text{Power} = \mathcal{V}_b^T \mathcal{F}_b = \mathcal{V}_s^T \mathcal{F}_s
+\end{equation}
+这说明力旋量和运动旋量在数学上互为“对偶向量”。
+
+\textbf{2. 空间力旋量与物体力旋量} \\
+\begin{itemize}
+    \item \textbf{物体力旋量 $\mathcal{F}_b = (m_b, f_b)$}:
+    $f_b$ 是作用在物体坐标系 $\{b\}$ 原点上的力，$m_b$ 是在该坐标系下表示的力矩。
+    \item \textbf{空间力旋量 $\mathcal{F}_s = (m_s, f_s)$}:
+    $f_s$ 是作用在固定坐标系 $\{s\}$ 原点上的力，$m_s$ 是相对于 $\{s\}$ 原点的力矩。
+\end{itemize}
+
+
+
+\textbf{3. 变换规律的推导} \\
+已知运动旋量的变换规律为 $\mathcal{V}_s = [Ad_{T_{sb}}] \mathcal{V}_b$，利用功率守恒原理：
+\begin{equation}
+    \mathcal{V}_s^T \mathcal{F}_s = ([Ad_{T_{sb}}] \mathcal{V}_b)^T \mathcal{F}_s = \mathcal{V}_b^T [Ad_{T_{sb}}]^T \mathcal{F}_s
+\end{equation}
+为了使等式对任意 $\mathcal{V}_b$ 都成立，必须满足：
+\begin{equation}
+    \mathcal{F}_b = [Ad_{T_{sb}}]^T \mathcal{F}_s
+\end{equation}
+\textbf{注意}：Twist 的变换是左乘伴随矩阵，而 Wrench 的变换是左乘伴随矩阵的\textbf{转置}。
+
+\textbf{4. 伴随转置矩阵的具体结构} \\
+根据 $[Ad_T] = \begin{bmatrix} R & 0 \\ [p]R & R \end{bmatrix}$，其转置为：
+\begin{equation}
+    [Ad_T]^T = \begin{bmatrix} R^T & -(R^T[p]) \\ 0 & R^T \end{bmatrix} = \begin{bmatrix} R^T & [R^T(-p)]R^T \\ 0 & R^T \end{bmatrix}
+\end{equation}
+该公式展示了力矩在坐标系变换时，不仅要进行旋转变换，还要加上由于力 $f$ 对新原点产生的力矩臂贡献。
+
+\end{mybox}

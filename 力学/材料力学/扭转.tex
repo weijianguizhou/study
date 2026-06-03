@@ -1,0 +1,109 @@
+\chapter{扭转 (Torsion)}
+
+\section{受力与变形特点}
+
+\subsection{受力特点}
+外力偶作用面与杆件横截面平行。
+
+\subsection{变形特点}
+纵向线转过一角度，产生切应变（剪切角）。杆件横截面绕轴线发生相对转动。
+
+
+\section{外力偶矩的计算}
+
+\subsection{直接计算}
+\begin{itemize}
+    \item $M_e = F \cdot d$ （作用于盘上的力偶）
+    \item $m = (F_1 - F_2) \cdot \frac{D}{2}$ （皮带传动）
+\end{itemize}
+
+\subsection{按输入功率和转速计算}
+已知轴的转速为 $n$ (r/min)，输出功率为 $P$ (kW)，求外力偶矩 $M_e$：
+\begin{align*}
+    P &= \frac{dW}{dt} = \frac{M_e d\varphi}{dt} = M_e \omega \\
+    P \times 1000 &= M_e \cdot \frac{2\pi n}{60} \\
+    M_e &= \frac{60000 P}{2\pi n} \approx 9549 \frac{P}{n} \quad (\text{N}\cdot\text{m})
+\end{align*}
+\textbf{结论：} 即低速轴更粗，高速轴更细。
+
+
+
+\section{圆轴扭转时的应力与强度分析}
+
+\subsection{纯剪切与薄壁圆筒}
+对于薄壁圆筒（壁厚 $t \le \frac{r_0}{10}$）：
+\begin{itemize}
+    \item 扭转时：圆周线大小、间距、形状不变；纵向线倾斜同一角度。
+    \item 切应力公式：$\tau = \frac{T}{2\pi r_0^2 t}$
+\end{itemize}
+
+\section{切应力互等定理 (Theorem of Conjugate Shear Stress)}
+
+\subsection{定义与表述}
+在相互垂直的两个平面上，切应力必然成对出现，且数值相等、方向垂直于两平面的交线。其方向表现为：两个切应力要么同时指向交线，要么同时背离交线。
+
+\subsection{数学表达式}
+若在微体的 $x$ 面上存在切应力 $\tau_{xy}$，在与之垂直的 $y$ 面上必存在切应力 $\tau_{yx}$，且满足：
+\begin{equation}
+    \tau_{xy} = \tau_{yx}
+\end{equation}
+
+\subsection{力学本质}
+该定理是由单元体的\textbf{力矩平衡条件} ($\sum M_0 = 0$) 推导得出的。
+\begin{itemize}
+    \item \textbf{在扭转中的体现：} 当圆轴受扭时，横截面上产生的切应力 $\tau$ 必然伴随着纵向截面（过轴线的截面）上大小相等的切应力。
+    \item \textbf{破坏现象：} 对于木材等纵向抗剪能力较弱的材料，在受扭时常沿纵向裂开，这就是切应力互等定理的直观体现。
+\end{itemize}
+
+\subsection{纯剪切状态}
+当单元体的各个面上只有切应力而无正应力时，称该点处于\textbf{纯剪切 (Pure Shear)} 状态。
+\subsection{剪切虎克定律}
+\begin{equation}
+    \tau = G\gamma, \quad G = \frac{E}{2(1+\mu)}
+\end{equation}
+
+\subsection{圆轴扭转应力公式推导}
+\begin{enumerate}
+    \item \textbf{几何关系：} $\gamma_\rho = \rho \frac{d\varphi}{dx} = \rho \theta$ （切应变与半径 $\rho$ 成正比）
+    \item \textbf{物理关系：} $\tau_\rho = G \gamma_\rho = G \rho \frac{d\varphi}{dx}$
+    \item \textbf{静力学关系：} $T = \int_A \tau_\rho \cdot \rho \, dA = G \frac{d\varphi}{dx} \int_A \rho^2 dA = G I_p \frac{d\varphi}{dx}$
+\end{enumerate}
+
+\subsection{应力公式}
+横截面上任意一点的切应力：
+\begin{equation}
+    \tau_\rho = \frac{T \rho}{I_p}
+\end{equation}
+横截面上的最大切应力（边缘点 $\rho = R$）：
+\begin{equation}
+    \tau_{\max} = \frac{T R}{I_p} = \frac{T}{W_t}
+\end{equation}
+其中 $I_p$ 为极惯性矩，$W_t = \frac{I_p}{R}$ 为抗扭截面模量。
+
+\subsection{截面几何参数}
+\begin{itemize}
+    \item \textbf{圆轴：} $I_p = \frac{\pi d^4}{32}, \quad W_t = \frac{\pi d^3}{16} $
+    \item \textbf{圆环：} $I_p = \frac{\pi (D^4 - d^4)}{32}, \quad W_t = \frac{\pi (D^4 - d^4)}{16D} $
+\end{itemize}
+
+
+
+\section{圆轴扭转变形与刚度计算}
+
+\subsection{变形公式}
+\begin{itemize}
+    \item \textbf{单位长度扭转角：} $\theta = \frac{d\varphi}{dx} = \frac{T}{G I_p}$
+    \item \textbf{相对扭转角 $\varphi$：}
+    \begin{enumerate}
+        \item 阶梯轴/分段等扭矩：$\varphi = \sum_{i=1}^{n} \frac{T_i l_i}{G_i I_{pi}}$
+        \item 变截面或连续变扭矩：$\varphi = \int_0^l \frac{T(x)}{G I_p(x)} dx$
+    \end{enumerate}
+\end{itemize}
+$G I_p$ 称为杆的\textbf{抗扭刚度}。
+
+\subsection{强度条件与刚度条件}
+\begin{enumerate}
+    \item \textbf{强度条件：} $\tau_{\max} = \frac{T_{\max}}{W_t} \le [\tau]$
+    \item \textbf{刚度条件：} $\theta_{\max} = \frac{T_{\max}}{G I_p} \cdot \frac{180}{\pi} \le [\theta] \quad (^\circ/\text{m})$
+\end{enumerate}
+

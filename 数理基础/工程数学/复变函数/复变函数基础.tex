@@ -1,0 +1,73 @@
+\chapter{复变函数基础}
+
+\section{实数域到复数域的扩充}
+从实数域 $\mathbb{R}$ 到复数域 $\mathbb{C}$ 的扩充，是为了使代数方程总有解、使开方、指数、三角函数等运算在更大范围内封闭。
+
+\subsection{扩充动机}
+实数域中，方程
+$$x^2 + 1 = 0$$
+无解。为使这类方程有解，引入虚数单位 $i$，满足
+$$i^2 = -1.$$
+
+\subsection{扩充步骤}
+1. 引入符号 $i$，定义 $i^2 = -1$。
+
+2. 定义复数为 $z = x + iy$，其中 $x,y\in\mathbb{R}$。
+
+3. 规定复数的加法与乘法运算满足交换律、结合律、分配律。
+
+4. 当 $y=0$ 时，$z = x$，即实数是复数的特例。
+
+5. 当 $x=0$ 时，$z = iy$ 为纯虚数。
+
+\subsection{扩充后的封闭性}
+扩充后的复数域 $\mathbb{C}$ 具有以下重要性质：
+\begin{enumerate}
+    \item 复数域是**代数闭域**：任意次数的复系数多项式方程在 $\mathbb{C}$ 内必有根。
+    \item 加、减、乘、除（除数非零）运算封闭。
+    \item 开方、指数、对数、三角函数、反三角函数均可合理定义。
+\end{enumerate}
+
+\section{定义与性质}
+复变函数是定义在复数集上的函数，记为
+$$w = f(z),$$
+其中 $z\in\mathbb{C}$ 为复自变量，$w\in\mathbb{C}$ 为复因变量。
+
+将 $z=x+iy$，$w=u+iv$ 代入，则复变函数可表示为
+$$f(z) = u(x,y) + i\,v(x,y),$$
+即一个复变函数等价于**两个二元实变函数的有序组合**。
+
+\section{初等函数}
+\subsection{指数函数}
+复指数函数定义为
+$$e^z = e^{x+iy} = e^x(\cos y + i\sin y),$$
+满足：
+\begin{itemize}
+    \item 周期性：周期为 $2\pi i$；
+    \item $e^{z_1+z_2}=e^{z_1}e^{z_2}$；
+    \item $|e^z|=e^x>0$。
+\end{itemize}
+
+\subsection{对数函数}
+复对数函数是指数函数的反函数，定义为多值函数：
+$$\ln z = \ln|z| + i\left(\arg z + 2k\pi\right),\quad k\in\mathbb{Z}.$$
+主值分支为
+$$\Ln z = \ln|z| + i\Arg z.$$
+
+\subsection{三角函数}
+由欧拉公式定义复三角函数：
+$$\cos z = \frac{e^{iz} + e^{-iz}}{2},\quad \sin z = \frac{e^{iz} - e^{-iz}}{2i}.$$
+性质：
+\begin{itemize}
+    \item 周期仍为 $2\pi$；
+    \item 在复平面上**无界**；
+    \item 实三角函数公式全部形式保留。
+\end{itemize}
+
+\subsection{反三角函数}
+以反正弦函数为例，由 $\sin w = z$ 解出：
+$$\arcsin z = -i \ln\left(iz + \sqrt{1-z^2}\right).$$
+
+\subsection{一般幂函数 $z^b$}
+利用复对数统一定义：
+$$z^b = e^{b\ln z}.$$

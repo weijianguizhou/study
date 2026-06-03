@@ -1,0 +1,72 @@
+\documentclass[12pt,a4paper]{article}
+% 基础配置：全兼容pdfLaTeX，无任何特殊依赖
+\usepackage[margin=1.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{textcomp}
+
+% 取消所有可能的编码/字体冲突配置
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\begin{document}
+
+\begin{center}
+    \textbf{\LARGE Attention Is All You Need} \\
+    \vspace{0.5cm}
+    \textbf{\large ZHOU WEI} \\
+    \vspace{0.2cm}
+    NJUST \\
+    \vspace{0.2cm}
+    \today
+\end{center}
+
+\vspace{1cm}
+
+\section*{Introduction}
+Good morning, everyone. Today I'm presenting "Attention Is All You Need"—a groundbreaking sequence transduction model that departs from traditional recurrent and convolutional architectures, and instead relies entirely on self-attention mechanisms. 
+
+To set the context, let's first consider the limitations of existing models: Traditional RNNs and LSTMs are inherently sequential, which makes them difficult to parallelize during training. Meanwhile, CNNs face challenges when modeling long-range dependencies in sequential data. It is precisely to address these critical drawbacks that we proposed the Transformer model, which leverages pure self-attention to enable both faster training and superior performance.
+
+\section*{Theoretical Framework}
+Now that we understand the motivation behind the Transformer, let's dive into its core theoretical components. 
+
+First and foremost is the Scaled Dot-Product Attention, which forms the foundation of the entire model. This mechanism is formally defined as:
+\[
+\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
+\]
+Here, $Q$, $K$, and $V$ represent three vectors respectively. Importantly, the scaling factor $\sqrt{d_k}$ is included to prevent dot product values from becoming too large, which would otherwise push the softmax function into regions with vanishing gradients.
+
+Building on this basic attention mechanism, we further introduce Multi-Head Attention to enhance the model's expressive power:
+\[
+\text{MultiHead}(Q, K, V) = \text{Concat}(\text{head}_1, \dots, \text{head}_h)W^O
+\]
+In essence, each head focuses on different representation subspaces, allowing the model to capture diverse dependencies in parallel—something that single-head attention cannot achieve effectively.
+
+\section*{Model Architecture}
+Having covered the core theoretical components, let's now turn our attention to the overall architecture of the Transformer. 
+
+At its core, the Transformer adopts a standard encoder-decoder structure, with 6 identical layers stacked in both the encoder and decoder modules. Specifically, the key components include:\
+\par 1. Encoder: Composed of multi-head attention followed by a feed-forward network, with residual connections and layer normalization applied to each sub-layer for stable training.\
+\par 2. Decoder: Adds a masked multi-head attention layer (to prevent access to future tokens) on top of the encoder's structure, plus an encoder-decoder attention layer to integrate encoder outputs.\
+\par 3. Positional encoding: Since self-attention is position-agnostic, we use sine and cosine functions to inject sequence order information into the model.
+
+\section*{Experimental Results}
+With the architecture explained, let's now examine the experimental results that validate the Transformer's effectiveness. 
+
+In our experiments on machine translation tasks, the Transformer achieved remarkable performance:
+- On the WMT 2014 English-German translation task, it reached 28.4 BLEU, setting a new state-of-the-art at the time.
+- For English-French translation, our large-scale Transformer model achieved 41.8 BLEU.
+- Most notably, the Transformer is approximately 10x faster to train than RNN-based models, thanks to its full parallelization capability.
+
+\section*{Conclusion}
+To summarize what we've discussed today, the Transformer is the first sequence transduction model built entirely on self-attention mechanisms, and it delivers three key advantages:
+\par - Superior translation quality compared to traditional models.
+\par - Significantly faster training due to full parallelization.
+\par - Efficient capture of long-range dependencies in sequential data.
+
+Looking ahead to future work, we plan to extend the Transformer to other modalities such as images and audio, and we aim to optimize local attention mechanisms to handle extremely large input sequences more efficiently.
+
+Thank you for your attention! I'd be happy to take any questions you may have.
+
+\end{document}

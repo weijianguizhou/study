@@ -1,0 +1,168 @@
+\chapter{应力状态分析和强度理论 (Analysis of Stress and Strength Theories)}
+
+\intro{在复杂载荷作用下，构件内的应力不仅随位置变化，且在同一点处随截面方位变化。本章旨在通过数学解析与几何绘图（莫尔圆），揭示应力转换的内在规律。}
+
+\section{研究应力状态的方法——单元体法}
+
+\subsection{单元体的概念}
+为了研究构件内某一点处的应力状态，我们围绕该点截取一个无限小的正六面体，称为\textbf{单元体 (Elementary Block)}。
+\begin{itemize}
+	\item \textbf{微元性}：各面上的应力被认为是均匀分布的。
+	\item \textbf{平行性}：相对的两个面上的应力大小相等、方向相反（满足平衡条件）。
+\end{itemize}
+
+\subsection{应力的符号规定}
+\begin{enumerate}
+	\item \textbf{正应力 $\sigma$}：拉应力为正（离开截面），压应力为负（指向截面）。
+	\item \textbf{切应力 $\tau$}：使单元体或其局部产生顺时针转动趋势的切应力为正，反之为负。
+\end{enumerate}
+
+\begin{theorem}{切应力互等定理 (Shear Stress Complementarity)}
+	在相互垂直的两个平面上，切应力必然成对出现，且大小相等，方向垂直于两平面的交线，同时指向或同时背离该交线。
+\end{theorem}
+
+\section{解析法求解二向应力状态}
+
+\subsection{任意斜截面上的应力推导}
+
+
+
+\begin{figure}[H]
+	\centering
+	% 确保这里开启了 tikzpicture 环境
+	\begin{tikzpicture}[scale=2.8, font=\small]
+		% 定义几何参数
+		\def\ang{30} 
+		\coordinate (O) at (0,0);
+		\coordinate (P) at (0,{1.5*tan(\ang)}); 
+		\coordinate (Q) at (1.5,0); 
+		
+		% 绘制隔离体
+		\draw[thick, fill=structurecolor!5] (O) -- (Q) -- (P) -- cycle;
+		
+		% 绘制法向 n 
+		\coordinate (M) at (0.75,{0.75*tan(\ang)}); 
+		\draw[dashed, gray] (M) -- +(0.8,0) node[right]{$x$};
+		
+		% 检查 \draw 命令是否正确
+		\draw[-{Stealth}, color=second, ultra thick] (M) -- +(\ang:0.7) node[above right] {$\sigma_\alpha$};
+		\draw[-{Stealth}, color=third, ultra thick] (M) -- +({\ang-90}:0.5) node[below right] {$\tau_\alpha$};
+		
+		% 角度 alpha (需要 calc 库支持)
+		\draw[->] ([shift=(0:0.4)]M) arc (0:\ang:0.4);
+		\node at ($(M)+(0.5,0.15)$) {$\alpha$};
+		
+		% x 面受力
+		\draw[-{Stealth}, color=main] (-0.4, {0.75*tan(\ang)}) -- (0, {0.75*tan(\ang)}) node[left] {$\sigma_x dA \sin\alpha$};
+		
+		% y 面受力
+		\draw[-{Stealth}, color=main] (0.75, -0.4) -- (0.75, 0) node[below] {$\sigma_y dA \cos\alpha$};
+	\end{tikzpicture}
+	\caption{二向应力状态隔离体受力分析}
+\end{figure}
+
+
+\subsubsection{平衡方程的建立与化简}
+
+设斜截面面积为 $dA$，由隔离体的静力平衡条件 $\sum F_n = 0$ 和 $\sum F_t = 0$ 可得：
+
+\begin{enumerate}
+	\item \textbf{法向平衡方程：}
+	\begin{equation*}
+		\sigma_\alpha dA = \sigma_x (dA \sin\alpha) \sin\alpha + \sigma_y (dA \cos\alpha) \cos\alpha + \tau_{xy} (dA \sin\alpha) \cos\alpha + \tau_{yx} (dA \cos\alpha) \sin\alpha
+	\end{equation*}
+	利用切应力互等定理 $\tau_{xy} = \tau_{yx}$，上式简化为：
+	\begin{equation*}
+		\sigma_\alpha = \sigma_x \sin^2\alpha + \sigma_y \cos^2\alpha + 2\tau_{xy} \sin\alpha \cos\alpha
+	\end{equation*}
+	引入倍角公式 $\sin^2\alpha = \frac{1-\cos 2\alpha}{2}$，$\cos^2\alpha = \frac{1+\cos 2\alpha}{2}$，得：
+	\begin{equation}
+		\sigma_\alpha = \frac{\sigma_x + \sigma_y}{2} - \frac{\sigma_x - \sigma_y}{2} \cos 2\alpha + \tau_{xy} \sin 2\alpha
+	\end{equation}
+	
+	\item \textbf{切向平衡方程：}
+	依据 $\tau_\alpha$ 顺时针为正的约定，建立沿 $t$ 轴（$n$ 轴顺时针 $90^\circ$）的平衡：
+	\begin{equation*}
+		\tau_\alpha dA = \sigma_x (dA \sin\alpha) \cos\alpha - \sigma_y (dA \cos\alpha) \sin\alpha - \tau_{xy} (dA \sin\alpha) \sin\alpha + \tau_{yx} (dA \cos\alpha) \cos\alpha
+	\end{equation*}
+	化简得：
+	\begin{equation}
+		\tau_\alpha = \frac{\sigma_x - \sigma_y}{2} \sin 2\alpha + \tau_{xy} \cos 2\alpha
+	\end{equation}
+\end{enumerate}
+
+上述公式表明，斜截面上的正应力$\sigma_\alpha$和切应力$\tau_\alpha$都是$\alpha$的函数，由此可求极值。并确定极值所在位置。
+
+\subsection{主应力与主平面}
+
+\begin{definition}{主平面与主应力}
+	切应力 $\tau_\alpha$ 等于零的平面称为\textbf{主平面}，其上的正应力称为\textbf{主应力}。
+\end{definition}
+
+令式 (7.2) 等于零，得主平面方位角 $\alpha_0$ 满足：
+\begin{equation}
+	\tan 2\alpha_0 = \frac{-2\tau_{xy}}{\sigma_x - \sigma_y}
+\end{equation}
+由上式可求得两个相差 $90^\circ$ 的角 $\alpha_0$。将此值代入式 (7.1)，可得两个主应力值：
+\begin{equation}
+	\sigma_{max, min} = \frac{\sigma_x + \sigma_y}{2} \pm \sqrt{\left( \frac{\sigma_x - \sigma_y}{2} \right)^2 + \tau_{xy}^2}
+\end{equation}
+\subsection{最大切应力}
+
+对 $\tau_\alpha$ 求导并令其为零，可得最大切应力所在平面的方位 $\alpha_1$：
+\begin{equation}
+	\tan 2\alpha_1 = \frac{\sigma_x - \sigma_y}{2\tau_{xy}}
+\end{equation}
+比较式 (7.3) 与 (7.5) 可知，$\tan 2\alpha_1 = -1 / \tan 2\alpha_0$，说明最大切应力所在平面与主平面成 $45^\circ$ 夹角。其值为：
+\begin{equation}
+	\tau_{max} = \sqrt{\left( \frac{\sigma_x - \sigma_y}{2} \right)^2 + \tau_{xy}^2} = \frac{\sigma_1 - \sigma_3}{2}
+\end{equation}
+\begin{remark}
+	刘鸿文教材指出，主应力通常按代数值大小排列，即 $\sigma_1 \ge \sigma_2 \ge \sigma_3$。在平面应力状态下，若计算出的两个主应力分别为 $50$ MPa 和 $-20$ MPa，且第三个方向应力为 $0$，则 $\sigma_1 = 50$, $\sigma_2 = 0$, $\sigma_3 = -20$。
+\end{remark}
+
+\subsection{平面应力状态的正应力不变量}
+在平面应力状态下，设单元体的x、y方向正应力为$\sigma_x$、$\sigma_y$，切应力为$\tau_{xy}$，则任意角度$\alpha$截面上的正应力为：
+\[
+\sigma_\alpha = \frac{\sigma_x+\sigma_y}{2} + \frac{\sigma_x-\sigma_y}{2}\cos2\alpha - \tau_{xy}\sin2\alpha
+\]
+
+对于与该截面垂直的截面（角度为$\alpha+90^\circ$），代入上式并利用三角恒等式$\cos(2\alpha+180^\circ)=-\cos2\alpha$、$\sin(2\alpha+180^\circ)=-\sin2\alpha$，可得：
+\[
+\sigma_{\alpha+90^\circ} = \frac{\sigma_x+\sigma_y}{2} - \frac{\sigma_x-\sigma_y}{2}\cos2\alpha + \tau_{xy}\sin2\alpha
+\]
+
+将两式相加，交叉项相互抵消，得到：
+\[
+\sigma_\alpha + \sigma_{\alpha+90^\circ} = \sigma_x + \sigma_y
+\]
+
+这表明：平面内任意两个相互垂直截面上的正应力之和为常数，等于单元体原始x、y方向的正应力之和，与截面角度无关。该常数称为**第一应力不变量**。
+\section{应力圆（莫尔圆）法}
+\intro{解析法计算繁琐且直观性差。1882年由德国工程师莫尔 (Otto Mohr) 提出的几何图解法，是分析应力状态最强大的直观工具。}
+
+\begin{proposition}{莫尔圆的方程}
+	对解析法两公式移项并平方相加，消去 $2\alpha$：
+	\begin{equation}
+		\left( \sigma_\alpha - \frac{\sigma_x + \sigma_y}{2} \right)^2 + \tau_\alpha^2 = \left( \frac{\sigma_x - \sigma_y}{2} \right)^2 + \tau_{xy}^2
+	\end{equation}
+	这是一个圆方程，圆心位于 $(\frac{\sigma_x+\sigma_y}{2}, 0)$，半径 $R = \sqrt{(\frac{\sigma_x-\sigma_y}{2})^2 + \tau_{xy}^2}$。
+\end{proposition}
+
+\section{强度理论 (Strength Theories)}
+
+\subsection{破坏准则概述}
+材料在外力作用下产生失效（塑性屈服或脆性断裂）的本质原因是什么？历史上提出了四大经典强度理论。
+
+\begin{enumerate}
+	\item \textbf{第一强度理论（最大拉应力理论）}：断裂是由最大主应力引起的。
+	\begin{equation} \sigma_{r1} = \sigma_1 \le [\sigma] \end{equation}
+	\item \textbf{第二强度理论（最大拉应变理论）}：破坏是由最大主伸长应变引起的。
+	\begin{equation} \sigma_{r2} = \sigma_1 - \mu(\sigma_2 + \sigma_3) \le [\sigma] \end{equation}
+	\item \textbf{第三强度理论（最大切应力理论/屈服准则）}：屈服是由最大切应力引起的。
+	\begin{equation} \sigma_{r3} = \sigma_1 - \sigma_3 \le [\sigma] \end{equation}
+	\item \textbf{第四强度理论（形状改变比能理论）}：
+	\begin{equation} \sigma_{r4} = \sqrt{\frac{1}{2}[(\sigma_1-\sigma_2)^2 + (\sigma_2-\sigma_3)^2 + (\sigma_3-\sigma_1)^2]} \le [\sigma] \end{equation}
+\end{enumerate}
+
+.

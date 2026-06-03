@@ -1,0 +1,61 @@
+\chapter{闭链运动学}
+
+在机器人学中，闭链机构（Closed-Chain Mechanisms）是指包含一个或多个封闭运动环路的机构。与开链机构相比，闭链机构通常具有更高的强度和运动精度，但其工作空间相对较小，且运动学分析更为复杂。
+
+\section{闭环约束方程}
+分析闭链机构的核心工具是“切割法”。通过将闭环在某个关节处切开，可以将其视为一个或多个具有约束条件的开链机构。
+
+\begin{defbox}{环路闭合方程 (Loop Closure Equations)}
+设一个闭环机构被切开后形成两条开链 $a$ 和 $b$，它们的末端位姿分别为 $T_a(\theta)$ 和 $T_b(\theta)$。为了保持机构的完整性，必须满足：
+\begin{equation}
+    T_a(\theta_a) = T_b(\theta_b)
+\end{equation}
+或者表示为隐式约束：
+\begin{equation}
+    f(\theta) = T_a(\theta) T_b^{-1}(\theta) - I = 0
+\end{equation}
+这些方程将关节变量耦合在一起，减少了系统的独立自由度。
+\end{defbox}
+
+
+
+\section{速度层面的约束}
+通过对位姿约束方程进行时间求导，可以得到关节速度 $\dot{\theta}$ 必须满足的线性空间。
+
+\begin{mybox}{约束雅可比矩阵 (Constraint Jacobian)}
+设 $\theta \in \mathbb{R}^n$ 为所有关节变量，速度约束可写为：
+\begin{equation}
+    J(\theta) \dot{\theta} = 0
+\end{equation}
+其中 $J(\theta) = \frac{\partial f}{\partial \theta} \in \mathbb{R}^{k \times n}$。系统的独立自由度等于 $n - \text{rank}(J)$。
+\end{mybox}
+
+\section{典型机构：Stewart 平台}
+Stewart-Gough 平台是并联机器人的典型代表，由一个静平台和通过六根可伸缩支腿支撑的动平台组成。
+
+
+
+\begin{formulabox}{逆运动学分析 (Inverse Kinematics)}
+对于并联机构，逆运动学通常非常简单。给定动平台的位姿 $(R, p)$，第 $i$ 根支腿的长度 $l_i$ 为：
+\begin{equation}
+    l_i = \| R p_{i,b} + p - b_i \|
+\end{equation}
+其中 $p_{i,b}$ 是连接点在动平台坐标系下的坐标，$b_i$ 是支座在固定系下的坐标。
+\end{formulabox}
+
+相比之下，并联机构的正运动学（从杆长推导位姿）通常没有解析解，需要使用牛顿-拉夫逊（Newton-Raphson）等数值迭代方法求解。
+
+\section{奇异性分析}
+闭链机构的奇异性比开链机构更丰富，通常分为以下几类：
+
+\begin{thoughtbox}{三类奇异性}
+\begin{itemize}
+    \item \textbf{执行器奇异 (Actuator Singularity)}：末端执行器失去某个方向的自由度，类似于开链机构的奇异。
+    \item \textbf{约束奇异 (Constraint Singularity)}：即使执行器锁死，末端执行器仍能在某些方向移动。这是并联机构特有的危险状态。
+    \item \textbf{结构奇异}：由机构特殊的几何参数对齐引起。
+\end{itemize}
+\end{thoughtbox}
+
+
+
+\clearpage % 确保所有浮动体在进入下一章前排版

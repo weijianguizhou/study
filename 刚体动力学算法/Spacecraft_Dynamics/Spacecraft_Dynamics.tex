@@ -1,0 +1,99 @@
+\documentclass[11pt,a4paper]{book}
+
+% --- 基础宏包 ---
+\usepackage[T1]{fontenc}
+\usepackage[UTF8]{ctex} 
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{geometry}
+\usepackage{bm}
+\usepackage{tcolorbox}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows,calc} 
+
+\usepackage[
+    colorlinks=true,
+    linkcolor=blue,
+    unicode=true
+]{hyperref}
+
+% --- 页面设置 ---
+\geometry{left=2cm, right=2cm, top=2.5cm, bottom=2.5cm}
+
+% --- 自定义环境 ---
+\tcbset{colback=gray!5!white, colframe=blue!75!black, fonttitle=\bfseries, arc=4pt}
+
+\begin{document}
+
+\chapter{刚体动力学基础}
+
+\section{矢量的时间变化率与输运定理}
+在讨论航天器运动时，必须区分矢量相对于不同参考系的时间变化率。设 $N$ 为惯性参考系 (Inertial Frame)，$B$ 为随体参考系 (Body Frame)，$\bm{\omega}$ 为 $B$ 在 $N$ 中的角速度。
+
+对于 $B$ 中的任意矢量 $\bm{A}$，其在两个参考系中的时间导数满足以下关系，即\textbf{输运定理 (Transport Theorem)}：
+\begin{equation}
+    {}^N \frac{d\bm{A}}{dt} = {}^B \frac{d\bm{A}}{dt} + {}^N\bm{\omega}^B \times \bm{A}
+\end{equation}
+这一关系是建立旋转动力学方程的数学基础，它表明观测者所处参考系的旋转会对速度和加速度的感知产生额外项（交叉积项）。
+
+
+
+\section{刚体动力学 (Rigid Body Dynamics)}
+
+\subsection{角动量 (Angular Momentum)}
+考虑一个由质心 $G$ 支撑的刚体，其相对于 $G$ 的角动量 $\bm{H}$ 可通过对刚体内各微元 $dm$ 的动量矩求积分获得。根据定义：
+\begin{equation}
+    \bm{H} = \int \bm{r} \times (\bm{\omega} \times \bm{r}) \, dm
+\end{equation}
+其中 $\bm{r}$ 是从质心指向微元的矢量。通过引入\textbf{惯性张量 (Inertia Tensor)} $\mathbf{I}$，上述线性映射关系可简写为：
+\begin{equation}
+    \bm{H} = \mathbf{I} \cdot \bm{\omega}
+\end{equation}
+
+\subsection{欧拉动力学方程 (Euler's Equations of Motion)}
+根据角动量定理，刚体受到的外力矩 $\bm{M}$ 等于其在惯性系中角动量的时间变化率。结合输运定理：
+\begin{equation}
+    \bm{M} = \left( \frac{d\bm{H}}{dt} \right)_{B} + \bm{\omega} \times \bm{H}
+\end{equation}
+当选择刚体的主轴 (Principal Axes) 作为坐标系轴时，惯性矩阵简化为对角阵 $\text{diag}(I_x, I_y, I_z)$。此时，矢量方程可展开为一组描述角速度分量的非线性微分方程，即\textbf{欧拉方程 (Euler's Equations)}：
+\begin{tcolorbox}[title=主轴形式下的欧拉方程]
+\begin{align}
+    M_x &= I_x \dot{\omega}_x - (I_y - I_z) \omega_y \omega_z \\
+    M_y &= I_y \dot{\omega}_y - (I_z - I_x) \omega_z \omega_x \\
+    M_z &= I_z \dot{\omega}_z - (I_x - I_y) \omega_x \omega_y
+\end{align}
+\end{tcolorbox}
+方程中的交叉乘积项（如 $\omega_y \omega_z$）体现了旋转运动中的惯性耦合效应。
+
+
+
+\section{物理模型示意图 (Physical Model)}
+为了直观理解角速度 $\bm{\omega}$ 与随体轴 $\bm{b}_i$ 的关系，建立如下示意图：
+
+\begin{center}
+\begin{tikzpicture}[scale=1.5, >=stealth]
+    % 绘制随体坐标轴
+    \draw[->, ultra thick, blue] (0,0) -- (2.5,0) node[right] {$\bm{b}_1$ (Longitudinal)};
+    \draw[->, ultra thick, blue] (0,0) -- (0,2.5) node[above] {$\bm{b}_2$ (Transverse)};
+    \draw[->, ultra thick, blue] (0,0) -- (-0.8,-0.8) node[below left] {$\bm{b}_3$ (Normal)};
+    
+    % 绘制刚体简化形状
+    \draw[rotate=15, dashed, thick, gray] (0.8,0.5) ellipse (1.5 and 0.8);
+    
+    % 角速度矢量与角位移
+    \draw[->, orange!80!black, line width=1.5pt] (0,0) -- (1.8,1.8) node[above right] {$\bm{\omega}$ (Angular Velocity)};
+    \draw[red, thick, ->] (0.8,0) arc (0:45:0.8);
+    \node[red] at (1.0, 0.4) {$\theta$ (Rotation)};
+    
+    % 力矩示意
+    \draw[->, thick, green!50!black] (1.5,1.5) arc (45:135:0.4);
+    \node[green!50!black] at (1.1,1.9) {$\bm{M}$};
+    
+    \node at (0.8,-1.5) {\small \textbf{图 1.1}: 刚体自旋及其在随体系下的动力学矢量表示};
+\end{tikzpicture}
+\end{center}
+
+\end{document}

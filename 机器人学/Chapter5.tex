@@ -1,0 +1,89 @@
+\chapter{逆运动学 (Inverse Kinematics)}
+
+逆运动学是前向运动学的逆过程，即求解方程 $f(\theta) = T$。相比前向运动学，其挑战在于：
+\begin{enumerate}
+    \item \textbf{多解性}：同一个末端位姿可能对应多个关节配置。
+    \item \textbf{无解性}：目标位姿可能超出机械臂的工作空间。
+    \item \textbf{非线性}：方程通常涉及复杂的三角函数。
+\end{enumerate}
+
+\section{解析逆运动学 (Analytic Inverse Kinematics)}
+
+对于特定结构的机器人（如具有球形腕部的 PUMA 或 Stanford 型机械臂），可以求得闭式解（Closed-form solutions）。
+
+\begin{thoughtbox}{几何解法思路}
+通常将问题拆分为两步：
+\begin{itemize}
+    \item \textbf{位置解}：利用机械臂前三个关节（通常决定腕部中心点 $W$ 的位置）解出 $\theta_1, \theta_2, \theta_3$。
+    \item \textbf{姿态解}：利用后三个关节（球形腕部）解出满足末端旋转矩阵 $R$ 的 $\theta_4, \theta_5, \theta_6$。
+\end{itemize}
+\end{thoughtbox}
+
+\section{数值逆运动学 (Numerical Inverse Kinematics)}
+
+对于一般结构的机器人，通常使用基于雅可比矩阵的迭代法，最常用的是 **Newton-Raphson 迭代**。
+
+\subsection{误差定义与推导}
+
+\begin{thoughtbox}{如何衡量位姿误差？}
+给定当前位形 $\theta_i$ 得到的位姿 $T(\theta_i)$ 和目标位姿 $T_{sd}$。我们不能简单相减，而应使用旋转矩阵的对数映射。
+定义在物体坐标系下的误差旋量 $\mathcal{V}_b$：
+\[ [e] = \log(T^{-1}(\theta_i) T_{sd}) \in se(3) \]
+这里的 $\mathcal{V}_b$ 代表了从当前位姿“移动”到目标位姿所需的瞬时速度。
+\end{thoughtbox}
+
+\subsection{算法迭代公式}
+
+利用雅可比矩阵的一阶泰勒展开：
+\begin{equation}
+    \mathcal{V}_b = J_b(\theta_i) \Delta \theta
+\end{equation}
+
+\begin{formulabox}{Newton-Raphson 迭代步骤}
+\begin{enumerate}
+    \item 初始化 $\theta^0$。
+    \item 计算当前位姿 $T(\theta^i)$ 和误差 $\mathcal{V}_b^i = \text{vec}(\log(T^{-1}(\theta^i) T_{sd}))$。
+    \item 如果 $\|\mathcal{V}_b^i\|$ 小于阈值，停止迭代。
+    \item 更新关节变量：
+    \begin{equation}
+        \theta^{i+1} = \theta^i + J_b^\dagger(\theta^i) \mathcal{V}_b^i
+    \end{equation}
+    其中 $J^\dagger$ 是雅可比矩阵的伪逆（Pseudoinverse）。
+\end{enumerate}
+\end{formulabox}
+
+\section{逆速度运动学 (Inverse Velocity Kinematics)}
+
+已知目标旋量 $\mathcal{V}$，求解关节速度 $\dot{\theta}$。
+
+\begin{itemize}
+    \item \textbf{非冗余且非奇异} ($n=6, \det(J) \neq 0$): $\dot{\theta} = J^{-1} \mathcal{V}$。
+    \item \textbf{冗余机械臂} ($n>6$): 存在无穷多解。通常求最小二乘解：
+    \[ \dot{\theta} = J^T (J J^T)^{-1} \mathcal{V} \]
+\end{itemize}
+
+\section{必要的绘图说明}
+
+\begin{center}
+\begin{tikzpicture}[node distance=2cm, auto]
+    % 逆运动学逻辑图
+    \node (target) [draw, rectangle, fill=blue!10] {目标位姿 $T_{sd}$};
+    \node (error) [draw, circle, right=of target] {$\mathcal{V}_b$};
+    \node (jac) [draw, rectangle, below=of error, fill=red!10] {Jacobian $J_b(\theta)$};
+    \node (update) [draw, rectangle, left=of jac, fill=green!10] {更新 $\theta_{i+1}$};
+    
+    \draw[->, thick] (target) -- node {$\log(T^{-1}T_{sd})$} (error);
+    \draw[->, thick] (error) -- node {伪逆映射} (jac);
+    \draw[->, thick] (jac) -- (update);
+    \draw[->, thick] (update) |- (target);
+    
+    \node at (2, -0.5) {迭代循环};
+\end{tikzpicture}
+\end{center}
+
+
+\section{总结与思考}
+\begin{itemize}
+    \item \textbf{数值法的局限}：数值法是局部寻优，依赖于初始猜测值 $\theta^0$。如果初始值选得不好，可能会收敛到错误的局部极小值或遭遇奇异点。
+    \item \textbf{奇异点处理}：在奇异点附近，伪逆 $J^\dagger$ 的元素会变得极大。工程上常使用 \textbf{阻尼最小二乘法 (Damped Least Squares)}，即 $J^T (J J^T + \lambda^2 I)^{-1}$ 来提高鲁棒性。
+\end{itemize}

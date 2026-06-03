@@ -1,0 +1,118 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{xeCJK} % 使用 XeLaTeX 编译
+\usepackage{amsmath, amssymb, bm}
+\usepackage{geometry}
+\usepackage{tikz}
+\usepackage{tcolorbox} % 用于例题框
+
+\geometry{left=2cm, right=2cm, top=2.5cm, bottom=2.5cm}
+
+\title{航天器动力学：从质点到刚体动力学全总结}
+\author{笔记整理}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{动力学基础与输运定理}
+
+\subsection{质点运动学与动力学}
+在惯性系 $\mathcal{I}$ 中，质点的动量定义为 $\mathbf{p} = m\mathbf{v}$。牛顿第二定律给出：
+\begin{equation}
+    \mathbf{F} = \frac{d\mathbf{p}}{dt} = m\mathbf{a} \quad (\text{当 } m \text{ 为常数时})
+\end{equation}
+
+\subsection{输运定理 (Transport Theorem) —— 核心推导基础}
+由于航天器的测量通常在随体坐标系 $\mathcal{B}$ 中进行，而物理定律定义在惯性系 $\mathcal{I}$ 中。设 $\mathbf{A}$ 为任意矢量，其在两系间的导数关系为：
+\begin{equation}
+    \left( \frac{d\mathbf{A}}{dt} \right)_{\mathcal{I}} = \left( \frac{d\mathbf{A}}{dt} \right)_{\mathcal{B}} + \bm{\omega}^{\mathcal{B/I}} \times \mathbf{A}
+\end{equation}
+其中 $\bm{\omega}^{\mathcal{B/I}}$ 是坐标系 $\mathcal{B}$ 相对于 $\mathcal{I}$ 的角速度。
+
+\section{刚体动力学推导}
+
+\subsection{角动量与惯性张量}
+对于刚体，其角动量 $\mathbf{H}$ 是所有质量元 $dm$ 的角动量之和：
+\begin{equation}
+    \mathbf{H} = \int \mathbf{r} \times \mathbf{v} dm = \int \mathbf{r} \times (\bm{\omega} \times \mathbf{r}) dm
+\end{equation}
+利用矢量三重积公式 $\mathbf{a} \times (\mathbf{b} \times \mathbf{c}) = \mathbf{b}(\mathbf{a} \cdot \mathbf{c}) - \mathbf{c}(\mathbf{a} \cdot \mathbf{b})$，推导出：
+\begin{equation}
+    \mathbf{H} = \left[ \int (r^2 \mathbf{E} - \mathbf{r}\mathbf{r}^T) dm \right] \bm{\omega} = \mathbf{I} \bm{\omega}
+\end{equation}
+其中 $\mathbf{I}$ 称为\textbf{惯性张量}（或惯性矩阵）：
+\begin{equation}
+    \mathbf{I} = \begin{bmatrix} 
+        I_{xx} & -I_{xy} & -I_{xz} \\ 
+        -I_{yx} & I_{yy} & -I_{yz} \\ 
+        -I_{zx} & -I_{zy} & I_{zz} 
+    \end{bmatrix}
+\end{equation}
+
+\subsection{欧拉动力学方程推导}
+根据角动量定理：$\mathbf{M} = \dot{\mathbf{H}}_{\mathcal{I}}$。应用输运定理：
+\begin{equation}
+    \mathbf{M} = \left( \frac{d\mathbf{H}}{dt} \right)_{\mathcal{B}} + \bm{\omega} \times \mathbf{H}
+\end{equation}
+由于在随体坐标系中，刚体的形状固定，故 $\dot{\mathbf{I}} = 0$。代入 $\mathbf{H} = \mathbf{I}\bm{\omega}$：
+\begin{equation}
+    \mathbf{M} = \mathbf{I}\dot{\bm{\omega}} + \bm{\omega} \times (\mathbf{I}\bm{\omega})
+\end{equation}
+
+\section{Tikz 示意图：随体坐标系}
+\begin{center}
+\begin{tikzpicture}[scale=1.5, >=stealth]
+    % 绘制刚体形状
+    \draw[thick, fill=gray!10] plot [smooth cycle] coordinates {(0,0) (2,0.5) (1.5,2) (-0.5,1.5)};
+    \node at (0.8, 1) {刚体 (Rigid Body)};
+    
+    % 绘制坐标轴
+    \draw[->, ultra thick, blue] (0.8, 0.8) -- (2.3, 0.8) node[right] {$x_b$};
+    \draw[->, ultra thick, blue] (0.8, 0.8) -- (0.8, 2.3) node[above] {$y_b$};
+    \draw[->, ultra thick, blue] (0.8, 0.8) -- (0.2, 0.2) node[below left] {$z_b$};
+    
+    % 绘制角速度矢量
+    \draw[->, red, very thick] (0.8, 0.8) -- (1.8, 1.8) node[above right] {$\bm{\omega}$};
+    \draw[->, orange, very thick] (1.2, 1.2) arc (45:135:0.5);
+    \node[orange] at (1.5, 1.5) {$\mathbf{M}$};
+\end{tikzpicture}
+\end{center}
+
+\section{典型例题}
+
+\begin{tcolorbox}[title=例题 1：无力矩状态下的自旋, colback=blue!5!white, colframe=blue!75!black]
+一个对称航天器 ($I_x = I_y \neq I_z$) 在太空中做自由转动（外力矩 $\mathbf{M}=0$）。请根据欧拉方程求其角速度的变化规律。
+
+\textbf{解：}
+代入欧拉方程，由于 $M_x=M_y=M_z=0$ 且 $I_x=I_y$：
+\begin{align}
+    I_x \dot{\omega}_x - (I_x - I_z) \omega_y \omega_z &= 0 \quad \dots (1)\\
+    I_x \dot{\omega}_y - (I_z - I_x) \omega_z \omega_x &= 0 \quad \dots (2)\\
+    I_z \dot{\omega}_z &= 0 \quad \dots (3)
+\end{align}
+由 (3) 得：$\omega_z = \Omega$（常数）。
+定义常数 $\lambda = \Omega \frac{I_z - I_x}{I_x}$，则前两式变为：
+\begin{equation}
+    \dot{\omega}_x + \lambda \omega_y = 0, \quad \dot{\omega}_y - \lambda \omega_x = 0
+\end{equation}
+这是一个谐振子方程，解得角速度在 $x-y$ 平面内做圆周运动（进动）：
+\begin{equation}
+    \omega_x(t) = A \cos(\lambda t + \phi), \quad \omega_y(t) = A \sin(\lambda t + \phi)
+\end{equation}
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=例题 2：转动动能计算, colback=green!5!white, colframe=green!50!black]
+已知航天器惯性矩阵为 $\mathbf{I} = \text{diag}(100, 150, 200) \text{ kg}\cdot\text{m}^2$，当前角速度 $\bm{\omega} = [0.1, 0, 0.2]^T \text{ rad/s}$。求其转动动能 $T$。
+
+\textbf{解：}
+转动动能公式：$T = \frac{1}{2} \bm{\omega}^T \mathbf{I} \bm{\omega}$。
+\begin{align*}
+    T &= \frac{1}{2} [0.1, 0, 0.2] \begin{bmatrix} 100 & 0 & 0 \\ 0 & 150 & 0 \\ 0 & 0 & 200 \end{bmatrix} \begin{bmatrix} 0.1 \\ 0 \\ 0.2 \end{bmatrix} \\
+    &= \frac{1}{2} (100 \times 0.1^2 + 200 \times 0.2^2) \\
+    &= \frac{1}{2} (1 + 8) = 4.5 \text{ Joules}
+\end{align*}
+\end{tcolorbox}
+
+\end{document}

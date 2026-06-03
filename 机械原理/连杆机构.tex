@@ -1,0 +1,359 @@
+\chapter{连杆机构(Planar Linkage Mechanisms)}
+平面连杆机构是由若干刚性构件通过低副（转动副、移动副）连接而成，在同一平面或相互平行平面内运动的机构，广泛应用于工程机械、机床、汽车等领域。
+
+\section{四杆机构(Four-bar Linkages)}
+四杆机构是平面连杆机构中最基本、应用最广泛的机构，由四个刚性构件通过低副连接组成。
+
+\subsection{四杆机构的基本类型}
+四杆机构的最基本类型就是\textbf{铰链四杆机构}（四个连接副均为转动副）。
+根据连架杆能否做整周转动，铰链四杆机构分为以下三类：
+
+\subsubsection{1. 曲柄摇杆机构 (Crank-rocker Mechanism)}
+- 定义：两连架杆中，一个为曲柄（能做360°整周转动），一个为摇杆（仅做往复摆动）。
+
+
+- 应用：雷达天线俯仰机构、缝纫机踏板机构。
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[scale=1.5]
+		% 四个节点：A(机架左), B(曲柄端), C(连杆), D(机架右)
+		\coordinate (A) at (0,0);
+		\coordinate (D) at (3,0);
+		\coordinate (B) at (1,1.2);
+		\coordinate (C) at (2.2,0.8);
+		% 绘制构件
+		\draw[fixed] (A) -- (D) node[midway, below] {机架($d$)};
+		\draw[link, red] (A) -- (B) node[midway, left] {曲柄($a$)};
+		\draw[link, blue] (B) -- (C) node[midway, above] {连杆($b$)};
+		\draw[link, green] (C) -- (D) node[midway, right] {摇杆($c$)};
+		% 绘制铰链
+		\foreach \p in {A,B,C,D} \fill[black] (\p) circle (2pt);
+		\node at (A)[below left] {$A$};
+		\node at (B)[above left] {$B$};
+		\node at (C)[above right] {$C$};
+		\node at (D)[below right] {$D$};
+	\end{tikzpicture}
+	\caption{曲柄摇杆机构}
+\end{figure}
+
+\subsubsection{2. 双曲柄机构 (Double-crank Mechanism)}
+- 定义：两连架杆\textbf{均为曲柄}，均可做360°整周转动。
+- 特殊形式：**平行双曲柄机构**（对边构件长度相等，两曲柄转速相同）。
+- 应用：机车车轮联动机构、摄影升降平台。
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[scale=1.5]
+		\coordinate (A) at (0,0);
+		\coordinate (D) at (3,0);
+		\coordinate (B) at (0,2);
+		\coordinate (C) at (3,2);
+		\draw[fixed] (A) -- (D) node[below] {机架($d$)};
+		\draw[link, red] (A) -- (B) node[left] {主动曲柄($a$)};
+		\draw[link] (B) -- (C) node[above] {连杆($b$)};
+		\draw[link, red] (C) -- (D) node[right] {从动曲柄($c$)};
+		\foreach \p in {A,B,C,D} \fill[black] (\p) circle (2pt);
+	\end{tikzpicture}
+	\caption{平行双曲柄机构}
+\end{figure}
+
+\subsubsection{3. 双摇杆机构 (Double-rocker Mechanism)}
+- 定义：两连架杆\textbf{均为摇杆}，只能做往复摆动，无曲柄存在。
+- 应用：起重机变幅机构、电风扇摇头机构。
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[scale=1.5]
+		\coordinate (A) at (0,0);
+		\coordinate (D) at (3,0);
+		\coordinate (B) at (0.8,1.5);
+		\coordinate (C) at (2.2,1.5);
+		\draw[fixed] (A) -- (D) node[below] {机架($d$)};
+		\draw[link, green] (A) -- (B) node[left] {摇杆($a$)};
+		\draw[link] (B) -- (C) node[above] {连杆($b$)};
+		\draw[link, green] (C) -- (D) node[right] {摇杆($c$)};
+		\foreach \p in {A,B,C,D} \fill[black] (\p) circle (2pt);
+	\end{tikzpicture}
+	\caption{双摇杆机构}
+\end{figure}
+
+\subsubsection{4. 含有移动副的四杆机构（衍生类型）}
+在铰链四杆机构基础上，将转动副转化为移动副，得到：
+\begin{enumerate}[itemsep=2pt]
+	\item 曲柄滑块机构（内燃机、压缩机核心机构）
+	\item 导杆机构
+	\item 摇块机构
+	\item 定块机构
+\end{enumerate}
+
+\section{平面连杆机构的运动特性}
+\subsection{曲柄存在条件}
+铰链四杆机构中，**连架杆成为曲柄的充要条件**：
+
+\subsubsection{1. 杆长条件（格拉霍夫定理 Grashof's Law）}
+设：
+\begin{itemize}
+	\item 最短杆长度：$a$
+	\item 最长杆长度：$d$
+	\item 其余两杆长度：$b、c$
+\end{itemize}
+满足：
+\[
+\boldsymbol{\text{最短杆长度 + 最长杆长度} \leq \text{其余两杆长度之和}}
+\]
+即：
+\[
+a + d \leq b + c
+\]
+
+\subsubsection{2. 机架条件}
+\begin{enumerate}[itemsep=2pt]
+	\item 最短杆为\textbf{连架杆} $\rightarrow$ 曲柄摇杆机构
+	\item 最短杆为\textbf{机架} $\rightarrow$ 双曲柄机构
+	\item 最短杆为\textbf{连杆} $\rightarrow$ 双摇杆机构
+	\item 若不满足杆长条件 $\rightarrow$ 无论哪个杆为机架，均为双摇杆机构
+\end{enumerate}
+
+\subsection{压力角和传动角}
+压力角与传动角是衡量机构**传力性能**的核心指标。
+
+\subsubsection{1. 定义}
+- **压力角$\boldsymbol{\alpha}$**：从动件上受力点的速度方向与受力方向之间的锐角。
+- **传动角$\boldsymbol{\gamma}$**：压力角的余角，$\boldsymbol{\gamma = 90^\circ - \alpha}$。
+- 关系：$\gamma$ 越大，$\alpha$ 越小，机构传力性能越好。
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[scale=1.8]
+		\coordinate (A) at (0,0);
+		\coordinate (D) at (3,0);
+		\coordinate (B) at (1,1);
+		\coordinate (C) at (2.2,0.8);
+		% 机构
+		\draw[fixed] (A)--(D);
+		\draw[link] (A)--(B) (B)--(C) (C)--(D);
+		% 压力角/传动角标注
+		\draw[arrow, red] (C) -- +(0.6,0) node[right] {速度方向};
+		\draw[arrow, blue] (C) -- (B) node[midway, above] {受力方向};
+		\pic[draw, "$\alpha$", angle radius=10pt] {angle=B--C--D};
+		\pic[draw, "$\gamma$", angle radius=15pt] {angle=D--C--B};
+		\foreach \p in {A,B,C,D} \fill (\p) circle (2pt);
+	\end{tikzpicture}
+	\caption{压力角$\alpha$与传动角$\gamma$}
+\end{figure}
+
+\subsubsection{2. 设计要求}
+工程上通常要求：
+\[
+\gamma_{\text{min}} \geq 40^\circ \sim 50^\circ
+\]
+
+\subsection{行程变化系数（行程速比系数$K$）}
+用于描述机构的**急回特性**（从动件回程速度大于工作行程速度）。
+
+\subsubsection{1. 极位夹角$\boldsymbol{\theta}$}
+曲柄摇杆机构中，摇杆处于**两个极限位置**时，曲柄对应的两位置之间的夹角$\theta$。
+
+\subsubsection{2. 行程速比系数公式}
+\[
+\boldsymbol{K = \frac{180^\circ + \theta}{180^\circ - \theta}}
+\]
+- $K>1$：机构具有急回特性
+
+- $K=1$：无急回特性
+
+- $\theta$ 越大，$K$ 越大，急回特性越明显
+
+\subsubsection{3. 极位夹角求解公式}
+\[
+\theta = \frac{K-1}{K+1} \times 180^\circ
+\]
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[scale=1.6]
+		\coordinate (A) at (0,0);
+		\coordinate (D) at (3,0);
+		\coordinate (C1) at (1.5,1.8);
+		\coordinate (C2) at (2.5,1.0);
+		\coordinate (B1) at (0.6,0.8);
+		\coordinate (B2) at (-0.5,0.3);
+		% 极限位置
+		\draw[fixed] (A)--(D);
+		\draw[dashed, link] (A)--(B1) (B1)--(C1) (C1)--(D);
+		\draw[dashed, link] (A)--(B2) (B2)--(C2) (C2)--(D);
+		\draw[red, thick] (B2)--(A)--(B1);
+		\pic[draw, "$\theta$", angle radius=20pt] {angle=B2--A--B1};
+		\foreach \p in {A,D,C1,C2} \fill (\p) circle (2pt);
+	\end{tikzpicture}
+	\caption{极位夹角$\theta$}
+\end{figure}
+
+\subsection{死点}
+\subsubsection{1. 定义}
+在曲柄摇杆机构中，当**连杆与从动曲柄共线**时，机构的传动角$\gamma=0^\circ$，压力角$\alpha=90^\circ$，此时主动力无法推动机构运动，该位置称为**死点位置**。
+
+\subsubsection{2. 死点位置特征}
+- 传动角 $\boldsymbol{\gamma=0^\circ}$
+- 机构传力力矩为0
+- 机构可能出现运动不确定、卡死现象
+
+\subsubsection{3. 死点位置的应用与克服}
+\begin{enumerate}[itemsep=2pt]
+	\item \textbf{利用死点}：夹具、飞机起落架（利用死点实现自锁，保持位置固定）
+	\item \textbf{克服死点}：
+	\begin{itemize}
+		\item 加装飞轮（利用惯性通过死点，如蒸汽机、内燃机）
+		\item 多组机构错位排列（如机车车轮）
+	\end{itemize}
+\end{enumerate}
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[scale=1.5]
+		\coordinate (A) at (0,0);
+		\coordinate (D) at (3,0);
+		\coordinate (B) at (1,0);
+		\coordinate (C) at (2,0);
+		% 死点：曲柄与连杆共线
+		\draw[fixed] (A)--(D);
+		\draw[link, red] (A)--(B);
+		\draw[link, blue] (B)--(C);
+		\draw[link, green] (C)--(D);
+		\foreach \p in {A,B,C,D} \fill[black] (\p) circle (2pt);
+		\node at (1.5, 0.3) {死点位置（共线）};
+	\end{tikzpicture}
+	\caption{四杆机构死点位置}
+\end{figure}
+
+\section{四杆机构的设计}
+平面四杆机构设计，是根据给定运动规律、轨迹要求或极限位置，确定各构件杆长、铰链位置的综合过程。
+常用设计方法分为：\textbf{图解法}、\textbf{解析法}。
+
+\subsection{图解法}
+图解法几何直观、作图简便，适合按给定连杆位置、摇杆摆角、急回系数等条件设计四杆机构，核心基础为\textbf{刚体倒置思想（反转法/机架变换法）}。
+
+\subsubsection{刚体倒置思想（反转法原理）}
+\label{sec:inversion}
+刚体倒置基本思路：
+给整个机构施加一个**公共反向角速度**，机构各构件间相对运动关系保持不变，仅改变机架，将「连架杆运动问题」转化为「连杆定点轨迹问题」。
+
+核心要点：
+\begin{enumerate}
+	\item 平面机构相对运动与机架选取无关；
+	\item 固定原主动件，把原机架视为运动构件，实现运动倒置；
+	\item 利用倒置后铰链定点圆周轨迹，图解求得铰链中心位置。
+\end{enumerate}
+
+适用典型设计工况：
+\begin{itemize}
+	\item 按给定两连架杆对应转角设计四杆机构；
+	\item 按给定连杆三个位置设计铰链四杆机构；
+	\item 按行程速比系数 $K$ 设计曲柄摇杆机构。
+\end{itemize}
+
+\subsubsection{按急回系数 $K$ 图解设计曲柄摇杆机构}
+设计步骤：
+\begin{enumerate}
+	\item 由已知 $K$ 计算极位夹角：
+	\[
+	\theta = 180^\circ \cdot \dfrac{K-1}{K+1}
+	\]
+	\item 选定摇杆长度 $l_{CD}$ 及摆角 $\psi$，作出摇杆两极限位置 $C_1D$、$C_2D$；
+	\item 作 $C_1C_2$ 连线，作辅助圆使得圆周角为 $\theta$；
+	\item 曲柄回转中心 $A$ 落在该圆周上，选定 $A$ 点；
+	\item 由几何关系求曲柄长 $a$、连杆长 $b$：
+	\[
+	\begin{cases}
+		l_{AC_1} = b - a\\
+		l_{AC_2} = b + a
+	\end{cases}
+	\]
+	联立解得：
+	\[
+	a = \dfrac{l_{AC_2}-l_{AC_1}}{2},\quad 
+	b = \dfrac{l_{AC_2}+l_{AC_1}}{2}
+	\]
+\end{enumerate}
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[scale=1.4,
+		joint/.style={circle,fill=black,minimum size=3pt,inner sep=0pt},
+		link/.style={thick},
+		fixed/.style={thick,double}]
+		% 机架D
+		\coordinate (D) at (4,0);
+		\coordinate (C1) at (1.5,1.8);
+		\coordinate (C2) at (2.8,1.2);
+		\coordinate (A) at (0,0);
+		
+		% 摇杆两极限位置
+		\draw[link] (D) -- (C1) node[above] {$C_1$};
+		\draw[link] (D) -- (C2) node[above] {$C_2$};
+		\draw[fixed] (A) -- (D) node[midway,below] {机架};
+		
+		% 连线
+		\draw[dashed] (C1) -- (C2);
+		\draw[dashed,red] (A) -- (C1);
+		\draw[dashed,red] (A) -- (C2);
+		
+		% 极位夹角
+		\pic[draw,"$\theta$",angle radius=18pt,angle eccentricity=1.3] {angle=C1--A--C2};
+		% 摆角
+		\pic[draw,"$\psi$",angle radius=15pt] {angle=C2--D--C1};
+		
+		\foreach \p in {A,D,C1,C2} \node[joint] at (\p) {};
+		\node[below left] at (A) {$A$};
+		\node[below right] at (D) {$D$};
+	\end{tikzpicture}
+	\caption{按急回系数 $K$ 图解设计曲柄摇杆机构}
+\end{figure}
+
+\subsubsection{按给定连杆位置设计（刚体倒置应用）}
+给定连杆 $BC$ 两个/三个位置，利用反转法：
+把连杆视为固定机架，原机架 $AD$ 变为运动连杆，作铰链 $A$、$D$ 所在圆心，几何作图直接求得各杆长度。
+
+\subsection{解析法}
+图解法精度受作图误差限制，\textbf{解析法}通过建立闭环矢量方程、坐标几何关系，精确求解各构件杆长与铰链坐标，适合工程高精度设计与计算机编程求解。
+
+\subsubsection{闭环矢量建模}
+将铰链四杆机构视为封闭矢量多边形：
+设四杆矢量依次为：机架 $\vec{l_4}$、曲柄 $\vec{l_1}$、连杆 $\vec{l_2}$、摇杆 $\vec{l_3}$，满足闭环条件：
+\[
+\vec{l_1} + \vec{l_2} = \vec{l_4} + \vec{l_3}
+\]
+
+建立直角坐标系，将矢量分解为 $x,y$ 分量：
+\[
+\begin{cases}
+	l_1\cos\varphi_1 + l_2\cos\varphi_2 = l_4 + l_3\cos\varphi_3\\
+	l_1\sin\varphi_1 + l_2\sin\varphi_2 = l_3\sin\varphi_3
+\end{cases}
+\]
+$\varphi_1$ 为曲柄转角，$\varphi_2$ 连杆角，$\varphi_3$ 摇杆摆角。
+
+\subsubsection{位移、角位移解析关系}
+消去中间连杆角 $\varphi_2$，整理可得**曲柄—摇杆角位移关系式**：
+\[
+\cos\varphi_3 = P_1\cos\varphi_1 + P_2\cos(\varphi_1-\varphi_3) + P_3
+\]
+其中 $P_1,P_2,P_3$ 为仅与各杆杆长有关的结构参数。
+
+给定多组曲柄、摇杆对应转角，代入方程可构造方程组，**求解四杆机构各杆相对长度**。
+
+\subsubsection{解析法设计特点}
+\begin{enumerate}
+	\item 计算精度高，无作图误差；
+	\item 适合多位置精确逼近、优化设计；
+	\item 便于编程实现、参数化建模与CAD二次开发；
+	\item 可结合最小传动角、空间约束进行优化设计。
+\end{enumerate}
+
+\subsubsection{常用设计工况解析求解}
+\begin{itemize}
+	\item 给定两连架杆三组对应转角，精确求解杆长比例；
+	\item 给定摇杆摆角、极位夹角，解析求曲柄、连杆、机架长度；
+	\item 约束最小传动角，进行四杆机构优化设计。
+\end{itemize}

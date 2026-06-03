@@ -1,0 +1,112 @@
+\chapter{机构运动分析}
+	
+	在机构运动分析中，速度分析是核心任务之一。瞬心法（Instant Center Method）是一种基于几何运动学的解析与作图相结合的方法，特别适用于简单平面机构的速度分析。
+	
+	\section{瞬心法}
+	
+	\subsection{瞬心的定义}
+	**速度瞬心**（简称瞬心）是指两个处于相对运动中的构件，在任一瞬时其相对速度为零的重合点。
+	\begin{itemize}
+		\item \textbf{绝对瞬心}：若其中一个构件为机架（静止不动），则该点在该瞬时的绝对速度为零。
+		\item \textbf{相对瞬心}：若两个构件都在运动，则该点在该瞬时具有相同的绝对速度（即相对速度为零）。
+	\end{itemize}
+	
+	\subsection{瞬心的数量}
+	对于一个由 $n$ 个构件（包含机架）组成的机构，由于任意两个构件之间都存在一个瞬心，其瞬心总数 $K$ 可以通过组合公式计算：
+	\begin{equation}
+		K = \binom{n}{2} = \frac{n(n-1)}{2}
+	\end{equation}
+	例如：对于常见的四杆机构 ($n=4$)，瞬心总数为 $K = \frac{4 \times 3}{2} = 6$ 个。
+	
+	\subsection{运动副的瞬心}
+	通过运动副直接相连的两个构件，其瞬心位置可以直接确定：
+	\begin{enumerate}
+		\item \textbf{转动副}：瞬心就在转动副的中心点。
+		\item \textbf{移动副}：两构件的相对运动为直线移动，其瞬心位于垂直于移动方向的无穷远处 ($P \to \infty$)。
+		\item \textbf{平面高副（纯滚动）}：两构件接触点即为瞬心。
+		\item \textbf{平面高副（滚动兼滑动）}：瞬心位于接触点处的公法线上，具体位置需结合其他约束确定。
+	\end{enumerate}
+	
+	\subsection{三心定理}
+	对于不直接相连的构件，其瞬心位置通常利用三心定理来确定。
+	
+	\begin{theorem}[三心定理]
+		三个彼此作平面运动的构件，其三个共有瞬心必定位于同一直线上。
+	\end{theorem}
+	
+	\textbf{证明简述}：
+	设三个构件分别为 1, 2, 3。瞬心 $P_{12}$ 和 $P_{13}$ 已知。假设瞬心 $P_{23}$ 是构件 2 和 3 的重合点。
+	\begin{itemize}
+		\item 作为构件 2 上的点，其速度 $v_{P23}$ 应垂直于连线 $P_{12}P_{23}$；
+		\item 作为构件 3 上的点，其速度 $v_{P23}$ 应垂直于连线 $P_{13}P_{23}$。
+	\end{itemize}
+	若要使 $v_{P23}$ 为同一矢量（大小相等且方向相同），则 $P_{12}$、$P_{13}$ 和 $P_{23}$ 必须共线。
+	
+	\subsection{瞬心法的应用}
+	利用瞬心法求机构的速度，通常遵循以下步骤：
+	\begin{enumerate}
+		\item 计算机构的瞬心总数 $K$。
+		\item 标出所有通过运动副直接确定的“显见瞬心”。
+		\item 利用三心定理，通过作图法（连线交点）找出待求的“隐藏瞬心”。
+		\item 根据公式 $v = \omega \cdot r$ 进行速度换算。例如，已知构件 1 的角速度 $\omega_1$，求构件 3 的角速度 $\omega_3$：
+		\begin{equation}
+			v_{P13} = \omega_1 \cdot l_{P12P13} = \omega_3 \cdot l_{P32P13}
+		\end{equation}
+	\end{enumerate}
+
+
+\section{相对运动图解法（矢量方程图解法）}
+
+相对运动图解法是基于多刚体运动学中的速度和加速度合成定理，通过列出矢量方程并利用几何作图（速度图、加速度图）求解未知量的方法。
+
+\subsection{基本原理}
+设构件上点 $A$ 为已知运动点，点 $B$ 为待求点，则其运动关系为：
+\begin{itemize}
+	\item \textbf{速度矢量方程}：$\vec{v}_B = \vec{v}_A + \vec{v}_{BA}$
+	\item \textbf{加速度矢量方程}：$\vec{a}_B = \vec{a}_A + \vec{a}_{BA}^n + \vec{a}_{BA}^t$
+\end{itemize}
+其中，$\vec{v}_{BA}$ 垂直于连线 $AB$，$\vec{a}_{BA}^n$（法向加速度）指向旋转中心，$\vec{a}_{BA}^t$（切向加速度）垂直于连线 $AB$。
+
+\subsection{哥氏加速度 (Coriolis Acceleration)}
+当动点在转动的导路（动坐标系）上移动时，必须考虑哥氏加速度：
+\begin{equation}
+	\vec{a}_k = 2\vec{\omega} \times \vec{v}_{rel}
+\end{equation}
+其大小为 $a_k = 2\omega v_{rel}$，方向判定遵循左手法则或将 $\vec{v}_{rel}$ 沿 $\vec{\omega}$ 方向旋转 $90^\circ$。
+
+\subsection{速度图与加速度图的特性}
+\begin{enumerate}
+	\item \textbf{速度极点 $p$}：图中所有从极点出发的矢量代表绝对速度，连接两点间的矢量代表相对速度。
+	\item \textbf{速度影像原理}：同一构件上各点在速度图（或加速度图）中所组成的图形，与原构件上各点组成的几何图形相似，且字母顺序一致，旋转方向一致。
+\end{enumerate}
+
+\section{解析法（矢量方程解析法）}
+
+解析法通过建立坐标系，利用机构的封闭矢量环方程进行求导，从而获得运动参数的精确解析解，是计算机辅助机构设计（CAMS）的基础。
+
+\subsection{复数矢量法}
+将构件看作复平面上的矢量，构件长度为 $l_i$，与 $x$ 轴夹角为 $\phi_i$。对于一个四杆机构，其封闭矢量环方程为：
+\begin{equation}
+	l_1 e^{j\phi_1} + l_2 e^{j\phi_2} = l_3 e^{j\phi_3} + l_4 e^{j\phi_4}
+\end{equation}
+
+\subsection{方程求解步骤}
+\begin{enumerate}
+	\item \textbf{位姿分析}：利用欧拉公式 $e^{j\phi} = \cos\phi + j\sin\phi$ 将矢量方程展开为实部（$x$ 轴）和虚部（$y$ 轴）的两个代数方程，解出未知的角位置 $\phi$。
+	\item \textbf{速度分析}：对位姿方程关于时间 $t$ 求一阶导数：
+	\begin{equation}
+		\sum_{i=1}^n j l_i \omega_i e^{j\phi_i} = 0
+	\end{equation}
+	\item \textbf{加速度分析}：对速度方程关于时间 $t$ 再求一次导数：
+	\begin{equation}
+		\sum_{i=1}^n (j l_i \alpha_i e^{j\phi_i} - l_i \omega_i^2 e^{j\phi_i}) = 0
+	\end{equation}
+\end{enumerate}
+
+\subsection{解析法的优点}
+相比图解法，解析法能够：
+\begin{itemize}
+	\item 提供极高的计算精度。
+	\item 易于编写程序进行全行程的运动特性曲线绘制。
+	\item 方便进行机构的优化设计。
+\end{itemize}

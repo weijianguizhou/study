@@ -1,0 +1,54 @@
+\chapter{剪切}
+
+\section{受力与变形特点}
+
+\subsection{受力特点}
+构件受一对大小相等、方向相反、作用线相距很近且垂直于杆轴线的横向外力作用。
+\begin{itemize}
+    \item \textbf{受力：} 外力平行、方向相反，但不在一条直线上。
+    \item \textbf{变形特点：} 沿剪切面剪断（相对错动变形）。
+    \item \textbf{破坏形式：} 剪切破坏、挤压破坏（在应力传递处导致）。
+\end{itemize}
+
+\section{剪切的实用计算}
+
+\subsection{内力分析}
+通过截面法，取上半部分分析：
+\begin{equation}
+    \sum X_i = 0 \implies F - F_s = 0 \implies F_s = F
+\end{equation}
+其中 $F_s$ 为剪切面上的内力，称为\textbf{剪力}。
+
+\subsection{切应力计算}
+假设切应力在剪切面上均匀分布，则切应力计算公式为：
+\begin{equation}
+    \tau = \frac{F_s}{A}
+\end{equation}
+其中 $A$ 为剪切面积。
+
+\subsection{切应力强度条件}
+为了保证构件不发生剪切破坏，需满足：
+\begin{equation}
+    \tau = \frac{F_s}{A} \le [\tau]
+\end{equation}
+其中 $[\tau]$ 为材料的许用切应力。
+
+\section{挤压的实用计算}
+
+\subsection{挤压应力公式}
+挤压发生在连接件与被连接件的接触表面。其实用计算公式为：
+\begin{equation}
+    \sigma_{bs} = \frac{F_{bs}}{A_{bs}}
+\end{equation}
+\begin{itemize}
+    \item $F_{bs}$：挤压力。
+    \item $A_{bs}$：有效挤压面积。
+\end{itemize}
+
+\subsection{挤压面积的确定}
+对于圆柱形接触面（如螺栓、销钉），$A_{bs}$ 采用\textbf{正投影面积}。
+\begin{itemize}
+    \item \textbf{思考：} 为什么不采用实际接触面积（半圆弧面）？
+    \item \textbf{结论：} 采用投影面积计算出的 $\sigma_{bs}$ 更大，结果更趋于安全，计算也更简便。
+\end{itemize}
+

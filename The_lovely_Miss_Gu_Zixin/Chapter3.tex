@@ -1,0 +1,543 @@
+\chapter{基础排版语法}
+好的！相信你已经成功输出了第一个.pdf文件。而\LaTeX 作为一个排版工具，我们来看看他是怎么进行排版的。
+虽然我们正常使用的时候会直接套用模板（你如果要我会发给你的，嗯），但是了解一些基础的排版语法对于后续的文档编写和个性化调整非常有帮助。
+好的，下面我们一起来看看吧！
+\section{标题与分级结构}
+在 \LaTeX 中，良好的文档结构能极大提升阅读体验和排版效果。
+\subsection{基本标题命令}
+\LaTeX 提供了一系列命令用于创建文档的分级结构，常见的有：
+
+\texttt{cahpter{}：}章节标题
+
+\texttt{section{}：}生成一级标题。在 article 文档中一般用于章节分隔；在 report 或 book 中会与 chapter{} 配合使用。
+
+\texttt{subsection{}：}生成二级标题，用于细分章节内容。
+
+\texttt{subsubsection{}：}生成三级标题，适合对部分内容进行更详细划分。
+
+\texttt{paragraph{} }与\texttt{subparagraph{}：}用于进一步划分段落，这两个命令通常格式较为紧凑，默认不自动编号。
+示例：
+\begin{lstlisting}
+	\documentclass{article}
+	\usepackage[utf8]{inputenc} % 编码设置
+	
+	\begin{document}
+		
+		\tableofcontents % 自动生成目录
+		
+		\section{引言}
+		\lipsum[1]
+		
+		\subsection{研究背景}
+		\lipsum[2]
+		
+		\subsubsection{问题定义}
+		\lipsum[3]
+		
+		\paragraph{小结：} 这里简要说明了引言部分的核心问题。
+		\lipsum[4]
+		
+		\section{方法介绍}
+		\lipsum[5]
+		
+	\end{document} 
+\end{lstlisting}
+
+
+\subsection{无编号标题}
+在某些场合（例如前言、致谢、附录），我们可能不希望标题带有自动编号。这时只需在标题命令后加上星号 *：
+\begin{lstlisting}
+	\section*{前言}：生成无编号的一级标题。
+\end{lstlisting}
+
+\subsection{标题格式定制}
+嗯，我常常会觉得默认的标题丑丑的......
+
+所以我们来看看怎么修改标题的格式吧！
+可以使用\texttt{ titlesec }等宏包来自定义标题格式，例如调整字体、字号、颜色、编号格式及间距等。
+下面是一个示例：
+\begin{lstlisting}
+	\documentclass{article}
+	\usepackage[utf8]{inputenc}
+	\usepackage{titlesec}
+	\usepackage{xcolor}
+	
+	% 定制一级标题格式：红色、粗体、较大字号，编号后加冒号
+	\titleformat{\section}
+	{\color{red}\bfseries\Large}  % 格式设置：红色、粗体、Large 字号
+	{\thesection:\quad}           % 编号格式：显示章节编号后跟冒号和间距
+	{0pt}                        % 编号与标题之间的额外间距
+	{}                           % 标题前的附加代码
+	
+	\begin{document}
+		
+		\tableofcontents
+		
+		\section{定制标题示例}
+		这里展示了自定义格式的一级标题。通过 \texttt{titlesec} 宏包，你可以对标题的风格进行任意定制。
+		
+		\subsection{默认格式的二级标题}
+		这里是二级标题部分的内容。
+		
+	\end{document} 
+\end{lstlisting}
+\section{正文输入：换行、分段与特殊字符}
+
+\subsection{空白字符与缩进控制}
+在 \LaTeX 中，源代码中的空格和回车处理遵循以下原则：
+\begin{itemize}
+    \item \textbf{空格合并}：源代码中连续的多个空格会被处理为一个空格。
+    \item \textbf{单次垂直回车}：在行末按下一次回车键，LaTeX 仅将其视为空格。
+    \item \textbf{分段 (Paragraph)}：连续按下两次回车（即中间留出一个空行）表示开始新的一段。也可以使用 \texttt{\textbackslash par} 命令。
+    \item \textbf{缩进控制}：中文排版通常默认首行缩进。若某段不需要缩进，在该段开头使用 \texttt{\textbackslash noindent}；若需强制缩进，使用 \texttt{\textbackslash indent}。
+\end{itemize}
+
+\subsection{换行、换页与间距控制}
+
+除了自然分段，有时需要人工干预排版布局：
+
+\begin{itemize}
+    \item \textbf{强制换行}：使用 \texttt{\textbackslash\textbackslash} 或 \texttt{\textbackslash newline}。注意：强制换行后的新行不会有首行缩进。
+    \item \textbf{禁止断行}：使用波浪号 \texttt{\~{}} 代替空格（如 \texttt{Fig.\~{}1}），可以防止在此处发生自动换行，保持语义连贯。
+    \item \textbf{强制换页}：使用 \texttt{\textbackslash clearpage} 或 \texttt{\textbackslash newpage}。前者会立即处理所有未排版的浮动体（如图片、表格）并另起一页，推荐在章节结束时使用。
+\end{itemize}
+
+\subsection{常见的页面布局（A4）}
+A4 纸张的物理尺寸为 210mm $\times$ 297mm。在本模板中，我们通过 \texttt{geometry} 宏包进行了如下设置：
+
+\begin{itemize}
+    \item \textbf{版心宽度}：当前正文宽度（\textbackslash textwidth）为 \the\textwidth。
+    \item \textbf{弹性留白}：使用 \texttt{\textbackslash vfill} 可以实现垂直方向的弹性填充。
+\end{itemize}
+\begin{lstlisting}
+\usepackage{geometry}
+\geometry{
+    a4paper,                % 确定纸张规格
+    width=150mm,            % 直接指定正文宽度
+    height=240mm,           % 直接指定正文高度
+    left=30mm,              % 左边距（通常为了装订留多一点）
+    top=25mm,               % 上边距
+    marginparsep=3mm,       % 正文与边注之间的间距
+    marginparwidth=20mm,    % 边注的宽度
+    showframe               % 【技巧】在预览中显示布局边框，方便调试
+}    
+\end{lstlisting}
+\subsection{段落与行间距控制}
+
+在 LaTeX 中，间距的调整通常分为“行间距”和“段间距”：
+
+\begin{enumerate}
+    \item \textbf{行间距 (Line Spacing)}：
+    通常在导言区使用 \texttt{setspace} 宏包进行全局调整：
+    \begin{verbatim}
+    \usepackage{setspace}
+    \onehalfspacing % 1.5 倍行距
+    \setstretch{1.25} % 自定义倍数
+    \end{verbatim}
+
+    \item \textbf{段间距 (Paragraph Spacing)}：
+    \begin{itemize}
+        \item \textbf{全局设置}：通过修改 \texttt{\textbackslash parskip} 的值。例如：\texttt{\textbackslash setlength\{\textbackslash parskip\}\{0.5em\}}。
+        \item \textbf{局部调整}：在两个段落之间手动插入垂直间距。
+        \begin{itemize}
+            \item \texttt{\textbackslash smallskip}, \texttt{\textbackslash medskip}, \texttt{\textbackslash bigskip}：标准预设间距。
+            \item \texttt{\textbackslash vspace\{len\}}：自定义精确高度，如 \texttt{\textbackslash vspace{10pt}}。
+        \end{itemize}
+    \end{itemize}
+
+    \item \textbf{水平间距}：
+    若需在行内手动增加空格，可使用 \texttt{\textbackslash hspace\{len\}}。特殊的弹性间距 \texttt{\textbackslash hfill} 可以将文字推向行首或行尾。
+\end{enumerate}
+
+\subsection{常用的长度单位}
+在设置间距时，了解 LaTeX 的单位非常重要：
+\begin{itemize}
+    \item \texttt{pt}：点 (Point)，约 0.35mm。
+    \item \texttt{cm/mm}：厘米/毫米。
+    \item \texttt{em}：相对于当前字体中字母 ``M'' 的宽度（推荐用于水平间距）。
+    \item \texttt{ex}：相对于当前字体中字母 ``x'' 的高度（推荐用于垂直间距）。
+\end{itemize}
+
+\begin{lstlisting}
+% --- 1. 换行与禁止断行示例 ---
+\noindent 这是一行正文内容。\\ 
+使用了双反斜杠强制换行，下一行不会有缩进。
+
+这是一段非常长的文字，为了防止像 Fig.~1 这样的引用被
+拆散在两行，我们使用了波浪号。 % Fig.~1 永远不会在 Fig. 处断开
+
+% --- 2. 垂直间距示例 ---
+\section{垂直间距对比}
+第一段。
+\smallskip 
+这是使用 \texttt{\textbackslash smallskip} 产生的间距。
+
+\medskip
+这是使用 \texttt{\textbackslash medskip} 产生的间距。
+
+\bigskip
+这是使用 \texttt{\textbackslash bigskip} 产生的间距。
+
+\vspace{2.5ex} 
+这是使用 \texttt{\textbackslash vspace\{2.5ex\}} 自定义的精确间距。
+
+% --- 3. 水平间距与弹性填充示例 ---
+\section{水平排版技巧}
+固定间距：A \hspace{3cm} B (中间空了 3cm)
+
+弹性填充示例（常用于页脚或签名）：\par
+\medskip
+\noindent 导师签名：\underline{\hspace{3em}} \hfill 日期：\today
+
+% --- 4. 页面单位示例 ---
+\noindent\rule{0.5\textwidth}{1pt} % 画一条占正文宽度一半的水平线    
+\end{lstlisting}
+
+
+\subsection{特殊字符与转义}
+LaTeX 预留了一些具有特殊功能的字符。如果直接输入，可能会导致编译错误或排版异常：
+\begin{table}
+    \centering
+    \begin{tabular}{lll}
+        \hline
+        字符 & 转义输入 & 功能说明 \\ \hline
+        \# & \texttt{\textbackslash\#} & 参数引导符 \\
+        \$ & \texttt{\textbackslash\$} & 数学模式引导符 \\
+        \% & \texttt{\textbackslash\%} & 注释符号（该符号后的内容不被编译） \\
+        \& & \texttt{\textbackslash\&} & 表格列分隔符 \\
+        \_ & \texttt{\textbackslash\_} & 数学下标符号 \\
+        \{ \} & \texttt{\textbackslash\{ \textbackslash\}} & 环境参数界定符 \\
+        \textasciitilde & \texttt{\textbackslash textasciitilde} & 不可断行空格 \\
+        \textasciicircum & \texttt{\textbackslash textasciicircum} & 数学上标符号 \\
+        \textbackslash & \texttt{\textbackslash textbackshash} & 命令引导符 \\ \hline
+    \end{tabular}
+\end{table}
+
+\subsection{注释技巧}
+使用 \texttt{\%} 可以注释掉单行内容。如果你需要大段注释，建议加载 \texttt{verbatim} 宏包并使用 \texttt{comment} 环境：
+% 这是一个单行注释，编译后不可见
+\begin{lstlisting}
+\begin{verbatim}
+\usepackage{verbatim}
+\begin{comment}
+    这里的文字
+    无论写多少行
+    都不会出现在 PDF 中
+\end{comment}
+\end{verbatim}
+    
+\end{lstlisting}
+
+\section{字体控制：字号、粗体、斜体与下划线}
+
+\subsection{字号控制}
+你可以使用内置命令改变字号大小：
+\begin{itemize}
+    \item {\tiny 最小号 (tiny)}
+    \item {\small 小号 (small)}
+    \item {\normalsize 标准 (normalsize)}
+    \item {\large 大号 (large)}
+    \item {\huge 巨大 (huge)}
+    \item 使用 ctex 宏包特有命令：\zihao{4} 这是四号字，\zihao{-4} 这是小四号字。
+    
+\end{itemize}
+\begin{lstlisting}
+\begin{itemize}
+    \item {\tiny 最小号 (tiny)}
+    \item {\small 小号 (small)}
+    \item {\normalsize 标准 (normalsize)}
+    \item {\large 大号 (large)}
+    \item {\huge 巨大 (huge)}
+    \item 使用 ctex 宏包特有命令：\zihao{4} 这是四号字，\zihao{-4} 这是小四号字。
+\end{itemize}   
+\end{lstlisting}
+\subsection{字体样式}
+这里展示常见的文本格式化方法：
+\begin{itemize}
+    \item \textbf{这是粗体 (Boldface)}
+    \item \textit{这是斜体 (Italic)} —— 在中文里通常表现为楷体。
+    \item \uline{这是下划线 (Underline)} —— 建议使用 \texttt{ulem} 宏包的 \texttt{\textbackslash uline} 命令。
+    \item \texttt{这是等宽字体 (Typewriter)} —— 常用于表示代码或路径。
+\end{itemize}
+\begin{lstlisting}
+\begin{itemize}
+    \item \textbf{这是粗体 (Boldface)}
+    \item \textit{这是斜体 (Italic)} —— 在中文里通常表现为楷体。
+    \item \uline{这是下划线 (Underline)} —— 建议使用 \texttt{ulem} 宏包的 \texttt{\textbackslash uline} 命令。
+    \item \texttt{这是等宽字体 (Typewriter)} —— 常用于表示代码或路径。
+\end{itemize}    
+\end{lstlisting}
+
+下面是一个字体字号的实践。。。。。
+\begin{lstlisting}
+	\documentclass{article}
+	
+	% 引入必要的宏包
+	\usepackage{ulem} % 用于删除线
+	\usepackage{xcolor} % 用于文本颜色
+	
+	\begin{document}
+		
+		% 标题
+		\section*{LaTeX 文本格式化示例}
+		
+		% 加粗文本
+		\textbf{这是加粗的文本}\\
+		
+		% 斜体文本
+		\textit{这是斜体的文本}\\
+		
+		% 下划线文本
+		\underline{这是带下划线的文本}\\
+		
+		% 删除线文本
+		\sout{这是带删除线的文本}\\
+		
+		% 上标和下标
+		这是上标：$x^2$，这是下标：$y_1$\\
+		
+		% 字体大小调整
+		{\tiny 这是 tiny 字体}\\
+		{\small 这是 small 字体}\\
+		{\normalsize 这是 normalsize 字体}\\
+		{\large 这是 large 字体}\\
+		{\Large 这是 Large 字体}\\
+		{\LARGE 这是 LARGE 字体}\\
+		{\huge 这是 huge 字体}\\
+		{\Huge 这是 Huge 字体}\\
+		
+		% 文本颜色
+		\textcolor{red}{这是红色文本}\\
+		\textcolor{blue}{这是蓝色文本}\\
+		\textcolor{green}{这是绿色文本}\\
+		
+		% 混合效果示例
+		\textbf{\textit{\textcolor{purple}{这是加粗+斜体+紫色的文本}}}\\
+		\underline{\textcolor{orange}{这是带下划线+橙色的文本}}\\
+		
+	\end{document}
+\end{lstlisting}
+
+\section{列表环境：有序与无序列表}
+
+
+
+\subsection{无序列表 (itemize)}
+无序列表使用项目符号：
+\begin{lstlisting}
+\begin{itemize}
+    \item 苹果
+    \item 香蕉
+    \item 橙子
+\end{itemize}    
+\end{lstlisting}
+\begin{itemize}
+    \item 苹果
+    \item 香蕉
+    \item 橙子
+\end{itemize}
+
+\subsection{有序列表 (enumerate)}
+有序列表会自动生成编号：
+\begin{lstlisting}
+\begin{enumerate}
+    \item 第一步：打开冰箱门
+    \item 第二步：把大象放进去
+    \item 第三步：关上冰箱门
+\end{enumerate}
+\end{lstlisting}
+\begin{enumerate}
+    \item 第一步：打开冰箱门
+    \item 第二步：把大象放进去
+    \item 第三步：关上冰箱门
+\end{enumerate}
+hhh这个笑话好老，我果然是老年人了哈哈哈。。。
+
+\subsection{嵌套列表}
+列表是可以嵌套使用的：
+\begin{lstlisting}
+    \begin{enumerate}
+    \item 编程语言
+    \begin{itemize}
+        \item C++
+        \item Python
+    \end{itemize}
+    \item 标记语言
+    \begin{itemize}
+        \item HTML
+        \item \LaTeX
+    \end{itemize}
+    
+\end{lstlisting}
+
+\begin{enumerate}
+    \item 编程语言
+    \begin{itemize}
+        \item C++
+        \item Python
+    \end{itemize}
+    \item 标记语言
+    \begin{itemize}
+        \item HTML
+        \item \LaTeX
+    \end{itemize}
+\end{enumerate}
+
+\section{插入超链接与目录}
+嘿嘿，有没有发现这个文档的目录点击即可跳转到相应章节？这就是一种超链接。在学术论文、技术报告和各类电子文档中，一个清晰的目录和便捷的超链接能大大提升文档的可读性和导航体验。\LaTeX 为此提供了两项强大的功能：
+\begin{enumerate}
+	\item 自动生成目录：通过 \texttt{tableofcontents }命令，\LaTeX 可以扫描文档中的标题命令，并自动生成包含各级标题和页码的目录。
+	\item 插入超链接:使用\texttt{hyperref}  宏包，可以将文档内的交叉引用和目录项都变成超链接，同时还能通过 \texttt{href} 命令插入指向外部网址的链接，以及利用\texttt{hypertarget}  和\texttt{hyperlink}  命令自定义内部跳转链接。 
+\end{enumerate}
+
+\subsection{自动生成目录}
+\subsubsection{基本用法}
+在 \LaTeX 中，生成目录只需在需要显示目录的地方插入 \texttt{tableofcontents }命令。\LaTeX 会扫描文档中所有支持的标题命令，并自动生成目录列表。示例如下：
+\begin{lstlisting}
+	\documentclass{article}
+	\usepackage{ctex}
+	\usepackage[utf8]{inputenc}  % 设置文档输入编码
+	
+	\begin{document}
+		
+		\tableofcontents  % 生成目录
+		
+		\section{引言}
+		这里介绍文档的背景和目的。
+		
+		\subsection{研究背景}
+		阐述研究的理论基础与现状。
+		
+		\section{方法介绍}
+		详细描述实验方法和数据处理过程。
+		
+	\end{document}
+\end{lstlisting}
+{\color{red}{\text{注意事项：}}}每次修改标题后，建议至少编译两次（或使用 \LaTeX 编辑器的“多次编译”功能），以确保目录中的页码信息正确更新。
+
+\subsubsection{超链接化目录}
+使用 hyperref 宏包后， 生成的目录会自动变成可点击的超链接。这意味着读者可以通过点击目录中的各级标题，直接跳转到对应的章节。
+
+\subsection{插入超链接}
+为了使文档中的链接变得可点击（无论是目录、交叉引用还是手动插入的链接），我们需要加载 \texttt{hyperref} 宏包。
+\subsubsection{加载\texttt{hyperref}宏包}
+在导言区加载 \texttt{hyperref} 宏包时，可以设置一些选项来控制链接的颜色、风格等。常用的设置如下：
+\begin{lstlisting}
+	\usepackage[colorlinks=true,      % 启用彩色链接而非带框链接
+	linkcolor=blue,       % 内部链接（如目录、交叉引用）颜色为蓝色
+	urlcolor=blue,        % 外部链接颜色为蓝色
+	citecolor=blue]{hyperref} % 参考文献链接颜色为蓝色
+\end{lstlisting}
+将 \texttt{hyperref} 宏包加载在所有其他宏包之后，确保其能正确修改文档内的所有交叉引用和链接。
+
+\subsubsection{插入外部超链接}
+使用 \texttt{hyperref} 宏包后，可以利用 \texttt{href }命令插入指向外部网站的超链接。基本语法为：
+\begin{lstlisting}
+	\href{<URL>}{<显示文本>} 
+\end{lstlisting}
+
+
+\subsubsection{插入内部链接}
+除了外部链接外，有时还需要在文档内部实现跳转。\texttt{hyperref} 提供了两组命令来实现内部链接：
+\begin{itemize}
+	\item [自动链接：]使用 \texttt{tableofcontents}、\texttt{ref}、\texttt{pageref} 等命令生成的链接在加载 \texttt{hyperref} 后均自动成为超链接。
+	
+	\item [自定义内部链接：]\texttt{hypertarget} 与 \texttt{hyperlink} 命令创建自定义的内部链接。
+	\begin{mybox}{使用方法}
+		\begin{enumerate}
+			\item 在目标位置设置锚点：
+			\begin{lstlisting}
+\hypertarget{sec:intro}{}
+			\end{lstlisting}
+			\item 在其他地方插入跳转链接：
+			\begin{lstlisting}
+请参见 \hyperlink{sec:intro}{引言} 部分。
+			\end{lstlisting}
+		\end{enumerate}
+		
+		
+	\end{mybox}
+\end{itemize}
+
+\subsubsection{综合示例}
+\begin{lstlisting}
+\documentclass{article}
+\usepackage{ctex}
+\usepackage[utf8]{inputenc}  % 设置输入编码
+\usepackage[T1]{fontenc}     % 设置输出编码，确保字符显示正确
+\usepackage{lipsum}          % 生成示例文本
+\usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
+
+\begin{document}
+	
+	\title{综合示例：目录与超链接}
+	\author{作者姓名}
+	\date{\today}
+	\maketitle
+	
+	\tableofcontents % 自动生成目录
+	
+	\bigskip
+	\hrule
+	\bigskip
+	
+	\section{引言} \hypertarget{sec:intro}{}
+	在本篇文章中，我们将详细介绍如何使用 LaTeX 的目录功能以及插入超链接。  
+	请访问 \href{https://www.latex-project.org}{LaTeX 官方网站} 获取更多信息。
+	
+	\section{文档结构}
+	本节描述文档结构与目录生成的基本原理。  
+	通过 \verb|\tableofcontents| 命令，LaTeX 会自动扫描所有标题命令，并生成一个结构清晰的目录。  
+	点击目录中的各个标题可以直接跳转到对应章节。
+	
+	\subsection{目录的生成}
+	\lipsum[1] % 生成一些占位文本
+	
+	\subsection{超链接的应用}
+	在本文中，超链接主要分为以下两种：
+	\begin{itemize}
+		\item \textbf{外部超链接}：例如指向 \href{https://www.latex-project.org}{LaTeX 官方网站}；
+		\item \textbf{内部超链接}：例如点击 \hyperlink{sec:intro}{这里} 可跳转回引言部分。
+	\end{itemize}
+	
+	\section{结论}
+	通过本示例，我们了解了如何：
+	\begin{enumerate}
+		\item 使用 \verb|\tableofcontents| 自动生成目录，并实现目录项的超链接功能；
+		\item 利用 hyperref 宏包，通过 \verb|\href| 插入外部链接；
+		\item 使用 \verb|\hypertarget| 与 \verb|\hyperlink| 实现自定义内部链接，增强文档导航体验。
+	\end{enumerate}
+	
+	\bigskip
+	\hrule
+	\bigskip
+	
+	\noindent
+	\textbf{Hello \LaTeX}
+	
+\end{document}
+\end{lstlisting}
+
+
+
+\section{ 插入脚注}
+在学术论文、技术文档及各类写作中，脚注和注释是常见的排版工具，用于提供额外的信息、引用来源或解释概念。我觉得使用Word进行脚注是个非常麻烦的事情，但是这件事在\LaTeX 中十分简单便捷。我们一起来看看吧！
+
+\subsection{插入脚注}
+脚注常用于文献引用、进一步说明或给出额外信息。在 LaTeX 中，插入脚注非常简单，通过 \begin{lstlisting}
+\footnote\end{lstlisting} 命令即可。
+\subsubsection{基本用法}
+脚注的基本语法如下：
+\begin{lstlisting}
+	\footnote{这里是脚注内容}
+\end{lstlisting}
+当你使用脚注时，\LaTeX 会自动为脚注内容编号，并把脚注内容放在页面底部。
+
+\subsubsection{多个脚注}
+在同一个段落或文本中，你可以使用多个脚注，\LaTeX 会自动为每个脚注编号。好方便！
+
+\subsubsection{脚注与章节标题的兼容}
+在有些文档中，我们需要在章节标题中插入脚注。\LaTeX 默认允许这样做，并会将脚注编号与标题内容一起显示。
+
+
+

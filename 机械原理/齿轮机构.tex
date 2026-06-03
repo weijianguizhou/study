@@ -1,0 +1,242 @@
+\chapter{齿轮机构 (Gear Mechanisms)}
+
+\intro{齿轮机构是现代机械中应用最广泛的传动机构，用于传递任意两轴之间的运动和动力。其核心优势在于传动比准确、效率高、寿命长。}
+
+\section{齿轮机构的应用及其分类}
+
+齿轮机构根据两轴相对位置的不同，可分为以下几类：
+
+\begin{enumerate}
+	\item \textbf{平行轴传动}：直齿圆柱齿轮、斜齿圆柱齿轮、人字齿轮。
+	\item \textbf{相交轴传动}：锥齿轮（直齿、斜齿、曲齿）。
+	\item \textbf{交错轴传动}：蜗杆传动、交错轴斜齿轮。
+\end{enumerate}
+
+\section{齿廓啮合基本定律}
+
+\begin{definition}[传动比(drive ratio)]
+	两轮的瞬时角速度之比。
+\end{definition}
+\begin{definition}[齿廓啮合基本定律]
+	互相啮合的一对齿轮，在任一时刻的传动比，等于两轮连心线被齿廓接触点的公法线所分成的两线段的反比。若传动比为常数，则节点为定点。
+\end{definition}
+
+\begin{definition}[节点(pitch point)]
+	两齿轮瞬心。
+\end{definition}
+
+\begin{definition}[瞬心线(instantaneous center line)]
+	节点$P$在每个齿轮运动平面上的轨迹。
+\end{definition}
+
+\begin{definition}[节圆(pitch circle)]
+	圆形齿轮节点在两个齿轮运动平面上的轨迹是两个圆。
+\end{definition}
+
+
+\begin{definition}[共轭齿廓(conjugate profiles)]
+	满足齿廓啮合基本定律的一对齿轮的齿廓。
+\end{definition}
+\subsection{数学推导}
+设两齿轮的角速度分别为 $\omega_1, \omega_2$，接触点为 $K$，过 $K$ 点作两齿廓的公法线 $nn$，与连心线 $O_1O_2$ 交于 $P$ 点（节点）。
+根据运动学速度合成定理，接触点 $K$ 分别在两构件上的速度 $v_{K1}$ 和 $v_{K2}$ 在公法线方向的分量必须相等：
+\begin{equation}
+	v_{K1} \cos \alpha = v_{K2} \cos \beta
+\end{equation}
+通过几何几何关系推导，可得传动比方程：
+\begin{equation}
+	i_{12} = \frac{\omega_1}{\omega_2} = \frac{O_2P}{O_1P}
+\end{equation}
+若要使传动比为常数，则节点 $P$ 在连心线上的位置必须固定。
+
+\section{渐开线形成及其特性}
+
+\subsection{渐开线的形成}
+\begin{definition}{渐开线 (Involute)}
+	一条直线（发生线）沿一个圆（基圆）作纯滚动时，直线上任一点的轨迹。
+\end{definition}
+
+\subsection{渐开线的特性}
+\begin{enumerate}
+	\item 发生线在基圆上的滚动长度等于基圆上对应的弧长：$BK = \wideparen{AB}$。
+	\item 渐开线上任意一点的公法线必切于基圆。且越接近基圆的点曲率半径越小，曲率越大、
+	\item 离基圆越远，压力角越大。基圆内无渐开线。
+\end{enumerate}
+
+\subsection{渐开线函数 (Involute Function)}
+设渐开线上任意一点的向径为 $r$，压力角为 $\alpha$，基圆半径为 $r_b$。由渐开线几何基本关系：
+\[
+r \cos\alpha = r_b
+\]
+
+根据渐开线形成原理，渐开线展角 $\theta$ 与压力角 $\alpha$ 满足几何关系：
+\[
+\theta = \tan\alpha - \alpha
+\]
+
+定义**渐开线函数**为展角 $\theta$，记作 $\operatorname{inv}\alpha$，于是得到渐开线函数标准方程：
+\begin{equation}
+	\operatorname{inv} \alpha = \tan \alpha - \alpha
+\end{equation}
+式中角度 $\alpha$ 须以**弧度**为单位。渐开线函数为超越函数，是齿轮齿形几何参数计算、变位系数求解中最核心的基础方程。
+
+以基圆半径 $r_b$ 和展角 $\theta$ 为参数，渐开线的参数方程可表示为：
+\[
+\begin{cases}
+	x = r_b(\cos\theta + \theta\sin\theta)\\
+	y = r_b(\sin\theta - \theta\cos\theta)
+\end{cases}
+\]
+
+利用平面曲线曲率公式，可求得渐开线上任意点的**曲率半径**：
+\[
+\rho = r_b \theta
+\]
+
+结合渐开线函数关系，曲率半径也可通过压力角直接计算：
+\[
+\rho = r_b (\tan\alpha - \alpha)
+\]
+该式表明，渐开线的曲率半径随压力角增大而线性增加，是齿轮啮合分析与齿面强度计算的重要几何参数。
+
+\section{渐开线齿廓啮合的特点}
+\begin{enumerate}
+	\item 啮合线是直线
+	\item 啮合角不变
+	\item 具有可分性
+\end{enumerate}
+\begin{proposition}
+	如何理解渐开线齿廓啮合的可分性？
+\end{proposition}
+渐开线齿轮的传动比取决于其基圆的大小（简单画个图，利用相似），而一对齿轮加工好之后基圆大小不发生改变。
+
+
+\section{渐开线齿轮各部分名称及标准齿轮的尺寸}
+
+\subsection{渐开线齿轮各部分名称（Nomenclature of Involute Gear）}
+以标准渐开线直齿圆柱齿轮为例，其轮齿各几何组成部分中英文名称及定义如下：
+
+\begin{enumerate}
+	\item \textbf{齿顶圆（Addendum Circle）}：齿轮齿顶所在的圆周，半径记为 $r_a$，直径记为 $d_a$；
+	\item \textbf{齿根圆（Dedendum Circle）}：齿轮齿槽底部所在的圆周，半径记为 $r_f$，直径记为 $d_f$；
+	\item \textbf{分度圆（Reference Circle / Pitch Circle）}：标准齿轮设计基准圆，半径 $r$、直径 $d$，为齿轮几何计算与啮合传动的基准；
+	\item \textbf{基圆（Base Circle）}：生成渐开线齿廓的基准圆，半径 $r_b$、直径 $d_b$，渐开线由基圆渐开展成；
+	\item \textbf{齿顶高（Addendum）}：分度圆至齿顶圆的径向高度，记作 $h_a$；
+	\item \textbf{齿根高（Dedendum）}：分度圆至齿根圆的径向高度，记作 $h_f$；
+	\item \textbf{全齿高（Whole Tooth Height）}：齿顶圆到齿根圆的径向总高度，满足 $h = h_a + h_f$；
+	\item \textbf{齿厚（Tooth Thickness）}：分度圆上同一轮齿两侧齿廓间的弧长，记作 $s$；
+	\item \textbf{齿槽宽（Space Width）}：分度圆上相邻两齿间齿槽的弧长，记作 $e$；
+	\item \textbf{齿距（Circular Pitch）}：分度圆上相邻两齿对应点的弧长，满足 $p = s + e$。
+\end{enumerate}
+\subsection{基本参数}
+\begin{itemize}
+	\item \textbf{齿数 $z$}：齿轮上的轮齿总数。
+	\item \textbf{模数 $m$}：$m = \frac{p}{\pi}= \frac{d}{z}$，其中 $p$ 为齿距。国家标准系列值。
+	\item \textbf{分度圆压力角 $\alpha$}：标准值为 $20^\circ$。
+\end{itemize}
+
+\subsection{标准齿轮几何尺寸计算表}
+\begin{table}[H]
+	\centering
+	\color{structurecolor}
+	\begin{tabular}{lll}
+		\hline
+		\textbf{名称} & \textbf{代号} & \textbf{计算公式} \\ \hline
+		分度圆直径 & $d$ & $d = mz$ \\
+		分度圆齿距 & $p$ & $p = \pi m$ \\
+		分度圆齿厚 & $s$ & $s = \frac{\pi m}{2} $ \\
+		分度圆齿槽宽 & $e$ & $e = \frac{\pi m}{2} $ \\
+		基圆直径 & $r_b$ & $d_b = d \cos \alpha$ \\
+		齿顶高系数 & $h_a^*$ & 一般取 $1.0$  短齿取$0.8$\\
+		齿顶高 &$h_a$ & $h_f=h_a^* m$ \\
+		顶隙系数 & $c^*$ & 一般取 $0.25$  短齿取$0.3$ \\
+		齿根高 &$h_f$ & $h_f=(h_a^*+c^*) m$ \\
+		齿全高 &$h$ & $h=(2h_a^*+c^*) m$ \\
+		齿顶圆直径 & $d_a$ & $d_a = d + 2h_a^* m$ \\
+		齿根圆直径 & $d_f$ & $d_f = d - 2(h_a^* + c^*)m$ \\ \hline
+	\end{tabular}
+\end{table}
+
+\section{渐开线直齿圆柱齿轮的啮合传动}
+
+\subsection{正确啮合条件}
+两齿轮要进入正常啮合状态，其模数和压力角必须分别相等：
+\begin{equation}
+	m_1 = m_2 = m, \quad \alpha_1 = \alpha_2 = \alpha
+\end{equation}
+
+\subsection{标准齿轮传动的正确安装中心距}
+\begin{equation}
+	a = r_1 +r_2
+\end{equation}
+非正确安装时：
+\begin{equation}
+	a' = r'_1 +r'_2
+\end{equation}
+
+存在一个这样的关系“
+\begin{equation}
+	a'=a\frac{\cos \alpha}{\cos \alpha'}
+\end{equation}
+\subsection{重合度 (Contact Ratio)}
+为保证连续传动，实际啮合线段 $B_1B_2$ 必须大于法向齿距 $p_b$：
+\begin{equation}
+	\epsilon_\alpha = \frac{1}{2\pi}[z_1(\tan \alpha_{a1}-\tan \alpha')+z_2(\tan \alpha_{a2}-\tan \alpha')]
+\end{equation}
+
+\section{渐开线齿轮的加工与根切}
+
+\subsection{加工方法}
+主要分为成形法（铣齿）和展成法（滚齿、插齿）。
+
+\subsection{根切现象 (Undercutting)}
+当用展成法加工齿数过少的齿轮时，刀具齿顶会切去轮齿根部的渐开线齿廓。
+\begin{theorem}{不发生根切的最小齿数}
+	对于标准齿轮（$\alpha = 20^\circ, h_a^* = 1$），其不发生根切的最小齿数为：
+	\begin{equation}
+		z_{min} = \frac{2h_a^*}{\sin^2 \alpha} \approx 17
+	\end{equation}
+\end{theorem}
+
+\section{变位齿轮 (Modified Gears)}
+
+为了避免根切或凑中心距，需要将刀具相对于齿轮中心径向移动一段距离 $xm$。
+\begin{itemize}
+	\item $x$：变位系数。
+	\item \textbf{正变位} ($x>0$)：刀具远离中心，齿根变厚，强度提高。
+	\item \textbf{负变位} ($x<0$)：刀具靠近中心，易根切。
+\end{itemize}
+
+\section{斜齿圆柱齿轮机构}
+
+\subsection{斜齿轮的特点}
+1. 啮合性能好，传动平稳。
+2. 重合度大。
+3. 产生轴向力。
+
+\subsection{当量齿数 (Equivalent Number of Teeth)}
+由于斜齿轮法面齿廓为渐开线，通过法面代换，其当量齿数为：
+\begin{equation}
+	z_v = \frac{z}{\cos^3 \beta}
+\end{equation}
+其中 $\beta$ 为螺旋角。
+
+\section{蜗杆传动 (Worm Drive)}
+
+\subsection{传动特点}
+\begin{enumerate}
+	\item 传动比大（通常 $i = 10 \sim 80$）。
+	\item 结构紧凑。
+	\item 具有反向自锁性。
+	\item 效率低，发热量大（存在剧烈滑动）。
+\end{enumerate}
+
+\begin{solution}
+	\textbf{例题}：已知一标准直齿圆柱齿轮，$z=20, m=4mm, \alpha=20^\circ$，求其基圆半径 $r_b$。
+	
+	解：首先计算分度圆半径：
+	$r = \frac{mz}{2} = \frac{4 \times 20}{2} = 40 mm$
+	
+	根据基圆与分度圆关系：
+	$r_b = r \cos \alpha = 40 \times \cos 20^\circ \approx 37.588 mm$
+\end{solution}

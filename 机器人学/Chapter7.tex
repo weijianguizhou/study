@@ -1,0 +1,69 @@
+\chapter{开链动力学}
+
+动力学研究主要解决两个问题：正向动力学（给定力矩求加速度）和逆向动力学（给定运动状态求所需力矩）。本书重点推导了基于牛顿-欧拉法（Newton-Euler）的递归算法。
+
+\section{拉格朗日动力学方程}
+拉格朗日法基于能量视角，通过动能与势能之差定义拉格朗日量 $L = \mathcal{K} - \mathcal{P}$。对于 $n$ 自由度机器人，其动力学方程通式为：
+\begin{equation}
+    \tau = M(\theta)\ddot{\theta} + c(\theta, \dot{\theta}) + g(\theta)
+\end{equation}
+其中：
+\begin{itemize}
+    \item $M(\theta) \in \mathbb{R}^{n \times n}$ 是质量矩阵（Mass Matrix），它是对称且正定的。
+    \item $c(\theta, \dot{\theta})$ 包含科里奥利力（Coriolis）和离心力（Centrifugal）。
+    \item $g(\theta)$ 是重力项。
+\end{itemize}
+
+
+
+\section{单刚体动力学：力旋量与动量}
+在研究多连杆之前，需定义空间力旋量 $\mathcal{F}$。一个刚体的空间动量 $\mathcal{P}$ 与空间速度 $\mathcal{V}$ 的关系为：
+\begin{equation}
+    \mathcal{P}_b = \mathcal{G}_b \mathcal{V}_b
+\end{equation}
+其中 $\mathcal{G}_b$ 是刚体的空间惯性矩阵（Spatial Inertia Matrix）：
+\begin{equation}
+    \mathcal{G}_b = \begin{bmatrix} \mathcal{I}_b & 0 \\ 0 & \mathfrak{m}I \end{bmatrix}
+\end{equation}
+这里 $\mathcal{I}_b$ 是转动惯量张量，$\mathfrak{m}$ 是质量。
+
+\begin{defbox}{牛顿-欧拉方程 (Newton-Euler Equation)}
+对于单个刚体，其运动方程为：
+\begin{equation}
+    \mathcal{F}_b = \mathcal{G}_b \dot{\mathcal{V}}_b - [\text{ad}_{\mathcal{V}_b}]^T \mathcal{P}_b
+\end{equation}
+其中 $[\text{ad}_{\mathcal{V}}]$ 是伴随算子的矩阵表示。
+\end{defbox}
+
+\section{递归牛顿-欧拉算法 (RNEA)}
+这是计算逆动力学最有效的方法，分为两个阶段：
+
+\begin{mybox}{RNEA 算法流程}
+\begin{enumerate}
+    \item \textbf{前向递归}（从基座到末端）：计算每个连杆的速度 $\mathcal{V}_i$ 和加速度 $\dot{\mathcal{V}}_i$。
+    \item \textbf{后向递归}（从末端到基座）：利用作用力与反作用力关系，计算每个关节所需的力矩 $\tau_i$。
+\end{enumerate}
+\end{mybox}
+
+
+
+\section{任务空间动力学}
+若末端执行器在任务空间受力 $f_{tip}$，则关节力矩方程变为：
+\begin{equation}
+    \tau = M(\theta)\ddot{\theta} + h(\theta, \dot{\theta}) + J^T(\theta) f_{tip}
+\end{equation}
+
+\begin{thoughtbox}{关于动力学奇异性的思考}
+虽然雅可比矩阵 $J$ 的奇异性会导致运动学上的性能退化，但动力学质量矩阵 $M(\theta)$ 在物理意义上永远是可逆的。这意味着无论处于何种构型，机器人总能产生加速度，只是某些方向可能需要极大的功率。
+\end{thoughtbox}
+
+\section{摩擦力与转子惯量}
+在实际工程中，必须考虑执行器的动力学特性：
+\begin{itemize}
+    \item \textbf{转子惯量}：高速旋转的电机转子会贡献显著的惯量，通常表示为 $G_i^2 I_{g,i}$，其中 $G_i$ 是减速比。
+    \item \textbf{摩擦力模型}：通常包含库仑摩擦 $\tau_{fric} = f_s \text{sgn}(\dot{\theta})$ 和黏性摩擦 $f_v \dot{\theta}$。
+\end{itemize}
+
+
+
+\clearpage

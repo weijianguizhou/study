@@ -1,0 +1,171 @@
+\chapter{广义变分原理}
+\section{多元函数极值问题的描述}
+\subsection{多元函数}
+设 \( \underline{x} = [x_1, x_2, \dots, x_n]^T \in \mathbb{R}^n \)，则关于变量 \( x_i \ (i=1,2,\dots,n) \) 的 \( n \) 元实函数记为
+\[
+y = f(x_1, x_2, \dots, x_n) \in \mathbb{R},
+\]
+可简记为 \( y = f(\underline{x}) \)。
+
+\subsection{多元函数的极值}
+\begin{definition}[极小值与极小值点]
+若多元函数 \( f(\underline{x}) \) 在 \( \underline{x}_0 \) 及其去心邻域内有定义，且对于所有满足
+\[
+0 < \|\delta \underline{x}\| < \varepsilon
+\]
+的自变量微小变更 \( \delta \underline{x} \)，都有
+\[
+f(\underline{x}_0) \leq f(\underline{x}_0 + \delta \underline{x}),
+\]
+则称 \( \underline{x}_0 \) 为函数 \( f(\underline{x}) \) 的一个**极小值点**，相应地，\( f(\underline{x}_0) \) 为函数 \( f(\underline{x}) \) 的一个**极小值**。
+\end{definition}
+
+\begin{definition}[极大值与极大值点]
+在相同条件下，如果都有
+\[
+f(\underline{x}_0) \geq f(\underline{x}_0 + \delta \underline{x}),
+\]
+则称 \( \underline{x}_0 \) 为函数 \( f(\underline{x}) \) 的一个**极大值点**，相应地，\( f(\underline{x}_0) \) 为函数 \( f(\underline{x}) \) 的一个**极大值**。
+\end{definition}
+
+\begin{remark}
+微小变更 \( \delta \underline{x} \) 可不在乎方向。
+\end{remark}
+
+\subsection{多元函数的泰勒展开式}
+设多元函数 \( y = f(\underline{x}) \) 在点 \( \underline{x}_0 \) 的邻域内具有 \( (m+1) \) 阶连续偏导数，则多元函数在该邻域内任一点 \( (\underline{x}_0 + \delta \underline{x}) \) 处的值可由 Taylor 展开式表示为（\( 0 < \theta < 1 \)）：
+\[
+\begin{aligned}
+f(\underline{x}_0 + \delta \underline{x}) &= f(\underline{x}_0) + Df(\underline{x})\big|_{\underline{x}=\underline{x}_0} + \frac{1}{2!} D^2 f(\underline{x})\big|_{\underline{x}=\underline{x}_0} \\
+&\quad + \dots + \frac{1}{m!} D^m f(\underline{x})\big|_{\underline{x}=\underline{x}_0} + \frac{1}{(m+1)!} D^{m+1} f(\underline{x})\big|_{\underline{x}=\underline{x}_0+\theta \delta \underline{x}},
+\end{aligned}
+\]
+其中算子 \( D \) 的表达式为
+\[
+D = \left( \delta x_1 \frac{\partial}{\partial x_1} + \delta x_2 \frac{\partial}{\partial x_2} + \dots + \delta x_n \frac{\partial}{\partial x_n} \right).
+\]
+
+\subsection{多元函数的驻点}
+多元函数 \( f \) 在点 \( (\underline{x}_0 + \delta \underline{x}) \) 处的一阶 Taylor 展开式为
+\[
+\begin{aligned}
+f(\underline{x}_0 + \delta \underline{x}) &= f(\underline{x}_0) + Df(\underline{x})\big|_{\underline{x}=\underline{x}_0} + \frac{1}{2!} D^2 f(\underline{x})\big|_{\underline{x}=\underline{x}_0+\theta \delta \underline{x}} \\
+&\approx f(\underline{x}_0) + Df(\underline{x})\big|_{\underline{x}=\underline{x}_0} \\
+&= f(\underline{x}_0) + \left[ \frac{\partial f}{\partial x_1} \ \frac{\partial f}{\partial x_2} \ \dots \ \frac{\partial f}{\partial x_n} \right]_{\underline{x}=\underline{x}_0}
+\begin{bmatrix}
+\delta x_1 \\
+\delta x_2 \\
+\vdots \\
+\delta x_n
+\end{bmatrix} \\
+&=: f(\underline{x}_0) + f_{\underline{x}}(\underline{x}_0) \delta \underline{x}.
+\end{aligned}
+\]
+
+若 \( \underline{x}_0 \) 为一个极小值点，则
+\[
+f(\underline{x}_0 + \delta \underline{x}) - f(\underline{x}_0) + f_{\underline{x}}(\underline{x}_0) \delta \underline{x} \geq f(\underline{x}_0).
+\]
+进而有
+\[
+\forall \delta \underline{x}, \quad f_{\underline{x}}(\underline{x}_0) \delta \underline{x} \geq 0.
+\]
+由于 \( \delta \underline{x} \) 方向任意，故
+\[
+f_{\underline{x}}(\underline{x}_0) \delta \underline{x} = 0 \implies f_{\underline{x}}(\underline{x}_0) = \underline{0}.
+\]
+因此，\( \underline{x}_0 \) 为函数 \( f \) 的一个极小值点 \( \implies \) \( \underline{x}_0 \) 为 \( f \) 的一个**驻点**。
+
+\section{含冗余约束的非独立变分}
+设 \( \underline{\alpha} \in \mathbb{R}^n \)，\( \underline{q} \in \mathbb{R}^n \)，\( \underline{\Phi} \in \mathbb{R}^{m \times n} \)，且满足
+\[
+\delta \underline{q}^T \underline{\alpha} = 0 \quad \forall \delta \underline{q}: \ \underline{\Phi} \delta \underline{q} = \underline{0}.
+\]
+则存在一个 Lagrange 乘子 \( \underline{\lambda} \in \mathbb{R}^m \)，满足
+\[
+\underline{\alpha} + \underline{\Phi}^T \underline{\lambda} = \underline{0}.
+\]
+即
+\[
+\delta \underline{q}^T \underline{\alpha} = 0 \quad \forall \delta \underline{q}: \ \underline{\Phi} \delta \underline{q} = \underline{0} \implies \exists \underline{\lambda} \ \text{s.t.} \ \underline{\alpha} + \underline{\Phi}^T \underline{\lambda} = \underline{0}.
+\]
+
+\begin{proof}
+通过行初等变换矩阵 \( R \)、\( C \)，可将 \( \underline{\Phi} \) 变换为
+\[
+R \underline{\Phi} C = \begin{bmatrix}
+\underline{\Phi}_D & \underline{\Phi}_I \\
+\underline{O} & \underline{O}
+\end{bmatrix} =: \begin{bmatrix}
+\overline{\underline{\Phi}} \\
+\underline{O}
+\end{bmatrix}.
+\]
+则
+\[
+\underline{\Phi} \delta \underline{q} = \underline{0} \iff R \underline{\Phi} C C^{-1} \delta \underline{q} = \underline{0} \iff \overline{\underline{\Phi}} C^{-1} \delta \underline{q} = \underline{0}.
+\]
+定义 \( \delta \overline{\underline{q}} := C^{-1} \delta \underline{q} \)，即 \( \delta \underline{q} = C \delta \overline{\underline{q}} \)。
+则
+\[
+0 = \delta \underline{q}^T \underline{\alpha} = (C \delta \overline{\underline{q}})^T \underline{\alpha} = \delta \overline{\underline{q}}^T C^T \underline{\alpha}.
+\]
+即
+\[
+0 = \delta \overline{\underline{q}}^T C^T \underline{\alpha} \quad \forall \delta \overline{\underline{q}}: \ \overline{\underline{\Phi}} \delta \overline{\underline{q}} = \underline{0}.
+\]
+将 \( \overline{\underline{\Phi}} = [\underline{\Phi}_D \ \underline{\Phi}_I] \in \mathbb{R}^{r \times n} \)（\( r \leq n \)，\( \underline{\Phi}_D \in \mathbb{R}^{r \times r} \)）分块，则存在 \( \underline{\lambda} \in \mathbb{R}^r \)，使得
+\[
+C^T \underline{\alpha} + \overline{\underline{\Phi}}^T \underline{\lambda} = \underline{0}.
+\]
+引入 \( \underline{\lambda}_0 \in \mathbb{R}^{m-r} \)，则
+\[
+C^T \underline{\alpha} + \overline{\underline{\Phi}}^T \underline{\lambda} + \underline{O}^T \underline{\lambda}_0 = \underline{0}.
+\]
+令 \( \underline{\Lambda} = R^T \begin{bmatrix}
+\underline{\lambda} \\
+\underline{\lambda}_0
+\end{bmatrix} \)，则
+\[
+\begin{aligned}
+\underline{0} &= C^T \underline{\alpha} + \begin{bmatrix}
+\overline{\underline{\Phi}} \\
+\underline{O}
+\end{bmatrix}^T \begin{bmatrix}
+\underline{\lambda} \\
+\underline{\lambda}_0
+\end{bmatrix} \\
+&= C^T \underline{\alpha} + (R \underline{\Phi} C)^T \begin{bmatrix}
+\underline{\lambda} \\
+\underline{\lambda}_0
+\end{bmatrix} \\
+&= C^T \underline{\alpha} + C^T \underline{\Phi}^T R^T \begin{bmatrix}
+\underline{\lambda} \\
+\underline{\lambda}_0
+\end{bmatrix} \\
+\implies \underline{0} &= \underline{\alpha} + \underline{\Phi}^T R^T \begin{bmatrix}
+\underline{\lambda} \\
+\underline{\lambda}_0
+\end{bmatrix} = \underline{\alpha} + \underline{\Phi}^T \underline{\Lambda}.
+\end{aligned}
+\]
+\end{proof}
+
+\section{多元函数条件极值问题求解}
+约束方程：
+\[
+\underline{0} = C_{\underline{x}}(\underline{x}) \delta \underline{x}.
+\]
+极值条件：
+\[
+f_{\underline{x}}(\underline{x}) \delta \underline{x} = 0.
+\]
+由广义变分原理，得
+\[
+\begin{cases}
+f_{\underline{x}}^T(\underline{x}_0) + C_{\underline{x}}^T(\underline{x}_0) \underline{\lambda} = \underline{0}, \\
+f_{\underline{x}}(\underline{x}_0) + C_{\underline{x}}^T(\underline{x}_0) \underline{\lambda} = \underline{0}, \\
+C(\underline{x}_0) = \underline{0}.
+\end{cases}
+\]
+由此解出极值点。

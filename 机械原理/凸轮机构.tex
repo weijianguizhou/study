@@ -1,0 +1,149 @@
+\chapter{凸轮机构 (Cam Mechanisms)}
+
+\intro{凸轮机构是由凸轮、从动件和机架三个基本构件组成的高副机构。它能将凸轮的连续转动转化为从动件预期的往复移动或摆动。}
+
+\section{凸轮机构的应用和分类}
+
+\subsection{凸轮机构的应用}
+凸轮机构的主要优点是只需设计适当的凸轮轮廓曲线，就可以使从动件实现任意给定的运动规律，且结构紧凑、易于设计。常见于：
+\begin{itemize}
+	\item 内燃机配气机构
+	\item 自动机床的进给机构
+	\item 工业机器人的控制机构
+\end{itemize}
+
+\subsection{凸轮机构的分类}
+
+\begin{enumerate}
+	\item \textbf{按凸轮形状分类}：
+	\begin{itemize}
+		\item \textbf{盘形凸轮}：最基本形式，凸轮呈盘状，绕固定轴转动。
+		\item \textbf{移动凸轮}：凸轮相对机架作直线移动。
+		\item \textbf{圆柱凸轮}：凸轮在圆柱体上加工出沟槽。
+	\end{itemize}
+	\item \textbf{按从动件形状分类}：尖顶从动件、滚子从动件、平底从动件。
+	\item \textbf{按从动件运动形式分类}：直动从动件、摆动从动件。
+\end{enumerate}
+
+\section{从动件的常用运动规律}
+
+\begin{definition}{位移线图 (Displacement Diagram)}
+	从动件的位移 $s$ 随凸轮转角 $\phi$ 变化的图形称为位移线图，记作 $s = f(\phi)$。
+\end{definition}
+
+\subsection{推程中的常用运动规律}
+
+\begin{enumerate}
+	\item \textbf{等速运动规律 (Constant Velocity Motion)}
+	从动件的速度为常数。
+	\begin{itemize}
+		\item \textbf{运动方程}：$s = \frac{h}{\phi_k} \phi$
+		\item \textbf{动力特性}：在始末两点速度有突变，加速度理论上无穷大，产生\textcolor{main}{刚性冲击}。
+	\end{itemize}
+	
+	\item \textbf{等加速等减速运动规律 (Constant Acceleration and Deceleration)}
+	又称抛物线运动规律。
+	\begin{itemize}
+		\item \textbf{动力特性}：加速度在行程中点有突变，产生\textcolor{second}{柔性冲击}。
+	\end{itemize}
+	
+	\item \textbf{简谐运动规律 (Simple Harmonic Motion)}
+	又称余弦加速度运动规律。
+	\begin{itemize}
+		\item \textbf{方程}：$s = \frac{h}{2} [1 - \cos(\frac{\pi \phi}{\phi_h})]$
+		\item \textbf{适用}：中低速场合。
+	\end{itemize}
+\end{enumerate}
+
+\begin{proposition}{冲击特性的选择}
+	在高速凸轮设计中，应首选正弦加速度运动规律（无突变），以减小振动和磨损。
+\end{proposition}
+
+% 示意图：位移线图
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[scale=1.2, arrow]
+		% 坐标轴
+		\draw[arrow] (0,0) -- (6,0) node[right] {$\phi$};
+		\draw[arrow] (0,0) -- (0,3) node[above] {$s$};
+		% 曲线
+		\draw[thick, color=main] (0,0) -- (2,2) node[midway, above left] {等速};
+		\draw[thick, color=second] (2,2) parabola[bend at end] (4,0);
+		\draw[thick, color=third] (4,0) .. controls (4.5, 0.5) and (5.5, 0.5) .. (6,0);
+		
+		\node at (1,-0.3) {推程};
+		\node at (3,-0.3) {回程};
+	\end{tikzpicture}
+	\caption{从动件典型位移线图示意}
+\end{figure}
+
+\section{平面凸轮轮廓线设计的作图法}
+
+\subsection{反转法原理 (Principle of Inversion)}
+\begin{theorem}{反转法}
+	在设计凸轮轮廓时，假设给整个凸轮机构施加一个与凸轮角速度 $\omega$ 大小相等、方向相反的角速度 $-\omega$。此时，凸轮相对静止，而机架和从动件则以 $-\omega$ 绕凸轮轴线转动。
+\end{theorem}
+
+\subsection{直动偏置从动件盘形凸轮的设计步骤}
+\begin{enumerate}
+	\item 取比例尺 $\mu_l$，作基圆 $r_0$ 和偏置圆 $e$。
+	\item 划分转角：根据位移线图，将推程角 $\phi_h$ 等分。
+	\item 确定从动件导路：反转方向截取对应位置。
+	\item 确定位移：在导路上量取 $s_i$。
+	\item 绘制轮廓：连接各点得到理论轮廓。若为滚子从动件，则以理论轮廓为中心作滚子圆的内包络线。
+\end{enumerate}
+
+\section{平面凸轮轮廓线设计的解析法}
+
+解析法利用坐标变换建立凸轮轮廓的参数方程，适用于数控加工。
+
+\subsection{直动从动件盘形凸轮}
+设凸轮基圆半径为 $r_0$，偏距为 $e$，从动件运动规律为 $s(\phi)$。
+以凸轮转动中心为原点 $O$，建立直角坐标系。
+
+根据反转法，凸轮轮廓上一点 $M$ 的坐标方程为：
+\begin{equation}
+	\begin{cases}
+		x = [s_0 + s(\phi)] \sin \phi + e \cos \phi \\
+		y = [s_0 + s(\phi)] \cos \phi - e \sin \phi
+	\end{cases}
+\end{equation}
+其中，$s_0 = \sqrt{r_0^2 - e^2}$ 为起始位置位移。
+
+\subsection{压力角与基圆半径的确定}
+\begin{definition}{压力角 $\alpha$}
+	在不计摩擦的情况下，凸轮对从动件的作用力方向与从动件受力点速度方向之间所夹的锐角。
+\end{definition}
+
+\begin{lemma}{压力角与效率}
+	压力角 $\alpha$ 越大，有效分力越小，径向分力越大。当 $\alpha$ 超过某一临界值时，机构会发生\textbf{自锁}。
+\end{lemma}
+
+\begin{remark}
+	通常规定：推程最大压力角 $[\alpha] \le 30^\circ$，回程最大压力角 $[\alpha'] \le 70^\circ \sim 80^\circ$。
+\end{remark}
+
+\section{本章小结}
+1. 凸轮机构的核心任务是根据要求的运动规律设计轮廓。\\
+2. 反转法是作图法和解析法的共同理论基础。\\
+3. 滚子半径的选择必须小于理论轮廓的最小曲率半径，否则会产生轮廓失真（变尖或交叉）。
+
+\newpage
+% 模拟占位符以展示后续页面的深度扩展
+% 以下内容在实际文档中应包含更复杂的公式推导和TikZ图表
+\subsection*{附录：常见运动规律动力学特征表}
+\begin{table}[H]
+	\centering
+	\renewcommand{\arraystretch}{1.5}
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		\rowcolor{structurecolor!20} \textbf{运动规律} & \textbf{位移方程} & \textbf{冲击类型} & \textbf{适用场合} \\ \hline
+		等速 & $h\phi/\phi_h$ & 刚性 & 低速、轻载 \\ \hline
+		等加速等减速 & 抛物线分段 & 柔性 & 中低速 \\ \hline
+		余弦加速度 & $\frac{h}{2}[1-\cos\frac{\pi\phi}{\phi_h}]$ & 柔性 & 中速 \\ \hline
+		正弦加速度 & $h[\frac{\phi}{\phi_h}-\frac{1}{2\pi}\sin\frac{2\pi\phi}{\phi_h}]$ & 无 & 高速 \\ \hline
+	\end{tabular}
+	\caption{常用从动件运动规律对比}
+\end{table}
+
+% 后续可继续扩充第五节：凸轮机构的结构设计，第六节：高速凸轮机构简介等...

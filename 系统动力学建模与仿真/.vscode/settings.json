@@ -1,0 +1,8 @@
+{
+    "python.analysis.extraPaths": [
+        "c:\\Users\\john\\.trae-cn\\extensions\\savvyanalyst.msc-adams-1.5.1-universal\\resources\\adamspy"
+    ],
+    "python.autoComplete.extraPaths": [
+        "c:\\Users\\john\\.trae-cn\\extensions\\savvyanalyst.msc-adams-1.5.1-universal\\resources\\adamspy"
+    ]
+}

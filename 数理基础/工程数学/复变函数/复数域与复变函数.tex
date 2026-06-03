@@ -1,0 +1,153 @@
+\chapter{复数域与复变函数}
+
+\section{复数的定义}
+\subsection{基本定义}
+复数通常表示为 $z = a + bi$ 的形式，其中：
+\begin{itemize}
+    \item $\boldsymbol{a}$ 称为\textbf{实部} (Real part)，记作 $\re(z)$。
+    \item $\boldsymbol{b}$ 称为\textbf{虚部} (Imaginary part)，记作 $\im(z)$。
+    \item $\boldsymbol{i}$ 是\textbf{虚数单位}，满足方程 $i^2 = -1$。
+\end{itemize}
+
+\subsection{数集表示}
+在数学符号中，复数集用 $\mathbb{C}$ 表示。它包含了所有的实数（当 $b=0$ 时），也就是说实数集 $\mathbb{R}$ 是复数集 $\mathbb{C}$ 的子集：
+$$\mathbb{R} \subset \mathbb{C}$$
+
+\section{复数的运算与复数集}
+\begin{itemize}
+    \item \textbf{共轭复数的定义：}
+    共轭复数的性质：$z \cdot \bar{z} = |z|^2$
+    \item \textbf{复数的运算性质：}
+    \begin{enumerate}
+        \item \textbf{交换律：} $z_1 + z_2 = z_2 + z_1$，$z_1 z_2 = z_2 z_1$
+        \item \textbf{结合律：} $(z_1 + z_2) + z_3 = z_1 + (z_2 + z_3)$，$(z_1 z_2) z_3 = z_1 (z_2 z_3)$
+        \item \textbf{分配律：} $(z_1 + z_2) z_3 = z_1 z_3 + z_2 z_3$，$z_1 (z_2 + z_3) = z_1 z_2 + z_1 z_3$
+        \item $z + 0 = z = 0 + z$；$z + (-1)z = 0$，$1 \cdot z = z$，$0 \cdot z = 0$
+        \item $\bar{\bar{z}} = z$
+        \item $z + \bar{z} = 2 \re(z)$，$z - \bar{z} = 2i \im(z)$
+        \item $\overline{z_1 \pm z_2} = \bar{z}_1 \pm \bar{z}_2$，$\overline{z_1 \cdot z_2} = \bar{z}_1 \cdot \bar{z}_2$；$\overline{\left(\frac{z_1}{z_2}\right)} = \frac{\bar{z}_1}{\bar{z}_2}$
+    \end{enumerate}
+\end{itemize}
+
+\noindent [例] 共轭虚根定理：
+
+若 $z$ 是实系数多项式方程
+$$C_0 z^n + C_1 z^{n-1} + C_2 z^{n-2} + \dots + C_{n-1} z + C_n = 0$$
+的根，其中 $n \in \mathbb{N}$，$C_k \in \mathbb{R}$ ($k=0, 1, \dots, n$)，$C_0 \neq 0$，则 $\bar{z}$ 也是该方程的根。
+
+\textbf{证明：}
+
+对 $C_0 z^n + C_1 z^{n-1} + C_2 z^{n-2} + \dots + C_{n-1} z + C_n = 0$ 两边取共轭：
+$$\overline{C_0 z^n + C_1 z^{n-1} + C_2 z^{n-2} + \dots + C_{n-1} z + C_n} = \bar{0}$$
+$$\bar{C}_0 \bar{z}^n + \bar{C}_1 \bar{z}^{n-1} + \bar{C}_2 \bar{z}^{n-2} + \dots + \bar{C}_{n-1} \bar{z} + \bar{C}_n = 0$$
+又 $\because C_k = \bar{C}_k$（实数的共轭是其本身），以及 $\overline{z^n} = \bar{z}^n$，$\therefore \bar{z}$ 满足原方程。
+
+\section{复数的几何表示}
+$z = x + iy$ 可以由一组有序实数 $(x, y) \in \mathbb{R}^2$ 唯一确定。
+
+$\therefore z$ 与平面 $xOy$ 上点的全体具有一一对应关系。
+
+于是，我们将 $x$ 轴定为\textbf{实轴}，$y$ 轴定为\textbf{虚轴}，两轴所在的平面定为\textbf{复平面}（或 $z$ 平面）。
+
+\subsection{性质}
+设 $z = x + iy$，$z_k, w_k \in \mathbb{C}$：
+\begin{enumerate}
+    \item $|x| \le |z|$，$|y| \le |z|$，$|z| \le |x| + |y|$；
+    \item $z\bar{z} = |z|^2 = |\bar{z}|^2$，$|z| = |\bar{z}|$；
+    \item $|z_1 \cdots z_n| = |z_1| \cdots |z_n|$，$|z^n| = |z|^n$；
+    \item $|z_1 + z_2| \le |z_1| + |z_2|$，$|z_1 - z_2| \ge ||z_1| - |z_2||$；
+    \item $|z_1 + z_2|^2 + |z_1 - z_2|^2 = 2(|z_1|^2 + |z_2|^2)$；
+    \item $\left|\sum_{k=1}^n z_k\right| \le \sum_{k=1}^n |z_k|$；
+    \item \textbf{(Cauchy 不等式)} $\left|\sum_{k=1}^n z_k w_k\right|^2 \le \left(\sum_{k=1}^n |z_k|^2\right)\left(\sum_{k=1}^n |w_k|^2\right)$
+\end{enumerate}
+
+\subsubsection{证明 (Pf)}
+\textbf{(1)} $|z| = \sqrt{x^2 + y^2}$
+
+$|x| = \sqrt{x^2}$，$|y| = \sqrt{y^2}$
+
+$\because y^2 \ge 0, x^2 \ge 0$
+
+$\therefore |z| \ge |x|, |z| \ge |y|$
+
+$|z|^2 = x^2 + y^2$，$(|x| + |y|)^2 = x^2 + y^2 + 2|xy| \ge |z|^2$
+
+$\therefore |z| \le |x| + |y|$
+
+\textbf{(2)} $z\bar{z} = (x + iy)(x - iy) = x^2 + y^2 = |z|^2$
+
+\textbf{（7）}
+对于任意复数 $\lambda$，有：
+$$\sum_{k=1}^n |z_k - \lambda w_k|^2 \ge 0$$
+展开得：
+$$\sum |z_k|^2 - \lambda \sum \bar{z}_k w_k - \bar{\lambda} \sum z_k \bar{w}_k + |\lambda|^2 \sum |w_k|^2 \ge 0$$
+令 $\lambda = \dfrac{\sum z_k \bar{w}_k}{\sum |w_k|^2}$，代入化简得：
+$$\left( \sum_{k=1}^n |z_k|^2 \right) \left( \sum_{k=1}^n |w_k|^2 \right) \ge \left| \sum_{k=1}^n z_k \bar{w}_k \right|^2$$
+\textbf{证毕。}
+
+\subsection{复数的三角表达式}
+\begin{definition}
+对每一个非零的复数 $z = x + iy$，实轴的正向与表示 $z$ 的向量 $\vec{Oz}$ 的夹角 $\theta$ 称为复数的\textbf{辐角}，记作 $\theta = \Arg z$。
+\end{definition}
+
+记 $r = |\vec{Oz}| = |z| > 0$，此时有 $\tan \theta = \frac{y}{x}$，$x = r \cos \theta$，$y = r \sin \theta$。
+
+称 $z = r(\cos \theta + i\sin \theta) = |z|[\cos(\Arg z) + i\sin(\Arg z)]$ 为\textbf{复数的三角表达式}。
+
+\subsubsection{复数主辐角 ($\argz z$) 的确定}
+$$
+\argz z = 
+\begin{cases} 
+\arctan \dfrac{y}{x}, & z \text{ 在第一、四象限内} \\ 
+\pi + \arctan \dfrac{y}{x}, & z \text{ 在第二象限内} \\ 
+-\pi + \arctan \dfrac{y}{x}, & z \text{ 在第三象限内} \\ 
+0, & z \text{ 在 } x \text{ 正半轴上} \\ 
+\dfrac{\pi}{2}, & z \text{ 在 } y \text{ 正半轴上} \\ 
+\pi, & z \text{ 在 } x \text{ 负半轴上} \\ 
+-\dfrac{\pi}{2}, & z \text{ 在 } y \text{ 负半轴上} 
+\end{cases}
+$$
+
+\section{三维空间中的球面投影（黎曼球）}
+在三维空间中，取一个与复平面切于原点 $z=0$ 的半径为 $\frac{1}{2}$ 的球面：
+$$\xi^2 + \eta^2 + \left(\zeta - \frac{1}{2}\right)^2 = \left(\frac{1}{2}\right)^2$$
+\begin{itemize}
+    \item 记 $S(0, 0, 0)$ 为南极 $S$。
+    \item 记 $N(0, 0, 1)$ 为北极 $N$。
+\end{itemize}
+
+对于复平面内任一点 $z(x, y, 0)$，若用直线连接 $z$ 和 $N$，则交球面于点 $P(\xi, \eta, \zeta)$。
+
+$$\frac{x}{\xi} = \frac{y}{\eta} = \frac{1}{1-\zeta}$$
+即 $\xi = (1-\zeta)x, \eta = (1-\zeta)y$。
+
+代入得：
+\begin{itemize}
+    \item $\xi = \dfrac{x}{x^2+y^2+1} = \dfrac{z+\bar{z}}{2(|z|^2+1)}$
+    \item $\eta = \dfrac{y}{x^2+y^2+1} = \dfrac{z-\bar{z}}{2i(|z|^2+1)}$
+    \item $\zeta = \dfrac{|z|^2}{|z|^2+1}$
+\end{itemize}
+
+\subsection{无穷远点与四则运算}
+关于 $\infty$ 的四则运算如下：
+\begin{itemize}
+    \item $a + \infty = \infty + a = \infty$
+    \item $a - \infty = \infty - a = \infty \quad (a \neq \infty)$
+    \item $a \cdot \infty = \infty \cdot a = \infty \quad (a \neq 0, \infty)$
+    \item $\dfrac{a}{\infty} = 0, \quad \dfrac{\infty}{a} = \infty \quad (a \neq \infty)$
+    \item $\dfrac{a}{0} = \infty \quad (a \neq 0)$
+\end{itemize}
+
+\section{复内积空间 $\mathbb{C}^n$}
+\begin{itemize}
+    \item \textbf{定义}：设 $\vec{z}, \vec{w} \in \mathbb{C}^n$，内积定义为：
+    $$\langle \vec{z}, \vec{w} \rangle = \sum_{k=1}^{n} \bar{z}_k w_k$$
+    \item \textbf{Cauchy 不等式}：$|\langle \vec{z}, \vec{w} \rangle| \le \|\vec{z}\| \|\vec{w}\|$
+\end{itemize}
+
+\section{复数的 $n$ 次方根}
+$$w_k = \sqrt[n]{|z|} \left[ \cos\left(\frac{\argz z + 2k\pi}{n}\right) + i\sin\left(\frac{\argz z + 2k\pi}{n}\right) \right], \quad k=0, 1, \dots, n-1$$
+
+实例：求 $\sqrt[5]{1-\sqrt{3}i}$
+$$1-\sqrt{3}i = 2\left[\cos\left(-\frac{\pi}{3}\right) + i\sin\left(-\frac{\pi}{3}\right)\right]$$
+$$\sqrt[5]{2} \left[\cos\left(-\frac{\pi}{15} + \frac{2k\pi}{5}\right) + i\sin\left(-\frac{\pi}{15} + \frac{2k\pi}{5}\right)\right], \quad k=0,1,2,3,4$$

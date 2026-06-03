@@ -1,0 +1,73 @@
+\documentclass[11pt,a4paper]{book}
+\usepackage[T1]{fontenc}
+\usepackage[UTF8]{ctex} % 支持中文显示
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{geometry}
+\usepackage{times}
+\usepackage{bm}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{mathptmx} 
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tikz}
+\usetikzlibrary{shapes, arrows, positioning} 
+\usepackage[
+    colorlinks=true,
+    linkcolor=blue,
+    unicode=true,
+    citecolor=black, 
+    urlcolor=black,
+    pdfpagemode=UseNone,
+    pdfstartview=FitH
+]{hyperref}
+\geometry{left=2cm, right=2cm, top=2.5cm, bottom=2.5cm}
+\begin{document}
+% --- 重新设计的简单封面 ---
+\begin{titlepage}
+    \centering
+    \vspace*{2cm} % 稍微调高了顶部间距以平衡视觉
+    % 顶部的两条横线
+    \rule{\textwidth}{1pt}\par
+    \vspace{0.2cm}
+    \rule{\textwidth}{3pt}\par
+    
+    \vspace{1.5cm}
+    
+    {\Huge \bfseries 自动控制原理学习笔记 \par}
+    \vspace{0.5cm}
+    {\Large \itshape  \par} 
+    
+    \vspace{1cm}
+
+
+    \vspace{1cm}
+    
+    \rule{\textwidth}{3pt}\par
+    \vspace{0.2cm}
+    \rule{\textwidth}{1pt}\par
+    
+    \vspace{2cm}
+    
+    \begin{flushright}
+        {\Large \textbf{魏舟} } \\
+        \vspace{0.5cm}
+        {\large \today}
+    \end{flushright}
+    
+    \vfill
+    
+    {\color{gray} \footnotesize 自动控制原理的笔记}
+
+\end{titlepage}
+
+\tableofcontents
+\include{Chapter1}
+\include{Chapter2}
+
+\end{document}
