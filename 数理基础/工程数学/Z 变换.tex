@@ -1,0 +1,145 @@
+\chapter{Z 变换}
+
+在连续时间信号与系统分析中，拉普拉斯变换是将时域连续信号映射到复频域（$s$ 平面）的强有力工具。然而，在离散时间信号与数字信号处理（DSP）领域，我们需要处理的是离散时间序列。$Z$ 变换（Z-Transform）正是拉普拉斯变换在离散域的自然延伸，它将时域的离散序列映射到复平面（$z$ 平面）上，从而将时域的差分方程运算转化为离散复频域的代数运算，极大地简化了离散系统的分析与设计。
+
+---
+
+\section{Z 变换的定义与收敛域}
+
+\subsection{Z 变换的定义}
+\begin{tcolorbox}[colback=blue!5!white, colframe=blue!75!black, title=定义 \thechapter.1 \quad Z 变换]
+	设离散时间序列为 $x(n)$，其中 $n$ 为整数。定义 $x(n)$ 的\textbf{双边 $Z$ 变换}为：
+	$$ X(z) = \mathcal{Z}[x(n)] = \sum_{n=-\infty}^{+\infty} x(n) z^{-n} $$
+	其中 $z$ 是一个复变量，$z = r e^{i\omega}$。
+	
+	若序列在 $n < 0$ 时满足 $x(n) = 0$（即因果序列），则上述定义退化为\textbf{单边 $Z$ 变换}：
+	$$ X(z) = \mathcal{Z}[x(n)] = \sum_{n=0}^{+\infty} x(n) z^{-n} $$
+\end{tcolorbox}
+
+\subsection{收敛域（ROC）}
+由于 $Z$ 变换是以无穷级数的形式定义的，级数必须收敛才有数学意义。使得 $X(z)$ 绝对收敛的所有 $z$ 值的集合称为\textbf{收敛域}（Region of Convergence, 简称 ROC）。即满足：
+$$ \sum_{n=-\infty}^{+\infty} |x(n) z^{-n}| < +\infty $$
+若令 $z = r e^{i\omega}$，则上述条件变为 $\sum_{n=-\infty}^{+\infty} |x(n)| r^{-n} < +\infty$。这表明收敛域仅取决于 $z$ 的模长 $r = |z|$，因此在复平面上，**$Z$ 变换的收敛域通常是一系列同心圆环或圆外、圆内的区域**。
+
+根据序列 $x(n)$ 的时域特性，其收敛域通常分为以下几种情况：
+\begin{enumerate}
+	\item \textbf{有限长序列：} 仅在有限区间 $n_1 \le n \le n_2$ 内非零。其 ROC 通常为整个 $z$ 平面（可能除去 $z=0$ 或 $z=\infty$）。
+	\item \textbf{因果序列（右边序列）：} 当 $n < n_0$ 时 $x(n) = 0$。其 ROC 为某个圆的外侧区域：$|z| > R_x$。
+	\item \textbf{反因果序列（左边序列）：} 当 $n > n_0$ 时 $x(n) = 0$。其 ROC 为某个圆的内侧区域：$|z| < R_y$。
+	\item \textbf{双边序列：} 左右两侧均无限延伸。其 ROC 为一个圆环区域：$R_x < |z| < R_y$（若 $R_x < R_y$ 级数才存在交集收敛）。
+\end{enumerate}
+
+---
+
+\section{Z 变换的基本性质}
+
+设 $\mathcal{Z}[x(n)] = X(z)$，收敛域为 $\text{ROC}_x$；$\mathcal{Z}[y(n)] = Y(z)$，收敛域为 $\text{ROC}_y$。
+
+\subsection{线性性质}
+\begin{tcolorbox}[colback=teal!5!white, colframe=teal!75!black, title=定理 \thechapter.1 \quad 线性性质]
+	设 $a, b$ 为任意常数，则：
+	$$ \mathcal{Z}[a x(n) + b y(n)] = a X(z) + b Y(z) \quad (\text{ROC} \supseteq \text{ROC}_x \cap \text{ROC}_y) $$
+\end{tcolorbox}
+
+\subsection{时移性质（移位性质）}
+\begin{tcolorbox}[colback=teal!5!white, colframe=teal!75!black, title=定理 \thechapter.2 \quad 时移性质]
+	对于双边 $Z$ 变换，若 $m$ 为任意整数，则：
+	$$ \mathcal{Z}[x(n - m)] = z^{-m} X(z) $$
+	
+	对于单边 $Z$ 变换（设 $m > 0$），由于移位会导致部分序列值滑出或滑入积分限，其公式修正为：
+	\begin{align*}
+		\mathcal{Z}[x(n - m)] &= z^{-m} X(z) + \sum_{k=0}^{m-1} x(k-m) z^{-k} \quad (\text{时域右移/延迟}) \\
+		\mathcal{Z}[x(n + m)] &= z^m \left[ X(z) - \sum_{k=0}^{m-1} x(k) z^{-k} \right] \quad (\text{时域左移/超前})
+	\end{align*}
+\end{tcolorbox}
+\begin{proof}[双边时移证明]
+	根据定义，令 $m' = n - m$，则 $n = m' + m$：
+	$$ \mathcal{Z}[x(n - m)] = \sum_{n=-\infty}^{+\infty} x(n-m) z^{-n} = \sum_{m'=-\infty}^{+\infty} x(m') z^{-(m'+m)} = z^{-m} \sum_{m'=-\infty}^{+\infty} x(m') z^{-m'} = z^{-m} X(z) $$
+\end{proof}
+
+\subsection{$z$ 域尺度变换（序列乘指数序列）}
+\begin{tcolorbox}[colback=teal!5!white, colframe=teal!75!black, title=定理 \thechapter.3 \quad $z$ 域尺度变换]
+	若 $a$ 为非零复常数，则：
+	$$ \mathcal{Z}[a^n x(n)] = X\left(\frac{z}{a}\right) \quad (\text{新 ROC: } |a| \cdot \text{ROC}_x) $$
+\end{tcolorbox}
+
+\subsection{时域微分（$z$ 域求导性质）}
+\begin{tcolorbox}[colback=teal!5!white, colframe=teal!75!black, title=定理 \thechapter.4 \quad $z$ 域求导性质]
+	序列乘以线性自变量 $n$ 对应于复频域的微分运算：
+	$$ \mathcal{Z}[n x(n)] = -z \frac{dX(z)}{dz} $$
+\end{tcolorbox}
+
+\subsection{时域卷积定理}
+时域卷积定理是数字线性时不变（LTI）系统级联与滤波分析的理论基石。
+\begin{tcolorbox}[colback=teal!5!white, colframe=teal!75!black, title=定理 \thechapter.5 \quad 时域卷积定理]
+	两个离散序列的卷积定义为 $x(n) * y(n) = \sum_{k=-\infty}^{+\infty} x(k)y(n-k)$。其 $Z$ 变换等于各自像函数的乘积：
+	$$ \mathcal{Z}[x(n) * y(n)] = X(z) \cdot Y(z) \quad (\text{ROC} \supseteq \text{ROC}_x \cap \text{ROC}_y) $$
+\end{tcolorbox}
+
+---
+
+\section{逆 Z 变换的计算方法}
+
+求解原序列 $x(n) = \mathcal{Z}^{-1}[X(z)]$ 常见的有三种经典代数方法。
+
+\subsection{1. 幂级数展开法（长除法）}
+由于 $X(z) = \sum x(n)z^{-n}$，若能将 $X(z)$ 写成关于 $z^{-1}$ 或 $z$ 的幂级数形式，则各项系数即为序列值 $x(n)$。在处理有理分式 $X(z) = \frac{P(z)}{Q(z)}$ 时，根据收敛域的指示，将分式进行多项式长除法展开：
+\begin{itemize}
+	\item 若 ROC 为圆外区域 $|z| > R$（因果序列），则将分子分母按 $z$ 的降幂（或 $z^{-1}$ 的升幂）排列进行长除，得到 $X(z) = c_0 + c_1 z^{-1} + c_2 z^{-2} + \cdots$。
+	\item 若 ROC 为圆内区域 $|z| < R$（反因果序列），则按 $z$ 的升幂排列进行长除。
+\end{itemize}
+
+\subsection{2. 部分分式展开法}
+当 $X(z)$ 是有理有理分式时，为了方便利用公式表，通常先对 $\frac{X(z)}{z}$ 进行部分分式展开（因为典型变换公式分子往往带 $z$）：
+$$ \frac{X(z)}{z} = \frac{A_1}{z - p_1} + \frac{A_2}{z - p_2} + \cdots $$
+乘回 $z$ 得到 $X(z) = \sum \frac{A_k z}{z - p_k}$，再根据收敛域 ROC 结合基本变换对（如 $\mathcal{Z}[a^n u(n)] = \frac{z}{z-a}, |z|>|a|$）求出原序列。
+
+\subsection{3. 留数计算法（复反演积分法）}
+根据围道积分定理，逆 $Z$ 变换的严格数学逆运算为：
+$$ x(n) = \mathcal{Z}^{-1}[X(z)] = \frac{1}{2\pi i} \oint_{C} X(z) z^{n-1} dz $$
+其中 $C$ 是收敛域内的一条逆时针正向闭合围道。由柯西留数定理可得：
+\begin{tcolorbox}[colback=teal!5!white, colframe=teal!75!black, title=定理 \thechapter.6 \quad 留数法求逆 Z 变换]
+	$$ x(n) = \sum_{k} \text{Res}[X(z) z^{n-1}, z_k] $$
+	其中 $z_k$ 是函数 $X(z)z^{n-1}$ 在围道 $C$ \textbf{内部} 的所有孤立奇点。
+\end{tcolorbox}
+*注意：* 随着 $n$ 取值的正负变化， $z=0$ 处可能会产生高阶极点，计算时通常需要分 $n \ge 0$ 和 $n < 0$ 讨论。
+
+---
+
+\section{Z 变换的应用：求解差分方程}
+
+线性常系数差分方程（LCCDE）是离散时间系统的时域数学模型。利用单边 $Z$ 变换的时移性质，可以非常优雅地解出包含初始条件的非齐次差分方程。
+
+\subsection{典型例题}
+\begin{tcolorbox}[colback=orange!5!white, colframe=orange!75!black, title=例题 \thechapter.1]
+	已知一因果离散系统的差分方程为：
+	$$ y(n) - \frac{1}{2}y(n-1) = x(n) $$
+	若激励信号 $x(n) = \left(\frac{1}{3}\right)^n u(n)$，且已知初始状态为 $y(-1) = 1$。求系统的全响应 $y(n)$。
+\end{tcolorbox}
+\begin{proof}[解]
+	对差分方程两边同时求\textbf{单边 $Z$ 变换}。
+	根据单边时移性质，有 $\mathcal{Z}[y(n-1)] = z^{-1}Y(z) + y(-1)$。代入方程得：
+	$$ Y(z) - \frac{1}{2}\left[ z^{-1}Y(z) + y(-1) \right] = X(z) $$
+	
+	已知 $x(n) = \left(\frac{1}{3}\right)^n u(n)$，其 $Z$ 变换为 $X(z) = \frac{1}{1 - \frac{1}{3}z^{-1}} = \frac{z}{z - \frac{1}{3}}$，收敛域为 $|z| > \frac{1}{3}$。
+	将初始条件 $y(-1) = 1$ 和 $X(z)$ 代入复频域代数方程中：
+	$$ \left(1 - \frac{1}{2}z^{-1}\right)Y(z) - \frac{1}{2} = \frac{1}{1 - \frac{1}{3}z^{-1}} $$
+	$$ \left(1 - \frac{1}{2}z^{-1}\right)Y(z) = \frac{1}{2} + \frac{1}{1 - \frac{1}{3}z^{-1}} = \frac{\frac{1}{2}\left(1 - \frac{1}{3}z^{-1}\right) + 1}{1 - \frac{1}{3}z^{-1}} = \frac{\frac{3}{2} - \frac{1}{6}z^{-1}}{1 - \frac{1}{3}z^{-1}} $$
+	
+	两边同除以 $\left(1 - \frac{1}{2}z^{-1}\right)$，得到系统全响应的像函数 $Y(z)$：
+	$$ Y(z) = \frac{\frac{3}{2} - \frac{1}{6}z^{-1}}{\left(1 - \frac{1}{2}z^{-1}\right)\left(1 - \frac{1}{3}z^{-1}\right)} $$
+	上下同乘 $z^2$，将其整理为关于 $z$ 的有理分式以便于展开：
+	$$ Y(z) = \frac{z\left(\frac{3}{2}z - \frac{1}{6}\right)}{\left(z - \frac{1}{2}\right)\left(z - \frac{1}{3}\right)} \implies \frac{Y(z)}{z} = \frac{\frac{3}{2}z - \frac{1}{6}}{\left(z - \frac{1}{2}\right)\left(z - \frac{1}{3}\right)} $$
+	
+	利用部分分式展开法：
+	$$ \frac{Y(z)}{z} = \frac{A}{z - \frac{1}{2}} + \frac{B}{z - \frac{1}{3}} $$
+	计算留数系数 $A$ 和 $B$：
+	$$ A = \left. \frac{\frac{3}{2}z - \frac{1}{6}}{z - \frac{1}{3}} \right|_{z=\frac{1}{2}} = \frac{\frac{3}{4} - \frac{1}{6}}{\frac{1}{2} - \frac{1}{3}} = \frac{\frac{7}{12}}{\frac{1}{6}} = \frac{7}{2} $$
+	$$ B = \left. \frac{\frac{3}{2}z - \frac{1}{6}}{z - \frac{1}{2}} \right|_{z=\frac{1}{3}} = \frac{\frac{1}{2} - \frac{1}{6}}{\frac{1}{3} - \frac{1}{2}} = \frac{\frac{1}{3}}{-\frac{1}{6}} = -2 $$
+	
+	于是有：
+	$$ \frac{Y(z)}{z} = \frac{\frac{7}{2}}{z - \frac{1}{2}} - \frac{2}{z - \frac{1}{3}} \implies Y(z) = \frac{7}{2}\frac{z}{z - \frac{1}{2}} - 2\frac{z}{z - \frac{1}{3}} $$
+	
+	由于系统和输入信号均为因果的，故响应的收敛域为 $|z| > \frac{1}{2}$。逐项求逆 $Z$ 变换，最终得到时域全响应解为：
+	$$ y(n) = \left[ \frac{7}{2}\left(\frac{1}{2}\right)^n - 2\left(\frac{1}{3}\right)^n \right] u(n) $$
+\end{proof}

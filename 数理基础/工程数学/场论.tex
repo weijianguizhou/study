@@ -1,0 +1,143 @@
+\chapter{场论}
+
+场论（Field Theory）是研究物理量在空间中分布与变化规律的数学工具，广泛应用于电磁学、流体力学与理论物理中。空间中的场主要分为标量场（如温度场、电势场）和矢量场（如流速场、电场）。本章将引入哈密顿算子（$\nabla$），系统阐述梯度的几何意义，散度与旋度的物理本质，并深入讨论高斯定理与斯托克斯定理这两大连接低维积分与高维积分的核心纽带。
+
+---
+
+\section{标量场的梯度}
+
+\subsection{方向导数}
+标量场中某一点的变化率不仅与位置有关，还与选取的方向有关。
+\begin{tcolorbox}[colback=blue!5!white, colframe=blue!75!black, title=定义 \thechapter.1 \quad 方向导数]
+	设标量函数 $u = f(x, y, z)$ 在点 $P(x, y, z)$ 的某邻域内有定义。$\vec{l} = (\cos\alpha, \cos\beta, \cos\gamma)$ 是从点 $P$ 出发的具有方向余弦的单位方向矢量。若极限
+	$$ \frac{\partial u}{\partial l} = \lim_{\Delta t \to 0} \frac{f(x + \Delta t\cos\alpha, y + \Delta t\cos\beta, z + \Delta t\cos\gamma) - f(x, y, z)}{\Delta t} $$
+	存在，则称该极限为标量场 $u$ 在点 $P$ 沿方向 $\vec{l}$ 的\textbf{方向导数}。
+\end{tcolorbox}
+
+若 $u = f(x, y, z)$ 可微，则其沿 $\vec{l}$ 的方向导数可以通过偏导数线性组合求得：
+$$ \frac{\partial u}{\partial l} = \frac{\partial u}{\partial x}\cos\alpha + \frac{\partial u}{\partial y}\cos\beta + \frac{\partial u}{\partial z}\cos\gamma $$
+
+\subsection{梯度的定义与几何意义}
+为了寻找使得方向导数取得最大值的方向，我们引入梯度的概念。
+\begin{tcolorbox}[colback=blue!5!white, colframe=blue!75!black, title=定义 \thechapter.2 \quad 梯度]
+	设标量场 $u = f(x, y, z)$ 在区域内各点存在一阶偏导数，则称矢量
+	$$ \text{grad}\,u = \nabla u = \frac{\partial u}{\partial x}\vec{i} + \frac{\partial u}{\partial y}\vec{j} + \frac{\partial u}{\partial z}\vec{k} $$
+	为标量场 $u$ 在该点处的\textbf{梯度}（Gradient）。其中 $\nabla = \vec{i}\frac{\partial}{\partial x} + \vec{j}\frac{\partial}{\partial y} + \vec{k}\frac{\partial}{\partial z}$ 称为\textbf{哈密顿算子}（Nabla 算子）。
+\end{tcolorbox}
+
+\textbf{几何与物理意义：}
+\begin{enumerate}
+	\item \textbf{最大变化率：} 方向导数可写为内积形式 $\frac{\partial u}{\partial l} = \nabla u \cdot \vec{l} = |\nabla u| \cos\theta$。因此，当 $\vec{l}$ 与 $\nabla u$ 同向时（$\theta=0$），方向导数取得最大值 $|\nabla u|$。这表明：\textbf{梯度方向是标量场数值增长最快的法向方向，梯度的模长等于该方向的最大增长率}。
+	\item \textbf{正交性：} 标量场在空间中形成的等值面群为 $f(x, y, z) = C$。梯度矢量 $\nabla u$ 严格垂直于过该点的等值面，即\textbf{梯度恒指向等值面的正法线方向}。
+\end{enumerate}
+
+---
+
+\section{矢量场的散度与旋度}
+
+设矢量场在直角坐标系下的表达式为：$\vec{A}(x, y, z) = P(x, y, z)\vec{i} + Q(x, y, z)\vec{j} + R(x, y, z)\vec{k}$。
+
+\subsection{散度的定义与物理本质}
+\begin{tcolorbox}[colback=blue!5!white, colframe=blue!75!black, title=定义 \thechapter.3 \quad 散度]
+	称标量
+	$$ \text{div}\,\vec{A} = \nabla \cdot \vec{A} = \frac{\partial P}{\partial x} + \frac{\partial Q}{\partial y} + \frac{\partial R}{\partial z} $$
+	为矢量场 $\vec{A}$ 的\textbf{散度}（Divergence）。
+\end{tcolorbox}
+
+\textbf{物理本质：} 散度是一个标量，表征了矢量场在某点处的“源头”或“汇”的强度。
+\begin{itemize}
+	\item $\nabla \cdot \vec{A} > 0$：该点有正源，通量向外流出。
+	\item $\nabla \cdot \vec{A} < 0$：该点有负源（汇），通量向内流入。
+	\item $\nabla \cdot \vec{A} = 0$：该点无源。若在某区域内处处有 $\nabla \cdot \vec{A} = 0$，则称该场为\textbf{无源场}或\textbf{管流场}。
+\end{itemize}
+
+\subsection{旋度的定义与物理本质}
+\begin{tcolorbox}[colback=blue!5!white, colframe=blue!75!black, title=定义 \thechapter.4 \quad 旋度]
+	称矢量
+	$$ \text{rot}\,\vec{A} = \text{curl}\,\vec{A} = \nabla \times \vec{A} = \begin{vmatrix} \vec{i} & \vec{j} & \vec{k} \\ \frac{\partial}{\partial x} & \frac{\partial}{\partial y} & \frac{\partial}{\partial z} \\ P & Q & R \end{vmatrix} $$
+	展开形式为：
+	$$ \nabla \times \vec{A} = \left( \frac{\partial R}{\partial y} - \frac{\partial Q}{\partial z} \right)\vec{i} + \left( \frac{\partial P}{\partial z} - \frac{\partial R}{\partial x} \right)\vec{j} + \left( \frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y} \right)\vec{k} $$
+	为矢量场 $\vec{A}$ 的\textbf{旋度}（Curl）。
+\end{tcolorbox}
+
+\textbf{物理本质：} 旋度是一个矢量，表征了矢量场在某点处的旋转微观效应。它的方向是流体旋转微元旋转轴的法向（符合右手螺旋定则），模长等于该点最大环流面密度。若在某区域内处处有 $\nabla \times \vec{A} = \vec{0}$，则称该场为\textbf{无旋场}或\textbf{保守场}。
+
+---
+
+\section{场论两大核心积分定理}
+
+\subsection{高斯散度定理}
+高斯定理建立了闭合曲面积分（宏观通量）与体积分（微观散度累加）之间的桥梁。
+\begin{tcolorbox}[colback=teal!5!white, colframe=teal!75!black, title=定理 \thechapter.1 \quad 高斯散度定理 (Gauss's Theorem)]
+	设空间有界闭区域 $V$ 的边界为分片光滑的闭曲面 $S$，$\vec{n}$ 是 $S$ 的外法线单位矢量。若矢量场 $\vec{A}$ 在 $V$ 上有一阶连续偏导数，则有：
+	$$ \oiint_{S} \vec{A} \cdot \vec{n}\, dS = \iiint_{V} (\nabla \cdot \vec{A})\, dV $$
+	即通过闭合曲面的总通量等于该曲面所包围体积内散度的总和。
+\end{tcolorbox}
+
+\subsection{斯托克斯定理}
+斯托克斯定理建立了沿闭合曲线的线积分（环流）与以该曲线为边界的开放曲面积分（旋度通量）之间的联系。
+\begin{tcolorbox}[colback=teal!5!white, colframe=teal!75!black, title=定理 \thechapter.2 \quad 斯托克斯定理 (Stokes's Theorem)]
+	设 $S$ 为分片光滑的开放曲面，其边界为分段光滑的空间右旋闭合曲线 $\Gamma$。$\vec{n}$ 为曲面 $S$ 的单位法矢量，且 $\Gamma$ 的正方向与 $\vec{n}$ 满足右手螺旋法则。若 $\vec{A}$ 在包含 $S$ 的开区域内有一阶连续偏导数，则：
+	$$ \oint_{\Gamma} \vec{A} \cdot d\vec{r} = \iint_{S} (\nabla \times \vec{A}) \cdot \vec{n}\, dS $$
+	即矢量沿闭合回路的环流等于该回路所张曲面上旋度的总通量。
+\end{tcolorbox}
+
+---
+
+\section{哈密顿算子的代数运算法则}
+
+$\nabla$ 算子具有双重身份：一方面它具有\textbf{微分算子}的特征（满足乘积微分求导律）；另一方面它具有\textbf{几何矢量}的特征（满足点积、叉积的代数规律）。
+
+\subsection{一阶算子核心恒等式}
+设 $u, v$ 为标量场，$\vec{A}, \vec{B}$ 为矢量场，以下恒等式在线性场论推导中被频繁使用：
+\begin{tcolorbox}[colback=teal!5!white, colframe=teal!75!black, title=定理 \thechapter.3 \quad 乘积性质恒等式]
+	\begin{align}
+		\nabla (uv) &= u \nabla v + v \nabla u \\
+		\nabla \cdot (u \vec{A}) &= u (\nabla \cdot \vec{A}) + \nabla u \cdot \vec{A} \\
+		\nabla \times (u \vec{A}) &= u (\nabla \times \vec{A}) + \nabla u \times \vec{A} \\
+		\nabla \cdot (\vec{A} \times \vec{B}) &= \vec{B} \cdot (\nabla \times \vec{A}) - \vec{A} \cdot (\nabla \times \vec{B})
+	\end{align}
+\end{tcolorbox}
+
+\subsection{\texorpdfstring{二阶算子与拉普拉斯算子}{二阶算子与拉普拉斯算子}}
+将 $\nabla$ 算子两次作用于场，可以得到五个主要的二阶场运算，其中有两项因“矢量几何恒等性”（如 $\vec{a}\times\vec{a}=\vec{0}$）而恒等于 0：
+\begin{tcolorbox}[colback=teal!5!white, colframe=teal!75!black, title=定理 \thechapter.4 \quad 二阶核心恒等式]
+	\begin{enumerate}
+		\item \textbf{梯度的旋度恒为零（保守场必无旋）：}
+		$$ \nabla \times (\nabla u) = \vec{0} \quad (\text{rot}(\text{grad}\,u) = \vec{0}) $$
+		\item \textbf{旋度的散度恒为零（旋涡场必无源）：}
+		$$ \nabla \cdot (\nabla \times \vec{A}) = 0 \quad (\text{div}(\text{rot}\,\vec{A}) = 0) $$
+	\end{enumerate}
+\end{tcolorbox}
+
+另外，梯度的散度 $\nabla \cdot (\nabla u)$ 引入了一个极其核心的算子——\textbf{拉普拉斯算子}（Laplacian），记为 $\nabla^2$ 或 $\Delta$：
+$$ \nabla \cdot (\nabla u) = \nabla^2 u = \frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2} + \frac{\partial^2 u}{\partial z^2} $$
+
+---
+
+\section{典型例题解析}
+
+\begin{tcolorbox}[colback=orange!5!white, colframe=orange!75!black, title=例题 \thechapter.1]
+	已知标量场为 $u = x^2 y z^3$，求：
+	\begin{enumerate}
+		\item 在点 $P(1, 2, 1)$ 处的梯度 $\nabla u$；
+		\item 在点 $P(1, 2, 1)$ 处沿从点 $P$ 指向点 $Q(2, 4, 3)$ 方向的方向导数 $\frac{\partial u}{\partial l}$。
+	\end{enumerate}
+\end{tcolorbox}
+
+\begin{proof}[解]
+	(1) 首先求标量场 $u$ 在任意点处的各阶偏导数：
+	$$ \frac{\partial u}{\partial x} = 2xyz^3, \quad \frac{\partial u}{\partial y} = x^2z^3, \quad \frac{\partial u}{\partial z} = 3x^2yz^2 $$
+	将点 $P(1, 2, 1)$ 代入上述偏导数中，可得：
+	$$ \left.\frac{\partial u}{\partial x}\right|_P = 2(1)(2)(1)^3 = 4, \quad \left.\frac{\partial u}{\partial y}\right|_P = (1)^2(1)^3 = 1, \quad \left.\frac{\partial u}{\partial z}\right|_P = 3(1)^2(2)(1)^2 = 6 $$
+	故点 $P$ 处的梯度为：
+	$$ \nabla u|_P = 4\vec{i} + \vec{j} + 6\vec{k} $$
+	
+	(2) 算出从点 $P$ 指向点 $Q$ 的位移矢量 $\vec{PQ}$：
+	$$ \vec{PQ} = (2-1)\vec{i} + (4-2)\vec{j} + (3-1)\vec{k} = \vec{i} + 2\vec{j} + 2\vec{k} $$
+	其模长为 $|\vec{PQ}| = \sqrt{1^2 + 2^2 + 2^2} = 3$。进而得到该方向的单位方向矢量 $\vec{l}$：
+	$$ \vec{l} = \frac{\vec{PQ}}{|\vec{PQ}|} = \frac{1}{3}\vec{i} + \frac{2}{3}\vec{j} + \frac{2}{3}\vec{k} $$
+	根据方向导数与梯度的点积映射关系：
+	$$ \frac{\partial u}{\partial l} = \nabla u|_P \cdot \vec{l} = (4, 1, 6) \cdot \left(\frac{1}{3}, \frac{2}{3}, \frac{2}{3}\right) = 4\cdot\frac{1}{3} + 1\cdot\frac{2}{3} + 6\cdot\frac{2}{3} = \frac{4 + 2 + 12}{3} = 6 $$
+	因此，场在点 $P$ 沿 $\vec{PQ}$ 方向的方向导数为 $6$。
+\end{proof}
