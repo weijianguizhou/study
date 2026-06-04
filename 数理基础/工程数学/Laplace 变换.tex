@@ -1,0 +1,177 @@
+\chapter{Laplace 变换}
+
+拉普拉斯变换（Laplace Transform）是算子振幅分析与线性系统理论中的强有力工具。它能够将时域中的微分、积分运算转化为复频域中的代数运算，从而极大地简化了解微分方程（组）的步骤。本章将详细讨论拉普拉斯变换的定义、核心性质、利用复变函数中的留数理论计算逆变换的方法，以及其在求解常微分方程初值问题中的典型应用。
+
+---
+
+\section{Laplace 变换的定义与存在定理}
+
+\subsection{Laplace 变换的定义}
+\begin{tcolorbox}[colback=blue!5!white, colframe=blue!75!black, title=定义 \thechapter.1 \quad Laplace 变换]
+	设函数 $f(t)$ 在 $t \ge 0$ 时有定义， $s = \sigma + i\omega$ 是一个复变量。若广义积分
+	$$ F(s) = \int_{0}^{+\infty} f(t) e^{-st} dt $$
+	在 $s$ 的某一区域内收敛，则称此积分确定了一个复变量 $s$ 的函数 $F(s)$，并称 $F(s)$ 为函数 $f(t)$ 的\textbf{拉普拉斯变换}（或像函数），记为：
+	$$ F(s) = \mathcal{L}[f(t)] $$
+	相应地，称 $f(t)$ 为 $F(s)$ 的\textbf{拉普拉斯逆变换}（或原函数），记为：
+	$$ f(t) = \mathcal{L}^{-1}[F(s)] $$
+\end{tcolorbox}
+
+\subsection{Laplace 变换的存在定理}
+并非所有的函数都存在拉普拉斯变换。以下定理给出了积分收敛的充分条件。
+\begin{tcolorbox}[colback=teal!5!white, colframe=teal!75!black, title=定理 \thechapter.1 \quad 存在定理]
+	若函数 $f(t)$ 满足下列条件：
+	\begin{enumerate}
+		\item 在 $t \ge 0$ 的任何有限区间上分段连续；
+		\item 当 $t \to +\infty$ 时，其增长速度是有限的，即存在常数 $M > 0$ 和 $c \ge 0$，使得：
+		$$ |f(t)| \le M e^{ct} \quad (\text{称 } f(t) \text{ 为指数级增长函数}) $$
+	\end{enumerate}
+	则当 $\text{Re}(s) > c$ 时，拉普拉斯变换积分必绝对收敛，且像函数 $F(s)$ 在右半平面 $\text{Re}(s) > c$ 内是解析的。
+\end{tcolorbox}
+
+---
+
+\section{Laplace 变换的基本性质}
+
+\subsection{线性性质}
+\begin{tcolorbox}[colback=teal!5!white, colframe=teal!75!black, title=定理 \thechapter.2 \quad 线性性质]
+	设 $\mathcal{L}[f_1(t)] = F_1(s)$，$\mathcal{L}[f_2(t)] = F_2(s)$，$\alpha, \beta$ 为任意常数，则：
+	$$ \mathcal{L}[\alpha f_1(t) + \beta f_2(t)] = \alpha F_1(s) + \beta F_2(s) $$
+\end{tcolorbox}
+
+\subsection{微分性质（时域微分）}
+\begin{tcolorbox}[colback=teal!5!white, colframe=teal!75!black, title=定理 \thechapter.3 \quad 微分定理]
+	设 $f(t)$ 连续，且其导数 $f'(t)$ 满足存在定理的条件，若 $\mathcal{L}[f(t)] = F(s)$，则：
+	$$ \mathcal{L}[f'(t)] = sF(s) - f(0) $$
+	一般地，若 $f(t)$ 的各阶导数均满足条件，则有 $n$ 阶微分公式：
+	$$ \mathcal{L}[f^{(n)}(t)] = s^n F(s) - s^{n-1}f(0) - s^{n-2}f'(0) - \cdots - f^{(n-1)}(0) $$
+\end{tcolorbox}
+
+\subsection{积分性质（时域积分）}
+\begin{tcolorbox}[colback=teal!5!white, colframe=teal!75!black, title=定理 \thechapter.4 \quad 积分定理]
+	若 $\mathcal{L}[f(t)] = F(s)$，则其变上限积分的拉氏变换为：
+	$$ \mathcal{L}\left[ \int_{0}^{t} f(\tau) d\tau \right] = \frac{1}{s} F(s) $$
+\end{tcolorbox}
+
+\subsection{相似性质}
+\begin{tcolorbox}[colback=teal!5!white, colframe=teal!75!black, title=定理 \thechapter.5 \quad 相似性质]
+	若 $a$ 为正实数，且 $\mathcal{L}[f(t)] = F(s)$，则：
+	$$ \mathcal{L}[f(at)] = \frac{1}{a} F\left(\frac{s}{a}\right) \quad \left(\text{Re}\left(\frac{s}{a}\right) > c\right) $$
+\end{tcolorbox}
+\begin{proof}
+	根据定义，有：
+	$$ \mathcal{L}[f(at)] = \int_{0}^{+\infty} f(at)e^{-st} dt $$
+	令 $u = at$，则 $t = \frac{u}{a}$，$dt = \frac{1}{a}du$。代入积分式中得：
+	$$ \mathcal{L}[f(at)] = \int_{0}^{+\infty} f(u)e^{-s\frac{u}{a}} d\left(\frac{u}{a}\right) = \frac{1}{a} \int_{0}^{+\infty} f(u)e^{-\left(\frac{s}{a}\right)u} du = \frac{1}{a} F\left(\frac{s}{a}\right) $$
+\end{proof}
+
+\textbf{延伸推论：}
+\begin{enumerate}
+	\item 若已知 $\mathcal{L}[f(t)] = F(s)$，则 $\mathcal{L}\left[f\left(\frac{t}{a}\right)\right] = aF(as)$。
+	\item 结合衰减性质（位移性质），可得：$\mathcal{L}\left[e^{at}f\left(\frac{t}{a}\right)\right] = aF(a(s-a))$。
+\end{enumerate}
+
+\subsection{卷积性质}
+\begin{tcolorbox}[colback=blue!5!white, colframe=blue!75!black, title=定义 \thechapter.2 \quad 卷积]
+	设函数 $f(t)$ 与 $g(t)$ 在 $[0, +\infty)$ 上有定义，称积分
+	$$ \int_{0}^{t} f(\tau)g(t-\tau)d\tau \quad (t \ge 0) $$
+	为函数 $f(t)$ 与 $g(t)$ 的\textbf{卷积}，记为 $f(t) * g(t)$。
+\end{tcolorbox}
+
+卷积运算满足交换律，即：$f(t) * g(t) = g(t) * f(t)$。
+
+\begin{tcolorbox}[colback=teal!5!white, colframe=teal!75!black, title=定理 \thechapter.6 \quad 卷积定理]
+	若 $\mathcal{L}[f(t)] = F(s)$，$\mathcal{L}[g(t)] = G(s)$，则两个函数时域卷积的拉普拉斯变换等于它们各自像函数的乘积：
+	$$ \mathcal{L}[f(t) * g(t)] = F(s) \cdot G(s) $$
+\end{tcolorbox}
+\begin{proof}
+	由定义开展二重积分：
+	$$ \mathcal{L}[f(t) * g(t)] = \int_{0}^{+\infty} \left[ \int_{0}^{t} f(\tau)g(t-\tau)d\tau \right] e^{-st} dt = \int_{0}^{+\infty} f(\tau) d\tau \int_{\tau}^{+\infty} g(t-\tau)e^{-st} dt $$
+	在内层积分中令 $u = t - \tau$，则 $t = u + \tau$，$dt = du$。积分限从 $[\tau, +\infty)$ 变为 $[0, +\infty)$：
+	$$ \mathcal{L}[f(t) * g(t)] = \int_{0}^{+\infty} f(\tau) d\tau \int_{0}^{+\infty} g(u)e^{-s(u+\tau)} du = \left( \int_{0}^{+\infty} f(\tau)e^{-s\tau} d\tau \right) \cdot \left( \int_{0}^{+\infty} g(u)e^{-su} du \right) = F(s)G(s) $$
+\end{proof}
+
+\textbf{逆变换应用：} 
+$$ \mathcal{L}^{-1}[F(s)G(s)] = f(t) * g(t) = \int_{0}^{t} f(\tau)g(t-\tau)d\tau $$
+
+\subsection{初值定理与终值定理}
+\begin{tcolorbox}[colback=teal!5!white, colframe=teal!75!black, title=定理 \thechapter.7 \quad 初值定理]
+	设 $\mathcal{L}[f(t)] = F(s)$，且 $\lim_{t \to 0^+} f(t)$ 存在，则：
+	$$ \lim_{t \to 0^+} f(t) = \lim_{s \to \infty} sF(s) $$
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=teal!5!white, colframe=teal!75!black, title=定理 \thechapter.8 \quad 终值定理]
+	设 $\mathcal{L}[f(t)] = F(s)$，若 $\lim_{t \to +\infty} f(t)$ 存在，且像函数 $F(s)$ 在右半复平面及虚轴上除原点外无奇点（即 $F(s)$ 的所有奇点均位于左半平面 $\text{Re}(s) < 0$ 或原点），则：
+	$$ \lim_{t \to +\infty} f(t) = \lim_{s \to 0} sF(s) $$
+\end{tcolorbox}
+
+---
+
+\section{用留数计算 Laplace 逆变换}
+
+\begin{tcolorbox}[colback=teal!5!white, colframe=teal!75!black, title=定理 \thechapter.9 \quad 留数反演定理]
+	设像函数 $F(s)$ 在整个扩充复平面上除去有限个孤立奇点 $s_1, s_2, \cdots, s_n$ 外处处解析，且满足条件 $\lim_{s \to \infty} F(s) = 0$。如果选取实数 $\beta$ 使得 $F(s)$ 的所有奇点都位于半平面 $\text{Re}(s) < \beta$ 内，则当 $t > 0$ 时，$F(s)$ 的拉普拉斯逆变换 $f(t)$ 可以表示为 $F(s)e^{st}$ 在其所有奇点处的留数之和：
+	$$ f(t) = \mathcal{L}^{-1}[F(s)] = \sum_{k=1}^{n} \text{Res}[F(s)e^{st}, s_k] \quad (t > 0) $$
+\end{tcolorbox}
+
+\subsection{典型极点处的留数计算法}
+1. \textbf{单极点（一阶极点）：}
+$$ \text{Res}[F(s)e^{st}, s_k] = \lim_{s \to s_k} (s - s_k)F(s)e^{st} $$
+2. \textbf{高阶极点（以 $m$ 阶极点为例）：}
+$$ \text{Res}[F(s)e^{st}, s_k] = \frac{1}{(m-1)!} \lim_{s \to s_k} \frac{d^{m-1 biographical}}{ds^{m-1}} \left[ (s - s_k)^m F(s)e^{st} \right] $$
+
+---
+
+\section{Laplace 变换的应用}
+
+拉普拉斯变换的基本应用逻辑是将时域的微分方程，通过导数的拉氏变换公式转化为关于 $Y(s)$ 的复频域代数方程，解出 $Y(s)$ 后再求其拉氏逆变换得到原微分方程的解。
+
+
+
+\subsection{典型例题 1：求解高阶常微分方程初值问题}
+\begin{tcolorbox}[colback=orange!5!white, colframe=orange!75!black, title=例题 \thechapter.1]
+	求微分方程 $y'' - 2y' - 3y = te^{-t}$ 满足初始条件 $y|_{t=0} = 0, y'|_{t=0} = 1$ 的解。
+\end{tcolorbox}
+\begin{proof}[解]
+	设 $\mathcal{L}[y(t)] = Y(s)$。已知 $\mathcal{L}[te^{-t}] = \frac{1}{(s+1)^2}$。
+	对方程两边同时取拉普拉斯变换：
+	$$ \left[ s^2Y(s) - s y(0) - y'(0) \right] - 2\left[ sY(s) - y(0) \right] - 3Y(s) = \frac{1}{(s+1)^2} $$
+	代入初始条件 $y(0) = 0, y'(0) = 1$ 得：
+	$$ (s^2 - 2s - 3)Y(s) - 1 = \frac{1}{(s+1)^2} $$
+	由于 $s^2 - 2s - 3 = (s-3)(s+1)$，故：
+	$$ (s-3)(s+1)Y(s) = 1 + \frac{1}{(s+1)^2} = \frac{(s+1)^2 + 1}{(s+1)^2} $$
+	$$ Y(s) = \frac{1}{(s-3)(s+1)^3} + \frac{1}{(s-3)(s+1)} $$
+	
+	为了求 $y(t) = \mathcal{L}^{-1}[Y(s)]$，我们可以分别对两部分用留数反演定理或分式展开进行计算：
+	对于 $Y(s)$，其孤立奇点为 $s_1 = 3$（单极点）和 $s_2 = -1$（三阶极点）。
+	根据留数反演定理：
+	$$ y(t) = \text{Res}[Y(s)e^{st}, 3] + \text{Res}[Y(s)e^{st}, -1] $$
+	经计算（或结合部分分式展开与时域卷积）可得原方程的唯一时域特解。
+\end{proof}
+
+\subsection{典型例题 2：求解常微分方程组初值问题}
+\begin{tcolorbox}[colback=orange!5!white, colframe=orange!75!black, title=例题 \thechapter.2]
+	求解常微分方程组
+	$$ \begin{cases} x'' - y'' = e^t \\ x'' - 2y'' + y = 0 \end{cases} $$
+	满足初始条件：$x(0) = 1, x'(0) = 0, y(0) = 0, y'(0) = 0$。
+\end{tcolorbox}
+\begin{proof}[解]
+	设 $\mathcal{L}[x(t)] = X(s)$，$\mathcal{L}[y(t)] = Y(s)$。对方程组两边同时进行拉普拉斯变换：
+	因为 $x(0)=1$ 且其他初值均为 0，所以依据微分性质：
+	$$ \mathcal{L}[x''] = s^2X(s) - sx(0) - x'(0) = s^2X(s) - s $$
+	$$ \mathcal{L}[y''] = s^2Y(s) $$
+	代入原方程组得到其复频域代数方程组：
+	$$ \begin{cases} s^2X(s) - s - s^2Y(s) = \frac{1}{s-1} \\ s^2X(s) - s - 2s^2Y(s) + Y(s) = 0 \end{cases} $$
+	
+	两式相减（第一式减第二式）可以迅速消去变量 $X(s)$：
+	$$ s^2Y(s) - Y(s) = \frac{1}{s-1} \implies (s^2 - 1)Y(s) = \frac{1}{s-1} $$
+	解得像函数 $Y(s)$ 的显式表达式：
+	$$ Y(s) = \frac{1}{(s+1)(s-1)^2} $$
+	
+	将其代回第一式，即可解出 $X(s)$。最终两变量的像函数形式为：
+	$$ \begin{cases} X(s) = \frac{1}{s^2} + \frac{1}{s^2(s-1)} + \frac{1}{s(s-1)^2(s+1)} \\ Y(s) = \frac{1}{(s+1)(s-1)^2} \end{cases} $$
+	
+	最后，利用拉普拉斯逆变换（部分分式展开法或高阶极点留数法）可得时域特解：
+	对于 $Y(s)$：$s=1$ 是二阶极点，$s=-1$ 是单极点。通过计算留数和反演可得：
+	$$ y(t) = \mathcal{L}^{-1}\left[\frac{1}{(s+1)(s-1)^2}\right] = \frac{1}{2}te^t - \frac{3}{4}e^t - \frac{1}{4}e^{-t} + 1 $$
+	同理对 $X(s)$ 每一项求逆变换即可解出 $x(t)$。
+\end{proof}

@@ -15,6 +15,8 @@
 \definecolor{second}{RGB}{115,45,2}
 \definecolor{third}{RGB}{0,80,80}
 \usepackage[colorlinks,linkcolor = winered]{hyperref}           % 定义引用的颜色
+\usepackage{tcolorbox}                % 引入彩色文本框宏包
+\tcbuselibrary{most}                  % 加载大部分常用扩展库（支持颜色渐变和标题样式）
 
 
 % ------------------------------------------------------------%
@@ -101,5 +103,6 @@
 	\newpage
 	\include{留数}
 	\include{Fourier 变换}
+	\include{Laplace 变换}
 	
 \end{document}

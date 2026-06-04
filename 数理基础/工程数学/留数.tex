@@ -1,1 +1,137 @@
 \chapter{留数}
+
+留数理论（Residue Theory）是复分析（Complex Analysis）中的核心内容之一。它将复变函数的解析性质与积分计算紧密结合，是孤立奇点理论的自然延伸。利用留数定理，我们可以将复杂的复变函数沿闭曲线的积分转化为函数在曲线内部孤立奇点处的“留数”之和，从而极大地简化了积分的计算。此外，留数理论也是计算某些难以用初等方法求解的实定积分的强有力工具。
+
+---
+
+\section{留数的定义与留数定理}
+
+\subsection{留数的定义}
+设 $z_0$ 是函数 $f(z)$ 的一个孤立奇点，即 $f(z)$ 在去心邻域 $D: 0 < |z - z_0| < R$ 内解析。根据罗朗（Laurent）级数理论，$f(z)$ 在该去心邻域内可以展开为：
+$$ f(z) = \sum_{n=-\infty}^{+\infty} c_n (z - z_0)^n $$
+其中展开式的系数 $c_n$ 由下式决定：
+$$ c_n = \frac{1}{2\pi i} \oint_{C} \frac{f(z)}{(z - z_0)^{n+1}} dz \quad (n = 0, \pm 1, \pm 2, \cdots) $$
+这里的 $C$ 是 $D$ 内绕 $z_0$ 的任意一条正向简单闭曲线。
+
+特别地，当 $n = -1$ 时，我们有：
+$$ c_{-1} = \frac{1}{2\pi i} \oint_{C} f(z) dz $$
+这个系数 $c_{-1}$ 包含了函数在该奇点处的某种“残留信息”，因此我们将其称为 $f(z)$ 在孤立奇点 $z_0$ 处的\textbf{留数}（或残数），记作 $\text{Res}(f, z_0)$ 或 $\text{Res}[f(z), z_0]$。
+
+\begin{definition}[留数]
+	设 $z_0$ 为 $f(z)$ 的孤立奇点，$f(z)$ 在其去心邻域内的罗朗展开式中 $(z-z_0)^{-1}$ 的系数 $c_{-1}$ 称为 $f(z)$ 在 $z_0$ 处的\textbf{留数}，即：
+	$$ \text{Res}(f, z_0) = c_{-1} = \frac{1}{2\pi i} \oint_{C} f(z) dz $$
+\end{definition}
+
+\subsection{留数基本定理}
+留数定义直接给出了单奇点包裹情形下的积分结果。当区域内包含多个孤立奇点时，通过复连通区域的柯西积分定理，可以立即导出著名的留数定理。
+
+\begin{theorem}[柯西留数定理]
+	设 $D$ 是一个有界区域，其边界为正向周线或闭曲线族 $C$。若函数 $f(z)$ 在 $D$ 内除去有限个孤立奇点 $z_1, z_2, \cdots, z_n$ 外处处解析，且在 $\bar{D} = D \cup C$ 上除这些奇点外连续，则 $f(z)$ 沿 $C$ 的正向积分等于 $f(z)$ 在 $D$ 内所有奇点处的留数之和的 $2\pi i$ 倍：
+	$$ \oint_{C} f(z) dz = 2\pi i \sum_{k=1}^{n} \text{Res}(f, z_k) $$
+\end{theorem}
+
+---
+
+\section{留数的计算方法}
+
+计算留数的核心在于寻找罗朗级数中 $c_{-1}$ 的值。虽然可以直接展开函数，但针对不同类型的孤立奇点（主要是极点），有着更为简便的代数计算公式。
+
+\subsection{可去奇点与本性奇点处的留数}
+\begin{enumerate}
+	\item \textbf{可去奇点：} 若 $z_0$ 是 $f(z)$ 的可去奇点，则 $f(z)$ 在 $z_0$ 的去心邻域内没有负幂项，即 $c_{-1} = 0$。因此，\textbf{可去奇点处的留数必为 0}。
+	\item \textbf{本性奇点：} 若 $z_0$ 是 $f(z)$ 的本性奇点，通常没有通用的代数公式，必须将 $f(z)$ 直接展开为罗朗级数，然后\textbf{直接观察 $(z-z_0)^{-1}$ 的系数}。
+\end{enumerate}
+
+\subsection{极点处的留数计算公式}
+若 $z_0$ 是 $f(z)$ 的极点，我们可以利用导数和极限来直接计算留数。
+
+\subsubsection{1. $m$ 阶极点的通用公式}
+\begin{theorem}
+	若 $z_0$ 是 $f(z)$ 的 $m$ 阶极点，则 $f(z)$ 在 $z_0$ 处的留数为：
+	$$ \text{Res}(f, z_0) = \frac{1}{(m-1)!} \lim_{z \to z_0} \frac{d^{m-1}}{dz^{m-1}} \left[ (z - z_0)^m f(z) \right] $$
+\end{theorem}
+
+\subsubsection{2. 1 阶极点（单极点）的特例公式}
+当 $m = 1$ 时，上述公式简化为：
+$$ \text{Res}(f, z_0) = \lim_{z \to z_0} (z - z_0) f(z) $$
+
+此外，在实际应用中，单极点经常以分式形式 $f(z) = \frac{P(z)}{Q(z)}$ 出现。
+\begin{theorem}[分式型单极点公式]
+	设 $f(z) = \frac{P(z)}{Q(z)}$，其中 $P(z)$ 和 $Q(z)$ 在 $z_0$ 处解析。若 $P(z_0) \neq 0$，$Q(z_0) = 0$ 且 $Q'(z_0) \neq 0$（即 $z_0$ 是 $Q(z)$ 的一重零点，从而为 $f(z)$ 的单极点），则：
+	$$ \text{Res}(f, z_0) = \frac{P(z_0)}{Q'(z_0)} $$
+\end{theorem}
+这个公式在处理三角函数或多项式分式时效率极高。
+
+\subsection{无穷远点处的留数}
+如果 $f(z)$ 在区域 $R < |z| < +\infty$ 内解析，则称 $\infty$ 轴为 $f(z)$ 的孤立奇点。
+定义 $f(z)$ 在 $\infty$ 处的留数为：
+$$ \text{Res}(f, \infty) = \frac{1}{2\pi i} \oint_{C^-} f(z) dz = - \frac{1}{2\pi i} \oint_{C^+} f(z) dz $$
+其中 $C$ 是一条顺时针方向（对无穷远点而言是正向）绕原点的闭曲线。
+
+通过作变换 $\zeta = \frac{1}{z}$，可以得到无穷远点留数的计算公式：
+$$ \text{Res}(f, \infty) = \text{Res}\left[ -\frac{1}{\zeta^2} f\left(\frac{1}{\zeta}\right), 0 \right] $$
+
+\begin{theorem}[全平面留数总和定理]
+	若 $f(z)$ 在整个扩充复平面上只有有限个孤立奇点 $z_1, z_2, \cdots, z_n$ 以及 $\infty$，则它们处的留数总和为零：
+	$$ \sum_{k=1}^{n} \text{Res}(f, z_k) + \text{Res}(f, \infty) = 0 $$
+\end{theorem}
+
+---
+
+\section{留数的典型应用}
+
+留数定理最重要的应用之一是计算实变函数中难以用常规微积分方法解决的某些实定积分。通常的方法是将实积分路线看作复平面上某条闭曲线的一部分，然后构造辅助复变函数进行闭合路径积分。
+
+\subsection{1. 计算 $\int_{0}^{2\pi} R(\cos\theta, \sin\theta) d\theta$ 型积分}
+这类积分的特点是区间为 $[0, 2\pi]$，被积函数是关于 $\sin\theta$ 和 $\cos\theta$ 的有理函数。
+
+\textbf{转化策略：}
+令 $z = e^{i\theta} = \cos\theta + i\sin\theta$，当 $\theta$ 从 $0$ 变到 $2\pi$ 时，$z$ 沿着复平面上的单位圆周 $C: |z|=1$ 逆时针运动。
+利用欧拉公式，我们有：
+$$ d\theta = \frac{dz}{iz}, \quad \cos\theta = \frac{z + z^{-1}}{2} = \frac{z^2 + 1}{2z}, \quad \sin\theta = \frac{z - z^{-1}}{2i} = \frac{z^2 - 1}{2iz} $$
+将其代入原积分，即可转化为沿单位圆周 $C$ 的复变函数有理分式积分：
+$$ \int_{0}^{2\pi} R(\cos\theta, \sin\theta) d\theta = \oint_{|z|=1} R\left( \frac{z^2+1}{2z}, \frac{z^2-1}{2iz} \right) \frac{dz}{iz} $$
+最后只需计算该函数在单位圆 $|z| < 1$ 内部的所有孤立奇点的留数即可。
+
+\subsection{2. 计算 $\int_{-\infty}^{+\infty} P(x)/Q(x) dx$ 型广义积分}
+其中 $P(x)$ 和 $Q(x)$ 为实多项式，且满足：$Q(x)$ 在实轴上无零点，且 $\text{deg}(Q) \ge \text{deg}(P) + 2$（保证积分收敛）。
+
+\textbf{转化策略：}
+在复平面上构造闭合回路 $\Gamma = [-R, R] \cup C_R$，其中 $C_R$ 是上半平面上以原点为圆心、 $R$ 为半径的半圆周。
+根据留数定理，当 $R$ 足够大以至于包含了上半平面内的所有奇点 $z_k$（$\text{Im}(z_k) > 0$）时：
+$$ \int_{-R}^{R} \frac{P(x)}{Q(x)} dx + \int_{C_R} \frac{P(z)}{Q(z)} dz = 2\pi i \sum_{\text{Im}(z_k)>0} \text{Res}\left( \frac{P}{Q}, z_k \right) $$
+由大弧段引理（Jordan引理的简化版），当 $R \to +\infty$ 时，沿半圆周 $C_R$ 的积分趋于 0。因此：
+$$ \int_{-\infty}^{+\infty} \frac{P(x)}{Q(x)} dx = 2\pi i \sum_{\text{Im}(z_k)>0} \text{Res}\left( \frac{P(z)}{Q(z)}, z_k \right) $$
+
+\subsection{3. 计算 $\int_{-\infty}^{+\infty} \frac{P(x)}{Q(x)} e^{i\alpha x} dx$ 型积分（约当引理）}
+这类积分常用于傅里叶变换的求解，其中 $\alpha > 0$，$\text{deg}(Q) \ge \text{deg}(P) + 1$。
+
+在同样的半圆闭回路 $\Gamma$ 下，我们需要借助\textbf{约当引理（Jordan's Lemma）}来证明大半圆弧上的积分贡献在 $R \to +\infty$ 时为 0：
+\begin{lemma}[约当引理]
+	设 $C_R$ 是上半平面上的半圆周 $|z|=R, \text{Im}(z) > 0$。若在 $C_R$ 上 $\lim_{R \to +\infty} F(z) = 0$ 均匀成立，则对于任何 $\alpha > 0$，有：
+	$$ \lim_{R \to +\infty} \int_{C_R} F(z) e^{i\alpha z} dz = 0 $$
+\end{lemma}
+
+基于此引理，这类积分的计算公式为：
+$$ \int_{-\infty}^{+\infty} \frac{P(x)}{Q(x)} e^{i\alpha x} dx = 2\pi i \sum_{\text{Im}(z_k)>0} \text{Res}\left( \frac{P(z)}{Q(z)} e^{i\alpha z}, z_k \right) $$
+通过取其实部或虚部，可以顺带求出形如 $\int_{-\infty}^{+\infty} \frac{P(x)}{Q(x)}\cos(\alpha x) dx$ 或 $\int_{-\infty}^{+\infty} \frac{P(x)}{Q(x)}\sin(\alpha x) dx$ 的积分。
+
+---
+
+\section{典型例题解析}
+
+\begin{example}
+	计算积分 $I = \int_{0}^{2\pi} \frac{1}{2 + \cos\theta} d\theta$。
+\end{example}
+\begin{proof}[解]
+	令 $z = e^{i\theta}$，则 $\cos\theta = \frac{z^2+1}{2z}$，$d\theta = \frac{dz}{iz}$。代入原积分得：
+	$$ I = \oint_{|z|=1} \frac{1}{2 + \frac{z^2+1}{2z}} \frac{dz}{iz} = \oint_{|z|=1} \frac{2}{4z + z^2 + 1} \frac{dz}{i} = \frac{2}{i} \oint_{|z|=1} \frac{1}{z^2 + 4z + 1} dz $$
+	设 $f(z) = \frac{1}{z^2 + 4z + 1}$，其分母的零点（即 $f(z)$ 的单极点）为：
+	$$ z_1 = -2 + \sqrt{3}, \quad z_2 = -2 - \sqrt{3} $$
+	显然，$|z_1| = 2 - \sqrt{3} < 1$（在单位圆内），而 $|z_2| = 2 + \sqrt{3} > 1$（在单位圆外）。
+	
+	利用分式型单极点留数公式，计算 $z_1$ 处的留数：
+	$$ \text{Res}(f, z_1) = \left. \frac{1}{(z^2 + 4z + 1)'} \right|_{z=z_1} = \frac{1}{2z_1 + 4} = \frac{1}{2(-2+\sqrt{3}) + 4} = \frac{1}{2\sqrt{3}} $$
+	由留数定理：
+	$$ I = \frac{2}{i} \cdot 2\pi i \cdot \text{Res}(f, z_1) = 4\pi \cdot \frac{1}{2\sqrt{3}} = \frac{2\pi}{\sqrt{3}} $$
+\end{proof}
