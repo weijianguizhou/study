@@ -1,24 +1,43 @@
 \documentclass[10pt,a4paper]{book}
-
 \title{工程数学笔记}
 \author{魏舟}
 \date{\today}
 
-\usepackage{ctex} 
+% 中文字体支持（启用伪粗体消除警告）
+\usepackage{ctex}
+
 \usepackage{geometry,graphicx,xcolor,color}
-\usepackage{amssymb,amsmath,amsthm}                             % 数学字体
-\usepackage{newpxtext,mathpazo}                                % 采用 Palatino 风格字体
+\usepackage{amssymb,amsmath,amsthm}
+\usepackage{newpxtext,mathpazo}
 \usepackage{newclude,ulem}
+\usepackage{esint}
+
+% ----- 自定义数学命令（修复未定义错误）-----
+\DeclareMathOperator{\re}{Re}
+\DeclareMathOperator{\im}{Im}
+\DeclareMathOperator{\Arg}{Arg}
+\DeclareMathOperator{\Ln}{Ln}
+\newcommand{\argz}{\operatorname{Arg}}   % 兼容原文档中的 \argz
+\newcommand{\dif}{\mathop{}\!\mathrm{d}}
+
+% 颜色定义
 \definecolor{winered}{rgb}{0.5,0,0}
 \definecolor{structurecolor}{RGB}{122,122,142}
 \definecolor{main}{rgb}{0.5,0,0}
 \definecolor{second}{RGB}{115,45,2}
 \definecolor{third}{RGB}{0,80,80}
-\usepackage[colorlinks,linkcolor = winered]{hyperref}           % 定义引用的颜色
-\usepackage{tcolorbox}                % 引入彩色文本框宏包
-\tcbuselibrary{most}                  % 加载大部分常用扩展库（支持颜色渐变和标题样式）
-\usepackage{esint} % 放在 \begin{document} 之前
 
+% hyperref 加载（放在最后，但要在 pdfstringdef 之前）
+\usepackage[colorlinks,linkcolor=winered]{hyperref}
+
+% 全局书签数学命令处理（方案二，若采用方案一则不需要）
+\pdfstringdefDisableCommands{%
+	\def\re{Re}\def\im{Im}\def\Arg{Arg}\def\argz{Arg}%
+	\def\Ln{Ln}\def\dif{d}%
+}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{most}
 
 % ------------------------------------------------------------%
 % 定义定理环境
@@ -102,6 +121,11 @@
 	\setcounter{page}{0}
 	\thispagestyle{empty}
 	\newpage
+	\include{复变函数/复数域与复变函数}
+	\include{复变函数/复变函数基础}
+	\include{复变函数/解析函数}
+	\include{复变函数/共形映射}
+	\include{复变函数/复积分}
 	\include{留数}
 	\include{Fourier 变换}
 	\include{Laplace 变换}

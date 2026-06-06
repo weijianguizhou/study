@@ -4,17 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "4a68782daecfc1d6",
+        "id": "8cf979472f48e281",
         "type": "tabs",
         "children": [
           {
-            "id": "bd4ea6e2b5a9ce53",
+            "id": "3a754ebc8d017cc0",
             "type": "leaf",
             "state": {
-              "type": "graph",
+              "type": "empty",
               "state": {},
-              "icon": "lucide-git-fork",
-              "title": "关系图谱"
+              "icon": "lucide-file",
+              "title": "新标签页"
             }
           }
         ]
@@ -187,7 +187,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "bd4ea6e2b5a9ce53",
+  "active": "3a754ebc8d017cc0",
   "lastOpenFiles": [
     "力学/静力学/约束和约束力.md",
     "力学/静力学/静力学基本公理.md",
