@@ -1,148 +1,151 @@
 \chapter{解析函数}
-
-\section{复变函数的极限}
-设函数 \(w=f(z)=u(x,y)+iv(x,y)\) 在 \(z_0=x_0+iy_0\) 的去心邻域内有定义，\(A=a+ib\) 为复常数。若对任意 \(\varepsilon>0\)，存在 \(\delta>0\)，使得当
-\[
-0<|z-z_0|<\delta
-\]
-时，有
-\[
-|f(z)-A|<\varepsilon,
-\]
-则称 \(A\) 为 \(f(z)\) 当 \(z\to z_0\) 时的极限，记作
-\[
-\lim_{z\to z_0}f(z)=A.
-\]
-
-\subsection{极限存在的充要条件}
-复变函数极限存在等价于其实部和虚部的极限同时存在：
-\[
-\lim_{z\to z_0}f(z)=A\iff
-\lim_{(x,y)\to(x_0,y_0)}u(x,y)=a,\quad
-\lim_{(x,y)\to(x_0,y_0)}v(x,y)=b.
-\]
-
-\subsection{极限运算法则}
-若 \(\lim\limits_{z\to z_0}f(z)=A\)，\(\lim\limits_{z\to z_0}g(z)=B\)，则
-\begin{enumerate}
-\item \(\lim\limits_{z\to z_0}[f(z)\pm g(z)]=A\pm B\);
-\item \(\lim\limits_{z\to z_0}[f(z)\cdot g(z)]=AB\);
-\item \(\lim\limits_{z\to z_0}\dfrac{f(z)}{g(z)}=\dfrac{A}{B}\ (B\neq 0)\).
-\end{enumerate}
-
-\section{复变函数的连续性}
-\begin{definition}
-若 \(\lim\limits_{z\to z_0}f(z)=f(z_0)\)，则称 \(f(z)\) 在 \(z_0\) 处连续。
-\end{definition}
-
-\subsection{连续的充要条件}
-\[
-f(z)\ \text{在}\ z_0\ \text{连续}
-\iff
-u(x,y),\ v(x,y)\ \text{在}\ (x_0,y_0)\ \text{处均连续}.
-\]
-
-\subsection{连续函数的运算性质}
-\begin{enumerate}
-\item 连续函数的和、差、积、商（分母非零）仍连续；
-\item 连续函数的复合函数仍连续；
-\item 有界闭域上的连续函数必有界、可取到最值。
-\end{enumerate}
-
-\section{复变函数的导数}
-\begin{definition}
-设函数 \(w=f(z)\) 在 \(z_0\) 的邻域内有定义。若极限
-\[
-\lim_{\Delta z\to 0}\frac{\Delta w}{\Delta z}
-=\lim_{\Delta z\to 0}\frac{f(z_0+\Delta z)-f(z_0)}{\Delta z}
-\]
-存在且有限，则称 \(f(z)\) 在 \(z_0\) 处\textbf{可导}，该极限称为 \(f(z)\) 在 \(z_0\) 处的导数，记作
-\[
-f'(z_0)=\left.\frac{\mathrm{d}w}{\mathrm{d}z}\right|_{z=z_0}.
-\]
-\end{definition}
-
-\subsection{可导的必要条件：连续}
-若 \(f(z)\) 在 \(z_0\) 可导，则 \(f(z)\) 必在 \(z_0\) 连续。
-\[
-\lim_{\Delta z\to0}\big[f(z_0+\Delta z)-f(z_0)\big]
-=\lim_{\Delta z\to0}\frac{f(z_0+\Delta z)-f(z_0)}{\Delta z}\cdot\Delta z
-=f'(z_0)\cdot 0=0.
-\]
-
-\section{柯西—黎曼方程（C-R 方程）}
-设 \(f(z)=u(x,y)+iv(x,y)\)，\(z=x+iy\)。
-
-\begin{theorem}
-\(f(z)\) 在 \(z\) 处可导的必要条件是 \(u,v\) 可微且满足
-\[
-\frac{\partial u}{\partial x}=\frac{\partial v}{\partial y},\qquad
-\frac{\partial u}{\partial y}=-\frac{\partial v}{\partial x}.
-\]
-若 \(u,v\) 一阶偏导连续且满足 C-R 方程，则 \(f(z)\) 可导。
-\end{theorem}
-
-\subsection{推导思路}
-令 \(\Delta z=\Delta x+i\Delta y\)，分别沿实轴、虚轴取极限，令两者相等即得 C-R 方程。
-
-\subsection{导数计算公式}
-\[
-f'(z)=\frac{\partial u}{\partial x}+i\frac{\partial v}{\partial x}
-=\frac{\partial v}{\partial y}-i\frac{\partial u}{\partial y}.
-\]
-
-\section{解析函数}
-\begin{definition}
-若 \(f(z)\) 在 \(z_0\) 及其某一邻域内**处处可导**，则称 \(f(z)\) 在 \(z_0\) 处\textbf{解析}。
-
-若 \(f(z)\) 在区域 \(D\) 内每一点都解析，则称 \(f(z)\) 是 \(D\) 内的\textbf{解析函数}。
-\end{definition}
-
-\subsection{可导与解析的区别}
-\begin{itemize}
-\item 可导：只要求在一点存在导数；
-\item 解析：要求在一点及其邻域内都可导，条件更强。
-\end{itemize}
-
-\subsection{解析的充要条件}
-\(f(z)=u+iv\) 在区域 \(D\) 内解析 \(\iff\)
-\begin{enumerate}
-\item \(u(x,y),\ v(x,y)\) 在 \(D\) 内可微；
-\item \(u,v\) 在 \(D\) 内处处满足 C-R 方程。
-\end{enumerate}
-
-\section{调和函数}
-\begin{definition}
-若二元实函数 \(u(x,y)\) 在区域 \(D\) 内具有二阶连续偏导数，且满足拉普拉斯方程
-\[
-\Delta u=\frac{\partial^2 u}{\partial x^2}+\frac{\partial^2 u}{\partial y^2}=0,
-\]
-则称 \(u\) 为 \(D\) 内的\textbf{调和函数}。
-\end{definition}
-
-\subsection{解析函数与调和函数的关系}
-\begin{theorem}
-若 \(f(z)=u+iv\) 在区域 \(D\) 内解析，则 \(u,v\) 都是 \(D\) 内的调和函数。
-\end{theorem}
-
-\textbf{推导：}
-由解析性知 C-R 方程成立：
-\[
-u_x=v_y,\quad u_y=-v_x.
-\]
-分别对两式求导：
-\[
-u_{xx}=v_{yx},\quad u_{yy}=-v_{xy}.
-\]
-由二阶偏导连续，\(v_{yx}=v_{xy}\)，故
-\[
-u_{xx}+u_{yy}=0.
-\]
-同理可证 \(v_{xx}+v_{yy}=0\)。
-
-\subsection{共轭调和函数}
-\begin{definition}
-设 \(u,v\) 均为调和函数，且满足 C-R 方程，则称 \(v\) 为 \(u\) 的\textbf{共轭调和函数}。
-\end{definition}
-
-若 \(f(z)=u+iv\) 解析，则 \(v\) 是 \(u\) 的共轭调和函数。已知 \(u\) 可通过 C-R 方程求出 \(v\)，从而构造解析函数。
+	
+	\section{复变函数的极限}
+	设函数 \(w=f(z)=u(x,y)+iv(x,y)\) 在 \(z_0=x_0+iy_0\) 的去心邻域内有定义，\(A=a+ib\) 为复常数。若对任意 \(\varepsilon>0\)，存在 \(\delta>0\)，使得当
+	\[
+	0<|z-z_0|<\delta
+	\]
+	时，有
+	\[
+	|f(z)-A|<\varepsilon,
+	\]
+	则称 \(A\) 为 \(f(z)\) 当 \(z\to z_0\) 时的极限，记作
+	\[
+	\lim_{z\to z_0}f(z)=A.
+	\]
+	
+	\subsection{极限存在的充要条件}
+	复变函数极限存在等价于其实部和虚部的极限同时存在：
+	\[
+	\lim_{z\to z_0}f(z)=A\iff
+	\lim_{(x,y)\to(x_0,y_0)}u(x,y)=a,\quad
+	\lim_{(x,y)\to(x_0,y_0)}v(x,y)=b.
+	\]
+	
+	\subsection{极限运算法则}
+	若 \(\lim\limits_{z\to z_0}f(z)=A\)，\(\lim\limits_{z\to z_0}g(z)=B\)，则
+	\begin{enumerate}
+		\item \(\lim\limits_{z\to z_0}[f(z)\pm g(z)]=A\pm B\);
+		\item \(\lim\limits_{z\to z_0}[f(z)\cdot g(z)]=AB\);
+		\item \(\lim\limits_{z\to z_0}\dfrac{f(z)}{g(z)}=\dfrac{A}{B}\ (B\neq 0)\).
+	\end{enumerate}
+	
+	\section{复变函数的连续性}
+	\begin{tcolorbox}[title=定义：复变函数的连续性, colframe=blue!50!black, colback=blue!5!white, sharp corners]
+		若 \(\lim\limits_{z\to z_0}f(z)=f(z_0)\)，则称 \(f(z)\) 在 \(z_0\) 处\textbf{连续}。
+	\end{tcolorbox}
+	
+	\subsection{连续的充要条件}
+	\[
+	f(z)\ \text{在}\ z_0\ \text{连续}
+	\iff
+	u(x,y),\ v(x,y)\ \text{在}\ (x_0,y_0)\ \text{处均连续}.
+	\]
+	
+	\subsection{连续函数的运算性质}
+	\begin{enumerate}
+		\item 连续函数的和、差、积、商（分母非零）仍连续；
+		\item 连续函数的复合函数仍连续；
+		\item 有界闭域上的连续函数必有界、可取到最值。
+	\end{enumerate}
+	
+	\section{复变函数的导数}
+	\begin{tcolorbox}[title=定义：复变函数的导数, colframe=blue!50!black, colback=blue!5!white, sharp corners]
+		设函数 \(w=f(z)\) 在 \(z_0\) 的邻域内有定义。若极限
+		\[
+		\lim_{\Delta z\to 0}\frac{\Delta w}{\Delta z}
+		=\lim_{\Delta z\to 0}\frac{f(z_0+\Delta z)-f(z_0)}{\Delta z}
+		\]
+		存在且有限，则称 \(f(z)\) 在 \(z_0\) 处\textbf{可导}，该极限称为 \(f(z)\) 在 \(z_0\) 处的导数，记作
+		\[
+		f'(z_0)=\left.\frac{\mathrm{d}w}{\mathrm{d}z}\right|_{z=z_0}.
+		\]
+	\end{tcolorbox}
+	
+	\subsection{可导的必要条件：连续}
+	若 \(f(z)\) 在 \(z_0\) 可导，则 \(f(z)\) 必在 \(z_0\) 连续。
+	\[
+	\lim_{\Delta z\to0}\big[f(z_0+\Delta z)-f(z_0)\big]
+	=\lim_{\Delta z\to0}\frac{f(z_0+\Delta z)-f(z_0)}{\Delta z}\cdot\Delta z
+	=f'(z_0)\cdot 0=0.
+	\]
+	
+	\section{柯西—黎曼方程（C-R 方程）}
+	设 \(f(z)=u(x,y)+iv(x,y)\)，\(z=x+iy\)。
+	
+	\begin{tcolorbox}[title=定理：柯西—黎曼方程 (C-R 方程), colframe=green!45!black, colback=green!5!white]
+		\(f(z)\) 在 \(z\) 处可导的必要条件是 \(u,v\) 可微且满足
+		\[
+		\frac{\partial u}{\partial x}=\frac{\partial v}{\partial y},\qquad
+		\frac{\partial u}{\partial y}=-\frac{\partial v}{\partial x}.
+		\]
+		若 \(u,v\) 一阶偏导连续且满足 C-R 方程，则 \(f(z)\) 可导。
+	\end{tcolorbox}
+	
+	\subsection{推导思路}
+	令 \(\Delta z=\Delta x+i\Delta y\)，分别沿实轴、虚轴取极限，令两者相等即得 C-R 方程。
+	
+	\subsection{导数计算公式}
+	\[
+	f'(z)=\frac{\partial u}{\partial x}+i\frac{\partial v}{\partial x}
+	=\frac{\partial v}{\partial y}-i\frac{\partial u}{\partial y}.
+	\]
+	
+	\section{解析函数}
+	\begin{tcolorbox}[title=定义：解析函数, colframe=blue!50!black, colback=blue!5!white, sharp corners]
+		若 \(f(z)\) 在 \(z_0\) 及其某一邻域内\textbf{处处可导}，则称 \(f(z)\) 在 \(z_0\) 处\textbf{解析}。
+		
+		若 \(f(z)\) 在区域 \(D\) 内每一点都解析，则称 \(f(z)\) 是 \(D\) 内的\textbf{解析函数}。
+	\end{tcolorbox}
+	
+	\subsection{可导与解析的区别}
+	\begin{tcolorbox}[colframe=orange!75!black, colback=orange!5!white, leftrule=4pt, rightrule=0pt, toprule=0pt, bottomrule=0pt, sharp corners]
+		\begin{itemize}
+			\item \textbf{可导}：只要求在一点存在导数；
+			\item \textbf{解析}：要求在一点及其邻域内都可导，条件更强。
+		\end{itemize}
+	\end{tcolorbox}
+	
+	\subsection{解析的充要条件}
+	\(f(z)=u+iv\) 在区域 \(D\) 内解析 \(\iff\)
+	\begin{enumerate}
+		\item \(u(x,y),\ v(x,y)\) 在 \(D\) 内可微；
+		\item \(u,v\) 在 \(D\) 内处处满足 C-R 方程。
+	\end{enumerate}
+	
+	\section{调和函数}
+	\begin{tcolorbox}[title=定义：调和函数, colframe=blue!50!black, colback=blue!5!white, sharp corners]
+		若二元实函数 \(u(x,y)\) 在区域 \(D\) 内具有二阶连续偏导数，且满足拉普拉斯方程
+		\[
+		\Delta u=\frac{\partial^2 u}{\partial x^2}+\frac{\partial^2 u}{\partial y^2}=0,
+		\]
+		则称 \(u\) 为 \(D\) 内的\textbf{调和函数}。
+	\end{tcolorbox}
+	
+	\subsection{解析函数与调和函数的关系}
+	\begin{tcolorbox}[title=定理：解析函数与调和函数, colframe=green!45!black, colback=green!5!white]
+		若 \(f(z)=u+iv\) 在区域 \(D\) 内解析，则 \(u,v\) 都是 \(D\) 内的调和函数。
+	\end{tcolorbox}
+	
+	\textbf{推导：}
+	由解析性知 C-R 方程成立：
+	\[
+	u_x=v_y,\quad u_y=-v_x.
+	\]
+	分别对两式求导：
+	\[
+	u_{xx}=v_{yx},\quad u_{yy}=-v_{xy}.
+	\]
+	由二阶偏导连续，\(v_{yx}=v_{xy}\)，故
+	\[
+	u_{xx}+u_{yy}=0.
+	\]
+	同理可证 \(v_{xx}+v_{yy}=0\)。
+	
+	\subsection{共轭调和函数}
+	\begin{tcolorbox}[title=定义：共轭调和函数, colframe=blue!50!black, colback=blue!5!white, sharp corners]
+		设 \(u,v\) 均为调和函数，且满足 C-R 方程，则称 \(v\) 为 \(u\) 的\textbf{共轭调和函数}。
+	\end{tcolorbox}
+	
+	若 \(f(z)=u+iv\) 解析，则 \(v\) 是 \(u\) 的共轭调和函数。已知 \(u\) 可通过 C-R 方程求出 \(v\)，从而构造解析函数。
+	
