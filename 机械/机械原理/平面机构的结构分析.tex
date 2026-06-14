@@ -157,14 +157,53 @@ DOF > 0 \\
 \subsection{虚约束 (Redundant Constraints)}
 某些约束对机构的限制作用或自由度的影响是重复的，即不起独立限制作用的约束。计算时需摘掉构件和约束（有限定几何条件，一般情况）。
 
-\subsection{常见情况}
+\subsubsection{常见情况}
 \begin{enumerate}
     \item 不同构件上两点间距、距离保持恒定。
     \item 两构件构成多个移动副且导路互相平行。
     \item 两构件构成多个转动副且轴线相互重合。
     \item 在输入件与输出件之间用多组完全相同的运动链来传递运动，只有一组起独立传递运动的作用，其余引入虚约束。
+    \item 两构件在多处组成平面高副，且高副元素接触处公法线相重合，此时仅计算一处高副，其余引入虚约束。
 \end{enumerate}
-
+\begin{figure}[htbp]
+	\centering
+	% 第一行，用 \hfill 填充水平空白，实现左右分布
+	\begin{subfigure}[b]{0.35\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{figure/虚约束情况1.png}
+		\caption{情况1}
+		\label{fig:sub1}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.35\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{figure/虚约束情况2.png}
+		\caption{情况2}
+		\label{fig:sub2}
+	\end{subfigure}
+	
+	\par % 换行符，分隔上下两行
+	\vspace{0.3cm} % 可选：增加垂直间距，让布局更美观
+	
+	% 第二行
+	\begin{subfigure}[b]{0.35\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{figure/虚约束情况3.png}
+		\caption{情况3}
+		\label{fig:sub3}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.35\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{figure/虚约束情况4.png}
+		\caption{情况4}
+		\label{fig:sub4}
+	\end{subfigure}
+	
+	\caption{虚约束的常见四种情况}
+	\label{fig:four_grid}
+\end{figure}
+\newpage
 \section{自由度计算的步骤}
 \begin{figure}[htbp]
     \centering
