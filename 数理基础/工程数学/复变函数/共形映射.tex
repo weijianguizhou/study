@@ -1,172 +1,307 @@
 \chapter{共形映射 (Conformal Mapping)}
-	
-	\section{几何意义}
-	\begin{itemize}
-		\item \textbf{保角性}：旋转角 $\operatorname{Arg} f'(z_0)$ 描述了曲线经过映射后的旋转量，且具有\textbf{旋转角不变性}。
-		\item \textbf{伸缩率不变性}：$|f'(z_0)|$ 描述了点 $z_0$ 处的微小线段在映射后的伸缩比例。
-	\end{itemize}
-	
-	\section{共形映射的定义}
-	\begin{tcolorbox}[title=定义：共形映射, colframe=blue!50!black, colback=blue!5!white, sharp corners]
-		若 $w = f(z)$ 在 $z_0$ 处解析、一一对应且 $f'(z_0) \neq 0$，则称该映射在 $z_0$ 处是\textbf{共形的}。
-	\end{tcolorbox}
-	
-	\subsection{扩充复平面上的共形性}
-	针对扩充复平面 $\mathbb{C}^*$ 上的定义：
-	\begin{itemize}
-		\item \textbf{情形 I}：当 $w = f(z)$ 将 $z = z_0 (\neq \infty)$ 映成 $w = \infty$ 时：\\
-		作 $\zeta = \dfrac{1}{w}$。若 $\zeta = \dfrac{1}{f(z)}$ 在 $z = z_0$ 处是共形的，则称 $w = f(z)$ 在 $z = z_0$ 处是共形的。
-		\item \textbf{情形 II}：当 $w = f(z)$ 将 $z = \infty$ 映成 $w = w_0 (\neq \infty)$ 时：\\
-		作 $\eta = \dfrac{1}{z}$。若 $w = f\left(\dfrac{1}{\eta}\right)$ 在 $\eta = 0$ 处是共形的，则称 $w = f(z)$ 在 $z = \infty$ 处是共形的。
-		\item \textbf{情形 III}：当 $w = f(z)$ 将 $z = \infty$ 映成 $w = \infty$ 时：\\
-		作 $\eta = \dfrac{1}{z}$，$\zeta = \dfrac{1}{w}$。若 $\zeta = \dfrac{1}{f(1/\eta)}$ 在 $\eta = 0$ 处是共形的，则称 $w = f(z)$ 在 $z = \infty$ 处是共形的。
-	\end{itemize}
-	
-	\begin{tcolorbox}[title=定理：分式线性映射的保角性, colframe=green!45!black, colback=green!5!white]
-		分式线性映射在扩充复平面上是一一的，且具有\textbf{保角性}。
-	\end{tcolorbox}
-	
-	\section{分式线性映射}
-	分式线性映射的一般形式为
-	\[
-	w = \frac{az+b}{cz+d}, \quad ad - bc \neq 0.
-	\]
-	它可以分解为以下三种基本变换：
-	\begin{enumerate}
-		\item \textbf{平移}：$z \mapsto z + b$
-		\item \textbf{旋转与伸缩}：$z \mapsto az$
-		\item \textbf{反演}：$z \mapsto \dfrac{1}{z}$
-	\end{enumerate}
-	公式分解：
-	\[
-	w = \frac{a}{c} - \frac{ad-bc}{c} \cdot \frac{1}{cz+d}.
-	\]
-	
-	\section{保圆性与对称点}
-	\subsection{对称点引理}
-	\begin{tcolorbox}[title=引理：对称点引理, colframe=green!45!black, colback=green!5!white]
-		$z_1, z_2$ 是关于圆周 $C$ 的对称点的充要条件是通过 $z_1, z_2$ 的任何圆周 $L$ 与 $C$ 正交。
-	\end{tcolorbox}
-	
-	\textbf{证明思路：}
-	\begin{itemize}
-		\item 设 $C$ 的圆心为 $z_0$，半径为 $R$。
-		\item 对称点满足：$|z_1 - z_0| \cdot |z_2 - z_0| = R^2$。
-		\item 利用切割线定理可证正交性。
-	\end{itemize}
-	
-	\subsection{保圆性 (Circle-Preserving Property)}
-	\begin{tcolorbox}[title=定义：保圆性, colframe=blue!50!black, colback=blue!5!white, sharp corners]
-		若一个映射将圆周映射为圆周，则称它具有\textbf{保圆性}。
-	\end{tcolorbox}
-	
-	以反演映射 $w = \dfrac{1}{z}$ 为例：\\
-	令 $z = x + iy$，$w = u + iv$，代入一般圆方程
-	\[
-	a(x^2+y^2) + bx + cy + d = 0,
-	\]
-	可得
-	\[
-	d(u^2+v^2) + bu - cv + a = 0,
-	\]
-	仍为圆方程，故保圆。
-	
-	\begin{tcolorbox}[title=备注, colframe=lightgray!60!black, colback=lightgray!10!white, sharp corners]
-		分式线性映射在复平面上将圆周映成圆周，具有\textbf{保圆性}。
-	\end{tcolorbox}
-	
-	\section{交比与映射唯一性}
-	\subsection{交比 (Cross Ratio)}
-	交比的定义为
-	\[
-	(z_1, z_2, z_3, z_4) = \frac{z_1 - z_3}{z_2 - z_3} : \frac{z_1 - z_4}{z_2 - z_4}
-	= \frac{(z_1 - z_3)(z_2 - z_4)}{(z_2 - z_3)(z_1 - z_4)}.
-	\]
-	
-	\begin{tcolorbox}[title=备注, colframe=lightgray!60!black, colback=lightgray!10!white, sharp corners]
-		分式线性映射具有\textbf{保交比性}。
-	\end{tcolorbox}
-	
-	\subsection{唯一确定映射的条件}
-	\begin{tcolorbox}[title=定理：唯一性定理, colframe=green!45!black, colback=green!5!white]
-		在 $z$ 平面与 $w$ 平面各给定相异三点，则存在唯一的分式线性映射 $w = f(z)$ 满足三点对应关系。
-	\end{tcolorbox}
-	
-	计算公式：
-	\[
-	\frac{(w - w_1)(w_3 - w_2)}{(w - w_2)(w_3 - w_1)}
-	= \frac{(z - z_1)(z_3 - z_2)}{(z - z_2)(z_3 - z_1)}.
-	\]
-	
-	\section{三种典型映射类型及其推导}
-	分式线性映射的核心在于利用\textbf{边界对应原理}与\textbf{对称点原理}确定参数。
-	
-	\subsection{类型 I：上半平面 $\operatorname{Im}(z) > 0 \to$ 单位圆盘 $|w| < 1$}
-	\begin{tcolorbox}[colframe=orange!75!black, colback=orange!5!white, leftrule=4pt, rightrule=0pt, toprule=0pt, bottomrule=0pt, sharp corners]
-		\textbf{推导步骤：}
-		\begin{enumerate}
-			\item 设上半平面内一点 $\lambda$（$\operatorname{Im}(\lambda) > 0$）映为圆心 $w=0$。
-			\item 由对称点原理，$\lambda$ 关于实轴的对称点 $\bar{\lambda}$ 应映为 $w=\infty$。
-			\item 映射形式为 $\displaystyle w = k \,\frac{z - \lambda}{z - \bar{\lambda}}$。
-			\item 实轴映为单位圆周 $|w|=1$，故 $|k|=1$，即 $k = e^{i\theta}$。
-		\end{enumerate}
-		\tcbline
-		\textbf{最终映射公式：}
-		\[
-		w = e^{i\theta} \frac{z - \lambda}{z - \bar{\lambda}}, \quad \theta\in\mathbb{R},\ \operatorname{Im}(\lambda) > 0.
-		\]
-	\end{tcolorbox}
-	
-	\subsection{类型 II：单位圆盘 $|z| < 1 \to$ 单位圆盘 $|w| < 1$}
-	\begin{tcolorbox}[colframe=orange!75!black, colback=orange!5!white, leftrule=4pt, rightrule=0pt, toprule=0pt, bottomrule=0pt, sharp corners]
-		\textbf{推导步骤：}
-		\begin{enumerate}
-			\item 设圆盘内一点 $\alpha$（$|\alpha| < 1$）映为 $w=0$。
-			\item 对称点 $1/\bar{\alpha}$ 映为 $w=\infty$。
-			\item 映射形式为 $\displaystyle w = k' \,\frac{z - \alpha}{1 - \bar{\alpha}z}$。
-			\item 边界对应得 $|k'|=1$，即 $k' = e^{i\varphi}$。
-		\end{enumerate}
-		\tcbline
-		\textbf{最终映射公式：}
-		\[
-		w = e^{i\varphi} \frac{z - \alpha}{1 - \bar{\alpha}z}, \quad \varphi\in\mathbb{R},\ |\alpha| < 1.
-		\]
-	\end{tcolorbox}
-	
-	\subsection{类型 III：上半平面 $\operatorname{Im}(z) > 0 \to$ 上半平面 $\operatorname{Im}(w) > 0$}
-	\begin{tcolorbox}[colframe=orange!75!black, colback=orange!5!white, leftrule=4pt, rightrule=0pt, toprule=0pt, bottomrule=0pt, sharp corners]
-		\textbf{推导步骤：}
-		\begin{enumerate}
-			\item 系数 $a,b,c,d$ 均取实数。
-			\item 虚部满足：
-			\[
-			\operatorname{Im}(w) = \frac{1}{2i}(w - \bar{w}) = \frac{(ad-bc)\operatorname{Im}(z)}{|cz+d|^2}.
-			\]
-			\item 定向要求 $ad - bc > 0$。
-		\end{enumerate}
-		\tcbline
-		\textbf{最终映射公式：}
-		\[
-		w = \frac{az + b}{cz + d}, \quad a,b,c,d\in\mathbb{R},\ ad-bc > 0.
-		\]
-	\end{tcolorbox}
-	
-	\section{初等函数的共形性}
-	\subsection{幂函数}
-	\begin{tcolorbox}[colframe=teal!60!black, colback=teal!5!white, sharp corners]
-		幂函数 $w = z^n \ (n \ge 2)$：
-		\begin{itemize}
-			\item \textbf{导数}：$\dfrac{\mathrm{d}w}{\mathrm{d}z} = nz^{n-1}$。
-			\item \textbf{共形性}：$z \neq 0$ 时处处共形；$z=0$ 处角度放大 $n$倍。
-			\item \textbf{角形域变换}：将 $0 < \arg z < \alpha$ 映为 $0 < \arg w < n\alpha$。
-		\end{itemize}
-	\end{tcolorbox}
-	
-	\subsection{指数函数}
-	\begin{tcolorbox}[colframe=teal!60!black, colback=teal!5!white, sharp corners]
-		指数函数 $w=e^z$：
-		\begin{itemize}
-			\item \textbf{导数}：$\dfrac{\mathrm{d}w}{\mathrm{d}z}=e^z\neq0$，复平面内处处共形。
-			\item \textbf{几何意义}：将水平带形域 $0<\operatorname{Im} z < 2\pi$ 共形映射为沿正实轴割开的复平面。
-		\end{itemize}
-	\end{tcolorbox}
+
+\section{几何意义}
+解析函数在导数不为零的点处具有两个重要的局部几何性质：
+\begin{itemize}
+  \item \textbf{保角性}：设曲线 \(C_1,C_2\) 在点 \(z_0\) 相交，夹角为 \(\theta\)。映射 \(w=f(z)\) 将 \(C_1,C_2\) 映为 \(\Gamma_1,\Gamma_2\)，它们在 \(w_0=f(z_0)\) 处的夹角仍为 \(\theta\)，且旋转方向保持不变。其原因是
+  \[
+  \operatorname{Arg} f'(z_0) = \lim_{\Delta z\to 0}\bigl[\operatorname{Arg}\Delta w - \operatorname{Arg}\Delta z\bigr],
+  \]
+  即映射后的切向量相对于原切向量旋转了 \(\operatorname{Arg} f'(z_0)\)，该旋转角对所有经过 \(z_0\) 的曲线均相同，故称\textbf{旋转角不变性}。
+  \item \textbf{伸缩率不变性}：微小线段在映射前后的长度比近似为常数 \(|f'(z_0)|\)，与线段方向无关。即
+  \[
+  |f'(z_0)| = \lim_{\Delta z\to 0}\frac{|\Delta w|}{|\Delta z|}.
+  \]
+\end{itemize}
+
+\begin{example}
+  设 \(w = f(z) = z^2 + 2z\)，求在点 \(z_0 = 1+i\) 处的旋转角与伸缩率。
+\end{example}
+\begin{solution}
+  \(f'(z) = 2z + 2\)，故 \(f'(1+i) = 2(1+i)+2 = 4+2i\)。
+  旋转角为 \(\operatorname{Arg}(4+2i) = \arctan\frac{2}{4} = \arctan 0.5\)。
+  伸缩率为 \(|f'(1+i)| = \sqrt{4^2+2^2} = 2\sqrt{5}\)。
+\end{solution}
+
+\section{共形映射的定义}
+\begin{definition}[共形映射]
+  若 \(w = f(z)\) 在区域 \(D\) 内处处解析、且对任意 \(z_0 \in D\) 有 \(f'(z_0) \neq 0\)，则称该映射在 \(D\) 内是\textbf{共形的}（或称第一类共形映射，保持夹角大小和方向）。
+\end{definition}
+
+\subsection{扩充复平面上的共形性}
+针对扩充复平面 \(\mathbb{C}^* = \mathbb{C}\cup\{\infty\}\)，可利用倒数变换将无穷远点转化为有限点，从而定义共形性：
+\begin{itemize}
+  \item \textbf{情形 I}：\(w = f(z)\) 将 \(z = z_0 (\neq \infty)\) 映成 \(w = \infty\)。\\
+  令 \(\zeta = \dfrac{1}{w}\)。若 \(\zeta = \dfrac{1}{f(z)}\) 在 \(z = z_0\) 处共形，则称原映射在 \(z = z_0\) 处共形。
+  \item \textbf{情形 II}：\(w = f(z)\) 将 \(z = \infty\) 映成 \(w = w_0 (\neq \infty)\)。\\
+  令 \(\eta = \dfrac{1}{z}\)。若 \(w = f\!\left(\dfrac{1}{\eta}\right)\) 在 \(\eta = 0\) 处共形，则称原映射在 \(z = \infty\) 处共形。
+  \item \textbf{情形 III}：\(w = f(z)\) 将 \(z = \infty\) 映成 \(w = \infty\)。\\
+  令 \(\eta = \dfrac{1}{z},\ \zeta = \dfrac{1}{w}\)。若 \(\zeta = \dfrac{1}{f(1/\eta)}\) 在 \(\eta = 0\) 处共形，则称原映射在 \(z = \infty\) 处共形。
+\end{itemize}
+
+\begin{theorem}[分式线性映射的保角性]
+  分式线性映射在扩充复平面上是一一的，且处处具有\textbf{保角性}。
+\end{theorem}
+
+\section{分式线性映射}
+分式线性映射（Möbius 变换）的一般形式为
+\[
+w = \frac{az+b}{cz+d}, \quad ad - bc \neq 0.
+\]
+它可以分解为以下三种基本变换的复合：
+\begin{enumerate}
+  \item \textbf{平移}：\(z \mapsto z + b\)
+  \item \textbf{旋转与伸缩}：\(z \mapsto az\)（\(a \neq 0\)）
+  \item \textbf{反演}：\(z \mapsto \dfrac{1}{z}\)
+\end{enumerate}
+公式分解：
+\[
+w = \frac{a}{c} - \frac{ad-bc}{c} \cdot \frac{1}{cz+d} \quad (c \neq 0).
+\]
+
+\begin{example}
+  将分式线性映射 \(w = \dfrac{2z+3}{z-1}\) 分解为基本变换的复合。
+\end{example}
+\begin{solution}
+  \[
+  w = \frac{2z+3}{z-1} = 2 + \frac{5}{z-1}.
+  \]
+  因此变换可分解为：\(z \mapsto z-1\)（平移），\(\mapsto \dfrac{1}{z-1}\)（反演），\(\mapsto \dfrac{5}{z-1}\)（伸缩），\(\mapsto \dfrac{5}{z-1}+2\)（平移）。
+\end{solution}
+
+\section{保圆性与对称点}
+\subsection{对称点引理}
+\begin{lemma}[对称点引理]
+  设 \(C\) 是以 \(z_0\) 为心、\(R\) 为半径的圆周。两点 \(z_1, z_2\) 关于 \(C\) 对称的充要条件是：过 \(z_1, z_2\) 的任意圆周（或直线）均与 \(C\) 正交。
+\end{lemma}
+
+\textbf{代数刻画}：\(z_1,z_2\) 关于圆周 \(C: |z - z_0| = R\) 对称 \(\iff\) \((z_1 - z_0)\overline{(z_2 - z_0)} = R^2\)，或当 \(C\) 为实轴（半径为无穷大的圆周）时，\(z_2 = \overline{z_1}\)。
+
+\begin{theorem}[分式线性映射的保对称性]
+  设 \(w = f(z)\) 是分式线性映射，\(C\) 为扩充复平面上的圆周。若 \(z_1,z_2\) 关于 \(C\) 对称，则 \(w_1 = f(z_1),\ w_2 = f(z_2)\) 关于 \(f(C)\) 也对称。
+\end{theorem}
+
+\subsection{保圆性 (Circle-Preserving Property)}
+\begin{definition}[保圆性]
+  若一个映射将扩充复平面上的圆周（包括直线，视为过 \(\infty\) 的圆周）映为圆周，则称它具有\textbf{保圆性}。
+\end{definition}
+
+以反演映射 \(w = \dfrac{1}{z}\) 为例验证：\\
+令 \(z = x + iy\)，\(w = u + iv\)，代入一般圆方程
+\[
+a(x^2+y^2) + bx + cy + d = 0,
+\]
+利用 \(x = \frac{u}{u^2+v^2},\ y = \frac{-v}{u^2+v^2}\)（由 \(z = 1/w\) 得 \(x+iy = \frac{u-iv}{u^2+v^2}\)），代入后整理可得
+\[
+d(u^2+v^2) + bu - cv + a = 0,
+\]
+仍为圆方程（当 \(d \neq 0\) 时为普通圆；\(d=0\) 时为直线）。故保圆。
+
+\begin{remark}
+  分式线性映射在扩充复平面上将圆周映成圆周，即具有\textbf{保圆性}。
+\end{remark}
+
+\section{交比与映射唯一性}
+\subsection{交比 (Cross Ratio)}
+扩充复平面上四个相异点 \(z_1,z_2,z_3,z_4\) 的交比定义为
+\[
+(z_1, z_2, z_3, z_4) = \frac{z_1 - z_3}{z_2 - z_3} : \frac{z_1 - z_4}{z_2 - z_4}
+= \frac{(z_1 - z_3)(z_2 - z_4)}{(z_2 - z_3)(z_1 - z_4)}.
+\]
+当某点为 \(\infty\) 时，将分子分母中含有该点的因子按极限理解（如 \(z_4 = \infty\) 时，\((z_1,z_2,z_3,\infty) = \frac{z_1 - z_3}{z_2 - z_3}\)）。
+
+\begin{remark}
+  分式线性映射保持交比不变，即具有\textbf{保交比性}：
+  \[
+  (w_1,w_2,w_3,w_4) = (z_1,z_2,z_3,z_4).
+  \]
+\end{remark}
+
+\subsection{唯一确定映射的条件}
+\begin{theorem}[唯一性定理]
+  给定 \(z\) 平面上三个相异点 \(z_1,z_2,z_3\) 与 \(w\) 平面上三个相异点 \(w_1,w_2,w_3\)，则存在唯一的分式线性映射 \(w = f(z)\) 使得
+  \[
+  f(z_k) = w_k, \quad k=1,2,3.
+  \]
+\end{theorem}
+
+由保交比性可直接写出该映射：
+\[
+\frac{(w - w_1)(w_3 - w_2)}{(w - w_2)(w_3 - w_1)}
+= \frac{(z - z_1)(z_3 - z_2)}{(z - z_2)(z_3 - z_1)}.
+\]
+
+\begin{example}
+  求将点 \(z=0,1,\infty\) 分别映为 \(w = -1, -i, 1\) 的分式线性映射。
+\end{example}
+\begin{solution}
+  设对应关系为 \(z_1=0\to w_1=-1,\ z_2=1\to w_2=-i,\ z_3=\infty\to w_3=1\)。
+  利用三点式：
+  \[
+  \frac{w - w_1}{w - w_2} \cdot \frac{w_3 - w_2}{w_3 - w_1} = \frac{z - z_1}{z - z_2} \cdot \frac{z_3 - z_2}{z_3 - z_1}.
+  \]
+  代入得
+  \[
+  \frac{w+1}{w+ i} \cdot \frac{1+ i}{2} = \frac{z-0}{z-1} \cdot 1 = \frac{z}{z-1}.
+  \]
+  解得
+  \[
+  w = \frac{(i-1)z + 2}{(1-3i)z + (i-1)}.
+  \]
+\end{solution}
+
+\section{三种典型映射类型及其推导}
+分式线性映射的核心在于利用\textbf{边界对应原理}与\textbf{对称点原理}确定参数。
+
+\subsection{类型 I：上半平面 \(\operatorname{Im}(z) > 0 \to\) 单位圆盘 \(|w| < 1\)}
+\begin{tcolorbox}[colframe=orange!75!black, colback=orange!5!white, leftrule=4pt, rightrule=0pt, toprule=0pt, bottomrule=0pt, sharp corners]
+  \textbf{推导步骤：}
+  \begin{enumerate}
+    \item 设上半平面内一点 \(\lambda\)（\(\operatorname{Im}(\lambda) > 0\)）映为圆心 \(w=0\)。
+    \item 由对称点原理，\(\lambda\) 关于实轴的对称点 \(\bar{\lambda}\) 应映为 \(w=\infty\)。
+    \item 映射形式为 \(\displaystyle w = k \,\frac{z - \lambda}{z - \bar{\lambda}}\)。
+    \item 实轴映为单位圆周 \(|w|=1\)，取 \(z\) 为实数时 \(|w| = |k| = 1\)，故 \(k = e^{i\theta}\)。
+  \end{enumerate}
+  \tcbline
+  \textbf{最终映射公式：}
+  \[
+  w = e^{i\theta} \frac{z - \lambda}{z - \bar{\lambda}}, \quad \theta\in\mathbb{R},\ \operatorname{Im}(\lambda) > 0.
+  \]
+\end{tcolorbox}
+
+\subsection{类型 II：单位圆盘 \(|z| < 1 \to\) 单位圆盘 \(|w| < 1\)}
+\begin{tcolorbox}[colframe=orange!75!black, colback=orange!5!white, leftrule=4pt, rightrule=0pt, toprule=0pt, bottomrule=0pt, sharp corners]
+  \textbf{推导步骤：}
+  \begin{enumerate}
+    \item 设圆盘内一点 \(\alpha\)（\(|\alpha| < 1\)）映为 \(w=0\)。
+    \item 对称点 \(1/\bar{\alpha}\) 映为 \(w=\infty\)。
+    \item 映射形式为 \(\displaystyle w = k' \,\frac{z - \alpha}{1 - \bar{\alpha}z}\)。
+    \item 单位圆周 \(|z|=1\) 映为 \(|w|=1\)，可得 \(|k'|=1\)，即 \(k' = e^{i\varphi}\)。
+  \end{enumerate}
+  \tcbline
+  \textbf{最终映射公式：}
+  \[
+  w = e^{i\varphi} \frac{z - \alpha}{1 - \bar{\alpha}z}, \quad \varphi\in\mathbb{R},\ |\alpha| < 1.
+  \]
+\end{tcolorbox}
+
+\subsection{类型 III：上半平面 \(\operatorname{Im}(z) > 0 \to\) 上半平面 \(\operatorname{Im}(w) > 0\)}
+\begin{tcolorbox}[colframe=orange!75!black, colback=orange!5!white, leftrule=4pt, rightrule=0pt, toprule=0pt, bottomrule=0pt, sharp corners]
+  \textbf{推导步骤：}
+  \begin{enumerate}
+    \item 系数 \(a,b,c,d\) 均取实数（可相差一个实常数因子）。
+    \item 虚部满足：
+    \[
+    \operatorname{Im}(w) = \frac{1}{2i}(w - \bar{w}) = \frac{(ad-bc)\operatorname{Im}(z)}{|cz+d|^2}.
+    \]
+    \item 为保持上、下半平面，需要分子分母符号一致，故要求 \(ad - bc > 0\)（保定向）。
+  \end{enumerate}
+  \tcbline
+  \textbf{最终映射公式：}
+  \[
+  w = \frac{az + b}{cz + d}, \quad a,b,c,d\in\mathbb{R},\ ad-bc > 0.
+  \]
+\end{tcolorbox}
+
+\begin{example}
+  求将上半平面映为单位圆盘，且使 \(\lambda = i\) 映为 \(w=0\)，并满足 \(w(2i) > 0\) 的分式线性映射。
+\end{example}
+\begin{solution}
+  由类型 I 公式，\(\lambda = i\)，\(\bar{\lambda} = -i\)，故
+  \[
+  w = e^{i\theta} \frac{z - i}{z + i}.
+  \]
+  由附加条件 \(w(2i) > 0\)：
+  \[
+  w(2i) = e^{i\theta} \frac{2i - i}{2i + i} = e^{i\theta} \frac{i}{3i} = \frac{1}{3} e^{i\theta} > 0,
+  \]
+  故 \(e^{i\theta} = 1\)（取 \(\theta = 0\)）。所求映射为
+  \[
+  w = \frac{z - i}{z + i}.
+  \]
+\end{solution}
+
+\begin{example}[边界对应求映射]
+  求将上半单位圆盘 \(D = \{z: |z|<1,\ \operatorname{Im}z > 0\}\) 共形映射为上半平面的映射。
+\end{example}
+\begin{solution}
+  区域边界由上半圆周和实轴上的线段 \([-1,1]\) 组成。
+  先用分式线性映射将两个边界“拉直”。考虑映射 \(w_1 = \frac{z+1}{z-1}\)。它把实轴映为实轴，把圆周 \(|z|=1\) 映为虚轴。取 \(z=0\) 得 \(w_1=-1\)，取 \(z=i\) 得 \(w_1=-i\)，故 \(w_1\) 将上半单位圆盘映为第三象限。调正方向：
+  用 \(w_2 = -w_1 = \frac{1+z}{1-z}\)，则 \(z=0\mapsto 1\)，\(z=i\mapsto i\)，将上半单位圆盘映为第一象限。
+  再平方 \(w = w_2^2 = \left(\frac{1+z}{1-z}\right)^2\)，即把第一象限映为上半平面。
+  故所求映射为
+  \[
+  w = \left(\frac{1+z}{1-z}\right)^2.
+  \]
+\end{solution}
+
+\section{初等函数的共形性}
+\subsection{幂函数}
+\begin{tcolorbox}[colframe=teal!60!black, colback=teal!5!white, sharp corners]
+  幂函数 \(w = z^n \ (n \ge 2)\)：
+  \begin{itemize}
+    \item \textbf{导数}：\(\dfrac{\mathrm{d}w}{\mathrm{d}z} = nz^{n-1}\)。
+    \item \textbf{共形性}：除 \(z=0\) 外处处共形；\(z=0\) 处角度放大 \(n\) 倍。
+    \item \textbf{角形域变换}：将角域 \(0 < \arg z < \alpha\)（\(\alpha \le 2\pi/n\)）一一地共形映为角域 \(0 < \arg w < n\alpha\)。
+  \end{itemize}
+\end{tcolorbox}
+
+\subsection{根式函数}
+\begin{tcolorbox}[colframe=teal!60!black, colback=teal!5!white, sharp corners]
+  根式函数 \(w = \sqrt[n]{z}\)（取定单值分支）：
+  \begin{itemize}
+    \item 是幂函数的逆映射，在除原点外的区域共形。
+    \item 将角域 \(0 < \arg z < n\alpha\) 共形映为 \(0 < \arg w < \alpha\)。
+    \item 常用于“展平”角度过大的角域。
+  \end{itemize}
+\end{tcolorbox}
+
+\subsection{指数函数}
+\begin{tcolorbox}[colframe=teal!60!black, colback=teal!5!white, sharp corners]
+  指数函数 \(w=e^z\)：
+  \begin{itemize}
+    \item \textbf{导数}：\(\dfrac{\mathrm{d}w}{\mathrm{d}z}=e^z\neq0\)，复平面内处处共形。
+    \item \textbf{几何意义}：将水平带形域 \(0<\operatorname{Im} z < 2\pi\) 共形映射为沿正实轴割开的复平面（去掉 \(0\) 到 \(+\infty\) 的射线）。一般地，带形域 \(y_0 < \operatorname{Im}z < y_0 + 2\pi\) 映为去掉从原点出发的一条射线的复平面。
+    \item 将水平直线映为从原点出发的射线，将竖直直线映为以原点为心的圆周。
+  \end{itemize}
+\end{tcolorbox}
+
+\subsection{对数函数}
+\begin{tcolorbox}[colframe=teal!60!black, colback=teal!5!white, sharp corners]
+  对数函数 \(w = \Ln z\)（取主值支 \(w = \ln|z| + i\Arg z,\ -\pi < \Arg z \le \pi\)）：
+  \begin{itemize}
+    \item 是指数函数的逆映射，在去掉原点和负实轴的区域上解析且导数 \(w' = 1/z \neq 0\)，故共形。
+    \item 将上述割开的复平面共形映为水平带形域 \(-\pi < \operatorname{Im}w < \pi\)。
+    \item 常用来把角域或扇形域变为带形域。
+  \end{itemize}
+\end{tcolorbox}
+
+\begin{example}[指数函数与带形域]
+  求将带形域 \(0 < \operatorname{Im} z < \pi\) 共形映射为单位圆盘 \(|w|<1\) 的映射。
+\end{example}
+\begin{solution}
+  分两步：
+  \begin{enumerate}
+    \item 先用指数函数 \(w_1 = e^z\)。当 \(z = x+iy,\ 0<y<\pi\) 时，\(w_1 = e^x e^{iy}\)，幅角在 \((0,\pi)\)，模长取遍 \((0,\infty)\)，故 \(w_1\) 将带形域映为上半平面 \(\operatorname{Im} w_1 > 0\)。
+    \item 再将上半平面映为单位圆盘，可取典型映射 \(w = \dfrac{w_1 - i}{w_1 + i}\)（将 \(i\) 映为圆心）。
+  \end{enumerate}
+  复合得
+  \[
+  w = \frac{e^z - i}{e^z + i}.
+  \]
+\end{solution}
+
+\begin{example}[对数函数与扇形域]
+  求将扇形域 \(D = \{z: |z| < 1,\ 0 < \arg z < \pi/3\}\) 共形映射为上半平面的映射。
+\end{example}
+\begin{solution}
+  \begin{enumerate}
+    \item 先用幂函数 \(w_1 = z^3\)，将扇形域（张角 \(\pi/3\)）展平为上半单位圆盘：\(|w_1|<1,\ \operatorname{Im} w_1 > 0\)。
+    \item 再用上半单位圆盘到上半平面的映射：\(w = \left(\dfrac{1+w_1}{1-w_1}\right)^2\)。
+  \end{enumerate}
+  复合得
+  \[
+  w = \left(\frac{1+z^3}{1-z^3}\right)^2.
+  \]
+\end{solution}
+

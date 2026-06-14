@@ -1,0 +1,65 @@
+\contentsline {section}{\numberline {1}前言}{3}{section.1}%
+\contentsline {section}{\numberline {2}语言特点}{3}{section.2}%
+\contentsline {section}{\numberline {3}环境配置与 pip 命令}{3}{section.3}%
+\contentsline {section}{\numberline {4}书写规则与规范}{3}{section.4}%
+\contentsline {section}{\numberline {5}数据类型 (Data Types)}{3}{section.5}%
+\contentsline {subsection}{\numberline {5.1}基本数据类型}{4}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}组合数据类型 (Container Types)}{4}{subsection.5.2}%
+\contentsline {subsubsection}{\numberline {5.2.1}序列类共通操作 (list, tuple, str)}{4}{subsubsection.5.2.1}%
+\contentsline {section}{\numberline {6}核心数据结构总结}{4}{section.6}%
+\contentsline {subsubsection}{\numberline {6.0.1}列表 (list)}{4}{subsubsection.6.0.1}%
+\contentsline {subsubsection}{\numberline {6.0.2}元组 (tuple)}{6}{subsubsection.6.0.2}%
+\contentsline {subsubsection}{\numberline {6.0.3}字典 (dict)}{7}{subsubsection.6.0.3}%
+\contentsline {subsubsection}{\numberline {6.0.4}集合 (set)}{9}{subsubsection.6.0.4}%
+\contentsline {section}{\numberline {7}程序控制流}{10}{section.7}%
+\contentsline {subsection}{\numberline {7.1}分支结构 (Conditional Statements)}{10}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}循环结构 (Loops)}{10}{subsection.7.2}%
+\contentsline {section}{\numberline {8}函数 (Functions)}{11}{section.8}%
+\contentsline {subsection}{\numberline {8.1}函数定义与调用}{11}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}变长参数 (Variable-length Arguments)}{11}{subsection.8.2}%
+\contentsline {subsubsection}{\numberline {8.2.1}元组类型变长参数 (*args)}{11}{subsubsection.8.2.1}%
+\contentsline {subsubsection}{\numberline {8.2.2}字典类型变长参数 (**kwargs)}{12}{subsubsection.8.2.2}%
+\contentsline {subsection}{\numberline {8.3}返回值 (Return Value)}{12}{subsection.8.3}%
+\contentsline {subsection}{\numberline {8.4}函数作用域 (Scope)}{12}{subsection.8.4}%
+\contentsline {subsection}{\numberline {8.5}Lambda 匿名函数}{13}{subsection.8.5}%
+\contentsline {subsection}{\numberline {8.6}高阶函数 (Higher-order Functions)}{13}{subsection.8.6}%
+\contentsline {section}{\numberline {9}异常处理 (Exception Handling)}{13}{section.9}%
+\contentsline {section}{\numberline {10}Python 输入与输出 (I/O) 详解}{14}{section.10}%
+\contentsline {subsection}{\numberline {10.1}标准输入输出}{14}{subsection.10.1}%
+\contentsline {subsection}{\numberline {10.2}格式化输出 (Formatting)}{14}{subsection.10.2}%
+\contentsline {subsubsection}{\numberline {10.2.1}f-string (推荐使用)}{14}{subsubsection.10.2.1}%
+\contentsline {subsubsection}{\numberline {10.2.2}format() 方法}{14}{subsubsection.10.2.2}%
+\contentsline {subsubsection}{\numberline {10.2.3}\% 占位符 (旧式)}{15}{subsubsection.10.2.3}%
+\contentsline {subsection}{\numberline {10.3}格式化规范详解 (Format Specification)}{15}{subsection.10.3}%
+\contentsline {subsection}{\numberline {10.4}文件操作 (File I/O)}{15}{subsection.10.4}%
+\contentsline {subsubsection}{\numberline {10.4.1}文件打开模式详解}{16}{subsubsection.10.4.1}%
+\contentsline {subsubsection}{\numberline {10.4.2}常用读取方法对比}{16}{subsubsection.10.4.2}%
+\contentsline {subsubsection}{\numberline {10.4.3}文件指针与编码}{16}{subsubsection.10.4.3}%
+\contentsline {subsubsection}{\numberline {10.4.4}综合代码示例}{16}{subsubsection.10.4.4}%
+\contentsline {subsection}{\numberline {10.5}路径处理 (os.path 与 pathlib)}{17}{subsection.10.5}%
+\contentsline {section}{\numberline {11}面向对象编程 (OOP)}{17}{section.11}%
+\contentsline {subsection}{\numberline {11.1}类与对象的创建}{17}{subsection.11.1}%
+\contentsline {subsection}{\numberline {11.2}实例化对象}{17}{subsection.11.2}%
+\contentsline {subsection}{\numberline {11.3}继承 (Inheritance)}{17}{subsection.11.3}%
+\contentsline {subsubsection}{\numberline {11.3.1}单级继承}{17}{subsubsection.11.3.1}%
+\contentsline {subsubsection}{\numberline {11.3.2}多级继承}{18}{subsubsection.11.3.2}%
+\contentsline {subsection}{\numberline {11.4}多态 (Polymorphism)}{18}{subsection.11.4}%
+\contentsline {subsection}{\numberline {11.5}封装与私有化 (Encapsulation)}{18}{subsection.11.5}%
+\contentsline {section}{\numberline {12}常用标准库模块}{19}{section.12}%
+\contentsline {section}{\numberline {13}总结与附录}{19}{section.13}%
+\contentsline {subsection}{\numberline {13.1}常用内置函数表}{19}{subsection.13.1}%
+\contentsline {section}{\numberline {14}编程训练任务}{20}{section.14}%
+\contentsline {section}{\numberline {15}经典算法}{22}{section.15}%
+\contentsline {subsection}{\numberline {15.1}查找}{22}{subsection.15.1}%
+\contentsline {subsubsection}{\numberline {15.1.1}顺序查找}{22}{subsubsection.15.1.1}%
+\contentsline {subsubsection}{\numberline {15.1.2}二分查找 (Binary Search)}{22}{subsubsection.15.1.2}%
+\contentsline {subsubsection}{\numberline {15.1.3}哈希查找 (Hash Search)}{22}{subsubsection.15.1.3}%
+\contentsline {subsubsection}{\numberline {15.1.4}插值查找 (Interpolation Search)}{23}{subsubsection.15.1.4}%
+\contentsline {subsection}{\numberline {15.2}查找算法对比总结}{23}{subsection.15.2}%
+\contentsline {subsection}{\numberline {15.3}排序}{23}{subsection.15.3}%
+\contentsline {subsubsection}{\numberline {15.3.1}选择排序 (Selection Sort)}{23}{subsubsection.15.3.1}%
+\contentsline {subsubsection}{\numberline {15.3.2}冒泡排序 (Bubble Sort)}{23}{subsubsection.15.3.2}%
+\contentsline {subsubsection}{\numberline {15.3.3}快速排序 (Quick Sort)}{24}{subsubsection.15.3.3}%
+\contentsline {subsubsection}{\numberline {15.3.4}插入排序 (Insertion Sort)}{24}{subsubsection.15.3.4}%
+\contentsline {subsection}{\numberline {15.4}常用算法复杂度对比}{25}{subsection.15.4}%
+\contentsline {subsection}{\numberline {15.5}Python 内置排序 (Timsort)}{25}{subsection.15.5}%

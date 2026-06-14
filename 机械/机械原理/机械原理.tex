@@ -4,67 +4,127 @@
 \author{魏舟}
 \date{\today}
 
-\usepackage{ctex} 
+% ========== 基础宏包 ==========
+\usepackage[table]{xcolor}
+\usepackage{ctex}
 \usepackage{geometry,graphicx,xcolor,color}
-\usepackage{amssymb,amsmath,amsthm}                             % 数学字体
-\usepackage{newpxtext,mathpazo}                                % 采用 Palatino 风格字体
+\usepackage{amssymb,amsmath,amsthm}
+\usepackage{siunitx}
+\usepackage{yhmath}
+\usepackage{newpxtext,mathpazo}
 \usepackage{newclude,ulem}
-\usepackage{subcaption}    % 必备，用于创建子图和子标题
-\usepackage{float}         % 可选，[H]位置参数需要用到它
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{angles, quotes, arrows.meta}
+\usepackage{enumerate}
+\usepackage{enumitem}
+\usepackage{wallpaper}
+\usepackage{titlesec, titletoc}
+\usepackage{fancyhdr}
+\usepackage[colorlinks,linkcolor=winered]{hyperref}
+\usepackage{xparse}
+
+% ========== 颜色定义 ==========
 \definecolor{winered}{rgb}{0.5,0,0}
 \definecolor{structurecolor}{RGB}{122,122,142}
 \definecolor{main}{rgb}{0.5,0,0}
 \definecolor{second}{RGB}{115,45,2}
 \definecolor{third}{RGB}{0,80,80}
-\usepackage[colorlinks,linkcolor = winered]{hyperref}           % 定义引用的颜色
 
+% ========== tcolorbox 设置 ==========
+\usepackage[skins, breakable, theorems, most]{tcolorbox}
+\tcbuselibrary{theorems, breakable, skins, most}
 
-% ------------------------------------------------------------%
-% 定义定理环境
-\usepackage{amsthm}
-\newtheoremstyle{defstyle}{3pt}{3pt}{\kaishu}{-3pt}{
-	\bfseries\color{main}}{}{0.5em}{\indent 【\thmname{#1} \thmnumber{#2}】 \thmnote{(#3)}}
+\tcbset{
+  mybox/.style = {
+    enhanced, breakable,
+    colback = white,
+    colframe = #1!50!black,
+    coltitle = white,
+    fonttitle = \bfseries\kaishu,
+    attach boxed title to top left = {yshift = -2mm, xshift = 3mm},
+    boxed title style = {
+      empty,
+      boxrule = 0pt,
+      colback = #1,
+      rounded corners = north,
+    },
+    left = 3mm, right = 3mm, top = 3mm, bottom = 3mm,
+    before skip = 12pt, after skip = 12pt,
+    drop shadow,
+    sharp corners,
+  }
+}
+
+% ========== 重新定义 definition 环境（仿照手动示例） ==========
+% 不带编号，标题为“定义：xxx”，蓝色直角盒子，浅蓝背景，支持跨页
+\NewDocumentEnvironment{definition}{o}
+  {%
+    \IfNoValueTF{#1}
+      {\begin{tcolorbox}[
+          title=定义,
+          colframe=blue!50!black,
+          colback=blue!5!white,
+          sharp corners,
+          breakable,
+          fonttitle=\bfseries\kaishu,
+          before skip=12pt,
+          after skip=12pt
+        ]}
+      {\begin{tcolorbox}[
+          title=定义：#1,
+          colframe=blue!50!black,
+          colback=blue!5!white,
+          sharp corners,
+          breakable,
+          fonttitle=\bfseries\kaishu,
+          before skip=12pt,
+          after skip=12pt
+        ]}
+  }
+  {%
+    \end{tcolorbox}
+  }
+
+% ========== 其他定理环境（使用 amsthm + tcolorboxenvironment） ==========
 \newtheoremstyle{thmstyle}{3pt}{3pt}{\kaishu}{-3pt}{
-	\bfseries\color{second}}{}{0.5em}{\indent【\thmname{#1} \thmnumber{#2}】 \thmnote{(#3)}}
+  \bfseries\color{second}}{}{0.5em}{\indent【\thmname{#1} \thmnumber{#2}】 \thmnote{(#3)}}
 \newtheoremstyle{prostyle}{3pt}{3pt}{\kaishu}{-3pt}{
-	\bfseries\color{third}}{}{0.5em}{\indent【\thmname{#1} \thmnumber{#2}】 \thmnote{(#3)}}
+  \bfseries\color{third}}{}{0.5em}{\indent【\thmname{#1} \thmnumber{#2}】 \thmnote{(#3)}}
 
-\theoremstyle{thmstyle} %theorem style
+\theoremstyle{thmstyle}
 \newtheorem{theorem}{定理}[chapter]
-\theoremstyle{defstyle} % definition style
-\newtheorem{definition}[theorem]{定义}
 \newtheorem{lemma}[theorem]{引理}
 \newtheorem{corollary}[theorem]{推论}
-\theoremstyle{prostyle} % proposition style
+\theoremstyle{prostyle}
 \newtheorem{proposition}[theorem]{命题}
 \newtheorem{example}[theorem]{例题}
 
+% 为这些环境添加普通盒子（标题在内容区）
+\tcolorboxenvironment{theorem}{mybox={second}}
+\tcolorboxenvironment{lemma}{mybox={second}}
+\tcolorboxenvironment{corollary}{mybox={second}}
+\tcolorboxenvironment{proposition}{mybox={third}}
+\tcolorboxenvironment{example}{mybox={structurecolor}}
+
+% ========== 证明、解、注环境 ==========
 \renewenvironment{proof}[1][证明]{\par{\kaishu \uline{\textbf{#1.}}} \;\fangsong}{\qed\par}
 \newenvironment{solution}{\par\underline{\textbf{解.}} \;\kaishu}{\par}
 \newenvironment{remark}{\par\underline{\textbf{注.}} \;\fangsong}{\par}
 \newcommand{\intro}[1]{\rightline{\parbox[t]{5cm}{\footnotesize \fangsong\quad\quad #1 }}}
-% ------------------------------------------------------------%
 
-\usepackage{enumerate}
-\usepackage{enumitem}
+% ========== 其他样式 ==========
 \setlist[enumerate,1]{label=\color{structurecolor}\arabic*.}
 \setlist[enumerate,2]{label=\color{structurecolor}(\arabic*).}
 \setlist[enumerate,3]{label=\color{structurecolor}\Roman*.}
 \setlist[enumerate,4]{label=\color{structurecolor}\Alph*.}
 
-\usepackage{wallpaper}
-%\CenterWallPaper{1}{}
-% 设置章形式
-% ---------------------------------- %
-% \setlength{\parindent}{0pt}  	
-\usepackage{titlesec, titletoc}
-\linespread{1.2} 				
-
-\usepackage{fancyhdr}
+\linespread{1.2}
 \fancypagestyle{plain}{%
-	\fancyhf{} % clear all header and footer fields
-	\renewcommand{\headrulewidth}{0pt}
-	\renewcommand{\footrulewidth}{0pt}
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
 }
 
 \titlecontents{chapter}[0em]{}{\large \fangsong{第 \thecontentslabel 章\quad}}{}{\hfill\contentspage}
@@ -78,27 +138,24 @@
 {\normalfont\color{structurecolor}}
 {\footnotesize \enspace \large \textcolor{structurecolor}{\S \,\thesection}\enspace}{6pt}
 {\Large\filcenter \bf \kaishu }
-
 \titlespacing*{\section}{1pc}{*7}{*2.3}[1pc]
-\titleformat{\subsection}[hang]{\bfseries}{
-	\large\bfseries\color{structurecolor}\thesubsection\enspace}{1pt}{%
-	\color{structurecolor}\large\bfseries\filright}
-\titleformat{\subsubsection}[hang]{\bfseries}{
-	\large\bfseries\color{structurecolor}\thesubsubsection\enspace}{1pt}{%
-	\color{structurecolor}\large\bfseries\filright}
-\usepackage{tikz}         % 绘图包
-\usetikzlibrary{angles, quotes, arrows.meta} % TikZ增强库
-\usepackage{enumitem}
-\usepackage{float}        % 图形固定位置
 
-% TikZ绘图样式统一设置
+\titleformat{\subsection}[hang]{\bfseries}{
+  \large\bfseries\color{structurecolor}\thesubsection\enspace}{1pt}{%
+  \color{structurecolor}\large\bfseries\filright}
+\titleformat{\subsubsection}[hang]{\bfseries}{
+  \large\bfseries\color{structurecolor}\thesubsubsection\enspace}{1pt}{%
+  \color{structurecolor}\large\bfseries\filright}
+
 \tikzset{
-	joint/.style={circle, fill=black, minimum size=4pt, inner sep=0pt}, % 铰链节点
-	link/.style={thick},                                                % 构件
-	fixed/.style={thick, double},                                       % 机架
-	arrow/.style={-{Stealth[scale=0.8]}}
+  joint/.style={circle, fill=black, minimum size=4pt, inner sep=0pt},
+  link/.style={thick},
+  fixed/.style={thick, double},
+  arrow/.style={-{Stealth[scale=0.8]}}
 }
 
+% 可选：解决中文字体粗体缺失警告（使用 XeLaTeX）
+% \setCJKmainfont{KaiTi}[AutoFakeBold=3]
 
 \begin{document}
 	

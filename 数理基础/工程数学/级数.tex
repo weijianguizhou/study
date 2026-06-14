@@ -1,0 +1,196 @@
+\chapter{级数}
+
+\section{复数项级数}
+
+\subsection{基本概念}
+设 $\{z_n\} = \{x_n + i y_n\}$ 为一复数序列，若存在复数 $z_0 = x_0 + i y_0$ 使得 $\lim_{n\to\infty} |z_n - z_0| = 0$，则称序列收敛于 $z_0$。
+
+无穷级数 $\sum_{n=0}^{\infty} z_n$ 定义为部分和序列 $S_N = \sum_{n=0}^{N} z_n$ 的极限（若存在）。
+
+\begin{tcolorbox}[title=定理：收敛的充要条件, colframe=green!45!black, colback=green!5!white]
+	级数 $\sum_{n=0}^{\infty} z_n$ 收敛的充要条件是：实部级数 $\sum_{n=0}^{\infty} x_n$ 与虚部级数 $\sum_{n=0}^{\infty} y_n$ 均收敛。
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=定义：绝对收敛与条件收敛, colframe=blue!50!black, colback=blue!5!white, sharp corners]
+	若 $\sum_{n=0}^{\infty} |z_n|$ 收敛，则称复数项级数\textbf{绝对收敛}。\\
+	若 $\sum_{n=0}^{\infty} z_n$ 收敛但 $\sum_{n=0}^{\infty} |z_n|$ 发散，则称其为\textbf{条件收敛}。
+\end{tcolorbox}
+
+常用的判别法可直接推广到复数项级数：
+\begin{itemize}
+	\item 比较判别法：若 $|z_n| \le a_n$ 且 $\sum a_n$ 收敛，则 $\sum z_n$ 绝对收敛。
+	\item 比值判别法：设 $\lim_{n\to\infty} \left| \frac{z_{n+1}}{z_n} \right| = \rho$，则当 $\rho<1$ 时绝对收敛，$\rho>1$ 时发散。
+	\item 根值判别法：设 $\lim_{n\to\infty} \sqrt[n]{|z_n|} = \rho$，结论同上。
+\end{itemize}
+
+\section{复变函数项级数}
+设 $\{f_n(z)\}$ 是定义在集合 $E\subset\mathbb{C}$ 上的函数列。若对每一点 $z\in E$，级数 $\sum_{n=0}^{\infty} f_n(z)$ 均收敛，则称其在 $E$ 上逐点收敛。
+
+\subsection{一致收敛与 Weierstrass M-判别法}
+
+\begin{tcolorbox}[title=定义：一致收敛, colframe=blue!50!black, colback=blue!5!white, sharp corners]
+	若对任意 $\varepsilon>0$，存在与 $z$ 无关的 $N$，使得当 $n>N$ 时，对所有 $z\in E$ 均有 $|r_n(z)| = \left|\sum_{k=n+1}^{\infty} f_k(z)\right| < \varepsilon$，则称级数在 $E$ 上\textbf{一致收敛}。
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=定理：Weierstrass M-判别法, colframe=green!45!black, colback=green!5!white]
+	若在集合 $E$ 上满足 $|f_n(z)| \le M_n$（$n=0,1,2,\dots$），且正项级数 $\sum_{n=0}^{\infty} M_n$ 收敛，则级数 $\sum_{n=0}^{\infty} f_n(z)$ 在 $E$ 上绝对且一致收敛。
+\end{tcolorbox}
+
+一致收敛级数保持了解析性、可逐项积分与逐项求导等重要性质，这些是幂级数理论的基础。
+
+\section{幂级数}
+形如 $\sum_{n=0}^{\infty} c_n (z-a)^n$ 的级数称为\textbf{幂级数}，其中 $c_n$ 为复常数，$a$ 为展开中心。
+
+\subsection{收敛半径与收敛圆}
+
+\begin{tcolorbox}[title=定理：Abel 定理, colframe=green!45!black, colback=green!5!white]
+	对于幂级数 $\sum_{n=0}^{\infty} c_n (z-a)^n$，存在一个实数 $R$ ($0\le R\le\infty$)，使得
+	\begin{itemize}
+		\item 当 $|z-a| < R$ 时，级数绝对收敛；
+		\item 当 $|z-a| > R$ 时，级数发散；
+		\item 在 $|z-a| \le \rho$ ($\rho<R$) 上一致收敛。
+	\end{itemize}
+	$R$ 称为该幂级数的\textbf{收敛半径}，开圆盘 $|z-a|<R$ 称为\textbf{收敛圆}。
+\end{tcolorbox}
+
+收敛半径的求法：
+\[
+R = \lim_{n\to\infty} \left| \frac{c_n}{c_{n+1}} \right| \quad \text{或} \quad R = \frac{1}{\displaystyle\limsup_{n\to\infty} \sqrt[n]{|c_n|}}.
+\]
+
+\subsection{幂级数的运算与解析性}
+
+\begin{tcolorbox}[title=性质, colframe=teal!60!black, colback=teal!5!white, sharp corners]
+	\begin{enumerate}
+		\item 幂级数在其收敛圆内可逐项加、乘（Cauchy乘积）及逐项微分与积分，且不改变收敛半径。
+		\item 和函数 $f(z)=\sum_{n=0}^{\infty} c_n (z-a)^n$ 在收敛圆内解析，且导数可通过逐项求导得到：
+		\[
+		f'(z) = \sum_{n=1}^{\infty} n c_n (z-a)^{n-1}.
+		\]
+	\end{enumerate}
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=例 1, colframe=orange!75!black, colback=orange!5!white, sharp corners]
+	求幂级数 $\displaystyle \sum_{n=0}^{\infty} \frac{z^n}{n!}$ 的收敛半径，并证明其和函数为 $e^z$。
+	\tcbline
+	\textbf{解：} $c_n = 1/n!$，则
+	\[
+	R = \lim_{n\to\infty} \frac{1/n!}{1/(n+1)!} = \lim_{n\to\infty} (n+1) = \infty.
+	\]
+	故该级数在整个复平面上收敛。记 $f(z)=\sum_{n=0}^{\infty} \frac{z^n}{n!}$，逐项求导得
+	\[
+	f'(z) = \sum_{n=1}^{\infty} \frac{n z^{n-1}}{n!} = \sum_{n=1}^{\infty} \frac{z^{n-1}}{(n-1)!} = f(z).
+	\]
+	又 $f(0)=1$，满足初值问题的唯一解即 $f(z)=e^z$。因此 $e^z = \sum_{n=0}^{\infty} \frac{z^n}{n!}$。
+\end{tcolorbox}
+
+\section{泰勒级数}
+
+\begin{tcolorbox}[title=定理：泰勒展开定理, colframe=green!45!black, colback=green!5!white]
+	设 $f(z)$ 在区域 $D$ 内解析，$a\in D$，$R$ 为 $a$ 到 $D$ 边界的距离。则在圆盘 $|z-a|<R$ 内，$f(z)$ 可唯一地展开为泰勒级数：
+	\[
+	f(z) = \sum_{n=0}^{\infty} c_n (z-a)^n, \quad \text{其中 } c_n = \frac{f^{(n)}(a)}{n!}.
+	\]
+\end{tcolorbox}
+
+这与实函数形式完全相同，但复变函数中只要函数在区域内解析，就一定能展成泰勒级数，且展开式唯一。
+
+\subsection{常用泰勒展开式}
+以 $a=0$ 为中心的 Maclaurin 展开：
+\begin{align*}
+	e^z &= \sum_{n=0}^{\infty} \frac{z^n}{n!}, \quad |z|<\infty; \\
+	\sin z &= \sum_{n=0}^{\infty} (-1)^n \frac{z^{2n+1}}{(2n+1)!}, \quad |z|<\infty; \\
+	\cos z &= \sum_{n=0}^{\infty} (-1)^n \frac{z^{2n}}{(2n)!}, \quad |z|<\infty; \\
+	\frac{1}{1-z} &= \sum_{n=0}^{\infty} z^n, \quad |z|<1.
+\end{align*}
+
+\begin{tcolorbox}[title=例 2, colframe=orange!75!black, colback=orange!5!white, sharp corners]
+	求 $f(z)=\dfrac{1}{z^2}$ 在 $z=1$ 处的泰勒展开式，并指出收敛半径。
+	\tcbline
+	\textbf{解：} 利用已知展开式 $\frac{1}{1+w} = \sum_{n=0}^{\infty} (-1)^n w^n$ ($|w|<1$)。将函数变形为关于 $(z-1)$ 的形式：
+	\[
+	f(z) = \frac{1}{z^2} = \frac{1}{[1+(z-1)]^2}.
+	\]
+	注意到 $\frac{d}{dz}\left(-\frac{1}{z}\right) = \frac{1}{z^2}$。先展开 $-\frac{1}{z}$：
+	\[
+	-\frac{1}{z} = -\frac{1}{1+(z-1)} = -\sum_{n=0}^{\infty} (-1)^n (z-1)^n, \quad |z-1|<1.
+	\]
+	对上式逐项求导得
+	\[
+	f(z) = \frac{1}{z^2} = \frac{d}{dz}\left(-\frac{1}{z}\right) = \sum_{n=1}^{\infty} (-1)^{n-1} n (z-1)^{n-1}, \quad |z-1|<1.
+	\]
+	收敛半径 $R=1$。
+\end{tcolorbox}
+
+\section{洛朗级数}
+当函数在奇点附近时，无法展成泰勒级数，但可以在环形区域内展开为洛朗级数。
+
+\begin{tcolorbox}[title=定理：洛朗展开定理, colframe=green!45!black, colback=green!5!white]
+	设 $f(z)$ 在圆环域 $R_1 < |z-a| < R_2$ 内解析，则对环域内任意一点 $z$，$f(z)$ 可唯一地表示为洛朗级数：
+	\[
+	f(z) = \sum_{n=-\infty}^{\infty} c_n (z-a)^n,
+	\]
+	其中系数
+	\[
+	c_n = \frac{1}{2\pi i} \oint_C \frac{f(\zeta)}{(\zeta-a)^{n+1}} \mathrm{d}\zeta,
+	\]
+	$C$ 为环域内围绕 $a$ 的任意正向简单闭曲线。
+\end{tcolorbox}
+
+洛朗级数由正幂项（解析部分）与负幂项（主要部分）组成。其收敛域是一个环形区域，内半径由奇点决定。
+
+\subsection{奇点分类}
+根据洛朗展开式中主要部分（负幂项）的项数，可将孤立奇点分为三类：
+\begin{itemize}
+	\item \textbf{可去奇点}：展开式中无负幂项；
+	\item \textbf{极点}：只有有限个负幂项，若最高负幂为 $m$ 次，则称为 $m$ 级极点；
+	\item \textbf{本性奇点}：有无穷多个负幂项。
+\end{itemize}
+
+\begin{tcolorbox}[title=例 3 (洛朗展开), colframe=orange!75!black, colback=orange!5!white, sharp corners]
+	求 $f(z)=\dfrac{1}{z(z-1)}$ 在以下区域内的洛朗展开式：\\
+	(1) $0<|z|<1$；\quad (2) $1<|z|<\infty$。
+	\tcbline
+	\textbf{解：} 先将函数分解为部分分式：
+	\[
+	f(z) = \frac{1}{z(z-1)} = \frac{1}{z-1} - \frac{1}{z}.
+	\]
+	(1) 在 $0<|z|<1$ 中，$|z|<1$，故 $\frac{1}{z-1} = -\frac{1}{1-z} = -\sum_{n=0}^{\infty} z^n$。
+	\[
+	f(z) = -\frac{1}{z} - \sum_{n=0}^{\infty} z^n = -\frac{1}{z} - 1 - z - z^2 - \cdots , \quad 0<|z|<1.
+	\]
+	(2) 在 $1<|z|<\infty$ 中，$|z|>1$，故 $\frac{1}{z-1} = \frac{1}{z}\cdot\frac{1}{1-1/z} = \frac{1}{z}\sum_{n=0}^{\infty} \frac{1}{z^n} = \sum_{n=0}^{\infty} \frac{1}{z^{n+1}}$。
+	\[
+	f(z) = \sum_{n=0}^{\infty} \frac{1}{z^{n+1}} - \frac{1}{z} = \sum_{n=2}^{\infty} \frac{1}{z^n} = \frac{1}{z^2} + \frac{1}{z^3} + \cdots , \quad 1<|z|<\infty.
+	\]
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=例 4 (利用洛朗级数求积分), colframe=orange!75!black, colback=orange!5!white, sharp corners]
+	计算积分 $\displaystyle \oint_{|z|=2} z^3 \sin\frac{1}{z} \,\mathrm{d}z$。
+	\tcbline
+	\textbf{解：} $\sin w = \sum_{n=0}^{\infty} (-1)^n \frac{w^{2n+1}}{(2n+1)!}$。令 $w=1/z$，则
+	\[
+	z^3 \sin\frac{1}{z} = z^3 \sum_{n=0}^{\infty} (-1)^n \frac{1}{(2n+1)! z^{2n+1}} = \sum_{n=0}^{\infty} (-1)^n \frac{z^{2-2n}}{(2n+1)!}.
+	\]
+	该洛朗级数中 $1/z$ 的系数（即 $c_{-1}$）对应于 $2-2n=-1$，解得 $n=3/2$ 非整数，故 $c_{-1}=0$。因此
+	\[
+	\oint_{|z|=2} z^3 \sin\frac{1}{z} \,\mathrm{d}z = 2\pi i \cdot c_{-1} = 0.
+	\]
+	（亦可由留数定理直接看出被积函数偶函数，留数为零，此处用洛朗级数法强调系数求解。）
+\end{tcolorbox}
+
+\section{解析函数的零点和孤立奇点}
+\subsection{零点与极点之间的关系}
+若 $f(z)$ 在 $z=a$ 解析且 $f(a)=0$，则 $a$ 为 $f$ 的零点。由泰勒展开，存在正整数 $m$ 使得
+$f(z) = (z-a)^m \varphi(z)$，其中 $\varphi(a)\neq 0$，此时称 $a$ 为 $f$ 的 $m$ 阶零点。
+零点与极点的关系：$a$ 是 $f(z)$ 的 $m$ 阶零点等价于 $a$ 是 $1/f(z)$ 的 $m$ 级极点。
+
+\begin{tcolorbox}[title=例 5, colframe=orange!75!black, colback=orange!5!white, sharp corners]
+	判别 $z=0$ 是函数 $f(z)=\dfrac{\sin z}{z^3}$ 的何种奇点。
+	\tcbline
+	\textbf{解：} $\sin z = z - \frac{z^3}{3!} + \frac{z^5}{5!} - \cdots$，故
+	\[
+	f(z) = \frac{1}{z^3}\left( z - \frac{z^3}{6} + \frac{z^5}{120} - \cdots \right) = \frac{1}{z^2} - \frac{1}{6} + \frac{z^2}{120} - \cdots
+	\]
+	洛朗级数中负幂项最高为 $1/z^2$，故 $z=0$ 为二级极点。
+\end{tcolorbox}
