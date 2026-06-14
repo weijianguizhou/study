@@ -11,10 +11,14 @@
             "id": "3a754ebc8d017cc0",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "数理基础/数学分析.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "新标签页"
+              "title": "数学分析"
             }
           }
         ]
@@ -189,10 +193,11 @@
   },
   "active": "3a754ebc8d017cc0",
   "lastOpenFiles": [
+    "摄影/eos600d-im3-zh.pdf",
+    "力学/材料力学/鏉愭枡鍔涘.pdf",
+    "力学/材料力学/材料力学.pdf",
     "力学/静力学/约束和约束力.md",
     "力学/静力学/静力学基本公理.md",
-    "力学/材料力学/材料力学.pdf",
-    "力学/材料力学/鏉愭枡鍔涘.pdf",
     "计算机类/机器学习/YOLO.pdf",
     "计算机类/机器学习/K-均值聚类的分层初始化方法.pdf",
     "计算机类/机器学习/基于 DBI 指标的分层初始化 K-means.pdf"
