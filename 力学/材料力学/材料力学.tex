@@ -1,13 +1,9 @@
 \documentclass[10pt,a4paper]{book}
-
-\title{材料力学}
-\author{魏舟}
-\date{\today}
-
 \usepackage{ctex} 
 \usepackage{geometry,graphicx,xcolor,color,subcaption}
 \usepackage{amssymb,amsmath,amsthm}                             % 数学字体
-\usepackage{newpxtext,mathpazo}                                % 采用 Palatino 风格字体
+\usepackage{newpxtext,mathpazo}    
+\usepackage{booktabs}   % 提供 \toprule, \midrule, \bottomrule                            % 采用 Palatino 风格字体
 \usepackage{newclude,ulem}
 \definecolor{winered}{rgb}{0.5,0,0}
 \definecolor{structurecolor}{RGB}{122,122,142}
@@ -87,11 +83,79 @@
 	\large\bfseries\color{structurecolor}\thesubsubsection\enspace}{1pt}{%
 	\color{structurecolor}\large\bfseries\filright}
 
+% 导言区定义格式
+\newtcolorbox{myTheorem}[1]{
+    colframe=blue!50!black,
+    colback=blue!5!white,
+    title=#1,                      % 标题由用户输入
+    fonttitle=\bfseries,
+    boxrule=0.5mm,
+    before skip=10pt,
+    after skip=10pt,
+    % 保持内部 \tcbline 的分隔样式与边框一致
+    segmentation style={blue!50!black, line width=0.5mm},
+}
+\newtcolorbox{myhypothesis}[1]{
+    colframe=green!50!black,      % 边框：绿色50% + 黑色50%
+    colback=green!5!white,        % 背景：绿色5% + 白色95%
+    title=#1,
+    fonttitle=\bfseries,
+    boxrule=0.5mm,
+    before skip=10pt,
+    after skip=10pt,
+    segmentation style={green!50!black, line width=0.5mm},  % 分割线与边框同色
+}
+\newtcolorbox{mydefinition}[1]{
+    colframe=red!50!black,      % 边框：红色50% + 黑色50%
+    colback=red!5!white,        % 背景：红色5% + 白色95%
+    title=#1,
+    fonttitle=\bfseries,
+    boxrule=0.5mm,
+    before skip=10pt,
+    after skip=10pt,
+    segmentation style={red!50!black, line width=0.5mm},  % 分割线与边框同色
+}
 
-
+% 导言区添加（需要 \usepackage{tcolorbox}）
+% 导言区改为：
+\tcbuselibrary{skins, breakable, theorems}
+\newtcolorbox{myformula}[1][]{
+    colframe=brown!50!black,
+    colback=brown!5!white,
+    boxrule=0.5mm,
+    before skip=10pt,
+    after skip=10pt,
+    halign=center,
+    valign=center,
+    sharp corners,
+    ams align,          % 关键：启用对齐环境
+    #1
+}
+\definecolor{DarkBlue}{RGB}{0,0,139}
 \begin{document}
-	
-	\maketitle
+	\begin{titlepage}
+		\begin{tikzpicture}[remember picture, overlay]
+			% 1. 背景颜色（可选）
+			\fill[white] (current page.south west) rectangle (current page.north east);
+			
+			\node[anchor=north] at (current page.north) {
+				\includegraphics[width=\paperwidth]{Figure/cover.jpg}
+			};
+			
+			% 3. 装饰条
+			\fill[DarkBlue] ([yshift=-12cm]current page.north west) rectangle ([yshift=-12.2cm]current page.north east);
+			
+			% 4. 标题与作者信息
+			\node[anchor=center, text=DarkBlue] at ([yshift=-20cm]current page.north) {
+				\begin{minipage}{0.8\paperwidth}
+					\centering
+					{\fontsize{40}{48}\sffamily\bfseries 材料力学笔记} \\[1cm]
+					{\fontsize{18}{22}\Large 魏舟 } \\[0.5cm]
+					{\large \today}
+				\end{minipage}
+			};
+		\end{tikzpicture}
+	\end{titlepage}
 	
 	\newpage
 	
@@ -100,15 +164,16 @@
 	\setcounter{page}{0}
 	\thispagestyle{empty}
 	\newpage
-	\include{1}
-	\include{轴向拉伸与压缩}
-	\include{剪切}
-	\include{扭转}
-	\include{弯曲}
-	\include{弯曲变形}
-	\include{应力状态分析和强度理论}
-	\include{组合变形}
-	\include{压杆稳定性}
-	\include{能量法}
-	\include{静不定问题}
+	\input{1}
+	\input{轴向拉伸与压缩}
+	\input{剪切}
+	\input{扭转}
+	\input{弯曲}
+    \input{弯曲应力}
+	\input{弯曲变形}
+	\input{应力状态分析和强度理论}
+	\input{组合变形}
+	\input{压杆稳定性}
+	\input{能量法}
+	\input{静不定问题}
 \end{document}

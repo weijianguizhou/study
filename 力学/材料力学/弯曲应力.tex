@@ -1,0 +1,162 @@
+\chapter{弯曲应力}
+
+\section{纯弯曲与横力弯曲}
+
+\begin{mydefinition}{纯弯曲}
+    梁的横截面上只有弯矩 \(M\) 而无剪力 \(F_Q\) 的弯曲称为纯弯曲。在纯弯曲段，梁的纤维只发生伸长或缩短，没有横向剪切错动。
+\end{mydefinition}
+
+\begin{mydefinition}{横力弯曲}
+    梁的横截面上同时存在弯矩 \(M\) 和剪力 \(F_Q\) 的弯曲称为横力弯曲（或剪切弯曲）。此时截面上除正应力外，还存在剪应力。
+\end{mydefinition}
+
+\begin{myhypothesis}{纯弯曲的基本假设}
+    \begin{enumerate}
+        \item \textbf{平面截面假设}：梁的横截面在变形后仍保持为平面，且仍垂直于变形后的轴线。
+        \item \textbf{纵向纤维互不挤压假设}：梁内各纵向纤维之间无正应力作用，只承受单向拉压。
+        \item \textbf{线弹性假设}：材料服从胡克定律，应力与应变成正比。
+        \item \textbf{小变形假设}：变形微小，可忽略轴线曲率的变化对截面位置的影响。
+    \end{enumerate}
+\end{myhypothesis}
+
+\section{纯弯曲正应力公式}
+
+\subsection{变形几何关系}
+取梁的纵向对称面为 \(xy\) 平面，\(x\) 轴沿梁轴线，\(y\) 轴向下（或向上，视约定）。在纯弯曲下，梁的轴线弯曲成圆弧曲线，曲率半径为 \(\rho\)。距中性层距离为 \(y\) 的纵向纤维的线应变为：
+\[
+\varepsilon = \frac{y}{\rho}
+\]
+其中 \(\rho\) 为中性层的曲率半径。
+
+\subsection{物理关系（胡克定律）}
+由胡克定律 \(\sigma = E \varepsilon\)，得横截面上距中性轴为 \(y\) 处的正应力：
+\[
+\sigma = \frac{E}{\rho} \, y
+\]
+即正应力沿截面高度呈线性分布。
+
+\subsection{静力关系}
+截面上正应力合成的内力矩等于弯矩 \(M\)。设中性轴过截面形心，且取 \(z\) 轴为中性轴（垂直于纵向对称面），则：
+\[
+\int_A y \, dA = 0 \quad \text{（自动满足，因中性轴过形心）}
+\]
+\[
+\int_A y \, \sigma \, dA = M \quad \Rightarrow \quad \int_A \frac{E}{\rho} y^2 \, dA = M
+\]
+定义惯性矩 \(I_z = \displaystyle\int_A y^2 \, dA\)，则得到曲率公式：
+\[
+\frac{1}{\rho} = \frac{M}{E I_z}
+\]
+
+代入物理关系，得到纯弯曲正应力公式：
+\begin{myformula}
+    \boxed{\displaystyle \sigma = \frac{M y}{I_z}}
+\end{myformula}
+其中 \(y\) 为所求应力点到中性轴的距离，正负号由弯矩方向和点的位置确定（通常拉为正、压为负）。
+
+\begin{myTheorem}{弯曲正应力公式}
+    在纯弯曲条件下，梁横截面上任一点的正应力 \(\sigma\) 与该点的弯矩 \(M\) 成正比，与该点到中性轴的距离 \(y\) 成正比，与截面的惯性矩 \(I_z\) 成反比，即
+    \[
+    \sigma = \frac{M}{I_z} \, y
+    \]
+    最大正应力出现在距中性轴最远的点，即上下边缘，其值为
+    \[
+    \sigma_{\max} = \frac{M}{W_z}, \quad W_z = \frac{I_z}{y_{\max}}
+    \]
+    其中 \(W_z\) 称为抗弯截面系数（或截面模量），是衡量截面抗弯强度的重要几何参数。
+\end{myTheorem}
+
+\subsection{常用截面的惯性矩与抗弯系数}
+\begin{myformula}
+\begin{aligned}
+    &\text{矩形截面（宽 }b\text{，高 }h\text{）：} & I_z &= \frac{b h^3}{12}, & W_z &= \frac{b h^2}{6} \\
+    &\text{圆形截面（直径 }d\text{）：} & I_z &= \frac{\pi d^4}{64}, & W_z &= \frac{\pi d^3}{32} \\
+    &\text{圆环形截面（外径 }D\text{，内径 }d\text{）：} & I_z &= \frac{\pi (D^4 - d^4)}{64}, & W_z &= \frac{\pi (D^4 - d^4)}{32D} \\
+    &\text{工字形截面（近似）：} & I_z &\approx \frac{B H^3 - b h^3}{12} \quad (\text{查表为准})
+\end{aligned}
+\end{myformula}
+
+\section{横力弯曲的正应力}
+
+在横力弯曲中，截面上同时存在弯矩和剪力。但工程实践表明，对于细长梁（跨高比 \(L/h > 5\)），剪力对正应力的影响很小，可以忽略不计。因此，横力弯曲的正应力仍可用纯弯曲公式 \(\sigma = M y / I_z\) 近似计算，其误差在工程允许范围内。
+
+\begin{myTheorem}{横力弯曲正应力的适用条件}
+    当梁的跨高比 \(L/h \ge 5\) 时，可用纯弯曲正应力公式计算横力弯曲时的正应力，计算精度足够。
+\end{myTheorem}
+
+\section{弯曲剪应力}
+
+\subsection{矩形截面梁的剪应力}
+设矩形截面宽 \(b\)、高 \(h\)，梁受横向力作用，截面上剪力为 \(F_Q\)。距中性轴为 \(y\) 处的剪应力 \(\tau\)（方向平行于剪力）为：
+\[
+\tau(y) = \frac{F_Q S_z^*(y)}{I_z b}
+\]
+其中 \(S_z^*(y)\) 为所求点以上（或以下）部分面积对中性轴的静矩。对于矩形截面：
+\[
+S_z^*(y) = \frac{b}{2} \left( \frac{h^2}{4} - y^2 \right)
+\]
+代入得：
+\[
+\tau(y) = \frac{3 F_Q}{2 b h} \left( 1 - \frac{4 y^2}{h^2} \right)
+\]
+最大剪应力出现在中性轴处（\(y=0\)）：
+\[
+\tau_{\max} = \frac{3}{2} \frac{F_Q}{b h} = \frac{3 F_Q}{2 A}
+\]
+
+\begin{myformula}
+    \boxed{ \displaystyle \tau_{\max} = \frac{3}{2} \frac{F_Q}{A} } \quad \text{（矩形截面梁的最大剪应力）}
+\end{myformula}
+
+\subsection{其他常用截面的剪应力}
+\begin{itemize}
+    \item \textbf{工字形截面}：剪应力主要由腹板承担，腹板上的剪应力近似均匀，\(\tau \approx F_Q / (h_w \cdot t_w)\)，其中 \(h_w\) 为腹板高度，\(t_w\) 为腹板厚度。
+    \item \textbf{圆形截面}：最大剪应力 \(\tau_{\max} = \frac{4}{3} \frac{F_Q}{A}\)。
+    \item \textbf{圆环形截面}：最大剪应力 \(\tau_{\max} \approx 2 \frac{F_Q}{A}\)（薄壁环）。
+\end{itemize}
+
+\begin{myTheorem}{弯曲剪应力分布规律}
+    剪应力沿截面高度呈抛物线分布（矩形截面），在中性轴处最大，在上下边缘处为零。工字形截面的剪应力主要集中在腹板上，翼缘上的剪应力很小。
+\end{myTheorem}
+
+\section{弯曲强度条件}
+
+\subsection{正应力强度条件}
+为保证梁不因正应力过大而破坏，要求梁的最大工作正应力不超过材料的许用应力：
+\[
+\sigma_{\max} = \frac{M_{\max}}{W_z} \le [\sigma]
+\]
+其中 \([\sigma]\) 为材料的许用弯曲正应力（拉压应力相同时取相同值；若材料拉压许用应力不同，需分别校核拉应力和压应力）。
+
+\subsection{剪应力强度条件}
+对于短梁、厚腹板梁或组合截面梁，有时剪应力也可能起控制作用，需校核：
+\[
+\tau_{\max} \le [\tau]
+\]
+其中 \([\tau]\) 为材料的许用剪应力。
+
+\begin{myformula}
+\begin{aligned}
+    &\text{正应力强度条件：} & \sigma_{\max} &= \frac{|M|_{\max}}{W_z} \le [\sigma] \\
+    &\text{剪应力强度条件：} & \tau_{\max} &= \frac{F_{Q,\max} S_z^*}{I_z b} \le [\tau]
+\end{aligned}
+\end{myformula}
+
+\subsection{强度校核的三类问题}
+\begin{enumerate}
+    \item \textbf{强度校核}：已知梁的尺寸、载荷和材料，判断是否满足 \(\sigma_{\max} \le [\sigma]\)、\(\tau_{\max} \le [\tau]\)。
+    \item \textbf{截面设计}：已知载荷和材料，根据强度条件确定所需的最小截面尺寸（如 \(W_z\)）。
+    \item \textbf{许用载荷确定}：已知截面和材料，求梁所能承受的最大载荷。
+\end{enumerate}
+
+\section{提高弯曲强度的措施}
+
+\begin{myhypothesis}{提高弯曲强度的途径}
+    \begin{enumerate}
+        \item \textbf{合理布置支座与载荷}：减小梁的最大弯矩，例如将集中力分散、尽量靠近支座，或增加辅助支承。
+        \item \textbf{选择合理的截面形状}：在截面面积相同的条件下，尽量增大抗弯截面系数 \(W_z\)，即采用“工形”、“箱形”、“空心”等截面，使材料远离中性轴。
+        \item \textbf{采用变截面梁}：根据弯矩沿梁轴的分布，设计变截面梁（如鱼腹梁、阶梯轴），使各截面上的最大应力同时接近许用值，节约材料。
+        \item \textbf{合理利用材料的拉压性能}：对于抗拉、抗压许用应力不同的材料（如铸铁、混凝土），将中性轴偏置于受拉或受压较弱的一侧，使两侧最大应力同时达到许用值（等强度梁）。
+    \end{enumerate}
+\end{myhypothesis}
+

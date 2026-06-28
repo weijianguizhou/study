@@ -1,1 +1,100 @@
 \chapter{静不定问题}
+
+\intro{多余约束赋予结构更多的刚度，却也带来了求解的挑战——变形协调是解锁的钥匙。
+\rightline{——材料力学}}
+
+\section{基本概念}
+
+\begin{mydefinition}{静定与静不定结构}
+    若一个结构的所有支座反力和内力均可仅由静力平衡方程（\(\sum F = 0\)，\(\sum M = 0\)）完全确定，则称为\textbf{静定结构}（Statically Determinate Structure）。若未知力的数目多于独立平衡方程的数目，则称为\textbf{静不定结构}（Statically Indeterminate Structure），也称超静定结构。
+\end{mydefinition}
+
+\begin{mydefinition}{多余约束与多余未知力}
+    在静不定结构中，为了保持结构的几何不变性，存在一些并非维持平衡所必需的约束，这些约束称为\textbf{多余约束}（Redundant Constraint）。多余约束对应的约束反力（或内力）称为\textbf{多余未知力}（Redundant Unknown）。多余未知力的数目等于静不定次数。
+\end{mydefinition}
+
+静不定次数的判定：
+\[
+\text{静不定次数} = \text{未知力总数} - \text{独立平衡方程数}
+\]
+对于平面一般力系，每个物体的独立平衡方程数为 3（\(\sum F_x = 0\)，\(\sum F_y = 0\)，\(\sum M_z = 0\)）。
+
+\section{力法（变形比较法）}
+
+\subsection{基本思想}
+将多余的约束反力（或内力）作为未知量，解除多余约束后得到一个静定结构（称为\textbf{静定基}或\textbf{基本体系}）。在多余约束处，根据原结构的变形条件（位移或转角等于实际值，通常为0或已知值），建立补充方程（称为\textbf{变形协调方程}）。联立平衡方程和协调方程即可求出所有未知力。
+
+\subsection{力法求解的一般步骤}
+\begin{enumerate}
+    \item \textbf{判定静不定次数}，确定多余约束。
+    \item \textbf{选取静定基}：解除多余约束，代之以相应的多余未知力（或力偶）。
+    \item \textbf{建立变形协调方程}：在多余约束处，将静定基在多余未知力和外载荷共同作用下的位移（或转角）与原结构的实际位移相等（通常为0）。
+    \item \textbf{利用叠加原理}计算各多余未知力和外载荷单独作用下在多余约束处产生的位移。
+    \item \textbf{求解力法方程}（通常是关于多余未知力的线性代数方程组），得到多余未知力。
+    \item \textbf{由平衡方程求其余反力}，然后进行强度、刚度计算。
+\end{enumerate}
+
+\subsection{力法正则方程}
+对于 \(n\) 次静不定结构，设多余未知力为 \(X_1, X_2, \dots, X_n\)，则变形协调方程可写为：
+\[
+\begin{cases}
+    \delta_{11} X_1 + \delta_{12} X_2 + \cdots + \delta_{1n} X_n + \Delta_{1P} = 0 \\
+    \delta_{21} X_1 + \delta_{22} X_2 + \cdots + \delta_{2n} X_n + \Delta_{2P} = 0 \\
+    \quad \cdots \\
+    \delta_{n1} X_1 + \delta_{n2} X_2 + \cdots + \delta_{nn} X_n + \Delta_{nP} = 0
+\end{cases}
+\]
+其中 \(\delta_{ij}\) 表示在 \(j\) 处作用单位广义力（或单位力偶）时，在 \(i\) 处产生的广义位移（柔度系数），\(\Delta_{iP}\) 为外载荷单独作用时在 \(i\) 处产生的广义位移。由位移互等定理，\(\delta_{ij} = \delta_{ji}\)，故柔度矩阵对称。
+
+\begin{myformula}
+    \delta_{ij} = \int \frac{\overline{M}_i \overline{M}_j}{EI} dx + \int \frac{\overline{F}_{Ni} \overline{F}_{Nj}}{EA} dx + \int \frac{\overline{T}_i \overline{T}_j}{GI_p} dx
+\end{myformula}
+其中 \(\overline{M}_i\)、\(\overline{F}_{Ni}\)、\(\overline{T}_i\) 分别为在 \(i\) 处作用单位广义力时产生的弯矩、轴力、扭矩。
+
+
+\section{对称性在静不定问题中的应用}
+
+当结构具有对称的几何形状、支承条件和材料性质时，可利用对称性简化计算。
+
+\subsection{对称结构}
+\begin{mydefinition}{对称结构}
+    若结构的几何形状、支承条件和截面尺寸关于某一轴线对称，则称为对称结构。
+\end{mydefinition}
+
+\subsection{载荷的分类}
+\begin{itemize}
+    \item \textbf{对称载荷}：载荷的作用线、大小和方向关于对称轴对称。在对称载荷作用下，结构的内力和变形具有对称性。
+    \item \textbf{反对称载荷}：载荷关于对称轴反对称（即对称轴一侧的载荷与另一侧大小相等、方向相反）。在反对称载荷作用下，结构的内力和变形具有反对称性。
+\end{itemize}
+
+\subsection{对称性简化规则}
+对于对称结构，在对称载荷作用下：
+\begin{enumerate}
+    \item 对称轴截面上的\textbf{剪力} \(F_Q\) 和\textbf{扭矩} \(T\) 为零。
+    \item 对称轴截面上的\textbf{转角} \(\theta\) 为零（因为变形对称，切线水平）。
+    \item 对称轴截面的\textbf{挠度} \(w\) 不一定为零（若载荷向下，中间点可能向下位移），但斜率（转角）为零。
+\end{enumerate}
+
+在反对称载荷作用下：
+\begin{enumerate}
+    \item 对称轴截面上的\textbf{轴力} \(F_N\) 和\textbf{弯矩} \(M\) 为零。
+    \item 对称轴截面上的\textbf{挠度} \(w\) 为零（变形反对称，中间点不移动）。
+    \item 对称轴截面上的\textbf{转角} \(\theta\) 不一定为零。
+\end{enumerate}
+
+这些性质可大幅减少未知量的数目。通常，利用对称性可将结构在对称轴处“切开”，取一半结构进行分析，并在切口处施加适当的约束（或释放约束）以体现对称或反对称条件。
+
+
+
+\subsection{对称性与力法的结合}
+在静不定次数较高时，先利用对称性将结构分解为对称和反对称两部分，分别求解，再叠加。这比直接解高阶力法方程要简便得多。
+
+\begin{myhypothesis}{对称性在力法中的使用步骤}
+    \begin{enumerate}
+        \item 判断结构是否对称，载荷是否对称或反对称。
+        \item 若载荷为任意，可将其分解为对称载荷与反对称载荷的叠加。
+        \item 分别计算对称和反对称情况下的内力（此时多余未知量因对称性而减少）。
+        \item 将结果叠加得到原结构的解。
+    \end{enumerate}
+\end{myhypothesis}
+

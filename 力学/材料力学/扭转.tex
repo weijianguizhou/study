@@ -22,8 +22,11 @@
 \begin{align*}
     P &= \frac{dW}{dt} = \frac{M_e d\varphi}{dt} = M_e \omega \\
     P \times 1000 &= M_e \cdot \frac{2\pi n}{60} \\
-    M_e &= \frac{60000 P}{2\pi n} \approx 9549 \frac{P}{n} \quad (\text{N}\cdot\text{m})
+    M_e &= \frac{60000 P}{2\pi n} \approx 9550 \frac{P}{n} \quad (\text{N}\cdot\text{m})
 \end{align*}
+\begin{myformula}
+        M_e &= \frac{60000 P}{2\pi n} \approx 9550 \frac{P}{n} \quad (\text{N}\cdot\text{m})
+    \end{myformula}
 \textbf{结论：} 即低速轴更粗，高速轴更细。
 
 
@@ -32,21 +35,20 @@
 
 \subsection{纯剪切与薄壁圆筒}
 对于薄壁圆筒（壁厚 $t \le \frac{r_0}{10}$）：
-\begin{itemize}
-    \item 扭转时：圆周线大小、间距、形状不变；纵向线倾斜同一角度。
-    \item 切应力公式：$\tau = \frac{T}{2\pi r_0^2 t}$
-\end{itemize}
+\begin{myhypothesis}{扭转假设}
+    圆周线大小、间距、形状不变；纵向线倾斜同一角度。
+\end{myhypothesis}
+ \begin{myformula}
+     \tau = \frac{T}{2\pi r_0^2 t}
+\end{myformula}
 
-\section{切应力互等定理 (Theorem of Conjugate Shear Stress)}
 
-\subsection{定义与表述}
-在相互垂直的两个平面上，切应力必然成对出现，且数值相等、方向垂直于两平面的交线。其方向表现为：两个切应力要么同时指向交线，要么同时背离交线。
+\section{切应力互等定理 }
 
-\subsection{数学表达式}
-若在微体的 $x$ 面上存在切应力 $\tau_{xy}$，在与之垂直的 $y$ 面上必存在切应力 $\tau_{yx}$，且满足：
-\begin{equation}
-    \tau_{xy} = \tau_{yx}
-\end{equation}
+\begin{myTheorem}{切应力互等定理}
+    在相互垂直的两个平面上，切应力必然成对出现，且数值相等、方向垂直于两平面的交线。其方向表现为：两个切应力要么同时指向交线，要么同时背离交线。
+\end{myTheorem}
+
 
 \subsection{力学本质}
 该定理是由单元体的\textbf{力矩平衡条件} ($\sum M_0 = 0$) 推导得出的。
@@ -58,9 +60,9 @@
 \subsection{纯剪切状态}
 当单元体的各个面上只有切应力而无正应力时，称该点处于\textbf{纯剪切 (Pure Shear)} 状态。
 \subsection{剪切虎克定律}
-\begin{equation}
+\begin{myformula}
     \tau = G\gamma, \quad G = \frac{E}{2(1+\mu)}
-\end{equation}
+\end{myformula}
 
 \subsection{圆轴扭转应力公式推导}
 \begin{enumerate}
@@ -71,14 +73,17 @@
 
 \subsection{应力公式}
 横截面上任意一点的切应力：
-\begin{equation}
+\begin{myformula}
     \tau_\rho = \frac{T \rho}{I_p}
-\end{equation}
+\end{myformula}
 横截面上的最大切应力（边缘点 $\rho = R$）：
-\begin{equation}
+\begin{myformula}
     \tau_{\max} = \frac{T R}{I_p} = \frac{T}{W_t}
-\end{equation}
+\end{myformula}
 其中 $I_p$ 为极惯性矩，$W_t = \frac{I_p}{R}$ 为抗扭截面模量。
+\begin{myformula}
+    I_p = \int_A \rho^2 dA, \quad W_t = \frac{I_p}{R}
+\end{myformula}
 
 \subsection{截面几何参数}
 \begin{itemize}
@@ -92,7 +97,11 @@
 
 \subsection{变形公式}
 \begin{itemize}
-    \item \textbf{单位长度扭转角：} $\theta = \frac{d\varphi}{dx} = \frac{T}{G I_p}$
+    \item \textbf{单位长度扭转角：} 
+    \begin{myformula}
+        \theta = \frac{d\varphi}{dx} = \frac{T}{G I_p}
+    \end{myformula}
+    
     \item \textbf{相对扭转角 $\varphi$：}
     \begin{enumerate}
         \item 阶梯轴/分段等扭矩：$\varphi = \sum_{i=1}^{n} \frac{T_i l_i}{G_i I_{pi}}$

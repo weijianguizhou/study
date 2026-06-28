@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "8cf979472f48e281",
+        "id": "8710290485ed1b1a",
         "type": "tabs",
         "children": [
           {
-            "id": "c2991f8d06df2e91",
+            "id": "225e71f5eea8bde6",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "力学/理论力学/零杆的判断.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "零杆的判断"
+              "title": "新标签页"
             }
           }
         ]
@@ -78,7 +74,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "dfcd6f1a0be67c9c",
@@ -191,11 +188,12 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "c2991f8d06df2e91",
+  "active": "225e71f5eea8bde6",
   "lastOpenFiles": [
+    "材料力学的基本概念整理.md",
+    "力学/理论力学/零杆的判断.md",
     "力学/理论力学",
     "力学/难题整理/材料力学.md",
-    "力学/理论力学/零杆的判断.md",
     "机械/机械原理/~$水运仪象台：11世纪世界科技明珠.pptx",
     "数理基础/概率论.md",
     "力学/难题整理",

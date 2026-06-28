@@ -1,1 +1,155 @@
 \chapter{组合变形}
+
+\intro{你偷走了我的影子，不论你在哪里，我都会一直想着你。
+
+\rightline——马克·李维}
+
+\section{概述}
+
+\begin{mydefinition}{组合变形}
+    构件在外力作用下，同时发生两种或两种以上基本变形（拉伸/压缩、剪切、扭转、弯曲）的情况，称为组合变形。
+\end{mydefinition}
+
+工程实际中的构件往往同时承受多种载荷，如：
+\begin{itemize}
+    \item 斜弯曲（双向弯曲）
+    \item 拉伸（压缩）与弯曲的组合
+    \item 偏心拉伸（压缩）
+    \item 弯曲与扭转的组合
+    \item 拉伸（压缩）、弯曲与扭转的组合
+\end{itemize}
+
+\begin{myhypothesis}{组合变形的分析方法——叠加原理}
+    对于线弹性小变形构件，组合变形中各基本变形引起的应力、位移可以分别计算，然后进行叠加。适用条件：
+    \begin{enumerate}
+        \item 材料服从胡克定律（线弹性）。
+        \item 变形很小，各基本变形的独立性成立（互不影响）。
+        \item 应力与载荷成线性关系。
+    \end{enumerate}
+\end{myhypothesis}
+
+\section{斜弯曲（双向弯曲）}
+
+\begin{mydefinition}{斜弯曲}
+    当梁的横向力不通过梁的纵向对称面（或与形心主轴不重合）时，梁的弯曲变形发生在两个相互垂直的平面内，这种弯曲称为斜弯曲。
+\end{mydefinition}
+
+\subsection{应力计算}
+设梁的截面具有两个形心主轴 \(y\) 和 \(z\)，外力 \(F\) 与 \(z\) 轴的夹角为 \(\varphi\)（在横向平面内）。将外力分解为沿 \(y\) 和 \(z\) 方向的两个分力：
+\[
+F_y = F \cos\varphi,\quad F_z = F \sin\varphi
+\]
+它们分别在 \(xz\) 平面和 \(xy\) 平面内产生平面弯曲。截面上任一点 \((y,z)\) 处的正应力为两个平面弯曲应力的代数和：
+\[
+\sigma(x,y,z) = \frac{M_z(x)}{I_z} y + \frac{M_y(x)}{I_y} z
+\]
+其中 \(M_z\) 为绕 \(z\) 轴的弯矩（引起 \(y\) 方向的弯曲），\(M_y\) 为绕 \(y\) 轴的弯矩（引起 \(z\) 方向的弯曲）。符号由弯矩方向及点的位置决定（拉正压负）。
+
+\subsection{中性轴位置}
+中性轴上各点正应力为零：
+\[
+\frac{M_z}{I_z} y + \frac{M_y}{I_y} z = 0
+\]
+即中性轴是一条过截面形心的直线，其斜率与弯矩分量和惯性矩有关。中性轴将截面分为拉、压两个区域。
+
+\subsection{最大正应力}
+最大正应力发生在距中性轴最远的点（通常是截面的角点）：
+\[
+\sigma_{\max} = \frac{|M_z|}{W_z} + \frac{|M_y|}{W_y}
+\]
+其中 \(W_z = I_z / y_{\max}\)，\(W_y = I_y / z_{\max}\)（若考虑正负号，需取代数叠加）。
+
+\begin{myTheorem}{斜弯曲强度条件}
+    \[
+    \sigma_{\max} = \left| \frac{M_z}{W_z} \pm \frac{M_y}{W_y} \right| \le [\sigma]
+    \]
+    对于矩形、工字形等具有两个对称轴的截面，\(\sigma_{\max} = \frac{|M_z|}{W_z} + \frac{|M_y|}{W_y}\)。
+\end{myTheorem}
+
+\section{拉伸（压缩）与弯曲的组合}
+
+\subsection{横向力与轴向力同时作用}
+当杆件同时承受轴向力 \(F_N\) 和横向力（产生弯矩 \(M\)）时，截面上的正应力为：
+\[
+\sigma = \frac{F_N}{A} \pm \frac{M}{W}
+\]
+符号取决于轴力是拉还是压，弯矩方向与所求点位置。
+
+\subsection{偏心拉伸（压缩）}
+\begin{mydefinition}{偏心拉伸（压缩）}
+    外力作用线平行于杆的轴线但不通过截面形心时，杆件发生偏心拉伸或压缩。可等效为轴向拉伸（压缩）和弯曲的组合。
+\end{mydefinition}
+
+设偏心力 \(F\) 作用点坐标为 \((e_y, e_z)\)（在截面形心坐标系中），则等效内力为：
+\[
+F_N = F,\quad M_y = F e_z,\quad M_z = F e_y
+\]
+（符号需根据力作用点位置确定）。截面上任一点 \((y,z)\) 的正应力：
+\[
+\sigma = \frac{F}{A} + \frac{F e_y}{I_z} y + \frac{F e_z}{I_y} z
+\]
+（拉为正，压为负；弯矩符号按实际方向确定）。
+
+\subsection{截面核心}
+\begin{mydefinition}{截面核心}
+    对于仅受压（或仅受拉）的构件，若偏心压力（或拉力）的作用点位于截面形心附近的某个区域内，则截面上不出现拉应力（或不出现压应力），该区域称为截面核心。
+\end{mydefinition}
+
+确定截面核心的方法是：使中性轴与截面边界相切，求出对应的偏心距，这些偏心距包围的区域即为截面核心。常见截面的截面核心：
+\begin{itemize}
+    \item 矩形截面：核心为菱形，顶点在对称轴上，距形心 \(h/6\) 和 \(b/6\)。
+    \item 圆形截面：核心为同心圆，半径 \(d/8\)。
+    \item 圆环形截面：核心为同心圆，半径 \(\frac{D^2 + d^2}{8D}\)（近似）。
+\end{itemize}
+
+\begin{myformula}
+    \text{矩形截面核心范围：} \quad |e_y| \le \frac{h}{6},\quad |e_z| \le \frac{b}{6}
+\end{myformula}
+
+\section{弯曲与扭转的组合}
+
+\subsection{圆轴弯扭组合}
+圆轴同时承受弯矩 \(M\) 和扭矩 \(T\) 时，横截面上存在弯曲正应力和扭转切应力。
+\begin{itemize}
+    \item 弯曲正应力 \(\sigma = \frac{M}{W}\)（在上下边缘最大）。
+    \item 扭转切应力 \(\tau = \frac{T}{W_p}\)（在圆周表面最大，其中 \(W_p\) 为抗扭截面系数）。
+\end{itemize}
+
+危险点位于圆轴表面，该点处于平面应力状态（\(\sigma\) 和 \(\tau\) 同时存在）。根据第三或第四强度理论，建立相当应力：
+
+\begin{myTheorem}{弯扭组合的强度条件}
+    对于圆轴，按第三强度理论：
+    \[
+    \sigma_{r3} = \sqrt{\sigma^2 + 4\tau^2} = \frac{1}{W} \sqrt{M^2 + T^2} \le [\sigma]
+    \]
+    按第四强度理论：
+    \[
+    \sigma_{r4} = \sqrt{\sigma^2 + 3\tau^2} = \frac{1}{W} \sqrt{M^2 + 0.75 T^2} \le [\sigma]
+    \]
+    其中 \(W\) 为弯曲抗弯截面系数，对于圆轴 \(W = \frac{\pi d^3}{32}\)，且 \(W_p = 2W\)，故 \(T\) 项系数有所不同。
+\end{myTheorem}
+
+\subsection{弯拉（压）扭组合}
+若圆轴同时受轴向力 \(F_N\)、弯矩 \(M\) 和扭矩 \(T\)，则危险点的正应力由轴向力和弯矩共同产生：
+\[
+\sigma = \frac{F_N}{A} + \frac{M}{W}
+\]
+切应力仍为 \(\tau = \frac{T}{W_p}\)。相当应力按第三或第四强度理论计算，将 \(\sigma\) 和 \(\tau\) 代入即可。
+
+\begin{myformula}
+    \begin{aligned}
+        &\text{第三强度理论：} & \sigma_{r3} &= \sqrt{\left(\frac{F_N}{A} + \frac{M}{W}\right)^2 + 4\left(\frac{T}{W_p}\right)^2} \le [\sigma] \\
+        &\text{第四强度理论：} & \sigma_{r4} &= \sqrt{\left(\frac{F_N}{A} + \frac{M}{W}\right)^2 + 3\left(\frac{T}{W_p}\right)^2} \le [\sigma]
+    \end{aligned}
+\end{myformula}
+
+\section{组合变形的一般步骤}
+
+\begin{enumerate}
+    \item \textbf{外力分析}：将外力向杆件形心简化，分解为产生各基本变形的载荷分量。
+    \item \textbf{内力分析}：画出各基本变形对应的内力图（轴力、剪力、弯矩、扭矩），确定危险截面。
+    \item \textbf{应力分析}：在危险截面上确定危险点，计算各基本变形在该点产生的应力分量。
+    \item \textbf{强度计算}：对于单向应力状态，叠加求最大应力；对于平面应力状态，应用合适的强度理论计算相当应力。
+    \item \textbf{校核或设计}：校核 \(\sigma_{\max} \le [\sigma]\) 或 \(\sigma_{ri} \le [\sigma]\)，或由此确定截面尺寸或许用载荷。
+\end{enumerate}
+

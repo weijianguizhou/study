@@ -1,1 +1,161 @@
 \chapter{弯曲变形}
+
+\section{基本概念与基本假设}
+
+\begin{mydefinition}{挠曲线}
+    梁在弯曲变形后，其轴线变成一条光滑连续的曲线，称为挠曲线（或弹性曲线）。用 \(w(x)\) 表示梁轴线上各点的竖向位移（挠度），以向下为正（或向上，视约定而定），则挠曲线方程即为 \(w = w(x)\)。
+\end{mydefinition}
+
+\begin{mydefinition}{转角}
+    梁横截面绕中性轴转动的角度称为转角，用 \(\theta(x)\) 表示。在小变形条件下，转角等于挠曲线在该点的切线与梁轴线的夹角，即
+    \[
+    \theta(x) \approx \tan\theta(x) = \frac{dw}{dx}
+    \]
+    转角通常以顺时针为正（或逆时针，需统一约定）。
+\end{mydefinition}
+
+\begin{myhypothesis}{弯曲变形的基本假设}
+    \begin{enumerate}
+        \item \textbf{小变形假设}：梁的变形远小于其尺寸，挠曲线近似为水平线，因此可近似用 \(\theta \approx w'\) 且忽略轴向位移。
+        \item \textbf{线弹性假设}：材料服从胡克定律，应力与应变成正比，弹性模量 \(E\) 为常数。
+        \item \textbf{平面截面假设}：梁的横截面在变形后仍保持为平面，且仍垂直于变形后的轴线（欧拉-伯努利梁理论）。
+        \item \textbf{忽略剪切变形}：仅考虑弯曲引起的变形，剪应力对挠度的影响忽略不计（适用于细长梁）。
+    \end{enumerate}
+\end{myhypothesis}
+
+\section{挠曲线近似微分方程}
+
+\begin{myTheorem}{挠曲线近似微分方程}
+    在纯弯曲或横力弯曲（忽略剪力影响）情况下，梁的挠曲线 \(w(x)\) 满足以下二阶线性常微分方程：
+    \[
+    \frac{d^2 w}{dx^2} = \frac{M(x)}{E I}
+    \]
+    其中 \(M(x)\) 为梁截面上的弯矩（以使梁下凸为正），\(E\) 为材料的弹性模量，\(I\) 为截面对中性轴的惯性矩。乘积 \(EI\) 称为梁的\textbf{抗弯刚度}。
+
+    若采用符号约定（弯矩符号与挠度符号一致），上式即为挠曲线的近似微分方程。更精确的表达式（考虑大变形）为
+    \[
+    \frac{w''}{(1+w'^2)^{3/2}} = \frac{M}{EI}
+    \]
+    但在小变形条件下，因 \(w' \ll 1\)，可简化为上述线性方程。
+\end{myTheorem}
+
+\begin{myformula}
+    \boxed{ \displaystyle EI \, w''(x) = M(x) } \quad \text{（弯曲变形的基本微分方程）}
+\end{myformula}
+
+由该方程可直接导出转角与挠度的关系：
+\[
+\theta(x) = w'(x) = \int \frac{M(x)}{EI} \, dx + C_1
+\]
+\[
+w(x) = \iint \frac{M(x)}{EI} \, dx \, dx + C_1 x + C_2
+\]
+其中 \(C_1, C_2\) 由梁的边界条件（支座约束）确定。
+
+\section{积分法求弯曲变形}
+
+\subsection{边界条件与连续条件}
+
+\begin{mydefinition}{边界条件}
+    梁的支座处对挠度和转角的限制条件称为边界条件。常见形式如下：
+    \begin{itemize}
+        \item \textbf{固定端}：\(w=0,\ \theta=0\)（即 \(w'=0\)）。
+        \item \textbf{铰支座（固定铰或可动铰）}：\(w=0\)，转角自由。
+        \item \textbf{自由端}：无约束，弯矩和剪力为零，即 \(M=0,\ F_Q=0\)，对应 \(w''=0,\ w'''=0\)（若采用四阶微分方程）。
+    \end{itemize}
+\end{mydefinition}
+
+\begin{mydefinition}{连续条件}
+    在梁的分段点（如集中力、集中力偶作用处或截面突变处），挠度 \(w\) 和转角 \(\theta\) 必须连续（即 \(w\) 和 \(w'\) 在分段点两侧的值相等），以保证挠曲线是一条光滑连续曲线。
+\end{mydefinition}
+
+\subsection{积分法步骤}
+\begin{enumerate}
+    \item 分段写出弯矩方程 \(M(x)\)（需根据载荷情况分段）。
+    \item 对每一段积分两次，得到含积分常数的挠度和转角表达式。
+    \item 利用边界条件和连续条件确定所有积分常数。
+    \item 代入后即得各段的转角方程和挠曲线方程。
+    \item 若需求最大挠度或转角，可令 \(w'=0\) 求极值点，再计算对应值。
+\end{enumerate}
+
+\begin{myformula}
+\begin{aligned}
+    & EI \, \theta(x) = EI \, w'(x) = \int M(x) \, dx + C_1 \\
+    & EI \, w(x) = \iint M(x) \, dx\, dx + C_1 x + C_2
+\end{aligned}
+\end{myformula}
+
+\section{叠加法求弯曲变形}
+
+\begin{myTheorem}{叠加原理}
+    对于线弹性小变形梁，当梁上同时作用多个载荷时，梁的挠度（或转角）等于各个载荷单独作用时所产生的挠度（或转角）的代数和。即
+    \[
+    w = w_1 + w_2 + \cdots + w_n, \quad \theta = \theta_1 + \theta_2 + \cdots + \theta_n
+    \]
+    其中 \(w_i, \theta_i\) 分别为第 \(i\) 个载荷单独作用时引起的位移。
+\end{myTheorem}
+
+\textbf{使用条件：}
+\begin{itemize}
+    \item 材料服从胡克定律（线弹性）。
+    \item 变形很小，挠曲线近似微分方程线性。
+    \item 载荷与位移成线性关系。
+\end{itemize}
+
+\subsection{常用叠加结果（简支梁、悬臂梁）}
+为了方便查用，以下列出几种典型载荷下的最大挠度和最大转角（取 \(EI\) 为常数）：
+
+\begin{myformula}
+\begin{aligned}
+    &\text{悬臂梁（自由端受集中力 }P\text{）：} & w_{\max} &= \frac{P L^3}{3EI}, & \theta_{\max} &= \frac{P L^2}{2EI} \\
+    &\text{悬臂梁（自由端受集中力偶 }M_0\text{）：} & w_{\max} &= \frac{M_0 L^2}{2EI}, & \theta_{\max} &= \frac{M_0 L}{EI} \\
+    &\text{简支梁（跨中受集中力 }P\text{）：} & w_{\max} &= \frac{P L^3}{48EI}, & \theta_{\max} &= \frac{P L^2}{16EI} \quad (\text{端部}) \\
+    &\text{简支梁（受均布载荷 }q\text{）：} & w_{\max} &= \frac{5q L^4}{384EI}, & \theta_{\max} &= \frac{q L^3}{24EI} \quad (\text{端部})
+\end{aligned}
+\end{myformula}
+
+\section{简单超静定梁}
+
+\begin{mydefinition}{超静定梁}
+    支座反力数目多于独立平衡方程数目的梁称为超静定梁。其未知力（包括反力、内力）不能仅由静力平衡方程完全确定，需补充变形协调条件。
+\end{mydefinition}
+
+\subsection{求解思路（变形比较法）}
+\begin{enumerate}
+    \item 解除多余约束，将超静定梁转化为静定基（基本系统）。
+    \item 在多余约束处施加相应的多余未知力（反力或力矩），使其变形与原结构一致。
+    \item 利用叠加法或积分法，列出多余约束处的变形协调方程（位移或转角等于已知值，通常为0）。
+    \item 联立平衡方程与协调方程，解出所有未知反力。
+    \item 一旦所有反力求出，后续内力、应力、变形计算同静定梁。
+\end{enumerate}
+
+\begin{myTheorem}{变形协调方程的一般形式}
+    设 \( \delta_{ij} \) 表示在 \(j\) 处单位力（或单位力偶）作用下在 \(i\) 处产生的位移（或转角），则对于有 \(n\) 个多余约束的超静定梁，协调方程可写为：
+    \[
+    \sum_{j=1}^{n} \delta_{ij} X_j + \Delta_{iP} = \Delta_i \quad (i=1,2,\dots,n)
+    \]
+    其中 \(X_j\) 为多余未知力，\(\Delta_{iP}\) 为外载荷在 \(i\) 处产生的位移，\(\Delta_i\) 为原结构在 \(i\) 处的已知位移（通常为0）。
+\end{myTheorem}
+
+\subsection{常见超静定梁示例}
+\begin{enumerate}
+    \item \textbf{一端固定、另一端铰支的梁}：有一个多余约束（铰支处的竖向反力为多余未知力）。
+    \item \textbf{两端固定的梁}：有两个多余约束（两端分别有一个多余反力偶和竖向反力）。
+    \item \textbf{连续梁}：多跨连续梁，中间支座处有多个多余约束。
+\end{enumerate}
+
+\begin{myformula}
+\begin{aligned}
+    & \text{平衡方程：} \quad \sum F = 0,\ \sum M = 0 \\
+    & \text{协调方程：} \quad w_B = 0 \quad \text{（若B端为多余约束）} \\
+    & \text{或} \quad \theta_A = 0 \quad \text{（若A端为固定端）}
+\end{aligned}
+\end{myformula}
+
+\section*{本章小结}
+\begin{itemize}
+    \item 弯曲变形的核心是挠曲线微分方程 \(EI w'' = M(x)\)，它是所有分析方法的基础。
+    \item 积分法通用但计算量大，适用于任意载荷；叠加法利用线性性质，快速简便。
+    \item 超静定梁需结合变形协调条件，通过变形比较法或力法求解。
+    \item 实际工程中，需控制梁的最大挠度不超过许用值，以保证刚度要求。
+\end{itemize}
