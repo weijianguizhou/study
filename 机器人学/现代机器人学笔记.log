@@ -1,10 +1,10 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2026.2.15)  29 JUN 2026 16:10
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2026.2.15)  29 JUN 2026 16:25
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**材料力学
-(./材料力学.tex
+**现代机器人学笔记
+(./现代机器人学笔记.tex
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
 (d:/Latex/R/texmf-dist/tex/latex/base/book.cls
@@ -884,8 +884,8 @@ Package fontspec Info:
 (fontspec)             - 'bold slanted small caps'  (b/scsl) with NFSS spec.:
 (fontspec)             <->"[TeXGyrePagellaX-BoldSlanted.otf]/OT:script=latn;language=dflt;+tnum;+lnum;+smcp;mapping=tex-text;"
 
- (./材料力学.aux)
-\openout1 = `材料力学.aux'.
+ (./现代机器人学笔记.aux)
+\openout1 = `现代机器人学笔记.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 135.
 LaTeX Font Info:    ... okay on input line 135.
@@ -947,12 +947,12 @@ Package caption Info: float package is loaded.
 Package caption Info: hyperref package is loaded.
 Package caption Info: End \AtBeginDocument code.
 Package hyperref Info: Link coloring ON on input line 135.
-(./材料力学.out) (./材料力学.out)
+(./现代机器人学笔记.out) (./现代机器人学笔记.out)
 \@outlinefile=\write4
-\openout4 = `材料力学.out'.
+\openout4 = `现代机器人学笔记.out'.
 
-File: Figure/cover.jpg Graphic file (type bmp)
-<Figure/cover.jpg>
+File: Figure/85471aa96176358dfa7b6bcd5377c7de.jpg Graphic file (type bmp)
+<Figure/85471aa96176358dfa7b6bcd5377c7de.jpg>
 
 Package fontspec Info: 
 (fontspec)             Could not resolve font "Microsoft YaHei Bold/I" (it
@@ -979,35 +979,35 @@ Package fontspec Info:
 (fontspec)             - 'bold italic' (b/it) with NFSS spec.: <->"Microsoft
 (fontspec)             YaHei/BI/OT:script=hani;language=dflt;"
 
-LaTeX Font Info:    Trying to load font information for OT1+ppl on input line 155.
+LaTeX Font Info:    Trying to load font information for OT1+ppl on input line 153.
  (d:/Latex/R/texmf-dist/tex/latex/psnfss/ot1ppl.fd
 File: ot1ppl.fd 2001/06/04 font definitions for OT1/ppl.
 )
-LaTeX Font Info:    Trying to load font information for OML+zplm on input line 155.
+LaTeX Font Info:    Trying to load font information for OML+zplm on input line 153.
  (d:/Latex/R/texmf-dist/tex/latex/psnfss/omlzplm.fd
 File: omlzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OML/zplm.
 )
-LaTeX Font Info:    Trying to load font information for OMS+zplm on input line 155.
+LaTeX Font Info:    Trying to load font information for OMS+zplm on input line 153.
  (d:/Latex/R/texmf-dist/tex/latex/psnfss/omszplm.fd
 File: omszplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMS/zplm.
 )
-LaTeX Font Info:    Trying to load font information for OMX+zplm on input line 155.
+LaTeX Font Info:    Trying to load font information for OMX+zplm on input line 153.
  (d:/Latex/R/texmf-dist/tex/latex/psnfss/omxzplm.fd
 File: omxzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMX/zplm.
 )
 LaTeX Font Info:    Font shape `U/msa/m/n' will be
-(Font)              scaled to size 10.42007pt on input line 155.
+(Font)              scaled to size 10.42007pt on input line 153.
 LaTeX Font Info:    Font shape `U/msa/m/n' will be
-(Font)              scaled to size 7.91925pt on input line 155.
+(Font)              scaled to size 7.91925pt on input line 153.
 LaTeX Font Info:    Font shape `U/msa/m/n' will be
-(Font)              scaled to size 6.25204pt on input line 155.
+(Font)              scaled to size 6.25204pt on input line 153.
 LaTeX Font Info:    Font shape `U/msb/m/n' will be
-(Font)              scaled to size 10.42007pt on input line 155.
+(Font)              scaled to size 10.42007pt on input line 153.
 LaTeX Font Info:    Font shape `U/msb/m/n' will be
-(Font)              scaled to size 7.91925pt on input line 155.
+(Font)              scaled to size 7.91925pt on input line 153.
 LaTeX Font Info:    Font shape `U/msb/m/n' will be
-(Font)              scaled to size 6.25204pt on input line 155.
-LaTeX Font Info:    Trying to load font information for OT1+zplm on input line 155.
+(Font)              scaled to size 6.25204pt on input line 153.
+LaTeX Font Info:    Trying to load font information for OT1+zplm on input line 153.
  (d:/Latex/R/texmf-dist/tex/latex/psnfss/ot1zplm.fd
 File: ot1zplm.fd 2002/09/08 Fontinst v1.914 font definitions for OT1/zplm.
 )
@@ -1049,319 +1049,15 @@ Package fontspec Info:
 
 
 LaTeX Font Warning: Font shape `TU/KaiTi(0)/b/n' undefined
-(Font)              using `TU/KaiTi(0)/m/n' instead on input line 162.
+(Font)              using `TU/KaiTi(0)/m/n' instead on input line 160.
 
-(./材料力学.toc
-
-Package fontspec Info: 
-(fontspec)             Could not resolve font "FangSong/BI" (it probably
-(fontspec)             doesn't exist).
-
-
-Package fontspec Info: 
-(fontspec)             Could not resolve font "FangSong/B" (it probably
-(fontspec)             doesn't exist).
-
-
-Package fontspec Info: 
-(fontspec)             Could not resolve font "FangSong/I" (it probably
-(fontspec)             doesn't exist).
-
-
-Package fontspec Info: 
-(fontspec)             Font family 'FangSong(0)' created for font 'FangSong'
-(fontspec)             with options [Script={CJK}].
-(fontspec)              
-(fontspec)              This font family consists of the following NFSS
-(fontspec)             series/shapes:
-(fontspec)              
-(fontspec)             - 'normal' (m/n) with NFSS spec.:
-(fontspec)             <->"FangSong/OT:script=hani;language=dflt;"
-
-
-
-[3]
-
-LaTeX Font Info:    Font shape `TU/SimSun(0)/m/sl' in size <10> not available
-(Font)              Font shape `TU/SimSun(0)/m/it' tried instead on input line 73.
-[4]
-
-[5])
+(./现代机器人学笔记.toc)
 \tf@toc=\write5
-\openout5 = `材料力学.toc'.
+\openout5 = `现代机器人学笔记.toc'.
 
 
 
-[0] (./1.tex
-Chapter 1.
-
-Underfull \hbox (badness 10000) in paragraph at lines 24--25
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 25--26
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 26--27
-
- []
-
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
-
-[1
-
-]
-
-[2]
-File: Figure/应力.png Graphic file (type bmp)
-<Figure/应力.png>
-File: Figure/线应变.png Graphic file (type bmp)
-<Figure/线应变.png>
-) (./轴向拉伸与压缩.tex
-
-[3]
-
-[4]
-Chapter 2.
-File: Figure/轴向拉压力.png Graphic file (type bmp)
-<Figure/轴向拉压力.png>
-File: Figure/应力分解.png Graphic file (type bmp)
-<Figure/应力分解.png>
-
-
-[5
-
-]
-File: Figure/低碳钢的拉伸曲线.png Graphic file (type bmp)
-<Figure/低碳钢的拉伸曲线.png>
-File: Figure/5dac5636-fb99-4781-a8c8-ee10be6bdf8d.png Graphic file (type bmp)
-<Figure/5dac5636-fb99-4781-a8c8-ee10be6bdf8d.png>
-
-
-[6]
-
-[7]
-File: Figure/铸铁的拉伸曲线.png Graphic file (type bmp)
-<Figure/铸铁的拉伸曲线.png>
-
-
-[8]
-
-[9]
-
-[10]) (./剪切.tex
-
-[11]
-
-[12
-
-]
-Chapter 3.
-
-
-[13]) (./扭转.tex
-
-[14]
-Chapter 4.
-
-
-[15
-
-]
-
-[16]
-
-[17]) (./弯曲.tex
-
-[18]
-Chapter 5.
-File: Figure/固定铰支座.png Graphic file (type bmp)
-<Figure/固定铰支座.png>
-File: Figure/可动铰支座.png Graphic file (type bmp)
-<Figure/可动铰支座.png>
-File: Figure/固定端支座.png Graphic file (type bmp)
-<Figure/固定端支座.png>
-
-
-[19
-
-]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
-
-[20]
-
-[21]) (./弯曲应力.tex
-
-[22]
-Chapter 6.
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
-
-[23
-
-]
-
-[24]
-
-[25]
-
-[26]
-Underfull \vbox (badness 3058) has occurred while \output is active []
-
-
-
-[27]) (./弯曲变形.tex
-
-[28]
-Chapter 7.
-
-
-[29
-
-]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
-
-[30]
-
-[31]
-
-[32]) (./应力状态分析和强度理论.tex
-
-[33]
-
-[34
-
-]
-Chapter 8.
-
-Underfull \hbox (badness 1895) in paragraph at lines 4--4
-[]  \TU/FangSong(0)/m/n/8 你 的 眼 睛 还 没 掉 转 过 来 看 我，|
- []
-
-
-Underfull \hbox (badness 1859) in paragraph at lines 4--4
-\TU/FangSong(0)/m/n/8 只 起 了 一 个 势，|  我 早 惊 乱 得 同 一
- []
-
-
-Underfull \hbox (badness 3009) in paragraph at lines 4--4
-\TU/FangSong(0)/m/n/8 只 听 到 弹 弓 弦 子 响 中 的 小 雀 了。|
- []
-
-LaTeX Font Info:    Font shape `U/msa/m/n' will be
-(Font)              scaled to size 9.37807pt on input line 43.
-LaTeX Font Info:    Font shape `U/msa/m/n' will be
-(Font)              scaled to size 7.29405pt on input line 43.
-LaTeX Font Info:    Font shape `U/msb/m/n' will be
-(Font)              scaled to size 9.37807pt on input line 43.
-LaTeX Font Info:    Font shape `U/msb/m/n' will be
-(Font)              scaled to size 7.29405pt on input line 43.
-
-
-[35]
-
-[36]
-
-[37]
-
-[38]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
-
-[39]) (./组合变形.tex
-
-[40]
-Chapter 9.
-
-
-[41
-
-]
-
-[42]
-
-[43]
-
-[44]) (./压杆稳定性.tex
-
-[45]
-
-[46
-
-]
-Chapter 10.
-
-
-[47]
-
-[48]
-
-[49]
-
-[50]
-Overfull \hbox (22.00623pt too wide) detected at line 215
-\OML/zplm/m/it/10 F[] \OT1/zplm/m/n/10 = [] = [] = [] \OMS/zplm/m/n/10 ^^Y \OT1/ppl/m/n/10 1.001 \OMS/zplm/m/n/10 ^^B \OT1/ppl/m/n/10 10[] [] \OT1/zplm/m/n/10 = \OT1/ppl/m/n/10 100.1 []
- []
-
-) (./能量法.tex
-
-[51]
-
-[52
-
-]
-Chapter 11.
-
-
-[53]
-
-[54]
-
-[55]
-
-[56]) (./静不定问题.tex
-
-[57]
-
-[58
-
-]
-Chapter 12.
-
-Underfull \hbox (badness 6510) in paragraph at lines 4--4
-[]  \TU/FangSong(0)/m/n/8 多 余 约 束 赋 予 结 构 更 多 的
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 4--4
-\TU/FangSong(0)/m/n/8 刚 度，|  却 也 带 来 了 求 解 的 挑
- []
-
-
-Underfull \hbox (badness 4060) in paragraph at lines 4--4
-\TU/FangSong(0)/m/n/8 战  |— —|  变 形 协 调 是 解 锁 的 钥 匙。|
- []
-
-
-
-[59]
-
-[60])
-
-[61] (./材料力学.aux)
+[0] (./现代机器人学笔记.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2020/03/25>
@@ -1370,16 +1066,16 @@ L3 programming layer <2020/03/25>
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package rerunfilecheck Info: File `材料力学.out' has not changed.
-(rerunfilecheck)             Checksum: 08146EB47E770B3B371525465FFBB68D;16248.
+Package rerunfilecheck Info: File `现代机器人学笔记.out' has not changed.
+(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 35499 strings out of 473832
- 795100 string characters out of 5735453
- 1192888 words of memory out of 5000000
- 57879 multiletter control sequences out of 15000+600000
- 582831 words of font info for 161 fonts, out of 8000000 for 9000
+ 33990 strings out of 473832
+ 732157 string characters out of 5735453
+ 1167684 words of memory out of 5000000
+ 56443 multiletter control sequences out of 15000+600000
+ 571165 words of font info for 104 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 102i,20n,118p,537b,885s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 102i,5n,118p,541b,885s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on 材料力学.pdf (67 pages).
+Output written on 现代机器人学笔记.pdf (3 pages).
