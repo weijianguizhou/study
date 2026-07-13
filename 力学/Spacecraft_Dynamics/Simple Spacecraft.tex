@@ -1,0 +1,317 @@
+\chapter{简单航天器 (Simple Spacecraft)}
+
+本章讨论两种航天器：可作为单一刚体建模的航天器，以及构成简单陀螺体的航天器。整章的运动方程建立均基于角动量原理。
+
+\section{无外力矩的轴对称刚体的旋转运动 (Rotational Motion of a Torque-Free, Axisymmetric Rigid Body)}
+
+\begin{mydefinition}{自旋与进动}
+当轴对称刚体 \(B\)（图 3.1.1）所受合力关于其质心 \(B^*\) 的力矩为零时，\(B\) 在牛顿参考系 \(N\) 中的旋转运动可以用两种简单旋转运动（1.1节）来描述，每种运动都具有恒定大小的角速度。
+\begin{itemize}
+    \item 运动一：\(B\) 在参考系 \(C\) 中的运动，其中 \(B\) 的角动量 \(\mathbf{H}\)（在 \(N\) 中固定）与 \(B\) 的对称轴在 \(C\) 中固定；
+    \item 运动二：\(C\) 在 \(N\) 中的运动。
+\end{itemize}
+对应的角速度分别称为**自旋角速度**和**进动角速度**：
+\begin{equation}
+^C\boldsymbol{\omega}^B = s\mathbf{c}_3 \tag{1}
+\end{equation}
+\begin{equation}
+^N\boldsymbol{\omega}^C = p\mathbf{h} \tag{2}
+\end{equation}
+其中 \(\mathbf{h}\) 是与 \(\mathbf{H}\) 同向的单位向量，\(\mathbf{c}_3\) 与 \(B\) 的对称轴平行。
+\end{mydefinition}
+
+自旋速率 \(s\) 和进动速率 \(p\) 定义为：
+\begin{equation}
+s \triangleq \left(1 - \frac{J}{I}\right)\hat{\omega}_3 \tag{3}
+\end{equation}
+\begin{equation}
+p \triangleq \frac{H}{I} \tag{4}
+\end{equation}
+其中 \(H\) 是 \(\mathbf{H}\) 的（常量）大小，\(I\) 和 \(J\) 分别是 \(B\) 关于通过 \(B^*\) 且分别垂直于和平行于 \(\mathbf{c}_3\) 的直线的转动惯量，\(\hat{\omega}_3\) 是 \(^N\boldsymbol{\omega}^B \cdot \mathbf{c}_3\) 在 \(t=0\) 时的值。
+
+为描述 \(t \ge 0\) 时 \(B\) 在 \(N\) 中的方向，引入欧拉参数 \(\epsilon_1,\dots,\epsilon_4\)（1.3节），它们满足：
+\begin{align}
+\epsilon_1 &= -\sin\phi\sin\frac{pt}{2}\cos\frac{st}{2} \tag{5} \\
+\epsilon_2 &= \sin\phi\sin\frac{pt}{2}\sin\frac{st}{2} \tag{6} \\
+\epsilon_3 &= \cos\phi\sin\frac{pt}{2}\cos\frac{pt}{2}\cos\frac{st}{2} + \cos\frac{pt}{2}\sin\frac{st}{2} \tag{7} \\
+\epsilon_4 &= -\cos\phi\sin\frac{pt}{2}\sin\frac{st}{2} + \cos\frac{pt}{2}\cos\frac{st}{2} \tag{8}
+\end{align}
+其中 \(\phi\) 是 \(\mathbf{h}\) 与 \(\mathbf{c}_3\) 之间的夹角：
+\begin{equation}
+\phi = \cos^{-1}\frac{\hat{\omega}_3 J}{H} = \cos^{-1}\frac{J s}{(I - J)p}, \quad 0 \le \phi \le \pi \tag{9}
+\end{equation}
+
+\begin{myTheorem}{潘索构造 (Poinsot Construction)}
+\(B\) 在 \(N\) 中的旋转运动还可以通过一个扁球体 \(\sigma\) 在固定平面 \(\pi\) 上的滚动运动来描述。\(\sigma\) 的中心 \(O\) 固定于 \(N\)，其主半直径分别为 \(k I^{-1/2}\) 和 \(k J^{-1/2}\)，对称轴始终平行于 \(\mathbf{c}_3\)。平面 \(\pi\) 是唯一一个固定于 \(N\)、垂直于 \(\mathbf{H}\) 且与 \(O\) 的距离 \(d = \frac{k(^N\boldsymbol{\omega}^B\cdot\mathbf{H})^{1/2}}{H}\) 的平面。该滚动运动中，\(\sigma\) 上点 \(Q\) 和平面 \(\pi\) 上描绘出的轨迹分别称为**本体极迹 (polhode)** 和**空间极迹 (herpolhode)**。此运动还可以等效为一个圆锥在另一个圆锥上的滚动，分别称为**体锥**和**空间锥**。
+\end{myTheorem}
+
+\begin{proof}[3.1节推导]
+定义 \(\omega_i \triangleq ^N\boldsymbol{\omega}^B \cdot \mathbf{c}_i \ (i=1,2,3)\)。角动量 \(\mathbf{H}\) 为：
+\begin{equation}
+\mathbf{H} = I\omega_1\mathbf{c}_1 + I\omega_2\mathbf{c}_2 + J\omega_3\mathbf{c}_3 \tag{13}
+\end{equation}
+由于 \(B\) 在 \(C\) 中的角速度为 \(^C\boldsymbol{\omega}^B = \dot{\theta}\mathbf{c}_3\)，在 \(N\) 中对 \(\mathbf{H}\) 求导，并令力矩为零，可得 \(I\dot{\omega}_1 + [I\dot{\theta} + (J-I)\omega_3]\omega_2 = 0\)。若选取 \(\dot{\theta} = (1 - J/I)\omega_3\)，则方程简化为 \(\dot{\omega}_i=0\)，从而角速度分量均为常数。
+进而，\(^N\boldsymbol{\omega}^C = \hat{\omega}_1\mathbf{c}_1 + \hat{\omega}_2\mathbf{c}_2 + \frac{J}{I}\hat{\omega}_3\mathbf{c}_3 \equiv \frac{H\mathbf{h}}{I} = p\mathbf{h}\)。角度 \(\phi\) 由 \(\cos\phi = \frac{J\hat{\omega}_3}{H} = \frac{J s}{(I-J)p}\) 确定。
+\end{proof}
+
+\section{圆轨道中轴对称刚体上的引力矩效应 (Effect of a Gravitational Moment on an Axisymmetric Rigid Body in a Circular Orbit)}
+
+设 \(B\) 的质量中心 \(B^*\) 绕点 \(O\) 做半径为 \(R\) 的圆周运动，所受的力系 \(S\) 的合力和关于 \(B^*\) 的总力矩为：
+\begin{equation}
+\mathbf{F} = -\mu m R^{-2}\mathbf{a}_1 \tag{1}
+\end{equation}
+\begin{equation}
+\mathbf{M} = \frac{3\mu}{R^3}\mathbf{a}_1 \times \mathbf{I} \cdot \mathbf{a}_1 \tag{2}
+\end{equation}
+此处 \(\mu\) 为常数。
+
+一种可能的运动是以角速度 \(\Omega = (\mu R^{-3})^{1/2}\) 进行的圆周运动。此时，\(B\) 的旋转运动满足以下微分方程（用欧拉参数 \(\epsilon_i\) 和角速度分量 \(\omega_j\) 表示）：
+\begin{align}
+2\dot{\epsilon}_1 &= \epsilon_2(\hat{\omega}_3 - s + \Omega) - \epsilon_3\omega_2 + \epsilon_4\omega_1 \tag{4} \\
+2\dot{\epsilon}_2 &= \epsilon_3\omega_1 + \epsilon_4\omega_2 - \epsilon_1(\hat{\omega}_3 - s + \Omega) \tag{5} \\
+2\dot{\epsilon}_3 &= \epsilon_4(\hat{\omega}_3 - s - \Omega) + \epsilon_1\omega_2 - \epsilon_2\omega_1 \tag{6} \\
+2\dot{\epsilon}_4 &= -\epsilon_1\omega_1 - \epsilon_2\omega_2 - \epsilon_3(\hat{\omega}_3 - s - \Omega) \tag{7}
+\end{align}
+以及力矩引起的角速度变化方程：
+\begin{align}
+\dot{\omega}_1 &= -s\omega_2 + (1 - JI^{-1})\left[\omega_2\hat{\omega}_3 - 12\Omega^2(\epsilon_1\epsilon_2 - \epsilon_3\epsilon_4)(\epsilon_3\epsilon_1 + \epsilon_2\epsilon_4)\right] \tag{8} \\
+\dot{\omega}_2 &= s\omega_1 - (1 - JI^{-1})\left[\omega_1\hat{\omega}_3 - 6\Omega^2(\epsilon_3\epsilon_1 + \epsilon_2\epsilon_4)(1 - 2\epsilon_2^2 - 2\epsilon_3^2)\right] \tag{9}
+\end{align}
+其中 \(\omega_3 = \hat{\omega}_3\) 为常数。
+
+\begin{myTheorem}{轴对称刚体的稳定性判据}
+考虑一种“开环”运动，即 \(\mathbf{c}_3\) 始终垂直于轨道平面（\(\mathbf{a}_3\)），此时：
+\begin{equation}
+s = \hat{\omega}_3 - \Omega, \quad \epsilon_1 = \epsilon_2 = \epsilon_3 = 0, \quad \epsilon_4 = 1, \quad \omega_1 = \omega_2 = 0 \tag{18}
+\end{equation}
+该运动是**不稳定**的，当且仅当无量纲参数 \(x = JI^{-1} - 1\) 和 \(y = \hat{\omega}_3\Omega^{-1} - 1\) 满足下列至少一个不等式：
+\begin{align}
+f_1(x,y) &\triangleq 1 + 3x + [x + y(1 + x)]^2 < 0 \tag{19} \\
+f_2(x,y) &\triangleq [x + y(1 + x)][4x + y(1 + x)] < 0 \tag{20} \\
+f_3(x,y) &\triangleq f_1^2 - 4f_2 < 0 \tag{21}
+\end{align}
+\end{myTheorem}
+
+\begin{proof}[线性化稳定性分析]
+令 \(\epsilon_1 \to \tilde{\epsilon}_1\)，\(\epsilon_4 \to 1 + \tilde{\epsilon}_4\)，\(\omega_j \to \tilde{\omega}_j\)。将这些线性化微小量代入微分方程 (4)-(9)，忽略高阶项，得到变分系统的特征方程 \(\lambda^2(\lambda^4 + 2b\lambda^2 + c) = 0\)。若 \(b<0, c<0\) 或 \(b^2-c<0\)，则特征值中有正实部，即对应上述不稳定情况。
+\end{proof}
+
+\begin{myTheorem}{进动漂移}
+如果 \(|\hat{\omega}_3/\Omega|\) 很大，则对称轴在 \(N\) 中的方向变化很慢。由对称轴与轨道法线确定的平面会近似均匀地绕轨道法线旋转。在 \(B^*\) 绕轨道一周期间，该平面转过的角度 \(\Delta\sigma\) 近似为：
+\begin{equation}
+\Delta\sigma \approx 3\pi \frac{\Omega}{\hat{\omega}_3}(IJ^{-1} - 1)\cos\hat{\psi} \quad \text{rad} \tag{22}
+\end{equation}
+\end{myTheorem}
+
+\section{轨道偏心率对轴对称刚体旋转运动的影响 (Influence of Orbit Eccentricity on the Rotational Motion of an Axisymmetric Rigid Body)}
+
+在 3.2 节所述的力系下，\(B^*\) 还可以沿椭圆轨道运动。设轨道偏心率为 \(e\)，长半轴为 \(a\)，周期为 \(T\)，平均角速度 \(n \triangleq 2\pi T^{-1} = (\mu a^{-3})^{1/2}\)。
+\(B^*\) 的极坐标 \(R\) 和 \(\theta\) 满足：
+\begin{equation}
+R = a(1-e^2)(1+e\cos\theta)^{-1} \tag{2}
+\end{equation}
+\begin{equation}
+\Omega \triangleq \dot{\theta} = n a^2(1-e^2)^{1/2}R^{-2} \tag{3}
+\end{equation}
+此时，旋转运动的微分方程(4)-(9)依然有效，只需将 \(\Omega\) 替换为式 (3) 中的时间函数，且系数中的 \(\Omega^2\) 替换为 \(n^2 a^3 R^{-3}\)：
+\begin{align}
+\dot{\omega}_1 &= -s\omega_2 + (1 - JI^{-1})[\omega_2\hat{\omega}_3 - 12n^2 a^3 R^{-3}(\epsilon_1\epsilon_2 - \epsilon_3\epsilon_4)(\epsilon_3\epsilon_1 + \epsilon_2\epsilon_4)] \tag{8} \\
+\dot{\omega}_2 &= s\omega_1 - (1 - JI^{-1})[\omega_1\hat{\omega}_3 - 6n^2 a^3 R^{-3}(\epsilon_3\epsilon_1 + \epsilon_2\epsilon_4)(1 - 2\epsilon_2^2 - 2\epsilon_3^2)] \tag{9}
+\end{align}
+稳定性分析显示，不稳定区域随偏心率 \(e\) 的增大而增大。大转速情形的平均进动率公式变为：
+\begin{equation}
+\Delta\sigma \approx 3\pi \frac{n}{\hat{\omega}_3} (IJ^{-1} - 1)(1 - e^2)^{-3/2}\cos\hat{\psi} \quad \text{rad} \tag{12}
+\end{equation}
+
+\section{无外力矩的非对称刚体的旋转运动 (Torque-Free Motion of an Unsymmetric Rigid Body)}
+
+设 \(B\) 为无外力矩的非对称刚体，\(\mathbf{b}_1,\mathbf{b}_2,\mathbf{b}_3\) 为沿主惯性轴的单位向量，对应主转动惯量为 \(I_1>I_2>I_3\)。
+角速度 \(\omega_i = ^N\boldsymbol{\omega}^B \cdot \mathbf{b}_i\) 满足欧拉动力学方程：
+\begin{equation}
+I_1\dot{\omega}_1 - (I_2 - I_3)\omega_2\omega_3 = 0 \tag{39}
+\end{equation}
+\begin{equation}
+I_2\dot{\omega}_2 - (I_3 - I_1)\omega_3\omega_1 = 0 \tag{40}
+\end{equation}
+\begin{equation}
+I_3\dot{\omega}_3 - (I_1 - I_2)\omega_1\omega_2 = 0 \tag{41}
+\end{equation}
+
+其解可用雅可比椭圆函数表示。以 \(h/e > I_2\) 的情形为例，解为：
+\begin{align}
+\omega_1^2 &= \frac{h - eI_1}{I_1(I_1 - I_3)} \text{dn}^2[p(t - t_0), k] \tag{11} \\
+\omega_2^2 &= \frac{h - eI_2}{I_2(I_2 - I_3)} \text{sn}^2[p(t - t_0), k] \tag{12} \\
+\omega_3^2 &= \frac{h - eI_3}{I_3(I_1 - I_3)} \text{cn}^2[p(t - t_0), k] \tag{13}
+\end{align}
+
+\begin{myTheorem}{非对称刚体旋转的稳定性}
+一个非对称刚体绕其最大 (\(I_1\)) 或最小 (\(I_3\)) 惯性主轴的简单旋转是稳定的。绕中间主轴 (\(I_2\)) 的旋转是不稳定的。证明可通过线性化微扰方程的特征分析得到。
+\end{myTheorem}
+\begin{proof}
+通过线性化特征方程分析，绕 \(I_2\) 旋转的微扰方程的特征根有一个正根，导致不稳定。
+\end{proof}
+
+\section{圆轨道中非对称刚体上的引力矩效应 (Effect of a Gravitational Moment on an Unsymmetric Rigid Body in a Circular Orbit)}
+
+设 \(B\) 在圆形轨道上运动，同时受到力系 \(S\) 的作用。
+动力学方程（使用方向余弦 \(C_{ij}\) 和角速度 \(\omega_i\) 表示）为：
+\begin{align}
+\dot{C}_{31} &= C_{32}\omega_3 - C_{33}\omega_2 \tag{4} \\
+\dot{C}_{32} &= C_{33}\omega_1 - C_{31}\omega_3 \tag{5} \\
+\dot{C}_{33} &= C_{31}\omega_2 - C_{32}\omega_1 \tag{6} \\
+\dot{C}_{11} &= C_{12}\omega_3 - C_{13}\omega_2 + \Omega(C_{13}C_{32} - C_{12}C_{33}) \tag{7} \\
+\dot{C}_{12} &= C_{13}\omega_1 - C_{11}\omega_3 + \Omega(C_{11}C_{33} - C_{13}C_{31}) \tag{8} \\
+\dot{C}_{13} &= C_{11}\omega_2 - C_{12}\omega_1 + \Omega(C_{12}C_{31} - C_{11}C_{32}) \tag{9}
+\end{align}
+以及：
+\begin{equation}
+\dot{\omega}_1 = K_1\omega_2\omega_3 - 3\Omega^2 K_1 C_{12}C_{13} \tag{10}
+\end{equation}
+其中参数 \(K_i\) 由主转动惯量定义：
+\begin{equation}
+K_1 \triangleq \frac{I_2 - I_3}{I_1}, \quad K_2 \triangleq \frac{I_3 - I_1}{I_2}, \quad K_3 \triangleq \frac{I_1 - I_2}{I_3} \tag{16}
+\end{equation}
+
+\begin{myTheorem}{稳定性与失稳}
+存在一个使 \(B\) 相对于轨道参考系保持静止的运动。该运动是否稳定取决于 \(K_1\) 和 \(K_2\) 的组合。当参数落入图 3.5.3 中阴影区域时，运动不稳定。即使满足所有稳定性条件，当初始角速度较小且主惯性轴接近对齐时，小的扰动也会导致姿态产生显著偏差。
+\end{myTheorem}
+\begin{proof}
+该运动的稳定性分析来源于线性化变分方程，其特征方程包含 \(K_1, K_2\) 和 \(K_3\) 的组合，当满足特定不等式组（对应阴影区域）时，具有正实部特征根。
+\end{proof}
+
+\section{陀螺体的角动量、惯性力矩和动能 (Angular Momentum, Inertia Torque, and Kinetic Energy of a Gyrostat)}
+
+设 \(G\) 为简单陀螺体，由载体 \(A\) 和轴对称转子 \(B\) 组成。
+\begin{myTheorem}{陀螺体的广义分解}
+陀螺体 \(G\) 关于其质心 \(G^*\) 在参考系 \(F\) 中的角动量 \(\mathbf{H}_G\)、惯性力矩 \(\mathbf{T}_G\) 和动能 \(K_G\) 均可表示为两个量之和：
+\begin{align}
+\mathbf{H}_G &= \mathbf{H}_R + \mathbf{H}_I \tag{1} \\
+\mathbf{T}_G &= \mathbf{T}_R + \mathbf{T}_I \tag{2} \\
+K_G &= K_R + K_I \tag{3}
+\end{align}
+其中下标 \(R\) 对应一个假想的、质量分布与 \(G\) 相同但运动方式与 \(A\) 相同的刚体；下标 \(I\) 对应内部运动（\(B\) 相对 \(A\) 的旋转）。
+具体表达式为：
+\begin{equation}
+\mathbf{H}_I = J {}^A\boldsymbol{\omega}^B \boldsymbol{\beta} \tag{4}
+\end{equation}
+\begin{equation}
+\mathbf{T}_I = -J({}^A\dot{\boldsymbol{\omega}}^B\boldsymbol{\beta} + {}^A\boldsymbol{\omega}^B {}^F\boldsymbol{\omega}^A \times \boldsymbol{\beta}) \tag{5}
+\end{equation}
+\begin{equation}
+K_I = \frac{1}{2}J({}^A\boldsymbol{\omega}^B)^2 + {}^F\boldsymbol{\omega}^A \cdot \mathbf{H}_I \tag{6}
+\end{equation}
+\end{myTheorem}
+其中 \(\boldsymbol{\beta}\) 是平行于 \(B\) 对称轴的单位向量，\(J\) 是 \(B\) 对其对称轴的转动惯量。
+
+陀螺体的旋转动能 \(K\) 还满足不等式：
+\begin{equation}
+K_{\min} \le K \le K_{\max} \tag{8}
+\end{equation}
+当 \(B\) 在 \(A\) 中静止（准刚体运动）时，\(K = K_{\min}\) 当且仅当 \(^F\boldsymbol{\omega}^A\) 平行于最大惯性主轴；\(K = K_{\max}\) 当且仅当 \(^F\boldsymbol{\omega}^A\) 平行于最小惯性主轴。
+
+\section{简单陀螺体的动力学方程 (Dynamical Equations for a Simple Gyrostat)}
+
+设 \(G\) 由载体 \(A\) 和转子 \(B\) 组成，其主转动惯量为 \(I_1, I_2, I_3\)，转子轴向转动惯量为 \(J\)。转子轴平行于单位向量 \(\boldsymbol{\beta}\)。
+定义广义角速度为 \(\omega_i = ^N\boldsymbol{\omega}^A \cdot \mathbf{a}_i, \ ^A\omega^B\) 为 \(B\) 相对 \(A\) 的角速度。
+动力学方程为：
+\begin{align}
+I_1\dot{\omega}_1 &= (I_2 - I_3)\omega_2\omega_3 - J[^A\dot{\omega}^B\beta_1 - ^A\omega^B(\beta_2\omega_3 - \beta_3\omega_2)] + M_1 \tag{6} \\
+I_2\dot{\omega}_2 &= (I_3 - I_1)\omega_3\omega_1 - J[^A\dot{\omega}^B\beta_2 - ^A\omega^B(\beta_3\omega_1 - \beta_1\omega_3)] + M_2 \tag{7} \\
+I_3\dot{\omega}_3 &= (I_1 - I_2)\omega_1\omega_2 - J[^A\dot{\omega}^B\beta_3 - ^A\omega^B(\beta_1\omega_2 - \beta_2\omega_1)] + M_3 \tag{8}
+\end{align}
+如果转子轴平行于某个主惯性轴（例如 \(\boldsymbol{\beta} = \mathbf{a}_3\)），且转子自由转动或以恒定角速度驱动，则方程简化为：
+\begin{align}
+I_1\dot{\omega}_1 &= (I_2 - I_3)\omega_2\omega_3 - J\sigma\omega_2 + M_1 \tag{9} \\
+I_2\dot{\omega}_2 &= (I_3 - I_1)\omega_3\omega_1 + J\sigma\omega_1 + M_2 \tag{10} \\
+I_3\dot{\omega}_3 &= (I_1 - I_2)\omega_1\omega_2 + M_3 \tag{11}
+\end{align}
+此处 \(\sigma\) 的取值视转子自由转动还是受控而定（见表 3.7.1）。
+
+\begin{proof}[推导]
+根据达朗贝尔原理，转子 \(B\) 的惯性力矩满足 \(\mathbf{T}_B + \mathbf{M}_{A/B} = 0\)。将其投影至轴向量 \(\boldsymbol{\beta}\) 并结合角速度叠加原理，即可导出载体的欧拉方程 (6)-(8)。
+\end{proof}
+
+\section{无外力矩的轴对称陀螺体的旋转运动 (Rotational Motion of a Torque-Free, Axisymmetric Gyrostat)}
+
+设陀螺体 \(G\) 为轴对称的，其中心惯性椭球和转子 \(B\) 的对称轴平行。当无外力矩时：
+\begin{myTheorem}{轴对称陀螺体的运动}
+\(G\) 的运动与单一轴对称刚体类似（3.1节），可分解为自旋和进动：
+\begin{equation}
+^C\boldsymbol{\omega}^A = s\mathbf{c}_3 \tag{1}
+\end{equation}
+\begin{equation}
+^N\boldsymbol{\omega}^C = p\mathbf{h} \tag{2}
+\end{equation}
+其中：
+\begin{equation}
+s = \frac{(I - J)\hat{\omega}_3 + K\hat{r}}{J} \tag{3}
+\end{equation}
+\begin{equation}
+p = \frac{H}{I} \tag{4}
+\end{equation}
+\(K\) 是转子 \(B\) 对其对称轴的转动惯量，\(\hat{r}\) 是 \(^A\boldsymbol{\omega}^B \cdot \mathbf{c}_3\) 的初始值。
+\end{myTheorem}
+转子相对角速度 \(r\) 满足微分方程：
+\begin{equation}
+\mathbf{c}_3 \cdot \mathbf{M}_{A/B} = K\dot{r} \tag{5}
+\end{equation}
+角度 \(\phi\) 保持不变：
+\begin{equation}
+\phi = \cos^{-1}\frac{J\hat{\omega}_3 + K\hat{r}}{H} = \cos^{-1}\frac{J s}{(I-J)p} \tag{6}
+\end{equation}
+
+\section{初始静止的无外力矩陀螺体的重定向 (Reorientation of a Torque-Free Gyrostat Initially at Rest)}
+
+\begin{myTheorem}{陀螺体的姿态重定向}
+初始时刻，若载体 \(A\) 和转子 \(B\) 均静止于 \(N\) 中，则在无外力矩作用下，仅通过驱动转子 \(B\) 相对 \(A\) 旋转，可以使 \(A\) 绕 \(N\) 中任意期望的单位向量 \(\mathbf{v}\) 完成一次简单旋转。
+若使转子轴平行于单位向量 \(\boldsymbol{\beta}\)，则载体 \(A\) 的旋转轴 \(\mathbf{v}\) 满足：
+\begin{equation}
+\boldsymbol{\beta} \cdot \mathbf{I}_G^{-1} \cdot \mathbf{v} < 0 \tag{12}
+\end{equation}
+载体在 \(N\) 中的转角 \(^N\theta_A\) 与转子在 \(A\) 中的转角 \(^A\theta_B\) 之间满足简单比例关系：
+\begin{equation}
+\frac{^N\theta_A}{^A\theta_B} = \frac{J \boldsymbol{\beta} \cdot \mathbf{I}_G^{-1} \cdot \mathbf{v}}{M - J} \tag{5}
+\end{equation}
+\end{myTheorem}
+其中 \(\mathbf{I}_G\) 是 \(G\) 的中心惯性并矢，\(M\) 是考虑了载体 \(A\) 和转子 \(B\) 质量分布后的等效转动惯量矩阵。
+
+\section{圆轨道中轴对称陀螺体上的引力矩效应 (Effect of a Gravitational Moment on an Axisymmetric Gyrostat in a Circular Orbit)}
+
+设轴对称陀螺体 \(G\)（对称轴与转子轴平行）在圆形轨道中运动。当转子自由转动或受控以恒定角速度转动时，其载体 \(A\) 的旋转运动方程为：
+\begin{align}
+\dot{\omega}_1 &= -a\Omega\omega_2 + \beta\Omega^2 s_2 c_2 s_3 \tag{7} \\
+\dot{\omega}_2 &= -a\Omega\omega_1 + \beta\Omega^2 s_2 c_2 c_3 \tag{8} \\
+\omega_3 &= \hat{\omega}_3, \quad \text{常数} \tag{9}
+\end{align}
+其中 \(s_2 = \sin\theta_2, c_2 = \cos\theta_2\)。
+此运动存在一个特别解，即对称轴始终保持垂直于轨道平面。该运动的稳定性判据与 3.2 节中轴对称刚体的稳定性判据（式 3.2.19-3.2.21）完全一致，只需将参数 \(\hat{\omega}_3\) 替换为陀螺体的等效转速即可。
+
+\section{圆轨道中非对称陀螺体上的引力矩效应 (Effect of a Gravitational Moment on an Unsymmetric Gyrostat in a Circular Orbit)}
+
+设非对称陀螺体 \(G\) 的转子轴平行于其中一根主惯性轴（设为 \(\mathbf{a}_3\)）。
+运动方程（使用方向余弦和角速度表示）为：
+\begin{align}
+\dot{C}_{31} &= C_{32}\omega_3 - C_{33}\omega_2 \tag{4} \\
+\dot{C}_{32} &= C_{33}\omega_1 - C_{31}\omega_3 \tag{5} \\
+\dot{C}_{33} &= C_{31}\omega_2 - C_{32}\omega_1 \tag{6} \\
+\dot{C}_{11} &= C_{12}\omega_3 - C_{13}\omega_2 + \Omega(C_{13}C_{32} - C_{12}C_{33}) \tag{7} \\
+\dot{C}_{12} &= C_{13}\omega_1 - C_{11}\omega_3 + \Omega(C_{11}C_{33} - C_{13}C_{31}) \tag{8} \\
+\dot{C}_{13} &= C_{11}\omega_2 - C_{12}\omega_1 + \Omega(C_{12}C_{31} - C_{11}C_{32}) \tag{9}
+\end{align}
+和描述角速度的动力学方程：
+\begin{align}
+\dot{\omega}_1 &= K_1\omega_2\omega_3 - 3\Omega^2 K_1 C_{12}C_{13} \tag{10} \\
+\dot{\omega}_2 &= K_2\omega_3\omega_1 - 3\Omega^2 K_2 C_{13}C_{11} + \sigma\omega_1(1 - I_3/I_2) \tag{11} \\
+\dot{\omega}_3 &= K_3\omega_1\omega_2 - 3\Omega^2 K_3 C_{11}C_{12} \tag{12}
+\end{align}
+\begin{myTheorem}{非对称陀螺体的失稳判据}
+考虑一种运动，使载体 \(A\) 相对轨道参考系保持静止（即 \(\mathbf{a}_i = \mathbf{e}_i\)）。该运动是**不稳定**的，如果：
+\begin{equation}
+K_3 > 0 \tag{18}
+\end{equation}
+或者如果下列不等式中的任何一个成立：
+\begin{equation}
+b < 0, \quad c < 0, \quad b^2 - c < 0 \tag{19}
+\end{equation}
+其中 \(b\) 和 \(c\) 是惯性参数 \(K_1, K_2\) 和转子相对转速的函数。
+\end{myTheorem}

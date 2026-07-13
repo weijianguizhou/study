@@ -1,0 +1,194 @@
+\chapter{状态空间方法}
+
+\intro{
+	控制即预见。
+	
+	\rightline{——Henri Fayol}
+}
+
+\section{状态空间表示的基本概念}
+
+\subsection{从二阶系统到一阶状态方程}
+
+$n$ 自由度系统 $M\ddot{\mathbf{x}} + C\dot{\mathbf{x}} + K\mathbf{x} = \mathbf{F}(t)$ 可化为 $2n$ 维一阶状态方程。定义状态向量：
+\begin{myformula}
+	\mathbf{z} = \begin{pmatrix} \mathbf{x} \\ \dot{\mathbf{x}} \end{pmatrix} \in \mathbb{R}^{2n}
+\end{myformula}
+
+则状态方程为：
+\begin{myformula}
+	\dot{\mathbf{z}} = A_s \mathbf{z} + B_s \mathbf{u}(t)
+\end{myformula}
+其中：
+\begin{myformula}
+	A_s = \begin{pmatrix} 0 & I \\ -M^{-1}K & -M^{-1}C \end{pmatrix}, \quad
+	B_s = \begin{pmatrix} 0 \\ M^{-1} B_u \end{pmatrix}
+\end{myformula}
+$\mathbf{u}(t)$ 为输入向量，$B_u$ 为力的分配矩阵（$\mathbf{F} = B_u \mathbf{u}$）。
+
+输出方程：
+\begin{myformula}
+	\mathbf{y} = C_s \mathbf{z} + D_s \mathbf{u}
+\end{myformula}
+$\mathbf{y}$ 为可测量的输出量（如特定自由度的位移、速度或加速度）。
+
+\subsection{线性时不变（LTI）系统的规范性}
+
+标准 LTI 系统记为 $\Sigma(A, B, C, D)$：
+\begin{myformula}
+	\begin{cases}
+		\dot{\mathbf{z}} = A \mathbf{z} + B \mathbf{u} \\
+		\mathbf{y} = C \mathbf{z} + D \mathbf{u}
+	\end{cases}
+\end{myformula}
+
+\section{状态方程的解}
+
+\subsection{齐次解——状态转移矩阵}
+
+齐次方程 $\dot{\mathbf{z}} = A \mathbf{z}$ 的解可表达为：
+\begin{myformula}
+	\mathbf{z}(t) = e^{A t} \mathbf{z}_0
+\end{myformula}
+其中 $e^{At}$ 为\textbf{状态转移矩阵}（矩阵指数）。
+
+\begin{theorem}{状态转移矩阵的基本性质}
+	\begin{enumerate}
+		\item $\Phi(0) = e^{A \cdot 0} = I$；
+		\item $\dot{\Phi}(t) = A \Phi(t) = \Phi(t) A$；
+		\item $\Phi(t_1 + t_2) = \Phi(t_1) \Phi(t_2)$；
+		\item $\Phi^{-1}(t) = \Phi(-t) = e^{-At}$；
+		\item $\det \Phi(t) = e^{\operatorname{tr}(A) t}$（Liouville 公式）。
+	\end{enumerate}
+\end{theorem}
+
+\subsection{非齐次解——状态转移公式}
+
+对有输入的系统 $\dot{\mathbf{z}} = A\mathbf{z} + B\mathbf{u}$，解为：
+\begin{myformula}
+	\mathbf{z}(t) = e^{A(t - t_0)} \mathbf{z}_0 + \int_{t_0}^{t} e^{A(t - \tau)} B \mathbf{u}(\tau) \, d\tau
+\end{myformula}
+
+\begin{proof}
+	考虑 $e^{-At} \mathbf{z}(t)$ 的导数：
+	\[
+	\frac{d}{dt}\left[ e^{-At} \mathbf{z} \right] = -A e^{-At} \mathbf{z} + e^{-At} (A\mathbf{z} + B\mathbf{u}) = e^{-At} B \mathbf{u}
+	\]
+	从 $t_0$ 到 $t$ 积分：
+	\[
+	e^{-At} \mathbf{z}(t) - e^{-A t_0} \mathbf{z}_0 = \int_{t_0}^{t} e^{-A\tau} B \mathbf{u}(\tau) d\tau
+	\]
+	左乘 $e^{At}$ 即得。
+\end{proof}
+
+\section{可控性与可观性}
+
+可控性与可观性是现代控制理论的两个基石。
+
+\begin{mydefinition}{可控性}
+	若存在一个控制输入 $\mathbf{u}(t)$，能在有限时间内将系统从任意初始状态 $\mathbf{z}_0$ 转移到任意目标状态 $\mathbf{z}_f$，则称系统 $\Sigma(A,B,C,D)$ \textbf{完全可控}。
+\end{mydefinition}
+
+\begin{theorem}{可控性判据（Kalman）}
+	系统 $\Sigma(A,B)$ 完全可控的充要条件是可控性矩阵满秩：
+	\[
+	\operatorname{rank}\begin{pmatrix}
+		B & AB & A^2B & \cdots & A^{n-1}B
+	\end{pmatrix} = n
+	\]
+	其中 $n = \dim(A)$。
+\end{theorem}
+
+\begin{mydefinition}{可观性}
+	若在有限时间内，通过对输出 $\mathbf{y}(t)$ 和输入 $\mathbf{u}(t)$ 的观测可以唯一确定初始状态 $\mathbf{z}_0$，则称系统\textbf{完全可观}。
+\end{mydefinition}
+
+\begin{theorem}{可观性判据（Kalman）}
+	系统 $\Sigma(A,C)$ 完全可观的充要条件是可观性矩阵满秩：
+	\[
+	\operatorname{rank}\begin{pmatrix}
+		C \\ CA \\ CA^2 \\ \vdots \\ CA^{n-1}
+	\end{pmatrix} = n
+	\]
+\end{theorem}
+
+\section{矩阵指数的数值计算}
+
+\subsection{特征分解法}
+
+若 $A$ 可对角化：$A = P \Lambda P^{-1}$（$\Lambda = \operatorname{diag}(\lambda_1, \ldots, \lambda_n)$），则：
+\begin{myformula}
+	e^{At} = P \, \operatorname{diag}(e^{\lambda_1 t}, \ldots, e^{\lambda_n t}) \, P^{-1}
+\end{myformula}
+
+\subsection{Laplace 变换法}
+
+状态方程的 Laplace 变换给出：
+\[
+s Z(s) - \mathbf{z}_0 = A Z(s) + B U(s)
+\]
+解得：
+\[
+Z(s) = (sI - A)^{-1} \mathbf{z}_0 + (sI - A)^{-1} B U(s)
+\]
+对比时域解，状态转移矩阵的 Laplace 变换为：
+\begin{myformula}
+	\mathcal{L}\{e^{At}\} = (sI - A)^{-1}
+\end{myformula}
+
+\subsection{数值方法——Padé 逼近与缩放平方法}
+
+直接使用 Taylor 级数计算 $e^{At}$ 可能因截断误差和计算量过大而不可行。实际中常用的算法为：
+
+\begin{enumerate}
+	\item \textbf{缩放平方法}（Scaling \& Squaring）：降低 $A$ 的范数后计算 Padé 逼近再平方恢复；
+	\item \textbf{Krylov 子空间法}：将问题投影到低维子空间，仅计算 $e^{At}$ 与特定向量的乘积 $e^{At} \mathbf{v}$。
+\end{enumerate}
+
+\section{传递函数矩阵}
+
+对 LTI 系统 $\Sigma(A,B,C,D)$，在频域的传递函数矩阵为：
+\begin{myformula}
+	G(s) = C (sI - A)^{-1} B + D
+\end{myformula}
+
+$G(s)$ 是 $p \times q$ 矩阵（$p$ 个输出，$q$ 个输入），其元素 $G_{ij}(s)$ 为第 $j$ 个输入到第 $i$ 个输出的传递函数。
+
+\begin{remark}
+	传递函数的极点即矩阵 $A$ 的特征值。系统的稳定性等价于 $A$ 的所有特征值的实部均为负。
+\end{remark}
+
+\section{线性反馈控制初步}
+
+\subsection{状态反馈}
+
+对于可控系统，可设计状态反馈控制律 $\mathbf{u} = -K \mathbf{z}$，使闭环系统
+\[
+\dot{\mathbf{z}} = (A - BK) \mathbf{z}
+\]
+具有期望的动力学特性。
+
+\begin{theorem}{极点配置定理}
+	若 $\Sigma(A,B)$ 完全可控，则存在反馈增益矩阵 $K$ 使得闭环系统矩阵 $A - BK$ 具有任意指定的特征值集合（但需满足复共轭条件）。
+\end{theorem}
+
+\subsection{线性二次型调节器（LQR）}
+
+LQR 问题：寻找最优控制 $\mathbf{u}(t)$ 使二次型性能指标极小化：
+\begin{myformula}
+	J = \int_{0}^{\infty} \left( \mathbf{z}^T Q \mathbf{z} + \mathbf{u}^T R \mathbf{u} \right) dt
+\end{myformula}
+其中 $Q \succeq 0$（半正定），$R \succ 0$（正定）。
+
+最优控制为线性状态反馈：
+\begin{myformula}
+	\mathbf{u}^* = -R^{-1} B^T P \mathbf{z} = -K_{\text{LQR}} \mathbf{z}
+\end{myformula}
+其中 $P$ 为代数 Riccati 方程的解：
+\begin{myformula}
+	A^T P + P A - P B R^{-1} B^T P + Q = 0
+\end{myformula}
+
+\begin{remark}
+	LQR 理论自然地解决了控制增益与能耗之间的权衡，广泛应用于航空航天、机器人、车辆控制等工程领域。
+\end{remark}

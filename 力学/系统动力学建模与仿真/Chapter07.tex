@@ -1,0 +1,173 @@
+\chapter{多自由度系统动力学建模}
+
+\intro{
+	整体大于部分之和。
+	
+	\rightline{——Aristotle}
+}
+
+\section{多自由度系统的基本描述}
+
+$n$ 自由度（MDOF）系统的运动方程可统一写成矩阵形式：
+\begin{myformula}
+	M \ddot{\mathbf{x}} + C \dot{\mathbf{x}} + K \mathbf{x} = \mathbf{F}(t)
+\end{myformula}
+其中：
+\begin{itemize}
+	\item $M \in \mathbb{R}^{n \times n}$——质量矩阵（正定对称）；
+	\item $C \in \mathbb{R}^{n \times n}$——阻尼矩阵（通常为对称的 Rayleigh 阻尼或比例阻尼）；
+	\item $K \in \mathbb{R}^{n \times n}$——刚度矩阵（对称半正定）；
+	\item $\mathbf{x} \in \mathbb{R}^n$——广义位移向量；
+	\item $\mathbf{F}(t) \in \mathbb{R}^n$——广义外力向量。
+\end{itemize}
+
+\section{无阻尼自由振动与特征值问题}
+
+\subsection{特征值问题}
+
+无阻尼自由振动方程 $M \ddot{\mathbf{x}} + K \mathbf{x} = \mathbf{0}$。设同步解 $\mathbf{x}(t) = \boldsymbol{\phi} e^{i \omega t}$，代入得：
+\begin{myformula}
+	(K - \omega^2 M) \boldsymbol{\phi} = \mathbf{0}
+\end{myformula}
+
+为使非零解存在，需系数矩阵行列式为零：
+\begin{myformula}
+	\det(K - \omega^2 M) = 0
+\end{myformula}
+此即\textbf{广义特征值问题}。特征值 $\omega_r^2$（$r = 1, \ldots, n$）给出固有频率的平方，特征向量 $\boldsymbol{\phi}_r$ 为对应的\textbf{模态振型}。
+
+\subsection{振型的正交性}
+
+\begin{theorem}{模态正交性}
+	设 $\omega_r \neq \omega_s$（$r \neq s$），则：
+	\[
+	\boldsymbol{\phi}_r^T M \boldsymbol{\phi}_s = 0, \qquad
+	\boldsymbol{\phi}_r^T K \boldsymbol{\phi}_s = 0
+	\]
+\end{theorem}
+
+\begin{proof}
+	由特征方程 $K \boldsymbol{\phi}_r = \omega_r^2 M \boldsymbol{\phi}_r$，左乘 $\boldsymbol{\phi}_s^T$：
+	\[
+	\boldsymbol{\phi}_s^T K \boldsymbol{\phi}_r = \omega_r^2 \, \boldsymbol{\phi}_s^T M \boldsymbol{\phi}_r
+	\]
+	交换 $r, s$ 并利用 $M, K$ 的对称性：
+	\[
+	\boldsymbol{\phi}_r^T K \boldsymbol{\phi}_s = \boldsymbol{\phi}_s^T K \boldsymbol{\phi}_r, \quad
+	\boldsymbol{\phi}_r^T M \boldsymbol{\phi}_s = \boldsymbol{\phi}_s^T M \boldsymbol{\phi}_r
+	\]
+	代入交换后的等式：
+	\[
+	\boldsymbol{\phi}_s^T K \boldsymbol{\phi}_r = \omega_s^2 \, \boldsymbol{\phi}_s^T M \boldsymbol{\phi}_r
+	\]
+	两式相减：$(\omega_r^2 - \omega_s^2) \, \boldsymbol{\phi}_s^T M \boldsymbol{\phi}_r = 0$。因 $\omega_r \neq \omega_s$，得正交性。
+\end{proof}
+
+\textbf{归一化条件：} 令 $\boldsymbol{\phi}_r^T M \boldsymbol{\phi}_r = m_r$（模态质量），$\boldsymbol{\phi}_r^T K \boldsymbol{\phi}_r = k_r = \omega_r^2 m_r$（模态刚度）。
+
+\section{模态叠加法}
+
+\subsection{坐标变换}
+
+引入模态矩阵 $\Phi = [\boldsymbol{\phi}_1, \boldsymbol{\phi}_2, \ldots, \boldsymbol{\phi}_n]$，作坐标变换：
+\begin{myformula}
+	\mathbf{x}(t) = \Phi \mathbf{q}(t) = \sum_{r=1}^{n} \boldsymbol{\phi}_r q_r(t)
+\end{myformula}
+其中 $\mathbf{q}$ 为\textbf{模态坐标}。
+
+\subsection{解耦方程}
+
+将变换代入运动方程，左乘 $\Phi^T$，利用正交性得\textbf{解耦方程组}：
+\begin{myformula}
+	\ddot{q}_r + 2 \zeta_r \omega_r \dot{q}_r + \omega_r^2 q_r = \frac{f_r(t)}{m_r}, \quad r = 1, \ldots, n
+\end{myformula}
+其中 $f_r(t) = \boldsymbol{\phi}_r^T \mathbf{F}(t)$ 为模态力，$\zeta_r$ 为模态阻尼比。这便将 $n$ 自由度耦合系统化为了 $n$ 个独立的单自由度系统。
+
+\begin{remark}
+	模态叠加法的关键在于：对于低阻尼系统，仅前 $m \ll n$ 阶模态即足以精确描述系统的动力学响应。这使得大规模系统的仿真成为可能。
+\end{remark}
+
+\section{比例阻尼与一般阻尼}
+
+\subsection{Rayleigh 阻尼}
+
+最常见的比例阻尼模型为 Rayleigh 阻尼：
+\begin{myformula}
+	C = \alpha M + \beta K
+\end{myformula}
+其模态阻尼比为：
+\[
+\zeta_r = \frac{\alpha}{2\omega_r} + \frac{\beta \omega_r}{2}
+\]
+
+\begin{remark}
+	Rayleigh 阻尼可被模态矩阵同时对角化，因此模态叠加法可直接适用。
+\end{remark}
+
+\subsection{一般黏性阻尼}
+
+若 $C$ 不能被同时对角化，则不能用传统模态叠加法。此时须将系统写成一阶状态空间形式，进行复模态分析。
+
+\section{复模态分析}
+
+将二阶系统化为一阶状态空间形式。定义状态向量 $\mathbf{z} = \begin{pmatrix} \mathbf{x} \\ \dot{\mathbf{x}} \end{pmatrix}$：
+\begin{myformula}
+	A \dot{\mathbf{z}} + B \mathbf{z} = \mathbf{G}(t)
+\end{myformula}
+其中：
+\[
+A = \begin{pmatrix} C & M \\ M & 0 \end{pmatrix}, \quad
+B = \begin{pmatrix} K & 0 \\ 0 & -M \end{pmatrix}
+\]
+
+特征值问题 $(\lambda A + B) \boldsymbol{\psi} = 0$ 给出 $2n$ 个复特征值 $\lambda_r$ 和复特征向量 $\boldsymbol{\psi}_r$。特征值以共轭对出现：
+\[
+\lambda_r, \lambda_r^* = -\zeta_r \omega_r \pm i \omega_r \sqrt{1 - \zeta_r^2}
+\]
+
+\section{频率响应函数矩阵}
+
+在频域，稳态响应满足：
+\begin{myformula}
+	(-\omega^2 M + i\omega C + K) \mathbf{X}(\omega) = \mathbf{F}(\omega)
+\end{myformula}
+定义\textbf{动刚度矩阵} $Z(\omega) = -\omega^2 M + i\omega C + K$，则：
+\begin{myformula}
+	\mathbf{X}(\omega) = H(\omega) \mathbf{F}(\omega)
+\end{myformula}
+$H(\omega) = [Z(\omega)]^{-1}$ 为 $n \times n$ 的\textbf{频率响应函数（FRF）矩阵}。
+
+利用模态展开：
+\begin{myformula}
+	H(\omega) = \sum_{r=1}^{n} \frac{\boldsymbol{\phi}_r \boldsymbol{\phi}_r^T}{m_r (\omega_r^2 - \omega^2 + 2i\zeta_r \omega_r \omega)}
+\end{myformula}
+
+元素 $H_{ij}(\omega)$ 表示在 $j$ 自由度处施加单位简谐力时在 $i$ 自由度处产生的位移响应。FRF 矩阵是实验模态分析的核心理论工具。
+
+\section{数值求解注意事项}
+
+\begin{enumerate}
+	\item \textbf{矩阵的稀疏性}：对于大型有限元模型，质量矩阵 $M$ 和刚度矩阵 $K$ 是稀疏的，应采用稀疏矩阵存储和算法；
+	\item \textbf{时程积分方法的选择}：Newmark-$\beta$ 法、Wilson-$\theta$ 法、HHT-$\alpha$ 法为结构动力学中常用的直接积分法；
+	\item \textbf{特征值求解}：对于大型特征值问题，子空间迭代法和 Lanczos 法为常用方法。
+\end{enumerate}
+
+\begin{example}{二自由度系统的模态分析}
+	两相同质量 $m$ 用三个相同弹簧 $k$ 连接。运动方程：
+	\[
+	\begin{pmatrix} m & 0 \\ 0 & m \end{pmatrix}
+	\begin{pmatrix} \ddot{x}_1 \\ \ddot{x}_2 \end{pmatrix}
+	+ \begin{pmatrix} 2k & -k \\ -k & 2k \end{pmatrix}
+	\begin{pmatrix} x_1 \\ x_2 \end{pmatrix} = \mathbf{0}
+	\]
+	特征值问题给出固有频率：
+	\[
+	\omega_1 = \sqrt{\frac{k}{m}}, \quad
+	\omega_2 = \sqrt{\frac{3k}{m}}
+	\]
+	对应的振型：
+	\[
+	\boldsymbol{\phi}_1 = \begin{pmatrix} 1 \\ 1 \end{pmatrix} \;(\text{同相模态}), \quad
+	\boldsymbol{\phi}_2 = \begin{pmatrix} 1 \\ -1 \end{pmatrix} \;(\text{反相模态})
+	\]
+\end{example}

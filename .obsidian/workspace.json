@@ -4,17 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "8710290485ed1b1a",
+        "id": "de9f116fbb71f088",
         "type": "tabs",
         "children": [
           {
-            "id": "225e71f5eea8bde6",
+            "id": "e6aba1aa3fcd2882",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "未命名.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "新标签页"
+              "title": "未命名"
             }
           }
         ]
@@ -174,7 +178,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -188,8 +193,11 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "225e71f5eea8bde6",
+  "active": "e6aba1aa3fcd2882",
   "lastOpenFiles": [
+    "Pasted image 20260629220006.jpg",
+    "未命名.md",
+    "Pasted image 20260629220331.jpg",
     "材料力学的基本概念整理.md",
     "力学/理论力学/零杆的判断.md",
     "力学/理论力学",
