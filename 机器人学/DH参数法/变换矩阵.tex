@@ -1,0 +1,210 @@
+\chapter{DH 变换矩阵的推导}
+
+\section{从 $\{i-1\}$ 到 $\{i\}$ 的四步变换}
+
+在标准 DH 参数法中，从坐标系 $\{i-1\}$ 变换到坐标系 $\{i\}$ 可以通过以下四个基本操作的顺序执行来实现：
+
+\begin{myTheorem}{标准 DH 的四步变换过程}
+	\[
+	{}^{i-1}_{i}\mathbf{T} = \mathrm{Rot}(z_{i-1}, \theta_i) \cdot \mathrm{Trans}(0,0,d_i) \cdot \mathrm{Trans}(a_{i-1},0,0) \cdot \mathrm{Rot}(x_{i-1}, \alpha_{i-1})
+	\]
+	
+	即：绕 $z_{i-1}$ 旋转 $\theta_i$ $\to$ 沿 $z_{i-1}$ 平移 $d_i$ $\to$ 沿 $x_{i-1}$ 平移 $a_{i-1}$ $\to$ 绕 $x_{i-1}$ 旋转 $\alpha_{i-1}$。
+\end{myTheorem}
+
+\begin{figure}[htbp]
+	\centering
+	\begin{tikzpicture}[scale=1.1]
+		% 步骤1：绕z旋转theta
+		\begin{scope}
+			\draw[->, thick] (0,0) -- (1.2,0) node[right] {$x$};
+			\draw[->, thick] (0,0) -- (0,1.2) node[above] {$z$};
+			\draw[->, dashed, red] (0,0) -- (0.8,0.8) node[right] {$x'$};
+			\draw[->, dashed, red] (0,0) -- (-0.8,0.8) node[left] {$y$};
+			\draw[->] (0.4,0) arc (0:45:0.4);
+			\node at (0.6,0.25) {$\theta_i$};
+			\node[below] at (0,-0.5) {步骤1: $\mathrm{Rot}(z,\theta_i)$};
+		\end{scope}
+		
+		\begin{scope}[xshift=3.5cm]
+			\draw[->, thick] (0,0) -- (1.2,0) node[right] {$x'$};
+			\draw[->, thick] (0,0) -- (0,1.5) node[above] {$z$};
+			\draw[->, thick, dashed] (0,1) -- (1.2,1) node[right] {$x''$};
+			\draw[<->] (-0.3,0) -- (-0.3,1) node[midway, left] {$d_i$};
+			\node[below] at (0,-0.5) {步骤2: $\mathrm{Trans}(0,0,d_i)$};
+		\end{scope}
+		
+		\begin{scope}[xshift=7cm]
+			\draw[->, thick] (0,0) -- (1.2,0) node[right] {$x''$};
+			\draw[->, thick] (0,0) -- (0,1.2) node[above] {$z$};
+			\draw[->, thick, dashed] (1.5,0) -- (2.7,0) node[right] {$x'''$};
+			\draw[<->] (0,-0.3) -- (1.5,-0.3) node[midway, below] {$a_{i-1}$};
+			\node[below] at (0.75,-0.7) {步骤3: $\mathrm{Trans}(a_{i-1},0,0)$};
+		\end{scope}
+		
+		\begin{scope}[xshift=10cm, yshift=-0.5cm]
+			\draw[->, thick] (0,0) -- (1.2,0) node[right] {$x'''$};
+			\draw[->, thick] (0,0) -- (0,1.2) node[above] {$z$};
+			\draw[->, dashed, red] (0,0) -- (0.7,1.0);
+			\draw[->] (0,0.5) arc (90:60:0.5);
+			\node at (0.3,0.7) {$\alpha_{i-1}$};
+			\node[below] at (0,-0.5) {步骤4: $\mathrm{Rot}(x,\alpha_{i-1})$};
+		\end{scope}
+	\end{tikzpicture}
+	\caption{标准 DH 变换的四步分解}
+\end{figure}
+
+\subsection{矩阵的显式展开}
+
+将上述四个基本矩阵相乘，得到标准 DH 变换矩阵的完整形式：
+
+\begin{myformula}
+	{}^{i-1}_{i}\mathbf{T} = \begin{bmatrix}
+		\cos\theta_i & -\sin\theta_i\cos\alpha_{i-1} &  \sin\theta_i\sin\alpha_{i-1} & a_{i-1}\cos\theta_i \\
+		\sin\theta_i &  \cos\theta_i\cos\alpha_{i-1} & -\cos\theta_i\sin\alpha_{i-1} & a_{i-1}\sin\theta_i \\
+		0            &  \sin\alpha_{i-1}             &  \cos\alpha_{i-1}             & d_i \\
+		0            &  0                            &  0                            & 1
+	\end{bmatrix}
+\end{myformula}
+
+\subsection{推导过程}
+
+让我们逐步验证这个结果。
+
+首先，四个基本矩阵分别为：
+
+\[
+\mathrm{Rot}(z, \theta_i) = \begin{bmatrix}
+	c\theta_i & -s\theta_i & 0 & 0 \\
+	s\theta_i &  c\theta_i & 0 & 0 \\
+	0         &  0         & 1 & 0 \\
+	0         &  0         & 0 & 1
+\end{bmatrix}, \qquad
+\mathrm{Trans}(0,0,d_i) = \begin{bmatrix}
+	1 & 0 & 0 & 0 \\
+	0 & 1 & 0 & 0 \\
+	0 & 0 & 1 & d_i \\
+	0 & 0 & 0 & 1
+\end{bmatrix}
+\]
+
+\[
+\mathrm{Trans}(a_{i-1},0,0) = \begin{bmatrix}
+	1 & 0 & 0 & a_{i-1} \\
+	0 & 1 & 0 & 0 \\
+	0 & 0 & 1 & 0 \\
+	0 & 0 & 0 & 1
+\end{bmatrix}, \qquad
+\mathrm{Rot}(x, \alpha_{i-1}) = \begin{bmatrix}
+	1 & 0          & 0           & 0 \\
+	0 & c\alpha_{i-1} & -s\alpha_{i-1} & 0 \\
+	0 & s\alpha_{i-1} &  c\alpha_{i-1} & 0 \\
+	0 & 0          & 0           & 1
+\end{bmatrix}
+\]
+
+计算 $\mathrm{Trans}(a_{i-1},0,0) \cdot \mathrm{Rot}(x,\alpha_{i-1})$：
+
+\[
+\mathbf{M}_1 = \begin{bmatrix}
+	1 & 0          & 0           & a_{i-1} \\
+	0 & c\alpha_{i-1} & -s\alpha_{i-1} & 0 \\
+	0 & s\alpha_{i-1} &  c\alpha_{i-1} & 0 \\
+	0 & 0          & 0           & 1
+\end{bmatrix}
+\]
+
+再乘以 $\mathrm{Trans}(0,0,d_i)$：
+
+\[
+\mathbf{M}_2 = \begin{bmatrix}
+	1 & 0          & 0           & a_{i-1} \\
+	0 & c\alpha_{i-1} & -s\alpha_{i-1} & 0 \\
+	0 & s\alpha_{i-1} &  c\alpha_{i-1} & d_i \\
+	0 & 0          & 0           & 1
+\end{bmatrix}
+\]
+
+最后乘以 $\mathrm{Rot}(z,\theta_i)$：
+
+\[
+{}^{i-1}_{i}\mathbf{T} = \begin{bmatrix}
+	c\theta_i & -s\theta_i c\alpha_{i-1} &  s\theta_i s\alpha_{i-1} & a_{i-1} c\theta_i \\
+	s\theta_i &  c\theta_i c\alpha_{i-1} & -c\theta_i s\alpha_{i-1} & a_{i-1} s\theta_i \\
+	0         &  s\alpha_{i-1}           &  c\alpha_{i-1}           & d_i \\
+	0         &  0                      &  0                        & 1
+\end{bmatrix}
+\]
+
+\textbf{验证无误。}
+
+\section{改进 DH 参数法（Modified DH / Craig 版本）}
+
+John J. Craig 在其 1986 年出版的教材中提出了改进的 DH 约定，核心区别在于\textbf{坐标系的附着位置}。
+
+\begin{mydefinition}{改进 DH 的坐标系附着}
+	在改进 DH 中，坐标系 $\{i\}$ 附着于连杆 $i$ 的\textbf{近端}（即靠关节 $i$ 一侧），而非远端。
+	
+	同时，变换从 $\{i-1\}$ 到 $\{i\}$ 的四步操作顺序也相应改变：
+	\[
+	{}^{i-1}_{i}\mathbf{T} = \mathrm{Rot}(x_{i-1}, \alpha_{i-1}) \cdot \mathrm{Trans}(a_{i-1},0,0) \cdot \mathrm{Rot}(z_i, \theta_i) \cdot \mathrm{Trans}(0,0,d_i)
+	\]
+\end{mydefinition}
+
+\subsection{两组约定的参数对应关系}
+
+\begin{center}
+	\begin{tabular}{ccc}
+		\toprule
+		参数 & 标准 DH（以 $\{i-1\}$ 为参考） & 改进 DH（以 $\{i\}$ 为参考） \\
+		\midrule
+		$a$ & $a_{i-1}$：从前一轴到本轴的公垂线长 & $a_{i-1}$：含义相同 \\
+		$\alpha$ & $\alpha_{i-1}$：绕 $x_{i-1}$ 的扭角 & $\alpha_{i-1}$：含义相同 \\
+		$d$ & $d_i$：沿 $z_{i-1}$ 的偏距 & $d_i$：沿 $z_i$ 的偏距 \\
+		$\theta$ & $\theta_i$：绕 $z_{i-1}$ 的转角 & $\theta_i$：绕 $z_i$ 的转角 \\
+		\bottomrule
+	\end{tabular}
+\end{center}
+
+\textbf{核心区别：}标准 DH 的 $d_i$ 和 $\theta_i$ 是参考 $z_{i-1}$ 轴的，而改进 DH 是参考 $z_i$ 轴的。这在参数编号上产生了偏移。
+
+\subsection{改进 DH 的显式矩阵}
+
+\[
+{}^{i-1}_{i}\mathbf{T}_{\text{MDH}} = \begin{bmatrix}
+	\cos\theta_i & -\sin\theta_i & 0 & a_{i-1} \\
+	\sin\theta_i\cos\alpha_{i-1} & \cos\theta_i\cos\alpha_{i-1} & -\sin\alpha_{i-1} & -d_i\sin\alpha_{i-1} \\
+	\sin\theta_i\sin\alpha_{i-1} & \cos\theta_i\sin\alpha_{i-1} &  \cos\alpha_{i-1} &  d_i\cos\alpha_{i-1} \\
+	0 & 0 & 0 & 1
+\end{bmatrix}
+\]
+
+\subsection{两种约定的选择建议}
+
+\begin{myTheorem}{DH 约定的选择}
+	\begin{enumerate}
+		\item \textbf{标准 DH}：在学术界和传统教材中广泛使用（如 Spong、Siciliano 等教材）。
+		\item \textbf{改进 DH}：在工业界和部分现代教材中使用（如 Craig 教材、ROS 中的 URDF 格式）。参数编号更直观（四个参数的下标一致：$a_i, \alpha_i, d_i, \theta_i$ 全部用 $i$）。
+	\end{enumerate}
+	
+	两者在数学上是等价的，只要参数的物理含义在选定的约定下被正确定义。
+\end{myTheorem}
+
+\section{计算末端位姿}
+
+建立所有相邻坐标系的变换矩阵后，末端执行器在基坐标系中的位姿为：
+
+\[
+{}^{0}_{n}\mathbf{T} = {}^{0}_{1}\mathbf{T}(\theta_1) \cdot {}^{1}_{2}\mathbf{T}(\theta_2) \cdot {}^{2}_{3}\mathbf{T}(\theta_3) \cdots {}^{n-1}_{n}\mathbf{T}(\theta_n) = \begin{bmatrix}
+	{}^{0}_{n}\mathbf{R} & {}^{0}\mathbf{p}_{n} \\
+	\mathbf{0} & 1
+\end{bmatrix}
+\]
+
+其中：
+\begin{itemize}
+	\item ${}^{0}_{n}\mathbf{R} \in \SO{3}$ —— 末端相对于基座的姿态矩阵；
+	\item ${}^{0}\mathbf{p}_{n} \in \R^3$ —— 末端原点在基坐标系中的位置向量。
+\end{itemize}
+
+这是机器人\textbf{正运动学}的核心公式。将其展开为含 $\theta_1, \ldots, \theta_n$ 的符号表达式后，代入具体关节角度即可得到末端位姿的数值。

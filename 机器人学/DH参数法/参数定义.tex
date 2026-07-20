@@ -1,0 +1,253 @@
+\chapter{DH 参数的几何定义}
+
+\section{连杆与关节的编号}
+
+在 DH 参数法中，约定如下编号规则：
+
+\begin{figure}[htbp]
+	\centering
+	\begin{tikzpicture}[scale=1.1]
+		% 基座
+		\fill[pattern=north east lines, pattern color=gray!50] (-0.5,0) rectangle (0.5,0.5);
+		\node at (0,0.25) {基座 0};
+		
+		% 关节1轴
+		\draw[ultra thick, blue] (0,0.5) -- (0,1.5);
+		\node[left] at (0,1.0) {轴 $i-1$};
+		
+		% 连杆 i-1
+		\draw[very thick] (0,0.5) -- (0,1.5);
+		
+		% 关节 i-1
+		\draw[fill=orange!30] (-0.2,0.5) rectangle (0.2,0.7);
+		\node[left] at (-0.2,0.6) {关节 $i-1$};
+		
+		% 连杆 i
+		\draw[very thick, red!60!black] (0,1.5) -- (3.5,2.5);
+		\node[red!60!black] at (1.5,2.0) {连杆 $i$};
+		
+		% 关节 i
+		\draw[fill=orange!30, rotate around={30:(3.5,2.5)}] (3.3,2.3) rectangle (3.7,2.7);
+		\node[above] at (3.8,2.6) {关节 $i$};
+		
+		% 关节i轴
+		\draw[ultra thick, blue, rotate around={30:(3.5,2.5)}] (3.5,2.0) -- (3.5,3.5);
+		\node[right] at (4.2,2.9) {轴 $i$};
+		
+		% 连杆 i+1
+		\draw[very thick, red!60!black] (3.5,2.5) -- (5.5,3.5);
+		
+		% 关节 i+1
+		\draw[fill=orange!30, rotate around={20:(5.5,3.5)}] (5.3,3.3) rectangle (5.7,3.7);
+		\node[right] at (5.8,3.6) {关节 $i+1$};
+		
+		% 公垂线
+		\draw[dashed, green!50!black, thick] (0,1.5) -- (3.5,2.5);
+		\node[green!50!black] at (2.2,2.9) {$a_{i-1}$（公垂线）};
+	\end{tikzpicture}
+	\caption{连杆与关节的编号约定}
+\end{figure}
+
+\textbf{编号规则：}
+\begin{itemize}
+	\item 基座编号为 0，视为\textbf{虚拟连杆 0}。
+	\item 从基座向外，依次编号：\textbf{关节 1、连杆 1、关节 2、连杆 2、……、关节 n、连杆 n}。
+	\item \textbf{连杆 $i$} 位于关节 $i$ 和关节 $i+1$ 之间。
+	\item 关节 $i$ 连接连杆 $i-1$ 和连杆 $i$；关节 $i$ 运动时，连杆 $i$ 随之运动。
+	\item 末端执行器（工具）编号为 $n+1$，视为\textbf{虚拟连杆 $n+1$}。
+\end{itemize}
+
+\section{四个 DH 参数的几何意义}
+
+对于每一对相邻的关节轴（轴 $i-1$ 与轴 $i$），四个 DH 参数完整刻画了它们的空间几何关系。
+
+\begin{mydefinition}{四个 DH 参数（标准 DH）}
+	设关节轴 $i-1$ 和关节轴 $i$ 为空间中两条直线，定义：
+	\begin{enumerate}
+		\item \textbf{连杆长度} $a_{i-1}$：沿 $x_{i-1}$ 轴方向，轴 $i-1$ 与轴 $i$ 之间的公垂线长度。当两轴平行时，有无数条等长公垂线；当两轴相交时，$a_{i-1}=0$。\\
+		\item \textbf{连杆扭角} $\alpha_{i-1}$：绕 $x_{i-1}$ 轴，从轴 $i-1$ 方向旋转到轴 $i$ 方向的角度（右旋为正）。\\
+		\item \textbf{连杆偏距} $d_i$：沿 $z_{i-1}$ 轴方向，从 $x_{i-1}$ 到 $x_i$ 的有向距离。\\
+		\item \textbf{关节转角} $\theta_i$：绕 $z_{i-1}$ 轴，从 $x_{i-1}$ 方向旋转到 $x_i$ 方向的角度（右旋为正）。
+	\end{enumerate}
+\end{mydefinition}
+
+\begin{figure}[htbp]
+	\centering
+	\begin{tikzpicture}[scale=1.3]
+		% 轴 i-1 (垂直向上)
+		\draw[->, ultra thick, blue] (0,-0.5) -- (0,3.5) node[above] {轴 $i-1$};
+		\node[left] at (0,1.5) {$z_{i-1}$};
+		
+		% 轴 i (倾斜)
+		\draw[->, ultra thick, blue, rotate around={25:(3,0.5)}] (3,-0.5) -- (3,3.5) node[above] {轴 $i$};
+		\node at (2.5,2.2) {$z_{i}$};
+		
+		% 公垂线 = a_{i-1}
+		\draw[->, very thick, red!70!black] (0,1) -- node[midway, above] {$a_{i-1}$} (3,1);
+		\node[below] at (1.5,1) {$x_{i-1}$};
+		
+		% x_{i-1}轴延伸
+		\draw[->, thick, red!70!black] (0,1) -- (-0.8,1);
+		
+		% 原点 O_{i-1}
+		\filldraw (0,1) circle (1.5pt) node[below left] {$O_{i-1}$};
+		
+		% 交点 O_i
+		\filldraw (3,1) circle (1.5pt) node[below right] {$O_{i}$};
+		
+		% x_i 轴（从O_i沿公垂线方向）
+		\draw[->, thick, red!70!black] (3,1) -- (4,1) node[right] {$x_i$};
+		
+		% 标注 alpha_{i-1}
+		\draw[->, thick, green!50!black] (2.6,1.5) arc[start angle=90, end angle=115, radius=1.2];
+		\node[green!50!black] at (2.3,1.8) {$\alpha_{i-1}$};
+		
+		% z_{i-1}在O_{i-1}处
+		\draw[->, thick, blue!50!black] (0,1) -- (0,2.2);
+		
+		% z_i在O_i处
+		\begin{scope}[shift={(3,1)}, rotate=25]
+			\draw[->, thick, blue!50!black] (0,0) -- (0,1.5);
+		\end{scope}
+		
+		% 标注 d_i (偏距，沿z_{i-1}方向)
+		\draw[<->, dashed, purple] (-0.5,0.5) -- (-0.5,1) node[midway, left] {$d_i$};
+		
+		% 标注 theta_i (绕z_{i-1}的转角)
+		\draw[->] (0.35,1.25) arc[start angle=0, end angle=20, radius=0.8];
+		\node at (0.8,1.6) {$\theta_i$};
+		
+	\end{tikzpicture}
+	\caption{标准 DH 参数的几何意义（空间示意）}
+\end{figure}
+
+\subsection{参数的进一步解释}
+
+\begin{enumerate}
+	\item \textbf{$a_{i-1}$（连杆长度）}：这是公垂线的长度，恒为非负。如果两轴平行，可在公垂线族中任选一条，通常选与前一公垂线相交的那一条。如果两轴相交，$a_{i-1}=0$。
+	
+	\item \textbf{$\alpha_{i-1}$（连杆扭角）}：描述了关节轴 $i$ 相对于关节轴 $i-1$ 的空间倾斜程度。借助右手定则：右手拇指指向 $x_{i-1}$，四指弯曲方向为 $\alpha_{i-1}$ 的正方向。
+	
+	\item \textbf{$d_i$（连杆偏距）}：对于\textbf{移动关节}，$d_i$ 是关节变量；对于\textbf{旋转关节}，$d_i$ 是常数。
+	
+	\item \textbf{$\theta_i$（关节转角）}：对于\textbf{旋转关节}，$\theta_i$ 是关节变量；对于\textbf{移动关节}，$\theta_i$ 是常数。
+\end{enumerate}
+
+\begin{myTheorem}{DH 参数的变量性}
+	\begin{center}
+		\begin{tabular}{ccc}
+			\toprule
+			关节类型 & 关节变量 & 常量参数 \\
+			\midrule
+			旋转关节 (R) & $\theta_i$ & $a_{i-1}, \alpha_{i-1}, d_i$ \\
+			移动关节 (P) & $d_i$     & $a_{i-1}, \alpha_{i-1}, \theta_i$ \\
+			\bottomrule
+		\end{tabular}
+	\end{center}
+\end{myTheorem}
+
+\textbf{注意：}无论哪种关节类型，$a_{i-1}$ 和 $\alpha_{i-1}$ 始终是常量（由机械结构决定），它们是对连杆本身的描述。而 $\theta_i$ 和 $d_i$ 中恰好有一个描述关节运动。
+
+\section{连杆坐标系的建立规则}
+
+DH 参数法的关键步骤是\textbf{为每个连杆固连一个坐标系}。坐标系的放置必须遵循统一规则。
+
+\begin{mydefinition}{连杆坐标系 $\{i\}$ 的建立（标准 DH）}
+	坐标系 $\{i\}$ 固连于连杆 $i$，按如下规则定义：
+	\begin{enumerate}
+		\item \textbf{原点 $O_i$}：关节轴 $i$ 与公垂线 $a_i$ 的交点（即轴 $i$ 和轴 $i+1$ 公垂线与轴 $i$ 的交点）。
+		\item \textbf{$z_i$ 轴}：沿关节轴 $i$ 的方向（指向任意，但建议一致朝向末端）。
+		\item \textbf{$x_i$ 轴}：沿从轴 $i$ 到轴 $i+1$ 的公垂线方向，从关节 $i$ 指向关节 $i+1$。
+		\item \textbf{$y_i$ 轴}：由右手定则确定：$\hat{\mathbf{y}}_i = \hat{\mathbf{z}}_i \times \hat{\mathbf{x}}_i$。
+	\end{enumerate}
+\end{mydefinition}
+
+\begin{figure}[htbp]
+	\centering
+	\begin{tikzpicture}[scale=1.2]
+		% 画两个关节轴
+		% 轴 i (垂直)
+		\draw[->, ultra thick, blue] (0,-0.3) -- (0,4) node[above] {轴 $i$};
+		\node[left] at (0,2.5) {$z_i$};
+		
+		% 轴 i+1 (倾斜)
+		\draw[->, ultra thick, blue] (3.5,-0.3) -- (3.5,4) node[above] {轴 $i+1$};
+		
+		% 轴i略倾斜展示（稍微倾斜以显示三维感）
+		% 实际上保持垂直以展示二维投影
+		
+		% 公垂线 a_i
+		\draw[->, very thick, red!70!black] (0,1.5) -- node[midway, above] {$a_i$} (3.5,1.5);
+		\node[below] at (1.75,1.5) {$x_i$};
+		
+		% O_i
+		\filldraw (0,1.5) circle (1.5pt) node[left] {$O_i$};
+		
+		% 坐标系{i}
+		\draw[->, thick, red!70!black] (0,1.5) -- (1.2,1.5) node[below] {$x_i$};
+		\draw[->, thick, green!50!black] (0,1.5) -- (0,2.5) node[left] {$z_i$};
+		\draw[->, thick, orange] (0,1.5) -- (-0.5,2.0) node[left] {$y_i$};
+		
+		% O_{i+1} （如果a_{i+1}定义的话）
+		\filldraw (3.5,1.5) circle (1.5pt) node[right] {$O_{i-1}$ 型};
+		
+		% 轴 i 方向在O_i处的箭头
+		\draw[->, thick, blue!50!black] (0,1.5) -- (0,2.5);
+		
+		% 轴 i+1方向
+		\draw[->, thick, blue!50!black] (3.5,1.5) -- (3.5,2.5);
+		\node[right] at (3.5,2.5) {$z_{i+1}$};
+		
+		% 标注alpha_i
+		\draw[->, thick, green!50!black] (3.2,2.0) arc[start angle=90, end angle=115, radius=0.8];
+		\node[green!50!black] at (2.8,2.3) {$\alpha_i$};
+	\end{tikzpicture}
+	\caption{连杆坐标系 $\{i\}$ 的建立：$z_i$ 沿关节轴 $i$，$x_i$ 沿公垂线指向关节 $i+1$}
+\end{figure}
+
+\subsection{基坐标系 $\{0\}$ 和末端坐标系 $\{n\}$ 的处理}
+
+\begin{itemize}
+	\item \textbf{基坐标系 $\{0\}$}：可任意放置，习惯上使 $z_0$ 沿关节轴 1 的方向。当关节变量 $\theta_1 = 0$（旋转关节）或 $d_1 = 0$（移动关节）时，使 $\{0\}$ 与 $\{1\}$ 重合。这样可令某些参数取零，简化表达式。
+	
+	\item \textbf{末端坐标系 $\{n\}$}：固连于末端连杆 $n$。通常将原点 $O_n$ 放在夹爪中心或工具参考点，$z_n$ 沿接近方向（approach），$x_n$ 沿法向或滑动方向。确保参数少、物理意义清晰即可。
+\end{itemize}
+
+\section{DH 参数表的建立}
+
+将每个连杆-关节对的四个参数整理成表格，是 DH 参数法的标准输出形式：
+
+\begin{center}
+	\begin{tabular}{cccccc}
+		\toprule
+		连杆 $i$ & $a_{i-1}$ & $\alpha_{i-1}$ & $d_i$ & $\theta_i$ & 关节类型 \\
+		\midrule
+		1 & $a_0$   & $\alpha_0$   & $d_1$   & $\theta_1$ & R/P \\
+		2 & $a_1$   & $\alpha_1$   & $d_2$   & $\theta_2$ & R/P \\
+		$\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ \\
+		$n$ & $a_{n-1}$ & $\alpha_{n-1}$ & $d_n$ & $\theta_n$ & R/P \\
+		\bottomrule
+	\end{tabular}
+\end{center}
+
+\textbf{注：}上表中 $a_{i-1}$ 和 $\alpha_{i-1}$ 描述连杆 $i-1$ 本身的形状，$d_i$ 和 $\theta_i$ 描述连杆 $i-1$ 与连杆 $i$ 之间的连接关系。这种"错位"的编号方式在标准 DH 中常常令人困惑，但也正是因为这样，四个参数恰好对应从 $\{i-1\}$ 到 $\{i\}$ 的四个变换步骤。
+
+\section{完整的参数赋值步骤}
+
+\begin{myTheorem}{DH 参数赋值的操作流程}
+	\begin{enumerate}
+		\item \textbf{确定所有关节轴}：在机械图中为每个关节画出无限延伸的轴线（空间中两条直线）。
+		\item \textbf{标注公垂线}：对每一对相邻关节轴，确定（或选取）公垂线。
+		\item \textbf{建立坐标系}：依次在公垂线与关节轴的交点处放置坐标系原点，依规则定轴。
+		\item \textbf{读参数}：从坐标系间的几何关系中读出 $a_{i-1}, \alpha_{i-1}, d_i, \theta_i$。
+		\item \textbf{填表}：将结果填入 DH 参数表。
+	\end{enumerate}
+\end{myTheorem}
+
+\subsection{特例处理}
+
+\begin{itemize}
+	\item \textbf{两轴平行}：有无穷多条公垂线，通常选择与上一公垂线相交的那一条（以保证 $d_i$ 的确定性）。
+	\item \textbf{两轴相交}：$a_{i-1}=0$，坐标系原点取在交点处。$x_{i-1}$ 取为与 $z_{i-1}$ 和 $z_i$ 均垂直的方向。
+	\item \textbf{第一轴}：坐标系 $\{0\}$ 可自由放置，一般选 $O_0$ 在关节轴 1 上，$z_0$ 沿关节轴 1。
+\end{itemize}

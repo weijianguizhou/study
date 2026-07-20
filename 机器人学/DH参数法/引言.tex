@@ -1,0 +1,121 @@
+\chapter{引言}
+\intro{
+	给我一个支点，我可以撬动地球。
+	
+	\rightline{——Archimedes}
+}
+
+\section{什么是 DH 参数法}
+
+机器人运动学研究的核心问题在于：\textbf{如何用数学语言精确描述机械臂各连杆之间的相对位置与姿态？}
+
+当我们面对一个由多个旋转或移动关节串联而成的开链机构时，需要回答一个根本性问题：\textbf{已知各个关节的运动量，如何计算出末端执行器在空间中的位置和姿态？}这就是所谓的\emph{正运动学}问题。
+
+1955 年，Jacques Denavit 和 Richard S. Hartenberg 在一篇开创性论文中提出了一种系统化的记法——用\textbf{仅四个参数}来描述相邻连杆之间的几何关系。这种方法被称为 \textbf{DH 参数法}（Denavit–Hartenberg Convention），至今仍是机器人学的基石之一。
+
+\begin{myTheorem}{DH 参数法的核心思想}
+	对于串联机器人中的每一对相邻连杆，只需 \textbf{四个独立参数} 即可完整描述两个连杆坐标系之间的齐次变换：
+	\begin{enumerate}
+		\item \textbf{连杆长度} $a_i$ —— 沿 $x_i$ 轴，从 $z_{i-1}$ 到 $z_i$ 的距离；
+		\item \textbf{连杆扭角} $\alpha_i$ —— 绕 $x_i$ 轴，从 $z_{i-1}$ 旋转到 $z_i$ 的角度；
+		\item \textbf{连杆偏距} $d_i$ —— 沿 $z_{i-1}$ 轴，从 $x_{i-1}$ 到 $x_i$ 的距离；
+		\item \textbf{关节转角} $\theta_i$ —— 绕 $z_{i-1}$ 轴，从 $x_{i-1}$ 旋转到 $x_i$ 的角度。
+	\end{enumerate}
+\end{myTheorem}
+
+\section{机器人运动学的基本任务}
+
+在深入研究 DH 参数法之前，我们首先明确机器人运动学所要解决的基本问题。
+
+\begin{myTheorem}{运动学基本任务}
+	\begin{enumerate}
+		\item \textbf{正运动学}：已知各关节变量值，求解末端执行器的位姿（位置与姿态）。
+		\item \textbf{逆运动学}：已知末端执行器期望位姿，反求各关节变量值。
+		\item \textbf{速度运动学}：建立关节速度与末端速度之间的映射关系（雅可比矩阵）。
+		\item \textbf{工作空间分析}：确定末端执行器可到达的全部位置与姿态的集合。
+	\end{enumerate}
+\end{myTheorem}
+
+其中，DH 参数法主要服务于\textbf{正运动学}的建模与求解。它为每一对相邻连杆建立了\textbf{统一的、参数化的变换矩阵}，使得从基座到末端的整体变换仅需将各级矩阵依次相乘即可。
+
+\section{串联机器人的基本组成}
+
+\begin{figure}[htbp]
+	\centering
+	\begin{tikzpicture}[scale=1.0]
+		% 基座
+		\fill[gray!30] (-1.5,0) rectangle (1.5,0.3);
+		\node at (0,0.15) {基座};
+		
+		% 关节1（旋转）
+		\draw[thick, fill=blue!20] (0,0.3) circle (0.25);
+		\node[font=\small] at (0,0.3) {J1};
+		
+		% 连杆1
+		\draw[very thick, red!60!black] (0,0.55) -- (0,1.8);
+		
+		% 关节2
+		\draw[thick, fill=blue!20] (0,1.8) circle (0.25);
+		\node[font=\small] at (0,1.8) {J2};
+		
+		% 连杆2
+		\draw[very thick, red!60!black] (0,2.05) -- (1.2,3.2);
+		
+		% 关节3
+		\draw[thick, fill=blue!20] (1.2,3.2) circle (0.25);
+		\node[font=\small] at (1.2,3.2) {J3};
+		
+		% 末端执行器
+		\draw[very thick, red!60!black] (1.2,3.45) -- (1.2,4.2);
+		\draw[fill=orange!30] (0.9,4.2) rectangle (1.5,4.6);
+		\node[font=\small] at (1.2,4.4) {末端};
+		
+		% 标注
+		\draw[<->, blue] (-0.6,0.55) -- (-0.6,1.8) node[midway, left] {连杆1};
+		\draw[<->, blue] (1.8,2.2) -- (2.2,3.1) node[midway, right] {连杆2};
+	\end{tikzpicture}
+	\caption{串联机器人基本组成：基座 — 关节 — 连杆 — 末端执行器}
+\end{figure}
+
+一个典型的串联机器人由以下部分依次连接而成：
+\begin{enumerate}
+	\item \textbf{基座}（Base）：固定于地面或工作台的参考基准。
+	\item \textbf{关节}（Joint）：提供运动自由度的连接机构，分为旋转关节（Revolute）和移动关节（Prismatic）。
+	\item \textbf{连杆}（Link）：连接相邻两个关节的刚性构件。
+	\item \textbf{末端执行器}（End-Effector）：安装于最后一个连杆末端的工具（夹爪、焊枪等）。
+\end{enumerate}
+
+\section{基本假设}
+
+为使模型简洁而在精度上可以接受，DH 参数法建立在如下假设之上：
+
+\begin{myhypothesis}{DH 参数法的基本假设}
+	\begin{enumerate}
+		\item \textbf{刚体假设}：所有连杆均为理想刚体，不考虑弹性变形。\\
+		\item \textbf{理想关节假设}：关节无间隙、无摩擦，运动沿精确的几何轴进行。\\
+		\item \textbf{串联开链假设}：机器人由一系列连杆通过单自由度关节依次串联而成，形成开式运动链。\\
+		\item \textbf{坐标系约定假设}：相邻坐标系之间存在确定的几何关系，可通过四个参数描述。
+	\end{enumerate}
+\end{myhypothesis}
+
+这些假设使得我们能够将复杂的空间机构简化为一系列\textbf{齐次变换矩阵}的级联，从而用线性代数的方法处理运动学问题。
+
+\section{为什么仅需四个参数}
+
+对于空间中任意两个坐标系，一般需要六个独立参数（三个位置 + 三个姿态角）才能完整描述它们之间的变换。那么，为什么 DH 参数法只用四个参数就够了？
+
+关键在于：\textbf{DH 参数法不是描述任意两个坐标系之间的关系，而是通过巧妙地选择坐标系的放置位置，使得两个约束条件被内在满足}。
+
+具体而言，DH 参数法的坐标系建立遵循两条关键规则：
+\begin{enumerate}
+	\item 坐标系 $\{i\}$ 的 $x_i$ 轴被强制定义为与从 $z_{i-1}$ 到 $z_i$ 的公垂线重合（或平行）。
+	\item 坐标系 $\{i\}$ 的 $x_i$ 轴被强制定义为与 $z_{i-1}$ 轴相交。
+\end{enumerate}
+
+这两条规则消耗了两个自由度，使得剩余的独立参数恰好为四个。这正是 DH 参数法的精妙所在：\textbf{用坐标系的选择来"吸收"冗余参数}。
+
+\section{DH 参数法的历史意义}
+
+在 DH 参数法提出之前，机构学中对空间连杆机构的描述缺乏统一的数学框架。Denavit 和 Hartenberg 的工作借鉴了当时刚兴起的\textbf{矩阵方法}，用 $4 \times 4$ 齐次变换矩阵来描述相邻构件之间的关系，这一思想直接影响了后续几十年机器人学的发展。
+
+1986 年，John J. Craig 在其经典教材 \textit{Introduction to Robotics: Mechanics and Control} 中提出了一种\textbf{改进的 DH 参数法}（Modified DH），改变了坐标系附着的位置（将坐标系 $\{i\}$ 从连杆 $i$ 的末端改为始端），使得参数的物理意义在某些场景下更加直观。本书将同时介绍标准 DH 和改进 DH 两种约定。

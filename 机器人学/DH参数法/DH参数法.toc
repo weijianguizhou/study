@@ -1,0 +1,45 @@
+\contentsline {chapter}{\numberline {1}引言}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}什么是 DH 参数法}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}机器人运动学的基本任务}{1}{section.1.2}%
+\contentsline {section}{\numberline {1.3}串联机器人的基本组成}{2}{section.1.3}%
+\contentsline {section}{\numberline {1.4}基本假设}{3}{section.1.4}%
+\contentsline {section}{\numberline {1.5}为什么仅需四个参数}{3}{section.1.5}%
+\contentsline {section}{\numberline {1.6}DH 参数法的历史意义}{3}{section.1.6}%
+\contentsline {chapter}{\numberline {2}数学基础}{5}{chapter.2}%
+\contentsline {section}{\numberline {2.1}位置与姿态的描述}{5}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}位置的描述}{5}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}姿态的描述——旋转矩阵}{5}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}绕坐标轴的基本旋转}{6}{subsection.2.1.3}%
+\contentsline {section}{\numberline {2.2}齐次变换矩阵}{6}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}基本齐次变换}{7}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}齐次变换的几何意义}{7}{subsection.2.2.2}%
+\contentsline {section}{\numberline {2.3}坐标系的变换链}{8}{section.2.3}%
+\contentsline {chapter}{\numberline {3}DH 参数的几何定义}{9}{chapter.3}%
+\contentsline {section}{\numberline {3.1}连杆与关节的编号}{9}{section.3.1}%
+\contentsline {section}{\numberline {3.2}四个 DH 参数的几何意义}{9}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}参数的进一步解释}{10}{subsection.3.2.1}%
+\contentsline {section}{\numberline {3.3}连杆坐标系的建立规则}{11}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}基坐标系 $\{0\}$ 和末端坐标系 $\{n\}$ 的处理}{12}{subsection.3.3.1}%
+\contentsline {section}{\numberline {3.4}DH 参数表的建立}{12}{section.3.4}%
+\contentsline {section}{\numberline {3.5}完整的参数赋值步骤}{12}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}特例处理}{13}{subsection.3.5.1}%
+\contentsline {chapter}{\numberline {4}DH 变换矩阵的推导}{15}{chapter.4}%
+\contentsline {section}{\numberline {4.1}从 $\{i-1\}$ 到 $\{i\}$ 的四步变换}{15}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}矩阵的显式展开}{15}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}推导过程}{16}{subsection.4.1.2}%
+\contentsline {section}{\numberline {4.2}改进 DH 参数法（Modified DH / Craig 版本）}{17}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}两组约定的参数对应关系}{17}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}改进 DH 的显式矩阵}{17}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}两种约定的选择建议}{17}{subsection.4.2.3}%
+\contentsline {section}{\numberline {4.3}计算末端位姿}{18}{section.4.3}%
+\contentsline {chapter}{\numberline {5}应用实例}{19}{chapter.5}%
+\contentsline {section}{\numberline {5.1}平面二连杆机械臂}{19}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}坐标系建立与 DH 参数表}{19}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}变换矩阵计算}{20}{subsection.5.1.2}%
+\contentsline {section}{\numberline {5.2}SCARA 机器人}{20}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}DH 参数表（改进 DH 约定）}{21}{subsection.5.2.1}%
+\contentsline {section}{\numberline {5.3}标准 DH 示例：PUMA 560}{21}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}写出变换矩阵}{22}{subsection.5.3.1}%
+\contentsline {section}{\numberline {5.4}DH 参数法的局限与注意事项}{22}{section.5.4}%
+\contentsline {section}{\numberline {5.5}小结}{22}{section.5.5}%
+\contentsfinish 

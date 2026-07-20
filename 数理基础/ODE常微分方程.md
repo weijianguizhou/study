@@ -654,6 +654,18 @@ $$\mathbf{u}(t) = \int \Phi^{-1}(t) \mathbf{f}(t) dt$$
 | **3. 积分项**  | 计算 $\mathbf{u}(t)$ 的导数          | $\mathbf{u}'(t) = \Phi^{-1}(t) \mathbf{f}(t)$                                                           |
 |             | 计算 $\mathbf{u}(t)$              | $\mathbf{u}(t) = \int \mathbf{u}'(t) dt$                                                                |
 | **4. 特解**   | 求解 $\mathbf{x}_p(t)$            | $\mathbf{x}_p(t) = \Phi(t) \mathbf{u}(t)$                                                               |
-| **5. 最终通解** | 求解 $\mathbf{x}(t)$              | $\mathbf{x}(t) = \mathbf{x}_h(t) + \mathbf{x}_p(t)$                                                     |
+| **5. 最终通解**   | 求解 $\mathbf{x}(t)$              | $\mathbf{x}(t) = \mathbf{x}_h(t) + \mathbf{x}_p(t)$                                                     |
+
+---
+
+## 相关笔记
+
+- [[里卡蒂方程（Riccati Equation）|Riccati 方程]] — 一类重要的非线性 ODE
+- [[微分方程与动力系统|动力系统]] — 从方程到定性分析：平衡解、稳定性、极限环
+- [[随机微分方程SDE|随机微分方程 (SDE)]] — ODE 的随机扩展
+- [[数学分析#格朗沃尔不等式 (Gronwall's Inequality)|Gronwall 不等式]] — 解估计的重要工具
+- [[代数/代数基础|代数基础]] — 线性 ODE 系统依赖矩阵特征值计算
+
+
 
 

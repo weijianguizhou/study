@@ -125,3 +125,11 @@ double_pendulum.xml
 
 </mujoco>
 ```
+---
+
+## 相关笔记
+
+- [[Overview|MuJoCo 概述]]
+- [[代码设计的方法论Methodology|代码设计方法论]]
+- [[../人工智能/RL-PPO理论|PPO 理论]] — 强化学习算法
+- [[../人工智能/马尔可夫决策过程 (Markov Decision Process, MDP)|MDP]] — 决策框架

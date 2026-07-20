@@ -476,3 +476,11 @@ if __name__ == "__main__":
 
     ballControl.main()
 ```
+---
+
+## 相关笔记
+
+- [[Overview|MuJoCo 概述]]
+- [[Benchmark 基准|Benchmark]] — 强化学习环境
+- [[../人工智能/RL-PPO理论|PPO 理论]] — 强化学习算法
+- [[../刚体动力学算法/刚体动力学算法|刚体动力学算法]] — 仿真数学基础

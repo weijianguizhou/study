@@ -101,3 +101,12 @@ $$\mathbf{F}_{\text{随机}}(\mathbf{x}_i) dt = \sigma d\mathbf{W}_i$$
 $$\mathbf{dx}_i = \left[ k_A (\mathbf{x}^* - \mathbf{x}_i) + k_C \left( \frac{1}{|\mathcal{N}_i|} \sum_{j \in \mathcal{N}_i} \mathbf{x}_j - \mathbf{x}_i \right) - k_R \sum_{j \in \mathcal{R}_i} g(|\mathbf{x}_i - \mathbf{x}_j|) \frac{\mathbf{x}_i - \mathbf{x}_j}{|\mathbf{x}_i - \mathbf{x}_j|} \right] dt + \sigma d\mathbf{W}_i$$
 
 这个模型是**自组织群体运动**（如 Boids 模型）和**随机控制理论**的常见应用。
+
+---
+
+## 相关笔记
+
+- [[ODE常微分方程|常微分方程 (ODE)]] — SDE 的确定性基础
+- [[微分方程与动力系统|动力系统]] — 确定性系统的定性分析
+- [[概率论|概率论]] — 随机变量、期望、分布
+- [[人工智能/马尔可夫决策过程 (Markov Decision Process, MDP)|MDP]] — 离散随机的决策模型
