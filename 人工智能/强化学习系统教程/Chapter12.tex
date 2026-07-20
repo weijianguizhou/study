@@ -1,0 +1,698 @@
+\chapter{从仿真到真实：Sim-to-Real Transfer}
+
+\intro{强化学习在仿真中取得的惊人成果——从游戏到机器人控制——长期以来面临一个根本性问题：在仿真中学到的策略能否在真实世界中同样有效？"从仿真到真实"（Sim-to-Real Transfer）正是桥接这一鸿沟的关键研究领域。本章系统探讨仿真-真实差距的根源、降低差距的各种技术方法，以及将RL策略安全可靠地部署到真实机器人上的工程实践。}
+
+\section{Sim-to-Real Gap的根源}
+
+仿真-真实差距（Sim-to-Real Gap）的直观表现为：在仿真中表现优异的策略，部署到真实机器人上后性能可能急剧下降甚至完全失效。理解这一差距的根源是设计有效迁移策略的前提。
+
+\subsection{物理参数不准确}
+
+在仿真中，我们为每个刚体赋予物理参数（质量 $m$、转动惯量 $I$、质心位置等），但这些参数与实际值存在差异：
+
+\begin{itemize}
+    \item \textbf{质量误差}：加工公差、附加组件（线缆、传感器）的重量往往被忽略
+    \item \textbf{转动惯量误差}：复杂几何形状的精确转动惯量难以计算，常使用粗略近似（如将非规则零件视为长方体）
+    \item \textbf{质心偏移}：质心位置在实际制造中与CAD模型设计值存在偏差
+\end{itemize}
+
+这些误差导致仿真中的动力学与实际不同，尤其是在高速运动和碰撞场景中表现更为明显。
+
+\subsection{摩擦与阻尼建模}
+
+接触力学是仿真中最难精确建模的部分：
+
+\begin{itemize}
+    \item \textbf{库仑摩擦 vs 粘性摩擦}：实际接触涉及复杂的微观摩擦行为——静摩擦、动摩擦、Stribeck效应等。仿真通常使用简化的库仑摩擦模型
+    \item \textbf{关节阻尼}：关节中的轴承摩擦、密封件摩擦具有非线性特性，而仿真通常只使用线性粘性阻尼
+    \item \textbf{地面接触}：不同的地面材质（木地板、地毯、草地、沙地）具有完全不同的接触特性。在仿真中使用均匀的摩擦系数 $\mu$ 远不足以捕获这种多样性
+\end{itemize}
+
+\subsection{传感器建模差异}
+
+真实传感器与仿真中的"理想传感器"之间存在显著差异：
+
+\begin{itemize}
+    \item \textbf{IMU噪声模型}：真实IMU存在零偏（bias）、随机游走（random walk）、刻度因子误差等，仿真中往往被忽略或使用简化模型
+    \item \textbf{编码器分辨率}：真实编码器有有限的脉冲数，导致位置测量存在量化误差
+    \item \textbf{力传感器漂移}：应变式力传感器存在温度漂移和长期漂移
+    \item \textbf{相机差异}：真实相机的曝光、白平衡、畸变、动态范围与仿真渲染存在差距
+\end{itemize}
+
+\subsection{执行器动力学}
+
+第10章和第11章中都假定执行器是理想的——力矩指令立即精确地施加到关节上。实际情况复杂得多：
+
+\begin{itemize}
+    \item \textbf{电机模型}：真实电机从电流到力矩的转换涉及到反电动势（back-EMF）、绕组电阻、电感等电磁动力学
+    \item \textbf{减速器}：谐波减速器（harmonic drive）的柔顺性（compliance）、回差（backlash）和摩擦对动力学有显著影响
+    \item \textbf{驱动电路}：伺服驱动器的电流环和位置环引入了额外的动态延迟
+\end{itemize}
+
+\subsection{视觉差异}
+
+在基于视觉的RL策略中，仿真图像（渲染）与真实图像之间的差距是迁移失败的主要来源：
+
+\begin{itemize}
+    \item \textbf{纹理}：仿真纹理通常比真实世界更光滑、更均匀
+    \item \textbf{光照}：仿真中的光照模型（通常是简化的Phong或PBR模型）与真实光照环境有本质差异
+    \item \textbf{背景}：仿真背景往往是均匀颜色或重复图案，真实环境场景复杂且动态变化
+    \item \textbf{运动模糊和烟雾}：真实相机存在的运动模糊、镜头畸变等在仿真中难以精确重现
+\end{itemize}
+
+\subsection{时间离散化误差}
+
+如第11章所述，仿真中的动力学方程在离散时间步中数值积分。时间步长 $\Delta t$ 的选择直接影响数值精度和稳定性：
+
+\begin{itemize}
+    \item 过大的 $\Delta t$ 导致接触计算不准确（穿透、弹跳）
+    \item 不同仿真引擎（MuJoCo、Bullet、Isaac Gym）使用不同的积分方法（半隐式欧拉、RK4等），结果可能存在差异
+    \item 真实物理是连续的，而RL策略在离散时间步中进行决策，引入了延迟
+\end{itemize}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=stealth, scale=1.0]
+    % Left: Simulation
+    \draw[thick,fill=blue!5,rounded corners] (-0.5,-0.5) rectangle (3.5,5);
+    \node[blue!60!black,font=\small\bfseries] at (1.5,4.7) {仿真（Sim）};
+    
+    % Simple robot in sim
+    \draw[thick,fill=blue!20] (0.5,1.5) rectangle (1.0,2.5); % body
+    \draw[thick,blue!50] (0.75,1.5) -- (0.3,0.8); % leg 1
+    \draw[thick,blue!50] (0.75,1.5) -- (1.2,0.8); % leg 2
+    \draw[thick,blue!50] (0.75,2.5) -- (0.3,3.0); % arm 1
+    \draw[thick,blue!50] (0.75,2.5) -- (1.2,3.0); % arm 2
+    \node at (0.75,2.0) {\small $\mathbf{M}_{\text{sim}}$};
+    
+    % Sim features
+    \node[align=left,font=\footnotesize,anchor=west] at (0.2,3.5) {理想质量\\理想摩擦\\无延迟\\完美传感器};
+    
+    % Gap arrow
+    \draw[->,very thick,red!70!black] (3.8,2.0) -- (5.2,2.0);
+    \node[red!70!black,font=\small\bfseries] at (4.5,2.3) {Gap};
+    \node[red!70!black,font=\footnotesize] at (4.5,1.7) {域迁移};
+    
+    % Right: Reality
+    \draw[thick,fill=red!5,rounded corners] (5.5,-0.5) rectangle (9.5,5);
+    \node[red!60!black,font=\small\bfseries] at (7.5,4.7) {真实（Real）};
+    
+    % Robot in real (slightly different)
+    \draw[thick,fill=red!20] (6.5,1.3) rectangle (7.1,2.3); % body (shifted)
+    \draw[thick,red!50] (6.8,1.3) -- (6.2,0.6); % leg 1 (different angle)
+    \draw[thick,red!50] (6.8,1.3) -- (7.4,0.6); % leg 2
+    \draw[thick,red!50] (6.8,2.3) -- (6.2,3.1);
+    \draw[thick,red!50] (6.8,2.3) -- (7.4,3.1);
+    \node at (6.8,1.9) {\small $\mathbf{M}_{\text{real}}$};
+    
+    % Real features
+    \node[align=left,font=\footnotesize,anchor=west] at (6.2,3.5) {参数误差\\摩擦非线性\\执行器延迟\\传感器噪声};
+    
+    % Connecting dashed lines showing parameter mismatch
+    \draw[dashed,gray,<->] (0.75,2.0) -- (6.8,1.9);
+    \node[gray,font=\footnotesize] at (3.8,1.5) {$\delta m, \delta I \neq 0$};
+\end{tikzpicture}
+\caption{Sim-to-Real Gap 示意。左侧是理想化仿真环境（精确参数、理想传感器、无延迟）；右侧是真实机器人环境（参数误差、摩擦非线性、执行器延迟、传感器噪声）。迁移的核心挑战是使策略对左右两侧的差异具有鲁棒性，而非仅过拟合到左侧的理想化环境。}
+\label{fig:sim2real_gap}
+\end{figure}
+
+\section{域随机化}
+
+域随机化（Domain Randomization，DR）是应对Sim-to-Real Gap最有效且应用最广泛的方法之一。其核心思想颇具哲学意味：\textbf{如果你无法精确知道真实世界的参数，就在训练时随机化所有可能的参数值，迫使策略对各种参数组合都具有鲁棒性}。
+
+\subsection{核心原理}
+
+\begin{mydefinition}{域随机化}
+在训练过程中，每个episode随机采样一组仿真参数 $\boldsymbol{\xi} \sim p(\boldsymbol{\xi})$（其中 $p(\boldsymbol{\xi})$ 是参数分布），使得策略 $\pi_\theta$ 在不同动力学下接受训练。优化的目标为：
+\begin{myformula}
+\max_\theta \E_{\boldsymbol{\xi} \sim p(\boldsymbol{\xi})} \E_{\tau \sim \pi_\theta, \mathcal{M}_{\boldsymbol{\xi}}} \left[ \sum_{t=0}^{T-1} \gamma^t r_t \right]
+\end{myformula}
+其中 $\mathcal{M}_{\boldsymbol{\xi}}$ 表示参数为 $\boldsymbol{\xi}$ 的MDP。当 $p(\boldsymbol{\xi})$ 覆盖了真实世界的参数范围时，训练出的策略应能在真实世界中泛化。
+\end{mydefinition}
+
+\subsection{物理参数随机化}
+
+最常用也最直接的随机化方式是随机化物理参数。这些参数包括但不限于：
+
+\begin{itemize}
+    \item \textbf{质量}：每个连杆的质量在标称值的 $\pm 20\%\sim 50\%$ 范围内随机扰动
+    \item \textbf{摩擦系数}：接触摩擦系数 $\mu \sim \text{Uniform}(\mu_{\min}, \mu_{\max})$
+    \item \textbf{关节阻尼}：$b \sim \text{LogUniform}(b_{\min}, b_{\max})$
+    \item \textbf{重力}：$\mathbf{g}$ 的方向和大小随机扰动（模拟不同环境和底盘倾斜）
+    \item \textbf{执行器力矩限制}：最大力矩在标称值附近随机变化
+\end{itemize}
+
+一个实用的随机化范围配置示例（适用于四足机器人行走任务）：
+
+\begin{myformula}
+\begin{aligned}
+m_i &\sim \text{Uniform}(0.8m_i^0, 1.2m_i^0) \quad \text{（连杆质量）} \\
+\mu &\sim \text{Uniform}(0.4, 1.5) \quad \text{（地面摩擦）} \\
+k_p &\sim \text{LogUniform}(0.5k_p^0, 2.0k_p^0) \quad \text{（位置控制增益）} \\
+\tau_{\text{delay}} &\sim \text{Uniform}(0, 20\text{ms}) \quad \text{（执行器延迟）}
+\end{aligned}
+\end{myformula}
+
+\subsection{视觉随机化}
+
+对于基于视觉的RL策略（使用相机图像作为状态输入），视觉随机化同样关键：
+
+\begin{itemize}
+    \item \textbf{纹理随机化}：随机替换环境中物体的纹理（颜色、图案）
+    \item \textbf{光照随机化}：随机改变光源位置、颜色、强度
+    \item \textbf{相机位置随机化}：相机的外参（位置和方向）在仿真中随机变化
+    \item \textbf{背景随机化}：将仿真场景放置在不同的背景图像之上
+    \item \textbf{随机扰动}：添加噪声（高斯噪声、椒盐噪声）、运动模糊、色彩抖动
+\end{itemize}
+
+\begin{remark}
+视觉随机化的一个极端案例是OpenAI在训练Dactyl灵巧手时采用的策略：每一千个episode随机改变环境的纹理和光照，使得训练数据涵盖数百万种视觉变化。策略最终学会了关注手和物体的几何信息而忽略纹理和光照——这正是迁移到真实世界所需要的视觉不变性。
+\end{remark}
+
+\subsection{动力学随机化}
+
+除了参数本身，还可以随机化动力学的结构：
+
+\begin{itemize}
+    \item \textbf{随机执行器延迟}：在每个episode中，指令到力矩的延迟在 $[0, \tau_{\max}]$ 内随机
+    \item \textbf{随机噪声注入}：向观测和动作中添加随机噪声
+    \item \textbf{随机外力扰动}：随机向机器人的某些部位施加短暂的冲量（模拟碰撞和推搡）
+    \item \textbf{随机地面几何}：随机生成起伏、障碍物或阶梯（模拟非平整路面）
+\end{itemize}
+
+\subsection{案例分析：OpenAI Rubik's Cube}
+
+OpenAI 在 2019 年使用 Dactyl 灵巧手完成了单手解魔方的任务。这是一个域随机化应用的标杆案例：
+
+\begin{itemize}
+    \item \textbf{随机化规模}：训练使用了约 13,000 年的仿真经验（由数千个CPU核心并行产生）
+    \item \textbf{随机化参数}：包括重力、关节摩擦、肌肉力矩限制、传感器延迟等数十个参数
+    \item \textbf{自动域随机化（ADR）}：与其手动指定随机化范围，ADR 在训练过程中自动扩展参数分布——从易于学习的狭窄分布开始，当策略性能达到阈值时自动放宽参数范围
+    \item \textbf{成果}：训练出的策略直接部署到真实Dactyl手上，成功率达到 $20\%\sim60\%$，而在标准策略中成功率为 $0\%$
+\end{itemize}
+
+\subsection{随机化范围的调优}
+
+随机化范围（$\boldsymbol{\xi}_{\min}$ 到 $\boldsymbol{\xi}_{\max}$）的选择是一个重要的工程决策：
+
+\begin{itemize}
+    \item \textbf{范围过窄}：策略可能过拟合到仿真中的特定参数，在真实世界中泛化不足
+    \item \textbf{范围过宽}：任务变得过于困难，策略无法学会任何有效行为（"被噪声淹没"）
+\end{itemize}
+
+\begin{myalgorithm}{自动域随机化 (ADR)}
+\begin{enumerate}
+    \item 初始化参数边界 $[\boldsymbol{\xi}_L, \boldsymbol{\xi}_U]$ 为狭窄范围（例如在标称值的 $\pm 5\%$ 内）
+    \item 重复以下循环：
+    \begin{itemize}
+        \item 在当前参数分布中训练策略，直到性能收敛
+        \item 评估策略性能
+        \item 若性能超过阈值，则扩展参数边界（例如扩大 $10\%$）
+        \item 若性能低于阈值，则收缩参数边界
+    \end{itemize}
+\end{enumerate}
+\end{myalgorithm}
+
+ADR 本质上实现了自动化的课程学习：策略先学习在简单（窄分布）环境中表现良好，然后逐步挑战更困难（宽分布）的环境。
+
+\subsection{渐进式随机化}
+
+另一种策略是在训练过程中逐步"打开"随机化。与ADR的不同之处在于，渐进式随机化的进度是预定义的而非自适应的：
+
+\begin{itemize}
+    \item 阶段1（前 20\% 步数）：无随机化，使用标称参数。策略学会基本的任务。
+    \item 阶段2（20\%--60\% 步数）：开始逐步增大随机化范围，引入质量和摩擦的随机化。
+    \item 阶段3（60\%--100\% 步数）：全量随机化，加入延迟、噪声和外力扰动。
+\end{itemize}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=stealth, scale=0.95]
+    % Environment box
+    \draw[thick,rounded corners] (-0.5,-0.5) rectangle (13,5.5);
+    \node[font=\small\bfseries] at (6.25,5.2) {域随机化训练管线};
+    
+    % Parameter sampler
+    \node[draw,rectangle,rounded corners,fill=orange!10,minimum width=2.5cm,minimum height=1.2cm] (sampler) at (1.5,3.5) {参数采样器};
+    \node[font=\footnotesize] at (1.5,4.3) {$\boldsymbol{\xi} \sim p(\boldsymbol{\xi})$};
+    \node[font=\footnotesize] at (1.5,2.8) {$m, \mu, b, \mathbf{g}, \dots$};
+    
+    % Sim envs
+    \node[draw,rectangle,rounded corners,fill=blue!10,minimum width=2cm,minimum height=1cm] (env1) at (5,4) {环境 1};
+    \node[draw,rectangle,rounded corners,fill=blue!10,minimum width=2cm,minimum height=1cm] (env2) at (5,2.5) {环境 2};
+    \node[draw,rectangle,rounded corners,fill=blue!10,minimum width=2cm,minimum height=1cm] (env3) at (5,1) {环境 $N$};
+    \node[font=\footnotesize] at (5,5.5) {并行仿真};
+    
+    % Arrows from sampler to envs
+    \draw[->,thick] (sampler.east) -- (env1.west);
+    \draw[->,thick] (sampler.east) -- (env2.west);
+    \draw[->,thick] (sampler.east) -- (env3.west);
+    
+    % RL algorithm
+    \node[draw,rectangle,rounded corners,fill=green!10,minimum width=3cm,minimum height=2.5cm] (rl) at (9,2.5) {RL 算法\\(PPO/SAC/TD3)};
+    
+    % Arrows from envs to RL
+    \draw[->,thick] (env1.east) -- (rl.west);
+    \draw[->,thick] (env2.east) -- (rl.west);
+    \draw[->,thick] (env3.east) -- (rl.west);
+    
+    % Policy output
+    \node[draw,rectangle,rounded corners,fill=purple!10,minimum width=2.5cm,minimum height=1cm] (policy) at (9,4.8) {策略 $\pi_\theta$};
+    \draw[<->,thick] (rl.north) -- (policy.south);
+    
+    % Policy to envs
+    \draw[->,thick,dashed,blue!60!black] (policy.west) -- (policy.west -| env1.east);
+    
+    % Real robot
+    \node[draw,circle,minimum size=1.5cm,fill=red!10] (robot) at (12,2.5) {真实\\机器人};
+    \draw[->,very thick,red!70!black] (policy.east) -- (policy.east -| robot.west) node[midway,above,font=\footnotesize]{部署};
+    
+    % Annotation
+    \node[align=center,font=\footnotesize,gray] at (6.25,-0.2) {每个episode的参数 $\boldsymbol{\xi}$ 不同 $\Rightarrow$ 策略被迫泛化};
+\end{tikzpicture}
+\caption{域随机化训练管线。每个episode开始时参数采样器从分布 $p(\boldsymbol{\xi})$ 中随机抽取一组物理参数，多个仿真实例在各自的参数设定下并行运行。RL算法从所有环境中收集数据训练策略。最终，在多样化动力学下训练出的鲁棒策略被部署到真实机器人上。}
+\label{fig:domain_rand}
+\end{figure}
+
+\section{系统辨识}
+
+系统辨识（System Identification，SysID）采用与域随机化互补的策略：与其让策略对所有可能的参数都鲁棒，不如先精确地辨识出真实系统的参数，然后在仿真中使用这些辨识出的参数进行训练。
+
+\subsection{从真实数据拟合仿真参数}
+
+系统辨识的基本流程为：
+
+\begin{myalgorithm}{仿真参数的系统辨识}
+\begin{enumerate}
+    \item \textbf{数据收集}：在真实机器人上执行一组精心设计的轨迹，记录状态序列 $\{\states_t, \actions_t\}_{t=1}^T$
+    \item \textbf{参数化}：选择一组待辨识的参数 $\boldsymbol{\theta}_{\text{phys}} = \{m_1, \ldots, m_n, I_1, \ldots, I_n, \mu, b, \ldots\}$
+    \item \textbf{仿真复现}：在仿真中使用相同的动作序列 $\{\actions_t\}$ 和候选参数 $\boldsymbol{\theta}_{\text{phys}}$，产生仿真轨迹 $\{\hat{\states}_t\}$
+    \item \textbf{优化}：最小化真实轨迹和仿真轨迹之间的差异
+    \begin{myformula}
+    \boldsymbol{\theta}_{\text{phys}}^* = \arg\min_{\boldsymbol{\theta}_{\text{phys}}} \sum_{t=1}^{T} \|\states_t - \hat{\states}_t(\boldsymbol{\theta}_{\text{phys}})\|^2
+    \end{myformula}
+\end{enumerate}
+\end{myalgorithm}
+
+优化通常使用梯度下降（通过仿真引擎的可微分版本，如DiffSim）或无梯度方法（如CMA-ES、贝叶斯优化）。
+
+\subsection{参数辨识 vs 非参数辨识}
+
+\begin{itemize}
+    \item \textbf{参数辨识}：假设真实系统可以用具有未知参数的解析动力学方程描述。目标是辨识出这些参数的真实值。优点是解释性强，缺点是如果模型结构错误（如未建模的柔性），辨识精度受限。
+    
+    \item \textbf{非参数辨识}：不预设特定的动力学形式，直接从数据中学习状态转移函数（使用神经网络等）。常见方法包括使用高斯过程回归（GPR）或神经网络来学习残差动力学：
+    \begin{myformula}
+    \states_{t+1} = f_{\text{sim}}(\states_t, \actions_t) + \Delta f_\phi(\states_t, \actions_t)
+    \end{myformula}
+    其中 $f_{\text{sim}}$ 是仿真中的(近似)动力学，$\Delta f_\phi$ 是学习到的真实-仿真残差。这种方法结合了物理先验（$f_{\text{sim}}$）和数据驱动校正（$\Delta f_\phi$）的优势。
+\end{itemize}
+
+\subsection{在线 vs 离线辨识}
+
+\begin{itemize}
+    \item \textbf{离线辨识}：在部署策略前，使用预先收集的数据一次性辨识参数。适用于环境基本不变的场景。
+    \item \textbf{在线辨识}：在策略运行过程中持续辨识和更新参数。适用于环境动态变化（如地面条件变化、有效载荷变化）的场景。在线辨识需要结合自适应控制技术。
+\end{itemize}
+
+\section{域自适应}
+
+域自适应（Domain Adaptation）是迁移学习中的一个重要分支，目标是将从源域（仿真）学到的表示或策略适配到目标域（真实世界）。
+
+\subsection{特征域对齐}
+
+基本思想是学习一个特征提取器 $\phi$，使得仿真数据和真实数据在这个特征空间中不可区分：
+
+\begin{myformula}
+\min_\phi \big[ \mathcal{L}_{\text{task}}(\phi) + \lambda \cdot d(p_\phi(\states_{\text{sim}}), p_\phi(\states_{\text{real}})) \big]
+\end{myformula}
+
+其中 $d(\cdot, \cdot)$ 是两个分布之间的差异度量。常用的度量包括：
+
+\begin{itemize}
+    \item \textbf{最大均值差异（MMD）}：基于核方法的分布差异度量
+    \item \textbf{中心矩差异（CMD）}：比较分布的低阶矩（一阶到K阶矩的差异）
+    \item \textbf{Wasserstein距离}：基于最优传输理论的分布差异，在GAN中广泛使用
+\end{itemize}
+
+\subsection{对抗域自适应}
+
+受生成对抗网络（GAN）启发，对抗域自适应使用一个鉴别器网络来区分仿真特征和真实特征：
+
+\begin{myformula}
+\min_\phi \max_D \big[ \mathcal{L}_{\text{task}}(\phi) - \lambda \cdot (\E_{\states_{\text{sim}}}[\log D(\phi(\states_{\text{sim}}))] + \E_{\states_{\text{real}}}[\log(1 - D(\phi(\states_{\text{real}})))]) \big]
+\end{myformula}
+
+鉴别器 $D$ 力图区分特征来自仿真还是真实世界，而特征提取器 $\phi$ 一方面要完成RL任务（最小化任务损失），另一方面又要欺骗鉴别器（产生域不可区分的特征）。两者对抗训练，最终使 $\phi$ 提取的特征具有跨域不变性。
+
+这一思想在以下场景中特别有用：
+\begin{itemize}
+    \item 当真实机器人的数据量有限但仿真数据可以任意生成时
+    \item 当视觉差异（光照、纹理）是主要差距来源时（使用Grad-CAM等技术可视化哪些图像区域引导了策略决策）
+\end{itemize}
+
+\subsection{循环一致性}
+
+循环一致性（Cycle Consistency）来源于 CycleGAN，用于未配对数据的域迁移。在机器人领域，可以用来在仿真和真实图像之间建立映射：
+
+\begin{myformula}
+\begin{aligned}
+G_{\text{S}\to\text{R}} &: \text{仿真图像} \to \text{真实风格图像} \\
+G_{\text{R}\to\text{S}} &: \text{真实图像} \to \text{仿真风格图像}
+\end{aligned}
+\end{myformula}
+
+循环一致性损失确保了往返映射的一致性：
+\begin{myformula}
+\mathcal{L}_{\text{cycle}} = \|G_{\text{R}\to\text{S}}(G_{\text{S}\to\text{R}}(\mathbf{x}_{\text{sim}})) - \mathbf{x}_{\text{sim}}\| + \|G_{\text{S}\to\text{R}}(G_{\text{R}\to\text{S}}(\mathbf{x}_{\text{real}})) - \mathbf{x}_{\text{real}}\|
+\end{myformula}
+
+在实际部署中，真实相机图像经过 $G_{\text{R}\to\text{S}}$ 转换为仿真风格的图像，然后输入到在仿真中训练的视觉RL策略，作为状态进行决策。
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=stealth, scale=0.9]
+    % Sim domain
+    \node[draw,rectangle,rounded corners,fill=blue!10,minimum width=3cm,minimum height=2cm] (sim) at (0,0) {仿真域\\$\states_{\text{sim}}$};
+    
+    % Real domain
+    \node[draw,rectangle,rounded corners,fill=red!10,minimum width=3cm,minimum height=2cm] (real) at (10,0) {真实域\\$\states_{\text{real}}$};
+    
+    % Feature extractor
+    \node[draw,rectangle,rounded corners,fill=green!10,minimum width=2cm,minimum height=1.2cm] (phi) at (5,2.5) {特征提取器 $\phi$};
+    
+    % Discriminator
+    \node[draw,rectangle,rounded corners,fill=orange!10,minimum width=2cm,minimum height=1.2cm] (disc) at (5,4.5) {鉴别器 $D$};
+    
+    % Policy / Task head
+    \node[draw,rectangle,rounded corners,fill=purple!10,minimum width=2cm,minimum height=1cm] (pol) at (5,0.8) {策略 $\pi$};
+    
+    % Arrows
+    \draw[->,thick] (sim.north) -- (phi.west);
+    \draw[->,thick] (real.north) -- (phi.east);
+    \draw[->,thick] (phi.north) -- (disc.south);
+    \draw[->,thick] (phi.south) -- (pol.north);
+    
+    % Gradients
+    \draw[->,red!70!black,thick,dashed] (disc.west) -- (disc.west -| phi.north) node[midway,left,font=\footnotesize]{$\nabla$对抗};
+    
+    % Loss annotations
+    \node[font=\footnotesize,orange] at (5,5.3) {域分类损失};
+    \node[font=\footnotesize,purple] at (5,0.2) {RL任务损失};
+    
+    % Feature space
+    \draw[thick,dashed,rounded corners] (3.5,-1.5) rectangle (6.5,6.0);
+    \node[font=\footnotesize] at (5,5.7) {共享特征空间};
+\end{tikzpicture}
+\caption{对抗域自适应架构。特征提取器 $\phi$ 将仿真和真实数据映射到共享特征空间。鉴别器 $D$ 试图判别特征来自哪个域（与 $\phi$ 对抗）。策略 $\pi$ 在共享特征上进行决策，并接收RL任务损失。通过对抗训练，$\phi$ 学到域不变的特征表示。}
+\label{fig:domain_adapt}
+\end{figure}
+
+\section{渐进微调}
+
+渐进微调（Progressive Fine-tuning）是一种折中策略：首先在仿真中训练一个初步策略，然后将其部署到真实机器人上，利用真实世界的数据进行少量额外训练。
+
+\subsection{仿真预训练 + 真实微调}
+
+这是最直观的Sim-to-Real策略：
+
+\begin{myalgorithm}{仿真预训练 + 真实微调}
+\begin{enumerate}
+    \item \textbf{阶段1：仿真预训练}：在仿真环境中训练策略 $\pi_{\theta_0}$ 直到性能收敛。建议配合域随机化以提高初始策略的鲁棒性。
+    \item \textbf{阶段2：真实微调}：将 $\pi_{\theta_0}$ 部署到真实机器人上，使用低学习率（通常为预训练的 $1/10$ 到 $1/100$）在真实交互数据上继续训练。每次收集 $N$ 个真实episode后，用SAC或PPO等算法更新参数。
+    \item \textbf{阶段3（可选）：迭代微调}：当策略在真实世界中性能稳定后，可将更新的真实动力学反馈到仿真中（通过系统辨识），进一步优化仿真参数，然后再次在改进的仿真中训练。
+\end{enumerate}
+\end{myalgorithm}
+
+真实微调的关键挑战在于数据效率——真实世界的交互数据极其昂贵。克服这一挑战的策略包括：
+
+\begin{itemize}
+    \item \textbf{使用off-policy算法（如SAC）}：可重复使用历史数据，提高样本效率
+    \item \textbf{结合域随机化}：预训练策略已经初步适应真实动力学，只需少量微调
+    \item \textbf{冻结特征层}：微调时只更新策略网络的最后几层，避免灾难性遗忘（catastrophic forgetting）
+\end{itemize}
+
+\subsection{安全微调策略}
+
+在真实机器人上进行RL微调时，安全性是首要考虑：
+
+\begin{itemize}
+    \item \textbf{约束策略空间}：在微调早期，限制策略的动作空间，仅允许在安全区域内进行小幅度的探索
+    \item \textbf{外部安全监控}：使用一个独立的安全控制器持续监控机器人的状态，在检测到不安全情况（如关节接近极限、即将摔倒）时立即接管控制
+    \item \textbf{渐进解放探索}：随着策略性能的提升，逐步放宽动作限制
+    \item \textbf{人类监督}：在微调初期，操作员可以随时通过遥控器接管，防止策略执行危险动作
+\end{itemize}
+
+\subsection{人在环路（Human-in-the-Loop）}
+
+人在环路的学习系统将人类判断纳入训练循环：
+
+\begin{itemize}
+    \item \textbf{干预式学习（DAgger 风格）}：当策略表现不佳时，人类专家接管并提供正确动作，这些专家示范被用于改进策略
+    \item \textbf{偏好学习}：模型生成多种行为候选，人类选择偏好的行为，通过人类反馈的强化学习（RLHF）来优化策略
+    \item \textbf{安全审批}：在高风险任务中（如操作危险物品），每次动作执行前需人类审批
+\end{itemize}
+
+\section{真实机器人部署案例}
+
+本节回顾几个将RL从仿真成功迁移到真实机器人的里程碑案例，分析其成功的关键因素。
+
+\subsection{四足机器人行走（ETH Zurich）}
+
+ETH Zurich 的 ANYmal 四足机器人项目是Sim-to-Real领域最知名的成功案例之一。
+
+\textbf{关键方法}：
+\begin{itemize}
+    \item \textbf{训练环境}：使用仿真环境生成大量多样的地形（平面、楼梯、碎石、斜坡等）
+    \item \textbf{域随机化}：随机化质量、摩擦、执行器延迟、IMU噪声等参数
+    \item \textbf{教师-学生策略}：先训练一个使用特权信息（privileged information，如精确的地面高度图）的"教师"策略，然后训练"学生"策略只使用本体感觉（proprioception）来模仿教师行为
+    \item \textbf{递阶架构}：高层策略输出速度指令，低层策略进行全身运动控制
+\end{itemize}
+
+\textbf{成果}：ANYmal 在仿真中训练后直接部署到真实机器人上，成功在各种室外地形上稳定行走，包括之前从未见过的斜坡和碎石路面。
+
+\subsection{灵巧手操作（OpenAI/Shadow Hand）}
+
+OpenAI 在2018--2019年间展示了使用 Shadow Dexterous Hand 完成灵巧操作的成果，包括旋转方块和单手解魔方。
+
+\textbf{关键方法}：
+\begin{itemize}
+    \item \textbf{大规模域随机化}：数千个参数同时随机化，包括视觉外观和物理属性
+    \item \textbf{自动域随机化（ADR）}：自适应调整随机化范围
+    \item \textbf{分布式训练}：使用数千个CPU核心产生约13,000年的仿真经验
+    \item \textbf{PPO训练}：利用并行环境的多样性进行训练
+\end{itemize}
+
+\textbf{成果}：策略从仿真直接部署到真实Shadow Hand，成功完成魔方操作，证明了极端域随机化确实能够弥合Sim-to-Real Gap。
+
+\subsection{无人机飞行控制}
+
+无人机（特别是四旋翼）领域也大量使用了RL和Sim-to-Real技术：
+
+\textbf{关键方法}：
+\begin{itemize}
+    \item 在仿真中训练端到端的飞行策略（从高速相机图像到电机转速）
+    \item 使用高保真度的空气动力学仿真
+    \item 域随机化包括旋翼效率、风扰动、IMU偏置等
+    \item 在部分工作中，使用神经网络直接学习仿真到真实图像的映射
+\end{itemize}
+
+\textbf{成果}：多个团队展示了仿真训练的无人机策略能在真实世界中完成竞速飞行、避障和特技动作（如翻滚）。
+
+\subsection{自动驾驶中的RL}
+
+自动驾驶是Sim-to-Real面临最严峻挑战的领域之一，因为真实世界的复杂性（交通参与者、天气、路况）极难在仿真中完整捕捉。
+
+\textbf{典型策略}：
+\begin{itemize}
+    \item 在分层架构中使用RL：微观战术决策（换道、跟车距离）由RL处理，宏观路径规划由传统方法处理
+    \item 使用真实交通数据增强仿真场景的真实性
+    \item 多智能体仿真：其他车辆和行人的行为由学习或规则模型模拟
+\end{itemize}
+
+\section{安全强化学习}
+
+当RL策略需要在真实机器人上运行时，安全不再是可选项而是必须满足的硬性约束。安全RL（Safe RL）研究如何在满足安全约束的条件下优化策略。
+
+\subsection{Constrained MDP (CMDP)}
+
+Constrained MDP 将安全问题形式化为带有约束的MDP问题：
+
+\begin{mydefinition}{Constrained MDP}
+一个CMDP通过在标准MDP上增加成本函数 $C(s, a)$（代表"不安全程度"或资源消耗）和对应的安全阈值 $d$ 来定义。优化问题变为：
+\begin{myformula}
+\begin{aligned}
+\max_\pi \quad & \E_\pi\left[\sum_{t=0}^{\infty} \gamma^t R(s_t, a_t)\right] \\
+\text{s.t.} \quad & \E_\pi\left[\sum_{t=0}^{\infty} \gamma^t C(s_t, a_t)\right] \leq d
+\end{aligned}
+\end{myformula}
+\end{mydefinition}
+
+求解CMDP的经典方法包括：
+
+\begin{itemize}
+    \item \textbf{拉格朗日方法}：将约束松弛为惩罚项，通过拉格朗日乘子 $\lambda \geq 0$ 自适应调整约束的惩罚力度
+    \begin{myformula}
+    \max_\pi \min_{\lambda \geq 0} \E_\pi\left[\sum_{t} \gamma^t (R_t - \lambda C_t)\right] + \lambda d
+    \end{myformula}
+    在训练过程中，$\lambda$ 在违反约束时增大，在满足约束时减小。
+    
+    \item \textbf{CPO (Constrained Policy Optimization)}：在信任域内更新策略参数，同时保证约束不被违反
+    \item \textbf{PPO-Lagrangian}：将拉格朗日方法与PPO结合，在每次策略更新时使用拉格朗日调整的奖励替代原始奖励
+\end{itemize}
+
+\subsection{安全层}
+
+安全层（Safety Layer）是一种在线安全机制，它在策略输出的动作被实际执行前进行验证和修改：
+
+\begin{mydefinition}{安全层}
+策略 $\pi_\theta$ 输出提议动作 $a_{\text{prop}}$。安全层求解一个优化问题：
+\begin{myformula}
+\begin{aligned}
+a_{\text{safe}} = \arg\min_a \quad & \|a - a_{\text{prop}}\|^2 \\
+\text{s.t.} \quad & \text{安全性约束（如 } \mathbf{q}_{\text{next}} \in \mathcal{Q}_{\text{safe}} \text{）}
+\end{aligned}
+\end{myformula}
+即在满足安全约束的前提下，找到最接近提议动作的安全动作。
+\end{mydefinition}
+
+安全层通常使用模型预测控制（MPC）或可达性分析来实现，需要动态模型和安全性定义的先验知识。一个实用的安全层可以简单到：
+\begin{itemize}
+    \item 钳位关节力矩到 $[\tau_{\min}, \tau_{\max}]$
+    \item 检测自碰撞并停止危险动作
+    \item 限制关节速度以保护电机
+\end{itemize}
+
+\subsection{屏障函数}
+
+控制屏障函数（Control Barrier Functions，CBF）为动态系统的安全性提供了数学保证：
+
+\begin{mydefinition}{控制屏障函数}
+考虑一个安全集合 $\mathcal{C} = \{s \mid h(s) \geq 0\}$（$h(s) > 0$ 表示安全，$h(s) = 0$ 表示边界）。函数 $h : \states \to \R$ 被称为控制屏障函数，如果存在一个扩展类 $\mathcal{K}$ 函数 $\alpha$ 使得：
+\begin{myformula}
+\sup_{a \in \actions} \big[ \nabla_s h(s)^{\T} f(s, a) + \alpha(h(s)) \big] \geq 0
+\end{myformula}
+其中 $f(s, a)$ 是系统的动力学方程。满足该条件的动作集合保证系统始终保持在安全集合 $\mathcal{C}$ 内。
+\end{mydefinition}
+
+将RL与CBF结合的典型方案是在RL策略的输出上叠加一个CBF滤波器：从RL策略获得提议动作，通过求解CBF约束的二次规划（QP）将其投影到安全动作集合上。
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=stealth, scale=0.95]
+    % RL Policy
+    \node[draw,rectangle,rounded corners,fill=blue!10,minimum width=2.5cm,minimum height=1.2cm] (policy) at (0,0) {RL 策略 $\pi_\theta$};
+    
+    % Safety layer
+    \node[draw,rectangle,rounded corners,fill=red!10,minimum width=3cm,minimum height=1.5cm] (safety) at (5,0) {安全层};
+    
+    % Robot
+    \node[draw,circle,minimum size=1.2cm,fill=gray!20] (robot) at (10,0) {机器人};
+    
+    % Proposed action
+    \draw[->,thick] (policy.east) -- node[above,font=\footnotesize]{$a_{\text{prop}}$} (safety.west);
+    
+    % Safe action
+    \draw[->,thick] (safety.east) -- node[above,font=\footnotesize]{$a_{\text{safe}}$} (robot.west);
+    
+    % State feedback
+    \draw[->,thick,dashed] (robot.south) -- (robot.south |- -1.0,-1.5) -| node[below,font=\footnotesize,pos=0.25]{$\states_t$} (policy.south);
+    
+    % Safety details inside
+    \node[font=\footnotesize,align=left] at (5,0.8) {力矩钳位\\碰撞检测\\CBF滤波};
+    
+    % Bypass arrow
+    \draw[->,thick,dotted,gray] (3,1.5) -- (3,1.5 -| safety.north) node[midway,above,font=\footnotesize]{不安全动作};
+    \draw[->,thick,red!70!black] (safety.north) -- (5,1.8) node[above,font=\footnotesize]{被拦截};
+    
+    % Safety boundary visualization
+    \draw[thick,dashed,red!50] (4.5,-1.0) ellipse (2.5 and 0.6);
+    \node[red!50,font=\footnotesize] at (3.5,-1.8) {安全集合 $\mathcal{C}$};
+\end{tikzpicture}
+\caption{安全RL架构。RL策略输出提议动作 $a_{\text{prop}}$，安全层对其进行验证和修改（力矩钳位、碰撞检测、CBF滤波），仅当动作通过所有安全检查后才被发送到机器人执行。被拦截的不安全动作被替换为最接近的安全动作。}
+\label{fig:safety_layer}
+\end{figure}
+
+\section{未来展望}
+
+\subsection{大规模并行仿真}
+
+GPU加速仿真正在彻底改变机器人RL的训练范式。NVIDIA Isaac Gym 等平台使得在单个GPU上同时仿真数千个环境成为现实（在RTX 4090上可达10,000+并行环境）。这意味着：
+
+\begin{itemize}
+    \item 以前需要云端数千个CPU核心的训练，现在可以在单个工作站上完成
+    \item 训练时间从天/周级别缩短到小时级别
+    \item 大量并行环境天然适合域随机化——每个环境可以有独立的参数设定
+\end{itemize}
+
+\subsection{基础模型 + RL}
+
+大语言模型（LLM）和视觉语言模型（VLM）的迅速发展为机器人RL带来了新机遇：
+
+\begin{itemize}
+    \item \textbf{高层任务规划}：LLM作为"大脑"，将自然语言指令分解为子任务，RL策略作为"小脑"执行具体运动。
+    \item \textbf{奖励函数自动生成}：LLM理解任务描述后自动生成初始奖励函数，减少人工工程工作量。
+    \item \textbf{代码即策略}：一些工作（如RT-2、Code-as-Policies）探索让LLM直接生成RL训练代码或机器人控制代码。
+\end{itemize}
+
+\subsection{RL for Science}
+
+RL在科学研究中的应用正在快速扩展，不限于传统机器人学：
+
+\begin{itemize}
+    \item \textbf{RL for 材料设计}：使用RL优化实验条件来合成具有特定性质的材料
+    \item \textbf{RL for 核聚变}：DeepMind 使用RL控制托卡马克中的磁场构型以实现等离子体稳态
+    \item \textbf{RL for 药物设计}：分子生成和逆合成规划中使用RL在巨大的化学空间中搜索
+    \item \textbf{RL for 芯片设计}：Google使用RL进行芯片布局（floorplanning），超过人类专家设计
+\end{itemize}
+
+\begin{remark}
+RL for Science的核心挑战在于：很多科学实验的"环境"是真实的物理实验设备，每次"step"的成本极高（注：核聚变研究中的一次托卡马克放电成本可达数十万元）。这要求RL算法具有极高的样本效率。Model-based RL、贝叶斯优化和主动学习正在成为这一领域的关键技术。
+\end{remark}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=stealth, scale=1.0]
+    % Center: "Sim-to-Real Hub"
+    \node[draw,circle,fill=yellow!20,minimum size=3cm] (center) at (0,0) {Sim-to-Real\\迁移};
+    
+    % Five subfields around
+    \node[draw,rectangle,rounded corners,fill=blue!10,minimum width=2.2cm,minimum height=0.8cm] (dr) at (0,2.5) {域随机化};
+    \node[draw,rectangle,rounded corners,fill=green!10,minimum width=2.2cm,minimum height=0.8cm] (si) at (2.5,1.5) {系统辨识};
+    \node[draw,rectangle,rounded corners,fill=orange!10,minimum width=2.2cm,minimum height=0.8cm] (da) at (2.5,-1.5) {域自适应};
+    \node[draw,rectangle,rounded corners,fill=purple!10,minimum width=2.2cm,minimum height=0.8cm] (ft) at (0,-2.5) {渐进微调};
+    \node[draw,rectangle,rounded corners,fill=red!10,minimum width=2.2cm,minimum height=0.8cm] (safe) at (-2.5,-1.5) {安全RL};
+    \node[draw,rectangle,rounded corners,fill=cyan!10,minimum width=2.2cm,minimum height=0.8cm] (fut) at (-2.5,1.5) {未来方向};
+    
+    % Connections
+    \foreach \n in {dr, si, da, ft, safe, fut} {
+        \draw[thick,<->] (center) -- (\n);
+    }
+    
+    % External arrows
+    \node at (4.0,2.5) [font=\footnotesize] {鲁棒策略};
+    \draw[->,thick] (dr.east) -- (4.0,2.5);
+    
+    \node at (4.0,-2.5) [font=\footnotesize] {精准仿真};
+    \draw[->,thick] (si.east) -- (4.0,-0.5);
+    
+    \node at (-4.5,0) [font=\footnotesize] {可靠部署};
+    \draw[->,thick] (safe.west) -- (-4.5,-1.5);
+\end{tikzpicture}
+\caption{Sim-to-Real 方法论全景。域随机化、系统辨识、域自适应和渐进微调是四种互补的技术路径，安全RL提供保障，未来方向包括大规模并行仿真和基础模型融合。完整的Sim-to-Real解决方案通常需要结合多种技术。}
+\label{fig:sim2real_overview}
+\end{figure}
+
+\section{本章小结}
+
+本章系统探讨了从仿真到真实（Sim-to-Real Transfer）这一RL在机器人领域落地的核心挑战及其解决方案。我们从仿真-真实差距的六个根源——物理参数误差、摩擦建模、传感器差异、执行器动力学、视觉差异和时间离散化——开始，建立了对差距本质的深刻理解。
+
+域随机化作为最有效的应对策略，通过在多样化的仿真环境中训练来迫使策略变得鲁棒。自动域随机化（ADR）进一步将随机化范围的调优过程自动化。系统辨识提供了互补的路线：精确拟合仿真参数使得训练环境更接近真实世界。对抗域自适应和特征域对齐则在表示层面上弥合仿真和真实世界的分布差异。
+
+渐进微调提供了一种务实的折中——先在仿真中大量训练，再在真实世界中少量调优。安全RL（CMDP、安全层、控制屏障函数）确保了策略在真实机器人上部署时的安全性约束。
+
+审视ANYmal四足机器人、Shadow灵巧手和自动驾驶等案例，我们看到了Sim-to-Real方法论在不同领域和不同复杂度问题中的成功实践。这些案例揭示了共同的成功模式：多样化训练 + 规律化约束 + 安全机制保障。
+
+随着大规模并行仿真、大语言/视觉模型与RL的融合，以及科学发现中RL的应用不断推进，Sim-to-Real领域正迈向更高效、更通用和更安全的新阶段。在这个进程中，机器人的"强化学徒"正在逐步走出仿真训练场，走向多姿多彩的现实世界。
+
+% --- END OF CHAPTER 12 ---

@@ -1,0 +1,461 @@
+\chapter{值函数近似与深度Q网络}
+
+\intro{从表格到神经网络——当状态空间爆炸式增长时，函数近似成为强化学习得以前往高维世界的桥梁。}
+
+\section{从表格到函数近似}
+
+\subsection{维度灾难}
+
+在前几章中，我们处理的都是"表格型"（tabular）强化学习——$V(s)$ 或 $Q(s,a)$ 存储在一个大表中，每个状态（或状态-动作对）占据一个独立的表项。这种方法在状态空间较小（如棋盘游戏的状态数）时可行，但在现实世界中，状态空间往往是连续的或极其庞大的。
+
+考虑以下维度的爆炸式增长：
+
+\begin{example}[维度灾难的具体表现]
+假设一个机器人有：
+\begin{itemize}
+    \item 关节角度：7 个自由度，每个量化为 100 个离散值 $\rightarrow$ $100^7 = 10^{14}$ 种关节配置。
+    \item 物体位置：3 个坐标 $(x, y, z)$，每个量化为 1000 个值 $\rightarrow$ $1000^3 = 10^9$ 种位置。
+    \item 速度：与位置类似的维度数。
+\end{itemize}
+
+仅这些便产生 $10^{14} \times 10^9 \times 10^9 = 10^{32}$ 种可能的状态——远超任何可存储和可遍历的规模。这就是\textbf{维度灾难}（Curse of Dimensionality）。
+\end{example}
+
+\begin{mydefinition}{维度灾难（Curse of Dimensionality）}
+随着状态空间的维度增加，状态数量呈指数级增长。这不仅导致存储不可行，还使得每个状态的访问频率指数下降，从而无法通过表格型方法进行有效学习。
+\end{mydefinition}
+
+解决维度灾难的核心手段是\textbf{函数近似}（Function Approximation）：用一个参数化的函数 $\hat{v}(s, \mathbf{w})$ 或 $\hat{q}(s, a, \mathbf{w})$ 来逼近真实的 $v_{\pi}(s)$ 或 $q_{\pi}(s,a)$。参数的数量通常远小于状态的数量，从而实现了泛化（generalization）——对类似状态给予类似的值估计。
+
+\subsection{线性函数近似}
+
+最简单的函数近似形式是\textbf{线性函数近似}（Linear Function Approximation）。
+
+\begin{mydefinition}{线性值函数近似}
+设 $\mathbf{x}(s) = [x_1(s), x_2(s), \ldots, x_d(s)]\T \in \R^d$ 是状态 $s$ 的特征向量（feature vector），参数向量 $\mathbf{w} = [w_1, w_2, \ldots, w_d]\T \in \R^d$。线性近似为：
+$$\hat{v}(s, \mathbf{w}) \doteq \mathbf{w}\T \mathbf{x}(s) = \sum_{i=1}^{d} w_i x_i(s)$$
+\end{mydefinition}
+
+特征工程是线性方法的核心：需要手工设计能够刻画状态本质属性的特征。常见的特征构造方法包括：
+\begin{itemize}
+    \item \textbf{多项式基函数}：对连续状态取多项式特征，如 $\mathbf{x}(s) = [1, s, s^2, \ldots]$
+    \item \textbf{傅里叶基函数}：使用不同频率的正弦/余弦函数作为基
+    \item \textbf{粗编码}（Coarse Coding）：用多个重叠的感受野覆盖状态空间
+    \item \textbf{瓦片编码}（Tile Coding）：将状态空间划分为多层偏移的格网，每个状态激活若干瓦片
+    \item \textbf{径向基函数}（RBF）：以某些中心点为基准的高斯函数
+\end{itemize}
+
+\begin{remark}
+线性方法在数学上具有优雅的收敛性保证（在 on-policy 情况下），并且计算简单。但其表达能力有限——当真实值函数是非线性时，无论特征多么精巧，线性近似都存在不可消除的近似误差。
+\end{remark}
+
+\subsection{非线性近似与神经网络}
+
+当状态空间高维且值函数的结构复杂时（如图像、高维传感器数据），手工设计特征变得极为困难。这正是\textbf{深度神经网络}大显身手的场景。
+
+\begin{mydefinition}{神经网络值函数近似}
+一个 $L$ 层的前馈神经网络定义了一个从状态到值的映射：
+$$\hat{v}(s, \mathbf{w}) = f_L(\mathbf{W}_L \cdot f_{L-1}(\cdots f_1(\mathbf{W}_1 \cdot \mathbf{x}(s) + \mathbf{b}_1) \cdots) + \mathbf{b}_L)$$
+其中 $\mathbf{w}$ 是所有层权重和偏置的集合，$f_i$ 是非线性激活函数（如 ReLU、tanh），$\mathbf{x}(s)$ 是状态的原始表示（可能直接是图像像素）。
+\end{mydefinition}
+
+神经网络的\textbf{自动特征提取}能力使其成为处理高维感知输入（如图像、声音）的理想选择。深度强化学习的核心突破——Deep Q-Network（DQN）——正是建立在用深度卷积神经网络来近似 Q 函数的基础之上。
+
+\subsection{预测目标：最小化均方值误差}
+
+在函数近似框架下，我们无法再对每个状态进行完美的估计。学习的目标变为最小化某种分布加权下的预测误差。
+
+\begin{mydefinition}{均方值误差（Mean Squared Value Error, MSVE）}
+令 $\mu(s)$ 为状态 $s$ 的\textbf{访问分布}（on-policy distribution）——在策略 $\pi$ 下状态 $s$ 被访问到的稳态概率。则加权均方误差为：
+$$\overline{\text{VE}}(\mathbf{w}) \doteq \sum_{s \in \states} \mu(s) \left[ v_{\pi}(s) - \hat{v}(s, \mathbf{w}) \right]^2$$
+\end{mydefinition}
+
+然而，我们无法直接计算 $\overline{\text{VE}}$——因为真实的 $v_{\pi}(s)$ 是未知的。因此，我们只能通过目标值（如 TD 目标、MC 回报等）来间接优化参数。
+
+\section{随机梯度下降用于值函数}
+
+\subsection{SGD 更新规则}
+
+假设我们可以对每个状态 $s$ 获得一个"监督信号" $U_t$（代表对 $v_{\pi}(S_t)$ 的某种估计），则随机梯度下降（SGD）的更新规则为：
+
+\begin{myformula}
+\textbf{值函数近似的 SGD 更新}
+$$\mathbf{w}_{t+1} \doteq \mathbf{w}_t - \frac{1}{2}\alpha \nabla_{\mathbf{w}} \left[ U_t - \hat{v}(S_t, \mathbf{w}_t) \right]^2$$
+$$= \mathbf{w}_t + \alpha \left[ U_t - \hat{v}(S_t, \mathbf{w}_t) \right] \nabla_{\mathbf{w}} \hat{v}(S_t, \mathbf{w}_t)$$
+\end{myformula}
+
+对于线性情形 $\hat{v}(s,\mathbf{w}) = \mathbf{w}\T \mathbf{x}(s)$，梯度化简为：
+$$\mathbf{w}_{t+1} = \mathbf{w}_t + \alpha \left[ U_t - \mathbf{w}_t\T \mathbf{x}(S_t) \right] \mathbf{x}(S_t)$$
+
+\subsection{半梯度方法}
+
+\begin{mydefinition}{半梯度方法（Semi-Gradient Methods）}
+当目标 $U_t$ 本身依赖于 $\mathbf{w}$ 时（如在 TD 方法中 $U_t = R_{t+1} + \gamma \hat{v}(S_{t+1}, \mathbf{w})$），标准的 SGD 不再是真正的梯度下降——因为我们在对 $U_t$ 求导时忽略了 $U_t$ 对 $\mathbf{w}$ 的依赖。这种忽略目标中对参数的依赖关系的做法称为\textbf{半梯度方法}。
+\end{mydefinition}
+
+半梯度方法的更新规则为：
+$$\mathbf{w}_{t+1} = \mathbf{w}_t + \alpha \left[ R_{t+1} + \gamma \hat{v}(S_{t+1}, \mathbf{w}_t) - \hat{v}(S_t, \mathbf{w}_t) \right] \nabla_{\mathbf{w}} \hat{v}(S_t, \mathbf{w}_t)$$
+
+\begin{remark}
+半梯度方法不是真正的梯度下降，因此没有收敛到局部最优的保证。但在实践中，半梯度方法收敛得很快（通常比真正的梯度方法快），而且对于线性函数近似，在 on-policy 情况下是可以证明收敛的。
+\end{remark}
+
+\subsection{线性 TD(0) 的收敛性}
+
+\begin{myTheorem}{线性 TD(0) 的收敛性}
+对于 on-policy 的线性 TD(0)（即使用 $\hat{v}(s,\mathbf{w}) = \mathbf{w}\T\mathbf{x}(s)$ 来估计给定策略 $\pi$ 的值函数），在满足标准的步长条件和访问到所有状态的前提下，参数 $\mathbf{w}$ 以概率 1 收敛到 TD 固定点 $\mathbf{w}_{\text{TD}}$。该固定点满足：
+$$\mathbf{w}_{\text{TD}} = \mathbf{A}^{-1} \mathbf{b}$$
+其中：
+\begin{align*}
+\mathbf{A} &= \E[\mathbf{x}(S_t)(\mathbf{x}(S_t) - \gamma \mathbf{x}(S_{t+1}))\T] \\
+\mathbf{b} &= \E[R_{t+1} \mathbf{x}(S_t)]
+\end{align*}
+
+而且，$\overline{\text{VE}}(\mathbf{w}_{\text{TD}}) \leq \frac{1}{1-\gamma} \min_{\mathbf{w}} \overline{\text{VE}}(\mathbf{w})$，即 TD 解的误差不超过最小可能误差的 $1/(1-\gamma)$ 倍。
+\end{myTheorem}
+
+\section{DQN 详细介绍}
+
+\subsection{DQN 架构}
+
+Deep Q-Network（DQN），由 Mnih et al.（2015）在 Nature 上发表，是将深度学习与 Q-Learning 结合的里程碑式工作。DQN 使用深度卷积神经网络来处理原始的 Atari 2600 游戏画面（$210\times 160$ 像素的 RGB 图像），直接从像素中学习最优策略。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=stealth, node distance=1.8cm, font=\footnotesize]
+    % Input
+    \node[draw, fill=blue!10, minimum width=1.8cm, minimum height=1.2cm, align=center] (input) {输入\\$84\times 84\times 4$\\（4帧堆叠）};
+    
+    % Conv1
+    \node[draw, fill=green!10, minimum width=2cm, minimum height=1.2cm, align=center, right=of input] (conv1) {Conv1\\$8\times 8$, stride 4\\32 filters, ReLU};
+    
+    % Conv2
+    \node[draw, fill=green!10, minimum width=2cm, minimum height=1.2cm, align=center, right=of conv1] (conv2) {Conv2\\$4\times 4$, stride 2\\64 filters, ReLU};
+    
+    % Conv3
+    \node[draw, fill=green!10, minimum width=2cm, minimum height=1.2cm, align=center, right=of conv2] (conv3) {Conv3\\$3\times 3$, stride 1\\64 filters, ReLU};
+    
+    % FC1
+    \node[draw, fill=orange!10, minimum width=2cm, minimum height=1.2cm, align=center, below=of conv3] (fc1) {FC\\512 units\\ReLU};
+    
+    % Output
+    \node[draw, fill=red!10, minimum width=2cm, minimum height=1.2cm, align=center, below=of fc1] (output) {Output\\$|\actions|$ units\\Q-values};
+    
+    % Arrows
+    \draw[->, thick] (input) -- (conv1);
+    \draw[->, thick] (conv1) -- (conv2);
+    \draw[->, thick] (conv2) -- (conv3);
+    \draw[->, thick] (conv3) -- (fc1);
+    \draw[->, thick] (fc1) -- (output);
+    
+    % Feature labels
+    \node[font=\tiny, above=0.3cm of conv1] {20x20x32};
+    \node[font=\tiny, above=0.3cm of conv2] {9x9x64};
+    \node[font=\tiny, above=0.3cm of conv3] {7x7x64};
+\end{tikzpicture}
+\caption{DQN 的网络架构（基于 Atari 版本的经典设计）。输入是最近 4 帧游戏画面的堆叠（提供运动信息），经三层卷积和一层全连接后输出每个动作的 Q 值。}
+\label{fig:dqn-arch}
+\end{figure}
+
+DQN 与标准 Q-Learning 有两个核心的不同：\textbf{经验回放}（Experience Replay）和\textbf{目标网络}（Target Network）。这两项创新解决了深度学习与强化学习结合时面临的两个根本性挑战。
+
+\subsection{经验回放}
+
+\begin{mydefinition}{经验回放（Experience Replay）}
+经验回放是一种将智能体的经验 $(S_t, A_t, R_{t+1}, S_{t+1})$ 存储在一个\textbf{回放缓冲区}（replay buffer）$\mathcal{D}$ 中，然后在训练时从缓冲区中\textbf{随机均匀采样}小批量（mini-batch）经验的技术。
+\end{mydefinition}
+
+经验回放解决了两个问题：
+
+\textbf{1. 打破数据相关性。} 在强化学习中，相邻时间步的经验高度相关（$S_t$ 与 $S_{t+1}$ 相似）。如果直接用这些相关数据训练神经网络，相当于在极度非独立同分布（non-i.i.d.）的数据上进行 SGD，会严重破坏优化过程。随机采样打破了这种时序相关性。
+
+\textbf{2. 提高数据效率。} 每条经验可以被多次用于训练，而不是使用一次后即丢弃。这在经验采集代价高昂的场景下尤为重要。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=stealth, node distance=1.3cm]
+    % Environment
+    \node[draw, fill=gray!10, minimum width=2.5cm, minimum height=1cm, align=center] (env) {环境};
+    
+    % Agent
+    \node[draw, fill=blue!10, minimum width=2.5cm, minimum height=1cm, align=center, right=of env, xshift=2cm] (agent) {智能体\\（$\varepsilon$-贪心）};
+    
+    % Replay Buffer
+    \node[draw, fill=green!10, minimum width=3cm, minimum height=1.5cm, align=center, below=of env, yshift=-1cm] (buffer) {经验回放缓冲区 $\mathcal{D}$\\(存储最近 $N$ 条经验)};
+    
+    % Training
+    \node[draw, fill=orange!10, minimum width=3cm, minimum height=1.5cm, align=center, below=of agent, yshift=-1cm] (train) {训练\\随机采样 mini-batch\\SGD 更新网络};
+    
+    % Arrows
+    \draw[->, thick] (agent) -- node[above, font=\footnotesize] {动作 $A_t$} (env);
+    \draw[->, thick] (env.north) -- ++(0,0.5) -| node[above right, font=\footnotesize] {状态 $S_{t+1}$, 奖励 $R_{t+1}$} (agent.north);
+    
+    \draw[->, thick] (agent) -- node[right, font=\footnotesize, align=left] {存储} (buffer.north east);
+    \draw[->, thick] (env) -- node[left, font=\footnotesize, align=right] {经验} (buffer.north west);
+    
+    \draw[->, thick] (buffer) -- node[below, font=\footnotesize, align=center] {采样} (train);
+    \draw[->, thick] (train) -- node[right, font=\footnotesize, align=left] {更新} (agent.south east);
+\end{tikzpicture}
+\caption{经验回放的工作流程：智能体与环境交互产生的经验存入缓冲区；训练时从缓冲区中随机采样多个经验组成 mini-batch 用于更新网络参数。}
+\label{fig:experience-replay}
+\end{figure}
+
+\subsection{目标网络}
+
+\begin{mydefinition}{目标网络（Target Network）}
+目标网络 $\hat{Q}(s,a;\mathbf{w}^{-})$ 是一个结构完全相同的第二份网络，但其参数 $\mathbf{w}^{-}$ 不是每一步都更新，而是周期性地从主网络（在线网络）$\hat{Q}(s,a;\mathbf{w})$ 复制过来（硬更新）或按比例融合（软更新）。
+\end{mydefinition}
+
+目标网络的引入解决了自举（bootstrapping）的"追逐移动目标"问题。在标准的 Q-Learning 中，损失函数为：
+$$L(\mathbf{w}) = \E\left[ \left( R_{t+1} + \gamma \max_{a'} \hat{Q}(S_{t+1}, a'; \mathbf{w}) - \hat{Q}(S_t, A_t; \mathbf{w}) \right)^2 \right]$$
+
+问题在于：损失中的目标项 $R_{t+1} + \gamma \max_{a'} \hat{Q}(S_{t+1}, a'; \mathbf{w})$ 和预测项 $\hat{Q}(S_t, A_t; \mathbf{w})$ 都依赖同一个参数 $\mathbf{w}$。这等价于在目标不断改变的情况下做回归——GD 很容易发散。
+
+\textbf{解决方案}：使用目标网络固定目标：
+$$L(\mathbf{w}) = \E\left[ \left( R_{t+1} + \gamma \max_{a'} \hat{Q}(S_{t+1}, a'; \mathbf{w}^{-}) - \hat{Q}(S_t, A_t; \mathbf{w}) \right)^2 \right]$$
+
+目标网络参数 $\mathbf{w}^{-}$ 的更新方式：
+\begin{itemize}
+    \item \textbf{硬更新}（Hard Update）：每 $C$ 步完全复制 $\mathbf{w}^{-} \leftarrow \mathbf{w}$。
+    \item \textbf{软更新}（Soft Update）：每步做加权移动平均 $\mathbf{w}^{-} \leftarrow \tau \mathbf{w} + (1-\tau) \mathbf{w}^{-}$，其中 $\tau \ll 1$（如 $\tau = 0.001$）。
+\end{itemize}
+
+\subsection{完整算法伪代码}
+
+\begin{myalgorithm}{Deep Q-Network（DQN）}
+\textbf{初始化：}
+\quad 初始化经验回放缓冲区 $\mathcal{D}$，容量为 $N$
+\quad 初始化在线网络参数 $\mathbf{w}$（随机）
+\quad 初始化目标网络参数 $\mathbf{w}^{-} \leftarrow \mathbf{w}$
+
+\textbf{循环} episode $= 1, 2, \ldots, M$：
+\quad 初始化状态 $S_1$（或状态序列）
+\quad \textbf{循环} $t = 1, 2, \ldots, T$：
+\quad \quad 以概率 $\varepsilon$ 随机选择动作 $A_t$，
+\quad \quad 否则选择 $A_t = \arg\max_a \hat{Q}(\phi(S_t), a; \mathbf{w})$
+\quad \quad 执行 $A_t$，观察 $R_{t+1}$ 和 $S_{t+1}$
+\quad \quad 将转移 $(\phi(S_t), A_t, R_{t+1}, \phi(S_{t+1}))$ 存入 $\mathcal{D}$
+\quad \quad 从 $\mathcal{D}$ 中随机采样 mini-batch $\{(\phi_j, A_j, R_j, \phi_j')\}_{j=1}^{B}$
+\quad \quad \textbf{对每个} $j$：
+\quad \quad \quad $y_j = \begin{cases}
+R_j, & \text{如果 } \phi_j' \text{ 是终止状态}\\
+R_j + \gamma \max_{a'} \hat{Q}(\phi_j', a'; \mathbf{w}^{-}), & \text{否则}
+\end{cases}$
+\quad \quad 对损失 $L = \frac{1}{B}\sum_j (y_j - \hat{Q}(\phi_j, A_j; \mathbf{w}))^2$ 做一次梯度下降步
+\quad \quad 每 $C$ 步：$\mathbf{w}^{-} \leftarrow \mathbf{w}$ \quad \color{gray}\% 硬更新目标网络
+\quad \textbf{直到} 回合终止
+\end{myalgorithm}
+
+\subsection{Atari 游戏中的表现}
+
+DQN 在 49 款 Atari 2600 游戏中进行了测试，使用完全相同的网络架构、超参数和训练算法。结果令人震惊：
+
+\begin{itemize}
+    \item 在 29 款游戏中，DQN 的表现超越了专业人类玩家的水平。
+    \item 在 22 款游戏中，DQN 的表现比人类玩家差。
+    \item 整体中位表现为人类水平的约 75\%（后来被改进版 DQN 大幅超越）。
+\end{itemize}
+
+这一结果证明了\textbf{通用}强化学习系统的可行性：同一个算法，不做任何针对特定游戏的调整，仅通过原始像素输入，就能学会玩多数游戏。
+
+\section{DQN 改进系列}
+
+自 DQN 提出以来，学术界涌现出一系列改进，逐步将 Atari 上的表现推向新的高度。
+
+\subsection{Double DQN}
+
+Double DQN（van Hasselt et al., 2016）将前文讨论的 Double Q-Learning 的思想融入 DQN 框架，以解决过估计问题。
+
+\begin{myformula}
+\textbf{Double DQN 的 TD 目标}
+$$y_t^{\text{DDQN}} = R_{t+1} + \gamma \hat{Q}\left(S_{t+1}, \arg\max_{a} \hat{Q}(S_{t+1}, a; \mathbf{w}); \mathbf{w}^{-}\right)$$
+\end{myformula}
+
+关键的改变：用\textbf{在线网络} $\mathbf{w}$ 选择最优动作（arg max），用\textbf{目标网络} $\mathbf{w}^{-}$ 评估该动作的值。这两个网络使用不同的参数，估计噪声（部分）独立，从而降低过估计。
+
+\begin{proof}[Double DQN 降低过估计的直觉]
+设在线网络和目标网络对最优动作的估计误差分别为 $\varepsilon_{\mathbf{w}}$ 和 $\varepsilon_{\mathbf{w}^{-}}$。在标准 DQN 中：
+$$\E[\max_{a'} \hat{Q}(S',a';\mathbf{w}^{-})] \geq \max_{a'} Q^*(S',a')$$
+
+在 Double DQN 中：
+$$\E[\hat{Q}(S', {\arg\max}_a \hat{Q}(S',a;\mathbf{w}); \mathbf{w}^{-})]$$
+
+如果在线网络偶尔错误地选择了一个因噪声而看起来更好的次优动作，目标网络（独立于此噪声）会对该动作给出一个不那么高的估值，从而抑制了过估计。
+\end{proof}
+
+\subsection{Dueling DQN}
+
+Dueling DQN（Wang et al., 2016）提出了一种创新的网络架构：将 Q 函数分解为\textbf{状态值函数} $V(s)$ 和\textbf{优势函数}（advantage function）$A(s,a)$ 的和。
+
+\begin{mydefinition}{Dueling 架构}
+$$\hat{Q}(s, a; \mathbf{w}, \boldsymbol{\alpha}, \boldsymbol{\beta}) = \hat{V}(s; \mathbf{w}, \boldsymbol{\alpha}) + \left( \hat{A}(s, a; \mathbf{w}, \boldsymbol{\beta}) - \frac{1}{|\actions|}\sum_{a'} \hat{A}(s, a'; \mathbf{w}, \boldsymbol{\beta}) \right)$$
+其中 $\mathbf{w}$ 是共享的卷积层参数，$\boldsymbol{\alpha}$ 和 $\boldsymbol{\beta}$ 分别是 $V$ 流和 $A$ 流的全连接层参数。
+\end{mydefinition}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=stealth, node distance=0.8cm, font=\footnotesize]
+    % Input
+    \node[draw, fill=blue!10, minimum width=2.5cm, minimum height=1cm, align=center] (input) {输入\\$84\times 84\times 4$};
+    
+    % Shared Conv layers
+    \node[draw, fill=green!10, minimum width=2.5cm, minimum height=1cm, align=center, below=of input] (conv) {共享卷积层\\（3 Conv + BN）};
+    
+    % Split
+    \node[draw, fill=gray!20, minimum width=1cm, minimum height=0.6cm, align=center, below=of conv, xshift=-1.5cm] (Vstream) {$V$ 流};
+    \node[draw, fill=gray!20, minimum width=1cm, minimum height=0.6cm, align=center, below=of conv, xshift=1.5cm] (Astream) {$A$ 流};
+    
+    % V output
+    \node[draw, fill=red!10, minimum width=1.8cm, minimum height=1cm, align=center, below=of Vstream] (Vout) {$\hat{V}(s)$\\(标量)};
+    
+    % A output
+    \node[draw, fill=orange!10, minimum width=1.8cm, minimum height=1cm, align=center, below=of Astream] (Aout) {$\hat{A}(s,\cdot)$\\($|\actions|$维向量)};
+    
+    % Combine
+    \node[draw, fill=purple!10, minimum width=3.5cm, minimum height=1cm, align=center, below=of Vout, xshift=0.75cm, yshift=-0.3cm] (Qout) {$\hat{Q}(s,a) = \hat{V}(s) + \hat{A}(s,a) - \frac{1}{|\actions|}\sum_{a'}\hat{A}(s,a')$};
+    
+    % Arrows
+    \draw[->, thick] (input) -- (conv);
+    \draw[->, thick] (conv.south) -- ++(0,-0.2) -| (Vstream.north);
+    \draw[->, thick] (conv.south) -- ++(0,-0.2) -| (Astream.north);
+    \draw[->, thick] (Vstream) -- (Vout);
+    \draw[->, thick] (Astream) -- (Aout);
+    \draw[->, thick] (Vout.south) -- ++(0,-0.3) -| (Qout);
+    \draw[->, thick] (Aout.south) -- ++(0,-0.3) -| (Qout);
+\end{tikzpicture}
+\caption{Dueling DQN 架构。输入经共享卷积层处理后分流为两个分支：$V$ 流输出标量状态值，$A$ 流输出每个动作的优势值，两者组合得到最终的 Q 值。}
+\label{fig:dueling-arch}
+\end{figure}
+
+Dueling 架构的主要优势：在某些状态下，所有动作的值几乎相同（例如前方是空旷道路），我们不需要精确知道每个动作的 Q 值，只需知道 $V(s)$。Dueling 架构可以更高效地学习这种模式，因为 $V$ 流不需要为每个动作学习。
+
+\subsection{Prioritized Experience Replay}
+
+标准的经验回放是均匀随机采样的。但直观上，并不是所有经验都同等重要——那些"出乎意料"的、导致较大 TD 误差的经验应该被更频繁地学习。
+
+\begin{mydefinition}{优先经验回放（Prioritized Experience Replay）}
+采样概率与 TD 误差的大小成正比：
+$$P(i) \propto |\delta_i|^{\alpha}$$
+其中 $\alpha \in [0,1]$ 控制优先化的程度（$\alpha=0$ 退化为均匀采样），$\delta_i$ 是第 $i$ 条经验的 TD 误差。
+
+为修正优先采样引入的偏差，使用重要性采样权重对梯度更新进行加权：
+$$w_i = \left(\frac{1}{N \cdot P(i)}\right)^{\beta}$$
+其中 $\beta \in [0,1]$ 控制偏差修正的程度。
+\end{mydefinition}
+
+实践中使用 Sum-Tree 数据结构来实现 $O(\log N)$ 的采样和更新复杂度。
+
+\subsection{Multi-step DQN}
+
+将 TD(0) 替换为 $n$-步回报，可以在偏差和方差之间取得更好的折中：
+
+\begin{myformula}
+\textbf{$n$-步 DQN 的 TD 目标}
+$$y_t^{(n)} = \sum_{k=0}^{n-1} \gamma^k R_{t+k+1} + \gamma^n \max_{a} \hat{Q}(S_{t+n}, a; \mathbf{w}^{-})$$
+\end{myformula}
+
+Multi-step 方法使奖励信号传播得更快（每次更新覆盖更长的轨迹段），在奖励稀疏的任务中效果尤为显著。
+
+\subsection{Noisy Nets}
+
+标准的 DQN 使用 $\varepsilon$-贪心进行探索，这是一种"无状态"的探索——每个状态下的动作随机性仅取决于 $\varepsilon$，不依赖于智能体对自身不确定性的估计。
+
+\begin{mydefinition}{噪声网络（Noisy Nets）}
+将网络的权重参数改为从分布中采样：
+$$\mathbf{w} = \boldsymbol{\mu} + \boldsymbol{\sigma} \odot \boldsymbol{\varepsilon}$$
+其中 $\boldsymbol{\mu}$ 和 $\boldsymbol{\sigma}$ 是可学习参数，$\boldsymbol{\varepsilon}$ 是从标准正态分布（或因子化高斯分布）中采样的噪声。$\odot$ 表示逐元素乘法。
+\end{mydefinition}
+
+噪声网络实现了\textbf{状态依赖的探索}——网络可以学习在不同状态下施加不同程度的探索。在训练过程中，网络逐渐学会何时"自信"（$\boldsymbol{\sigma}$ 变小，减少探索），何时"不确定"（$\boldsymbol{\sigma}$ 变大，增加探索）。
+
+\subsection{Distributional RL}
+
+标准 Q-Learning 学习的是累积回报的\textbf{期望值}（均值）。但在许多场景下，回报的\textbf{完整分布}包含更丰富的信息——例如方差、偏度等可以用来衡量风险。
+
+\begin{mydefinition}{分位数回归 DQN（QR-DQN）}
+不再输出标量 Q 值，而是输出 Q 值分布在一组分位数（如 $N=200$ 个分位数）上的值 $\theta_i(s,a)$。损失函数使用分位数 Huber 损失：
+$$\mathcal{L} = \frac{1}{N}\sum_{i=1}^{N}\sum_{j=1}^{N} \rho_{\hat{\tau}_i}^{\kappa}\left( \delta_{ij} \right)$$
+其中 $\delta_{ij} = R + \gamma \theta_j(S', a^*) - \theta_i(S,A)$，$\rho$ 是分位数损失，$\kappa$ 是 Huber 损失的阈值参数。
+\end{mydefinition}
+
+C51 和 QR-DQN 是分布强化学习的两个代表算法。C51 将回报分布离散化为 51 个"原子"（固定位置的支撑点），学习这些原子的概率质量。
+
+\subsection{Rainbow：集大成者}
+
+\begin{mydefinition}{Rainbow}
+Rainbow（Hessel et al., 2018）将 DQN 的六个改进全部整合到一个算法中：
+\begin{enumerate}
+    \item Double DQN（解耦动作选择与评估）
+    \item Dueling DQN（V + A 分解）
+    \item Prioritized Experience Replay（优先回放）
+    \item Multi-step DQN（$n$-步回报）
+    \item Noisy Nets（噪声网络探索）
+    \item Distributional RL（C51 分布学习）
+\end{enumerate}
+\end{mydefinition}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.0, >=stealth]
+    % Main box
+    \node[draw, thick, fill=yellow!5, rounded corners, minimum width=12cm, minimum height=2.5cm] (rainbow) at (0,0) {};
+    \node[font=\large\bfseries, above=0.8cm] at (rainbow.north) {Rainbow};
+    
+    % Sub-components
+    \node[draw, fill=blue!15, rounded corners, minimum width=2.2cm, minimum height=1.2cm, align=center, font=\footnotesize] (ddqn) at (-4.5,0.3) {Double\\DQN};
+    \node[draw, fill=green!15, rounded corners, minimum width=2.2cm, minimum height=1.2cm, align=center, font=\footnotesize] (pri) at (-1.5,0.3) {Prioritized\\Replay};
+    \node[draw, fill=orange!15, rounded corners, minimum width=2.2cm, minimum height=1.2cm, align=center, font=\footnotesize] (duel) at (1.5,0.3) {Dueling\\Architecture};
+    \node[draw, fill=red!15, rounded corners, minimum width=2.2cm, minimum height=1.2cm, align=center, font=\footnotesize] (multi) at (4.5,0.3) {Multi-step\\Returns};
+    
+    \node[draw, fill=purple!15, rounded corners, minimum width=2.2cm, minimum height=1.2cm, align=center, font=\footnotesize] (noisy) at (-4.5,-0.7) {Noisy\\Nets};
+    \node[draw, fill=cyan!15, rounded corners, minimum width=2.2cm, minimum height=1.2cm, align=center, font=\footnotesize] (dist) at (0,-0.7) {Distributional\\RL};
+    
+    % Connecting lines
+    \draw[->, gray, thick] (ddqn) -- (pri);
+    \draw[->, gray, thick] (pri) -- (duel);
+    \draw[->, gray, thick] (duel) -- (multi);
+    \draw[->, gray, thick] (noisy) -- (dist);
+    \draw[->, gray, thick] (ddqn) -- (noisy);
+    \draw[->, gray, thick] (multi) -- (dist);
+    
+    % Result
+    \node[font=\footnotesize, below=0.5cm of rainbow, text width=10cm, align=center] {
+        Rainbow 在 Atari 上的中位人类归一化得分远超任何一个单独改进；
+        消融实验表明每个组件都做出了正向贡献，但贡献大小因游戏而异。
+    };
+\end{tikzpicture}
+\caption{Rainbow 架构示意：六项改进的有机整合。消融研究发现每个组件都有贡献，其中 Prioritized Replay 和 Multi-step 在许多游戏中贡献最大。}
+\label{fig:rainbow}
+\end{figure}
+
+\section{连续动作空间的挑战}
+
+\subsection{为什么 DQN 不适合连续动作}
+
+DQN 的一个根本限制：在连续动作空间中，无法直接取 $\max$。DQN 的动作选择依赖于：
+$$a^* = \arg\max_{a \in \actions} \hat{Q}(s, a; \mathbf{w})$$
+
+当 $\actions$ 是离散且规模较小时（如 Atari 中的 4--18 个离散动作），遍历所有动作即可找到 $\arg\max$。但当动作空间是连续的（如机器人的关节力矩、方向盘的转角），不可能遍历无穷多个动作。
+
+\begin{mydefinition}{连续动作空间中的 $\arg\max$ 问题}
+在连续动作空间中，$\max_{a} \hat{Q}(s,a)$ 是一个非凸优化问题，通常没有闭式解。可能的解法包括：
+\begin{enumerate}
+    \item \textbf{离散化}：将连续空间划分为有限的离散动作。但精度和计算量的折中往往不可接受。
+    \item \textbf{梯度上升}：对 $\hat{Q}(s,a)$ 关于 $a$ 求梯度，迭代优化找到近似最优动作。每次动作选择都需要求解一个优化子问题，开销大且可能陷入局部最优。
+    \item \textbf{交叉熵方法（CEM）}等随机搜索算法：同样计算开销大。
+\end{enumerate}
+\end{mydefinition}
+
+这些局限性自然地引出了下一章的主题——策略梯度方法，它们原生地支持连续动作空间。
+
+\section{本章小结}
+
+本章从函数近似的基本概念出发，逐步引出了现代深度强化学习的基础架构 DQN 及其一系列改进。核心要点：
+
+\begin{enumerate}
+    \item \textbf{函数近似}解决了维度灾难，使强化学习可以扩展到高维、连续的状态空间。
+    \item \textbf{线性方法}有理论保证但表达能力有限；\textbf{深度神经网络}表达能力强，但与强化学习的结合需要技术上的创新。
+    \item \textbf{DQN 的两大创新}——经验回放（打破数据相关性，提高数据效率）和目标网络（稳定训练）——使深度 Q-Learning 在 Atari 游戏上取得了突破性成功。
+    \item \textbf{DQN 的改进系列}（Double DQN, Dueling DQN, PRI, Multi-step, Noisy Nets, Distributional RL）各自瞄准 DQN 的一个特定缺陷，Rainbow 将它们整合在一起达到了最佳性能。
+    \item \textbf{连续动作空间}下 DQN 面临 $\arg\max$ 不可解的问题，这构成了策略梯度方法的天然动机。
+\end{enumerate}

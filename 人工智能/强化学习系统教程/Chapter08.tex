@@ -1,0 +1,660 @@
+
+% ======================================================================
+% 第8章  连续动作空间的深度强化学习
+% ======================================================================
+\chapter{连续动作空间的深度强化学习}
+
+\intro{从离散到连续——当动作是关节力矩而非按钮选择，\\
+深度强化学习如何应对高维连续控制的挑战。}
+
+\section{连续控制问题}
+
+在前面章节介绍的 DQN 及其变体中，我们讨论的核心是离散动作空间：智能体在每个状态下从有限的动作集合 $\actions = \{a_1, a_2, \dots, a_m\}$ 中选择一个动作。然而，许多现实世界的控制问题——机器人的关节力矩、汽车的转向角度、无人机的旋翼推力——都是\emph{连续}的。
+
+\subsection{连续动作空间的形式化}
+
+\begin{mydefinition}{连续动作空间 MDP}
+在连续动作空间中，MDP 被定义为 $\langle \states, \actions, \trans, \reward, \gamma \rangle$，其中：
+
+\begin{itemize}
+    \item $\states \subseteq \R^{d_s}$ 为状态空间（通常是连续的）
+    \item $\actions \subseteq \R^{d_a}$ 为动作空间（连续的，通常是有界超立方体）
+    \item $\trans(s' \mid s, a)$ 为转移概率
+    \item $\reward(s, a)$ 为奖励函数
+\end{itemize}
+
+策略 $\pi: \states \to \mathcal{P}(\actions)$ 将每个状态映射到动作空间上的一个概率分布。
+\end{mydefinition}
+
+常见的形式是 $\actions = [a_{\min}, a_{\max}]^{d_a}$，即一个有界超立方体。例如，一个 7 自由度的机械臂的动作空间是 $\actions = [-1, 1]^7$，每个维度对应一个关节的（归一化后的）力矩。
+
+\subsection{DQN 的失效}
+
+DQN 及其变体之所以难以直接应用于连续动作空间，根源在于其动作选择机制：
+
+\[
+a^* = \arg\max_{a \in \actions} Q(s, a; \theta)
+\]
+
+在离散空间中，$|\actions|$ 是有限的（例如 Atari 游戏中通常为 4--18 个动作），可以直接计算所有动作的 $Q$ 值并取最大。但在连续空间中，$\actions$ 是无限集合，$\arg\max$ 操作退化为一个非凸优化问题——需要在每个决策步骤求解一个高维的最优化问题，这在计算上是不现实的。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.0]
+    % Left: discrete
+    \draw[->] (-2.5,0) -- (2.5,0) node[right] {$a$};
+    \draw[->] (0,-0.5) -- (0,2.5) node[above] {$Q(s,a)$};
+    \draw[domain=-2:2, smooth, blue!40, dashed] plot (\x, {1.5 - 0.5*(\x)^2});
+    
+    \foreach \x in {-1.5, -0.8, 0, 0.7, 1.5} {
+        \filldraw[red] (\x, {1.5 - 0.5*(\x)^2}) circle (2pt);
+    }
+    \node at (0,-1) {\small 离散：有限个 $a$，可枚举};
+    
+    % Right: continuous
+    \begin{scope}[xshift=6cm]
+    \draw[->] (-2.5,0) -- (2.5,0) node[right] {$a \in \R$};
+    \draw[->] (0,-0.5) -- (0,2.5) node[above] {$Q(s,a)$};
+    \draw[domain=-2.3:2.3, smooth, blue!60, very thick] 
+        plot (\x, {1.5 - 0.3*(\x)^2 + 0.15*sin(4*\x r)});
+    \filldraw[red] (0, {1.5}) circle (2pt) node[above right] {\tiny $\max$?};
+    \node at (0,-1) {\small 连续：无限个 $a$，需优化};
+    \end{scope}
+\end{tikzpicture}
+\caption{离散动作空间（左）与连续动作空间（右）的对比。在连续空间中，$\arg\max_a Q(s,a)$ 退化为非凸优化问题，无法通过简单枚举求解。}
+\label{fig:disc_cont}
+\end{figure}
+
+\subsection{应对策略：三类方法}
+
+解决连续动作空间 RL 的方法可以归纳为三大类：
+
+\begin{enumerate}
+    \item \textbf{策略梯度方法}：直接学习参数化的策略 $\pi_\theta(a \mid s)$，输出动作分布的参数（如高斯分布的均值和方差），避免了 $\arg\max$ 问题。PPO 属于此类。
+    
+    \item \textbf{确定性策略梯度（DPG）系列}：学习确定性策略 $\mu_\theta(s)$，直接输出动作值。需要特殊的探索机制（如噪声注入）。DDPG、TD3 属于此类。
+    
+    \item \textbf{基于价值的扩展}：将连续动作空间离散化，或学习可微分的 $Q$ 函数后用梯度上升求解 $\max_a Q(s,a)$。NAF（Normalized Advantage Functions）属于此类，但应用范围有限。
+\end{enumerate}
+
+本章将重点介绍第二类方法，即 DDPG $\to$ TD3 $\to$ SAC 这一技术路线。
+
+\section{DDPG：深度确定性策略梯度}
+
+DDPG（Deep Deterministic Policy Gradient）由 Lillicrap 等人于 2015 年提出，是将 DQN 的核心思想——经验回放与目标网络——成功移植到连续动作空间的里程碑式工作。
+
+\subsection{确定性策略梯度回顾}
+
+在第六章中，我们介绍了 Silver 等人（2014）的确定性策略梯度（Deterministic Policy Gradient, DPG）定理。
+
+\begin{myTheorem}{确定性策略梯度定理}
+对于确定性策略 $a = \mu_\theta(s)$，在 MDP 中的性能梯度为：
+
+\[
+\nabla_\theta J(\mu_\theta) = \E_{s \sim \rho^\mu}
+\left[ \nabla_\theta \mu_\theta(s) \; \nabla_a Q^\mu(s, a) \big|_{a = \mu_\theta(s)} \right]
+\]
+
+与随机策略梯度相比，DPG 在 $a$ 的维度较高时具有更低的方差（因为不需要对动作空间做重要性采样）。
+\end{myTheorem}
+
+\subsubsection{链式法则的展开}
+
+上述定理的直观理解可以通过链式法则来说明：
+
+\[
+\frac{\partial J}{\partial \theta} = \frac{\partial J}{\partial a} \cdot \frac{\partial a}{\partial \theta}
+= \nabla_a Q(s, a) \cdot \nabla_\theta \mu_\theta(s)
+\]
+
+策略参数 $\theta$ 的更新依赖于两个信号：
+\begin{itemize}
+    \item $\nabla_a Q(s, a)$：Critic 告诉我们"动作应该往哪个方向调整"（从 $Q$ 值角度）
+    \item $\nabla_\theta \mu_\theta(s)$：Actor 告诉我们"参数应该往哪个方向调整"（从策略参数化角度）
+\end{itemize}
+
+\subsection{Actor-Critic 架构}
+
+DDPG 使用标准的 Actor-Critic 架构：
+
+\begin{itemize}
+    \item \textbf{Actor（策略网络）} $\mu(s; \theta^\mu)$：输入状态 $s$，输出确定性动作 $a$。网络的输出层使用 $\tanh$（或其他有界激活函数）以匹配动作空间的范围。
+    
+    \item \textbf{Critic（$Q$ 网络）} $Q(s, a; \theta^Q)$：输入状态 $s$ 和动作 $a$，输出 Q 值。动作 $a$ 通常在网络的中间层引入。
+\end{itemize}
+
+\begin{remark}
+在 DDPG 中，Critic 网络通常在第一层全连接层之后才将动作 $a$ 作为附加输入（而非在第一层就拼接 $s$ 和 $a$）。这种做法有助于减少 Q 函数对动作的过拟合。
+\end{remark}
+
+\subsection{DQN 技巧的移植}
+
+DDPG 的核心贡献在于将 DQN 的两大稳定化技巧成功应用于连续控制的 Actor-Critic 框架。
+
+\subsubsection{经验回放（Experience Replay）}
+
+与 DQN 相同，DDPG 使用一个回放缓冲区 $\mathcal{D}$ 存储交互经验 $(s_t, a_t, r_t, s_{t+1})$，并在每次更新时随机采样一个小批量（mini-batch）来打破数据间的时序相关性。
+
+\begin{myformula}
+y_i = r_i + \gamma \, Q'(s_{i+1}, \mu'(s_{i+1}; \theta^{\mu'}); \theta^{Q'})
+\end{myformula}
+
+其中 $Q'$ 和 $\mu'$ 是目标网络（下一小节）。
+
+\subsubsection{目标网络与软更新}
+
+不同于 DQN 的"硬更新"（每隔 C 步将在线网络的参数完全复制到目标网络），DDPG 使用了"软更新"（Soft Target Updates）：
+
+\begin{mydefinition}{软更新（Soft Update / Polyak Averaging）}
+对于目标参数 $\theta^-$ 和在线参数 $\theta$，软更新定义为：
+
+\[
+\theta^- \leftarrow \tau \,\theta + (1 - \tau)\,\theta^-
+\]
+
+其中 $\tau \ll 1$（通常 $\tau = 0.001$ 或 $0.005$）为软更新系数。
+\end{mydefinition}
+
+软更新的优势在于：目标网络在每个训练步都被缓慢更新，这使得目标值的变化是平滑的，显著提升了训练的稳定性。$\tau$ 越小，目标网络变化越慢（越稳定但滞后越严重）；$\tau$ 越大，目标网络更新越快（跟踪能力更强但可能引起不稳定）。
+
+\begin{remark}
+软更新是 DDPG 区别于 DQN 的一个关键设计选择。在 DQN 中，Q 网络本身是不稳定的，硬更新提供了明确的"稳定锚点"；在 DDPG 中，Actor-Critic 的双网络结构 + 软更新共同提供了稳定性。
+\end{remark}
+
+\subsection{Ornstein-Uhlenbeck 噪声}
+
+确定性策略 $\mu_\theta(s)$ 的输出是确定的——但在训练初期需要充分的探索。DDPG 通过在策略输出上叠加 Ornstein-Uhlenbeck（OU）噪声来引入探索：
+
+\begin{mydefinition}{OU 过程}
+OU 过程是一个具有均值回复特性的随机过程：
+
+\[
+dx_t = \theta (\mu - x_t) dt + \sigma dW_t
+\]
+
+离散化形式为：
+\[
+x_{t+1} = x_t + \theta (\mu - x_t) \Delta t + \sigma \sqrt{\Delta t} \, \mathcal{N}(0, I)
+\]
+
+其中 $\theta > 0$ 控制均值回复速度，$\mu$ 为长期均值，$\sigma$ 为波动率。
+\end{mydefinition}
+
+OU 噪声的特点是：对时间有相关性（不像是高斯白噪声），相邻时间步的噪声值相似，因此在物理系统中产生平滑的探索轨迹。
+
+\begin{remark}
+在实际实现中，许多从业者发现简单的零均值高斯噪声 $a = \mu_\theta(s) + \mathcal{N}(0, \sigma^2)$ 效果通常不差于 OU 噪声，且实现更简单。OU 噪声的优势主要在具有惯性（动量）的物理系统中体现。
+\end{remark}
+
+\subsection{批量归一化}
+
+DDPG 的作者特别强调了批量归一化（Batch Normalization, BN）的重要性。在连续控制任务中，状态的不同维度（如位置、速度、角度）的量纲和数值范围可能差异巨大。BN 通过将每一层的激活值归一化到零均值和单位方差，有效地解决了这个问题。
+
+不过需要注意的是，BN 在目标网络和在线网络中的统计量是独立维护的，这可能在训练早期引入额外的方差。
+
+\subsection{DDPG 完整算法}
+
+\begin{myalgorithm}{深度确定性策略梯度（DDPG）}
+\textbf{超参数}：软更新系数 $\tau$，折扣因子 $\gamma$，回放缓冲区容量 $N$，batch 大小 $B$\\
+\textbf{输入}：初始化 Actor $\mu(s;\theta^\mu)$，Critic $Q(s,a;\theta^Q)$
+\begin{enumerate}
+    \item 初始化目标网络：$\theta^{\mu'} \leftarrow \theta^\mu$，$\theta^{Q'} \leftarrow \theta^Q$
+    \item 初始化回放缓冲区 $\mathcal{D} \leftarrow \emptyset$
+    \item 初始化 OU 噪声过程 $\mathcal{N}_{\text{OU}}$
+    \item \textbf{for} episode $= 1, 2, \dots, M$ \textbf{do}：
+    \item \quad 获取初始状态 $s_0$
+    \item \quad \textbf{for} $t = 0, 1, 2, \dots, T$ \textbf{do}：
+    \item \quad \quad 选择动作：$a_t = \mu(s_t; \theta^\mu) + \mathcal{N}_{\text{OU},t}$
+    \item \quad \quad 执行 $a_t$，观察 $r_t$, $s_{t+1}$，存入 $\mathcal{D}$
+    \item \quad \quad 从 $\mathcal{D}$ 中随机采样 batch $\{(s_i, a_i, r_i, s_{i+1})\}_{i=1}^{B}$
+    \item \quad \quad 计算目标值：$y_i = r_i + \gamma \, Q'(s_{i+1}, \mu'(s_{i+1}; \theta^{\mu'}); \theta^{Q'})$
+    \item \quad \quad 更新 Critic：$\mathcal{L}_{\text{critic}} = \frac{1}{B} \sum_i (Q(s_i, a_i; \theta^Q) - y_i)^2$
+    \item \quad \quad 更新 Actor：$\nabla_{\theta^\mu} J \approx \frac{1}{B} \sum_i \nabla_a Q(s, a; \theta^Q)|_{a=\mu(s_i)} \nabla_{\theta^\mu} \mu(s_i; \theta^\mu)$
+    \item \quad \quad 软更新目标网络：
+    \begin{align*}
+        \theta^{Q'} &\leftarrow \tau \theta^Q + (1-\tau) \theta^{Q'} \\
+        \theta^{\mu'} &\leftarrow \tau \theta^\mu + (1-\tau) \theta^{\mu'}
+    \end{align*}
+    \item \quad \textbf{end for}
+    \item \textbf{end for}
+\end{enumerate}
+\end{myalgorithm}
+
+\section{TD3：双延迟深度确定性策略梯度}
+
+尽管 DDPG 在许多连续控制任务上取得了成功，但它存在几个已知的严重问题。TD3（Twin Delayed DDPG）由 Fujimoto 等人于 2018 年提出，仅通过三项精巧的改进就大幅提升了 DDPG 的稳定性和性能。
+
+\subsection{DDPG 的三大问题}
+
+\begin{enumerate}
+    \item \textbf{过估计偏差（Overestimation Bias）}：由于 $\max$ 操作的固有特性（即使没有误差，$\E[\max(X)] \ge \max(\E[X])$），加上函数近似误差，DDPG 的 Critic 会系统性地高估 Q 值。在 DDPG 中，目标值计算 $y = r + \gamma Q'(s', \mu'(s'))$ 虽然没有显式的 $\max$，但 $\mu'$ 本身就是最大化 $Q'$ 的方向（通过 $\nabla_a Q'$ 训练），因此过估计依然存在。
+    
+    \item \textbf{高方差（High Variance）}：Actor 的更新依赖于 Critic 的梯度 $\nabla_a Q$。如果 Critic 不够准确，Actor 会沿着错误的方向被更新。由于 Actor 和 Critic 是交替更新的，这种误差会相互放大，形成恶性循环。
+    
+    \item \textbf{超参数敏感性}：DDPG 对学习率、软更新系数 $\tau$、噪声参数等高度敏感。同一个超参数组合在不同任务上的表现可能天差地别，调参成本极高。
+\end{enumerate}
+
+\subsection{改进一：Clipped Double Q-Learning}
+
+为缓解过估计偏差，TD3 借鉴了 Double Q-Learning 的思想，但做了关键的改进。
+
+\begin{mydefinition}{Clipped Double Q-Learning（CDQ）}
+TD3 维护两个独立的 Critic 网络 $Q_{\phi_1}$ 和 $Q_{\phi_2}$（以及对应的目标网络 $Q'_{\phi_1}$ 和 $Q'_{\phi_2}$）。目标值计算为：
+
+\begin{myformula}
+y = r + \gamma\, \min_{j=1,2} Q'_{\phi_j}(s', a')
+\end{myformula}
+
+其中 $a' = \mu'(s')$（目标 Actor 的输出）。取 $\min$ 而非 $\max$ 是 CDQ 的核心——两个 Q 网络都倾向于高估，但取较小者可以有效抑制过估计。
+\end{mydefinition}
+
+与标准 Double Q-Learning（用一个网络选动作，另一个网络评估）不同，CDQ 不区分"选择"和"评估"——两个网络都参与动作评估，取最小值来获得一个保守且更准确的估计。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=1.5cm,
+    block/.style={rectangle, draw=blue!60, fill=blue!8, thick, minimum width=3cm, minimum height=0.7cm, align=center},
+    net/.style={rectangle, draw=red!50, fill=red!5, thick, minimum width=2.2cm, minimum height=0.6cm, align=center},
+    arrow/.style={->, >=stealth, thick}]
+    
+    \node[block] (state) {状态 $s$};
+    
+    \node[block, below left=of state, xshift=-1cm] (actor) {Actor $\mu_\theta(s)$};
+    \node[block, below right=of state, xshift=1cm] (actort) {Target Actor $\mu_{\theta'}(s')$};
+    
+    \node[net, below=of actor, xshift=-1.5cm] (q1) {Critic 1\\$Q_{\phi_1}(s,a)$};
+    \node[net, below=of actor, xshift=1.5cm] (q2) {Critic 2\\$Q_{\phi_2}(s,a)$};
+    
+    \node[net, below=of actort, xshift=-0.8cm] (tq1) {Target Critic 1\\$Q'_{\phi_1}(s',a')$};
+    \node[net, below=of actort, xshift=0.8cm] (tq2) {Target Critic 2\\$Q'_{\phi_2}(s',a')$};
+    
+    \node[block, below=of tq1, xshift=0.8cm, fill=green!10, draw=green!60] (minop) {$\min(Q_1', Q_2')$};
+    
+    \draw[arrow] (state) -- (actor);
+    \draw[arrow] (state) -- (actort);
+    \draw[arrow] (actor) -- (q1);
+    \draw[arrow] (actor) -- (q2);
+    \draw[arrow] (actort) -- (tq1);
+    \draw[arrow] (actort) -- (tq2);
+    \draw[arrow] (tq1) -- (minop);
+    \draw[arrow] (tq2) -- (minop);
+    
+    \node[right=0.5cm of minop] {目标值 $y$};
+\end{tikzpicture}
+\caption{TD3 的双 Critic 架构。两个独立的 Critic 独立评估，通过取 $\min$ 抑制过估计偏差。Actor 仅通过 $Q_1$ 更新（$Q_2$ 仅用于目标值计算）。}
+\label{fig:td3_twin}
+\end{figure}
+
+\subsection{改进二：延迟策略更新}
+
+TD3 的第二个改进是降低 Actor 的更新频率。具体来说：
+
+\begin{mydefinition}{延迟策略更新（Delayed Policy Updates）}
+Critic 网络每步都更新，而 Actor 网络和目标网络每 $d$ 步才更新一次（通常 $d = 2$）。
+\end{mydefinition}
+
+延迟更新的直觉是：如果 Critic 还不够准确，基于不准确的 Critic 来更新 Actor 只会引入噪声。等 Critic 先"赶上"（多更新几次），再同步更新 Actor，可以有效降低方差。
+
+\begin{remark}
+这个技巧可以理解为一种隐式的方差缩减。在标准的交替更新中，Actor 的每一步更新都可能受到 Critic 随机误差的影响。延迟更新将 Actor 的更新间隔拉长到 Critic 更新的 $d$ 倍，相当于在更准确的 $Q$ 估计下做策略改进。
+\end{remark}
+
+\subsection{改进三：目标策略平滑}
+
+过估计偏差的另一个来源是 Q 函数对动作的尖锐峰值——函数近似器可能在状态-动作空间中的某些区域产生不真实的尖锐峰值，而目标 Actor $\mu'$ 正好指向这些峰值。为缓解此问题，TD3 对目标动作添加噪声：
+
+\begin{mydefinition}{目标策略平滑（Target Policy Smoothing）}
+在计算目标值时，对目标 Actor 的输出添加裁剪后的高斯噪声：
+
+\begin{myformula}
+a' = \mu'(s') + \operatorname{clip}\big( \mathcal{N}(0, \sigma_{\text{target}}),\; -c,\; c \big)
+\end{myformula}
+
+其中 $\sigma_{\text{target}}$ 为目标噪声标准差，$c$ 为裁剪范围。典型的参数为 $\sigma_{\text{target}} = 0.2$，$c = 0.5$。
+\end{mydefinition}
+
+目标策略平滑的核心直觉是：在目标动作的邻域内对 Q 值做平滑——如果 Q 函数在 $a'$ 附近的确有一个尖峰，添加噪声后 $a'$ 会偏离尖峰的最优点，Q 值会降低，从而抑制了过估计。
+
+\subsubsection{为什么目标平滑有效}
+
+可以将目标平滑理解为一种隐式的正则化：
+
+\[
+y = r + \gamma \, \E_{\epsilon} \left[ \min_{j=1,2} Q'_{\phi_j}(s', \mu'(s') + \epsilon) \right], \quad \epsilon \sim \operatorname{clip}(\mathcal{N}(0, \sigma^2), -c, c)
+\]
+
+对邻域内 Q 值的平均使得 Critic 倾向于学习"平滑"的 Q 函数——在好的动作附近 Q 值都较高，而非仅在某个精确的动作值上有极高的 Q 值。这增加了策略的鲁棒性。
+
+\subsection{TD3 完整算法}
+
+\begin{myalgorithm}{双延迟深度确定性策略梯度（TD3）}
+\textbf{超参数}：延迟步数 $d$，目标噪声 $\sigma_{\text{target}}$，裁剪范围 $c$，\\
+\qquad\qquad 软更新系数 $\tau$，折扣因子 $\gamma$，探索噪声 $\sigma_{\text{explore}}$\\
+\textbf{输入}：Actor $\mu_\theta$, Critics $Q_{\phi_1}, Q_{\phi_2}$（及对应的目标网络）
+\begin{enumerate}
+    \item 初始化目标网络：$\theta' \leftarrow \theta$, $\phi_1' \leftarrow \phi_1$, $\phi_2' \leftarrow \phi_2$
+    \item 初始化回放缓冲区 $\mathcal{D} \leftarrow \emptyset$
+    \item \textbf{for} $t = 1, 2, \dots, T_{\max}$ \textbf{do}：
+    \item \quad 选择动作：$a = \mu_\theta(s) + \epsilon$，$\epsilon \sim \mathcal{N}(0, \sigma_{\text{explore}})$
+    \item \quad 执行 $a$，观察 $r$, $s'$，存入 $\mathcal{D}$
+    \item \quad 从 $\mathcal{D}$ 中采样 batch $\mathcal{B} = \{(s, a, r, s', d)\}$
+    \item \quad 计算目标动作：$\tilde{a} = \mu_{\theta'}(s') + \operatorname{clip}(\epsilon', -c, c)$，$\epsilon' \sim \mathcal{N}(0, \sigma_{\text{target}})$
+    \item \quad 计算目标值：$y = r + \gamma(1-d) \min_{j=1,2} Q_{\phi_j'}(s', \tilde{a})$
+    \item \quad 更新 Critic：$\mathcal{L}_j = \frac{1}{|\mathcal{B}|} \sum (Q_{\phi_j}(s, a) - y)^2$，$j=1,2$
+    \item \quad \textbf{if} $t \bmod d = 0$ \textbf{then}：
+    \item \quad \quad 更新 Actor：$\nabla_\theta J \approx \frac{1}{|\mathcal{B}|} \sum \nabla_a Q_{\phi_1}(s, a)|_{a=\mu_\theta(s)} \nabla_\theta \mu_\theta(s)$
+    \item \quad \quad 软更新目标网络：
+    \begin{align*}
+        \phi_j' &\leftarrow \tau \phi_j + (1-\tau) \phi_j', \quad j=1,2 \\
+        \theta' &\leftarrow \tau \theta + (1-\tau) \theta'
+    \end{align*}
+    \item \quad \textbf{end if}
+    \item \textbf{end for}
+\end{enumerate}
+\end{myalgorithm}
+
+\begin{remark}
+在目标值公式中，$d$ 是一个 done 标志（当 episode 终止时为 $1$，否则为 $0$）。$(1-d)$ 因子确保在终止状态后的目标值不包含未来奖励。
+\end{remark}
+
+\subsection{TD3 的消融实验分析}
+
+Fujimoto 等人的原始论文通过系统的消融实验分析了三项改进各自的贡献：
+
+\begin{enumerate}
+    \item \textbf{仅添加 CDQ}：过估计显著降低，但方差问题仍存，某些任务上性能反而下降。
+    \item \textbf{仅添加延迟更新}：方差有所降低，但过估计未被处理，在 Q 值较大的任务上表现不佳。
+    \item \textbf{仅添加目标平滑}：Q 函数更平滑，但过估计偏差依然严重。
+    \item \textbf{三项同时使用}：在所有测试任务上均显著优于 DDPG，且与单独每项改进相比都有提升，说明三项改进之间存在协同效应。
+\end{enumerate}
+
+\section{SAC：柔性 Actor-Critic}
+
+SAC（Soft Actor-Critic）由 Haarnoja 等人于 2018 年提出，将最大熵（Maximum Entropy）原则引入 Actor-Critic 框架。SAC 可以视为 TD3 的"随机策略"扩展，它不仅追求高回报，还鼓励策略保留尽可能多的随机性（熵）。
+
+\subsection{最大熵强化学习框架}
+
+在标准 RL 中，目标是最大化期望累积回报：
+
+\[
+J(\pi) = \E_{\tau \sim \pi} \left[ \sum_{t=0}^{\infty} \gamma^t \reward(s_t, a_t) \right]
+\]
+
+最大熵 RL 在目标函数中加入了策略熵的项：
+
+\begin{mydefinition}{最大熵目标}
+\[
+J(\pi) = \E_{\tau \sim \pi} \left[ \sum_{t=0}^{\infty} \gamma^t \big( \reward(s_t, a_t) + \alpha \, \mathcal{H}(\pi(\cdot \mid s_t)) \big) \right]
+\]
+
+其中 $\mathcal{H}(\pi(\cdot \mid s)) = -\E_{a \sim \pi(\cdot \mid s)}[\log \pi(a \mid s)]$ 是策略的熵，$\alpha > 0$ 是温度参数（temperature parameter），控制熵正则化的强度。
+\end{mydefinition}
+
+\subsubsection{熵正则化的好处}
+
+\begin{enumerate}
+    \item \textbf{自动探索}：策略被激励保持随机性，无需手动设计探索策略（如 DDPG 中的 OU 噪声）。只要某个动作不是明确"坏"的，策略就会保留一定的概率尝试它。
+    
+    \item \textbf{鲁棒性}：最大熵策略倾向于学习多种达到目标的"备选方案"，而非过度专注于单一最优路径。当环境动态变化或存在模型误差时，这种多样性使策略更加鲁棒。
+    
+    \item \textbf{多模态捕捉}：在存在多个近似最优动作的状态下，最大熵策略会自然地输出多模态分布，而非强制收敛到单一动作。
+    
+    \item \textbf{更好的探索-利用平衡}：温度参数 $\alpha$ 提供了一个显式的旋钮来调节探索（大 $\alpha$）vs 利用（小 $\alpha$）。
+\end{enumerate}
+
+\subsection{Soft Bellman 方程}
+
+在最大熵框架下，值函数定义被修改为包含熵的"Soft"版本。
+
+\begin{mydefinition}{Soft 状态值函数与 Soft Q 函数}
+Soft 状态值函数：
+\[
+V^{\pi}_{\text{soft}}(s) = \E_{\tau \sim \pi} \left[ \sum_{t=0}^{\infty} \gamma^t \big( \reward(s_t, a_t) + \alpha \mathcal{H}(\pi(\cdot \mid s_t)) \big) \mid s_0 = s \right]
+\]
+
+Soft Q 函数：
+\[
+Q^{\pi}_{\text{soft}}(s, a) = \reward(s, a) + \gamma \, \E_{s' \sim \trans} \left[ V^{\pi}_{\text{soft}}(s') \right]
+\]
+
+两者满足 Soft Bellman 方程：
+\begin{myformula}
+Q^{\pi}_{\text{soft}}(s, a) = \reward(s, a) + \gamma \, \E_{s' \sim \trans,\, a' \sim \pi}
+\Big[ Q^{\pi}_{\text{soft}}(s', a') - \alpha \log \pi(a' \mid s') \Big]
+\end{myformula}
+\end{mydefinition}
+
+关键区别在于：状态值函数从 $Q$ 到 $V$ 的转换不再是简单的 $\max$ 或期望，而是包含了熵的 SoftMax 操作。在离散动作空间中：
+
+\[
+V^{\pi}_{\text{soft}}(s) = \alpha \log \sum_a \exp\left( \frac{1}{\alpha} Q^{\pi}_{\text{soft}}(s, a) \right)
+\]
+
+在连续空间中则是积分形式。
+
+\subsection{Soft Q 函数更新}
+
+SAC 使用函数近似 $Q_{\phi}(s, a)$ 来近似 Soft Q 函数。类似于 TD3，SAC 也使用双 Q 网络来抑制过估计偏差。Soft Bellman 残差为：
+
+\begin{myformula}
+\mathcal{L}_Q(\phi) = \E_{(s,a,r,s') \sim \mathcal{D}}
+\left[ \big( Q_{\phi}(s, a) - \big( r + \gamma ( \min_{j=1,2} Q_{\bar{\phi}_j}(s', a') - \alpha \log \pi_\theta(a' \mid s') ) \big) \big)^2 \right]
+\end{myformula}
+
+其中 $a' \sim \pi_\theta(\cdot \mid s')$ 是从当前策略采样的（重参数化后的）动作，$\bar{\phi}$ 表示目标网络参数。
+
+\subsection{Soft 策略更新：重参数化技巧}
+
+SAC 的策略网络输出一个高斯分布 $\pi_\theta(\cdot \mid s) = \mathcal{N}(\mu_\theta(s), \sigma_\theta(s)^2)$。为了通过采样动作来更新策略（且让梯度可以流过采样操作），SAC 使用重参数化技巧（Reparameterization Trick）：
+
+\[
+a = f_\theta(s, \xi) = \mu_\theta(s) + \sigma_\theta(s) \odot \xi, \quad \xi \sim \mathcal{N}(0, I)
+\]
+
+策略目标是最小化期望 KL 散度（使得策略向 Soft Q 函数引导的方向改进）：
+
+\begin{myformula}
+\mathcal{L}_\pi(\theta) = \E_{s \sim \mathcal{D},\, \xi \sim \mathcal{N}(0,I)}
+\left[ \alpha \log \pi_\theta(f_\theta(s, \xi) \mid s) - \min_{j=1,2} Q_{\phi_j}(s, f_\theta(s, \xi)) \right]
+\end{myformula}
+
+这等价于最小化：
+
+\[
+\mathcal{L}_\pi(\theta) = \E_{s \sim \mathcal{D}} \left[ D_{\text{KL}}\Big( \pi_\theta(\cdot \mid s) \;\|\; \frac{\exp( \frac{1}{\alpha} Q(s, \cdot) )}{Z(s)} \Big) \right]
+\]
+
+即让当前策略逼近以 $Q$ 值为能势的 Boltzmann 分布。
+
+\subsection{温度参数 $\alpha$ 的自动调节}
+
+$\alpha$ 是 SAC 中最关键的超参数。经验上，最优的 $\alpha$ 值在不同任务和不同训练阶段差别很大。SAC 的一个重要创新是\emph{自动调节} $\alpha$。
+
+\begin{mydefinition}{自动温度调节}
+SAC 将 $\alpha$ 的调节建模为以下最小化问题：
+
+\[
+\mathcal{L}(\alpha) = \E_{s \sim \mathcal{D},\, a \sim \pi_\theta} \left[ -\alpha \log \pi_\theta(a \mid s) - \alpha \bar{\mathcal{H}} \right]
+\]
+
+其中 $\bar{\mathcal{H}}$ 是目标熵（target entropy），通常设为 $\bar{\mathcal{H}} = -\dim(\actions)$（即动作空间维度的负值）。
+\end{mydefinition}
+
+直观上，当策略的实际熵高于目标熵时，$\alpha$ 减小（减少熵的奖励权重，鼓励更确定的行为）；当实际熵低于目标熵时，$\alpha$ 增大（增加探索激励）。这使得算法在不同任务和阶段间自动调节探索强度。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.9]
+    \draw[->] (-0.3,0) -- (12,0) node[right] {训练步数};
+    \draw[->] (0,-0.3) -- (0,8) node[above] {};
+    % Grid
+    \foreach \y in {0,1,2,3,4,5,6,7} {
+        \draw[gray!20] (-0.1,\y) -- (11.5,\y);
+        \node[gray!50, left] at (0,\y) {\tiny \y};
+    }
+    \foreach \x in {0,20,40,60,80,100} {
+        \draw[gray!20] (\x*0.11, -0.1) -- (\x*0.11, 7.5);
+        \node[gray!50, below] at (\x*0.11, 0) {\tiny \x};
+    }
+    % Return curve (blue)
+    \draw[blue!60, very thick, smooth] plot coordinates {
+        (0,0) (0.55,0.5) (1.1,1.2) (1.65,2.0) (2.2,2.8) (2.75,3.5) 
+        (3.3,4.2) (3.85,4.8) (4.4,5.3) (4.95,5.7) (5.5,6.0) (6.05,6.3) 
+        (6.6,6.5) (7.15,6.7) (7.7,6.8) (8.25,6.9) (8.8,7.0) (9.35,7.0) 
+        (9.9,7.1) (10.45,7.1) (11.0,7.1)
+    };
+    % log alpha (red, dashed)
+    \draw[red!60, very thick, dashed, smooth] plot coordinates {
+        (0,7.0) (1.1,6.3) (2.2,5.25) (3.3,3.85) (4.4,2.45) (5.5,1.26) 
+        (6.6,0.56) (7.7,0.21) (8.8,0.14) (9.9,0.14) (11.0,0.14)
+    };
+    % Entropy (green, dotted)
+    \draw[green!60!black, very thick, dotted, smooth] plot coordinates {
+        (0,7.0) (1.1,5.6) (2.2,4.48) (3.3,3.5) (4.4,2.52) (5.5,1.68) 
+        (6.6,1.12) (7.7,0.70) (8.8,0.56) (9.9,0.42) (11.0,0.42)
+    };
+    % Legend
+    \draw[blue!60, very thick] (7.5, 7.6) -- (8.2, 7.6); 
+    \node[blue!70, right] at (8.4, 7.6) {\small 累积回报};
+    \draw[red!60, very thick, dashed] (7.5, 7.2) -- (8.2, 7.2);
+    \node[red!70, right] at (8.4, 7.2) {\small $\log \alpha$};
+    \draw[green!60!black, very thick, dotted] (7.5, 6.8) -- (8.2, 6.8);
+    \node[green!70!black, right] at (8.4, 6.8) {\small 策略熵 $\mathcal{H}$};
+    % Y-axis label
+    \node[rotate=90, blue!70] at (-0.8, 3.5) {\small 累积回报};
+    \node[rotate=90, red!70] at (-1.3, 3.5) {\small $\log\alpha$ / $\mathcal{H}$};
+\end{tikzpicture}
+\caption{SAC 训练过程中累积回报、温度参数 $\alpha$（对数尺度）和策略熵的典型演化曲线。随着训练进行，策略逐渐学会获取高回报，同时 $\alpha$ 自动降低（熵也逐渐降低），实现从探索到利用的自然过渡。}
+\label{fig:sac_entropy}
+\end{figure}
+
+\subsection{SAC 完整算法}
+
+\begin{myalgorithm}{柔性 Actor-Critic（SAC）}
+\textbf{超参数}：折扣因子 $\gamma$，软更新系数 $\tau$，目标熵 $\bar{\mathcal{H}}$，学习率\\
+\textbf{输入}：策略 $\pi_\theta$，双 Q 网络 $Q_{\phi_1}, Q_{\phi_2}$，温度参数 $\alpha$
+\begin{enumerate}
+    \item 初始化目标网络：$\bar{\phi}_1 \leftarrow \phi_1$，$\bar{\phi}_2 \leftarrow \phi_2$
+    \item 初始化回放缓冲区 $\mathcal{D} \leftarrow \emptyset$
+    \item \textbf{for each} environment step \textbf{do}：
+    \item \quad $a \sim \pi_\theta(\cdot \mid s)$，执行 $a$，观察 $r$, $s'$, done
+    \item \quad $\mathcal{D} \leftarrow \mathcal{D} \cup \{(s, a, r, s', \text{done})\}$
+    \item \quad \textbf{for each} gradient step \textbf{do}：
+    \item \quad \quad 从 $\mathcal{D}$ 采样 batch $\mathcal{B}$
+    \item \quad \quad 采样 $a' \sim \pi_\theta(\cdot \mid s')$ 和 $\xi \sim \mathcal{N}(0,I)$
+    \item \quad \quad 计算 Q 目标：
+    \begin{align*}
+    y &= r + \gamma(1-\text{done}) \big( \min_{j=1,2} Q_{\bar{\phi}_j}(s', a') - \alpha \log \pi_\theta(a' \mid s') \big)
+    \end{align*}
+    \item \quad \quad 更新 Q 网络：$\phi_j \leftarrow \phi_j - \eta_Q \nabla_{\phi_j} \mathcal{L}_Q(\phi_j)$，$j=1,2$
+    \item \quad \quad 更新策略：$\theta \leftarrow \theta - \eta_\pi \nabla_\theta \mathcal{L}_\pi(\theta)$
+    \item \quad \quad 更新温度：$\alpha \leftarrow \alpha - \eta_\alpha \nabla_\alpha \mathcal{L}(\alpha)$
+    \item \quad \quad 软更新目标网络：$\bar{\phi}_j \leftarrow \tau \phi_j + (1-\tau) \bar{\phi}_j$，$j=1,2$
+    \item \quad \textbf{end for}
+    \item \textbf{end for}
+\end{enumerate}
+\end{myalgorithm}
+
+\begin{remark}
+SAC 是 off-policy 算法（使用经验回放），样本效率远高于 on-policy 的 PPO（通常高出 5--10 倍）。但其缺点是每步环境交互后需要做多次梯度更新（通常 1 次），且双 Q 网络的维护增加了内存开销。
+\end{remark}
+
+\subsection{SAC 与 DDPG / TD3 的系统对比}
+
+\begin{table}[H]
+\centering
+\caption{DDPG、TD3 与 SAC 的系统对比}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{特性} & \textbf{DDPG} & \textbf{TD3} & \textbf{SAC} \\
+\midrule
+策略类型 & 确定性的 & 确定性的 & 随机的（高斯） \\
+Q 网络数 & 1 & 2（取 min） & 2（取 min） \\
+过估计处理 & 无 & CDQ & CDQ \\
+探索机制 & OU / 高斯噪声 & 高斯噪声 & 熵正则化（内在） \\
+策略更新频率 & 每步 & 每 $d$ 步 & 每步 \\
+目标平滑 & 无 & 有 & 隐式（随机策略） \\
+$\max_a Q(s,a)$ & 无（确定性） & 无（确定性） & 无（随机采样） \\
+稳定性 & 低 & 高 & 很高 \\
+样本效率 & 高 & 高 & 很高 \\
+实现复杂度 & 中 & 中 & 较高 \\
+\bottomrule
+\end{tabular}
+\label{tab:algo_compare}
+\end{table}
+
+\section{算法选择指南}
+
+面对具体的连续控制任务，如何选择合适的算法？以下是一个系统性的决策框架。
+
+\subsection{选择维度}
+
+\begin{enumerate}
+    \item \textbf{样本效率}：如果你有一个高保真度的仿真器，且交互成本低廉，那么 on-policy 的 PPO（通过并行化）可能是最好的选择。如果交互成本高昂（如真实机器人），则 SAC 或 TD3 的 off-policy 特性更有利。
+    
+    \item \textbf{稳定性要求}：如果训练崩溃是不可接受的（如在线生产系统），TD3 和 SAC 比 DDPG 更可靠；PPO 的裁剪机制也使其非常稳定。
+    
+    \item \textbf{实现难度}：PPO 的实现最为简洁（核心只有约 10 行），SAC 最复杂（需要维护双 Q 网络、自动温度调节、重参数化等）。
+    
+    \item \textbf{动作空间特性}：如果最优策略本身是确定性的（如精确的位置控制），DDPG/TD3 的确定性策略可能更自然；如果需要探索多模态的行为（如机器人操作中有多种抓取方式），SAC 的随机策略更合适。
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.0]
+    % Radar-like comparison
+    \pgfmathsetmacro{\rad}{2.5}
+    
+    % Background grid
+    \foreach \r in {0.5, 1, 1.5, 2, 2.5} {
+        \draw[gray!30] (0,0) circle (\r);
+    }
+    \foreach \ang in {0,72,144,216,288} {
+        \draw[gray!30] (0,0) -- (\ang:\rad);
+    }
+    
+    % Labels
+    \node[align=center] at (90:\rad+0.6) {稳定性};
+    \node[align=center] at (18:\rad+0.6) {样本效率};
+    \node[align=center] at (-54:\rad+0.6) {实现简洁};
+    \node[align=center] at (-126:\rad+0.6) {探索能力};
+    \node[align=center] at (-198:\rad+0.6) {并行性};
+    
+    % PPO (blue)
+    \draw[blue!60, thick, fill=blue!10, opacity=0.4] 
+        (90:2.1) -- (18:1.2) -- (-54:2.4) -- (-126:1.6) -- (-198:2.5) -- cycle;
+        
+    % TD3 (red)
+    \draw[red!60, thick, fill=red!10, opacity=0.3]
+        (90:1.9) -- (18:2.2) -- (-54:1.6) -- (-126:0.8) -- (-198:1.0) -- cycle;
+        
+    % SAC (green)
+    \draw[green!60!black, thick, fill=green!10, opacity=0.3]
+        (90:2.3) -- (18:2.5) -- (-54:1.0) -- (-126:2.4) -- (-198:1.2) -- cycle;
+    
+    \node[blue!70] at (-1.5, -2.0) {\small PPO};
+    \node[red!70] at (1.5, -2.0) {\small TD3};
+    \node[green!70!black] at (0, -2.5) {\small SAC};
+\end{tikzpicture}
+\caption{PPO vs TD3 vs SAC 的多维对比雷达图。PPO 在实现简洁和并行性上占优；TD3 在稳定性上表现良好；SAC 在样本效率和探索能力上领先。注意：此图为定性示意，具体表现因任务而异。}
+\label{fig:algo_radar}
+\end{figure}
+
+\subsection{推荐流程}
+
+\begin{enumerate}
+    \item \textbf{从 PPO 开始}：实现简单、调参友好、性能稳定。如果样本效率不是瓶颈，PPO 通常是最快的上手选择。
+    
+    \item \textbf{如果样本效率成为瓶颈}：切换到 SAC。SAC 在样本效率、稳定性和最终性能之间取得了最佳平衡，是当前连续控制领域最重要的 SOTA 算法之一。
+    
+    \item \textbf{如果 SAC 仍然不稳定}：尝试 TD3。TD3 在一些对探索要求不高但需要精确控制的任务上（如精确的位置跟踪）可能优于 SAC。
+    
+    \item \textbf{如果需要在真实机器人上部署}：考虑模型的 Sim-to-Real 迁移（第 12 章），在仿真中使用 SAC 训练，再迁移到真实环境。
+\end{enumerate}
+
+\section{本章小结}
+
+本章系统介绍了连续动作空间中深度强化学习的三大里程碑算法：DDPG、TD3 和 SAC。DDPG 首次将 DQN 的经验回放和目标网络技术成功移植到 Actor-Critic 框架中，为连续控制打开了大门。TD3 通过三项精巧改进（Clipped Double Q-Learning、延迟策略更新、目标策略平滑）解决了 DDPG 的过估计和不稳定问题。SAC 将最大熵原则引入 Actor-Critic，通过天然的探索机制和自动温度调节，在样本效率和最终性能上都达到了新的高度。这三种算法代表了连续控制 RL 中"确定性 $\to$ 随机性"、"手工探索 $\to$ 自动探索"、"单一 Q $\to$ 双 Q"的进化脉络，为下一章即将讨论的模型基方法奠定了重要的算法基础。
+
+\end{chapter}

@@ -1,0 +1,191 @@
+\documentclass[10pt,a4paper]{book}
+\usepackage{ctex} 
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{graphicx,xcolor,color,subcaption}
+\usepackage{amssymb,amsmath,amsthm}
+\usepackage{newpxtext,mathpazo}    
+\usepackage{booktabs}
+\usepackage{newclude,ulem}
+\usepackage{makecell}
+\usepackage{multirow}
+\usepackage{array}
+\definecolor{winered}{rgb}{0.5,0,0}
+\definecolor{structurecolor}{RGB}{122,122,142}
+\definecolor{main}{rgb}{0.5,0,0}
+\definecolor{second}{RGB}{115,45,2}
+\definecolor{third}{RGB}{0,80,80}
+\usepackage[colorlinks,linkcolor = winered]{hyperref}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\usepackage{amsthm}
+\newtheoremstyle{defstyle}{3pt}{3pt}{\kaishu}{-3pt}{
+	\bfseries\color{main}}{}{0.5em}{\indent 【\thmname{#1} \thmnumber{#2}】 \thmnote{(#3)}}
+\newtheoremstyle{thmstyle}{3pt}{3pt}{\kaishu}{-3pt}{
+	\bfseries\color{second}}{}{0.5em}{\indent【\thmname{#1} \thmnumber{#2}】 \thmnote{(#3)}}
+\newtheoremstyle{prostyle}{3pt}{3pt}{\kaishu}{-3pt}{
+	\bfseries\color{third}}{}{0.5em}{\indent【\thmname{#1} \thmnumber{#2}】 \thmnote{(#3)}}
+
+\theoremstyle{thmstyle}
+\newtheorem{theorem}{定理}[chapter]
+\theoremstyle{defstyle}
+\newtheorem{definition}[theorem]{定义}
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{corollary}[theorem]{推论}
+\theoremstyle{prostyle}
+\newtheorem{proposition}[theorem]{命题}
+\newtheorem{example}[theorem]{例题}
+\newtheorem{algorithm}[theorem]{算法}
+
+\renewenvironment{proof}[1][证明]{\par{\kaishu \uline{\textbf{#1.}}} \;\fangsong}{\qed\par}
+\newenvironment{solution}{\par\underline{\textbf{解.}} \;\kaishu}{\par}
+\newenvironment{remark}{\par\underline{\textbf{注.}} \;\fangsong}{\par}
+\newcommand{\intro}[1]{\rightline{\parbox[t]{5cm}{\footnotesize \fangsong\quad\quad #1 }}}
+
+\usepackage{enumerate}
+\usepackage{enumitem}
+\setlist[enumerate,1]{label=\color{structurecolor}\arabic*.}
+\setlist[enumerate,2]{label=\color{structurecolor}(\arabic*).}
+\setlist[enumerate,3]{label=\color{structurecolor}\Roman*.}
+\setlist[enumerate,4]{label=\color{structurecolor}\Alph*.}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{angles, quotes, arrows.meta, calc, patterns, backgrounds, decorations.pathreplacing, positioning, shapes, fit, matrix, intersections}
+
+\usepackage{titlesec, titletoc}
+\linespread{1.25}
+
+\usepackage{fancyhdr}
+\fancypagestyle{plain}{%
+	\fancyhf{}
+	\renewcommand{\headrulewidth}{0pt}
+	\renewcommand{\footrulewidth}{0pt}
+}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\small\kaishu 强化学习：从数学基础到机器人控制}
+\fancyhead[RE,LO]{\small\kaishu \leftmark}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titlecontents{chapter}[0em]{}{\large \fangsong{第 \thecontentslabel 章\quad}}{}{\hfill\contentspage}
+\titlecontents{section}[2em]{}{\thecontentslabel\quad\textcolor{blue}}{}{\titlerule*{ .} \contentspage}
+
+\titleformat{\chapter}[display]{\Large}
+{\color{structurecolor}\centering\small \color{structurecolor}第 \zhnumber{\arabic{chapter}} \ 章 }{0.5ex}
+{\color{structurecolor}{\titlerule[1pt]}\Large \kaishu \centering \bfseries}
+
+\titleformat{\section}[frame]
+{\normalfont\color{structurecolor}}
+{\footnotesize \enspace \large \textcolor{structurecolor}{\S \,\thesection}\enspace}{6pt}
+{\Large\filcenter \bf \kaishu }
+
+\titlespacing*{\section}{1pc}{*7}{*2.3}[1pc]
+\titleformat{\subsection}[hang]{\bfseries}{
+	\large\bfseries\color{structurecolor}\thesubsection\enspace}{1pt}{%
+	\color{structurecolor}\large\bfseries\filright}
+
+\newtcolorbox{myTheorem}[1]{
+    colframe=blue!50!black, colback=blue!5!white,
+    title=#1, fonttitle=\bfseries, boxrule=0.5mm,
+    before skip=10pt, after skip=10pt,
+    segmentation style={blue!50!black, line width=0.5mm},
+}
+\newtcolorbox{myhypothesis}[1]{
+    colframe=green!50!black, colback=green!5!white,
+    title=#1, fonttitle=\bfseries, boxrule=0.5mm,
+    before skip=10pt, after skip=10pt,
+    segmentation style={green!50!black, line width=0.5mm},
+}
+\newtcolorbox{mydefinition}[1]{
+    colframe=red!50!black, colback=red!5!white,
+    title=#1, fonttitle=\bfseries, boxrule=0.5mm,
+    before skip=10pt, after skip=10pt,
+    segmentation style={red!50!black, line width=0.5mm},
+}
+\newtcolorbox{myalgorithm}[1]{
+    colframe=orange!50!black, colback=orange!5!white,
+    title=#1, fonttitle=\bfseries, boxrule=0.5mm,
+    before skip=10pt, after skip=10pt,
+    segmentation style={orange!50!black, line width=0.5mm},
+}
+
+\tcbuselibrary{skins, breakable, theorems}
+\newtcolorbox{myformula}[1][]{
+    colframe=brown!50!black, colback=brown!5!white,
+    boxrule=0.5mm, before skip=10pt, after skip=10pt,
+    halign=center, valign=center, sharp corners,
+    ams align, #1
+}
+
+\definecolor{DarkBlue}{RGB}{0,0,139}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\T}{\ensuremath{^{\mathsf{T}}}}
+\newcommand{\states}{\mathcal{S}}
+\newcommand{\actions}{\mathcal{A}}
+\newcommand{\trans}{\mathcal{P}}
+\newcommand{\reward}{\mathcal{R}}
+
+\newcommand{\bellman}{Bellman}
+\newcommand{\mc}{Monte Carlo}
+
+\begin{document}
+	\begin{titlepage}
+		\begin{tikzpicture}[remember picture, overlay]
+			\fill[white] (current page.south west) rectangle (current page.north east);
+			\fill[DarkBlue] ([yshift=-10cm]current page.north west) rectangle ([yshift=-10.3cm]current page.north east);
+			
+			\node[anchor=center, text=DarkBlue] at ([yshift=-16cm]current page.north) {
+				\begin{minipage}{0.85\paperwidth}
+					\centering
+					{\fontsize{36}{44}\sffamily\bfseries 强化学习} \\[0.5cm]
+					{\fontsize{20}{28}\sffamily 从数学基础到机器人控制} \\[1.5cm]
+					{\fontsize{14}{18}\kaishu 基于强化学习的机器人运动控制策略} \\[2cm]
+					{\fontsize{16}{20}\Large 魏舟 } \\[0.5cm]
+					{\large \today}
+				\end{minipage}
+			};
+		\end{tikzpicture}
+	\end{titlepage}
+	
+	\newpage
+	\thispagestyle{empty}
+	\vspace*{4cm}
+	\begin{center}
+		{\Large \kaishu 内容提要}
+	\end{center}
+	\vspace{1cm}
+	
+	本书从最基础的数学知识出发，系统介绍强化学习（Reinforcement Learning, RL）的理论、算法及其在机器人控制中的应用。全书共十二章：第1章回顾必要的数学基础；第2--4章建立马尔可夫决策过程的框架并介绍经典求解方法；第5--9章深入深度强化学习的核心算法；第10--12章聚焦机器人运动学、动力学及强化学习在实际机器人控制中的部署。
+	
+	本书的特点在于：（1）从概率论和线性代数的最基本概念开始，降低初学者的入门门槛；（2）所有算法均附有伪代码，便于读者实现；（3）在机器人控制部分，与Denavit-Hartenberg参数法和刚体动力学算法紧密衔接；（4）涵盖从仿真到真实机器人（Sim-to-Real）的最新研究进展。
+	
+	\vspace{2cm}
+	\begin{flushright}
+		\kaishu 魏舟 \\
+		2025年7月
+	\end{flushright}
+	
+	\newpage
+	\tableofcontents
+	
+	\setcounter{page}{0}
+	\thispagestyle{empty}
+	\newpage
+	
+	% === CHAPTERS ===
+	\input{Chapter01}
+	\input{Chapter02}
+	\input{Chapter03}
+	\input{Chapter04}
+	\input{Chapter05}
+	\input{Chapter06}
+	\input{Chapter07}
+	\input{Chapter08}
+	\input{Chapter09}
+	\input{Chapter10}
+	\input{Chapter11}
+	\input{Chapter12}
+	
+\end{document}

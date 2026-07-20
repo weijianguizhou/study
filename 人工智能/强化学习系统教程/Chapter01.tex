@@ -1,0 +1,871 @@
+\chapter{数学基础}
+
+\intro{``Mathematics is the language with which God has written the universe.''\par
+\hfill --- Galileo Galilei\par
+本章建立强化学习所需的数学基础。强化学习处于概率论、线性代数、优化理论和微积分的交叉点。掌握这些数学工具，是深入理解后续所有算法的前提。每一小节末尾均标注该知识点在强化学习中的具体应用场景，帮助读者建立概念之间的桥梁。}
+
+% ======================================================================
+\section{概率论基础}
+% ======================================================================
+
+概率论是强化学习的核心数学语言。智能体在不确定环境中决策，奖励信号带有随机性，状态转移可能是随机的---这些都要求我们使用概率工具来建模和分析。本节从随机变量的基本概念出发，逐步深入到重要性采样等高级技术。
+
+% ----------------------------------------------------------------------
+\subsection{随机变量与概率分布}
+% ----------------------------------------------------------------------
+
+\begin{mydefinition}{随机变量}
+随机变量 $X$ 是从样本空间 $\Omega$ 到实数集 $\R$ 的一个可测函数。随机变量分为两类：
+\begin{itemize}
+    \item \textbf{离散随机变量}：取值于有限或可数无限集合 $\{x_1, x_2, \dots\}$，由\textbf{概率质量函数}(PMF) $p(x) = \Pr(X = x)$ 描述。
+    \item \textbf{连续随机变量}：取值于连续区间，由\textbf{概率密度函数}(PDF) $f(x)$ 描述，满足 $\Pr(a \le X \le b) = \int_a^b f(x)\,dx$。
+\end{itemize}
+\end{mydefinition}
+
+概率分布必须满足归一化条件：
+\begin{myformula}
+\sum_{x} p(x) = 1 \quad \text{(离散)}, \qquad \int_{-\infty}^{\infty} f(x)\,dx = 1 \quad \text{(连续)}
+\end{myformula}
+
+\textbf{常见的离散分布：}
+\begin{itemize}
+    \item \textbf{Bernoulli分布} $\mathrm{Bernoulli}(\theta)$：$p(x) = \theta^x (1-\theta)^{1-x}$，$x \in \{0,1\}$。描述单次二元试验。
+    \item \textbf{分类分布 (Categorical)} $\mathrm{Cat}(\theta_1, \dots, \theta_K)$：$p(x = k) = \theta_k$，$\sum_k \theta_k = 1$。Bernoulli的多类推广。在RL中，随机策略 $\pi(a \mid s)$ 正是对每个状态 $s$ 定义的一个分类分布。
+    \item \textbf{二项分布} $\mathrm{Binomial}(n, \theta)$：$p(k) = \binom{n}{k} \theta^k (1-\theta)^{n-k}$。描述 $n$ 次独立Bernoulli试验中成功的次数。
+    \item \textbf{Poisson分布} $\mathrm{Poisson}(\lambda)$：$p(k) = \frac{\lambda^k e^{-\lambda}}{k!}$。描述单位时间内随机事件发生的次数，在排队论和强化学习的到达过程建模中有应用。
+\end{itemize}
+
+\textbf{常见的连续分布：}
+\begin{itemize}
+    \item \textbf{均匀分布} $U(a, b)$：$f(x) = \frac{1}{b-a}$，$x \in [a, b]$。
+    \item \textbf{正态分布} $\mathcal{N}(\mu, \sigma^2)$：$f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)$。中心极限定理保证了许多随机现象的极限分布为正态分布。在RL中，策略梯度方法常用正态分布作为连续动作空间的策略参数化形式。
+    \item \textbf{指数分布} $\mathrm{Exp}(\lambda)$：$f(x) = \lambda e^{-\lambda x}$，$x \ge 0$。具有无记忆性，与马尔可夫性质密切相关。
+\end{itemize}
+
+\begin{myTheorem}{概率分布函数的性质}
+任一概率分布函数（PMF或PDF）$p(x)$ 满足：
+\begin{enumerate}
+    \item \textbf{非负性}：$p(x) \ge 0$ 对所有 $x$ 成立。
+    \item \textbf{归一化}：$\sum_x p(x) = 1$ 或 $\int p(x)dx = 1$。
+    \item \textbf{可加性}：对互斥事件 $A$ 和 $B$，$\Pr(A \cup B) = \Pr(A) + \Pr(B)$。
+\end{enumerate}
+\end{myTheorem}
+
+\begin{tikzpicture}[scale=1.2]
+    \draw[->] (-0.5,0) -- (8,0) node[right] {$x$};
+    \draw[->] (0,-0.2) -- (0,3.5) node[above] {$p(x)$};
+    % Discrete PMF
+    \foreach \x/\y in {1/1.2,2/2.8,3/2.0,4/0.8,5/0.3} {
+        \draw[blue, thick] (\x,0) -- (\x,\y);
+        \fill[blue] (\x,\y) circle (1.5pt);
+        \fill[blue] (\x,0) circle (1.5pt);
+    }
+    \node[blue] at (3,-0.5) {离散分布 (PMF)};
+    % Continuous PDF  
+    \draw[domain=0.5:5.5,smooth,variable=\x,red,thick] plot ({\x+1.2},{2.0*exp(-(\x-2.5)^2/1.2)});
+    \node[red] at (5.5,1.0) {连续分布 (PDF)};
+\end{tikzpicture}
+
+% ----------------------------------------------------------------------
+\subsection{条件概率、贝叶斯公式与全概率公式}
+% ----------------------------------------------------------------------
+
+\begin{mydefinition}{条件概率}
+事件 $A$ 在事件 $B$ 已发生条件下的条件概率定义为：
+\begin{myformula}
+\Pr(A \mid B) = \frac{\Pr(A \cap B)}{\Pr(B)}, \quad \Pr(B) > 0
+\end{myformula}
+\end{mydefinition}
+
+条件概率是强化学习的基石。策略 $\pi(a \mid s)$ 本身就是条件概率：在状态 $s$ 下选择动作 $a$ 的概率。状态转移概率 $p(s' \mid s, a)$ 也是条件概率：在状态 $s$ 执行动作 $a$ 后转移到 $s'$ 的概率。
+
+由条件概率定义可直接导出\textbf{乘法法则}：
+\begin{myformula}
+\Pr(A \cap B) = \Pr(A \mid B) \Pr(B) = \Pr(B \mid A) \Pr(A)
+\end{myformula}
+
+推广到 $n$ 个事件的\textbf{链式法则}：
+\begin{myformula}
+\Pr(A_1 \cap A_2 \cap \dots \cap A_n) = \Pr(A_1) \Pr(A_2 \mid A_1) \Pr(A_3 \mid A_1, A_2) \cdots \Pr(A_n \mid A_1, \dots, A_{n-1})
+\end{myformula}
+
+\textbf{链式法则在RL中的核心应用}：给定策略 $\pi$ 和MDP，一条轨迹 $\tau = (s_0, a_0, s_1, a_1, \dots, s_T)$ 的概率为：
+\begin{myformula}
+\Pr(\tau) = p(s_0) \prod_{t=0}^{T-1} \pi(a_t \mid s_t) \, p(s_{t+1} \mid s_t, a_t)
+\end{myformula}
+这是策略梯度方法中似然比技巧的基础。
+
+\begin{myTheorem}{全概率公式 (Law of Total Probability)}
+设 $B_1, B_2, \dots, B_n$ 为样本空间的一个划分（互斥且穷尽），则对任意事件 $A$：
+\begin{myformula}
+\Pr(A) = \sum_{i=1}^{n} \Pr(A \mid B_i) \Pr(B_i)
+\end{myformula}
+连续形式：$\Pr(A) = \int \Pr(A \mid B = b) \, f_B(b) \, db$。
+\end{myTheorem}
+
+\begin{proof}
+由划分定义：$A = A \cap \left(\bigcup_{i=1}^{n} B_i\right) = \bigcup_{i=1}^{n} (A \cap B_i)$。由于 $B_i$ 互斥，$(A \cap B_i)$ 也互斥，故：
+\begin{align*}
+\Pr(A) = \sum_{i=1}^{n} \Pr(A \cap B_i) = \sum_{i=1}^{n} \Pr(A \mid B_i) \Pr(B_i)
+\end{align*}
+\end{proof}
+
+\textbf{全概率公式在RL中的应用}：Bellman方程的核心推导依赖全概率公式。状态值函数定义为：
+\[
+V^{\pi}(s) = \E_\pi[G_t \mid S_t = s] = \sum_a \pi(a \mid s) \sum_{s', r} p(s', r \mid s, a) [r + \gamma V^{\pi}(s')]
+\]
+这里对动作 $a$ 求期望和对后继状态 $(s', r)$ 求期望，本质上就是两次应用全概率公式。
+
+\begin{myTheorem}{贝叶斯公式 (Bayes' Rule)}
+\begin{myformula}
+\Pr(B_i \mid A) = \frac{\Pr(A \mid B_i) \Pr(B_i)}{\sum_{j=1}^{n} \Pr(A \mid B_j) \Pr(B_j)}
+\end{myformula}
+其中分母正是全概率公式。术语上：$\Pr(B_i)$ 为\textbf{先验概率}，$\Pr(B_i \mid A)$ 为\textbf{后验概率}，$\Pr(A \mid B_i)$ 为\textbf{似然}。
+\end{myTheorem}
+
+\begin{example}
+\textbf{医学诊断与贝叶斯更新}：某疾病发病率为 $1\%$，检测准确率为 $99\%$（真阳性率），假阳性率为 $2\%$。若某人检测呈阳性，他真正患病的概率是多少？
+
+设 $D$ 为患病事件，$T^+$ 为检测阳性。已知：
+\[
+\Pr(D) = 0.01,\quad \Pr(T^+ \mid D) = 0.99,\quad \Pr(T^+ \mid \neg D) = 0.02
+\]
+由贝叶斯公式：
+\begin{align*}
+\Pr(D \mid T^+) &= \frac{0.99 \times 0.01}{0.99 \times 0.01 + 0.02 \times 0.99} \\
+&= \frac{0.0099}{0.0099 + 0.0198} = \frac{0.0099}{0.0297} \approx 0.333
+\end{align*}
+仅 $33.3\%$！这个反直觉的结果说明：即使高准确率测试，对于罕见病，阳性结果也可能大部分是假阳性。
+
+\textbf{RL启示}：在部分可观测环境中，智能体需要根据观测序列不断更新对隐藏状态的信念，这正是贝叶斯滤波的思想。
+\end{example}
+
+% ----------------------------------------------------------------------
+\subsection{期望、方差与协方差}
+% ----------------------------------------------------------------------
+
+\begin{mydefinition}{期望 (Expectation)}
+离散随机变量 $X$ 的期望为：
+\[
+\E[X] = \sum_{x} x \, p(x)
+\]
+连续随机变量：$\E[X] = \int x \, f(x) \, dx$。
+
+对函数 $g(X)$ 的期望：$\E[g(X)] = \sum_x g(x) p(x)$（离散）或 $\int g(x) f(x) dx$（连续）。
+\end{mydefinition}
+
+\textbf{期望的线性性质}（极其重要）：
+\begin{myformula}
+\E[aX + bY] = a\E[X] + b\E[Y]
+\end{myformula}
+注意：线性性不要求 $X$ 和 $Y$ 独立。这一性质简化了RL中大量推导。
+
+\begin{mydefinition}{方差与标准差}
+方差度量随机变量偏离其均值的程度：
+\begin{align*}
+\mathrm{Var}[X] &= \E[(X - \E[X])^2] = \E[X^2] - (\E[X])^2
+\end{align*}
+标准差 $\sigma_X = \sqrt{\mathrm{Var}[X]}$，与 $X$ 具有相同量纲。
+\end{mydefinition}
+
+方差的性质：
+\begin{itemize}
+    \item $\mathrm{Var}[aX + b] = a^2 \mathrm{Var}[X]$
+    \item 若 $X, Y$ 独立，则 $\mathrm{Var}[X + Y] = \mathrm{Var}[X] + \mathrm{Var}[Y]$
+    \item 若 $X, Y$ 不独立，则 $\mathrm{Var}[X + Y] = \mathrm{Var}[X] + \mathrm{Var}[Y] + 2\mathrm{Cov}[X, Y]$
+\end{itemize}
+
+\begin{mydefinition}{协方差与相关系数}
+协方差度量两个随机变量的线性相关程度：
+\[
+\mathrm{Cov}[X, Y] = \E[(X - \E[X])(Y - \E[Y])] = \E[XY] - \E[X]\E[Y]
+\]
+相关系数（标准化协方差）：
+\[
+\rho_{XY} = \frac{\mathrm{Cov}[X, Y]}{\sqrt{\mathrm{Var}[X] \mathrm{Var}[Y]}} \in [-1, 1]
+\]
+\end{mydefinition}
+
+\begin{remark} \textbf{为什么对RL重要？}
+回报 $G_t = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1}$ 是一个随机变量。RL算法的核心就是估计 $\E[G_t \mid S_t = s]$（值函数）。方差在RL中同样关键：高方差意味着估计不稳定，actor-critic方法引入baseline的核心动机就是减少策略梯度估计的方差$\mathrm{Var}[\nabla_\theta J(\theta)]$。协方差在理解不同状态之间值估计的相关性、以及多任务强化学习中也很重要。
+\end{remark}
+
+% ----------------------------------------------------------------------
+\subsection{大数定律与中心极限定理}
+% ----------------------------------------------------------------------
+
+\begin{myTheorem}{大数定律（Law of Large Numbers, LLN）}
+设 $X_1, X_2, \dots, X_n$ 为独立同分布 (i.i.d.) 随机变量，$\E[X_i] = \mu$。则样本均值依概率收敛于 $\mu$：
+\[
+\bar{X}_n = \frac{1}{n} \sum_{i=1}^{n} X_i \xrightarrow{P} \mu \quad (n \to \infty)
+\]
+\emph{强}大数定律：$\bar{X}_n \xrightarrow{\text{a.s.}} \mu$（几乎必然收敛）。
+\end{myTheorem}
+
+LLN是统计估计方法的理论基础。在RL中，Monte Carlo方法的核心思想就是用大量采样轨迹的平均回报来估计值函数。例如，对状态 $s$ 的 $n$ 次访问得到的回报 $G^{(1)}, G^{(2)}, \dots, G^{(n)}$：
+\[
+V(s) \approx \frac{1}{n} \sum_{i=1}^{n} G^{(i)}
+\]
+LLN保证了当 $n \to \infty$ 时这个估计收敛到真实值。
+
+\begin{myTheorem}{中心极限定理（Central Limit Theorem, CLT）}
+设 $X_1, \dots, X_n \overset{\text{i.i.d.}}{\sim} (\mu, \sigma^2)$，则标准化样本均值的分布收敛到标准正态分布：
+\[
+\frac{\bar{X}_n - \mu}{\sigma / \sqrt{n}} \xrightarrow{d} \mathcal{N}(0, 1) \quad (n \to \infty)
+\]
+等价地，$\bar{X}_n \approx \mathcal{N}\left(\mu, \frac{\sigma^2}{n}\right)$。
+\end{myTheorem}
+
+CLT告诉我们：估计误差大约以 $O(1/\sqrt{n})$ 的速率衰减，且误差近似服从正态分布。这为RL中构建置信区间和进行假设检验提供了理论基础。例如，在bandit问题中，Upper Confidence Bound (UCB) 算法正是基于Hoeffding不等式（CLT的泛化版本）来选择动作。
+
+% ----------------------------------------------------------------------
+\subsection{条件期望与全期望公式}
+% ----------------------------------------------------------------------
+
+\begin{mydefinition}{条件期望}
+给定 $Y = y$ 时 $X$ 的条件期望为：
+\[
+\E[X \mid Y = y] = \sum_x x \cdot \Pr(X = x \mid Y = y) \quad \text{或} \quad \int x \, f_{X \mid Y}(x \mid y) \, dx
+\]
+$\E[X \mid Y]$ 本身是一个关于 $Y$ 的随机变量：当 $Y = y$ 时取值为 $\E[X \mid Y = y]$。
+\end{mydefinition}
+
+\begin{myTheorem}{全期望公式 (Law of Total Expectation)}
+\begin{myformula}
+\E[X] = \E_Y\big[\E_X[X \mid Y]\big]
+\end{myformula}
+即：无条件期望等于条件期望的期望。
+\end{myTheorem}
+
+\begin{proof}
+对于离散情况：
+\begin{align*}
+\E_Y[\E_X[X \mid Y]] &= \sum_y \E[X \mid Y = y] \Pr(Y = y) \\
+&= \sum_y \left(\sum_x x \Pr(X = x \mid Y = y)\right) \Pr(Y = y) \\
+&= \sum_x x \sum_y \Pr(X = x, Y = y) = \sum_x x \Pr(X = x) = \E[X]
+\end{align*}
+\end{proof}
+
+\textbf{全期望公式在RL中的核心应用}：它是Bellman方程推导的核心工具。例如，状态值函数 $V^{\pi}(s) = \E[G_t \mid S_t = s]$：
+\[
+V^{\pi}(s) = \E[G_t \mid S_t = s] = \E[R_{t+1} + \gamma G_{t+1} \mid S_t = s]
+\]
+应用全期望公式，对 $S_{t+1}$（和 $A_t$）取条件：
+\begin{align*}
+V^{\pi}(s) &= \E_{A_t \sim \pi(\cdot \mid s)}\left[\E_{S_{t+1}, R_{t+1}}\left[R_{t+1} + \gamma \E[G_{t+1} \mid S_{t+1}] \;\middle|\; S_t = s, A_t\right]\right] \\
+&= \sum_a \pi(a \mid s) \sum_{s', r} p(s', r \mid s, a) \left[r + \gamma V^{\pi}(s')\right]
+\end{align*}
+这正是Bellman期望方程！可以说，理解全期望公式就理解了Bellman方程的本质。
+
+全方差公式（方差分解）同样有用：
+\[
+\mathrm{Var}[X] = \E[\mathrm{Var}[X \mid Y]] + \mathrm{Var}[\E[X \mid Y]]
+\]
+在RL中，这一分解帮助我们理解回报方差中哪些来自环境随机性，哪些来自策略随机性。
+
+% ----------------------------------------------------------------------
+\subsection{重要性采样 (Importance Sampling)}
+% ----------------------------------------------------------------------
+
+\begin{mydefinition}{重要性采样}
+设我们希望估计 $\E_{x \sim p}[f(x)]$，但难以从 $p$ 采样。重要性采样利用一个易采样的提议分布 $q$（满足 $q(x) > 0$ 当 $p(x) > 0$）：
+\begin{myformula}
+\E_{x \sim p}[f(x)] = \sum_x f(x) p(x) = \sum_x f(x) \frac{p(x)}{q(x)} q(x) = \E_{x \sim q}\left[\frac{p(x)}{q(x)} f(x)\right]
+\end{myformula}
+其中 $w(x) = p(x)/q(x)$ 称为\textbf{重要性权重}。
+\end{mydefinition}
+
+实际中，我们从 $q$ 采样 $x^{(1)}, \dots, x^{(n)}$，构建估计：
+\[
+\hat{\mu}_{\mathrm{IS}} = \frac{1}{n} \sum_{i=1}^{n} w(x^{(i)}) f(x^{(i)})
+\]
+
+\textbf{在RL中的核心应用}：\textbf{离策略(off-policy)学习}。当行为策略 $b$（用于采样）与目标策略 $\pi$（待评估）不同时，我们需要用重要性采样校正分布差异。例如，在off-policy Monte Carlo中，一条轨迹 $\tau$ 的重要性权重为：
+\[
+w(\tau) = \prod_{t=0}^{T-1} \frac{\pi(A_t \mid S_t)}{b(A_t \mid S_t)}
+\]
+这本质上就是用重要性采样从$b$生成的轨迹中无偏估计$\pi$的值函数。
+
+\begin{myTheorem}{重要性采样的无偏性与方差}
+$\E_q[w(x) f(x)] = \E_p[f(x)]$，故IS估计是无偏的。其方差为：
+\[
+\mathrm{Var}_q[w(x) f(x)] = \E_q[w(x)^2 f(x)^2] - (\E_p[f(x)])^2
+\]
+当 $p$ 和 $q$ 差异很大时，重要性权重方差极大，导致估计不可靠。这就解释了为什么off-policy方法在策略差异大时需要额外的方差削减技术。
+\end{myTheorem}
+
+\textbf{加权重要性采样 (Weighted IS)} 是一种偏差-方差权衡：
+\[
+\hat{\mu}_{\mathrm{WIS}} = \frac{\sum_{i=1}^{n} w(x^{(i)}) f(x^{(i)})}{\sum_{i=1}^{n} w(x^{(i)})}
+\]
+WIS是有偏的，但方差通常远小于普通IS。在RL中，加权重要性采样常用于off-policy策略评估。
+
+\begin{example}
+设目标分布 $p = \mathcal{N}(0, 1)$（标准正态），我们希望估计 $\E_p[x^2] = 1$（方差）。
+若我们只能用 $q = \mathcal{N}(1, 1)$ 采样。重要性权重：
+\begin{align*}
+w(x) = \frac{\frac{1}{\sqrt{2\pi}} e^{-x^2/2}}{\frac{1}{\sqrt{2\pi}} e^{-(x-1)^2/2}} = \exp\left(-\frac{x^2}{2} + \frac{(x-1)^2}{2}\right) = \exp\left(\frac{1}{2} - x\right)
+\end{align*}
+从 $q$ 采 $n=10000$ 个样本并计算IS估计，可得到接近 $1.0$ 的估计值（尽管$q$与$p$有偏移）。普通IS的权重方差较大，但WIS能给出更稳定的估计。
+\end{example}
+
+% ======================================================================
+\section{线性代数基础}
+% ======================================================================
+
+强化学习中，值函数是向量（每个状态对应一个分量），转移概率是矩阵，策略评估本质上是求解线性方程组。扎实的线性代数是理解算法收敛性和实现高效计算的关键。
+
+% ----------------------------------------------------------------------
+\subsection{向量与矩阵}
+% ----------------------------------------------------------------------
+
+\begin{mydefinition}{向量}
+$n$ 维实向量 $\mathbf{x} \in \R^n$ 是一个有序的 $n$ 元组：$\mathbf{x} = (x_1, x_2, \dots, x_n)^\T$。在RL中，值函数 $\mathbf{V} \in \R^{|\states|}$ 是一个向量，每一分量对应一个状态的值。
+\end{mydefinition}
+
+\textbf{向量运算：}
+\begin{itemize}
+    \item \textbf{内积}：$\langle \mathbf{x}, \mathbf{y} \rangle = \mathbf{x}^\T \mathbf{y} = \sum_{i=1}^{n} x_i y_i$
+    \item \textbf{外积}：$\mathbf{x} \mathbf{y}^\T \in \R^{n \times m}$（若 $\mathbf{x} \in \R^n, \mathbf{y} \in \R^m$）
+    \item \textbf{线性组合}：$\sum_{i=1}^{k} c_i \mathbf{v}_i$
+\end{itemize}
+
+在RL中，值函数的Bellman方程可以紧凑表示为向量形式：
+\[
+\mathbf{V}^{\pi} = \mathbf{R}^{\pi} + \gamma \mathbf{P}^{\pi} \mathbf{V}^{\pi}
+\]
+其中 $\mathbf{P}^{\pi} \in \R^{|\states| \times |\states|}$ 是策略$\pi$下的状态转移矩阵。
+
+\begin{mydefinition}{矩阵}
+$m \times n$ 矩阵 $\mathbf{A} \in \R^{m \times n}$：
+\[
+\mathbf{A} = \begin{bmatrix}
+a_{11} & a_{12} & \cdots & a_{1n} \\
+a_{21} & a_{22} & \cdots & a_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{m1} & a_{m2} & \cdots & a_{mn}
+\end{bmatrix}
+\]
+\end{mydefinition}
+
+\textbf{矩阵乘法} $(\mathbf{AB})_{ij} = \sum_{k} a_{ik} b_{kj}$（$\mathbf{A} \in \R^{m \times k}$，$\mathbf{B} \in \R^{k \times n}$）。矩阵乘法不满足交换律：$\mathbf{AB} \neq \mathbf{BA}$（一般情况）。
+
+\textbf{特殊矩阵：}
+\begin{itemize}
+    \item \textbf{单位矩阵} $\mathbf{I}_n$：$(\mathbf{I})_{ij} = \delta_{ij}$（Kronecker delta），$\mathbf{I}\mathbf{A} = \mathbf{A}\mathbf{I} = \mathbf{A}$
+    \item \textbf{对角矩阵} $\mathrm{diag}(d_1, \dots, d_n)$：非对角线元素为零
+    \item \textbf{随机矩阵}：每行元素非负且和为1。\textbf{MDP的转移矩阵 $\mathbf{P}^{\pi}$ 正是一个随机矩阵}。
+\end{itemize}
+
+% ----------------------------------------------------------------------
+\subsection{特征值与特征向量}
+% ----------------------------------------------------------------------
+
+\begin{mydefinition}{特征值与特征向量}
+对方阵 $\mathbf{A} \in \R^{n \times n}$，若存在非零向量 $\mathbf{v}$ 和标量 $\lambda$ 满足：
+\begin{myformula}
+\mathbf{A} \mathbf{v} = \lambda \mathbf{v}
+\end{myformula}
+则 $\lambda$ 为 $\mathbf{A}$ 的\textbf{特征值}，$\mathbf{v}$ 为对应的\textbf{特征向量}。
+\end{mydefinition}
+
+特征值由特征方程 $\det(\mathbf{A} - \lambda \mathbf{I}) = 0$ 确定。$n$ 阶矩阵有 $n$ 个特征值（计重数）。
+
+\begin{myTheorem}{谱半径 (Spectral Radius)}
+矩阵 $\mathbf{A}$ 的谱半径定义为：
+\[
+\rho(\mathbf{A}) = \max_{i} |\lambda_i|
+\]
+其中 $\lambda_i$ 遍历 $\mathbf{A}$ 的所有特征值。
+
+\textbf{核心结论}：对于随机矩阵 $\mathbf{P}$（如MDP的转移矩阵），$\rho(\mathbf{P}) = 1$。进一步，$\rho(\gamma \mathbf{P}^{\pi}) = \gamma < 1$（当 $\gamma < 1$）。这正是Bellman算子为压缩映射的代数本质。
+\end{myTheorem}
+
+\begin{myTheorem}{特征分解 (Eigendecomposition)}
+若 $\mathbf{A} \in \R^{n \times n}$ 有 $n$ 个线性无关的特征向量 $\mathbf{v}_1, \dots, \mathbf{v}_n$（对应特征值 $\lambda_1, \dots, \lambda_n$），则：
+\[
+\mathbf{A} = \mathbf{V} \boldsymbol{\Lambda} \mathbf{V}^{-1}
+\]
+其中 $\mathbf{V} = [\mathbf{v}_1 \; \cdots \; \mathbf{v}_n]$，$\boldsymbol{\Lambda} = \mathrm{diag}(\lambda_1, \dots, \lambda_n)$。
+\end{myTheorem}
+
+\textbf{特征分解在RL中的应用}：通过特征分解，Bellman方程的解析解 $\mathbf{V}^{\pi} = (\mathbf{I} - \gamma \mathbf{P}^{\pi})^{-1} \mathbf{R}^{\pi}$ 可写为：
+\[
+\mathbf{V}^{\pi} = \sum_{k=0}^{\infty} \gamma^k (\mathbf{P}^{\pi})^k \mathbf{R}^{\pi}
+\]
+使用特征分解 $(\mathbf{P}^{\pi})^k = \mathbf{V} \boldsymbol{\Lambda}^k \mathbf{V}^{-1}$，可见当 $\gamma < 1$ 时 $\gamma^k \boldsymbol{\Lambda}^k \to \mathbf{0}$，保证了解的存在唯一性。
+
+% ----------------------------------------------------------------------
+\subsection{矩阵逆与伪逆}
+% ----------------------------------------------------------------------
+
+\begin{mydefinition}{逆矩阵}
+若存在方阵 $\mathbf{A}^{-1}$ 满足 $\mathbf{A} \mathbf{A}^{-1} = \mathbf{A}^{-1} \mathbf{A} = \mathbf{I}$，则称 $\mathbf{A}$ 为\textbf{可逆}（非奇异）。
+\end{mydefinition}
+
+可逆的充要条件：$\det(\mathbf{A}) \neq 0$，等价于所有特征值均非零。
+
+\textbf{在RL中的应用}：Bellman方程的解析解 $\mathbf{V}^{\pi} = (\mathbf{I} - \gamma \mathbf{P}^{\pi})^{-1} \mathbf{R}^{\pi}$ 需要求 $(\mathbf{I} - \gamma \mathbf{P}^{\pi})$ 的逆。当 $\gamma < 1$ 时，该矩阵总是可逆的，因为 $\rho(\gamma \mathbf{P}^{\pi}) = \gamma < 1$，所以 $\mathbf{I} - \gamma \mathbf{P}^{\pi}$ 的所有特征值满足 $1 - \gamma \lambda_i > 0$，非奇异。
+
+\textbf{Neumann级数}给出了逆的一个有用的级数表示：
+\begin{myformula}
+(\mathbf{I} - \mathbf{A})^{-1} = \sum_{k=0}^{\infty} \mathbf{A}^k, \quad \text{当 } \rho(\mathbf{A}) < 1
+\end{myformula}
+令 $\mathbf{A} = \gamma \mathbf{P}^{\pi}$（$\rho(\gamma \mathbf{P}^{\pi}) = \gamma < 1$），得：
+\[
+\mathbf{V}^{\pi} = \sum_{k=0}^{\infty} \gamma^k (\mathbf{P}^{\pi})^k \mathbf{R}^{\pi}
+\]
+这正是回报定义 $\mathbf{V}^{\pi} = \E[\sum_{k=0}^{\infty} \gamma^k \mathbf{R}_{t+k+1}^{\pi}]$ 的矩阵形式。
+
+\begin{mydefinition}{Moore-Penrose伪逆}
+对任意矩阵 $\mathbf{A} \in \R^{m \times n}$（可以不是方阵），伪逆 $\mathbf{A}^{+} \in \R^{n \times m}$ 满足四条Penrose条件：
+\begin{itemize}
+    \item $\mathbf{A} \mathbf{A}^{+} \mathbf{A} = \mathbf{A}$
+    \item $\mathbf{A}^{+} \mathbf{A} \mathbf{A}^{+} = \mathbf{A}^{+}$
+    \item $(\mathbf{A} \mathbf{A}^{+})^\T = \mathbf{A} \mathbf{A}^{+}$
+    \item $(\mathbf{A}^{+} \mathbf{A})^\T = \mathbf{A}^{+} \mathbf{A}$
+\end{itemize}
+\end{mydefinition}
+
+伪逆在RL的最小二乘方法中有重要应用。LSTD (Least-Squares Temporal Difference) 和 LSPI (Least-Squares Policy Iteration) 都需要求解超定线性系统，使用伪逆给出最小范数最小二乘解。
+
+% ----------------------------------------------------------------------
+\subsection{线性方程组的求解}
+% ----------------------------------------------------------------------
+
+考虑线性方程组 $\mathbf{A} \mathbf{x} = \mathbf{b}$，其中 $\mathbf{A} \in \R^{n \times n}$，$\mathbf{b} \in \R^n$。
+
+\begin{itemize}
+    \item \textbf{直接法}：若 $\mathbf{A}$ 可逆，解为 $\mathbf{x} = \mathbf{A}^{-1} \mathbf{b}$。计算复杂度 $O(n^3)$（高斯消元）。适用于小规模问题（如小型GridWorld）。
+    \item \textbf{迭代法}：对大规模问题（如$|\states| > 10^6$），直接求逆不可行，需要迭代求解。这正是动态规划方法（策略迭代、值迭代）在做的。
+\end{itemize}
+
+\textbf{迭代法的基本框架}：将 $\mathbf{A}$ 分裂为 $\mathbf{A} = \mathbf{M} - \mathbf{N}$（$\mathbf{M}$ 易求逆），则迭代格式为：
+\[
+\mathbf{x}^{(k+1)} = \mathbf{M}^{-1} \mathbf{N} \mathbf{x}^{(k)} + \mathbf{M}^{-1} \mathbf{b}
+\]
+
+\textbf{在RL中}：Bellman方程 $\mathbf{V} = \mathbf{R}^{\pi} + \gamma \mathbf{P}^{\pi} \mathbf{V}$ 可写为标准形式 $(\mathbf{I} - \gamma \mathbf{P}^{\pi}) \mathbf{V} = \mathbf{R}^{\pi}$。策略评估的迭代格式 $\mathbf{V}^{(k+1)} = \mathbf{R}^{\pi} + \gamma \mathbf{P}^{\pi} \mathbf{V}^{(k)}$ 正是取 $\mathbf{M} = \mathbf{I}$，$\mathbf{N} = \gamma \mathbf{P}^{\pi}$ 的迭代法（Richardson迭代）。
+
+迭代法的收敛速率由 $\rho(\mathbf{M}^{-1} \mathbf{N})$ 决定。对上述迭代，收敛速率为 $\rho(\gamma \mathbf{P}^{\pi}) = \gamma$：$\gamma$ 越接近0，收敛越快。
+
+% ----------------------------------------------------------------------
+\subsection{向量与矩阵范数}
+% ----------------------------------------------------------------------
+
+\begin{mydefinition}{向量范数}
+向量 $\mathbf{x} \in \R^n$ 的 $L_p$ 范数定义为：
+\begin{align*}
+L_0\text{（伪）范数：}&\quad \|\mathbf{x}\|_0 = \text{非零元素个数} \\
+L_1\text{范数：}&\quad \|\mathbf{x}\|_1 = \sum_{i=1}^{n} |x_i| \\
+L_2\text{范数（欧氏范数）：}&\quad \|\mathbf{x}\|_2 = \sqrt{\sum_{i=1}^{n} x_i^2} \\
+L_\infty\text{范数（最大范数）：}&\quad \|\mathbf{x}\|_\infty = \max_{i} |x_i|
+\end{align*}
+\end{mydefinition}
+
+\textbf{在RL中的使用}：
+\begin{itemize}
+    \item \textbf{$L_\infty$范数}用于DP收敛准则：$\|\mathbf{V}^{(k+1)} - \mathbf{V}^{(k)}\|_\infty < \theta$ 意味着每个状态的值估计变化都不超过 $\theta$，是策略评估停止条件的自然选择。
+    \item \textbf{$L_2$范数}用于最小二乘方法：LSTD、DQN中的TD目标本质上是Minimizing Bellman residual的$L_2$范数。
+    \item \textbf{$L_1$范数}用于稀疏性约束：LASSO正则化可获得稀疏值函数表示，在特征选择和可解释RL中有应用。
+\end{itemize}
+
+\begin{mydefinition}{诱导矩阵范数}
+由向量范数诱导的矩阵范数：
+\[
+\|\mathbf{A}\|_p = \sup_{\mathbf{x} \neq \mathbf{0}} \frac{\|\mathbf{A}\mathbf{x}\|_p}{\|\mathbf{x}\|_p}
+\]
+常用诱导范数：
+\begin{itemize}
+    \item $\|\mathbf{A}\|_1 = \max_j \sum_i |a_{ij}|$（最大列和）
+    \item $\|\mathbf{A}\|_\infty = \max_i \sum_j |a_{ij}|$（最大行和）
+    \item $\|\mathbf{A}\|_2 = \sqrt{\rho(\mathbf{A}^\T \mathbf{A})}$（谱范数）
+\end{itemize}
+\end{mydefinition}
+
+\textbf{关键性质}：对任意诱导矩阵范数，$\rho(\mathbf{A}) \le \|\mathbf{A}\|$。对随机矩阵 $\mathbf{P}$，$\|\mathbf{P}\|_\infty = 1$（因为每行和为1）。
+
+% ----------------------------------------------------------------------
+\subsection{梯度与Hessian矩阵}
+% ----------------------------------------------------------------------
+
+\begin{mydefinition}{梯度}
+多元函数 $f: \R^n \to \R$ 在点 $\mathbf{x}$ 的梯度是偏导数构成的列向量：
+\begin{myformula}
+\nabla f(\mathbf{x}) = \left(\frac{\partial f}{\partial x_1}, \frac{\partial f}{\partial x_2}, \dots, \frac{\partial f}{\partial x_n}\right)^\T
+\end{myformula}
+梯度指向函数增长最快的方向；$-\nabla f(\mathbf{x})$ 指向最速下降方向。
+\end{mydefinition}
+
+\textbf{关键梯度计算}（在RL中极其常用）：
+\begin{itemize}
+    \item $\nabla_{\mathbf{x}} (\mathbf{a}^\T \mathbf{x}) = \mathbf{a}$
+    \item $\nabla_{\mathbf{x}} (\mathbf{x}^\T \mathbf{A} \mathbf{x}) = (\mathbf{A} + \mathbf{A}^\T) \mathbf{x}$（若 $\mathbf{A}$ 对称则为 $2\mathbf{A}\mathbf{x}$）
+    \item $\nabla_{\mathbf{x}} \|\mathbf{x}\|_2^2 = 2\mathbf{x}$
+\end{itemize}
+
+\begin{mydefinition}{Jacobian矩阵}
+向量值函数 $\mathbf{f}: \R^n \to \R^m$ 的Jacobian矩阵 $\mathbf{J} \in \R^{m \times n}$：
+\[
+(\mathbf{J})_{ij} = \frac{\partial f_i}{\partial x_j}
+\]
+
+\textbf{Hessian矩阵}是梯度函数的Jacobian（对标量函数 $f$）：
+\[
+\mathbf{H}_f(\mathbf{x}) = \nabla^2 f(\mathbf{x}) = \begin{bmatrix}
+\frac{\partial^2 f}{\partial x_1^2} & \cdots & \frac{\partial^2 f}{\partial x_1 \partial x_n} \\
+\vdots & \ddots & \vdots \\
+\frac{\partial^2 f}{\partial x_n \partial x_1} & \cdots & \frac{\partial^2 f}{\partial x_n^2}
+\end{bmatrix}_{n \times n}
+\]
+\end{mydefinition}
+
+Hessian矩阵总是对称的（若$f$二阶连续可导）。Hessian刻画了函数的曲率：
+\begin{itemize}
+    \item $\mathbf{H} \succ 0$（正定）：$f$ 在该点局部严格凸
+    \item $\mathbf{H} \prec 0$（负定）：$f$ 在该点局部严格凹
+    \item $\mathbf{H}$ 不定：鞍点
+\end{itemize}
+
+\begin{remark} \textbf{RL中的应用}：
+\begin{itemize}
+    \item \textbf{策略梯度}：$\nabla_\theta J(\theta) = \E_\tau[\sum_t \nabla_\theta \log \pi_\theta(a_t \mid s_t) \cdot G_t]$，核心是计算对数策略的梯度。
+    \item \textbf{自然梯度}：使用Fisher信息矩阵（对数似然的Hessian的负期望）进行参数更新，$\theta \leftarrow \theta + \alpha \mathbf{F}^{-1} \nabla_\theta J(\theta)$，实现了参数空间中的``不变''更新。
+    \item \textbf{TRPO/PPO}：使用KL散度的Hessian（即Fisher矩阵）约束策略更新幅度。
+    \item \textbf{二阶优化}：Newton法 $\theta \leftarrow \theta - \mathbf{H}^{-1} \nabla f(\theta)$，收敛更快但每次迭代代价大。
+\end{itemize}
+\end{remark}
+
+% ======================================================================
+\section{优化基础}
+% ======================================================================
+
+优化是强化学习的另一支柱。值函数的最优性由Bellman最优方程刻画，本质是一个不动点问题；策略的改进等价于对策略空间的最优化；策略梯度方法直接对期望回报进行梯度上升。理解优化理论有助于深刻把握RL算法设计的内在逻辑。
+
+% ----------------------------------------------------------------------
+\subsection{凸集与凸函数}
+% ----------------------------------------------------------------------
+
+\begin{mydefinition}{凸集}
+集合 $C \subseteq \R^n$ 称为凸集，若对任意 $\mathbf{x}, \mathbf{y} \in C$ 和任意 $\lambda \in [0, 1]$，有：
+\[
+\lambda \mathbf{x} + (1 - \lambda) \mathbf{y} \in C
+\]
+即：连接集合内任意两点的线段完全包含在集合中。
+\end{mydefinition}
+
+\begin{mydefinition}{凸函数}
+定义在凸集 $C$ 上的函数 $f$ 称为凸函数，若对任意 $\mathbf{x}, \mathbf{y} \in C$ 和 $\lambda \in [0, 1]$：
+\[
+f(\lambda \mathbf{x} + (1 - \lambda) \mathbf{y}) \le \lambda f(\mathbf{x}) + (1 - \lambda) f(\mathbf{y})
+\]
+严格凸：不等式严格成立（$\mathbf{x} \neq \mathbf{y}$，$\lambda \in (0,1)$）。若不等式反向，则为\textbf{凹函数}。
+\end{mydefinition}
+
+\begin{tikzpicture}[scale=1.0]
+    % Convex function
+    \draw[->] (-0.5,0) -- (4,0) node[right] {$x$};
+    \draw[->] (0,-0.5) -- (0,3.5) node[above] {$f(x)$};
+    \draw[domain=0.2:3.8,smooth,variable=\x,blue,thick] plot ({\x},{0.3*(\x-2)^2+0.8});
+    \draw[red,dashed] (0.8,{0.3*(0.8-2)^2+0.8}) -- (3.2,{0.3*(3.2-2)^2+0.8});
+    \fill[red] (0.8,{0.3*(0.8-2)^2+0.8}) circle (1.5pt);
+    \fill[red] (3.2,{0.3*(3.2-2)^2+0.8}) circle (1.5pt);
+    \node at (2,-0.8) {凸函数：弦在函数上方};
+\end{tikzpicture}
+\qquad
+\begin{tikzpicture}[scale=1.0]
+    % Non-convex function  
+    \draw[->] (-0.5,0) -- (4,0) node[right] {$x$};
+    \draw[->] (0,-1.5) -- (0,2.0) node[above] {$f(x)$};
+    \draw[domain=0.2:3.8,smooth,variable=\x,red,thick] plot ({\x},{1.5*sin(1.8*\x r)});
+    \node at (2,-2.0) {非凸函数：存在局部最优};
+\end{tikzpicture}
+
+\textbf{凸函数的关键性质：}
+\begin{enumerate}
+    \item \textbf{局部最小值即全局最小值}：凸函数的任何局部极小点必为全局最小点。这是凸优化问题``容易''的根本原因。
+    \item \textbf{一阶条件}：若 $f$ 可微，则 $f$ 凸 $\iff$ $f(\mathbf{y}) \ge f(\mathbf{x}) + \nabla f(\mathbf{x})^\T (\mathbf{y} - \mathbf{x})$ 对所有 $\mathbf{x}, \mathbf{y}$ 成立（函数图像在切线上方）。
+    \item \textbf{二阶条件}：若 $f$ 二阶可微，则 $f$ 凸 $\iff$ $\nabla^2 f(\mathbf{x}) \succeq 0$（Hessian半正定）对所有 $\mathbf{x}$ 成立。
+\end{enumerate}
+
+\begin{remark} \textbf{RL中的凸性}：
+值函数的Bellman算子不是凸的（因为是线性算子），但许多RL子问题具有凸结构：
+\begin{itemize}
+    \item \textbf{线性函数逼近下的策略评估}：目标函数 $\|\mathbf{V}_\theta - (\mathbf{R} + \gamma \mathbf{P} \mathbf{V}_\theta)\|^2$ 关于线性参数$\theta$是凸的（实际上是一个线性最小二乘问题）。
+    \item \textbf{值迭代}：Bellman最优算子 $\mathcal{T} V(s) = \max_a [R(s,a) + \gamma \sum_{s'} P(s' \mid s,a) V(s')]$ 关于 $V$ 是单调的但不是凸的（含$\max$）。
+    \item \textbf{策略梯度}：目标 $J(\theta)$ 通常是非凸的，这就是为什么策略梯度方法只能收敛到局部最优。
+\end{itemize}
+\end{remark}
+
+% ----------------------------------------------------------------------
+\subsection{梯度下降法}
+% ----------------------------------------------------------------------
+
+\begin{mydefinition}{梯度下降 (Gradient Descent)}
+对于无约束优化问题 $\min_{\mathbf{x} \in \R^n} f(\mathbf{x})$，梯度下降迭代：
+\begin{myformula}
+\mathbf{x}_{k+1} = \mathbf{x}_k - \alpha_k \nabla f(\mathbf{x}_k)
+\end{myformula}
+其中 $\alpha_k > 0$ 为\textbf{步长}（学习率）。
+\end{mydefinition}
+
+\begin{tikzpicture}[scale=1.1]
+    % Contour plot of a quadratic
+    \draw[->] (-0.5,0) -- (5,0) node[right] {$x_1$};
+    \draw[->] (0,-0.5) -- (0,4) node[above] {$x_2$};
+    \draw[blue!40,thick] (2.5,2.5) ellipse (1.8 and 1.5);
+    \draw[blue!40,thick] (2.5,2.5) ellipse (1.2 and 1.0);
+    \draw[blue!40,thick] (2.5,2.5) ellipse (0.6 and 0.5);
+    \draw[blue!40,thick] (2.5,2.5) ellipse (0.2 and 0.15);
+    \fill[red] (2.5,2.5) circle (2pt) node[below right] {$\mathbf{x}^*$};
+    % Gradient descent path
+    \fill (1.5,1.0) circle (1.5pt);
+    \draw[->,red,thick] (1.5,1.0) -- (2.0,1.5);
+    \draw[->,red,thick] (2.0,1.5) -- (2.25,1.9);
+    \draw[->,red,thick] (2.25,1.9) -- (2.4,2.2);
+    \draw[->,red,thick] (2.4,2.2) -- (2.47,2.38);
+    \node at (1.5,0.5) {梯度下降轨迹};
+\end{tikzpicture}
+
+\textbf{步长选择}至关重要：
+\begin{itemize}
+    \item $\alpha$ 太小：收敛缓慢，浪费计算资源
+    \item $\alpha$ 太大：可能震荡甚至发散
+    \item \textbf{精确线搜索}：$\alpha_k = \arg\min_{\alpha > 0} f(\mathbf{x}_k - \alpha \nabla f(\mathbf{x}_k))$
+    \item \textbf{Armijo条件}：$\alpha_k$ 满足 $f(\mathbf{x}_k - \alpha \nabla f(\mathbf{x}_k)) \le f(\mathbf{x}_k) - c\alpha \|\nabla f(\mathbf{x}_k)\|^2$，$c \in (0, 1)$
+    \item \textbf{学习率衰减}：$\alpha_k = \frac{\alpha_0}{1 + \text{decay} \cdot k}$，常用于SGD的RL应用
+\end{itemize}
+
+\begin{myTheorem}{梯度下降的收敛性（$L$-光滑函数）}
+设 $f$ 是 $L$-光滑函数（$\nabla f$ 是 $L$-Lipschitz连续：$\|\nabla f(\mathbf{x}) - \nabla f(\mathbf{y})\| \le L \|\mathbf{x} - \mathbf{y}\|$）且有下界。若取常数步长 $\alpha \le 1/L$，则梯度下降满足：
+\[
+\min_{0 \le k < K} \|\nabla f(\mathbf{x}_k)\|^2 \le \frac{2L(f(\mathbf{x}_0) - f^*)}{K}
+\]
+即收敛速率为 $O(1/K)$。若 $f$ 进一步是 $\mu$-强凸的，则线性收敛：$f(\mathbf{x}_k) - f^* \le (1 - \mu/L)^k (f(\mathbf{x}_0) - f^*)$。
+\end{myTheorem}
+
+\begin{remark} \textbf{梯度下降与RL中的策略迭代}：
+策略迭代的改进步骤本质上是广义的梯度下降：在策略空间中，沿值函数增长的方向更新策略。而值迭代中Bellman最优算子的不动点迭代可以看作求解隐式最优性方程的一种``最速下降''方法。自然策略梯度则使用Fisher信息矩阵作为预处理器，实现了参数空间中的不变梯度下降。
+\end{remark}
+
+% ----------------------------------------------------------------------
+\subsection{随机梯度下降 (SGD)}
+% ----------------------------------------------------------------------
+
+在实际RL中，我们通常不知道完整的目标函数，而是通过采样获得梯度的随机估计。
+
+\begin{mydefinition}{随机梯度下降}
+目标 $\min_\theta F(\theta) = \E_{z \sim D}[f(\theta; z)]$。SGD迭代：
+\begin{myformula}
+\theta_{k+1} = \theta_k - \alpha_k \hat{\nabla} f(\theta_k; z_k)
+\end{myformula}
+其中 $z_k$ 是从数据分布 $D$ 中采样的一个（或一批）随机样本，$\hat{\nabla}$ 是无偏梯度估计：$\E_{z}[\hat{\nabla} f(\theta; z)] = \nabla F(\theta)$。
+\end{mydefinition}
+
+SGD的收敛分析需要额外的条件。经典结果（Robbins-Monro）要求步长满足：
+\[
+\sum_{k=1}^{\infty} \alpha_k = \infty, \qquad \sum_{k=1}^{\infty} \alpha_k^2 < \infty
+\]
+典型选择：$\alpha_k = \frac{1}{k}$ 或 $\alpha_k = \frac{c}{\sqrt{k}}$。
+
+\textbf{SGD在RL中的普遍性}：几乎所有的现代深度RL方法都使用SGD或其变体（Adam、RMSprop等）。原因很简单：环境模型未知，我们只能通过与环境的交互获得有限的样本数据来估计梯度。例如：
+\begin{itemize}
+    \item \textbf{DQN}：用经验回放（replay buffer）采样$z = (s, a, r, s')$，对Q网络的参数$\theta$执行SGD来最小化TD误差。
+    \item \textbf{策略梯度}：$\nabla_\theta J \approx \frac{1}{N} \sum_{i=1}^{N} \sum_{t=0}^{T} \nabla_\theta \log \pi_\theta(a_t^{(i)} \mid s_t^{(i)}) \cdot \hat{G}_t^{(i)}$，用一批轨迹估计梯度。
+    \item \textbf{Actor-Critic}：Actor用SGD更新策略参数，Critic用SGD更新值函数参数。
+\end{itemize}
+
+% ----------------------------------------------------------------------
+\subsection{约束优化与Lagrange乘子法}
+% ----------------------------------------------------------------------
+
+\begin{mydefinition}{Lagrange乘子法}
+考虑等式约束优化问题：
+\[
+\min_{\mathbf{x}} f(\mathbf{x}), \quad \text{s.t. } g_i(\mathbf{x}) = 0 \; (i = 1, \dots, m)
+\]
+定义Lagrange函数 $\mathcal{L}(\mathbf{x}, \boldsymbol{\lambda}) = f(\mathbf{x}) + \sum_{i=1}^{m} \lambda_i g_i(\mathbf{x})$。必要条件（KKT）：
+\[
+\nabla_{\mathbf{x}} \mathcal{L} = \nabla f(\mathbf{x}) + \sum_{i=1}^{m} \lambda_i \nabla g_i(\mathbf{x}) = \mathbf{0}, \quad g_i(\mathbf{x}) = 0
+\]
+\end{mydefinition}
+
+对于不等式约束 $h_j(\mathbf{x}) \le 0$，引入非负Lagrange乘子 $\mu_j \ge 0$，KKT条件补充互补松弛条件：$\mu_j h_j(\mathbf{x}) = 0$。
+
+\textbf{对偶性 (Duality)}：Lagrange对偶函数：
+\[
+q(\boldsymbol{\lambda}, \boldsymbol{\mu}) = \inf_{\mathbf{x}} \mathcal{L}(\mathbf{x}, \boldsymbol{\lambda}, \boldsymbol{\mu})
+\]
+对偶问题是 $\max_{\boldsymbol{\lambda}, \boldsymbol{\mu} \ge 0} q(\boldsymbol{\lambda}, \boldsymbol{\mu})$。弱对偶性保证对偶最优值 $\le$ 原始最优值；强对偶性（Slater条件成立时）保证等号成立。
+
+\begin{remark} \textbf{Lagrange乘子法在高级RL中的关键应用}：
+\begin{itemize}
+    \item \textbf{TRPO}：$\max_\theta \E[\pi_\theta] \; \text{s.t.} \; D_{\mathrm{KL}}(\pi_{\mathrm{old}} \| \pi_\theta) \le \delta$。约束优化确保策略更新不过大，使用Lagrange乘子或对偶梯度下降处理。
+    \item \textbf{PPO}：用截断（clipping）机制替代显式KL约束，等价于一种``软''约束优化。
+    \item \textbf{约束马尔可夫决策过程 (CMDP)}：在安全RL中，额外约束期望代价不超过阈值。Lagrangian方法将约束问题转化为无约束max-min问题。
+    \item \textbf{最大熵RL (SAC)}：目标 $J(\pi) = \sum_t \E[r_t + \alpha \mathcal{H}(\pi(\cdot \mid s_t))]$，$\alpha$ 通过Lagrangian方法自适应调整以满足目标熵约束。
+\end{itemize}
+\end{remark}
+
+% ----------------------------------------------------------------------
+\subsection{KL散度}
+% ----------------------------------------------------------------------
+
+\begin{mydefinition}{KL散度 (Kullback-Leibler Divergence)}
+对离散分布 $p$ 和 $q$（满足 $q(x) = 0 \Rightarrow p(x) = 0$）：
+\begin{myformula}
+D_{\mathrm{KL}}(p \| q) = \sum_{x} p(x) \log \frac{p(x)}{q(x)}
+\end{myformula}
+对连续分布：$D_{\mathrm{KL}}(p \| q) = \int p(x) \log \frac{p(x)}{q(x)} dx$。
+\end{mydefinition}
+
+\textbf{KL散度的性质：}
+\begin{itemize}
+    \item \textbf{非负性}：$D_{\mathrm{KL}}(p \| q) \ge 0$，等号当且仅当 $p = q$（几乎处处）。由Gibbs不等式可证。
+    \item \textbf{非对称性}：$D_{\mathrm{KL}}(p \| q) \neq D_{\mathrm{KL}}(q \| p)$（一般情况）。这不是一个真正的距离度量。
+    \item \textbf{与交叉熵的关系}：$D_{\mathrm{KL}}(p \| q) = H(p, q) - H(p)$，其中 $H(p, q) = -\sum_x p(x) \log q(x)$ 是交叉熵，$H(p) = -\sum_x p(x) \log p(x)$ 是熵。
+\end{itemize}
+
+\begin{example}
+\textbf{KL散度计算示例}：设 $p = \mathrm{Bernoulli}(0.7)$，$q = \mathrm{Bernoulli}(0.3)$。
+\begin{align*}
+D_{\mathrm{KL}}(p \| q) &= 0.7 \log \frac{0.7}{0.3} + 0.3 \log \frac{0.3}{0.7} \\
+&= 0.7 \times 0.8473 + 0.3 \times (-0.8473) \\
+&= 0.5931 - 0.2542 = 0.3389
+\end{align*}
+反过来 $D_{\mathrm{KL}}(q \| p) = 0.3 \log(0.3/0.7) + 0.7 \log(0.7/0.3) = -0.2542 + 0.5931 = 0.3389$（巧合：Bernoulli分布因为对称性在此例中等值，但一般情况下 $p=0.9, q=0.1$ 时两者差异显著）。
+\end{example}
+
+\begin{remark} \textbf{KL散度在RL中的核心角色}：
+\begin{itemize}
+    \item \textbf{TRPO/PPO}：策略更新约束 $D_{\mathrm{KL}}(\pi_{\mathrm{old}} \| \pi_\theta) \le \delta$ 防止破坏性的策略突变。
+    \item \textbf{相对熵正则化}：目标函数加入熵项 $-\alpha H(\pi)$ 鼓励探索。
+    \item \textbf{变分推断}：在贝叶斯RL中，用KL散度度量近似后验与真实后验的差异。
+    \item \textbf{信息论解释}：$D_{\mathrm{KL}}(p \| q)$ 衡量使用 $q$ 而非 $p$ 编码数据时的额外比特开销。
+\end{itemize}
+\end{remark}
+
+% ======================================================================
+\section{微积分回顾}
+% ======================================================================
+
+% ----------------------------------------------------------------------
+\subsection{链式法则}
+% ----------------------------------------------------------------------
+
+\textbf{单变量链式法则}：若 $y = f(u)$，$u = g(x)$，则 $\frac{dy}{dx} = \frac{dy}{du} \cdot \frac{du}{dx}$。
+
+\textbf{多变量链式法则}：若 $z = f(y_1, \dots, y_m)$，$y_i = g_i(x_1, \dots, x_n)$，则：
+\[
+\frac{\partial z}{\partial x_j} = \sum_{i=1}^{m} \frac{\partial z}{\partial y_i} \cdot \frac{\partial y_i}{\partial x_j}
+\]
+
+\textbf{在RL中的应用}：神经网络的值函数逼近中，反向传播算法就是链式法则的高效实现。策略梯度中：
+\[
+\nabla_\theta \log \pi_\theta(a \mid s) = \nabla_\theta \log\left(\frac{e^{f_\theta(s,a)}}{\sum_{a'} e^{f_\theta(s,a')}}\right)
+\]
+这个softmax策略的梯度计算本质上就是链式法则的反复应用。
+
+% ----------------------------------------------------------------------
+\subsection{对数求导技巧}
+% ----------------------------------------------------------------------
+
+\begin{myTheorem}{对数求导技巧 (Log-Derivative / Likelihood Ratio Trick)}
+\begin{myformula}
+\nabla_\theta \log f(\theta) = \frac{\nabla_\theta f(\theta)}{f(\theta)}
+\end{myformula}
+等价地，$\nabla_\theta f(\theta) = f(\theta) \nabla_\theta \log f(\theta)$。
+\end{myTheorem}
+
+这个看似平凡的技巧是\textbf{策略梯度定理}的核心！推导如下：
+\begin{align*}
+\nabla_\theta J(\theta) &= \nabla_\theta \E_{\tau \sim \pi_\theta}[R(\tau)] = \nabla_\theta \int p_\theta(\tau) R(\tau) d\tau \\
+&= \int \nabla_\theta p_\theta(\tau) R(\tau) d\tau \\
+&= \int p_\theta(\tau) \nabla_\theta \log p_\theta(\tau) \cdot R(\tau) d\tau \\
+&= \E_{\tau \sim \pi_\theta}\left[R(\tau) \nabla_\theta \log p_\theta(\tau)\right]
+\end{align*}
+而 $\log p_\theta(\tau) = \log p(s_0) + \sum_{t=0}^{T-1} \left[\log \pi_\theta(a_t \mid s_t) + \log p(s_{t+1} \mid s_t, a_t)\right]$，环境动态 $p(s_{t+1} \mid s_t, a_t)$ 不依赖 $\theta$，故：
+\[
+\nabla_\theta J(\theta) = \E_{\tau \sim \pi_\theta}\left[R(\tau) \sum_{t=0}^{T-1} \nabla_\theta \log \pi_\theta(a_t \mid s_t)\right]
+\]
+这就是REINFORCE算法的基础。对数求导技巧让我们能够对期望内部的分布参数求梯度。
+
+% ----------------------------------------------------------------------
+\subsection{压缩映射与Banach不动点定理}
+% ----------------------------------------------------------------------
+
+这是确保Bellman算子迭代收敛的最重要的数学定理。
+
+\begin{mydefinition}{压缩映射 (Contraction Mapping)}
+在度量空间 $(X, d)$ 上，映射 $\mathcal{T}: X \to X$ 称为\textbf{压缩映射}，若存在常数 $\gamma \in [0, 1)$ 使得：
+\[
+d(\mathcal{T}(x), \mathcal{T}(y)) \le \gamma \, d(x, y), \quad \forall x, y \in X
+\]
+$\gamma$ 称为压缩因子。
+\end{mydefinition}
+
+\begin{myTheorem}{Banach不动点定理 (Banach Fixed-Point Theorem)}
+设 $(X, d)$ 是完备度量空间，$\mathcal{T}: X \to X$ 是压缩映射。则：
+\begin{enumerate}
+    \item $\mathcal{T}$ 存在\textbf{唯一}不动点 $x^*$：$\mathcal{T}(x^*) = x^*$。
+    \item 对任意初值 $x_0 \in X$，迭代序列 $x_{k+1} = \mathcal{T}(x_k)$ 收敛到 $x^*$。
+    \item 收敛速率：$d(x_k, x^*) \le \frac{\gamma^k}{1 - \gamma} d(x_1, x_0)$（先验估计），$d(x_k, x^*) \le \frac{\gamma}{1 - \gamma} d(x_k, x_{k-1})$（后验估计）。
+\end{enumerate}
+\end{myTheorem}
+
+\begin{proof}
+\textbf{存在性}：由压缩性质 $d(x_{k+1}, x_k) = d(\mathcal{T}(x_k), \mathcal{T}(x_{k-1})) \le \gamma d(x_k, x_{k-1})$，递推得 $d(x_{k+1}, x_k) \le \gamma^k d(x_1, x_0)$。对任意 $m > n$：
+\begin{align*}
+d(x_m, x_n) &\le \sum_{i=n}^{m-1} d(x_{i+1}, x_i) \le \sum_{i=n}^{m-1} \gamma^i d(x_1, x_0) \\
+&= \gamma^n d(x_1, x_0) \sum_{i=0}^{m-n-1} \gamma^i < \frac{\gamma^n}{1 - \gamma} d(x_1, x_0) \to 0 \quad (n \to \infty)
+\end{align*}
+故 $\{x_k\}$ 是Cauchy序列，由完备性知收敛于某 $x^* \in X$。
+
+\textbf{不动点性质}：$x^* = \lim_{k \to \infty} x_{k+1} = \lim_{k \to \infty} \mathcal{T}(x_k) = \mathcal{T}(\lim_{k \to \infty} x_k) = \mathcal{T}(x^*)$（$\mathcal{T}$ 的连续性由压缩性保证）。
+
+\textbf{唯一性}：若 $\mathcal{T}(x^*) = x^*$ 且 $\mathcal{T}(y^*) = y^*$，则 $d(x^*, y^*) = d(\mathcal{T}(x^*), \mathcal{T}(y^*)) \le \gamma d(x^*, y^*)$。由于 $\gamma < 1$，必有 $d(x^*, y^*) = 0$，即 $x^* = y^*$。
+\end{proof}
+
+\begin{remark} \textbf{在RL中的核心应用：Bellman算子是压缩映射！}
+这是动态规划方法和时序差分学习收敛性的理论基础。下面构造性地说明：
+
+在 $L_\infty$ 范数下，定义Bellman期望算子 $\mathcal{T}^{\pi}$：
+\[
+(\mathcal{T}^{\pi} V)(s) = \sum_a \pi(a \mid s) \sum_{s', r} p(s', r \mid s, a) [r + \gamma V(s')]
+\]
+对任意 $V_1, V_2$：
+\begin{align*}
+\| \mathcal{T}^{\pi} V_1 - \mathcal{T}^{\pi} V_2 \|_\infty &= \max_s \left| \sum_a \pi(a \mid s) \sum_{s'} \gamma p(s' \mid s, a) [V_1(s') - V_2(s')] \right| \\
+&\le \gamma \max_s \sum_a \pi(a \mid s) \sum_{s'} p(s' \mid s, a) |V_1(s') - V_2(s')| \\
+&\le \gamma \max_{s'} |V_1(s') - V_2(s')| = \gamma \|V_1 - V_2\|_\infty
+\end{align*}
+故 $\mathcal{T}^{\pi}$ 是以 $\gamma$ 为压缩因子的压缩映射。其唯一不动点正是 $V^{\pi}$。类似地，Bellman最优算子 $\mathcal{T}^{*}$ 也是压缩映射，其不动点是 $V^{*}$。
+\end{remark}
+
+这一数学事实保证了：
+\begin{itemize}
+    \item 策略评估（迭代施加 $\mathcal{T}^{\pi}$）必定收敛到 $V^{\pi}$
+    \item 值迭代（迭代施加 $\mathcal{T}^{*}$）必定收敛到 $V^{*}$
+    \item TD学习的期望更新也是 $\mathcal{T}^{\pi}$ 的随机近似，在适当条件下收敛
+\end{itemize}
+
+% ======================================================================
+\section{本章小结}
+% ======================================================================
+
+本章系统地梳理了强化学习所需的核心数学基础。概率论提供了不确定性建模的语言---条件概率、期望运算、全期望公式是理解Bellman方程推导的钥匙；线性代数为值函数的向量化表示和高效计算提供了工具；优化理论（梯度下降、约束优化、KL散度）是现代策略优化方法的数学支撑；微积分中的链式法则和对数求导技巧直接导出策略梯度定理；Banach不动点定理则是保证所有迭代算法收敛的定海神针。
+
+在后继章节中，我们将看到这些数学概念如何自然地融入马尔可夫决策过程（第\ref{ch:mdp}章）、动态规划（第\ref{ch:dp}章）以及蒙特卡洛和时序差分方法之中。读者若发现任何数学概念生疏，请随时返回本章复习。
+
+\emph{数学是RL的语法，算法是RL的修辞，而智能体在环境中学习的经验则是RL的诗篇。}
+
+\section*{习题}
+
+\begin{enumerate}
+    \item 证明全期望公式：$\E[X] = \E_Y[\E[X \mid Y]]$。给出离散和连续两种情况的证明。
+    \item 设 $p = \mathcal{N}(0, 1)$，$q = \mathcal{N}(1, 1)$。计算重要性采样在 $n = 10, 100, 1000, 10000$ 样本下估计 $\E_p[x^2]$ 的（理论）方差，并讨论普通IS与WIS的权衡。
+    \item 证明Bellman期望算子 $\mathcal{T}^{\pi}$ 在 $L_\infty$ 范数下是 $\gamma$-压缩映射。为什么这一性质对值迭代的收敛至关重要？
+    \item 给定策略 $\pi$ 下的转移矩阵 $\mathbf{P}^{\pi}$，证明 $\rho(\gamma \mathbf{P}^{\pi}) = \gamma$，并由此推断 $(\mathbf{I} - \gamma \mathbf{P}^{\pi})$ 可逆。
+    \item 推导策略梯度定理：$\nabla_\theta J(\theta) = \E_{\tau \sim \pi_\theta}[\sum_t \nabla_\theta \log \pi_\theta(a_t \mid s_t) \cdot G_t]$。详细说明对数求导技巧和全期望公式在推导中的使用。
+    \item 计算 $D_{\mathrm{KL}}(\mathcal{N}(\mu_1, \sigma_1^2) \| \mathcal{N}(\mu_2, \sigma_2^2))$ 的闭式表达式。讨论非对称性在策略约束中的应用。
+\end{enumerate}

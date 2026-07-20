@@ -1,0 +1,672 @@
+\chapter{马尔可夫决策过程}\label{ch:mdp}
+
+\intro{``The future is independent of the past given the present.''\par
+\hfill --- Markov Property\par
+马尔可夫决策过程（MDP）是强化学习问题的数学框架。它用精确的数学语言描述了智能体与环境交互的序列决策问题。本章从智能体-环境交互模型出发，逐步建立MDP的形式化定义，深入推导Bellman方程（RL的``基本定理''），并最终建立从马尔可夫链到MDP的完整理论层级。这是全书最重要的理论基础章节。}
+
+% ======================================================================
+\section{智能体-环境交互模型}
+% ======================================================================
+
+% ----------------------------------------------------------------------
+\subsection{基本框架}
+% ----------------------------------------------------------------------
+
+强化学习问题的本质是：一个智能体（Agent）在环境（Environment）中反复交互，通过试错来学习最优决策。这个交互过程可以用以下循环来描述：
+
+\begin{center}
+\begin{tikzpicture}[node distance=2.5cm, auto]
+    \node[draw, rounded corners, fill=blue!10, minimum width=3cm, minimum height=1.5cm] (agent) {\textbf{智能体 Agent}};
+    \node[draw, rounded corners, fill=green!10, minimum width=3cm, minimum height=1.5cm, right=4cm of agent] (env) {\textbf{环境 Environment}};
+    
+    \draw[->, thick] (agent.east) -- node[above] {动作 $A_t$} (env.west);
+    \draw[->, thick] (env.west) -- node[below, midway] {奖励 $R_{t+1}$} (agent.east);
+    \draw[->, thick, bend left=30] (env.south west) to node[below left] {状态 $S_{t+1}$} (agent.south east);
+    
+    \node[below=0.8cm of agent] (timestep) at (agent.south) {时刻 $t$};
+    \node[below=0.8cm of env] (timestep2) at (env.south) {时刻 $t+1$};
+\end{tikzpicture}
+\end{center}
+
+在每个离散时间步 $t = 0, 1, 2, \dots$：
+\begin{enumerate}
+    \item 智能体观测环境的当前\textbf{状态} $S_t \in \states$。
+    \item 基于该状态，智能体选择一个\textbf{动作} $A_t \in \actions$。若智能体使用策略 $\pi$，则 $A_t \sim \pi(\cdot \mid S_t)$。
+    \item 环境接收动作，转移到新状态 $S_{t+1} \in \states$ 并向智能体返回一个\textbf{奖励} $R_{t+1} \in \R \subseteq \reward$。
+\end{enumerate}
+这一循环不断重复，产生一条\textbf{轨迹}（trajectory）：
+\[
+S_0, A_0, R_1, S_1, A_1, R_2, S_2, A_2, \dots
+\]
+
+\begin{mydefinition}{历史 (History)}
+到时刻 $t$ 的历史 $H_t$ 包含了所有可观测的过去信息：
+\[
+H_t = (S_0, A_0, R_1, S_1, A_1, R_2, \dots, R_t, S_t)
+\]
+历史 $H_t$ 是智能体在时间 $t$ 做决策时可用的``全部知识''。
+\end{mydefinition}
+
+如果智能体必须记住完整历史才能做出最优决策，那么决策问题的复杂度将随 $t$ 指数增长。\textbf{马尔可夫性质}（下一节）提供了一个关键的简化假设。
+
+% ----------------------------------------------------------------------
+\subsection{关键概念的形式化}
+% ----------------------------------------------------------------------
+
+\begin{mydefinition}{状态 (State)}
+状态 $S_t \in \states$ 是对环境在时刻 $t$ 状况的一种描述。状态空间 $\states$ 可以是：
+\begin{itemize}
+    \item \textbf{离散有限}：如棋盘位置（国际象棋）、网格单元（GridWorld）。$|\states| = N$。
+    \item \textbf{连续}：如机器人的关节角度和角速度（$(\theta, \dot{\theta}) \in \R^{2d}$）。
+\end{itemize}
+\end{mydefinition}
+
+\begin{mydefinition}{动作 (Action)}
+动作 $A_t \in \actions$ 是智能体在时刻 $t$ 的决策。动作空间 $\actions$ 可以是：
+\begin{itemize}
+    \item \textbf{离散有限}：如上下左右移动（GridWorld）、{买入, 卖出, 持有}（交易）。
+    \item \textbf{连续}：如施加给机器人关节的力矩值 $\tau \in \R^d$。
+\end{itemize}
+\end{mydefinition}
+
+\begin{mydefinition}{奖励 (Reward)}
+奖励 $R_{t+1} \in \R$ 是环境对智能体在状态 $S_t$ 执行动作 $A_t$ 后给出的即时反馈标量。奖励定义了RL问题的\textbf{目标}：智能体的目标是最大化累积奖励（回报），而非即时奖励。
+
+\textbf{奖励假设} (Reward Hypothesis)：任何目标都可以形式化为最大化期望累积奖励。这是RL的基本公设。
+\end{mydefinition}
+
+\begin{remark}
+奖励设计（reward shaping）是RL实践中最重要也最困难的环节之一。一个不恰当的奖励函数可能导致奖励欺骗（reward hacking）——智能体学到了形式正确但意图错误的策略。例如，训练机器人到达目标，如果直接给距离的负值作为惩罚，机器人可能学会在原地不动（如果终止条件不当）。
+\end{remark}
+
+% ======================================================================
+\section{马尔可夫性质}
+% ======================================================================
+
+% ----------------------------------------------------------------------
+\subsection{定义与内涵}
+% ----------------------------------------------------------------------
+
+\begin{mydefinition}{马尔可夫性质 (Markov Property)}
+一个状态 $S_t$ 被称为\textbf{马尔可夫的}，当且仅当：
+\begin{myformula}
+\Pr(S_{t+1} = s', R_{t+1} = r \mid S_t = s, A_t = a) = \Pr(S_{t+1} = s', R_{t+1} = r \mid H_t)
+\end{myformula}
+即：给定当前状态和动作，未来（下一状态和奖励）与历史无关。简言之：\textbf{未来条件独立于过去，给定现在}。
+\end{mydefinition}
+
+\textbf{直观理解}：一个理想棋盘的状态（棋子位置）是马尔可夫的——给定当前棋盘布局和下一步走法，棋局的演变完全确定，不需要知道之前的对弈历史。相反，视频游戏的一个单帧画面通常不是马尔可夫的——单帧无法反映运动物体速度和方向，需要多帧信息。
+
+\begin{mydefinition}{马尔可夫状态}
+状态 $S_t$ 是马尔可夫的，当它包含了完成决策所需的``所有相关信息''。形式化地：
+\[
+\Pr(S_{t+1} \mid S_t, A_t) = \Pr(S_{t+1} \mid S_0, A_0, \dots, S_t, A_t)
+\]
+\end{mydefinition}
+
+\textbf{马尔可夫性质的意义}：
+\begin{enumerate}
+    \item \textbf{计算效率}：决策仅依赖当前状态，无需维护完整历史。存储成本 $O(1)$ 而非 $O(t)$。
+    \item \textbf{理论简化}：MDP理论对问题的分析变得简洁优雅。Bellman方程能成立正是因为马尔可夫性质。
+    \item \textbf{模型学习}：只需学习 $\Pr(s', r \mid s, a)$，而非整个历史的条件分布。
+\end{enumerate}
+
+\begin{remark}
+\textbf{这个假设合理吗？} 在许多实际问题中完美马尔可夫性质并不成立。处理非马尔可夫环境的策略包括：
+\begin{itemize}
+    \item \textbf{状态增强}：将最近 $k$ 帧图像拼接为一个状态（Atari DQN的经典做法），从而构造近似马尔可夫状态。
+    \item \textbf{记忆机制}：使用RNN/LSTM作为策略网络的一部分，隐式编码历史信息。
+    \item \textbf{信念MDP}：将信念（对真实状态的概率分布）作为新的``状态''，信念状态总是马尔可夫的。
+\end{itemize}
+\end{remark}
+
+% ----------------------------------------------------------------------
+\subsection{部分可观测马尔可夫决策过程 (POMDP)}
+% ----------------------------------------------------------------------
+
+\begin{mydefinition}{POMDP}
+一个POMDP是七元组 $(\states, \actions, \trans, \reward, \Omega, \mathcal{O}, \gamma)$，其中：
+\begin{itemize}
+    \item $\states, \actions, \trans, \reward, \gamma$ 同MDP。
+    \item $\Omega$：观测空间。智能体不直接观测到状态 $s$，而是收到观测 $o \in \Omega$。
+    \item $\mathcal{O}: \states \times \actions \times \Omega \to [0, 1]$：观测概率。$\mathcal{O}(o \mid s', a) = \Pr(O_{t+1} = o \mid S_{t+1} = s', A_t = a)$。
+\end{itemize}
+\end{mydefinition}
+
+POMDP是更一般的框架，MDP是 $\mathcal{O}(s \mid s', a) = 1$（完美观测）的特例。POMDP的复杂度远高于MDP，其策略需为历史映射：$a_t \sim \pi(\cdot \mid h_t)$。
+
+\textbf{处理POMDP的两种范式}：
+\begin{enumerate}
+    \item \textbf{信念方法}：维护信念状态 $b(s) = \Pr(S_t = s \mid h_t)$。信念更新通过贝叶斯滤波：$b'(s') \propto \mathcal{O}(o \mid s', a) \sum_s p(s' \mid s, a) b(s)$。信念MDP将POMDP转化为在连续信念空间上的MDP，但其信念空间维度为 $|\states| - 1$，精确求解通常不可行。
+    \item \textbf{直接方法}：用神经网络（如LSTM）直接从观测历史映射到动作，隐式学习信念表示。这是深度RL处理部分可观测性的主流方法。
+\end{enumerate}
+
+% ======================================================================
+\section{MDP的形式化定义}
+% ======================================================================
+
+\begin{mydefinition}{马尔可夫决策过程 (MDP)}
+一个有限MDP由五元组定义：
+\begin{myformula}
+(\states, \actions, \trans, \reward, \gamma)
+\end{myformula}
+其中：
+\begin{itemize}
+    \item $\states$：有限状态集，$s \in \states$。
+    \item $\actions$：有限动作集，$a \in \actions$。在某些问题中动作集可依赖于状态：$\actions(s) \subseteq \actions$。
+    \item $\trans: \states \times \actions \times \states \to [0, 1]$：\textbf{状态转移概率}。
+    \[
+    \trans_{ss'}^a = \Pr(S_{t+1} = s' \mid S_t = s, A_t = a)
+    \]
+    通常联合定义转移和奖励：$p(s', r \mid s, a) = \Pr(S_{t+1} = s', R_{t+1} = r \mid S_t = s, A_t = a)$。
+    \item $\reward: \states \times \actions \times \states \to \R$（或$\reward(s,a)$，$\reward(s)$）：\textbf{奖励函数}。
+    \item $\gamma \in [0, 1]$：\textbf{折扣因子}。$\gamma = 1$ 仅允许在episodic（有终止）任务中使用。
+\end{itemize}
+\end{mydefinition}
+
+% ----------------------------------------------------------------------
+\subsection{转移概率矩阵}
+% ----------------------------------------------------------------------
+
+对给定的动作 $a$，转移概率构成一个矩阵 $\mathbf{P}^a \in \R^{|\states| \times |\states|}$：
+\[
+\mathbf{P}^a = \begin{bmatrix}
+p(s_1 \mid s_1, a) & p(s_2 \mid s_1, a) & \cdots & p(s_n \mid s_1, a) \\
+p(s_1 \mid s_2, a) & p(s_2 \mid s_2, a) & \cdots & p(s_n \mid s_2, a) \\
+\vdots & \vdots & \ddots & \vdots \\
+p(s_1 \mid s_n, a) & p(s_n \mid s_n, a) & \cdots & p(s_n \mid s_n, a)
+\end{bmatrix}
+\]
+
+$\mathbf{P}^a$ 是一个\textbf{行随机矩阵}（每行元素非负且和为1）。在给定策略 $\pi$ 下，整体的状态转移矩阵为：
+\[
+\mathbf{P}^{\pi} = \sum_a \mathbf{P}^a \cdot \mathbf{\Pi}^a
+\]
+其中 $\mathbf{\Pi}^a = \mathrm{diag}(\pi(a \mid s_1), \pi(a \mid s_2), \dots, \pi(a \mid s_n))$，或者更直接地：
+\[
+P^{\pi}(s' \mid s) = \sum_a \pi(a \mid s) \, p(s' \mid s, a)
+\]
+
+\begin{center}
+\begin{tikzpicture}[node distance=2.5cm, every node/.style={circle, draw, minimum size=1cm}]
+    \node[fill=blue!15] (s1) {$s_1$};
+    \node[fill=blue!15, right of=s1] (s2) {$s_2$};
+    \node[fill=blue!15, below of=s1] (s3) {$s_3$};
+    
+    \draw[->, thick] (s1) to[bend left=20] node[above, draw=none] {$0.3$} (s2);
+    \draw[->, thick] (s2) to[bend left=20] node[below, draw=none] {$0.2$} (s1);
+    \draw[->, thick] (s1) to[bend right=20] node[left, draw=none] {$0.4$} (s3);
+    \draw[->, thick] (s3) to[bend right=20] node[right, draw=none] {$0.5$} (s1);
+    \draw[->, thick] (s1) to[loop above] node[draw=none] {$0.3$} (s1);
+    \draw[->, thick] (s2) to[loop above] node[draw=none] {$0.5$} (s2);
+    \draw[->, thick] (s2) to node[right, draw=none] {$0.3$} (s3);
+    \draw[->, thick] (s3) to[loop below] node[draw=none] {$0.5$} (s3);
+    
+    \node[draw=none, right=1cm of s2] {$\mathbf{P}^a$ 示例};
+\end{tikzpicture}
+\end{center}
+
+% ----------------------------------------------------------------------
+\subsection{奖励函数的三种形式}
+% ----------------------------------------------------------------------
+
+实际中奖励函数有三种常见形式，它们可以相互转化：
+
+\begin{enumerate}
+    \item \textbf{$R(s, a)$}：仅依赖状态和动作。$R_t = R(S_{t-1}, A_{t-1})$。Bandit问题的自然形式。
+    \item \textbf{$R(s, a, s')$}：依赖状态、动作和后继状态。$R_t = R(S_{t-1}, A_{t-1}, S_t)$。MDP的完整形式，包含转移的不确定性。
+    \item \textbf{$R(s)$}：仅依赖状态。$R_t = R(S_t)$。当奖励仅与所在位置相关时使用。
+\end{enumerate}
+
+这三种形式之间的转化：若奖励以 $R(s, a, s')$ 给出，可定义：
+\begin{align*}
+R(s, a) &= \sum_{s'} p(s' \mid s, a) \, R(s, a, s') \quad \text{(求期望)} \\
+R(s) &= \sum_a \pi(a \mid s) \, R(s, a) \quad \text{(对动作求期望)}
+\end{align*}
+
+本书主要使用 $R(s, a)$ 或联合分布 $p(s', r \mid s, a)$。推导时用后者的形式最一般。
+
+% ----------------------------------------------------------------------
+\subsection{折扣因子 $\gamma$ 的作用}
+% ----------------------------------------------------------------------
+
+折扣因子 $\gamma$ 控制智能体对未来奖励的重视程度，其作用可以从多个角度理解：
+
+\textbf{1. 数学角度——保证级数收敛}：回报定义为无限和：
+\[
+G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \dots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1}
+\]
+若奖励有界 $|R_t| \le R_{\max}$，则 $|G_t| \le R_{\max} \sum_{k=0}^{\infty} \gamma^k = \frac{R_{\max}}{1 - \gamma}$（几何级数）。$\gamma < 1$ 保证了无限和收敛，使得无限持续任务中的值函数有良好定义。
+
+\textbf{2. 经济学角度——时间偏好}：$\gamma$ 反映了``今天的一元钱比明天的一元钱更值钱''的偏好。$\gamma = 0.9$ 意味着 $k$ 步后的奖励按照 $0.9^k$ 衰减——10步后的奖励影响力仅为当步的 $0.9^{10} \approx 0.349$ 倍。
+
+\textbf{3. 不确定性角度}：未来具有不确定性。$\gamma < 1$ 可以看作智能体对未来事件存在概率为 $1 - \gamma$ 的终止概率。换言之，折扣MDP等价于每一步以概率 $(1-\gamma)$ 终止、进入吸收态（零奖励）的未折扣MDP。
+
+\textbf{4. 算法角度——收敛保证}：$\gamma < 1$ 使Bellman算子成为压缩映射（压缩因子恰好是 $\gamma$），从而保证迭代算法的收敛性。当 $\gamma = 1$ 时，需要额外的遍历性条件才能保证收敛。
+
+\textbf{极限情况}：
+\begin{itemize}
+    \item $\gamma \to 0$：智能体极度短视，只关心即时奖励 $R_{t+1}$。策略退化为``贪心选择最大即时奖励''。
+    \item $\gamma \to 1$：智能体眼光长远，几乎等权重地考虑所有未来奖励。更可能找到最优策略，但计算和收敛更困难。
+    \item $\gamma = 1$：仅用于\textbf{分幕任务} (episodic tasks)，其中有终止状态的保证使回报总是有限。
+\end{itemize}
+
+% ======================================================================
+\section{策略 (Policy)}
+% ======================================================================
+
+\begin{mydefinition}{策略}
+策略 $\pi$ 定义了智能体在每个状态下如何选择动作，是智能体的``大脑''。
+\begin{itemize}
+    \item \textbf{确定性策略}：$\pi: \states \to \actions$，$\pi(s) = a$。在每个状态下指定唯一动作。
+    \item \textbf{随机策略}：$\pi: \states \times \actions \to [0, 1]$，$\pi(a \mid s) = \Pr(A_t = a \mid S_t = s)$。给出动作的概率分布。
+\end{itemize}
+\end{mydefinition}
+
+\textbf{为什么要使用随机策略？}
+\begin{enumerate}
+    \item \textbf{最优策略可能是随机的}：在POMDP中，随机策略可能严格优于所有确定性策略（Kuhn扑克是经典例证）。
+    \item \textbf{探索需求}：确定性贪心策略在未知环境中可能导致``锁定''在次优行为。$\epsilon$-贪心策略在估计的Q值基础上加入随机探索。
+    \item \textbf{策略梯度要求}：$\nabla_\theta \pi_\theta(a \mid s)$ 在确定性策略下无定义（或需要特殊处理如DPG）。
+    \item \textbf{对手博弈}：在多方环境中，随机策略是最优均衡（如石头-剪刀-布，最优策略是等概率1/3选择每个动作）。
+\end{enumerate}
+
+策略具有\textbf{Markov性质}：$\pi(A_t \mid H_t) = \pi(A_t \mid S_t)$——仅根据当前状态决策。这是MDP理论的标准设定。(\emph{非Markov策略}在POMDP中才有必要性。)
+
+在策略 $\pi$ 下，MDP退化为一个\textbf{马尔可夫奖励过程 (MRP)}，其状态转移为：
+\[
+P^{\pi}(s' \mid s) = \sum_{a \in \actions} \pi(a \mid s) \, p(s' \mid s, a)
+\]
+期望奖励为：$R^{\pi}(s) = \sum_a \pi(a \mid s) \, R(s, a)$。
+
+% ======================================================================
+\section{回报与值函数}
+% ======================================================================
+
+% ----------------------------------------------------------------------
+\subsection{回报 (Return)}
+% ----------------------------------------------------------------------
+
+\begin{mydefinition}{回报}
+从时间步 $t$ 开始的折扣回报定义为：
+\begin{myformula}
+G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \dots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1}
+\end{myformula}
+对于分幕任务（有终止时间 $T$）：$G_t = \sum_{k=0}^{T-t-1} \gamma^k R_{t+k+1}$（求和到终止，不需要折扣也能保证有限）。
+\end{mydefinition}
+
+回报具有一个重要的递归结构：
+\begin{myformula}
+G_t = R_{t+1} + \gamma G_{t+1}
+\end{myformula}
+这是所有Bellman方程推导的起点。虽然简单，但意义深远：它意味着我们不需要等到episode结束才能学习——如果知道 $G_{t+1}$ 的估计，就能更新 $G_t$ 的估计。这正是TD学习的核心思想。
+
+% ----------------------------------------------------------------------
+\subsection{状态值函数}
+% ----------------------------------------------------------------------
+
+\begin{mydefinition}{状态值函数 $V^{\pi}(s)$}
+策略 $\pi$ 下状态 $s$ 的值函数是从 $s$ 开始、遵循策略 $\pi$ 的期望回报：
+\begin{myformula}
+V^{\pi}(s) = \E_{\pi}[G_t \mid S_t = s] = \E_{\pi}\left[\sum_{k=0}^{\infty} \gamma^k R_{t+k+1} \;\middle|\; S_t = s\right]
+\end{myformula}
+其中 $\E_{\pi}$ 表示智能体的动作依据 $\pi$ 选取、状态转移依据环境动态 $p$。
+\end{mydefinition}
+
+$V^{\pi}(s)$ 回答了``处于状态 $s$ 有多好''的问题。它是长期累积奖励的期望。
+
+\textbf{值函数的有界性}：若 $|R_t| \le R_{\max}$，则：
+\[
+|V^{\pi}(s)| = \left|\E\left[\sum_{k=0}^{\infty} \gamma^k R_{t+k+1}\right]\right| \le \sum_{k=0}^{\infty} \gamma^k \E[|R_{t+k+1}|] \le \frac{R_{\max}}{1 - \gamma}
+\]
+
+% ----------------------------------------------------------------------
+\subsection{动作值函数}
+% ----------------------------------------------------------------------
+
+\begin{mydefinition}{动作值函数 $Q^{\pi}(s, a)$}
+在策略 $\pi$ 下，在状态 $s$ 执行动作 $a$（之后仍遵循 $\pi$）的期望回报：
+\begin{myformula}
+Q^{\pi}(s, a) = \E_{\pi}[G_t \mid S_t = s, A_t = a] = \E_{\pi}\left[\sum_{k=0}^{\infty} \gamma^k R_{t+k+1} \;\middle|\; S_t = s, A_t = a\right]
+\end{myformula}
+\end{mydefinition}
+
+$Q^{\pi}(s, a)$ 回答了``在状态 $s$ 执行动作 $a$ 有多好''。$Q$ 函数是 $V$ 函数按动作的分解。
+
+\begin{myTheorem}{$V^{\pi}$ 与 $Q^{\pi}$ 的关系}
+\begin{align}
+V^{\pi}(s) &= \sum_{a \in \actions} \pi(a \mid s) \; Q^{\pi}(s, a) \label{eq:v-q-rel} \\
+Q^{\pi}(s, a) &= \sum_{s', r} p(s', r \mid s, a) \left[ r + \gamma V^{\pi}(s') \right] \label{eq:q-v-rel}
+\end{align}
+\end{myTheorem}
+
+\begin{proof}
+\eqref{eq:v-q-rel} 直接由全期望公式得出：对动作 $A_t$ 的分布求期望。
+\begin{align*}
+V^{\pi}(s) &= \E_{\pi}[G_t \mid S_t = s] \\
+&= \E_{A_t \sim \pi(\cdot \mid s)}\left[\E[G_t \mid S_t = s, A_t]\right] \\
+&= \sum_a \pi(a \mid s) \, Q^{\pi}(s, a)
+\end{align*}
+
+\eqref{eq:q-v-rel} 由回报的递归结构：
+\begin{align*}
+Q^{\pi}(s, a) &= \E_{\pi}[R_{t+1} + \gamma G_{t+1} \mid S_t = s, A_t = a] \\
+&= \sum_{s', r} p(s', r \mid s, a) \, \E_{\pi}[r + \gamma G_{t+1} \mid S_{t+1} = s'] \\
+&= \sum_{s', r} p(s', r \mid s, a) \left[ r + \gamma \, V^{\pi}(s') \right]
+\end{align*}
+\end{proof}
+
+\begin{center}
+% Backup diagram for V(s)
+\begin{tikzpicture}[scale=1.0]
+    % Root node
+    \fill[blue!30, draw=blue!60, thick] (0, 0) circle (0.4cm) node {$s$};
+    
+    % Action nodes
+    \foreach \i/\ang in {1/135, 2/45} {
+        \fill[white, draw=black, thick] ({1.5*cos(\ang)}, {1.5*sin(\ang)}) circle (0.3cm);
+        \draw[->, thick] (0,0) -- ({1.5*cos(\ang)}, {1.5*sin(\ang)});
+    }
+    \node at (1.5, 1.5*0.707) {$a$};
+    \node at (1.5, -1.5*0.707) {$\vdots$};
+    
+    % State nodes
+    \foreach \j/\pos in {1/{2.8,0.8}, 2/{2.8,-0.8}} {
+        \fill[green!20, draw=green!60, thick] (\pos) circle (0.35cm);
+        \draw[->, thick] (1.5, 1.5*0.707) -- (\pos);
+    }
+    \draw[->, thick] (1.5, 1.5*0.707) -- (2.8, 0);
+    \node at (2.8*1.15, 0.8*1.15) {$s'$};
+    
+    % Labels
+    \node[below=1.8cm] at (current bounding box.center) {$V^{\pi}(s)$ 的Backup图};
+\end{tikzpicture}
+\qquad
+% Backup diagram for Q(s,a)
+\begin{tikzpicture}[scale=1.0]
+    % Root node
+    \fill[red!30, draw=red!60, thick] (0, 0) circle (0.4cm) node {$(s,a)$};
+    
+    % Reward branch
+    \fill[gray!20, draw=gray!60] (1.5, 0.5) circle (0.25cm);
+    \draw[->, thick] (0.2, 0.2) -- (1.3, 0.45);
+    \node at (0.9, 0.6) {$r$};
+    
+    % State nodes
+    \foreach \j/\pos in {1/{1.5,1.8}, 2/{1.5,0}, 3/{1.5,-1.8}} {
+        \fill[green!20, draw=green!60, thick] (\pos) circle (0.35cm);
+        \draw[->, thick] (0,0) -- (\pos);
+    }
+    \node at (1.5*1.15, 1.8*1.15) {$s'$};
+    \node at (1.5, -1.5) {$\vdots$};
+    
+    \node[below=1.8cm] at (current bounding box.center) {$Q^{\pi}(s,a)$ 的Backup图};
+\end{tikzpicture}
+\end{center}
+
+% ======================================================================
+\section{Bellman方程}
+% ======================================================================
+
+Bellman方程是强化学习的基石，它建立了值函数在当前状态与后继状态之间的递归关系。本节详细推导Bellman期望方程和Bellman最优方程。
+
+% ----------------------------------------------------------------------
+\subsection{Bellman期望方程——$V^{\pi}$}
+% ----------------------------------------------------------------------
+
+\begin{myTheorem}{$V^{\pi}$ 的Bellman期望方程}
+\begin{myformula}
+V^{\pi}(s) = \sum_{a} \pi(a \mid s) \sum_{s', r} p(s', r \mid s, a) \left[ r + \gamma V^{\pi}(s') \right]
+\end{myformula}
+\end{myTheorem}
+
+\begin{proof}
+从定义出发，逐步推导。这个推导虽然看似繁琐，但每一步都有清晰的概率论依据，建议读者仔细领会。
+
+\begin{align*}
+V^{\pi}(s) &= \E_{\pi}[G_t \mid S_t = s] \\
+&= \E_{\pi}[R_{t+1} + \gamma G_{t+1} \mid S_t = s] \quad \text{(回报的递归分解)} \\
+&= \E_{\pi}[R_{t+1} \mid S_t = s] + \gamma \E_{\pi}[G_{t+1} \mid S_t = s]
+\end{align*}
+
+\textbf{第一项}：对动作取期望，再对奖励取期望。
+\[
+\E[R_{t+1} \mid S_t = s] = \sum_a \pi(a \mid s) \sum_{s', r} p(s', r \mid s, a) \, r
+\]
+
+\textbf{第二项}：需要引入中间变量。
+\begin{align*}
+\E[G_{t+1} \mid S_t = s] &= \sum_a \pi(a \mid s) \, \E[G_{t+1} \mid S_t = s, A_t = a] \\
+&= \sum_a \pi(a \mid s) \sum_{s'} \Pr(S_{t+1} = s' \mid S_t = s, A_t = a) \, \E[G_{t+1} \mid S_{t+1} = s'] \\
+&= \sum_a \pi(a \mid s) \sum_{s'} p(s' \mid s, a) \, V^{\pi}(s')
+\end{align*}
+
+将两部分合并（并将奖励项也展开）：
+\begin{align*}
+V^{\pi}(s) &= \sum_a \pi(a \mid s) \sum_{s', r} p(s', r \mid s, a) \, r \;+\; \gamma \sum_a \pi(a \mid s) \sum_{s'} p(s' \mid s, a) \, V^{\pi}(s') \\
+&= \sum_{a} \pi(a \mid s) \sum_{s', r} p(s', r \mid s, a) \left[ r + \gamma V^{\pi}(s') \right]
+\end{align*}
+证毕。
+\end{proof}
+
+\textbf{Bellman方程的直观含义}：状态 $s$ 的值等于在 $s$ 执行一步动作的期望即时奖励，加上折扣后的下一状态值的期望。这完美体现了动态规划中``分而治之''的思想——将无限期问题分解为一步决策加一个子问题。
+
+% ----------------------------------------------------------------------
+\subsection{Bellman期望方程——$Q^{\pi}$}
+% ----------------------------------------------------------------------
+
+\begin{myTheorem}{$Q^{\pi}$ 的Bellman期望方程}
+\begin{myformula}
+Q^{\pi}(s, a) = \sum_{s', r} p(s', r \mid s, a) \left[ r + \gamma \sum_{a'} \pi(a' \mid s') \, Q^{\pi}(s', a') \right]
+\end{myformula}
+\end{myTheorem}
+
+\begin{proof}
+\begin{align*}
+Q^{\pi}(s, a) &= \E_{\pi}[R_{t+1} + \gamma G_{t+1} \mid S_t = s, A_t = a] \\
+&= \sum_{s', r} p(s', r \mid s, a) \, \E_{\pi}[r + \gamma G_{t+1} \mid S_{t+1} = s'] \\
+&= \sum_{s', r} p(s', r \mid s, a) \left[ r + \gamma \sum_{a'} \pi(a' \mid s') \, Q^{\pi}(s', a') \right]
+\end{align*}
+其中最后一步使用了 $V^{\pi}(s') = \sum_{a'} \pi(a' \mid s') Q^{\pi}(s', a')$。
+\end{proof}
+
+% ----------------------------------------------------------------------
+\subsection{Bellman方程的矩阵形式}
+% ----------------------------------------------------------------------
+
+将Bellman期望方程写为紧凑的矩阵形式，对于理解算法的代数结构和收敛性分析极为有用。
+
+设 $\mathbf{V}^{\pi} \in \R^{|\states|}$ 为值函数向量，$\mathbf{R}^{\pi} \in \R^{|\states|}$ 为期望即时奖励向量：
+\[
+R^{\pi}(s) = \sum_a \pi(a \mid s) \sum_{s', r} p(s', r \mid s, a) \, r
+\]
+$\mathbf{P}^{\pi} \in \R^{|\states| \times |\states|}$ 为策略 $\pi$ 下的状态转移矩阵：
+\[
+P^{\pi}_{ss'} = \sum_a \pi(a \mid s) \, p(s' \mid s, a)
+\]
+
+则Bellman期望方程可写为：
+\begin{myformula}
+\mathbf{V}^{\pi} = \mathbf{R}^{\pi} + \gamma \mathbf{P}^{\pi} \mathbf{V}^{\pi}
+\end{myformula}
+
+移项可得线性方程组 $(\mathbf{I} - \gamma \mathbf{P}^{\pi}) \mathbf{V}^{\pi} = \mathbf{R}^{\pi}$。由于 $\gamma < 1$，$\rho(\gamma \mathbf{P}^{\pi}) = \gamma < 1$，矩阵 $\mathbf{I} - \gamma \mathbf{P}^{\pi}$ 可逆，解析解为：
+\begin{myformula}
+\mathbf{V}^{\pi} = (\mathbf{I} - \gamma \mathbf{P}^{\pi})^{-1} \mathbf{R}^{\pi}
+\end{myformula}
+
+\textbf{Neumann级数展开}（证明见第\ref{ch:dp}章）给出了另一种表示：
+\[
+\mathbf{V}^{\pi} = \sum_{k=0}^{\infty} \gamma^k (\mathbf{P}^{\pi})^k \mathbf{R}^{\pi}
+\]
+第 $k$ 项对应 $k$ 步之后期望奖励的贡献。这提供了直接求解的理论基础（对小规模MDP），但对于大规模问题（$|\states| > 10^4$），矩阵求逆的 $O(|\states|^3)$ 复杂度不可接受，必须使用迭代方法。
+
+% ----------------------------------------------------------------------
+\subsection{Bellman最优方程}
+% ----------------------------------------------------------------------
+
+\begin{mydefinition}{最优值函数}
+最优状态值函数和最优动作值函数分别定义为：
+\begin{align*}
+V^{*}(s) &= \max_{\pi} V^{\pi}(s), \quad \forall s \in \states \\
+Q^{*}(s, a) &= \max_{\pi} Q^{\pi}(s, a), \quad \forall s \in \states, a \in \actions
+\end{align*}
+\end{mydefinition}
+
+\textbf{核心事实}：存在一个确定性最优策略 $\pi^{*}$ 同时最大化所有状态的值。对于有限MDP，最优策略总是存在的且可以是确定性的。
+
+\begin{myTheorem}{Bellman最优方程 (Bellman Optimality Equation)}
+\begin{align}
+V^{*}(s) &= \max_{a \in \actions} \sum_{s', r} p(s', r \mid s, a) \left[ r + \gamma V^{*}(s') \right] \label{eq:bellman-opt-v} \\
+Q^{*}(s, a) &= \sum_{s', r} p(s', r \mid s, a) \left[ r + \gamma \max_{a' \in \actions} Q^{*}(s', a') \right] \label{eq:bellman-opt-q}
+\end{align}
+\end{myTheorem}
+
+\begin{proof}[推导思路]
+对 $V^{*}$ 的Bellman最优方程：最优策略在每个状态选择最大化 $Q^{*}(s, a)$ 的动作。因此：
+\[
+V^{*}(s) = \max_{a} Q^{*}(s, a)
+\]
+代入 $Q^{*}$ 的定义：
+\[
+V^{*}(s) = \max_{a} \sum_{s', r} p(s', r \mid s, a) [r + \gamma V^{*}(s')]
+\]
+对 $Q^{*}$ 的方程：
+\[
+Q^{*}(s, a) = \sum_{s', r} p(s', r \mid s, a) [r + \gamma \max_{a'} Q^{*}(s', a')]
+\]
+因为后继状态 $s'$ 处最优策略会选择最优动作。
+\end{proof}
+
+\textbf{Bellman最优方程与Bellman期望方程的区别}：
+\begin{itemize}
+    \item \textbf{Bellman期望方程}：对给定策略 $\pi$ 的线性方程。唯一的解是 $V^{\pi}$。
+    \item \textbf{Bellman最优方程}：含有 $\max$ 算子的非线性方程。唯一的解是 $V^{*}$。
+\end{itemize}
+
+\begin{myTheorem}{最优策略的贪心性}
+给定 $Q^{*}$，最优策略可以直接以贪心方式提取：
+\begin{myformula}
+\pi^{*}(s) = \arg\max_{a \in \actions} Q^{*}(s, a)
+\end{myformula}
+若存在多个最大化动作，任意概率分配均构成最优策略。
+\end{myTheorem}
+
+这一性质至关重要：如果能够学习到 $Q^{*}$（或 $V^{*}$ 加模型），就可以提取出最优策略，无需额外的策略优化。
+
+% ======================================================================
+\section{与马尔可夫链的关系}
+% ======================================================================
+
+强化学习的理论基础可以组织为一个递进的层级结构：
+
+\begin{center}
+\begin{tikzpicture}[node distance=2cm]
+    \node[draw, rounded corners, fill=orange!15, minimum width=8cm, minimum height=0.8cm] (mdp) {\textbf{马尔可夫决策过程 (MDP)}};
+    \node[draw, rounded corners, fill=yellow!15, minimum width=6cm, minimum height=0.8cm, above=0.3cm of mdp] (mrp) {\textbf{马尔可夫奖励过程 (MRP)}};
+    \node[draw, rounded corners, fill=green!15, minimum width=4cm, minimum height=0.8cm, above=0.3cm of mrp] (mc) {\textbf{马尔可夫链 (MC)}};
+    
+    \node[right=0.5cm of mdp] {$\states, \actions, \trans, \reward, \gamma$};
+    \node[right=0.5cm of mrp] {$\states, \trans^{\pi}, \reward^{\pi}, \gamma$};
+    \node[right=0.5cm of mc] {$\states, \trans^{\pi}$};
+    
+    \draw[->] (mc.south) -- (mrp.north) node[midway, right] {$+ \reward^{\pi}$};
+    \draw[->] (mrp.south) -- (mdp.north) node[midway, right] {$+ \actions, \pi$};
+\end{tikzpicture}
+\end{center}
+
+\begin{itemize}
+    \item \textbf{马尔可夫链 (MC)}：仅有状态和转移概率 $\Pr(S_{t+1} \mid S_t)$，无动作、无奖励。MC是关于随机演化过程的模型，如天气变化模型。
+    \item \textbf{马尔可夫奖励过程 (MRP)}：MC + 奖励函数 $R(s)$ + 折扣 $\gamma$。给定一个策略，MDP退化为MRP。MRP已经有值函数概念：$V(s) = \E[\sum \gamma^k R_{t+k+1} \mid S_t = s]$。
+    \item \textbf{马尔可夫决策过程 (MDP)}：MRP + 动作空间。智能体能通过选择动作影响状态演化过程，目标是最优化累积奖励。
+\end{itemize}
+
+\textbf{将MDP看作MRP}：对任意给定的策略 $\pi$，MDP $(\states, \actions, \trans, \reward, \gamma)$ 退化成一个MRP $(\states, \trans^{\pi}, \reward^{\pi}, \gamma)$。这解释了为什么策略评估可以通过求解MRP的值函数来完成---策略固定后，动作维度被``积掉''了。
+
+\textbf{将MDP看作MC}：若用确定性最优策略，MDP变成最优策略下的MC，此时每步动作固定，只剩状态的随机演化。
+
+% ======================================================================
+\section{GridWorld 完整示例}
+% ======================================================================
+
+考虑一个 $4 \times 4$ 的GridWorld问题：
+
+\begin{center}
+\begin{tikzpicture}[scale=1.2]
+    \draw[step=1.0, gray, very thin] (0,0) grid (4,4);
+    
+    % Cell labels
+    \foreach \x/\y/\v in {0/3/0, 1/3/1, 2/3/2, 3/3/3, 0/2/4, 1/2/5, 2/2/6, 3/2/7, 0/1/8, 1/1/9, 2/1/10, 3/1/11, 0/0/12, 1/0/13, 2/0/14, 3/0/15} {
+        \node at (\x+0.5, \y+0.5) {$s_{\v}$};
+    }
+    
+    % Terminal states
+    \fill[red!20] (3,3) rectangle (4,4);
+    \node at (3.5, 3.5) {$s_3$};
+    \fill[red!20, draw=red] (3,0) rectangle (4,1);
+    \node at (3.5, 0.5) {$s_{15}$};
+    
+    \node at (3.8, 4.3) {$R=+1$};
+    \node at (3.8, -0.3) {$R=-1$};
+    
+    \draw[blue, thick, ->] (0.5, 3.5) -- (0.5, 4.3) node[above] {北};
+    \draw[blue, thick, ->] (0.5, 3.5) -- (-0.2, 3.5) node[left] {西};
+    \draw[blue, thick, ->] (0.5, 3.5) -- (1.2, 3.5) node[right] {东};
+    \draw[blue, thick, ->] (0.5, 3.5) -- (0.5, 2.8) node[below] {南};
+\end{tikzpicture}
+\end{center}
+
+\textbf{MDP定义}：
+\begin{itemize}
+    \item $\states = \{s_0, s_1, \dots, s_{15}\}$，共 $16$ 个状态。
+    \item $\actions = \{\text{北, 南, 东, 西}\}$，共 $4$ 个动作。
+    \item 转移概率：每个动作以 $0.8$ 概率按预期方向移动，$0.1$ 概率左偏，$0.1$ 概率右偏。撞墙则停留在原位置。
+    \item 非终止状态奖励为 $-0.04$（每步小惩罚，鼓励尽快到达目标）。
+    \item 两个终止状态：$s_3$（左上，$R=+1$），$s_{15}$（右下，$R=-1$）。
+    \item $\gamma = 0.9$。
+\end{itemize}
+
+\textbf{均匀随机策略的值函数}：若策略在每种状态下均以 $0.25$ 等概率选择每个动作，我们来手动计算几个状态的值。
+
+\textbf{终止状态}：$V(s_3) = V(s_{15}) = 0$（终止后不再有奖励）。
+
+\textbf{非终止状态示例}——考虑 $s_2$（位置 (3,4)，紧邻正向终止态）：
+在东移动作下：
+\begin{align*}
+Q(s_2, \text{东}) &= 0.8 \cdot (+1 - 0.04) + 0.1 \cdot (V(s_2) - 0.04) + 0.1 \cdot (V(s_1) - 0.04) + \gamma \cdot \text{后继值}
+\end{align*}
+由于等式两侧都含 $V$（互依赖），这需要联立求解16个线性方程。
+
+用Python数值求解（参见配套代码），均匀随机策略在非终止状态的值大约在 $-0.5$ 到 $+0.3$ 之间。靠近 $+1$ 奖励的状态值为正（如 $s_2$），靠近 $-1$ 奖励的状态值为负。这表明即使随机行走，值函数也自然地编码了``距离好终点有多近''的信息。
+
+对比之下，最优策略（通过值迭代求得，见第\ref{ch:dp}章）会选择一条最短路径到达 $+1$ 的终点，非终止状态值显著高于随机策略的值。
+
+% ======================================================================
+\section{本章小结}
+% ======================================================================
+
+本章建立了强化学习问题的最核心数学模型——马尔可夫决策过程。我们从智能体-环境交互循环出发，定义了状态、动作、奖励三要素。马尔可夫性质为复杂决策问题提供了关键的简化，使当前状态足以概括未来决策所需的所有历史信息。
+
+MDP的五元组形式化 $(\states, \actions, \trans, \reward, \gamma)$ 精确刻画了序列决策问题。策略 $\pi$ 定义了智能体的行为方式；值函数 $V^{\pi}$ 和 $Q^{\pi}$ 量化了策略的优劣。本章最核心的成果是Bellman方程：
+
+\begin{itemize}
+    \item \textbf{Bellman期望方程}：$V^{\pi}(s) = \sum_a \pi(a \mid s) \sum_{s',r} p(s',r \mid s,a) [r + \gamma V^{\pi}(s')]$。给定策略，值函数满足的线性递归关系。
+    \item \textbf{Bellman最优方程}：$V^{*}(s) = \max_a \sum_{s',r} p(s',r \mid s,a) [r + \gamma V^{*}(s')]$。最优值函数满足的非线性递归关系。
+\end{itemize}
+
+这两个方程是全书所有算法的理论源头：策略评估（第\ref{ch:dp}章）迭代求解Bellman期望方程；策略改进利用贪心性从 $Q^{\pi}$ 构造更优策略；值迭代迭代求解Bellman最优方程；TD学习是Bellman期望方程的随机近似；Q-learning是Bellman最优方程的随机近似。掌握了MDP和Bellman方程，就掌握了RL的语法。
+
+\section*{习题}
+
+\begin{enumerate}
+    \item 证明：对于一个有限MDP，存在一个确定性最优策略（不需要随机化）。提示：考虑Bellman最优算子 $\mathcal{T}$。
+    \item 推导 $Q^{\pi}$ 的Bellman方程，并在GridWorld上手动计算 $s_2$ 的 $Q(s_2, \text{东})$（仅写出方程形式）。
+    \item 证明 $\|\mathbf{P}^{\pi}\|_\infty = 1$（在行和矩阵范数下）。由此证明 $\| \gamma \mathbf{P}^{\pi} \|_\infty = \gamma$。
+    \item 一个MDP有 $3$ 个状态，$\gamma = 0.9$。均匀随机策略下的转移矩阵为：
+    \[
+    \mathbf{P}^{\pi} = \begin{bmatrix} 0.5 & 0.3 & 0.2 \\ 0.1 & 0.6 & 0.3 \\ 0.0 & 0.4 & 0.6 \end{bmatrix}, \quad \mathbf{R}^{\pi} = \begin{bmatrix} 1 \\ 0 \\ -1 \end{bmatrix}
+    \]
+    计算 $\mathbf{V}^{\pi}$ 的解析解：$\mathbf{V}^{\pi} = (\mathbf{I} - \gamma \mathbf{P}^{\pi})^{-1} \mathbf{R}^{\pi}$。
+    \item 在 $\gamma = 0$ 和 $\gamma \to 1$ 两种极限下，Bellman最优方程分别退化成什么形式？最优策略的行为如何变化？
+    \item 将一个普通的无折扣MDP（$\gamma = 1$，有终止状态）等价转化为带折扣的无限持续MDP（$\gamma < 1$，无终止状态）。给出转化公式。
+\end{enumerate}

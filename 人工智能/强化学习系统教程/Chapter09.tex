@@ -1,0 +1,535 @@
+
+% ======================================================================
+% 第9章  模型基强化学习
+% ======================================================================
+\chapter{模型基强化学习}
+
+\intro{从试错到预测——让智能体学会世界的运行规律，\\
+在想象中规划而非在现实中冒险。}
+
+\section{Model-Free vs Model-Based}
+
+在前面章节中我们系统介绍了 Q-Learning、策略梯度、Actor-Critic 等算法，它们有一个共同特点：\emph{不显式地学习环境模型}。智能体直接从交互经验中学习策略或价值函数，而不试图理解动作如何改变状态。这类方法统称为\emph{无模型强化学习}（Model-Free RL）。
+
+\begin{mydefinition}{Model-Free RL 与 Model-Based RL}
+\begin{itemize}
+    \item \textbf{Model-Free RL}：直接从经验中学习策略 $\pi_\theta$ 或价值函数 $Q_\phi$，不学习环境动力学模型。智能体通过试错（trial-and-error）与环境交互，依赖大量样本。
+    \item \textbf{Model-Based RL}：显式地学习环境的动力学模型 $f: \states \times \actions \to \states$（或概率转移 $p(s' \mid s, a)$）和奖励模型 $r: \states \times \actions \to \R$。学到的模型被用于规划、模拟或加速策略学习。
+\end{itemize}
+\end{mydefinition}
+
+\subsection{核心区别}
+
+\begin{table}[H]
+\centering
+\caption{Model-Free 与 Model-Based 的核心区别}
+\begin{tabular}{@{}p{3.5cm}p{5cm}p{5cm}@{}}
+\toprule
+\textbf{维度} & \textbf{Model-Free} & \textbf{Model-Based} \\
+\midrule
+对环境的理解 & 隐式的（通过值函数/策略） & 显式的（动力学模型） \\
+学习对象 & 策略 $\pi$ 或价值 $Q$, $V$ & 模型 $f, r$ + 策略 $\pi$ \\
+样本效率 & 低（需要大量交互） & 高（可想象生成数据） \\
+计算开销 & 低（直接优化策略） & 高（需要做规划） \\
+泛化能力 & 弱（新任务从头训练） & 强（模型可跨任务迁移） \\
+稳定性 & 较好（无模型误差积累） & 挑战性（复合误差问题） \\
+\bottomrule
+\end{tabular}
+\label{tab:mf_vs_mb}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=1.8cm,
+    block/.style={rectangle, draw=blue!60, fill=blue!8, thick, minimum width=3cm, minimum height=0.8cm, align=center},
+    mblock/.style={rectangle, draw=green!50!black, fill=green!8, thick, minimum width=3.2cm, minimum height=0.8cm, align=center},
+    arrow/.style={->, >=stealth, thick, blue!60},
+    marrow/.style={->, >=stealth, thick, green!50!black}]
+    
+    % Model-Free path (left)
+    \node[block] (mfdata) {真实环境交互\\收集经验};
+    \node[block, below=of mfdata] (mfupdate) {直接更新策略 $\pi_\theta$\\或价值函数 $Q_\phi$};
+    \draw[arrow] (mfdata) -- (mfupdate);
+    \draw[arrow] (mfupdate.west) -- ++(-1.2,0) |- (mfdata.west) 
+        node[midway, left, blue!60] {\footnotesize 循环};
+    \node[blue!60] at (-2.2,-1.8) {\textbf{Model-Free}};
+    
+    % Model-Based path (right)
+    \begin{scope}[xshift=6.5cm]
+    \node[mblock] (mbdata) {真实环境交互\\收集经验};
+    \node[mblock, below=of mbdata] (mblearn) {学习动力学模型\\$f_\phi(s,a) \to s'$};
+    \node[mblock, below=of mblearn] (mbplan) {用模型做规划\\或生成模拟数据};
+    \node[mblock, below=of mbplan] (mbupdate) {更新策略 $\pi_\theta$};
+    \draw[marrow] (mbdata) -- (mblearn);
+    \draw[marrow] (mblearn) -- (mbplan);
+    \draw[marrow] (mbplan) -- (mbupdate);
+    \draw[marrow] (mbupdate.east) -- ++(1.2,0) |- (mbdata.east) 
+        node[midway, right, green!50!black] {\footnotesize 循环};
+    \end{scope}
+    \node[green!50!black] at (9.5,-5.5) {\textbf{Model-Based}};
+\end{tikzpicture}
+\caption{Model-Free 与 Model-Based 的学习范式对比。Model-Based 在收集数据和更新策略之间插入了学习模型和用模型规划两个关键步骤。}
+\label{fig:mf_vs_mb}
+\end{figure}
+
+\subsection{何时使用 Model-Based}
+
+Model-Based RL 在以下场景中具有显著优势：
+
+\begin{enumerate}
+    \item \textbf{交互成本高昂}：真实机器人、医疗决策、自动驾驶等场景中，每次试错的代价极高。学到的模型可以在想象中进行成千上万次的低代价试错。
+    \item \textbf{任务需要频繁切换}：同一环境中的不同任务，学到的模型可以跨任务复用，Model-Free 策略则需重新训练。
+    \item \textbf{需要前瞻性推理}：象棋、围棋等需要长程规划的任务中，Model-Based 方法（如 AlphaZero 的 MCTS）天然适合。
+    \item \textbf{安全关键场景}：可使用模型在想象中预判动作后果，提前过滤不安全选项。
+\end{enumerate}
+
+\section{学习环境模型}
+
+Model-Based RL 的第一步是\emph{从数据中学习环境模型}，通常包括两个部分。
+
+\subsection{前向动力学模型}
+
+\begin{mydefinition}{前向动力学模型}
+\[
+f_\phi(s_t, a_t) \approx s_{t+1}
+\]
+或更一般地，预测下一个状态的分布：
+\[
+p_\phi(s_{t+1} \mid s_t, a_t) = \mathcal{N}\big( \mu_\phi(s_t, a_t),\; \Sigma_\phi(s_t, a_t) \big)
+\]
+其中 $\phi$ 为模型参数（通常是一个神经网络）。
+\end{mydefinition}
+
+学习 $\Delta s = s_{t+1} - s_t$（状态变化量）而非直接预测 $s_{t+1}$ 通常更稳定，因为 $\Delta s$ 的数值范围更小。
+
+\subsection{奖励模型}
+
+\begin{mydefinition}{奖励模型}
+\[
+r_\phi(s_t, a_t) \approx r_{t+1}
+\]
+在很多情况下，奖励函数由 MDP 定义而已知，不需要学习。但当奖励需要从观测中推断时（如从传感器数据），奖励模型也是必要的。
+\end{mydefinition}
+
+\subsection{模型训练}
+
+给定从真实环境收集的数据集 $\mathcal{D} = \{(s_t, a_t, r_t, s_{t+1})\}$，最小化以下损失：
+
+\begin{myformula}
+\mathcal{L}_{\text{dyn}}(\phi) = \frac{1}{N} \sum_{(s,a,s') \in \mathcal{D}}
+\| s' - f_\phi(s, a) \|^2
+\end{myformula}
+
+如果使用概率模型（输出均值和对数方差），损失为负对数似然：
+
+\begin{myformula}
+\mathcal{L}_{\text{prob}}(\phi) = -\frac{1}{N} \sum_{(s,a,s') \in \mathcal{D}}
+\log p_\phi(s' \mid s, a)
+\end{myformula}
+
+\begin{remark}
+在连续状态空间的实践中，直接预测 MSE 通常效果不错，但在模型用于长程 rollout 时，概率模型的不确定性量化能力开始体现价值。
+\end{remark}
+
+\subsection{确定性模型 vs 概率模型}
+
+\begin{enumerate}
+    \item \textbf{确定性模型} $s' = f_\phi(s, a)$：简单直接，训练速度快。缺点是无法表达模型的不确定性——在数据稀疏区域可能输出不合理预测，但没有机制表示不确定。
+    \item \textbf{概率模型} $s' \sim \mathcal{N}(\mu_\phi(s,a), \Sigma_\phi(s,a))$：输出预测分布，可同时给出预测值和置信度。在基于采样的规划中，可以从分布中采样来模拟不同结果。
+\end{enumerate}
+
+\subsection{集成模型（Ensemble）}
+
+单一神经网络模型容易在新颖状态下产生错误预测。集成模型通过训练多个独立模型并聚合预测来降低不确定性：
+
+\begin{mydefinition}{集成动力学模型}
+训练 $K$ 个独立模型 $\{f_{\phi_1}, f_{\phi_2}, \dots, f_{\phi_K}\}$（通常 $K = 5 \sim 10$）。每个模型在数据集的不同随机子集上训练（Bootstrap 采样），或使用不同的随机初始化。
+
+在规划阶段的两种使用方式：
+\begin{itemize}
+    \item \textbf{确定性聚合}：$\hat{s}' = \frac{1}{K} \sum_{k=1}^K f_{\phi_k}(s, a)$
+    \item \textbf{随机采样}：每次随机选择一个模型做预测（引入模型不确定性作为隐式探索）
+\end{itemize}
+\end{mydefinition}
+
+集成模型的关键优势：
+\begin{enumerate}
+    \item \textbf{降低预测误差}：多个模型的平均通常优于单个模型
+    \item \textbf{提供不确定性估计}：各模型预测间的方差可作为认知不确定性（epistemic uncertainty）的度量
+\end{enumerate}
+
+\section{用模型做规划}
+
+一旦有了环境模型，就可以用它来想象未来并进行规划。
+
+\subsection{Dyna-Q}
+
+Dyna 架构由 Sutton 于 1990 年提出，是最早将学习模型和用模型规划结合在一起的框架。
+
+\begin{mydefinition}{Dyna-Q 的核心思想}
+Dyna-Q 在标准 Q-Learning 基础上增加了三个并行步骤：
+\begin{enumerate}
+    \item \textbf{直接 RL}：使用真实交互经验更新 Q 值（标准 Q-Learning）
+    \item \textbf{模型学习}：用真实经验更新环境模型 $M(s, a) = (s', r)$
+    \item \textbf{间接 RL（规划）}：每个时间步额外执行 $n$ 次模拟体验——从过去经验中随机采样状态-动作对，用模型预测下一状态和奖励，再用模拟数据更新 Q 值
+\end{enumerate}
+\end{mydefinition}
+
+\begin{myalgorithm}{Dyna-Q（表格型）}
+\textbf{超参数}：步长 $\alpha$，折扣因子 $\gamma$，探索率 $\varepsilon$，规划步数 $n$\\
+\textbf{输入}：初始化 $Q(s,a) \leftarrow 0$，模型 $M(s,a) \leftarrow \emptyset$
+\begin{enumerate}
+    \item \textbf{for each} episode \textbf{do}：
+    \item \quad 获取初始状态 $s$
+    \item \quad \textbf{repeat}（对每一步）：
+    \item \quad \quad 以 $\varepsilon$-greedy 从 $Q(s, \cdot)$ 选择 $a$
+    \item \quad \quad 执行 $a$，观察 $r, s'$
+    \item \quad \quad $Q(s,a) \leftarrow Q(s,a) + \alpha\,[r + \gamma \max_{a'} Q(s',a') - Q(s,a)]$ \quad（直接 RL）
+    \item \quad \quad $M(s,a) \leftarrow (s', r)$ \quad（模型学习——表格型直接记录）
+    \item \quad \quad \textbf{for} i = 1 to $n$ \textbf{do}：\quad（规划）
+    \item \quad \quad \quad 随机选取过往状态 $s_m$ 和动作 $a_m$
+    \item \quad \quad \quad $s'_m, r_m \leftarrow M(s_m, a_m)$
+    \item \quad \quad \quad $Q(s_m, a_m) \leftarrow Q(s_m, a_m) + \alpha\,[r_m + \gamma \max_{a'} Q(s'_m, a') - Q(s_m, a_m)]$
+    \item \quad \quad \textbf{end for}
+    \item \quad \quad $s \leftarrow s'$
+    \item \quad \textbf{until} $s$ 为终止状态
+    \item \textbf{end for}
+\end{enumerate}
+\end{myalgorithm}
+
+\subsection{Dyna 架构图}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=2.2cm,
+    block/.style={rectangle, rounded corners, draw=blue!60, fill=blue!8, thick, 
+        minimum width=2.8cm, minimum height=0.8cm, align=center},
+    dblock/.style={rectangle, rounded corners, draw=green!50!black, fill=green!8, thick, 
+        minimum width=2.8cm, minimum height=0.8cm, align=center},
+    arrow/.style={->, >=stealth, thick}]
+    
+    \node[block] (env) {真实环境};
+    \node[block, below=of env] (direct) {直接 RL\\更新 $Q(s,a)$};
+    \node[dblock, below left=of direct, yshift=0.3cm] (model) {模型学习\\$M(s,a) \to (s',r)$};
+    \node[dblock, below right=of direct, yshift=0.3cm] (sim) {模拟经验\\生成};
+    \node[block, below=of direct, yshift=-1.2cm] (qtable) {价值函数 $Q(s,a)$};
+    
+    \draw[arrow] (env) -- (direct) node[midway, right] {\footnotesize 真实经验};
+    \draw[arrow] (direct) -- (qtable) node[midway, right, xshift=0.3cm] {\footnotesize 更新};
+    
+    \draw[arrow, green!50!black] (direct.west) -- ++(-0.5,0) |- (model.west) 
+        node[midway, left, green!50!black] {\footnotesize 喂入};
+    \draw[arrow, green!50!black] (model) -- (sim) 
+        node[midway, above] {\footnotesize $(s,a) \to (s',r)$};
+    \draw[arrow, green!50!black] (sim) -- (qtable) 
+        node[midway, right, xshift=-0.3cm] {\footnotesize 规划更新};
+    
+    \draw[arrow, dashed, gray] (qtable.west) -- ++(-1.2,0) |- (env.west) 
+        node[midway, left, gray] {\footnotesize 策略};
+    
+    \node[blue!60] at (0, -3.8) {\small 蓝色 = 直接 RL（真实经验）};
+    \node[green!50!black] at (6.2, -3.8) {\small 绿色 = 间接 RL（模型规划）};
+\end{tikzpicture}
+\caption{Dyna 架构：真实经验同时用于直接 Q 值更新和模型学习。学到的模型产生模拟经验，额外用于更新 Q 值。两条路径共享同一价值函数。}
+\label{fig:dyna}
+\end{figure}
+
+\subsection{规划步数 $n$ 的选择}
+
+$n$ 是 Dyna-Q 的核心超参数：
+
+\begin{itemize}
+    \item \textbf{$n = 0$}：退化为标准 Q-Learning（不使用模型规划）
+    \item \textbf{$n$ 较大}：更充分地利用模型，加速价值传播，但计算开销增加
+    \item \textbf{过大的 $n$}：如果模型不准确，大量错误规划可能反而损害学习
+\end{itemize}
+
+在 Sutton 和 Barto 的经典实验中（Gridworld 迷宫导航），Dyna-Q 在 $n = 50$ 时仅需真实环境 3 步即可学到接近最优的策略，而无模型的 Q-Learning 需要 25 步以上——规划步数本质上实现了用计算换取数据。
+
+\begin{remark}
+表格型的 Dyna-Q 无法直接扩展到连续状态空间，因为它需要记录每个 $(s,a)$ 对应的 $(s',r)$。在深度学习中，Dyna 思想被推广为用神经网络作为环境模型，并结合模型 Rollout 生成模拟数据来训练策略。
+\end{remark}
+
+\section{MPC：模型预测控制}
+
+模型预测控制（Model Predictive Control, MPC）是控制理论中广泛应用的方法，其核心思想——\emph{滚动时域优化}（Receding Horizon Control）——与 Model-Based RL 天然契合。
+
+\subsection{MPC 的核心思想}
+
+\begin{mydefinition}{模型预测控制（MPC）}
+在每个决策时刻 $t$，给定当前状态 $s_t$ 和环境模型 $f$，MPC 求解以下有限时域最优控制问题：
+
+\[
+a_{t:t+H-1}^* = \arg\max_{a_{t:t+H-1}} \sum_{k=0}^{H-1} \gamma^k \reward(\hat{s}_{t+k}, a_{t+k})
+\]
+
+约束：$\hat{s}_{t+k+1} = f(\hat{s}_{t+k}, a_{t+k})$，$\hat{s}_t = s_t$
+
+然后执行第一个动作 $a_t^*$，下一时刻对新的状态重新求解。这就是滚动时域优化。
+\end{mydefinition}
+
+其中 $H$ 是规划时域（Planning Horizon）。$H$ 越大则规划越远见，但计算代价也越高。
+
+\subsection{为什么 MPC 适用于学到的模型}
+
+MPC 的三个关键特性使其特别适合与学到的环境模型结合：
+
+\begin{enumerate}
+    \item \textbf{重规划（Replanning）}：每个时间步根据最新观测重新求解，这天然地容忍了模型的不准确性——即使模型在某一步预测错误，下一步的重规划会根据真实新状态校正回来。
+    \item \textbf{开环规划}：MPC 求解的是一系列开环动作序列，而非全局闭环策略。当模型完美时开环序列与最优策略一致；当模型不完美时重规划提供了闭环校正。
+    \item \textbf{有限时域}：MPC 只需在 $H$ 步短时域内优化，而非求解整个 MDP，计算上更加可行。
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.9]
+    % Time axis
+    \draw[->] (0,0) -- (12,0) node[right] {时间 $t$};
+    
+    % Current time marker at t
+    \draw[dashed, red] (1.5,-1.5) -- (1.5,2.5) node[above, red] {\small 当前时刻};
+    \filldraw[red] (1.5,0) circle (2pt);
+    
+    % Horizon at time t (blue)
+    \draw[blue!60, very thick] (1.5,1.5) -- (7.5,1.5);
+    \draw[blue!60, ->] (7.5,1.5) -- (10.5,1.5);
+    \node[blue!60] at (4.5,2.0) {\small 规划时域 $H$（$t$ 时刻）};
+    \node[blue!60] at (1.5,1.8) {\small $s_t$};
+    
+    % Horizon at time t+1 (green, shifted forward)
+    \draw[green!50!black, very thick] (4.5,0.8) -- (10.5,0.8);
+    \draw[green!50!black, ->] (10.5,0.8) -- (11.5,0.8);
+    \node[green!50!black] at (7.5,1.2) {\small 规划时域 $H$（$t+1$ 时刻）};
+    
+    % Actual state trajectory (wavy red)
+    \draw[red!60, thick, ->] (0,-1) -- (0.5,-0.8) -- (1.2,-0.5) -- (1.5,-0.4) 
+        -- (2.2,-0.6) -- (3.0,-0.3) -- (3.7,-0.5) -- (4.5,-0.2) -- (5.2,-0.4) 
+        -- (6.0,-0.1) -- (6.7,-0.3) -- (7.5,0.0) -- (8.2,-0.2)
+        -- (9.0,0.1) -- (9.7,-0.1) -- (10.5,0.2) -- (11.2,0.0);
+    \node[red!70] at (11.6,-0.1) {\small 实际轨迹};
+    
+    % Annotations
+    \draw[->, gray] (3.0,1.5) -- (2.0,-0.3) node[midway, right, gray] {\footnotesize 执行第一步};
+    \draw[->, gray] (6.0,0.8) -- (4.8,-0.2) node[midway, left, gray] {\footnotesize 滚动};
+\end{tikzpicture}
+\caption{MPC 的滚动时域优化。在每个时刻对未来 $H$ 步进行规划，但只执行第一步。下一时刻在新的状态下重新规划，时域窗口向前滑动。}
+\label{fig:mpc_horizon}
+\end{figure}
+
+\subsection{随机采样方法：Random Shooting}
+
+当动作空间为高维连续时，通过梯度优化求解 MPC 目标函数可能很困难。随机采样方法提供了一个简单的替代：
+
+\begin{myalgorithm}{Random Shooting（RS）}
+\textbf{输入}：当前状态 $s$，模型 $f$，时域 $H$，采样数 $N$\\
+\textbf{输出}：最优动作 $a^*$
+\begin{enumerate}
+    \item \textbf{for} $i = 1, 2, \dots, N$ \textbf{do}：
+    \item \quad 随机采样动作序列 $\{a_0^{(i)}, a_1^{(i)}, \dots, a_{H-1}^{(i)}\}$（通常从先验分布如均匀分布）
+    \item \quad 使用模型 rollout：$s_0^{(i)} = s$，$s_{k+1}^{(i)} = f(s_k^{(i)}, a_k^{(i)})$
+    \item \quad 计算累积回报：$J^{(i)} = \sum_{k=0}^{H-1} \gamma^k \reward(s_k^{(i)}, a_k^{(i)})$
+    \item \textbf{end for}
+    \item 选择回报最高的序列：$i^* = \arg\max_i J^{(i)}$
+    \item \textbf{return} 第一个动作：$a^* = a_0^{(i^*)}$
+\end{enumerate}
+\end{myalgorithm}
+
+RS 方法简单但效率低——在 $N$ 个随机样本中找到好序列的概率随动作空间维度呈指数下降。
+
+\subsection{CEM：交叉熵方法}
+
+CEM（Cross-Entropy Method）通过迭代精炼采样分布来改进 RS 的效率。
+
+\begin{myalgorithm}{CEM 规划}
+\textbf{超参数}：样本数 $N$，精英比例 $\rho$（如 $0.1$），迭代次数 $K$\\
+\textbf{输入}：当前状态 $s$，模型 $f$，时域 $H$
+\begin{enumerate}
+    \item 初始化采样分布：$\mu_k \leftarrow 0$（均值），$\Sigma_k \leftarrow I$（协方差），$k = 0, \dots, H-1$
+    \item \textbf{for} iteration $= 1, 2, \dots, K$ \textbf{do}：
+    \item \quad 从 $\mathcal{N}(\mu, \Sigma)$ 中采样 $N$ 条动作序列
+    \item \quad 对每条序列做模型 rollout，计算回报 $J$
+    \item \quad 选回报最高的 $M = \lceil \rho N \rceil$ 条精英序列
+    \item \quad 用精英序列重新估计 $\mu_k$ 和 $\Sigma_k$（样本均值和协方差）
+    \item \textbf{end for}
+    \item \textbf{return} 最优分布均值 $\mu_0$（或最优序列的第一个动作）
+\end{enumerate}
+\end{myalgorithm}
+
+CEM 的核心思想是：从随机均匀搜索逐渐收缩到高回报区域，每次迭代利用精英样本调整搜索分布。这使得它比 RS 高效得多，特别适合在中等维度（5--20 维）的动作空间中做规划。
+
+\subsection{与 RL 的结合}
+
+MPC 可以与 RL 策略结合使用：
+
+\begin{enumerate}
+    \item \textbf{MPC 作为策略}：直接用 MPC 配合学到的模型选择动作。最简单但推理开销大。
+    \item \textbf{RL 策略 + MPC 精炼}：先用 RL 训练的快速策略网络 $\pi_\theta$ 提议动作，然后用 MPC 在提议动作邻域内做局部搜索精炼。
+    \item \textbf{MPC 作为数据生成器}：用 MPC 生成高质量示范数据，再用这些数据训练快速策略网络（行为克隆 + 微调），实现从慢速搜索到快速推理的蒸馏。
+\end{enumerate}
+
+\section{先进 Model-Based 方法}
+
+\subsection{MBPO：基于模型的策略优化}
+
+MBPO（Model-Based Policy Optimization）由 Janner 等人于 2019 年提出，巧妙地将 Model-Based 和 Model-Free 方法融合。
+
+\begin{mydefinition}{MBPO 的核心架构}
+MBPO = 集成动力学模型 + 短时分支 Rollout + SAC 策略优化
+
+具体流程：
+\begin{enumerate}
+    \item 用真实环境数据训练一个集成模型 $\{f_{\phi_1}, \dots, f_{\phi_K}\}$（概率模型，输出高斯分布）
+    \item 在每个训练迭代中，从真实数据中采样起始状态 $s$，用模型做 $k$ 步的分支 Rollout（branched rollout），产生新的模拟数据
+    \item 将模拟数据与真实数据混合，使用 SAC（off-policy Actor-Critic）更新策略
+\end{enumerate}
+\end{mydefinition}
+
+\subsubsection{分支 Rollout 的关键设计}
+
+MBPO 的核心创新在于分支 Rollout 的长度控制：
+
+\begin{mydefinition}{分支 Rollout（Branched Rollout）}
+从真实经验中的状态 $s_t$ 出发，使用集成模型进行 $k$ 步的模拟展开：
+\begin{align*}
+s_t^{\text{real}} &\xrightarrow{a_t} s_{t+1}^{\text{real}} &\text{（真实数据）} \\
+s_t^{\text{real}} &\xrightarrow{\tilde{a}_t} \tilde{s}_{t+1}^{\text{model}} 
+\xrightarrow{\tilde{a}_{t+1}} \tilde{s}_{t+2}^{\text{model}} 
+\xrightarrow{\tilde{a}_{t+2}} \cdots \tilde{s}_{t+k}^{\text{model}} &\text{（模型 rollout）}
+\end{align*}
+
+Rollout 长度 $k$ 是关键超参数：
+\begin{itemize}
+    \item $k = 0$：退化为纯 Model-Free（不使用模型数据）
+    \item $k$ 较小：模型误差可控，但数据增益有限
+    \item $k$ 过大：复合误差使模拟数据质量急剧下降
+\end{itemize}
+\end{mydefinition}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.0]
+    % Real data points (top row)
+    \foreach \x in {0,2,4,6,8} {
+        \filldraw[blue!60] (\x, 2.5) circle (3pt);
+    }
+    \draw[blue!40, dashed] (0,2.5) -- (8.5,2.5);
+    \node[blue!70] at (9.2, 2.5) {\small 真实轨迹};
+    
+    % Branched rollouts from each real state
+    \foreach \x in {0,2,4,6,8} {
+        % Branch of length k=3
+        \filldraw[green!70] (\x, 2.5) circle (3pt);
+        \draw[green!50!black, ->] (\x, 2.5) -- (\x+0.5, 1.8);
+        \draw[green!50!black, ->] (\x+0.5, 1.8) -- (\x+1.0, 1.2);
+        \draw[green!50!black, ->] (\x+1.0, 1.2) -- (\x+1.5, 0.6);
+        \filldraw[green!70] (\x+0.5, 1.8) circle (2pt);
+        \filldraw[green!70] (\x+1.0, 1.2) circle (2pt);
+        \filldraw[green!70] (\x+1.5, 0.6) circle (2pt);
+    }
+    \node[green!50!black] at (4, 0.0) {\small 分支 Rollout（$k=3$，每个真实状态出发）};
+    
+    % k-step annotation
+    \draw[<->, gray, thick] (0.3, 2.1) -- (1.5, 0.3);
+    \node[gray] at (1.6, 1.2) {\footnotesize $k$ 步};
+\end{tikzpicture}
+\caption{MBPO 的分支 Rollout 示意：从每个真实状态出发，使用学到的集成模型进行 $k$ 步模拟展开。所有模拟数据与真实数据一起送入 SAC 进行策略优化。}
+\label{fig:mbpo}
+\end{figure}
+
+\subsubsection{为什么分支 Rollout 有效}
+
+\begin{enumerate}
+    \item \textbf{短时域 = 低误差}：$k$ 步以内的模型预测误差可控，模拟数据仍然有用
+    \item \textbf{数据增强}：每个真实状态可以产生多条分支 Rollout（通过对不同动作序列的模拟），大幅扩充数据量
+    \item \textbf{与 off-policy 算法兼容}：SAC 天然可以使用来自任意数据分布的经验，模拟数据和真实数据混合不会引入额外偏差
+\end{enumerate}
+
+\subsection{模型基与模型无关的混合}
+
+MBPO 代表了一类混合方法的哲学：用模型增强 Model-Free 算法，而非完全替代它。这种混合设计在实践中结合了两者的优势：
+
+\begin{itemize}
+    \item \textbf{模型提供数据效率}：短时 Rollout 生成的大量模拟数据使得策略在早期阶段就能学到有用的行为
+    \item \textbf{Model-Free 策略提供鲁棒性}：当模型误差累积到一定地步时，策略仍然可以依靠真实经验来校正
+\end{itemize}
+
+在 MuJoCo 基准上，MBPO 的样本效率比 SAC 高出 3--5 倍，达到了当时 Model-Based RL 的新 SOTA。
+
+\subsection{Dreamer：在世界模型中学习}
+
+Dreamer 系列方法（Hafner 等，2019--2023）代表了另一种 Model-Based RL 的思路——在\emph{潜空间}（latent space）中学习世界模型。
+
+\begin{mydefinition}{Dreamer 的世界模型架构}
+Dreamer 由三个核心组件构成：
+\begin{enumerate}
+    \item \textbf{编码器（Encoder）} $q(z_t \mid o_t, h_{t-1})$：将高维观测 $o_t$（如图像像素）压缩到低维潜状态 $z_t$
+    \item \textbf{动力学模型（Dynamics）} $p(z_{t+1} \mid z_t, a_t)$：在潜空间中预测状态演化
+    \item \textbf{解码器（Decoder）} $p(o_t \mid z_t)$：从潜状态重建观测
+\end{enumerate}
+
+策略和价值函数全部在\emph{潜空间}中学习和优化，完全不需要接触高维原始观测。
+\end{mydefinition}
+
+Dreamer 的关键优势在于：通过将环境建模从高维观测空间（如 $64 \times 64 \times 3$ 的像素）压缩到紧凑的潜空间（如 $30$ 维的向量），模型的训练和 Rollout 都变得极其高效。这使得 Dreamer 能够直接在图像观测上做 Model-Based RL，无需任何手工设计的状态表征。
+
+\section{模型误差}
+
+尽管 Model-Based RL 在样本效率上具有优势，但学到的模型永远不可能是完美的。模型误差——特别是\emph{复合误差}——是 Model-Based RL 面临的核心挑战。
+
+\subsection{复合误差}
+
+\begin{mydefinition}{复合误差（Compounding Error）}
+假设每一步的模型预测误差为 $\varepsilon$，则 $k$ 步 Rollout 后的累积误差上界约为 $O(k \cdot \varepsilon)$（最坏情况是指数增长 $O(e^k \varepsilon)$，但在实践中通常介于两者之间）。
+
+直观理解：模型在第 1 步预测的状态 $\hat{s}_1$ 已经偏离真实 $s_1$。第 2 步模型以 $\hat{s}_1$ 为输入，其预测 $\hat{s}_2$ 的误差同时来自模型本身的预测误差和输入 $\hat{s}_1$ 的误差。误差随 Rollout 步数不断累积。
+\end{mydefinition}
+
+\begin{myTheorem}{复合误差的简要分析}
+设真实动力学为 $s_{t+1} = f(s_t, a_t)$，学到的模型为 $\hat{f}$。假定 $\hat{f}$ 满足 Lipschitz 连续性：
+
+\[
+\|\hat{f}(s_1, a) - \hat{f}(s_2, a)\| \le L \|s_1 - s_2\|
+\]
+
+在 $k$ 步 Rollout 中（使用模型自身的预测作为后续输入），最终状态的误差满足：
+
+\[
+\|s_k - \hat{s}_k\| \le \varepsilon \cdot \frac{L^k - 1}{L - 1} \quad (\text{当 } L \neq 1)
+\]
+
+当 $L < 1$（收缩动力学）时误差有界；当 $L > 1$（扩散动力学）时误差呈指数增长。
+\end{myTheorem}
+
+\subsection{截断 Rollout}
+
+复合误差的最直接应对策略是\textbf{截断 Rollout}——限制模型预测的最大长度 $k_{\max}$：
+
+\[
+k \le k_{\max} = \min\left( \frac{\log(\delta / \varepsilon)}{\log(L)}, \; K \right)
+\]
+
+其中 $\delta$ 是可容忍的误差上限。当模型置信度低或环境本身具有高度不确定性时，$k_{\max}$ 应设置得较小。
+
+\subsection{不确定性感知规划}
+
+另一个更精细的策略是\textbf{不确定性感知规划}（Uncertainty-Aware Planning）：
+
+\begin{enumerate}
+    \item \textbf{使用概率模型}：对于每个预测步，模型输出一个分布而非点估计。在 Rollout 过程中持续跟踪不确定性。
+    \item \textbf{拒绝高不确定性路径}：当累积不确定性超过阈值时，提前终止该 Rollout 分支，避免在不可靠的预测上做决策。
+    \item \textbf{悲观规划（Pessimistic Planning）}：在模型不确定的区域，对奖励施加惩罚项（类似于 UCB 的相反操作），防止策略被模型的幻觉所误导。
+\end{enumerate}
+
+\begin{remark}
+模型的不确定性可以分为两类：（1）\textbf{认知不确定性（Epistemic Uncertainty）}——由于数据不足导致的模型无知，可以通过收集更多数据来消除；（2）\textbf{偶然不确定性（Aleatoric Uncertainty）}——环境本身的随机性，即使完美模型也无法消除。集成模型的方差主要捕捉前者，而概率模型的输出标准差同时反映了两者。
+\end{remark}
+
+\section{本章小结}
+
+本章系统介绍了模型基强化学习（Model-Based RL）的理论与算法。从 Model-Free 与 Model-Based 的本质区别出发，我们依次讨论了环境模型的学习方法（前向动力学模型、奖励模型、集成模型）、经典规划框架（Dyna-Q）、滚动时域优化 MPC（包括 Random Shooting 与 CEM），以及两个代表当下 SOTA 的先进方法——MBPO（模型与策略优化的混合）和 Dreamer（在潜空间中学习世界模型）。最后，我们剖析了模型基方法最核心的挑战——复合误差及其应对策略（截断 Rollout 和不确定性感知规划）。
+
+Model-Based RL 的核心哲学是用计算换取数据——学到环境运行的规律后，智能体可以在想象中进行大量的低代价试错。这一范式在交互成本高昂、需要多任务泛化、以及安全关键的应用中具有不可替代的价值。后续章节将把这些方法带入机器人控制的实战场景。
+
+\end{chapter}

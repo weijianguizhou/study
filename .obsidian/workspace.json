@@ -11,10 +11,14 @@
             "id": "961be8bfd50a6a96",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "人工智能/马尔可夫决策过程 (Markov Decision Process, MDP).md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "新标签页"
+              "title": "马尔可夫决策过程 (Markov Decision Process, MDP)"
             }
           }
         ]
@@ -173,8 +177,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -190,6 +193,25 @@
   },
   "active": "961be8bfd50a6a96",
   "lastOpenFiles": [
+    "人工智能/强化学习系统教程/main.pdf",
+    "人工智能/强化学习系统教程/Chapter12.tex",
+    "人工智能/强化学习系统教程/Chapter09.tex",
+    "人工智能/强化学习系统教程/Chapter03.tex",
+    "人工智能/强化学习系统教程/Chapter11.tex",
+    "人工智能/强化学习系统教程/main.toc",
+    "人工智能/强化学习系统教程/main.out",
+    "人工智能/强化学习系统教程/main.aux",
+    "人工智能/强化学习系统教程/main.log",
+    "人工智能/强化学习系统教程/Chapter06.tex",
+    "人工智能/强化学习系统教程/Chapter08.tex",
+    "人工智能/RL-策略梯度.md",
+    "人工智能/RL-动态规划与TD.md",
+    "人工智能/RL-机器人控制.md",
+    "人工智能/RL-DQN与值函数近似.md",
+    "人工智能/时间序列预测（Time Series Forecasting）.md",
+    "人工智能/人工智能.md",
+    "人工智能/马尔可夫决策过程 (Markov Decision Process, MDP).md",
+    "人工智能/基于Agent的建模 (ABM).md",
     "材料力学的基本概念整理.md",
     "数理基础/工程数学/帝国时代策略.md",
     "00-知识索引.md",
@@ -199,11 +221,8 @@
     "Pasted image 20260629220006.jpg",
     "Pasted image 20260629220331.jpg",
     "力学/理论力学/零杆的判断.md",
-    "力学/理论力学",
     "力学/难题整理/材料力学.md",
-    "机械/机械原理/~$水运仪象台：11世纪世界科技明珠.pptx",
     "数理基础/概率论.md",
-    "力学/难题整理",
     "数理基础/里卡蒂方程（Riccati Equation）.md",
     "数理基础/数理统计.md",
     "数理基础/数学模型.md",
@@ -211,15 +230,6 @@
     "数理基础/向量微积分.md",
     "数理基础/微分几何.md",
     "数理基础/凸优化.md",
-    "数理基础/随机微分方程SDE.md",
-    "数理基础/数学分析.md",
-    "摄影/eos600d-im3-zh.pdf",
-    "力学/材料力学/鏉愭枡鍔涘.pdf",
-    "力学/材料力学/材料力学.pdf",
-    "力学/静力学/约束和约束力.md",
-    "力学/静力学/静力学基本公理.md",
-    "计算机类/机器学习/YOLO.pdf",
-    "计算机类/机器学习/K-均值聚类的分层初始化方法.pdf",
-    "计算机类/机器学习/基于 DBI 指标的分层初始化 K-means.pdf"
+    "数理基础/随机微分方程SDE.md"
   ]
 }

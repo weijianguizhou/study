@@ -1,0 +1,566 @@
+\chapter{策略梯度方法}
+
+\intro{不学值、不贪心——直接对策略建模，让梯度指引智能体走向最优决策。}
+
+\section{为什么需要策略梯度}
+
+\subsection{DQN 在连续动作空间的局限}
+
+如上一章所述，基于值函数的方法（如 DQN）在连续动作空间下面临一个根本性困难：$\arg\max_a Q(s,a)$ 是一个无法精确求解的非凸连续优化问题。虽然可以使用梯度上升、随机搜索等方法近似，但这带来了额外的计算开销和不稳定性。
+
+而现实世界的许多重要问题恰恰具有连续动作空间：
+\begin{itemize}
+    \item \textbf{机器人控制}：关节力矩是连续向量。
+    \item \textbf{自动驾驶}：方向盘角度、油门、刹车都是连续量。
+    \item \textbf{资源分配}：功率、带宽等在连续区间内调整。
+    \item \textbf{金融交易}：买入/卖出的数量是连续的。
+\end{itemize}
+
+\subsection{随机策略的天然优势}
+
+策略梯度方法提供了一种截然不同的视角：\textbf{直接对策略参数化}并沿梯度方向优化。这意味着策略不是一个隐式的贪心选择（$\arg\max_a Q(s,a)$），而是显式的概率分布 $\pi_{\boldsymbol{\theta}}(a|s)$。
+
+\begin{mydefinition}{基于策略的方法（Policy-Based Methods）}
+基于策略的方法直接学习一个参数化的策略函数：
+$$\pi_{\boldsymbol{\theta}}(a|s) = \Pr(A_t = a \mid S_t = s, \boldsymbol{\theta})$$
+参数 $\boldsymbol{\theta}$ 通过基于梯度的优化方法来调整，使策略在任务中的期望回报最大化。
+\end{mydefinition}
+
+随机策略相比确定性策略有以下几个关键优势：
+
+\begin{enumerate}
+    \item \textbf{天然的探索能力}：策略是一个概率分布，本身就包含了探索机制，不需要借助外部的 $\varepsilon$-贪心等启发式方法。
+    \item \textbf{适用于部分可观测环境}：在 POMDP（部分可观测 MDP）中，随机策略通常优于确定性策略。最优策略可能需要在信息缺失时随机化。
+    \item \textbf{避免策略退化}：在策略迭代中，确定性策略可能在两个状态间震荡（比如：在状态 A 选动作 1 导致状态 B，在状态 B 选动作 2 导致状态 A，但两者都不好）。随机策略可以平滑地混合两个动作。
+    \item \textbf{更简单的收敛理论}：策略梯度是真实的梯度，优化的是明确的目标函数，不像值函数方法有时不稳定的"半梯度"。
+\end{enumerate}
+
+\subsection{策略的参数化表示}
+
+策略可以由任意可微函数表示。最常见的两种方案：
+
+\begin{itemize}
+    \item \textbf{离散动作空间}：使用 Softmax 策略：
+    $$\pi_{\boldsymbol{\theta}}(a|s) = \frac{e^{h(s,a;\boldsymbol{\theta})}}{\sum_{a'} e^{h(s,a';\boldsymbol{\theta})}}$$
+    其中 $h(s,a;\boldsymbol{\theta})$ 是"偏好函数"（通常由神经网络输出）。
+
+    \item \textbf{连续动作空间}：使用高斯策略（Gaussian Policy）：
+    $$\pi_{\boldsymbol{\theta}}(a|s) = \frac{1}{\sqrt{2\pi\sigma_{\boldsymbol{\theta}}(s)^2}} \exp\left(-\frac{(a - \mu_{\boldsymbol{\theta}}(s))^2}{2\sigma_{\boldsymbol{\theta}}(s)^2}\right)$$
+    网络的输出是均值 $\mu_{\boldsymbol{\theta}}(s)$ 和标准差 $\sigma_{\boldsymbol{\theta}}(s)$，动作从该高斯分布中采样。
+\end{itemize}
+
+\section{策略梯度定理}
+
+\subsection{目标函数}
+
+策略梯度方法的目标是最大化某个性能度量 $J(\boldsymbol{\theta})$：
+
+\begin{mydefinition}{策略性能度量 $J(\boldsymbol{\theta})$}
+\begin{itemize}
+    \item \textbf{回合制任务}（episodic）：使用起始状态的值
+    $$J(\boldsymbol{\theta}) \doteq v_{\pi_{\boldsymbol{\theta}}}(s_0) = \E_{\pi_{\boldsymbol{\theta}}}[G_0 \mid S_0 = s_0]$$
+    
+    \item \textbf{连续任务}（continuing）：使用平均奖励率
+    $$J(\boldsymbol{\theta}) \doteq \lim_{T\to\infty} \frac{1}{T} \E_{\pi_{\boldsymbol{\theta}}}\left[\sum_{t=0}^{T-1} R_{t+1}\right]$$
+\end{itemize}
+\end{mydefinition}
+
+在本章中，我们主要讨论回合制任务的 $J(\boldsymbol{\theta}) = v_{\pi_{\boldsymbol{\theta}}}(s_0)$。本章的核心问题是：\textbf{如何计算 $\nabla_{\boldsymbol{\theta}} J(\boldsymbol{\theta})$？}
+
+\subsection{对数导数技巧}
+
+在深入推导策略梯度定理之前，我们需要一个关键的数学工具——\textbf{对数导数技巧}（log-derivative trick），也称为\textbf{似然比技巧}（likelihood ratio trick）。
+
+\begin{myformula}
+\textbf{对数导数技巧}
+$$\nabla_{\boldsymbol{\theta}} \pi_{\boldsymbol{\theta}}(a|s) = \pi_{\boldsymbol{\theta}}(a|s) \cdot \frac{\nabla_{\boldsymbol{\theta}} \pi_{\boldsymbol{\theta}}(a|s)}{\pi_{\boldsymbol{\theta}}(a|s)} = \pi_{\boldsymbol{\theta}}(a|s) \cdot \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(a|s)$$
+\end{myformula}
+
+这个技巧之所以重要，是因为它将梯度表达为"概率 $\times$ 对数概率的梯度"的形式。当我们需要计算涉及概率分布采样的期望的梯度时，这个技巧允许我们将梯度"移入"期望内部，从而可以用 Monte Carlo 采样来估计。
+
+\subsection{轨迹概率的梯度}
+
+考虑一条轨迹 $\tau = (S_0, A_0, R_1, S_1, A_1, R_2, \ldots, S_{T-1}, A_{T-1}, R_T, S_T)$。在策略 $\pi_{\boldsymbol{\theta}}$ 和环境动态 $\trans$ 下，轨迹的概率为：
+
+\begin{myformula}
+\textbf{轨迹概率}
+$$P(\tau \mid \boldsymbol{\theta}) = p_0(S_0) \prod_{t=0}^{T-1} \pi_{\boldsymbol{\theta}}(A_t \mid S_t) \cdot \trans(S_{t+1} \mid S_t, A_t)$$
+\end{myformula}
+
+对两边取对数：
+$$\log P(\tau \mid \boldsymbol{\theta}) = \log p_0(S_0) + \sum_{t=0}^{T-1} \left[ \log \pi_{\boldsymbol{\theta}}(A_t \mid S_t) + \log \trans(S_{t+1} \mid S_t, A_t) \right]$$
+
+对 $\boldsymbol{\theta}$ 求梯度——关键洞察出现了：
+
+\begin{myformula}
+\textbf{轨迹对数概率的梯度}
+$$\nabla_{\boldsymbol{\theta}} \log P(\tau \mid \boldsymbol{\theta}) = \sum_{t=0}^{T-1} \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(A_t \mid S_t)$$
+\end{myformula}
+
+\textbf{环境转移项 $\trans(S_{t+1} \mid S_t, A_t)$ 消失了！}因为 $\trans$ 不依赖于 $\boldsymbol{\theta}$。这是一个极为重要的结果：\textbf{策略梯度不需要环境模型}。我们只需要轨迹中每一步的对数策略梯度之和。
+
+\subsection{策略梯度定理的推导}
+
+现在我们可以正式推导策略梯度定理。
+
+\begin{myTheorem}{策略梯度定理（Policy Gradient Theorem）}
+对于回合制 MDP，策略性能的梯度为：
+$$\nabla_{\boldsymbol{\theta}} J(\boldsymbol{\theta}) = \E_{\pi_{\boldsymbol{\theta}}}\left[ \sum_{t=0}^{T-1} G_t \cdot \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(A_t \mid S_t) \right]$$
+其中 $G_t = \sum_{k=0}^{T-t-1} \gamma^k R_{t+k+1}$ 是从时间 $t$ 开始的折扣回报。
+\end{myTheorem}
+
+\begin{proof}[策略梯度定理的详细推导]
+首先，将 $J(\boldsymbol{\theta})$ 写为对轨迹的期望形式：
+$$J(\boldsymbol{\theta}) = \E_{\tau \sim P(\cdot\mid\boldsymbol{\theta})}[G_0(\tau)] = \int P(\tau \mid \boldsymbol{\theta}) \, G_0(\tau) \, d\tau$$
+
+对 $\boldsymbol{\theta}$ 求梯度：
+\begin{align*}
+\nabla_{\boldsymbol{\theta}} J(\boldsymbol{\theta}) &= \int \nabla_{\boldsymbol{\theta}} P(\tau \mid \boldsymbol{\theta}) \, G_0(\tau) \, d\tau \\
+&= \int P(\tau \mid \boldsymbol{\theta}) \, \nabla_{\boldsymbol{\theta}} \log P(\tau \mid \boldsymbol{\theta}) \, G_0(\tau) \, d\tau \quad \text{（对数导数技巧）}\\
+&= \E_{\tau \sim P(\cdot\mid\boldsymbol{\theta})}\left[ \nabla_{\boldsymbol{\theta}} \log P(\tau \mid \boldsymbol{\theta}) \cdot G_0(\tau) \right]
+\end{align*}
+
+代入 $\nabla_{\boldsymbol{\theta}} \log P(\tau \mid \boldsymbol{\theta}) = \sum_{t=0}^{T-1} \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(A_t \mid S_t)$：
+
+\begin{align*}
+\nabla_{\boldsymbol{\theta}} J(\boldsymbol{\theta}) &= \E_{\pi_{\boldsymbol{\theta}}}\left[ \sum_{t=0}^{T-1} \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(A_t \mid S_t) \cdot G_0(\tau) \right] \\
+&= \E_{\pi_{\boldsymbol{\theta}}}\left[ \sum_{t=0}^{T-1} G_t \cdot \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(A_t \mid S_t) \right]
+\end{align*}
+
+最后一步利用了因果关系：在时间 $t$ 的动作 $A_t$ 只能影响 $t$ 之后的奖励，所以可以用 $G_t$ 替代 $G_0$（早期的回报与 $A_t$ 无关，其期望为 0　贡献）。
+\end{proof}
+
+\subsection{为什么不需要环境模型}
+
+策略梯度定理的美妙之处在于：我们只需要能够从策略 $\pi_{\boldsymbol{\theta}}$ 中采样轨迹，并记录各步的对数概率梯度 $\nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(A_t|S_t)$ 和回报 $G_t$。整个过程中不需要知道 $\trans$ 或 $\reward$——环境模型完全被抽象掉了。
+
+这也是策略梯度方法适合\textbf{真实机器人}等实际应用的深层原因：我们无法精确建模世界的物理规律，但可以让机器人不断尝试，从经验中估计梯度方向。
+
+\begin{table}[H]
+\centering
+\caption{策略梯度与 Q-Learning 的模型依赖性对比}
+\begin{tabular}{@{}p{5.5cm}p{5.5cm}@{}}
+\toprule
+策略梯度 & Q-Learning \\
+\midrule
+直接学习策略 $\pi_{\boldsymbol{\theta}}$ & 先学习 $Q^*$，再推导策略 \\
+天然支持连续动作 & 需要 $\arg\max$，不适合连续动作 \\
+随机策略，内置探索 & 确定性策略，需要外部探索 \\
+真实的梯度优化 & 近似的半梯度优化 \\
+高方差（需要方差减小技术） & 方差相对较低（bootstrap） \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{REINFORCE：蒙特卡洛策略梯度}
+
+\subsection{算法推导}
+
+REINFORCE（Williams, 1992）是策略梯度定理的最直接实现：使用 Monte Carlo 方法来估计梯度。
+
+\begin{myformula}
+\textbf{REINFORCE 的梯度估计}
+$$\nabla_{\boldsymbol{\theta}} J(\boldsymbol{\theta}) \approx \frac{1}{N}\sum_{i=1}^{N}\sum_{t=0}^{T_i-1} G_t^{(i)} \cdot \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(A_t^{(i)} \mid S_t^{(i)})$$
+\end{myformula}
+
+对应的参数更新公式：
+$$\boldsymbol{\theta} \leftarrow \boldsymbol{\theta} + \alpha \cdot G_t \cdot \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(A_t \mid S_t)$$
+
+\subsection{算法伪代码}
+
+\begin{myalgorithm}{REINFORCE（蒙特卡洛策略梯度）}
+\textbf{输入：} 可微策略参数化 $\pi_{\boldsymbol{\theta}}(a|s)$
+
+\textbf{算法参数：} 学习率 $\alpha > 0$，折扣因子 $\gamma \in [0,1]$
+
+\textbf{初始化：} 策略参数 $\boldsymbol{\theta}$（随机初始化）
+
+\textbf{循环}（对每个回合）：
+\quad 使用 $\pi_{\boldsymbol{\theta}}$ 生成一条完整轨迹：
+\quad \quad $S_0, A_0, R_1, S_1, A_1, R_2, \ldots, S_{T-1}, A_{T-1}, R_T$
+\quad \textbf{循环} $t = 0, 1, \ldots, T-1$：
+\quad \quad $G \leftarrow \sum_{k=t}^{T-1} \gamma^{k-t} R_{k+1}$ \quad \color{gray}\% 从时刻 $t$ 开始的折扣回报
+\quad \quad $\boldsymbol{\theta} \leftarrow \boldsymbol{\theta} + \alpha \gamma^t \cdot G \cdot \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(A_t \mid S_t)$
+\end{myalgorithm}
+
+\begin{remark}
+$\nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(A_t \mid S_t)$ 的含义：它指向\textbf{增加}在状态 $S_t$ 下选择动作 $A_t$ 的概率的方向。REINFORCE 的核心直觉是：
+\begin{itemize}
+    \item 如果 $G_t$ 很大（正），则增大 $\pi_{\boldsymbol{\theta}}(A_t|S_t)$——好的动作应该更频繁地被选择。
+    \item 如果 $G_t$ 很小（负），则减小 $\pi_{\boldsymbol{\theta}}(A_t|S_t)$——坏的动作应该被避免。
+\end{itemize}
+更新幅度正比于"动作有多好"（$G_t$）乘以"动作对参数有多敏感"（梯度）。
+\end{remark}
+
+\subsection{高方差问题}
+
+REINFORCE 最大的问题是\textbf{高方差}。方差来源包括：
+
+\begin{enumerate}
+    \item \textbf{轨迹长度的方差}：不同轨迹的步数不同，回报的方差随步数累积。
+    \item \textbf{环境随机性}：在相同的状态和动作下，由于环境转移的随机性，实际接收到的奖励可能差异很大。
+    \item \textbf{策略随机性}：策略本身在采样动作时引入了额外的随机性。
+\end{enumerate}
+
+高方差导致两个后果：
+\begin{itemize}
+    \item \textbf{收敛缓慢}：梯度的噪声太大，需要极小的学习率和大量的样本才能收敛。
+    \item \textbf{不稳定}：偶尔出现的高回报或低回报样本可能导致参数的剧烈震荡。
+\end{itemize}
+
+\section{方差减小技术}
+
+\subsection{Baseline}
+
+减小策略梯度方差的第一个标准技巧是引入\textbf{基线（baseline）}函数。
+
+\begin{myformula}
+\textbf{带基线的策略梯度}
+$$\nabla_{\boldsymbol{\theta}} J(\boldsymbol{\theta}) = \E_{\pi_{\boldsymbol{\theta}}}\left[ \sum_{t=0}^{T-1} (G_t - b(S_t)) \cdot \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(A_t \mid S_t) \right]$$
+其中 $b(s)$ 是任意\textbf{仅依赖于状态}（不依赖于动作）的函数。
+\end{myformula}
+
+\begin{proof}[基线不减梯度的期望]
+我们需要证明 $\E_{\pi_{\boldsymbol{\theta}}}[b(S_t) \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(A_t \mid S_t)] = 0$：
+
+\begin{align*}
+\E_{\pi_{\boldsymbol{\theta}}}[b(S_t) \nabla_{\boldsymbol{\theta}} \log \pi(A_t|S_t)] 
+&= \E_{S_t}[b(S_t) \cdot \E_{A_t \sim \pi_{\boldsymbol{\theta}}(\cdot|S_t)}[\nabla_{\boldsymbol{\theta}} \log \pi(A_t|S_t)]]
+\end{align*}
+
+内层期望为：
+\begin{align*}
+\E_{A_t \sim \pi_{\boldsymbol{\theta}}}[\nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(A_t|S_t)] 
+&= \sum_a \pi_{\boldsymbol{\theta}}(a|S_t) \cdot \frac{\nabla_{\boldsymbol{\theta}} \pi_{\boldsymbol{\theta}}(a|S_t)}{\pi_{\boldsymbol{\theta}}(a|S_t)} \\
+&= \sum_a \nabla_{\boldsymbol{\theta}} \pi_{\boldsymbol{\theta}}(a|S_t) \\
+&= \nabla_{\boldsymbol{\theta}} \sum_a \pi_{\boldsymbol{\theta}}(a|S_t) = \nabla_{\boldsymbol{\theta}} 1 = \mathbf{0}
+\end{align*}
+
+因此基线项对内层期望无贡献，整个期望为零。基线\textbf{不引入偏差，但可以大幅减小方差}。
+\end{proof}
+
+\textbf{而基线为什么减小方差？}直观上，$G_t$ 在最优策略下对\emph{所有}动作都是正的（只要问题设计合理）。如果没有基线，所有动作的概率都会被增大，只是好动作增大多一些、坏动作增大小一些。有了基线，好的动作（$G_t > b$）概率增大，差的动作（$G_t < b$）概率减小。这使得梯度方向更"纯粹"——它区分了相对好坏而不是绝对好坏。
+
+\subsection{最优基线的推导}
+
+一个自然的问题是：什么样的基线 $b(s)$ 最优？
+
+\begin{myTheorem}{最优基线}
+最小化策略梯度方差的最优基线为：
+$$b^*(s) = \frac{\E[G_t \cdot \|\nabla_{\boldsymbol{\theta}} \log \pi(A_t|S_t)\|^2 \mid S_t = s]}{\E[\|\nabla_{\boldsymbol{\theta}} \log \pi(A_t|S_t)\|^2 \mid S_t = s]}$$
+这是一个加权平均回报，权重是每个动作对应的对数梯度范数。
+
+在通常情况下（梯度范数对不同动作近似相等），最优基线近似为：
+$$b^*(s) \approx \E[G_t \mid S_t = s] = v_{\pi_{\boldsymbol{\theta}}}(s)$$
+\end{myTheorem}
+
+\begin{remark}
+这一结论极为重要：\textbf{状态值函数 $v_{\pi}(s)$ 是最优基线的良好近似}。这直接引出了 Actor-Critic 架构——用 Critic 来估计 $v_{\pi}(s)$ 作为 Actor 的基线。
+\end{remark}
+
+\subsection{引入优势函数}
+
+用 $V^{\pi}(S_t)$ 作为基线后，梯度变为：
+$$\nabla_{\boldsymbol{\theta}} J(\boldsymbol{\theta}) = \E_{\pi_{\boldsymbol{\theta}}}\left[ \sum_{t} (G_t - V^{\pi}(S_t)) \cdot \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(A_t \mid S_t) \right]$$
+
+\begin{mydefinition}{优势函数（Advantage Function）}
+动作 $a$ 在状态 $s$ 下的\textbf{优势}定义为：
+$$A^{\pi}(s,a) \doteq Q^{\pi}(s,a) - V^{\pi}(s)$$
+它衡量了选择动作 $a$ 相对于"平均"可以多获得多少回报。$A^{\pi} > 0$ 表示该动作优于平均，$A^{\pi} < 0$ 表示劣于平均。
+\end{mydefinition}
+
+使用优势函数，策略梯度可以写成：
+$$\nabla_{\boldsymbol{\theta}} J(\boldsymbol{\theta}) = \E_{\pi_{\boldsymbol{\theta}}}\left[ \sum_{t} A^{\pi_{\boldsymbol{\theta}}}(S_t, A_t) \cdot \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(A_t \mid S_t) \right]$$
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=stealth, scale=1.2]
+    % Axes
+    \draw[->] (0,0) -- (5.5,0) node[right] {训练步数};
+    \draw[->] (0,-2.5) -- (0,2.5) node[above] {梯度估计};
+    
+    % REINFORCE (high variance)
+    \draw[red, thick, name path=reinforce] plot[smooth, tension=0.6] coordinates {
+        (0,0) (0.3,0.2) (0.5,-0.5) (0.8,1.2) (1.0,-0.3) (1.2,-1.0) (1.5,0.8) (1.7,1.5)
+        (2.0,-0.2) (2.2,-1.2) (2.5,0.5) (2.7,1.8) (3.0,-0.8) (3.2,-1.5) (3.5,0.3)
+        (3.7,1.2) (4.0,-0.5) (4.2,-0.8) (4.5,0.6) (4.7,1.3) (5.0,-0.4)
+    };
+    \fill[red, opacity=0.15] plot[smooth, tension=0.6] coordinates {
+        (0,0) (0.3,0.2) (0.5,-0.5) (0.8,1.2) (1.0,-0.3) (1.2,-1.0) (1.5,0.8) (1.7,1.5)
+        (2.0,-0.2) (2.2,-1.2) (2.5,0.5) (2.7,1.8) (3.0,-0.8) (3.2,-1.5) (3.5,0.3)
+        (3.7,1.2) (4.0,-0.5) (4.2,-0.8) (4.5,0.6) (4.7,1.3) (5.0,-0.4)
+    } -- (5,1.3) -- cycle;
+    
+    % REINFORCE with baseline (low variance)
+    \draw[blue, thick, name path=baseline] plot[smooth, tension=0.6] coordinates {
+        (0,0) (0.3,0.03) (0.5,0.15) (0.8,0.22) (1.0,0.31) (1.2,0.27) (1.5,0.38) (1.7,0.45)
+        (2.0,0.50) (2.2,0.55) (2.5,0.62) (2.7,0.68) (3.0,0.73) (3.2,0.79) (3.5,0.85)
+        (3.7,0.92) (4.0,0.97) (4.2,1.02) (4.5,1.08) (4.7,1.15) (5.0,1.20)
+    };
+    \fill[blue, opacity=0.15] plot[smooth, tension=0.6] coordinates {
+        (0,0) (0.3,0.03) (0.5,0.15) (0.8,0.22) (1.0,0.31) (1.2,0.27) (1.5,0.38) (1.7,0.45)
+        (2.0,0.50) (2.2,0.55) (2.5,0.62) (2.7,0.68) (3.0,0.73) (3.2,0.79) (3.5,0.85)
+        (3.7,0.92) (4.0,0.97) (4.2,1.02) (4.5,1.08) (4.7,1.15) (5.0,1.20)
+    } -- (5,0.8) -- cycle;
+    
+    % Legend
+    \node[red, font=\footnotesize] at (4.5, 2.0) {REINFORCE（无基线）};
+    \node[blue, font=\footnotesize] at (4.5, -0.3) {REINFORCE（带基线）};
+    
+    \node[font=\footnotesize] at (2.7, -2.2) {带基线的梯度估计方差显著减小，收敛更平滑};
+\end{tikzpicture}
+\caption{REINFORCE 无基线（红色，高方差）与带基线（蓝色，低方差）的梯度估计对比示意。基线将绝对回报转为相对优势，大幅减小了估计的波动。}
+\label{fig:baseline-comparison}
+\end{figure}
+
+\section{Actor-Critic 架构}
+
+\subsection{架构设计}
+
+Actor-Critic 方法是策略梯度方法（Actor）和值函数方法（Critic）的有机结合，是目前最主流的深度强化学习范式之一。
+
+\begin{mydefinition}{Actor-Critic}
+\begin{itemize}
+    \item \textbf{Actor（演员）}：策略函数 $\pi_{\boldsymbol{\theta}}(a|s)$，负责\textbf{选择动作}。参数 $\boldsymbol{\theta}$ 通过策略梯度更新。
+    \item \textbf{Critic（评论家）}：值函数 $V_{\mathbf{w}}(s)$ 或 $Q_{\mathbf{w}}(s,a)$，负责\textbf{评估动作的好坏}。参数 $\mathbf{w}$ 通过 TD 学习更新。
+\end{itemize}
+Critic 的输出用于构造优势函数的估计，作为 Actor 梯度中的"信号"，告诉 Actor 哪些动作值得加强、哪些应该削弱。
+\end{mydefinition}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=stealth, node distance=1.5cm, font=\footnotesize]
+    % Environment
+    \node[draw, fill=gray!10, minimum width=3cm, minimum height=1.5cm, align=center] (env) {环境};
+    
+    % Actor
+    \node[draw, fill=blue!15, minimum width=2.5cm, minimum height=1.5cm, align=center, left=of env, xshift=-1cm] (actor) {Actor $\pi_{\boldsymbol{\theta}}(a|s)$\\（策略网络）};
+    
+    % Critic
+    \node[draw, fill=green!15, minimum width=2.5cm, minimum height=1.5cm, align=center, right=of env, xshift=1cm] (critic) {Critic $V_{\mathbf{w}}(s)$\\（值网络）};
+    
+    % TD Error node
+    \node[draw, fill=orange!15, minimum width=3cm, minimum height=1cm, align=center, below=of env, yshift=-0.5cm] (td) {TD 误差 $\delta_t$};
+    
+    % Arrows
+    \draw[->, thick] (actor.east) -- node[above] {$A_t$} (env.west);
+    \draw[->, thick] (env.north) -- ++(0,0.5) -| node[above right] {$S_{t+1}, R_{t+1}$} (critic.north);
+    \draw[->, thick] (env.north) -- ++(0,0.2) -| node[above left] {$S_t$} (actor.north);
+    
+    \draw[->, thick] (critic.south) -- ++(0,-0.5) -| node[right] {$V(S_t), V(S_{t+1})$} (td.east);
+    \draw[->, thick] (env.south) -- (td.north);
+    
+    \draw[->, thick, red] (td.west) -- ++(-1.5,0) |- node[left] {$\delta_t$ 指导更新} (actor.south);
+    \draw[->, thick, green!50!black] (td.east) -- ++(1,0) |- node[right] {$\delta_t$ 更新} (critic.south);
+\end{tikzpicture}
+\caption{Actor-Critic 架构。Actor 选择动作，Critic 评估值函数，TD 误差 $\delta_t$ 同时驱动两个网络的更新。}
+\label{fig:actor-critic}
+\end{figure}
+
+\subsection{Actor 更新}
+
+Actor 使用带基线的策略梯度：
+$$\nabla_{\boldsymbol{\theta}} J(\boldsymbol{\theta}) \approx \sum_t \delta_t \cdot \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(A_t \mid S_t)$$
+
+其中 $\delta_t = R_{t+1} + \gamma V_{\mathbf{w}}(S_{t+1}) - V_{\mathbf{w}}(S_t)$ 是 TD 误差，用作优势函数 $A(S_t, A_t)$ 的近似。
+
+\begin{proof}[TD 误差作为优势函数的无偏估计]
+优势函数的定义为 $A^{\pi}(s,a) = Q^{\pi}(s,a) - V^{\pi}(s)$。
+
+TD 误差的期望为：
+\begin{align*}
+\E_{\pi}[\delta_t \mid S_t = s, A_t = a] &= \E_{\pi}[R_{t+1} + \gamma V(S_{t+1}) - V(S_t) \mid S_t = s, A_t = a] \\
+&= \E[R_{t+1} + \gamma V(S_{t+1}) \mid S_t = s, A_t = a] - V(s) \\
+&= Q(s,a) - V(s) = A(s,a)
+\end{align*}
+
+因此，$\delta_t$ 是优势函数的一个无偏（但含噪声的）估计。在实际中使用这个估计既简单又有效。
+\end{proof}
+
+\subsection{Critic 更新}
+
+Critic 使用标准的 TD 学习来更新其参数 $\mathbf{w}$：
+$$\mathbf{w} \leftarrow \mathbf{w} + \beta \cdot \delta_t \cdot \nabla_{\mathbf{w}} V_{\mathbf{w}}(S_t)$$
+
+其中 $\beta$ 是 Critic 的学习率。Critic 的损失函数为：
+$$L(\mathbf{w}) = \frac{1}{2}\delta_t^2 = \frac{1}{2}[R_{t+1} + \gamma V_{\mathbf{w}}(S_{t+1}) - V_{\mathbf{w}}(S_t)]^2$$
+
+这是标准的半梯度 TD 更新（忽略了 $V_{\mathbf{w}}(S_{t+1})$ 对 $\mathbf{w}$ 的依赖）。
+
+\subsection{A2C：Advantage Actor-Critic}
+
+A2C（Advantage Actor-Critic）是同步的、基于优势函数的 Actor-Critic 算法。与 A3C（异步版本）相比，A2C 使用同步更新，等待所有并行 worker 完成后再统一更新全局参数。
+
+\begin{myalgorithm}{A2C（Advantage Actor-Critic）}
+\textbf{初始化：} Actor 参数 $\boldsymbol{\theta}$，Critic 参数 $\mathbf{w}$（随机）
+
+\textbf{循环}（对每个回合）：
+\quad $t \leftarrow 0$，初始化 $S_0$
+\quad \textbf{循环}（回合未终止）：
+\quad \quad 采样 $A_t \sim \pi_{\boldsymbol{\theta}}(\cdot \mid S_t)$
+\quad \quad 执行 $A_t$，观察 $R_{t+1}$ 和 $S_{t+1}$
+\quad \quad 存储 $(S_t, A_t, R_{t+1})$
+\quad \quad $t \leftarrow t+1$
+\quad \quad \textbf{如果} $S_t$ 是终止状态或 $t$ 达到 $t_{\max}$：
+\quad \quad \quad \textbf{对} $k = t-1, \ldots, 0$（从后向前）：
+\quad \quad \quad \quad $R \leftarrow \begin{cases}
+0 & \text{终止}\\
+V_{\mathbf{w}}(S_{k+1}) & \text{否则}
+\end{cases}$
+\quad \quad \quad \quad \textbf{对} $i = k, \ldots, t-1$：
+\quad \quad \quad \quad \quad $R \leftarrow R_i + \gamma R$
+\quad \quad \quad \quad \quad $\delta \leftarrow R - V_{\mathbf{w}}(S_i)$
+\quad \quad \quad \quad \quad $\mathbf{w} \leftarrow \mathbf{w} + \beta \delta \nabla_{\mathbf{w}} V_{\mathbf{w}}(S_i)$
+\quad \quad \quad \quad \quad $\boldsymbol{\theta} \leftarrow \boldsymbol{\theta} + \alpha \delta \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(A_i \mid S_i)$
+\quad \quad \quad 重置存储
+\end{myalgorithm}
+
+\subsection{A3C：Asynchronous Advantage Actor-Critic}
+
+A3C（Mnih et al., 2016）是 A2C 的异步版本。它的核心思想是\textbf{并行化}：创建多个 worker（每个 worker 有自己独立的环境实例和网络副本），各 worker 异步地向全局网络推送梯度更新，然后同步最新的全局参数。
+
+\begin{mydefinition}{A3C 的关键特性}
+\begin{enumerate}
+    \item \textbf{异步并行}：多个 worker 独立运行，无需等待彼此，充分利用多核 CPU 的计算能力。
+    \item \textbf{探索多样性}：不同 worker 的网络参数略有差异（因异步更新），导致行为策略自然多样化，增强了整体探索。
+    \item \textbf{无需经验回放}：A3C 是在线的（on-policy），使用 $n$-步回报进行训练，不需要经验回放缓冲区。
+    \item \textbf{熵正则化}：在损失函数中添加策略熵项 $-\beta H(\pi_{\boldsymbol{\theta}}(\cdot|S_t))$，鼓励持续探索，防止策略过早收敛到次优确定性策略。
+\end{enumerate}
+\end{mydefinition}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[>=stealth, node distance=1.2cm, font=\footnotesize]
+    % Global Network
+    \node[draw, fill=red!15, minimum width=4cm, minimum height=1.5cm, align=center, rounded corners] (global) at (0,3) {全局网络（Global Network）\\$\pi_{\boldsymbol{\theta}}(a|s)$, $V_{\mathbf{w}}(s)$};
+    
+    % Workers
+    \node[draw, fill=blue!15, minimum width=2.5cm, minimum height=1.5cm, align=center, rounded corners] (w1) at (-4,0) {Worker 1\\Env 1};
+    \node[draw, fill=blue!15, minimum width=2.5cm, minimum height=1.5cm, align=center, rounded corners] (w2) at (0,0) {Worker 2\\Env 2};
+    \node[draw, fill=blue!15, minimum width=2.5cm, minimum height=1.5cm, align=center, rounded corners] (w3) at (4,0) {Worker 3\\Env 3};
+    
+    % Push gradients (up)
+    \draw[->, thick, red!60] (w1.north) -- node[right, font=\tiny] {推送梯度} ++(0,1.2) -| (global.south west);
+    \draw[->, thick, red!60] (w2.north) -- node[right, font=\tiny] {推送梯度} ++(0,1.2) -- (global.south);
+    \draw[->, thick, red!60] (w3.north) -- node[right, font=\tiny] {推送梯度} ++(0,1.2) -| (global.south east);
+    
+    % Pull parameters (down)
+    \draw[->, thick, blue!60, dashed] (global.south) -- ++(0,-0.5) -| node[below left, font=\tiny] {拉取参数} (w2.north east);
+    \draw[->, thick, blue!60, dashed] (global.south west) -- ++(-0.8,-0.5) -| (w1.north);
+    \draw[->, thick, blue!60, dashed] (global.south east) -- ++(0.8,-0.5) -| (w3.north);
+    
+    % Dots for more workers
+    \node[font=\large] at (-1.5,0) {\dots};
+    \node[font=\large] at (1.5,0) {\dots};
+\end{tikzpicture}
+\caption{A3C 的并行架构。每个 worker 在自己的环境副本中独立收集经验，计算梯度并异步推送到全局网络；同时从全局网络拉取最新参数。多个 worker 的独立探索自然地增强了训练的多样性。}
+\label{fig:a3c-arch}
+\end{figure}
+
+A3C 在 Atari 游戏上达到了与 DQN 相当甚至更好的性能，同时训练速度快得多（多核并行），且不需要 GPU 也能有效运行。
+
+\section{确定性策略梯度}
+
+\subsection{DPG 理论}
+
+前述的策略梯度方法都是针对随机策略。Silver et al.（2014）提出了\textbf{确定性策略梯度}（Deterministic Policy Gradient, DPG），将策略梯度框架扩展到确定性策略。
+
+\begin{mydefinition}{确定性策略}
+确定性策略 $\mu_{\boldsymbol{\theta}} : \states \to \actions$ 是一个从状态到动作的映射（而非概率分布）：
+$$a = \mu_{\boldsymbol{\theta}}(s)$$
+\end{mydefinition}
+
+\textbf{为什么使用确定性策略？}在随机策略中，梯度估计的方差来自于对动作的采样。确定性策略消除了这一层方差，可能产生更高效的梯度估计——在高维动作空间中尤其如此。
+
+\begin{myTheorem}{确定性策略梯度定理}
+对于确定性策略 $\mu_{\boldsymbol{\theta}}(s)$，性能目标的梯度为：
+$$\nabla_{\boldsymbol{\theta}} J(\boldsymbol{\theta}) = \E_{s \sim \rho^{\mu}}\left[ \nabla_{\boldsymbol{\theta}} \mu_{\boldsymbol{\theta}}(s) \cdot \nabla_a Q^{\mu}(s,a) \big|_{a=\mu_{\boldsymbol{\theta}}(s)} \right]$$
+其中 $\rho^{\mu}$ 是策略 $\mu$ 下的折扣状态分布。
+\end{myTheorem}
+
+\begin{proof}[DPG 梯度的推导思路]
+DPG 的推导利用了链式法则：$\boldsymbol{\theta}$ 的变化影响策略 $\mu(s)$，$\mu(s)$ 的变化影响 Q 值 $Q(s,\mu(s))$，而我们的目标是最大化所有状态下的期望 Q 值。梯度的"两端"分别是：
+\begin{itemize}
+    \item $\nabla_{\boldsymbol{\theta}} \mu_{\boldsymbol{\theta}}(s)$：策略输出关于参数的梯度（Actor 的雅可比矩阵）
+    \item $\nabla_a Q^{\mu}(s,a)|_{a=\mu_{\boldsymbol{\theta}}(s)}$：Q 函数关于动作的梯度（Critic 提供）
+\end{itemize}
+两者相乘即得到参数更新的方向。
+\end{proof}
+
+\subsection{Off-policy DPG}
+
+DPG 的一个关键特性是它可以自然地以 off-policy 方式运行。因为梯度估计不涉及对动作的采样期望（动作是确定性计算的），所以行为策略可以和目标策略不同。这为 DDPG（Deep Deterministic Policy Gradient）的提出铺平了道路。
+
+\begin{myalgorithm}{DDPG（Deep Deterministic Policy Gradient）}
+\textbf{初始化：}
+\quad Critic 网络 $Q_{\mathbf{w}}(s,a)$ 和 Actor 网络 $\mu_{\boldsymbol{\theta}}(s)$（随机）
+\quad 目标网络 $Q_{\mathbf{w}^{-}}$ 和 $\mu_{\boldsymbol{\theta}^{-}}$（参数复制自主网络）
+\quad 经验回放缓冲区 $\mathcal{D}$
+
+\textbf{循环}（对每个回合）：
+\quad 初始化探索噪声过程 $\mathcal{N}$
+\quad 获取初始状态 $S_1$
+\quad \textbf{循环} $t = 1, 2, \ldots, T$：
+\quad \quad 选择动作 $A_t = \mu_{\boldsymbol{\theta}}(S_t) + \mathcal{N}_t$
+\quad \quad 执行 $A_t$，观察 $R_{t+1}, S_{t+1}$
+\quad \quad 将 $(S_t, A_t, R_{t+1}, S_{t+1})$ 存入 $\mathcal{D}$
+\quad \quad 从 $\mathcal{D}$ 采样 mini-batch
+\quad \quad 计算 TD 目标 $y = R + \gamma Q_{\mathbf{w}^{-}}(S', \mu_{\boldsymbol{\theta}^{-}}(S'))$
+\quad \quad 更新 Critic：最小化 $(y - Q_{\mathbf{w}}(S,A))^2$
+\quad \quad 更新 Actor：$\nabla_{\boldsymbol{\theta}} J \approx \frac{1}{B}\sum \nabla_a Q_{\mathbf{w}}(s,a)|_{a=\mu_{\boldsymbol{\theta}}(s)} \nabla_{\boldsymbol{\theta}} \mu_{\boldsymbol{\theta}}(s)$
+\quad \quad 软更新目标网络：$\mathbf{w}^{-} \leftarrow \tau \mathbf{w} + (1-\tau)\mathbf{w}^{-}$
+\quad \quad \quad \quad \quad \quad \;\; $\boldsymbol{\theta}^{-} \leftarrow \tau \boldsymbol{\theta} + (1-\tau)\boldsymbol{\theta}^{-}$
+\end{myalgorithm}
+
+\section{方法对比与总结}
+
+\subsection{Value-Based vs Policy-Based vs Actor-Critic}
+
+\begin{table}[H]
+\centering
+\caption{三类强化学习方法的系统对比}
+\begin{tabular}{@{}p{2.8cm}p{3.2cm}p{3.2cm}p{3.2cm}@{}}
+\toprule
+维度 & Value-Based（DQN等） & Policy-Based（REINFORCE等） & Actor-Critic（A2C, PPO等） \\
+\midrule
+核心思想 & 学习最优值函数 & 直接优化策略 & 策略+值函数联合优化 \\
+动作空间 & 离散 & 连续/离散均可 & 连续/离散均可 \\
+策略类型 & 贪心/$\varepsilon$-贪心 & 随机策略 & 随机/确定性均可 \\
+探索方式 & 外部（$\varepsilon$-贪心） & 内在（概率采样） & 结合两者 \\
+样本效率 & 高（经验回放） & 低（on-policy） & 中等或高 \\
+方差 & 低 & 高 & 中等 \\
+偏差 & 高（TD bootstrap） & 无偏（MC更新） & 中等 \\
+收敛性 & 不稳定（non-convex） & 收敛到局部最优 & 收敛到局部最优 \\
+并行化 & 困难 & 容易 & 容易（A3C） \\
+典型算法 & DQN, Rainbow & REINFORCE, TRPO & A2C, A3C, PPO, DDPG \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{实际选择指南}
+
+\begin{enumerate}
+    \item \textbf{离散、小动作空间 + 视觉输入}：DQN 系列（Rainbow）是最佳选择，经验回放使样本效率极高。
+    \item \textbf{连续动作空间}：Actor-Critic 方法是唯一实用的选择。DDPG/TD3 用于确定性策略，PPO/SAC 用于随机策略。
+    \item \textbf{需要快速原型验证}：A2C/A3C 或 PPO 实现简单、鲁棒性好，是很好的起点。
+    \item \textbf{样本效率至关重要（如真实机器人）}：Off-policy 的 Actor-Critic（如 SAC、TD3）利用经验回放。
+    \item \textbf{高维动作空间}：确定性策略梯度（DDPG/TD3）可能更有效，因为不需要对动作分布积分。
+\end{enumerate}
+
+\subsection{本章小结}
+
+策略梯度方法将强化学习从"找到最好的值"的思维范式切换到了"直接优化行为"的范式。本章的核心要点包括：
+
+\begin{enumerate}
+    \item \textbf{策略梯度定理}是本章的理论基石——它告诉我们梯度的方向可以通过采样的轨迹来估计，而且\textbf{不需要知道环境模型}。
+    \item \textbf{REINFORCE}是最直接的实现，但因高方差问题在实践中效率低下。
+    \item \textbf{基线（baseline）}技术在不引入偏差的前提下显著降低方差，最优基线近似为状态值函数 $V(s)$。
+    \item \textbf{Actor-Critic}将策略学习和值函数学习优雅地结合在一起：Critic 提供低方差的优势估计，Actor 据此调整策略。
+    \item \textbf{A3C}通过异步并行实现了高效的训练，无需经验回放。
+    \item \textbf{确定性策略梯度（DPG）}为连续控制提供了另一种高效的选择，DDPG 将其与深度学习结合。
+    \item 三类方法（Value-Based, Policy-Based, Actor-Critic）各有优劣，实际应用中应根据任务特点选择最适合的方法。
+\end{enumerate}
+
+\begin{remark}
+从下一章开始，我们将进入高级策略梯度方法的讨论，包括 TRPO（Trust Region Policy Optimization）和 PPO（Proximal Policy Optimization），这些方法通过约束策略更新的幅度进一步提高了训练的稳定性和样本效率。
+\end{remark}

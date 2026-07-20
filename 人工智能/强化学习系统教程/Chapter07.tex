@@ -1,0 +1,849 @@
+
+% ======================================================================
+% 第7章  TRPO、PPO 与 GAE
+% ======================================================================
+\chapter{TRPO、PPO 与 GAE}
+
+\intro{信任区域与近端优化——从理论上约束策略更新，\\
+在工程上实现稳定、高效的策略梯度方法。}
+
+\section{从策略梯度到 TRPO}
+
+在第六章中，我们详细介绍了策略梯度（Policy Gradient, PG）方法及其各类变体。尽管这些方法在理论上具有良好的收敛性质，但在实际应用中面临着若干严峻挑战。本节将从这些问题出发，逐步引出信任区域策略优化（Trust Region Policy Optimization, TRPO）的核心思想。
+
+\subsection{策略梯度的困境}
+
+回顾 REINFORCE 算法及其 Actor-Critic 扩展，它们都基于如下的策略梯度定理：
+
+\begin{myformula}
+\nabla_\theta J(\theta) = \E_{\tau \sim \pi_\theta}\left[ \sum_{t=0}^{T} \nabla_\theta \log \pi_\theta(a_t \mid s_t) \Psi_t \right]
+\end{myformula}
+
+其中 $\Psi_t$ 可以是累积回报 $G_t$、优势函数 $A(s_t, a_t)$ 或 TD 误差 $\delta_t$。然而，这一朴素形式的策略梯度在实际中存在以下问题：
+
+\begin{enumerate}
+    \item \textbf{步长敏感性（Step-Size Sensitivity）}：策略梯度是典型的 on-policy 方法，每次策略更新后，旧的样本便不能再使用。如果步长太大，策略可能"越过"了性能更好的区域，导致灾难性崩溃；如果步长太小，学习进展极其缓慢。不同于监督学习中可以通过验证集诊断步长问题，RL 中错误的步长会直接破坏策略，且这种破坏是不可逆的。
+    
+    \item \textbf{样本效率低下（Low Sample Efficiency）}：每次梯度估计都需要从当前策略采样全新的一批轨迹。在高维连续控制任务中，收集一条轨迹的代价高昂，而 on-policy 的约束使我们必须频繁地丢弃旧样本。
+    
+    \item \textbf"高方差（High Variance）"：即使引入了基线（Baseline）来降低方差，REINFORCE 在长轨迹上的方差仍然巨大，导致训练不稳定。
+\end{enumerate}
+
+\subsubsection{一个好策略是如何被"摧毁"的}
+
+考虑一个简单的例子：假设当前策略 $\pi_{\theta_k}$ 在某个状态下以 $0.6$ 的概率选择动作 $a_1$（好动作），以 $0.4$ 的概率选择 $a_2$（坏动作）。在一次策略梯度更新后，新策略 $\pi_{\theta_{k+1}}$ 变成以 $0.05$ 的概率选择 $a_1$，以 $0.95$ 的概率选择 $a_2$。由于策略的剧烈变化，后续采样到的轨迹质量急剧下降，梯度估计也随之恶化，形成正反馈的恶性循环。
+
+\begin{myTheorem}{策略更新的"破坏半径"}
+令 $\theta$ 和 $\theta'$ 为两组策略参数，$D_{\text{TV}}(\pi_\theta \| \pi_{\theta'}) = \max_s D_{\text{TV}}(\pi_\theta(\cdot\mid s) \| \pi_{\theta'}(\cdot\mid s))$。Schulman 等（2015）证明了以下下界：
+
+\[
+J(\theta') \ge L_{\theta}(\theta') - C \cdot D_{\text{KL}}^{\max}(\theta, \theta')
+\]
+
+其中 $L_{\theta}(\theta') = \E_{s,a \sim \pi_{\theta}} \left[ \frac{\pi_{\theta'}(a\mid s)}{\pi_{\theta}(a\mid s)} A^{\pi_\theta}(s,a) \right]$，$C = \frac{4\epsilon\gamma}{(1-\gamma)^2}$，$\epsilon = \max_{s,a} |A^{\pi_\theta}(s,a)|$。
+\end{myTheorem}
+
+这个定理的意义在于：只要新旧策略之间的 KL 散度足够小，新策略的真实性能就不会低于某个可计算的下界。这就为"保守更新"提供了理论依据——我们不应在参数空间中走得太远，而应在策略分布空间中保持克制。
+
+\subsection{重要性采样与 Off-Policy 过渡}
+
+要利用旧策略的样本更新新策略，自然需要引入重要性采样（Importance Sampling）。设 $\pi_{\theta_{\text{old}}}$ 为采样策略（行为策略），$\pi_\theta$ 为目标策略，优势函数为 $\hat{A}_t$，则 off-policy 策略梯度为：
+
+\begin{myformula}
+\nabla_\theta J(\theta) = \E_{(s_t, a_t) \sim \pi_{\theta_{\text{old}}}}
+\left[ \frac{\pi_\theta(a_t \mid s_t)}{\pi_{\theta_{\text{old}}}(a_t \mid s_t)} \,
+\nabla_\theta \log \pi_\theta(a_t \mid s_t) \, \hat{A}_t \right]
+\end{myformula}
+
+对应的替代目标（Surrogate Objective）为：
+
+\begin{myformula}
+L_{\theta_{\text{old}}}(\theta) = \E_{(s_t, a_t) \sim \pi_{\theta_{\text{old}}}}
+\left[ \frac{\pi_\theta(a_t \mid s_t)}{\pi_{\theta_{\text{old}}}(a_t \mid s_t)} \, \hat{A}_t \right]
+\end{myformula}
+
+\begin{remark}
+重要性采样虽然在数学上是无偏的，但当重要性权重 $\frac{\pi_\theta}{\pi_{\theta_{\text{old}}}}$ 的方差过大时，梯度估计的质量会严重下降。这正是我们在使用 off-policy 数据时需要"近距离"约束的原因。
+\end{remark}
+
+\subsubsection{重要性权重的方差问题}
+
+考虑重要性权重的期望：
+
+\[
+\E_{a \sim \pi_{\text{old}}} \left[ \frac{\pi_\theta(a)}{\pi_{\text{old}}(a)} \right]
+= \sum_a \pi_{\text{old}}(a) \frac{\pi_\theta(a)}{\pi_{\text{old}}(a)} = \sum_a \pi_\theta(a) = 1
+\]
+
+虽然期望为 1，但当两个分布差异较大时，某些样本的权重可能远远超过 1，另一些则趋近于 0。极端情况下，$\pi_{\text{old}}(a)$ 很小但 $\pi_\theta(a)$ 很大，导致权重 $\frac{\pi_\theta}{\pi_{\text{old}}} \gg 1$，使得个别样本主导整个梯度估计，有效样本量大幅下降。
+
+\begin{mydefinition}{有效样本量（Effective Sample Size, ESS）}
+给定重要性权重 $w_i = \frac{\pi_\theta(a_i)}{\pi_{\text{old}}(a_i)}$，有效样本量定义为：
+
+\[
+\text{ESS} = \frac{(\sum_i w_i)^2}{\sum_i w_i^2}
+\]
+
+当 ESS 过低时，梯度估计变得不可靠，策略更新方向可能完全错误。
+\end{mydefinition}
+
+\subsection{TRPO 的约束优化形式}
+
+TRPO 的核心思想是将策略改进建模为一个带约束的优化问题：在保持新旧策略"足够接近"的前提下，最大化替代目标。
+
+\begin{mydefinition}{TRPO 优化问题}
+\[
+\begin{aligned}
+\max_{\theta} \quad & \E_{s, a \sim \pi_{\theta_{\text{old}}}}
+\left[ \frac{\pi_\theta(a \mid s)}{\pi_{\theta_{\text{old}}}(a \mid s)} \, \hat{A}(s, a) \right] \\[4pt]
+\text{s.t.} \quad & \E_{s \sim \rho_{\theta_{\text{old}}}}
+\left[ D_{\text{KL}}\big( \pi_{\theta_{\text{old}}}(\cdot \mid s) \;\|\; \pi_\theta(\cdot \mid s) \big) \right] \le \delta
+\end{aligned}
+\]
+\end{mydefinition}
+
+其中 $\rho_{\theta_{\text{old}}}$ 是旧策略下的状态访问分布，$\delta$ 是信任区域半径（通常取 $\delta \approx 0.01$）。KL 散度度量的是策略在每一个状态下输出分布的差异，这正是我们真正关心的"策略距离"。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.2]
+    \draw[->,thick] (-3,0) -- (3,0) node[right] {参数 $\theta_1$};
+    \draw[->,thick] (0,-3) -- (0,3) node[above] {参数 $\theta_2$};
+    
+    \fill[blue!20] (0,0) circle (1.5);
+    \draw[blue!60, thick] (0,0) circle (1.5);
+    \node[blue!80] at (0.5, 1.2) {\footnotesize 信任区域};
+    
+    \fill[red!20] (0,0) circle (2.5);
+    \draw[red!40, dashed] (0,0) circle (2.5);
+    \node[red!60] at (1.8, 0.8) {\footnotesize 参数空间};
+    
+    \fill[blue] (0,0) circle (2pt) node[below=2pt] {\tiny $\theta_{\text{old}}$};
+    \fill[green!60!black] (1.2,0.3) circle (2pt) node[below=2pt] {\tiny 自然梯度};
+    \fill[red!60] (1.8,0.5) circle (2pt) node[above=2pt] {\tiny 朴素梯度};
+    
+    \draw[->, green!60!black, thick] (0,0) -- (1.2,0.3);
+    \draw[->, red!60, thick] (0,0) -- (1.8,0.5);
+    
+    \node[align=center] at (0,-2.8) {\footnotesize 内圈：策略分布的信任区域（KL约束）\\
+    \footnotesize 外圈：参数空间中相同 Euclidean 距离的区域};
+\end{tikzpicture}
+\caption{信任区域示意：参数空间中的相同 Euclidean 步长，在策略分布空间中的"实际距离"可能差异巨大。TRPO 直接在策略分布空间（KL距离）中限定步长。}
+\label{fig:trust_region}
+\end{figure}
+
+\subsubsection{为什么约束在策略空间而非参数空间}
+
+图~\ref{fig:trust_region} 说明了关键直觉：参数空间中的 Euclidean 距离与策略分布之间的距离之间没有简单的对应关系。在某些参数方向上，微小的参数变化可能导致策略分布的剧烈改变（高曲率方向）；而在另一些方向上，较大的参数变化可能对策略分布几乎没有影响。TRPO 通过 KL 散度直接在策略分布空间中设定约束，确保每一步更新都是"安全"的。
+
+\subsection{Fisher 信息矩阵与自然梯度}
+
+在实际求解 TRPO 的约束优化问题时，KL 散度约束是非线性的，直接处理困难。TRPO 采用的做法是：将目标函数和 KL 散度约束分别做一阶和二阶泰勒近似。
+
+\subsubsection{泰勒展开}
+
+替代目标的一阶近似（即策略梯度）：
+
+\[
+L_{\theta_{\text{old}}}(\theta) \approx \nabla_\theta L_{\theta_{\text{old}}}(\theta)\big|_{\theta=\theta_{\text{old}}} \cdot (\theta - \theta_{\text{old}}) = g\T (\theta - \theta_{\text{old}})
+\]
+
+其中 $g = \nabla_\theta L_{\theta_{\text{old}}}(\theta)|_{\theta=\theta_{\text{old}}}$。
+
+KL 散度的二阶近似（一阶项在 $\theta = \theta_{\text{old}}$ 处为零，因为 $\pi_{\theta_{\text{old}}}$ 是 KL 散度的最小值点）：
+
+\[
+\E_s\left[ D_{\text{KL}}(\pi_{\theta_{\text{old}}} \| \pi_\theta) \right]
+\approx \frac{1}{2} (\theta - \theta_{\text{old}})\T F (\theta - \theta_{\text{old}})
+\]
+
+其中 $F$ 是 Fisher 信息矩阵（Fisher Information Matrix, FIM）。
+
+\begin{mydefinition}{Fisher 信息矩阵（策略梯度语境）}
+对于参数化的策略 $\pi_\theta$，Fisher 信息矩阵定义为：
+
+\[
+F = \E_{s \sim \rho_{\theta_{\text{old}}}} \;
+\E_{a \sim \pi_{\theta_{\text{old}}}(\cdot \mid s)}
+\left[ \nabla_\theta \log \pi_\theta(a \mid s) \;
+\nabla_\theta \log \pi_\theta(a \mid s)\T \right]
+\bigg|_{\theta = \theta_{\text{old}}}
+\]
+
+$F$ 是一个 $d \times d$ 的半正定矩阵（$d$ 为参数维度），也是 $\log \pi_\theta$ 在该点的\emph{负期望 Hessian}。
+\end{mydefinition}
+
+\subsubsection{Fisher 信息矩阵的直观意义}
+
+FIM 度量了参数空间中每个方向上"策略分布变化的敏感度"。在 FIM 大的方向上，微小的参数变化就会引起策略分布的剧烈改变；在 FIM 小的方向上，参数变化对策略的影响微乎其微。正因为如此，FIM 是参数空间的 Riemannian 度量张量——它告诉我们参数空间中真正的"距离"应该怎样测量。
+
+\begin{myTheorem}{FIM 与 KL 散度的关系}
+Fisher 信息矩阵 $F$ 是 KL 散度在 $\theta_{\text{old}}$ 处对 $\theta$ 的 Hessian：
+
+\[
+F = \nabla^2_{\theta} \;
+\E_s\left[ D_{\text{KL}}\big( \pi_{\theta_{\text{old}}}(\cdot \mid s) \;\|\; \pi_\theta(\cdot \mid s) \big) \right]
+\bigg|_{\theta = \theta_{\text{old}}}
+\]
+
+这解释了为什么约束的泰勒展开中一阶项消失、二阶项正是 $\frac{1}{2}(\Delta\theta)\T F (\Delta\theta)$。
+\end{myTheorem}
+
+\subsubsection{自然梯度}
+
+用上述近似后，TRPO 的子问题变为：
+
+\begin{myformula}
+\max_{\Delta\theta} \quad g\T \Delta\theta \qquad
+\text{s.t.} \quad \frac{1}{2} \Delta\theta\T F \Delta\theta \le \delta
+\end{myformula}
+
+此问题有解析解（通过 Lagrange 乘子法可得）：
+
+\begin{myformula}
+\Delta\theta = \sqrt{\frac{2\delta}{g\T F^{-1} g}} \; F^{-1} g
+\end{myformula}
+
+$F^{-1} g$ 被称为\emph{自然梯度}（Natural Gradient）。直观上，自然梯度是将普通的策略梯度 $g$ 用 Fisher 信息矩阵的逆做了一次"旋转与缩放"——抑制高曲率方向的步长，放大低曲率方向的步长，使得在策略分布空间中的位移均匀。
+
+\begin{remark}
+自然梯度的概念最初由 Amari（1998）在信息几何领域提出。在统计学中，Fisher 信息矩阵定义了概率分布族上的 Riemannian 度量，而自然梯度就是该度量下的最速上升方向。将这一思想应用于策略优化，正是 TRPO 的理论核心。
+\end{remark}
+
+\subsection{共轭梯度法求解}
+
+在实际的深度 RL 中，神经网络参数 $d$ 往往是百万量级的。直接计算 $F^{-1}$ 的代价是 $O(d^3)$，完全不可行。TRPO 使用共轭梯度法（Conjugate Gradient, CG）来近似求解 $F^{-1}g$。
+
+\subsubsection{共轭梯度法概述}
+
+共轭梯度法是一种迭代求解线性系统 $F x = g$ 的方法，每次迭代只需计算一次矩阵-向量积 $F v$，无需显式构造或求逆 $F$。关键优势：
+
+\begin{enumerate}
+    \item 只需 $O(d)$ 的存储空间（而非 $O(d^2)$）
+    \item 每步迭代代价 $O(d^2)$（通过自动微分高效计算 $F v$）
+    \item 通常只需 $10 \sim 20$ 步即可收敛到足够精度
+\end{enumerate}
+
+\subsubsection{高效计算 $F v$}
+
+Fisher 信息矩阵 $F$ 不直接存储。矩阵-向量积 $F v$ 可以通过以下方式高效计算：
+
+\begin{myformula}
+F v = \nabla_\theta \left( \E_{s,a} \left[ \left( \nabla_\theta \log \pi_\theta(a \mid s)\T v \right)^2 \right] \right)
+\end{myformula}
+
+在实际代码实现中，$Fv$ 可通过两次自动微分求得：先计算 $\nabla_\theta \log \pi_\theta\T v$（一个标量），再对其求梯度。
+
+\begin{myalgorithm}{共轭梯度法求解线性系统 Fx = g}
+\textbf{输入}：矩阵-向量积算子 $F(\cdot)$，目标向量 $g$，迭代次数 $K$，容忍度 $\epsilon$\\
+\textbf{输出}：近似解 $x \approx F^{-1} g$
+\begin{enumerate}
+    \item $x_0 \leftarrow 0$，$r_0 \leftarrow g$（残差），$p_0 \leftarrow g$（共轭方向）
+    \item \textbf{for} $k = 0, 1, \dots, K-1$ \textbf{do}：
+    \item \quad $\alpha_k \leftarrow \dfrac{r_k\T r_k}{p_k\T (F p_k)}$
+    \item \quad $x_{k+1} \leftarrow x_k + \alpha_k p_k$
+    \item \quad $r_{k+1} \leftarrow r_k - \alpha_k (F p_k)$
+    \item \quad \textbf{if} $\|r_{k+1}\| < \epsilon$ \textbf{then break}
+    \item \quad $\beta_k \leftarrow \dfrac{r_{k+1}\T r_{k+1}}{r_k\T r_k}$
+    \item \quad $p_{k+1} \leftarrow r_{k+1} + \beta_k p_k$
+    \item \textbf{end for}
+    \item \textbf{return} $x_{k+1}$
+\end{enumerate}
+\end{myalgorithm}
+
+\subsection{线性搜索}
+
+共轭梯度法求出的解 $x \approx F^{-1}g$ 给出了\emph{方向}，但还需要确定\emph{步长}。TRPO 采用线性搜索（Line Search）来找到满足以下条件的最大步长 $\beta^j$（$j = 0, 1, 2, \dots$）：
+
+\begin{enumerate}
+    \item \textbf{KL 散度约束}：实际 KL 散度 $\le \delta$（硬约束）
+    \item \textbf{性能改进}：替代目标 $L_{\theta_{\text{old}}}(\theta) \ge 0$（确保不退化）
+\end{enumerate}
+
+具体而言，令 $\theta = \theta_{\text{old}} + \beta^j \cdot \Delta\theta$（$\beta \in (0, 1)$ 为衰减因子，通常 $\beta = 0.5$），逐步减小 $j$（即缩小步长），直到两个条件同时满足。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.0]
+    \draw[->] (-3,0) -- (3,0) node[right] {$x$};
+    \draw[->] (0,-0.5) -- (0,5) node[above] {$L(\theta_{\text{old}} + x \cdot \Delta\theta)$};
+    
+    \draw[domain=-3:3, smooth, blue!60, thick] plot (\x, {4 - exp(-0.5*\x*\x) * 0.5 - 0.5*\x*\x * 0.3});
+    
+    \filldraw (0,3.5) circle (2pt) node[above] {$\theta_{\text{old}}$};
+    
+    \draw[green!60!black, thick] (0,3.5) -- (2.5, 2.8) node[midway, above, sloped] {\tiny 自然梯度方向};
+    
+    \filldraw[red] (0.8, 3.9) circle (2pt) node[above=6pt] {\tiny $\beta^0$: 违反KL};
+    \filldraw[orange] (2.0, 2.6) circle (2pt) node[below=6pt] {\tiny $\beta^1$: 性能下降};
+    \filldraw[green!60!black] (1.5, 4.2) circle (2pt) node[above=6pt] {\tiny $\beta^2$: 接受};
+    
+    \node at (0, -1) {\footnotesize 线性搜索：沿自然梯度方向逐步缩步长，直到满足约束};
+\end{tikzpicture}
+\caption{线性搜索示意：从全步长开始逐步缩小，直至找到同时满足 KL 约束和性能改进条件的步长。}
+\label{fig:line_search}
+\end{figure}
+
+\subsection{TRPO 完整算法}
+
+\begin{myalgorithm}{信任区域策略优化（TRPO）}
+\textbf{超参数}：KL 目标 $\delta$，回溯因子 $\beta$，CG 步数 $K$，CG 阻尼系数 $c$\\
+\textbf{输入}：初始策略参数 $\theta_0$，初始价值函数参数 $\phi_0$
+\begin{enumerate}
+    \item \textbf{for} iteration $= 0, 1, 2, \dots$ \textbf{do}：
+    \item \quad 使用策略 $\pi_k = \pi_{\theta_k}$ 收集一批轨迹 $\mathcal{D}_k = \{\tau_i\}$
+    \item \quad 对每条轨迹计算优势估计 $\hat{A}_1, \hat{A}_2, \dots, \hat{A}_T$（使用 GAE）
+    \item \quad 计算策略梯度：
+    \quad $g = \frac{1}{|\mathcal{D}_k|} \sum \nabla_\theta \log \pi_\theta(a_t \mid s_t) \, \hat{A}_t \big|_{\theta_k}$
+    \item \quad 使用共轭梯度法求解 $F x = g$，得到自然梯度方向 $x \approx F^{-1} g$
+    \item \quad 计算建议步长：$\Delta\theta = \sqrt{\frac{2\delta}{x\T F x}} \; x$
+    \item \quad 线性搜索：找到最小的 $j \ge 0$ 使得：
+    \begin{enumerate}
+        \item $\overline{D}_{\text{KL}}(\theta_{\text{old}} \| \theta_{\text{new}}) \le \delta$
+        \item $L_{\theta_{\text{old}}}(\theta_{\text{new}}) \ge 0$
+    \end{enumerate}
+    其中 $\theta_{\text{new}} = \theta_k + \beta^j \Delta\theta$
+    \item \quad 更新策略参数：$\theta_{k+1} \leftarrow \theta_{\text{new}}$
+    \item \quad 使用均方误差更新价值函数参数 $\phi_{k+1}$（拟合回报或价值目标）
+    \item \textbf{end for}
+\end{enumerate}
+\end{myalgorithm}
+
+\begin{remark}
+TRPO 的共轭梯度步骤虽然避免了 $O(d^3)$ 的矩阵求逆，但整个算法仍然相当复杂，特别是需要计算和存储 Fisher 矩阵-向量积、需要线性搜索等。这些工程复杂性直接催生了 PPO 的诞生。
+\end{remark}
+
+\section{GAE：泛化优势估计}
+
+在策略梯度方法中，优势函数 $A(s_t, a_t)$ 的估计质量直接影响训练的稳定性和效率。本节介绍的泛化优势估计（Generalized Advantage Estimation, GAE）提供了一种优雅的方式，在偏差和方差之间通过单一参数 $\lambda$ 进行连续调节。
+
+\subsection{优势函数估计的偏差-方差权衡}
+
+回顾优势函数的定义：
+
+\[
+A^{\pi}(s_t, a_t) = Q^{\pi}(s_t, a_t) - V^{\pi}(s_t)
+\]
+
+在实践中有多种方式来估计 $A(s_t, a_t)$：
+
+\begin{enumerate}
+    \item \textbf{MC 估计}（$\lambda = 1$ 的极端）：
+    \[
+    \hat{A}_t^{\text{MC}} = G_t - V(s_t) = \sum_{l=0}^{\infty} \gamma^l r_{t+l} - V(s_t)
+    \]
+    无偏但方差大。需要完整的轨迹回报，且由于累积了所有未来随机性，估计的方差随轨迹长度线性增长。
+    
+    \item \textbf{TD(0) 估计}（$\lambda = 0$ 的极端）：
+    \[
+    \hat{A}_t^{\text{TD}(0)} = \delta_t = r_t + \gamma V(s_{t+1}) - V(s_t)
+    \]
+    即一步 TD 误差。方差小但有偏（依赖于价值函数近似的质量）。$V(s)$ 的不准确性直接引入系统性偏差。
+\end{enumerate}
+
+\begin{myTheorem}{TD 误差与优势函数的关系}
+对于任意策略 $\pi$，$k$-步优势估计可以表示为 $k$ 个 TD 误差的折扣和：
+
+\[
+\hat{A}_t^{(k)} = \sum_{l=0}^{k-1} \gamma^l \delta_{t+l}^{\;V}
+\]
+
+其中 $\delta_t^{\;V} = r_t + \gamma V(s_{t+1}) - V(s_t)$ 是一步 TD 误差。特别地，当 $k \to \infty$ 时，$\hat{A}_t^{(\infty)} = \sum_{l=0}^{\infty} \gamma^l \delta_{t+l}^{\;V} = A^{\pi}(s_t, a_t)$（无偏）。
+\end{myTheorem}
+
+\subsection{GAE($\lambda$) 的定义}
+
+GAE 的核心思想是：取所有 $k$-步优势估计的指数加权平均，权重由 $\lambda$ 控制。
+
+\begin{mydefinition}{GAE($\lambda$)}
+对于 $0 \le \lambda \le 1$，泛化优势估计定义为：
+
+\[
+\hat{A}_t^{\text{GAE}(\lambda)} = (1-\lambda) \sum_{k=1}^{\infty} \lambda^{k-1} \hat{A}_t^{(k)}
+\]
+
+等价地，可以用 TD 误差表示为：
+
+\begin{myformula}
+\hat{A}_t^{\text{GAE}(\lambda)} = \sum_{l=0}^{\infty} (\gamma \lambda)^l \, \delta_{t+l}^{\;V}
+\end{myformula}
+\end{mydefinition}
+
+其中 $\delta_t^{\;V} = r_t + \gamma V(s_t) - V(s_{t-1})$ 在使用中更常见的写法是 $\delta_t = r_t + \gamma V(s_{t+1}) - V(s_t)$。
+
+\subsubsection{$\lambda$ 参数的作用}
+
+$\lambda$ 可以被理解为一个"偏差-方差旋钮"：
+
+\begin{itemize}
+    \item \textbf{$\lambda = 0$}：$\hat{A}_t^{\text{GAE}(0)} = \delta_t$，即一步 TD 误差。最低方差，最高偏差（强烈依赖价值函数精度）。
+    \item \textbf{$\lambda = 1$}：$\hat{A}_t^{\text{GAE}(1)} = \sum_{l=0}^{\infty} \gamma^l \delta_{t+l} = G_t - V(s_t)$，即 MC 估计。无偏但方差最大。
+    \item \textbf{$0 < \lambda < 1$}：在两者之间平滑过渡。实际中 $\lambda \approx 0.95$ 是一个非常稳健的选择。
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.0]
+    \draw[->] (-0.3,0) -- (11.5,0) node[right] {步数 $l$（从当前时刻开始）};
+    \draw[->] (0,-0.3) -- (0,5.5) node[above] {权重（归一化）};
+    \foreach \y in {0,1,2,3,4,5} {
+        \draw[gray!30] (-0.1,\y) -- (11,\y);
+        \node[gray!60, left] at (0,\y) {\tiny \y};
+    }
+    \foreach \x in {0,2,4,6,8,10} {
+        \draw[gray!30] (\x*1.05, -0.1) -- (\x*1.05, 5.2);
+        \node[gray!60, below] at (\x*1.05, 0) {\tiny \x};
+    }
+    % lambda = 0: single bar at l=0, zero elsewhere
+    \draw[blue!60, thick] (0,0) -- (0,5.0);
+    \fill[blue!60] (0,5.0) circle (3pt);
+    \fill[blue!60] (1.05,0.03) circle (3pt);
+    \foreach \i in {2,3,4,5,6,7,8,9,10} {
+        \fill[blue!60] (\i*1.05, 0.03) circle (2pt);
+    }
+    % lambda = 0.95: exponential decay
+    \draw[green!60!black, thick] (0,5.0) -- (1.05, 4.75) -- (2.1, 4.51) -- (3.15, 4.29) 
+        -- (4.2, 4.07) -- (5.25, 3.87) -- (6.3, 3.68) -- (7.35, 3.49) 
+        -- (8.4, 3.32) -- (9.45, 3.15) -- (10.5, 2.99);
+    \foreach \x/\y in {0/5.0, 1.05/4.75, 2.1/4.51, 3.15/4.29, 4.2/4.07, 5.25/3.87} {
+        \fill[green!60!black] (\x,\y) circle (3pt);
+    }
+    \foreach \x/\y in {6.3/3.68, 7.35/3.49, 8.4/3.32, 9.45/3.15, 10.5/2.99} {
+        \fill[green!60!black] (\x,\y) circle (2pt);
+    }
+    % lambda = 1: constant
+    \draw[red!60, thick, dashed] (0,0.05) -- (10.5, 0.05);
+    \foreach \i in {0,1,...,10} {
+        \fill[red!60] (\i*1.05, 0.05) circle (2pt);
+    }
+    % Legend
+    \fill[blue!60] (7.5, 5.2) circle (3pt); \node[blue!70, right] at (7.7,5.2) {\small $\lambda=0$};
+    \fill[green!60!black] (7.5, 4.8) circle (3pt); \node[green!70!black, right] at (7.7,4.8) {\small $\lambda=0.95$};
+    \fill[red!60] (7.5, 4.4) circle (3pt); \node[red!70, right] at (7.7,4.4) {\small $\lambda=1.0$};
+\end{tikzpicture}
+\caption{GAE 中各步 TD 误差的权重分布（以 $\gamma\lambda$ 衰减）。$\lambda=0$ 时仅使用当前 TD 误差；$\lambda=0.95$ 时权重以半衰期约 13 步的速度衰减；$\lambda=1$ 时各步权重相等。}
+\label{fig:gae_weights}
+\end{figure}
+
+\subsubsection{GAE 的递推计算}
+
+在实际编程中，GAE 可以通过反向递推高效计算，无需存储所有 TD 误差：
+
+\begin{myalgorithm}{GAE 的递推计算}
+\textbf{输入}：奖励序列 $\{r_0, r_1, \dots, r_{T-1}\}$，价值估计 $\{V(s_0), V(s_1), \dots, V(s_T)\}$（$V(s_T)=0$ 或由网络估计），折扣 $\gamma$，参数 $\lambda$\\
+\textbf{输出}：优势序列 $\{\hat{A}_0, \hat{A}_1, \dots, \hat{A}_{T-1}\}$
+\begin{enumerate}
+    \item 初始化 $g \leftarrow 0$（累积优势）
+    \item \textbf{for} $t = T-1, T-2, \dots, 0$ \textbf{do}：
+    \item \quad $\delta_t \leftarrow r_t + \gamma V(s_{t+1}) - V(s_t)$
+    \item \quad $g \leftarrow \delta_t + \gamma \lambda \, g$
+    \item \quad $\hat{A}_t \leftarrow g$
+    \item \textbf{end for}
+    \item \textbf{return} $\{\hat{A}_0, \dots, \hat{A}_{T-1}\}$
+\end{enumerate}
+\end{myalgorithm}
+
+\subsection{GAE 在 PPO 中的使用}
+
+在 PPO 中，GAE 是默认的优势估计方法。价值网络 $V_\phi$ 被训练来最小化：
+
+\[
+\mathcal{L}_V(\phi) = \frac{1}{T} \sum_{t=0}^{T-1} \big( V_\phi(s_t) - V_t^{\text{target}} \big)^2
+\]
+
+其中 $V_t^{\text{target}} = \hat{A}_t + V_{\phi_{\text{old}}}(s_t)$，即用旧的 $V$ 加上当前 GAE 优势来构造更准确的价值目标。
+
+\begin{remark}
+GAE 之所以在 PPO 中表现优异，有两个原因：（1）PPO 的多轮更新机制对优势估计的方差比较容忍，可以选用较大的 $\lambda$（如 0.95）；（2）GAE 递推计算与 PPO 的数据收集流水线天然契合，可以实现高效的向量化实现。
+\end{remark}
+
+\section{PPO：近端策略优化}
+
+PPO（Proximal Policy Optimization）是 TRPO 的工程化版本，由 Schulman 等人在 2017 年提出。它保留了 TRPO "保守更新"的核心思想，但用极其简洁的 clipped 目标函数替代了 TRPO 复杂的二阶优化。PPO 已成为实际中应用最广泛的策略梯度算法。
+
+\subsection{从 TRPO 到 PPO 的简化思路}
+
+回顾 TRPO 的约束优化问题：
+
+\[
+\max_\theta \; \E \left[ \frac{\pi_\theta}{\pi_{\text{old}}} \hat{A} \right]
+\quad \text{s.t.} \quad \E[D_{\text{KL}}(\pi_{\text{old}} \| \pi_\theta)] \le \delta
+\]
+
+TRPO 通过二阶近似 + 共轭梯度 + 线性搜索来求解，工程实现复杂。PPO 的核心洞见是：与其在优化过程中显式地维护 KL 约束，不如直接在目标函数中"惩罚"过大的策略更新。这引出了 PPO 的两种变体。
+
+\subsection{PPO-Clip}
+
+PPO-Clip 是最常用的变体，其目标函数为：
+
+\begin{mydefinition}{PPO-Clip 目标函数}
+定义概率比（probability ratio）$r_t(\theta) = \dfrac{\pi_\theta(a_t \mid s_t)}{\pi_{\theta_{\text{old}}}(a_t \mid s_t)}$，则：
+
+\begin{myformula}
+\mathcal{L}^{\text{CLIP}}(\theta) = \E_t \Big[ \min\big(
+    r_t(\theta) \hat{A}_t,\;
+    \operatorname{clip}\big(r_t(\theta),\; 1-\epsilon,\; 1+\epsilon\big) \hat{A}_t
+\big) \Big]
+\end{myformula}
+
+其中 $\epsilon$ 是裁剪范围（通常取 $0.1$ 或 $0.2$），$\hat{A}_t$ 是优势估计。
+\end{mydefinition}
+
+\subsubsection{PPO-Clip 的直观解释}
+
+裁剪操作的核心逻辑取决于 $\hat{A}_t$ 的符号：
+
+\begin{enumerate}
+    \item \textbf{当 $\hat{A}_t > 0$（好动作）}：我们希望增加 $r_t(\theta) = \frac{\pi_\theta}{\pi_{\text{old}}}$，即增大该动作的概率。但裁剪上界 $1+\epsilon$ 阻止了 $r_t$ 超过 $1+\epsilon$，防止策略变化过大。
+    
+    \item \textbf{当 $\hat{A}_t < 0$（坏动作）}：我们希望减小 $r_t(\theta)$。但裁剪下界 $1-\epsilon$ 阻止了 $r_t$ 降到 $1-\epsilon$ 以下，同样防止策略变化过大。
+\end{enumerate}
+
+$\min$ 操作确保了：当实际 $r_t$ 已经越过了裁剪边界时，梯度被切断（梯度为 0），该样本不再对参数更新产生贡献。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.2]
+    % Axes
+    \draw[->] (-0.5,0) -- (4.5,0) node[right] {$r_t(\theta) = \frac{\pi_\theta}{\pi_{\text{old}}}$};
+    \draw[->] (0,-1.5) -- (0,3.0) node[above] {$\mathcal{L}^{\text{CLIP}}$};
+    
+    % Reference line at r=1
+    \draw[dashed, gray] (2, -1.5) -- (2, 3.0);
+    \node[gray] at (2, -1.8) {$1$};
+    
+    % Clip bounds
+    \draw[dashed, red!60] (1.6, -1.5) -- (1.6, 3.0);
+    \node[red!60] at (1.6, -1.8) {\footnotesize $1-\epsilon$};
+    \draw[dashed, red!60] (2.4, -1.5) -- (2.4, 3.0);
+    \node[red!60] at (2.4, -1.8) {\footnotesize $1+\epsilon$};
+    
+    % Case A > 0 (blue)
+    \draw[blue!60, very thick] (0,0) -- (1.6, 0.4);
+    \draw[blue!60, very thick] (1.6, 0.4) -- (2.4, 0.6);
+    \draw[blue!60, very thick, dashed] (2.4, 0.6) -- (4.5, 1.125); % unbounded version
+    \draw[blue!60, very thick] (2.4, 0.6) -- (4.5, 0.6); % clipped (flat)
+    \node[blue!70, rotate=14] at (3.2, 1.2) {\footnotesize $r\hat{A}$（无裁剪）};
+    \node[blue!70] at (3.2, 0.4) {\footnotesize 裁剪后的 $\mathcal{L}$};
+    \node[blue!70] at (0.8, 0.1) {\footnotesize $\hat{A}>0$};
+    
+    % Case A < 0 (red)
+    \draw[red!60, very thick] (0,0) -- (1.6, -0.4);
+    \draw[red!60, very thick] (1.6, -0.4) -- (2.4, -0.6);
+    \draw[red!60, very thick, dashed] (2.4, -0.6) -- (4.5, -1.125); % unbounded
+    \draw[red!60, very thick] (2.4, -0.6) -- (4.5, -0.6); % clipped (flat)
+    \node[red!70] at (3.2, -1.0) {\footnotesize $\hat{A}<0$};
+    
+    \filldraw (2,0) circle (1.5pt) node[below=3pt] {\tiny $\theta_{\text{old}}$};
+\end{tikzpicture}
+\caption{PPO-Clip 目标函数的几何解释。蓝色曲线对应 $\hat{A}>0$ 的情况：$r_t$ 从 1 增大时目标函数上升，但越过 $1+\epsilon$ 后被裁平（梯度为零）。红色曲线对应 $\hat{A}<0$ 的情况：$r_t$ 从 1 减小时目标函数上升，但越过 $1-\epsilon$ 后被裁平。}
+\label{fig:ppo_clip}
+\end{figure}
+
+\subsubsection{PPO-Clip 为什么有效}
+
+\begin{proof}[PPO-Clip 的函数形式推导]
+考虑最大化 $\mathcal{L}^{\text{CLIP}}$ 的梯度行为。
+
+当 $\hat{A}_t > 0$：
+\[
+\frac{\partial \mathcal{L}^{\text{CLIP}}}{\partial \theta} =
+\begin{cases}
+\hat{A}_t \cdot \nabla_\theta r_t(\theta), & r_t(\theta) < 1+\epsilon \\
+0, & r_t(\theta) \ge 1+\epsilon
+\end{cases}
+\]
+即当概率比已经超过 $1+\epsilon$ 时，梯度被截断，策略不再继续"强化"该动作。
+
+当 $\hat{A}_t < 0$：
+\[
+\frac{\partial \mathcal{L}^{\text{CLIP}}}{\partial \theta} =
+\begin{cases}
+\hat{A}_t \cdot \nabla_\theta r_t(\theta), & r_t(\theta) > 1-\epsilon \\
+0, & r_t(\theta) \le 1-\epsilon
+\end{cases}
+\]
+即当概率比已经低于 $1-\epsilon$ 时，梯度被截断，策略不再继续"惩罚"该动作。
+\end{proof}
+
+\subsection{PPO-Penalty}
+
+PPO 的另一种变体——PPO-Penalty（也称 PPO-KL）直接在目标函数中添加 KL 散度惩罚项：
+
+\begin{mydefinition}{PPO-Penalty 目标函数}
+\[
+\mathcal{L}^{\text{PEN}}(\theta) = \E_t \left[
+    r_t(\theta) \hat{A}_t - \beta \cdot D_{\text{KL}}\big( \pi_{\theta_{\text{old}}}(\cdot \mid s_t) \;\|\; \pi_\theta(\cdot \mid s_t) \big)
+\right]
+\]
+\end{mydefinition}
+
+其中 $\beta$ 是惩罚系数。与原版 TRPO 不同的是，PPO-Penalty 使用\emph{自适应}的 $\beta$ 系数。
+
+\subsubsection{自适应 KL 系数}
+
+PPO-Penalty 的核心机制是根据实际 KL 散度与目标值 $d_{\text{targ}}$ 的偏差来动态调节 $\beta$：
+
+\begin{myalgorithm}{自适应 KL 系数调节}
+\textbf{输入}：当前 KL 散度 $d = \E_t[D_{\text{KL}}(\pi_{\text{old}} \| \pi_\theta)]$，目标 KL $d_{\text{targ}}$\\
+\textbf{每轮策略更新后执行}：
+\begin{enumerate}
+    \item \textbf{if} $d < d_{\text{targ}} / 1.5$：\\
+    \quad $\beta \leftarrow \beta / 2$ \quad（惩罚太强，放松约束）
+    \item \textbf{else if} $d > d_{\text{targ}} \times 1.5$：\\
+    \quad $\beta \leftarrow \beta \times 2$ \quad（策略变化太大，收紧约束）
+    \item \textbf{else}：\\
+    \quad 保持 $\beta$ 不变
+\end{enumerate}
+\end{myalgorithm}
+
+通常设置 $d_{\text{targ}} = 0.01$，与 TRPO 中的 $\delta$ 一致。
+
+\begin{remark}
+在实践中，PPO-Clip 比 PPO-Penalty 更受欢迎，主要原因是：（1）PPO-Clip 超参数更少（只需 $\epsilon$）；（2）PPO-Clip 的目标函数形式更简洁，梯度计算更直接；（3）实验表明 PPO-Clip 在大多数任务上表现不逊于甚至优于 PPO-Penalty。Schulman 等人的原始论文也推荐 PPO-Clip 作为默认选择。
+\end{remark}
+
+\subsection{Critic Loss 与 Value Clipping}
+
+PPO 中价值网络（Critic）同样受益于"裁剪"技术。类似于策略目标的裁剪，我们可以对价值更新也施加约束：
+
+\begin{mydefinition}{PPO Value Clipping 损失}
+设 $V^{\text{target}}_t = \hat{A}_t + V_{\phi_{\text{old}}}(s_t)$ 为价值目标，则：
+\[
+\mathcal{L}^{\text{VF}}(\phi) = \E_t \Big[ \max\big(
+    (V_\phi(s_t) - V^{\text{target}}_t)^2,\;
+    \big( V_{\phi_{\text{old}}}(s_t) + \operatorname{clip}(V_\phi(s_t) - V_{\phi_{\text{old}}}(s_t), -\epsilon_v, \epsilon_v) - V^{\text{target}}_t \big)^2
+\big) \Big]
+\]
+\end{mydefinition}
+
+其中 $\epsilon_v$ 通常取与策略裁剪相同的值（如 $0.2$）。Value Clipping 防止价值网络在一次更新中变化过大，进一步增强了训练的稳定性。
+
+\subsection{完整 PPO 算法}
+
+\begin{myalgorithm}{近端策略优化（PPO-Clip）}
+\textbf{超参数}：裁剪范围 $\epsilon$，价值裁剪范围 $\epsilon_v$，GAE 参数 $\lambda$，折扣因子 $\gamma$，\\
+\qquad\qquad PPO epoch 数 $K$，mini-batch 大小 $M$，熵系数 $c_{\text{ent}}$\\
+\textbf{输入}：初始策略参数 $\theta_0$，初始价值参数 $\phi_0$
+\begin{enumerate}
+    \item \textbf{for} iteration $= 0, 1, 2, \dots$ \textbf{do}：
+    \item \quad 使用当前策略 $\pi_{\theta_k}$ 收集 $N$ 步交互数据
+    \item \quad \quad $\{(s_t, a_t, r_t, s_{t+1}, \log\pi_{\theta_k}(a_t\mid s_t), V_{\phi_k}(s_t))\}_{t=0}^{N-1}$
+    \item \quad 计算 GAE 优势 $\hat{A}_1, \dots, \hat{A}_{N-1}$ 和价值目标 $V_t^{\text{target}}$
+    \item \quad 对优势进行归一化：$\hat{A} \leftarrow \dfrac{\hat{A} - \mu_{\hat{A}}}{\sigma_{\hat{A}} + \varepsilon}$
+    \item \quad \textbf{for} epoch $= 1, 2, \dots, K$ \textbf{do}：
+    \item \quad \quad 将数据随机打乱，划分为大小为 $M$ 的 mini-batches
+    \item \quad \quad \textbf{for each} mini-batch \textbf{do}：
+    \item \quad \quad \quad 计算概率比 $r_t(\theta) = \dfrac{\pi_\theta(a_t \mid s_t)}{\pi_{\theta_k}(a_t \mid s_t)}$
+    \item \quad \quad \quad 计算裁剪目标：
+    \quad $\mathcal{L}^{\text{CLIP}} = \frac{1}{M} \sum \min(r_t \hat{A}_t, \operatorname{clip}(r_t, 1-\epsilon, 1+\epsilon) \hat{A}_t)$
+    \item \quad \quad \quad 计算价值损失：$\mathcal{L}^{\text{VF}} = \frac{1}{M} \sum (V_\phi(s_t) - V_t^{\text{target}})^2$（或使用 value clipping）
+    \item \quad \quad \quad 计算熵正则项：$\mathcal{L}^{\text{ENT}} = \frac{1}{M} \sum \mathcal{H}(\pi_\theta(\cdot \mid s_t))$
+    \item \quad \quad \quad 总损失：$\mathcal{L} = -\mathcal{L}^{\text{CLIP}} + c_1 \mathcal{L}^{\text{VF}} - c_{\text{ent}} \mathcal{L}^{\text{ENT}}$
+    \item \quad \quad \quad 使用 Adam（或其他优化器）更新 $\theta$ 和 $\phi$
+    \item \quad \quad \textbf{end for}
+    \item \quad \textbf{end for}
+    \item \textbf{end for}
+\end{enumerate}
+\end{myalgorithm}
+
+\subsection{超参数建议}
+
+经过大量实验验证，以下超参数配置在多数任务上表现稳健：
+
+\begin{table}[H]
+\centering
+\caption{PPO 推荐超参数配置}
+\begin{tabular}{@{}lcl@{}}
+\toprule
+\textbf{超参数} & \textbf{推荐值} & \textbf{说明} \\
+\midrule
+裁剪范围 $\epsilon$ & $0.2$ & 对大多数任务有效 \\
+GAE $\lambda$       & $0.95$ & 偏差-方差之间良好平衡 \\
+折扣因子 $\gamma$    & $0.99$ & 标准选择 \\
+PPO epochs $K$     & $10$   & 对小型任务 \\
+Mini-batch 大小 $M$ & $64$   & GPGPU友好 \\
+熵系数 $c_{\text{ent}}$ & $0.01$ & 适度鼓励探索 \\
+学习率               & $3\times10^{-4}$ & Adam 默认 \\
+每轮交互步数           & $2048$  & 标准 MuJoCo 设置 \\
+\bottomrule
+\end{tabular}
+\label{tab:ppo_hyper}
+\end{table}
+
+\begin{remark}
+PPO 的超参数在不同任务间具有很好的\emph{可迁移性}。OpenAI 的员工曾开玩笑说："PPO 好到我们几乎不需要调参。" 虽然有些夸张，但 PPO 的确显著降低了 RL 实验的工程门槛。
+\end{remark}
+
+\subsection{PPO 为什么广泛流行}
+
+PPO 后来居上，成为 RL 社区的事实标准（特别是在 OpenAI 内部），原因可以归纳为以下几点：
+
+\begin{enumerate}
+    \item \textbf{实现简洁}：PPO-Clip 的核心逻辑仅需约 10 行代码，远少于 TRPO 的数百行。这极大地降低了出错概率和维护成本。
+    \item \textbf{性能稳定}：裁剪机制提供了一种"软"的信任区域约束，在大多数基准测试中与 TRPO 持平或更优，且对超参数不敏感。
+    \item \textbf{样本效率适中}：虽然不如 SAC 等 off-policy 算法样本效率高，但批量更新（多轮 epoch + mini-batch）充分压榨了每批数据的价值。
+    \item \textbf{易于并行化}：PPO 的数据收集阶段可以自然地通过多个并行环境加速，这使其在分布式训练场景（如 OpenAI Five、GPT 系列 RLHF）中大放异彩。
+    \item \textbf{通用性}：PPO 适用于离散和连续动作空间，只需修改策略网络的输出层即可。
+\end{enumerate}
+
+\section{PPO 的实现细节}
+
+虽然 PPO 的算法思路清晰，但正确的实现涉及大量细节。本节将从工程角度逐一拆解。
+
+\subsection{多轮更新的意义}
+
+PPO 在每个 iteration 中收集一批数据后，会对此数据做 $K$ 轮（epoch）的梯度更新。这与 on-policy 方法"用完即弃"的传统形成了鲜明对比。
+
+多轮更新的关键在于：\textbf{裁剪操作限制了每轮更新中策略变化的幅度}。即使进行了 $K$ 轮更新，只要 $\epsilon$ 足够小，$r_t(\theta)$ 就不会偏离 $1$ 太远，数据仍然"近似有效的"。这使得 PPO 在不牺牲稳定性的前提下，显著提升了样本利用率。
+
+\subsection{Mini-Batch 训练}
+
+每轮 epoch 中，数据被随机打乱并分割为大小为 $M$ 的 mini-batch。这种做法有两个好处：
+
+\begin{enumerate}
+    \item \textbf{梯度估计更加稳定}：不同 mini-batch 之间的随机噪声起到了隐式的正则化作用。
+    \item \textbf{更好地利用 GPU 并行性}：适中的 batch 大小（如 64 或 128）可以在单个 GPU 上高效做矩阵乘法。
+\end{enumerate}
+
+\subsection{优势归一化}
+
+在计算 PPO 损失之前，通常对优势估计进行归一化：
+
+\[
+\hat{A} \leftarrow \frac{\hat{A} - \mu_{\hat{A}}}{\sigma_{\hat{A}} + \varepsilon}
+\]
+
+其中 $\mu_{\hat{A}}$ 和 $\sigma_{\hat{A}}$ 分别是该批数据中所有优势值的均值和标准差。
+
+优势归一化的好处包括：
+
+\begin{itemize}
+    \item \textbf{尺度不变性}：不同任务和不同训练阶段的优势值量级可能相差数个数量级。归一化后，梯度更新幅度更加稳定，减少了对学习率的敏感性。
+    \item \textbf{信号平衡}：均值归零意味着约一半的样本有正优势（被"鼓励"），一半有负优势（被"惩罚"），避免了更新方向偏向某一侧。
+    \item \textbf{与裁剪机制互补}：归一化使得 $r_t \hat{A}_t$ 的值域更可控，裁剪机制更容易发挥作用。
+\end{itemize}
+
+\subsection{熵正则项}
+
+PPO 的完整损失函数包含一个熵正则项（Entropy Bonus），用于鼓励策略保持一定程度的随机性（即探索）：
+
+\[
+\mathcal{L}^{\text{ENT}}(\theta) = \frac{1}{N} \sum_{t} \mathcal{H}(\pi_\theta(\cdot \mid s_t))
+\]
+
+其中 $\mathcal{H}(\pi_\theta(\cdot \mid s_t)) = -\sum_a \pi_\theta(a \mid s_t) \log \pi_\theta(a \mid s_t)$（离散动作）或 $- \E_{a \sim \pi_\theta}[\log \pi_\theta(a \mid s_t)]$（连续动作）。
+
+熵正则项的作用是防止策略过早收敛到次优的确定性策略（即"过早收敛"问题）。$c_{\text{ent}}$ 的典型取值为 $0.01$，对于探索困难的任务可以适当增大。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=2cm, auto,
+    block/.style={rectangle, draw=blue!60, fill=blue!10, thick, minimum width=4cm, minimum height=0.8cm, align=center},
+    diamond/.style={diamond, draw=red!60, fill=red!10, thick, minimum width=2.5cm, minimum height=0.8cm, align=center, aspect=2},
+    arrow/.style={->, >=stealth, thick}]
+    
+    \node[block] (collect) {数据收集\\使用 $\pi_{\theta_k}$ 交互 $N$ 步};
+    \node[block, below=of collect] (gae) {计算 GAE 优势\\和价值目标};
+    \node[block, below=of gae] (norm) {优势归一化};
+    \node[diamond, below=of norm] (epoch) {for epoch = 1..K};
+    \node[block, below=of epoch, xshift=-3cm] (minibatch) {Mini-batch 训练\\计算 $\mathcal{L}^{\text{CLIP}}$, $\mathcal{L}^{\text{VF}}$, $\mathcal{L}^{\text{ENT}}$};
+    \node[block, below=of epoch, xshift=3cm] (update) {Adam 更新\\$\theta$, $\phi$};
+    \node[block, below=of minibatch] (done) {完成本 iteration};
+    
+    \draw[arrow] (collect) -- (gae);
+    \draw[arrow] (gae) -- (norm);
+    \draw[arrow] (norm) -- (epoch);
+    \draw[arrow] (epoch) -| (minibatch);
+    \draw[arrow] (minibatch) -- (update);
+    \draw[arrow] (update) |- (epoch);
+    \draw[arrow] (epoch) -- (done);
+    
+    \node[right=0.5cm of collect, align=left, text=blue!60] {\footnotesize $\log\pi_{\text{old}}$, $V_{\text{old}}$ 保存};
+    \node[right=0.5cm of gae, align=left, text=blue!60] {\footnotesize $\lambda=0.95$, $\gamma=0.99$};
+    \node[right=0.5cm of norm, align=left, text=blue!60] {\footnotesize 均值为 $0$，标准差为 $1$};
+\end{tikzpicture}
+\caption{PPO 训练循环流程图。从数据收集到多轮 mini-batch 更新的完整流程。}
+\label{fig:ppo_flow}
+\end{figure}
+
+\subsection{学习率调度}
+
+在实际训练中，常常使用学习率调度来提升收敛质量：
+
+\begin{itemize}
+    \item \textbf{线性衰减}：$\alpha_k = \alpha_0 \cdot (1 - \frac{k}{K_{\text{total}}})$
+    \item \textbf{余弦退火}：$\alpha_k = \alpha_{\min} + \frac{1}{2}(\alpha_0 - \alpha_{\min})(1 + \cos(\pi \frac{k}{K_{\text{total}}}))$
+    \item \textbf{固定学习率}：在 PPO 中，固定学习率配合裁剪机制已经在多数任务上表现良好
+\end{itemize}
+
+\subsection{完整训练循环（代码级别伪代码）}
+
+\begin{myalgorithm}{PPO 完整训练循环}
+\begin{enumerate}
+    \item 初始化策略网络 $\pi_\theta$ 和价值网络 $V_\phi$
+    \item 初始化优化器 optimizer($\theta$, $\phi$)
+    \item \textbf{for} iteration $= 1, 2, \dots, N_{\text{iter}}$ \textbf{do}：
+    \item \quad $\mathcal{B} \leftarrow \{\}$ \qquad \% 空缓冲区
+    \item \quad \textbf{for} step $= 1, 2, \dots, T$ \textbf{do}：
+    \item \quad \quad 采样 $a \sim \pi_\theta(\cdot \mid s)$，执行 $a$，观察 $r, s'$
+    \item \quad \quad 存入 $\mathcal{B}$：$(s, a, r, s', \log\pi_\theta(a\mid s), V_\phi(s))$
+    \item \quad \quad \textbf{if} $s'$ 是终止状态 \textbf{then} 重置环境
+    \item \quad \textbf{end for}
+    \item \quad 从 $\mathcal{B}$ 计算 $\hat{A}_t^{\text{GAE}}$ 和 $V_t^{\text{target}}$
+    \item \quad $\hat{A} \leftarrow (\hat{A} - \mu) / (\sigma + \varepsilon)$
+    \item \quad \textbf{for} epoch $= 1, 2, \dots, K$ \textbf{do}：
+    \item \quad \quad 打乱 $\mathcal{B}$ 并构造 mini-batches
+    \item \quad \quad \textbf{for each} mini-batch $\mathcal{M}$ \textbf{do}：
+    \item \quad \quad \quad 计算 $r_t = \exp(\log\pi_\theta(a_t\mid s_t) - \log\pi_{\text{old}}(a_t\mid s_t))$
+    \item \quad \quad \quad $\mathcal{L}_{\text{clip}} = \E_{\mathcal{M}}[ \min(r_t \hat{A}_t, \operatorname{clip}(r_t, 1-\epsilon, 1+\epsilon)\hat{A}_t) ]$
+    \item \quad \quad \quad $\mathcal{L}_{\text{vf}} = \E_{\mathcal{M}}[ (V_\phi(s_t) - V_t^{\text{target}})^2 ]$
+    \item \quad \quad \quad $\mathcal{L}_{\text{ent}} = \E_{\mathcal{M}}[ \mathcal{H}(\pi_\theta(\cdot\mid s_t)) ]$
+    \item \quad \quad \quad $\mathcal{L} = -\mathcal{L}_{\text{clip}} + c_1 \mathcal{L}_{\text{vf}} - c_{\text{ent}} \mathcal{L}_{\text{ent}}$
+    \item \quad \quad \quad 反向传播，更新 $\theta$, $\phi$
+    \item \quad \quad \textbf{end for}
+    \item \quad \textbf{end for}
+    \item \textbf{end for}
+\end{enumerate}
+\end{myalgorithm}
+
+\section{实验与对比分析}
+
+\subsection{TRPO vs PPO 在 MuJoCo 上的性能}
+
+在 Schulman 等人（2017）的原始论文中，PPO 在 OpenAI Gym MuJoCo 基准（包括 HalfCheetah、Hopper、Walker2d、Swimmer、Ant、Humanoid 等）上进行了系统评估。主要结论包括：
+
+\begin{enumerate}
+    \item \textbf{PPO 在几乎所有任务上都达到或超过了 TRPO 的性能}，且训练更加稳定。
+    \item \textbf{PPO 的样本效率与 TRPO 相当}，但计算开销显著更低（因为不需要共轭梯度迭代）。
+    \item \textbf{PPO 在不同的随机种子下性能方差更小}，表现出更好的鲁棒性。
+\end{enumerate}
+
+\subsection{PPO-Clip vs PPO-Penalty}
+
+两种 PPO 变体的对比实验显示：
+
+\begin{itemize}
+    \item 在大多数连续控制任务上，PPO-Clip 的表现与 PPO-Penalty 相当或略优。
+    \item PPO-Clip 的参数更少（少一个自适应调度的超参数 $\beta$），工程实现更简洁。
+    \item PPO-Penalty 的 KL 惩罚机制在理论上有更好的可解释性，但在实践中自适应 $\beta$ 的调节滞后效应有时会导致训练的不稳定。
+\end{itemize}
+
+社区最终形成了以 PPO-Clip 为默认选择、PPO-Penalty 作为备选方案的共识。
+
+\subsection{PPO 的泛化能力}
+
+PPO 已被成功应用于远超原论文范畴的广泛领域：
+
+\begin{itemize}
+    \item \textbf{大型语言模型对齐（RLHF）}：InstructGPT 和 ChatGPT 的训练中，PPO 被用作强化学习阶段的算法。在这个场景中，"动作"是生成下一个 token，"奖励"来自人类偏好模型。
+    \item \textbf{游戏 AI}：OpenAI Five（Dota 2）使用 PPO 在数万个 CPU 核心上并行训练。
+    \item \textbf{机器人操作}：从仿真到真实世界的迁移学习中，PPO 因其稳定性和易于并行化的特点被广泛使用。
+    \item \textbf{推荐系统}：PPO 被用于在线推荐和广告投放中的策略优化。
+\end{itemize}
+
+\section{本章小结}
+
+本章系统介绍了从策略梯度到 PPO 的发展脉络。TRPO 为策略更新提供了优雅的约束优化框架，但其复杂的二阶优化限制了工程适用性。GAE($\lambda$) 在优势估计的偏差-方差权衡上给出了灵活的调节手段。PPO 通过简洁的裁剪机制，保留了 TRPO 的"保守更新"思想，同时大幅简化了实现，成为事实上的 RL 标准算法。下一章我们将转向连续动作空间中的深度强化学习方法。
+
+\end{chapter}
