@@ -89,7 +89,7 @@ $$v_{\pi}(s) \doteq \E_{\pi}[G_t \mid S_t = s] \approx \frac{1}{N}\sum_{i=1}^{N}
 两种方法的具体差异如下：
 
 \begin{myformula}
-\textbf{First-Visit MC 策略评估}
+\text{First-Visit MC 策略评估}
 \end{myformula}
 
 \begin{myalgorithm}{First-Visit MC 策略评估}
@@ -439,9 +439,8 @@ $$V(S_t) \leftarrow V(S_t) + \alpha \delta_t$$
 SARSA 是 TD 预测的直接控制扩展。其名称来源于每次更新使用的五元组：$(S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1})$。
 
 \begin{myformula}
-\textbf{SARSA 更新规则}
-$$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha [R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t)]$$
-\end{myformula}
+\text{SARSA 更新规则}
+Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha [R_{t+1} + \gamma Q(S_{t+1}, A_{t+1}) - Q(S_t, A_t)]\end{myformula}
 
 SARSA 是 on-policy 方法：行为策略和目标策略都是 $\varepsilon$-贪心策略。这意味着 $A_{t+1}$ 是根据与 $A_t$ 相同的 $\varepsilon$-贪心策略选出的。
 
@@ -532,9 +531,8 @@ Cliff Walking 是经典的用于说明 SARSA 和 Q-Learning 行为差异的示�
 Q-Learning 是强化学习中最著名、最广泛使用的 off-policy 控制算法。其核心思想是：在更新 $Q(S_t, A_t)$ 时，使用 $S_{t+1}$ 处所有可能动作中的\textbf{最大} Q 值作为近似最优值。
 
 \begin{myformula}
-\textbf{Q-Learning 更新规则}
-$$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha [R_{t+1} + \gamma \max_{a} Q(S_{t+1}, a) - Q(S_t, A_t)]$$
-\end{myformula}
+\text{Q-Learning 更新规则}
+Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha [R_{t+1} + \gamma \max_{a} Q(S_{t+1}, a) - Q(S_t, A_t)]\end{myformula}
 
 关键的洞察在于：Q-Learning 直接学习\textbf{最优}动作值函数 $Q^*$，无论当前使用什么行为策略。这就是 off-policy 的本质——目标策略是贪心策略（取 $\max$），而行为策略可以是任意探索策略（如 $\varepsilon$-贪心）。
 
@@ -585,9 +583,8 @@ $$Q^*(s,a) = \E\left[R_{t+1} + \gamma \max_{a'} Q^*(S_{t+1}, a') \mid S_t=s, A_t
 Expected SARSA 是 SARSA 的一种推广，它在更新中使用了 $S_{t+1}$ 处所有动作的\textbf{期望} Q 值，而非特定的 $A_{t+1}$。
 
 \begin{myformula}
-\textbf{Expected SARSA 更新规则}
-$$Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[R_{t+1} + \gamma \sum_{a} \pi(a|S_{t+1}) Q(S_{t+1}, a) - Q(S_t, A_t)\right]$$
-\end{myformula}
+\text{Expected SARSA 更新规则}
+Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[R_{t+1} + \gamma \sum_{a} \pi(a|S_{t+1}) Q(S_{t+1}, a) - Q(S_t, A_t)\right]\end{myformula}
 
 Expected SARSA 可以视为 SARSA 和 Q-Learning 的中间地带：
 \begin{itemize}

@@ -1,0 +1,540 @@
+\chapter{线性回归与梯度下降}
+
+\intro{线性回归是最基础也是最经典的机器学习模型之一。尽管形式简单，它包含了监督学习的核心要素：模型假设、损失函数、优化方法和泛化分析。理解线性回归及其优化算法（梯度下降的各种变体）是学习深度神经网络的必要前提。}
+
+\section{线性回归模型}
+
+\subsection{模型定义}
+
+给定输入特征 $\mathbf{x}\in\R^d$，线性回归模型假设输出 $y$ 是输入的线性组合：
+
+\[
+\hat{y} = \mathbf{w}^{\top}\mathbf{x} + b
+\]
+
+其中 $\mathbf{w}\in\R^d$ 是权重向量，$b\in\R$ 是偏置项。为简化表示，通常将偏置吸收到权重向量中：令 $\tilde{\mathbf{x}}=[\mathbf{x};1]$（追加常数 $1$），$\tilde{\mathbf{w}}=[\mathbf{w};b]$。
+
+对于包含 $m$ 个样本的数据集，设 $\mathbf{X}\in\R^{m\times (d+1)}$（每行一个样本，包含偏置列），目标向量 $\mathbf{y}\in\R^m$，则预测向量为：
+
+\[
+\hat{\mathbf{y}} = \mathbf{X}\mathbf{w}
+\]
+
+\subsection{损失函数：均方误差}
+
+均方误差（Mean Squared Error, MSE）是线性回归最常用的损失函数：
+
+\[
+J(\mathbf{w}) = \frac{1}{2m}\sum_{i=1}^{m} (\hat{y}_i - y_i)^2 = \frac{1}{2m}\|\mathbf{X}\mathbf{w} - \mathbf{y}\|_2^2
+\]
+
+系数 $\frac{1}{2}$ 是为了求导时消去指数，简化梯度表达式。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    mypoint/.style={circle, fill=blue!40, inner sep=1.5pt},
+    myline/.style={red!70, very thick},
+    myproj/.style={red!60, thin, dashed},
+    mylabel/.style={font=\small}
+]
+    \draw[->, >=stealth] (0, 0) -- (8, 0) node[right] {$x$};
+    \draw[->, >=stealth] (0, 0) -- (0, 6) node[above] {$y$};
+
+    \foreach \x/\y in {0.8/1.2, 1.5/1.8, 2.2/2.1, 3.0/2.5, 3.8/3.1, 4.5/3.5, 5.3/4.0, 6.0/4.3, 6.8/4.8} {
+        \node[mypoint] at (\x, \y) {};
+    }
+
+    \draw[myline, domain=0.5:7.2] plot (\x, {0.6*\x + 0.7});
+    \draw[myproj] (3.8, 3.1) -- (3.8, {0.6*3.8+0.7});
+    \node[mylabel, red!60] at (4.2, 2.5) {残差};
+
+    \node[mylabel, blue!70] at (6.5, 5.2) {$\hat{y}=wx+b$};
+    \node[mylabel] at (1.5, -0.8) {目标：最小化残差平方和};
+\end{tikzpicture}
+\caption{线性回归的几何解释。红色直线是拟合结果，虚线表示数据点到直线的垂直距离（残差）。}
+\label{fig:linear-regression}
+\end{figure}
+
+\section{正规方程}
+
+对 $J(\mathbf{w})$ 求导：
+
+\[
+\nabla_{\mathbf{w}} J(\mathbf{w}) = \frac{1}{m}\mathbf{X}^{\top}(\mathbf{X}\mathbf{w} - \mathbf{y})
+\]
+
+令梯度为零得正规方程：
+
+\[
+\mathbf{X}^{\top}\mathbf{X}\mathbf{w} = \mathbf{X}^{\top}\mathbf{y}
+\]
+
+当 $\mathbf{X}^{\top}\mathbf{X}$ 可逆时，解析解为：
+
+\[
+\mathbf{w}^* = (\mathbf{X}^{\top}\mathbf{X})^{-1}\mathbf{X}^{\top}\mathbf{y}
+\]
+
+正规方程的计算复杂度为 $O(d^3 + d^2m)$，当特征数 $d$ 很大时矩阵求逆不可行。对于深度学习，必须使用迭代方法（梯度下降）。
+
+\begin{mycode}{Python中的正规方程}
+\begin{lstlisting}[language=Python]
+import numpy as np
+
+np.random.seed(42)
+m, d = 100, 2
+X = np.random.randn(m, d)
+true_w = np.array([3.0, 2.0])
+true_b = 5.0
+y = X @ true_w + true_b + 0.5 * np.random.randn(m)
+
+X_aug = np.column_stack([X, np.ones(m)])
+
+w_normal = np.linalg.solve(X_aug.T @ X_aug, X_aug.T @ y)
+print(f"正规方程解: w={w_normal[:2]}, b={w_normal[2]:.4f}")
+
+w_pinv = np.linalg.pinv(X_aug) @ y
+print(f"伪逆法解:   w={w_pinv[:2]}, b={w_pinv[2]:.4f}")
+print(f"真实值:     w={true_w}, b={true_b}")
+\end{lstlisting}
+\end{mycode}
+
+\section{梯度下降}
+
+\subsection{批量梯度下降}
+
+梯度下降的核心思想：每一步沿负梯度方向移动一小步：
+
+\[
+\mathbf{w}_{t+1} = \mathbf{w}_t - \eta \nabla_{\mathbf{w}} J(\mathbf{w}_t)
+\]
+
+其中 $\eta>0$ 是学习率。对于 MSE 损失：
+
+\[
+\nabla_{\mathbf{w}} J(\mathbf{w}) = \frac{1}{m}\mathbf{X}^{\top}(\mathbf{X}\mathbf{w} - \mathbf{y})
+\]
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    myarrow/.style={->, >=stealth, very thick},
+    mylabel/.style={font=\small}
+]
+    \draw[->, >=stealth] (-4, 0) -- (4, 0) node[right] {$w_1$};
+    \draw[->, >=stealth] (0, -4) -- (0, 4) node[above] {$w_2$};
+
+    \foreach \r in {0.4, 0.8, 1.2, 1.6, 2.0, 2.4, 2.8, 3.2} {
+        \draw[blue!30, thick, rotate around={20:(0,0)}]
+            (0, 0) ellipse ({\r*1.8} and \r);
+    }
+
+    \fill[red] (0, 0) circle (3pt);
+    \node[mylabel, red, right] at (0, 0.2) {$\mathbf{w}^*$};
+
+    \draw[myarrow, red!70] (3.2, 2.5) -- (2.1, 1.6);
+    \draw[myarrow, red!70] (2.1, 1.6) -- (1.4, 1.0);
+    \draw[myarrow, red!70] (1.4, 1.0) -- (0.9, 0.6);
+    \draw[myarrow, red!70] (0.9, 0.6) -- (0.5, 0.35);
+    \draw[myarrow, red!70] (0.5, 0.35) -- (0.2, 0.15);
+
+    \fill[red!70] (3.2, 2.5) circle (2pt);
+    \node[mylabel, red!70] at (3.2, 2.8) {$\mathbf{w}_0$};
+
+    \node[mylabel, blue!50] at (-2, -3) {等高线 = $J(\mathbf{w})$};
+    \node[mylabel, red!70] at (2, -3) {路径 = 梯度下降迭代};
+\end{tikzpicture}
+\caption{梯度下降的优化轨迹。每一步沿负梯度方向移动，最终收敛到最小值。}
+\label{fig:gradient-descent-path}
+\end{figure}
+
+\begin{myalgorithm}{批量梯度下降算法}
+\begin{enumerate}
+    \item [输入:] 训练数据 $\mathbf{X}\in\R^{m\times d}$，标签 $\mathbf{y}\in\R^m$，学习率 $\eta$，最大迭代次数 $T$
+    \item [初始化:] $\mathbf{w}_0$（通常为零向量）
+    \item [循环:] 对 $t=0,1,\ldots,T-1$：
+    \begin{enumerate}
+        \item 计算梯度：$\mathbf{g}_t = \frac{1}{m}\mathbf{X}^{\top}(\mathbf{X}\mathbf{w}_t-\mathbf{y})$
+        \item 更新参数：$\mathbf{w}_{t+1} = \mathbf{w}_t - \eta\mathbf{g}_t$
+        \item 若 $\|\mathbf{g}_t\|_2 < \varepsilon$，则停止
+    \end{enumerate}
+    \item [输出:] $\mathbf{w}_T$
+\end{enumerate}
+\end{myalgorithm}
+
+\subsection{随机梯度下降}
+
+随机梯度下降（SGD）每次更新只使用一个随机样本：
+
+\[
+\mathbf{w}_{t+1} = \mathbf{w}_t - \eta \nabla_{\mathbf{w}} J(\mathbf{w}_t; \mathbf{x}^{(i)}, y^{(i)})
+\]
+
+其中 $\nabla_{\mathbf{w}} J(\mathbf{w}; \mathbf{x}^{(i)}, y^{(i)}) = (\hat{y}_i - y_i)\mathbf{x}^{(i)}$。SGD的随机噪声有助于逃离鞍点和局部极小点。
+
+\subsection{小批量随机梯度下降}
+
+小批量 SGD 每次使用 $B$ 个样本：
+
+\[
+\mathbf{w}_{t+1} = \mathbf{w}_t - \frac{\eta}{B} \sum_{i\in\mathcal{B}_t} \nabla_{\mathbf{w}} J(\mathbf{w}_t; \mathbf{x}^{(i)}, y^{(i)})
+\]
+
+其中 $\mathcal{B}_t$ 是第 $t$ 次迭代的随机小批量。小批量 SGD 兼顾了计算效率和梯度估计的方差。
+
+\begin{mycode}{Python中的梯度下降实现}
+\begin{lstlisting}[language=Python]
+import numpy as np
+
+np.random.seed(42)
+m, d = 1000, 5
+X = np.random.randn(m, d)
+true_w = np.array([1.5, -2.0, 3.0, -0.5, 2.0])
+y = X @ true_w + 3.0 + 0.5 * np.random.randn(m)
+X_aug = np.column_stack([X, np.ones(m)])
+
+def mse_loss(w, X, y):
+    pred = X @ w
+    return 0.5 * np.mean((pred - y) ** 2)
+
+def mse_gradient(w, X, y):
+    pred = X @ w
+    return X.T @ (pred - y) / len(y)
+
+# 批量梯度下降
+w_bgd = np.zeros(d + 1)
+lr = 0.01
+for t in range(500):
+    grad = mse_gradient(w_bgd, X_aug, y)
+    w_bgd -= lr * grad
+print(f"Batch GD - 最终损失: {mse_loss(w_bgd, X_aug, y):.6f}")
+
+# 小批量SGD
+w_sgd = np.zeros(d + 1)
+batch_size = 32
+for t in range(500):
+    idx = np.random.choice(m, batch_size, replace=False)
+    Xb, yb = X_aug[idx], y[idx]
+    grad = mse_gradient(w_sgd, Xb, yb)
+    w_sgd -= lr * grad
+print(f"Mini-batch SGD - 最终损失: {mse_loss(w_sgd, X_aug, y):.6f}")
+\end{lstlisting}
+\end{mycode}
+
+\section{动量与自适应优化器}
+
+\subsection{带动量的 SGD}
+
+动量方法通过累积历史梯度加速收敛：
+
+\begin{myformula}
+\mathbf{v}_t &= \beta\mathbf{v}_{t-1} + (1-\beta)\nabla J(\mathbf{w}_t) \\
+\mathbf{w}_{t+1} &= \mathbf{w}_t - \eta\mathbf{v}_t
+\end{myformula}
+
+其中 $\beta\in[0,1)$ 是动量系数（通常 $0.9$）。动量在梯度方向一致时加速，在梯度剧烈变化时保持稳定。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    myarrow/.style={->, >=stealth, thick},
+    mydash/.style={->, >=stealth, thick, dashed},
+    mylabel/.style={font=\small}
+]
+    \draw[blue!30, thick, rotate around={15:(0,0)}] (0, 0) ellipse (4cm and 1cm);
+    \draw[blue!20, thick, rotate around={15:(0,0)}] (0, 0) ellipse (3cm and 0.75cm);
+    \draw[blue!20, thick, rotate around={15:(0,0)}] (0, 0) ellipse (2cm and 0.5cm);
+    \draw[blue!20, thick, rotate around={15:(0,0)}] (0, 0) ellipse (1cm and 0.25cm);
+
+    \fill[red] (0, 0) circle (3pt) node[right] {$\mathbf{w}^*$};
+
+    \draw[mydash, blue!70] (3.5, 2) -- (2.8, 1.2) -- (2.5, 1.6) -- (1.8, 0.9) --
+        (1.5, 1.2) -- (0.9, 0.6) -- (0.7, 0.8) -- (0.3, 0.3) -- (0.1, 0.1);
+
+    \draw[myarrow, red!80] (3.5, 2) -- (2.5, 1.3) -- (1.6, 0.7) --
+        (0.8, 0.3) -- (0.2, 0.1) -- (0, 0);
+
+    \node[mylabel, blue!70] at (5, 1.5) {无动量（震荡）};
+    \node[mylabel, red!80] at (5, 0.8) {有动量（平滑）};
+\end{tikzpicture}
+\caption{动量方法在峡谷形损失函数上的效果对比。有动量（红色）的路径明显比无动量（蓝色虚线）更平滑高效。}
+\label{fig:momentum}
+\end{figure}
+
+\subsection{Nesterov 动量}
+
+Nesterov 动量先根据当前速度向前看一步，再在该前瞻点上计算梯度：
+
+\[
+\mathbf{v}_t = \beta\mathbf{v}_{t-1} + \eta\nabla J(\mathbf{w}_t - \beta\mathbf{v}_{t-1})
+\]
+\[
+\mathbf{w}_{t+1} = \mathbf{w}_t - \mathbf{v}_t
+\]
+
+这种前瞻策略使得 Nesterov 动量在接近最优解时能提前减速。
+
+\subsection{AdaGrad}
+
+AdaGrad 为每个参数自适应调整学习率：
+
+\[
+\mathbf{s}_t = \mathbf{s}_{t-1} + \nabla J(\mathbf{w}_t) \odot \nabla J(\mathbf{w}_t)
+\]
+\[
+\mathbf{w}_{t+1} = \mathbf{w}_t - \frac{\eta}{\sqrt{\mathbf{s}_t + \varepsilon}} \odot \nabla J(\mathbf{w}_t)
+\]
+
+AdaGrad 的问题：$\mathbf{s}_t$ 单调递增，学习率持续下降。
+
+\subsection{RMSProp}
+
+RMSProp 用指数移动平均代替累计和：
+
+\[
+\mathbf{s}_t = \beta\mathbf{s}_{t-1} + (1-\beta)\nabla J(\mathbf{w}_t) \odot \nabla J(\mathbf{w}_t)
+\]
+\[
+\mathbf{w}_{t+1} = \mathbf{w}_t - \frac{\eta}{\sqrt{\mathbf{s}_t + \varepsilon}} \odot \nabla J(\mathbf{w}_t)
+\]
+
+\subsection{Adam}
+
+Adam 结合了动量和 RMSProp，是目前最常用的优化器：
+
+\begin{myformula}
+\mathbf{m}_t &= \beta_1\mathbf{m}_{t-1} + (1-\beta_1)\nabla J(\mathbf{w}_t) \\
+\mathbf{v}_t &= \beta_2\mathbf{v}_{t-1} + (1-\beta_2)\nabla J(\mathbf{w}_t)^2 \\
+\hat{\mathbf{m}}_t &= \frac{\mathbf{m}_t}{1-\beta_1^t} \\
+\hat{\mathbf{v}}_t &= \frac{\mathbf{v}_t}{1-\beta_2^t} \\
+\mathbf{w}_{t+1} &= \mathbf{w}_t - \eta\frac{\hat{\mathbf{m}}_t}{\sqrt{\hat{\mathbf{v}}_t} + \varepsilon}
+\end{myformula}
+
+默认超参数：$\eta=0.001$，$\beta_1=0.9$，$\beta_2=0.999$，$\varepsilon=10^{-8}$。
+
+\begin{mycode}{Python中的优化器实现}
+\begin{lstlisting}[language=Python]
+import numpy as np
+
+class Momentum:
+    def __init__(self, lr=0.01, beta=0.9):
+        self.lr, self.beta = lr, beta
+        self.v = None
+
+    def update(self, w, grad):
+        if self.v is None:
+            self.v = np.zeros_like(w)
+        self.v = self.beta * self.v + self.lr * grad
+        return w - self.v
+
+class Adam:
+    def __init__(self, lr=0.001, beta1=0.9, beta2=0.999, eps=1e-8):
+        self.lr, self.beta1, self.beta2, self.eps = lr, beta1, beta2, eps
+        self.m, self.v, self.t = None, None, 0
+
+    def update(self, w, grad):
+        if self.m is None:
+            self.m = np.zeros_like(w)
+            self.v = np.zeros_like(w)
+        self.t += 1
+        self.m = self.beta1 * self.m + (1 - self.beta1) * grad
+        self.v = self.beta2 * self.v + (1 - self.beta2) * (grad ** 2)
+        m_hat = self.m / (1 - self.beta1 ** self.t)
+        v_hat = self.v / (1 - self.beta2 ** self.t)
+        return w - self.lr * m_hat / (np.sqrt(v_hat) + self.eps)
+
+# 测试
+np.random.seed(0)
+X = np.random.randn(200, 3)
+y = X @ np.array([2.0, -1.0, 0.5]) + 1.0
+
+for name, opt in [('SGD', None), ('Momentum', Momentum(lr=0.05)),
+                   ('Adam', Adam(lr=0.05))]:
+    w_opt = np.zeros(3)
+    for i in range(200):
+        grad = X.T @ (X @ w_opt - y) / len(y)
+        if opt is None:
+            w_opt -= 0.05 * grad
+        else:
+            w_opt = opt.update(w_opt, grad)
+    loss = 0.5 * np.mean((X @ w_opt - y) ** 2)
+    print(f"{name:10s} - 损失: {loss:.6f}, w: {w_opt.round(3)}")
+\end{lstlisting}
+\end{mycode}
+
+\section{学习率调度}
+
+\begin{itemize}
+    \item \textbf{阶梯衰减}：每隔固定epochs将学习率乘以衰减因子（如 $\times 0.1$）
+    \item \textbf{指数衰减}：$\eta_t = \eta_0 \cdot \gamma^t$
+    \item \textbf{余弦退火}：$\eta_t = \eta_{\min} + \frac{1}{2}(\eta_{\max}-\eta_{\min})(1+\cos(\frac{t}{T}\pi))$
+    \item \textbf{热身（Warmup）}：训练初期线性增加学习率，对大型 Transformer 训练至关重要
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    mycurve/.style={thick, smooth},
+    mylabel/.style={font=\small}
+]
+    \draw[->, >=stealth] (0, 0) -- (8, 0) node[right] {迭代次数 $t$};
+    \draw[->, >=stealth] (0, 0) -- (0, 4.5) node[above] {学习率 $\eta_t$};
+
+    \draw[mycurve, blue!70] (0, 3.5) -- (1.99, 3.5) -- (2, 1.75) -- (3.99, 1.75) --
+        (4, 0.875) -- (5.99, 0.875) -- (6, 0.437) -- (7.5, 0.437);
+
+    \draw[mycurve, red!70, domain=0:7.5, samples=100]
+        plot (\x, {3.5 * exp(-0.3*\x)});
+
+    \draw[mycurve, green!50!black, domain=0:3.75, samples=80]
+        plot (\x, {0.2 + 1.65*(1+cos(\x*180/3.75))});
+    \draw[mycurve, green!50!black, domain=3.75:7.5, samples=80]
+        plot (\x, {0.2 + 1.65*(1+cos((\x-3.75)*180/3.75))});
+
+    \node[mylabel, blue!70, right] at (7.8, 1.2) {阶梯};
+    \node[mylabel, red!70, right] at (7.8, 0.5) {指数};
+    \node[mylabel, green!50!black, right] at (7.8, 3) {余弦};
+\end{tikzpicture}
+\caption{不同的学习率调度策略对比。阶梯衰减（蓝）分段下降，指数衰减（红）平滑递减，余弦退火（绿）在周期内平滑变化。}
+\label{fig:lr-schedules}
+\end{figure}
+
+\section{正则化}
+
+\subsection{$L^2$ 正则化（Ridge 回归/权重衰减）}
+
+在 MSE 损失中加入权重向量的 $L^2$ 范数惩罚：
+
+\[
+J(\mathbf{w}) = \frac{1}{2m}\|\mathbf{X}\mathbf{w} - \mathbf{y}\|_2^2 + \frac{\lambda}{2}\|\mathbf{w}\|_2^2
+\]
+
+正则化参数 $\lambda>0$ 控制惩罚强度。梯度：
+
+\[
+\nabla_{\mathbf{w}} J = \frac{1}{m}\mathbf{X}^{\top}(\mathbf{X}\mathbf{w} - \mathbf{y}) + \lambda\mathbf{w}
+\]
+
+Ridge 回归的解析解：
+\[
+\mathbf{w}^* = (\mathbf{X}^{\top}\mathbf{X} + m\lambda\mathbf{I})^{-1}\mathbf{X}^{\top}\mathbf{y}
+\]
+
+加入 $\lambda\mathbf{I}$ 后矩阵变得可逆（即使原矩阵不可逆），解决了多重共线性问题。$L^2$ 正则化倾向于让所有权重都接近零但不为零。
+
+\subsection{$L^1$ 正则化（Lasso 回归）}
+
+\[
+J(\mathbf{w}) = \frac{1}{2m}\|\mathbf{X}\mathbf{w} - \mathbf{y}\|_2^2 + \lambda\|\mathbf{w}\|_1
+\]
+
+$L^1$ 正则化倾向于产生稀疏解——许多权重变为精确的零，从而实现特征选择。其梯度涉及次梯度（因为绝对值在原点不可导）：
+
+\[
+\frac{\partial \|\mathbf{w}\|_1}{\partial w_j} = \operatorname{sign}(w_j)
+\]
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    mycontour/.style={thick},
+    mylabel/.style={font=\small}
+]
+    \draw[->, >=stealth] (-3, 0) -- (3, 0) node[right] {$w_1$};
+    \draw[->, >=stealth] (0, -3) -- (0, 3) node[above] {$w_2$};
+
+    % MSE contour (ellipse)
+    \draw[mycontour, blue!50, rotate around={30:(1.2,0)}]
+        (1.2, 0) ellipse (2.0cm and 1.2cm);
+
+    % L2 constraint (circle)
+    \draw[mycontour, red!70] (0, 0) circle (1.5);
+    \fill[red] (1.1, 1.0) circle (2.5pt);  % intersection (not typically sparse)
+    \node[mylabel, red!70] at (-1.5, 1.8) {$L^2$ 约束};
+
+    % L1 constraint (diamond)
+    \draw[mycontour, green!50!black] (-1.8, 0) -- (0, -1.8) -- (1.8, 0) -- (0, 1.8) -- cycle;
+    \fill[green!50!black] (0, 1.6) circle (2.5pt);  % intersection at axis -> sparse
+    \node[mylabel, green!50!black] at (-2.1, 0.5) {$L^1$ 约束};
+
+    \node[mylabel] at (2.5, -2.5) {$L^1$ 正则化更易产生稀疏解};
+    \node[mylabel] at (2.5, -2.9) {(交点在坐标轴上)};
+\end{tikzpicture}
+\caption{$L^1$ 与 $L^2$ 正则化的几何解释。MSE 的等高线（椭圆）和正则化约束区域（菱形/$L^1$，圆/$L^2$）相交于最优解。$L^1$ 正则化因菱形尖点在坐标轴上，容易产生稀疏解。}
+\label{fig:l1-vs-l2}
+\end{figure}
+
+\subsection{弹性网络}
+
+弹性网络结合 $L^1$ 和 $L^2$ 正则化：
+
+\[
+J(\mathbf{w}) = \frac{1}{2m}\|\mathbf{X}\mathbf{w} - \mathbf{y}\|_2^2 + \lambda_1\|\mathbf{w}\|_1 + \frac{\lambda_2}{2}\|\mathbf{w}\|_2^2
+\]
+
+它兼具 $L^1$ 的稀疏性和 $L^2$ 的稳定性，在特征高度相关时表现优于纯 Lasso。
+
+\begin{mycode}{Python中的正则化对比}
+\begin{lstlisting}[language=Python]
+import numpy as np
+from sklearn.linear_model import LinearRegression, Ridge, Lasso
+
+np.random.seed(42)
+m, d = 50, 100  # d >> m: 高维情况
+X = np.random.randn(m, d)
+true_w = np.zeros(d)
+true_w[:5] = [4, 3, -2, 5, 1]  # 只有5个非零特征
+y = X @ true_w + 0.3 * np.random.randn(m)
+
+lr = LinearRegression()
+ridge = Ridge(alpha=1.0)
+lasso = Lasso(alpha=0.5)
+
+for name, model in [('无正则', lr), ('L2(Ridge)', ridge), ('L1(Lasso)', lasso)]:
+    model.fit(X, y)
+    w_pred = model.coef_
+    print(f"{name}: 非零特征数 = {np.sum(np.abs(w_pred) > 1e-4)}")
+    print(f"  w[:5] = {w_pred[:5].round(2)}")
+\end{lstlisting}
+\end{mycode}
+
+\section{多项式回归}
+
+线性回归可以扩展到多项式回归：将原始特征 $\mathbf{x}$ 映射到更高维的多项式特征空间。例如，一元二次回归：
+
+\[
+\hat{y} = w_0 + w_1 x + w_2 x^2
+\]
+
+设 $\boldsymbol{\phi}(\mathbf{x})=[1,x,x^2]^{\top}$，则 $\hat{y}=\mathbf{w}^{\top}\boldsymbol{\phi}(\mathbf{x})$，仍是一个关于 $\mathbf{w}$ 的线性模型。多项式回归可以拟合非线性关系，但阶数过高会过拟合。
+
+\section{偏差-方差权衡}
+
+模型的泛化误差可以分解为三个部分：
+
+\[
+\mathbb{E}[(y-\hat{f}(\mathbf{x}))^2] = \underbrace{(\operatorname{Bias}[\hat{f}])^2}_{\text{偏差}^2}
++ \underbrace{\operatorname{Var}[\hat{f}]}_{\text{方差}} + \underbrace{\sigma^2}_{\text{不可约误差}}
+\]
+
+其中：
+\begin{itemize}
+    \item \textbf{偏差}：模型预测的期望与真实值的差异。高偏差意味着欠拟合（模型太简单）。
+    \item \textbf{方差}：对不同训练集，模型预测的变化程度。高方差意味着过拟合（模型太复杂）。
+    \item \textbf{不可约误差}：数据本身的噪声，无法通过任何模型消除。
+\end{itemize}
+
+正则化参数 $\lambda$ 控制偏差-方差权衡：$\lambda$ 越大，模型越简单（高偏差，低方差）；$\lambda$ 越小，模型越复杂（低偏差，高方差）。
+
+\section{本章小结}
+
+本章介绍了线性回归与梯度下降的核心内容：
+\begin{itemize}
+    \item 线性回归是最基础的监督学习模型，MSE是其标准损失函数
+    \item 正规方程提供了解析解，但特征数大时不适用
+    \item 梯度下降系列算法（SGD、动量、AdaGrad、RMSProp、Adam）是深度学习优化的基石
+    \item 学习率调度策略对训练效果有显著影响
+    \item 正则化（$L^1$、$L^2$、弹性网络）控制模型复杂度，防止过拟合
+    \item 偏差-方差权衡揭示了模型复杂度和泛化性能之间的根本矛盾
+\end{itemize}

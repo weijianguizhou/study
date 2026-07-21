@@ -1,0 +1,630 @@
+
+\chapter{优化深度神经网络}
+
+\intro{如果说网络结构决定了模型的"能力上限"，那么优化算法则决定了我们能否到达这个上限。本章从随机梯度下降出发，深入动量法、自适应学习率方法（Adam/AdamW），以及学习率调度、超参数搜索等实用技术，帮助你驯服深层网络的训练过程。}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{优化问题的数学描述}
+
+\subsection{经验风险最小化}
+
+深度学习中的优化问题可以统一表述为\textbf{经验风险最小化}（Empirical Risk Minimization）：
+
+\[
+\boldsymbol{\theta}^* = \arg\min_{\boldsymbol{\theta}} \mathcal{L}(\boldsymbol{\theta}) = \frac{1}{m}\sum_{i=1}^{m} \ell(f(\mathbf{x}^{(i)}; \boldsymbol{\theta}), \mathbf{y}^{(i)})
+\]
+
+其中 $\boldsymbol{\theta} \in \R^{d}$ 是模型的所有参数（通常 $d$ 可达数十亿），$\ell(\cdot, \cdot)$ 是样本损失，$\mathcal{L}$ 是整个训练集的平均损失。
+
+这个优化问题的特点使其与经典的凸优化有本质不同：
+\begin{itemize}
+    \item \textbf{非凸性}——损失曲面存在大量局部极小值、鞍点和平台区域
+    \item \textbf{高维度}——参数量可达百万甚至万亿级别
+    \item \textbf{数据规模大}——百万级样本，不可能每步计算全梯度
+    \item \textbf{目标泛化}——训练损失最低的解不一定是测试损失最低的
+\end{itemize}
+
+\subsection{非凸优化的挑战——鞍点而非局部极小值}
+
+在高维空间中，纯局部极小值（所有方向的曲率都为正）极为罕见；更常见的是\textbf{鞍点}（saddle point）——某些方向向上弯曲，其他方向向下弯身。在高维优化中，逃离鞍点是比逃离局部极小值更核心的问题。
+
+\begin{remark}
+神经网络的损失曲面高度非凸，但实践表明：大多数局部极小值具有相似的泛化性能，而梯度下降算法擅长逃离鞍点但可能卡在平坦的"高原"区域。因此，现代优化器设计的核心目标是\textbf{加速逃离鞍点和平坦区域}。
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{梯度下降法及其变体}
+
+\subsection{批量梯度下降}
+
+\textbf{批量梯度下降}（Batch Gradient Descent, BGD）使用整个训练集计算梯度，每次参数更新方向是最准确的：
+
+\[
+\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \eta\,\nabla_{\boldsymbol{\theta}}\mathcal{L}(\boldsymbol{\theta}_t) = \boldsymbol{\theta}_t - \frac{\eta}{m}\sum_{i=1}^{m} \nabla_{\boldsymbol{\theta}}\ell(\boldsymbol{\theta}_t; \mathbf{x}^{(i)}, \mathbf{y}^{(i)})
+\]
+
+BGD的梯度估计无偏且方差为零，但每步更新都需要遍历全部数据，计算代价高昂，现代深度学习训练几乎不使用。
+
+\subsection{随机梯度下降}
+
+\textbf{随机梯度下降}（Stochastic Gradient Descent, SGD）每步只用一个随机样本来估计梯度：
+
+\[
+\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \eta\,\nabla_{\boldsymbol{\theta}}\ell(\boldsymbol{\theta}_t; \mathbf{x}^{(i)}, \mathbf{y}^{(i)})
+\]
+
+单个样本的梯度方差极大，导致参数更新方向剧烈振荡。但这一噪声在实际中可能是有益的——它帮助算法跳出局部极小值和鞍点。
+
+\subsection{小批量随机梯度下降}
+
+\textbf{小批量SGD}（Mini-batch SGD）是实际使用中最标准的方法：每步使用一个\textbf{小批量}（mini-batch）$\mathcal{B}$ 的样本：
+
+\[
+\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \frac{\eta}{|\mathcal{B}|}\sum_{i\in\mathcal{B}} \nabla_{\boldsymbol{\theta}}\ell(\boldsymbol{\theta}_t; \mathbf{x}^{(i)}, \mathbf{y}^{(i)})
+\]
+
+批大小 $|\mathcal{B}|$ 是重要的超参数：
+\begin{itemize}
+    \item 批大小太小——梯度噪声过大，训练不稳定，GPU利用率低
+    \item 批大小适中——噪声适度，收敛快，对泛化有利（噪声有正则化效果）
+    \item 批大小太大——梯度精确但每步计算量大，泛化性能可能下降
+\end{itemize}
+
+在实际中，批大小常取 32、64、128 或 256，并受GPU显存限制。
+
+\begin{figure}[H]\centering
+\begin{tikzpicture}[scale=1.1]
+\draw[->] (-4.5,0) -- (0.5,0) node[right] {$\theta_1$};
+\draw[->] (0,-1.5) -- (0,3.0) node[above] {$\theta_2$};
+\draw[very thick, domain=-4:0.3, samples=100,
+      blue!60, variable=\x] plot ({\x}, {0.8*\x*\x + 0.5});
+
+% SGD path
+\draw[->, red!70, thick, domain=-3.5:-1.5, samples=20,
+      variable=\x] plot ({\x}, {0.8*\x*\x + 0.5 + 0.15*sin(10*\x r)});
+\node[red!70, font=\footnotesize] at (-2.8,2.5) {SGD（震荡）};
+
+% BGD path
+\draw[->, blue!70, thick, dashed,
+      domain=-3.5:-0.5, samples=20]
+      plot ({\x}, {0.8*\x*\x + 0.5});
+\node[blue!70, font=\footnotesize] at (-2.0,2.5) {BGD（平滑）};
+
+\fill[orange] (-0.5,0.7) circle (2pt) node[above right, font=\tiny] {最优解};
+\node[font=\footnotesize] at (-2.0,-1.2) {BGD平滑但慢，SGD快但震荡};
+\end{tikzpicture}
+\caption{BGD与SGD在损失曲面上的优化轨迹对比。BGD路径平滑但每步计算代价大，SGD路径振荡但收敛更快（总计算量更小）}
+\label{fig:sgd-vs-bgd}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{动量法——让梯度具有"惯性"}
+
+\subsection{经典动量}
+
+\textbf{动量法}（Momentum）在SGD的基础上引入\textbf{速度}变量 $\mathbf{v}$，使得参数更新不仅取决于当前梯度，还取决于历史上的更新方向：
+
+\begin{myformula}
+\begin{aligned}
+\mathbf{v}_t &= \beta \mathbf{v}_{t-1} + (1 - \beta)\,\nabla_{\boldsymbol{\theta}}\mathcal{L}(\boldsymbol{\theta}_t) \\
+\boldsymbol{\theta}_{t+1} &= \boldsymbol{\theta}_t - \eta\,\mathbf{v}_t
+\end{aligned}
+\end{myformula}
+
+其中 $\beta \in [0, 1)$ 是动量系数（通常取0.9）。$\mathbf{v}_t$ 可以视为梯度的\textbf{指数加权移动平均}（EMA）。
+
+动量的两大好处：
+\begin{itemize}
+    \item \textbf{加速收敛}——在梯度方向一致的维度（如平缓谷底）持续加速
+    \item \textbf{抑制振荡}——在梯度方向频繁翻转的维度（如窄谷两侧），正负梯度相互抵消，减小震荡
+\end{itemize}
+
+\begin{figure}[H]\centering
+\begin{tikzpicture}[scale=0.8]
+% Draw a narrow valley
+\draw[->] (-5,-2.5) -- (5,-2.5) node[right] {$\theta_1$};
+\draw[->] (0,-3.5) -- (0,3.5) node[above] {$\theta_2$};
+\draw[blue!10] (-4.5,-2) to[out=30,in=180] (0,0) to[out=0,in=150] (4.5,-2);
+\draw[blue!10] (-4.5,2) to[out=-30,in=180] (0,0) to[out=0,in=-150] (4.5,2);
+
+\draw[->, red!70, very thick] (3.5,2.5) -- (3.7,2.3) node[midway, right, font=\tiny] {SGD};
+\draw[->, blue!70, very thick] (3.5,2.0) -- (3.0,0.8) node[midway, right, font=\tiny] {动量};
+
+\node[font=\footnotesize] at (0,-3.2) {沿窄谷振荡方向：SGD反复"之"字下降，动量沿谷底平滑加速};
+\end{tikzpicture}
+\caption{在窄谷状的损失曲面上，SGD在峡谷两侧反复振荡下降缓慢，动量法利用历史方向的惯性沿谷底快速推进}
+\label{fig:momentum-effect}
+\end{figure}
+
+\subsection{Nesterov 加速梯度}
+
+\textbf{Nesterov加速梯度}（NAG）是动量法的改进，其关键思想是：先按累积动量"前瞻"一步，再在"前瞻点"计算梯度进行修正：
+
+\begin{myformula}
+\begin{aligned}
+\mathbf{v}_t &= \beta \mathbf{v}_{t-1} + (1 - \beta)\,\nabla_{\boldsymbol{\theta}}\mathcal{L}(\boldsymbol{\theta}_t - \eta\beta\mathbf{v}_{t-1}) \\
+\boldsymbol{\theta}_{t+1} &= \boldsymbol{\theta}_t - \eta\,\mathbf{v}_t
+\end{aligned}
+\end{myformula}
+
+NAG可以理解为带有``前瞻''的动量法——在惯性方向上先走一步，看看前方曲率变化，再决定实际更新方向和步长。这使得NAG在凸优化中具有更好的理论收敛保证。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{自适应学习率方法}
+
+动量法在所有参数维度上使用相同的全局学习率。然而，在深度网络中，不同层、不同参数可能需要不同的学习率。自适应方法为每个参数独立调整学习率。
+
+\subsection{AdaGrad}
+
+AdaGrad累积历史梯度的平方和，使频繁更新的参数学习率衰减更快：
+
+\[
+\mathbf{G}_t = \mathbf{G}_{t-1} + \nabla\mathcal{L}(\boldsymbol{\theta}_t)^2, \quad
+\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \frac{\eta}{\sqrt{\mathbf{G}_t + \varepsilon}}\odot\nabla\mathcal{L}(\boldsymbol{\theta}_t)
+\]
+
+其中所有运算为逐元素操作。$\mathbf{G}_t$ 单调递增，导致学习率在训练后期衰减至几乎为零，这使得AdaGrad对非平稳目标（如深度网络的非凸优化）不够友好。
+
+\subsection{RMSProp}
+
+RMSProp通过将累积改为指数移动平均，解决了AdaGrad学习率单调衰减的问题：
+
+\[
+\mathbf{G}_t = \beta \mathbf{G}_{t-1} + (1 - \beta)\,(\nabla\mathcal{L}(\boldsymbol{\theta}_t))^2
+\]
+
+其中 $\beta$ 通常取0.9。RMSProp使用近期梯度的二阶矩估计来调整各维度的学习率。
+
+\subsection{Adam——当前的事实标准}
+
+\textbf{Adam}（Adaptive Moment Estimation）同时结合了动量（一阶矩）和RMSProp（二阶矩）：
+
+\begin{myformula}
+\begin{aligned}
+\mathbf{m}_t &= \beta_1\mathbf{m}_{t-1} + (1 - \beta_1)\nabla\mathcal{L}(\boldsymbol{\theta}_t) \quad \text{（一阶矩，动量）}\\
+\mathbf{v}_t &= \beta_2\mathbf{v}_{t-1} + (1 - \beta_2)(\nabla\mathcal{L}(\boldsymbol{\theta}_t))^2 \quad \text{（二阶矩，自适应学习率）}\\[4pt]
+\hat{\mathbf{m}}_t &= \frac{\mathbf{m}_t}{1 - \beta_1^t} \quad \text{（偏差修正）}\\[4pt]
+\hat{\mathbf{v}}_t &= \frac{\mathbf{v}_t}{1 - \beta_2^t} \quad \text{（偏差修正）}\\[4pt]
+\boldsymbol{\theta}_t &= \boldsymbol{\theta}_{t-1} - \eta\,\frac{\hat{\mathbf{m}}_t}{\sqrt{\hat{\mathbf{v}}_t} + \varepsilon}
+\end{aligned}
+\end{myformula}
+
+默认超参数：$\eta = 0.001$，$\beta_1 = 0.9$，$\beta_2 = 0.999$，$\varepsilon = 10^{-8}$。
+
+\textbf{偏差修正}的必要性：由于 $\mathbf{m}_0 = \mathbf{v}_0 = \mathbf{0}$，在训练初期，EMA估计会严重偏向零。偏差修正项 $1/(1 - \beta^t)$ 在初期放大估计值，$t$ 增大后趋近于1，自然地消除初始偏差。
+
+\begin{myTheorem}{Adam的收敛性质}
+Adam在凸优化中具有 $O(1/\sqrt{T})$ 的遗憾界（regret bound），与SGD相同。在非凸随机优化中，Adam可以保证收敛到平稳点。但实际上，Adam在Transformer等现代架构上经常优于SGD+momentum。
+\end{myTheorem}
+
+\subsection{AdamW——解耦权重衰减}
+
+标准Adam中，权重衰减（$L^2$正则化）与自适应学习率耦合，导致大梯度参数的正则化效果减弱。\textbf{AdamW}将权重衰减从梯度更新中\textbf{解耦}：
+
+\[
+\boldsymbol{\theta}_{t} = \boldsymbol{\theta}_{t-1} - \eta\,\frac{\hat{\mathbf{m}}_t}{\sqrt{\hat{\mathbf{v}}_t} + \varepsilon} - \eta\lambda\boldsymbol{\theta}_{t-1}
+\]
+
+最后的 $\eta\lambda\boldsymbol{\theta}_{t-1}$ 项是\textbf{解耦的权重衰减}（decoupled weight decay），其效果等价于在损失中加 $(\lambda/2)\|\boldsymbol{\theta}\|^2$ 但不干扰自适应学习率。AdamW已成为Transformer训练的标准优化器。
+
+\begin{mycode}{PyTorch 中各种优化器的使用与对比}
+\begin{lstlisting}[language=Python]
+import torch
+import torch.nn as nn
+import torch.optim as optim
+
+# 构建测试用模�?model = nn.Sequential(
+    nn.Linear(100, 200), nn.ReLU(),
+    nn.Linear(200, 200), nn.ReLU(),
+    nn.Linear(200, 10)
+)
+
+# ========== 各种优化器 ==========
+# SGD + 动量
+opt_sgd = optim.SGD(model.parameters(), lr=0.01,
+                    momentum=0.9, weight_decay=1e-4,
+                    nesterov=True)  # Nesterov加速
+
+# Adam
+opt_adam = optim.Adam(model.parameters(), lr=1e-3,
+                      betas=(0.9, 0.999), eps=1e-8,
+                      weight_decay=0)  # 注意：Adam的weight_decay是L2正则化
+
+# AdamW（推荐！）
+opt_adamw = optim.AdamW(model.parameters(), lr=1e-3,
+                        betas=(0.9, 0.999), eps=1e-8,
+                        weight_decay=0.01)  # 解耦的权重衰�?# RMSProp
+opt_rmsprop = optim.RMSprop(model.parameters(), lr=1e-3,
+                            alpha=0.99, eps=1e-8,
+                            momentum=0.9)
+
+# ========== 遍历所有优化器进行训练 ==========
+optimizers = {
+    'SGD+Nesterov': opt_sgd,
+    'Adam': opt_adam,
+    'AdamW': opt_adamw,
+    'RMSProp+Momentum': opt_rmsprop,
+}
+
+def train_with_optimizer(name, optimizer, X, y, n_steps=500):
+    criterion = nn.CrossEntropyLoss()
+    losses = []
+    for step in range(n_steps):
+        optimizer.zero_grad()
+        output = model(X)
+        loss = criterion(output, y)
+        loss.backward()
+        optimizer.step()
+        losses.append(loss.item())
+    return losses
+
+# 对比不同优化器的收敛曲�?X = torch.randn(128, 100)
+y = torch.randint(0, 10, (128,))
+results = {}
+for name, opt in optimizers.items():
+    model_copy = nn.Sequential(
+        nn.Linear(100, 200), nn.ReLU(),
+        nn.Linear(200, 200), nn.ReLU(),
+        nn.Linear(200, 10)
+    )
+    opt_copy = type(opt)(model_copy.parameters(),
+                         **{k: v for k, v in opt.param_groups[0].items()
+                            if k != 'params'})
+    results[name] = train_with_optimizer(name, opt_copy, X, y)
+
+# 观察：Adam/AdamW 通常收敛最快
+# SGD+Nesterov 可能需要更多步但泛化可能更好
+\end{lstlisting}
+\end{mycode}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{学习率调度策略}
+
+固定的学习率在训练后期可能过大（导致在最优解附近振荡）或过小（导致收敛缓慢）。\textbf{学习率调度}（Learning Rate Schedule）在训练过程中动态调整学习率。
+
+\subsection{常用调度策略}
+
+\begin{itemize}
+    \item \textbf{阶梯衰减}（Step Decay）：每固定步数将学习率乘以衰减因子 $\gamma$（如每30个epoch将学习率减半）
+    \item \textbf{指数衰减}：$\eta_t = \eta_0 \cdot \gamma^t$
+    \item \textbf{余弦退火}（Cosine Annealing）：$\eta_t = \eta_{\min} + \frac{\eta_{\max} - \eta_{\min}}{2}\left(1 + \cos\left(\frac{t}{T}\pi\right)\right)$
+    \item \textbf{预热}（Warmup）：在训练的前若干步将学习率从0线性增加到目标值，随后再衰减。对Transformer模型训练至关重要
+    \item \textbf{ReduceLROnPlateau}：当验证集指标不再改善时自动降低学习率
+\end{itemize}
+
+\begin{mycode}{PyTorch 学习率调度器示例}
+\begin{lstlisting}[language=Python]
+import torch.optim as optim
+import torch.optim.lr_scheduler as lr_scheduler
+
+model = nn.Linear(100, 10)
+optimizer = optim.AdamW(model.parameters(), lr=1e-3)
+
+# 1. 阶梯衰�?scheduler_step = lr_scheduler.StepLR(optimizer,
+    step_size=30, gamma=0.1)
+
+# 2. 余弦退火（带预�?
+scheduler_cos = lr_scheduler.CosineAnnealingLR(
+    optimizer, T_max=100, eta_min=1e-6)
+
+# 3. ReduceLROnPlateau
+scheduler_plateau = lr_scheduler.ReduceLROnPlateau(
+    optimizer, mode='min', factor=0.5, patience=10)
+
+# 4. OneCycleLR（最先进的通用调度�?
+scheduler_1cycle = lr_scheduler.OneCycleLR(
+    optimizer, max_lr=1e-2,
+    steps_per_epoch=len(train_loader),
+    epochs=50, pct_start=0.3)  # 前30%时间预热
+
+# 5. 预热 + 余弦退火（Transformers 标�?
+def warmup_cosine(optimizer, warmup_steps, total_steps):
+    """自定义 warmup-cosine 组合调度"""
+    def lr_lambda(current_step):
+        if current_step < warmup_steps:
+            return float(current_step) / float(max(1, warmup_steps))
+        progress = float(current_step - warmup_steps) / \
+                   float(max(1, total_steps - warmup_steps))
+        return max(0.0, 0.5 * (1.0 + math.cos(math.pi * progress)))
+    return lr_scheduler.LambdaLR(optimizer, lr_lambda)
+
+# 使用
+scheduler_warmup_cos = warmup_cosine(optimizer,
+    warmup_steps=1000, total_steps=10000)
+
+# 训练循环中
+for epoch in range(100):
+    train(...)                 # 训练一个epoch
+    scheduler_step.step()      # epoch级调度
+
+    # 对 batch 级调度：
+    # for batch_idx, (X, y) in enumerate(loader):
+    #     train_step(...)
+    #     scheduler_1cycle.step()  # 每batch更新LR
+\end{lstlisting}
+\end{mycode}
+
+\begin{figure}[H]\centering
+\begin{tikzpicture}[scale=0.85]
+\draw[->] (0,0) -- (10,0) node[right] {训练步数};
+\draw[->] (0,0) -- (0,4.5) node[above] {学习率};
+
+% Step decay
+\draw[blue!70, very thick] (0,4.0) -- (3,4.0) -- (3,1.0) -- (6,1.0) -- (6,0.25) -- (9.5,0.25);
+\node[blue!70, font=\footnotesize, anchor=east] at (9.5,0.5) {阶梯衰减};
+
+% Cosine
+\draw[red!70, very thick, domain=0:9.5, samples=100]
+    plot (\x, {0.1 + 1.9*(1 + cos(3.14159*\x/9.5))});
+\node[red!70, font=\footnotesize, anchor=east] at (9.5,1.8) {余弦退火};
+
+% Warmup + decay
+\draw[green!60!black, very thick] (0,0) -- (0.8,3.2) -- plot[domain=0.8:9.5, samples=100]
+    (\x, {3.2*exp(-0.4*(\x-0.8))});
+\node[green!60!black, font=\footnotesize, anchor=east] at (9.5,2.5) {预热+指数衰减};
+
+\draw[->, very thick, purple!70] (1.0,0.2) -- (1.8,0.2);
+\node[purple!70, font=\footnotesize] at (1.4,0.45) {Warmup};
+\end{tikzpicture}
+\caption{三种常用学习率调度策略的曲线对比。阶梯衰减简单粗放，余弦退火平滑逐渐，Warmup+衰减对Transformer至关重要}
+\label{fig:lr-schedules-ch8}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{梯度裁剪}
+
+在深度网络（特别是RNN和Transformer）训练中，梯度爆炸是一个常见问题。\textbf{梯度裁剪}通过限制梯度的最大范数来防止参数更新过大：
+
+\[
+\tilde{\mathbf{g}} = \begin{cases}
+\mathbf{g} & \|\mathbf{g}\|_2 \leq c \\
+c \cdot \frac{\mathbf{g}}{\|\mathbf{g}\|_2} & \|\mathbf{g}\|_2 > c
+\end{cases}
+\]
+
+即：如果梯度的 $L^2$ 范数超过阈值 $c$，则将其缩放到范数恰好为 $c$。这一简单技术极大提高了RNN训练的稳定性。
+
+\begin{mycode}{梯度裁剪与其他训练技巧}
+\begin{lstlisting}[language=Python]
+import torch
+
+# 梯度裁剪（通常在loss.backward()之后，optimizer.step()之前）
+loss.backward()
+torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+optimizer.step()
+
+# 也可按值裁剪
+torch.nn.utils.clip_grad_value_(model.parameters(), clip_value=0.5)
+
+# ========== 梯度监测 ==========
+def monitor_gradients(model):
+    """监控各层梯度范数（帮助诊断训练问题）"""
+    total_norm = 0
+    for name, p in model.named_parameters():
+        if p.grad is not None:
+            param_norm = p.grad.data.norm(2)
+            total_norm += param_norm.item() ** 2
+            if param_norm > 10:  # 梯度异常大
+                print(f"WARNING: Large grad in {name}: {param_norm:.2f}")
+    return total_norm ** 0.5
+
+# ========== 混合精度训练（节省显存，加速训练）==========
+from torch.cuda.amp import autocast, GradScaler
+
+scaler = GradScaler()
+
+for X, y in loader:
+    optimizer.zero_grad()
+
+    with autocast():  # 自动混合精度前向
+        output = model(X)
+        loss = criterion(output, y)
+
+    scaler.scale(loss).backward()  # 缩放loss防止梯度下�?    scaler.unscale_(optimizer)      # 反缩�?    torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+    scaler.step(optimizer)          # 更新参数
+    scaler.update()                 # 更新缩�?
+\end{lstlisting}
+\end{mycode}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{二阶优化方法简介}
+
+一阶方法（SGD、Adam）只使用\textbf{梯度}（一阶导数）信息。\textbf{二阶方法}使用\textbf{Hessian矩阵}（二阶导数）来捕捉损失曲面的曲率信息。
+
+\subsection{牛顿法}
+
+牛顿法的更新规则考虑了曲率的倒数：
+
+\[
+\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \mathbf{H}^{-1}\nabla\mathcal{L}(\boldsymbol{\theta}_t)
+\]
+
+其中 $\mathbf{H} = \nabla_{\boldsymbol{\theta}}^2\mathcal{L}(\boldsymbol{\theta})$ 是Hessian矩阵。牛顿法在凸函数上具有二次收敛速度，但：
+\begin{itemize}
+    \item 计算 $\mathbf{H}^{-1}$ 需要 $O(d^3)$ 时间（$d$ 为参数数量）
+    \item 存储 $d \times d$ 的Hessian矩阵需要 $O(d^2)$ 内存
+    \item 在非凸函数上可能收敛到鞍点而非局部极小值
+\end{itemize}
+
+\subsection{L-BFGS——实用的拟牛顿法}
+
+\textbf{L-BFGS}（Limited-memory BFGS）通过维持有限历史中的梯度差异来近似Hessian的逆，避免了显式存储和求逆。在参数较少的任务（如风格迁移、小规模优化）中，L-BFGS往往比Adam表现更好。
+
+在深度学习中，二阶方法主要用于：
+\begin{itemize}
+    \item 小规模、对精度要求高的优化任务
+    \item 超参数调优的内层循环
+    \item 加固已收敛模型的微调
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{超参数调优}
+
+\subsection{网格搜索 vs 随机搜索 vs 贝叶斯优化}
+
+\begin{itemize}
+    \item \textbf{网格搜索}：穷举所有超参数组合。当超参数维度较高时，组合数指数爆炸
+    \item \textbf{随机搜索}：在超参数空间中随机采样。研究表明，在同样计算预算下，随机搜索找到的最优解通常优于网格搜索
+    \item \textbf{贝叶斯优化}：使用高斯过程或TPE（Tree-structured Parzen Estimator）建模超参数到验证性能的映射，在每次试验后更新模型，智能地选择下一组超参数
+\end{itemize}
+
+\subsection{实用超参数调优建议}
+
+\begin{enumerate}
+    \item \textbf{学习率是最重要的超参数}——先花80\%的精力找到合适的学习率
+    \item \textbf{使用学习率范围测试}（LR Range Test）：从极小学习率开始，每个batch逐步增大，观察损失的变化趋势，选择损失下降最快区域的LR
+    \item \textbf{批大小}通常受GPU显存约束，在可行范围内优先选择较大的值
+    \item \textbf{权重衰减}通常取 $10^{-4}$ 到 $10^{-2}$ 之间，配合AdamW使用
+    \item \textbf{Dropout率}：全连接层0.5，卷积层0.1-0.3，Transformer中通常0.1
+    \item \textbf{隐藏层数/宽度}：从较小的网络开始，逐步增大直到过拟合，再引入正则化
+\end{enumerate}
+
+\begin{mycode}{Optuna 贝叶斯超参数调优}
+\begin{lstlisting}[language=Python]
+import optuna  # pip install optuna
+
+def objective(trial):
+    # 采样超参数
+    lr = trial.suggest_float('lr', 1e-5, 1e-1, log=True)
+    n_layers = trial.suggest_int('n_layers', 1, 5)
+    hidden_dim = trial.suggest_int('hidden_dim', 32, 512, step=32)
+    dropout_p = trial.suggest_float('dropout_p', 0.0, 0.5)
+    batch_size = trial.suggest_categorical(
+        'batch_size', [16, 32, 64, 128])
+
+    # 构建并训练模型
+    model = build_model(n_layers, hidden_dim, dropout_p)
+    val_acc = train_and_evaluate(model, lr, batch_size)
+
+    return val_acc  # Optuna 最大化目标
+
+# 创建研究并优化
+study = optuna.create_study(
+    direction='maximize',
+    pruner=optuna.pruners.MedianPruner()
+)
+study.optimize(objective, n_trials=50)
+
+print(f"Best params: {study.best_params}")
+print(f"Best value: {study.best_value:.4f}")
+
+# 可视化
+optuna.visualization.plot_param_importances(study)
+optuna.visualization.plot_optimization_history(study)
+optuna.visualization.plot_contour(study,
+    params=['lr', 'hidden_dim'])
+\end{lstlisting}
+\end{mycode}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{训练稳定性与调试技巧}
+
+\subsection{梯度与激活值监控}
+
+深层网络训练中最常见的问题是梯度消失/爆炸和激活值异常：
+
+\begin{mycode}{训练监控与调试代码}
+\begin{lstlisting}[language=Python]
+import torch
+import numpy as np
+
+class Monitor:
+    """插入模型各层，记录激活值和梯度的统计�?"""
+    def __init__(self, model):
+        self.model = model
+        self.activations = {}
+        self.gradients = {}
+        self._register_hooks()
+
+    def _register_hooks(self):
+        def forward_hook(name):
+            def hook(module, inp, out):
+                self.activations[name] = {
+                    'mean': out.data.mean().item(),
+                    'std': out.data.std().item(),
+                    'max': out.data.max().item(),
+                    'frac_zero': (out.data == 0).float().mean().item()
+                }
+            return hook
+
+        def backward_hook(name):
+            def hook(module, grad_in, grad_out):
+                if grad_out[0] is not None:
+                    self.gradients[name] = {
+                        'mean': grad_out[0].data.mean().item(),
+                        'std': grad_out[0].data.std().item(),
+                        'norm': grad_out[0].data.norm(2).item()
+                    }
+            return hook
+
+        for name, module in self.model.named_modules():
+            if isinstance(module, (nn.Linear, nn.Conv2d)):
+                module.register_forward_hook(forward_hook(name))
+                module.register_backward_hook(backward_hook(name))
+
+    def report(self):
+        print("\n=== 激活值统计 ===")
+        for name, stats in self.activations.items():
+            flag = "!!!" if abs(stats['mean']) > 10 else ""
+            print(f"  {name:30s}: mean={stats['mean']:+.4f}, "
+                  f"std={stats['std']:.4f}, zero={stats['frac_zero']:.2%} {flag}")
+
+        print("\n=== 梯度统计 ===")
+        for name, stats in self.gradients.items():
+            flag = "!!!" if stats['norm'] > 100 else ""
+            print(f"  {name:30s}: mean={stats['mean']:+.6f}, "
+                  f"norm={stats['norm']:.4f} {flag}")
+
+# ========== 梯度检查（验证自定义反向传播的正确性）==========
+from torch.autograd import gradcheck
+
+# 对于自定义函数
+class MyReLU(torch.autograd.Function):
+    @staticmethod
+    def forward(ctx, x):
+        ctx.save_for_backward(x)
+        return x.clamp(min=0)
+
+    @staticmethod
+    def backward(ctx, grad_output):
+        x, = ctx.saved_tensors
+        grad_input = grad_output.clone()
+        grad_input[x < 0] = 0
+        return grad_input
+
+# 数值梯度检�?input_tensor = (torch.randn(20, 20, dtype=torch.double,
+                          requires_grad=True))
+test = gradcheck(MyReLU.apply, input_tensor, eps=1e-6, atol=1e-4)
+print(f"Gradient check passed: {test}")
+\end{lstlisting}
+\end{mycode}
+
+\subsection{常见训练问题诊断表}
+
+\begin{center}
+\begin{tabular}{p{3.5cm}|p{3.5cm}|p{5cm}}
+\toprule
+\textbf{症状} & \textbf{可能原因} & \textbf{解决方案} \\
+\midrule
+Loss不下降 & 学习率过小/过大 & 调整学习率；做LR Range Test \\
+Loss为NaN & 梯度爆炸；学习率过大 & 梯度裁剪；降低学习率 \\
+训练Loss远低于验证Loss & 过拟合 & 增加正则化（Dropout, 权重衰减） \\
+验证Loss远低于训练Loss & 数据泄漏；Dropout干扰 & 检查数据处理；调整Dropout率 \\
+Loss下降后突然跳高 & 学习率过大 & 降低学习率；使用学习率调度 \\
+GPU利用率低 & batch size过小；数据加载慢 & 增大batch size；增加num\_workers \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{本章小结}
+
+优化是深度学习训练的核心实践环节。本章覆盖了从基础SGD到现代自适应优化器的完整演进路径：
+\begin{itemize}
+    \item 动量法通过累积历史梯度方向，加速窄谷中的收敛
+    \item Adam结合动量和自适应学习率，是当前最广泛使用的默认优化器
+    \item AdamW将权重衰减与自适应学习率解耦，进一步提升泛化性能
+    \item 学习率调度（特别是Warmup + 余弦退火）对训练大模型至关重要
+    \item 梯度裁剪是防止RNN/Transformer训练崩溃的简单而有效的技术
+    \item 超参数调优应从学习率开始，逐步扩展到其他参数
+\end{itemize}

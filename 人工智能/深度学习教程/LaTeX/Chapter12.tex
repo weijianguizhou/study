@@ -1,0 +1,541 @@
+
+\chapter{Transformer与大规模语言模型}
+
+\intro{2017年的"Attention Is All You Need"论文彻底改变了深度学习的格局。Transformer摒弃了RNN的循环结构，完全基于注意力机制构建，以无与伦比的并行性和长程建模能力成为现代深度学习的统一架构。本章从Transformer的核心组件出发，深入BERT的双向编码和GPT的自回归生成，最终覆盖Llama和DeepSeek等前沿大模型的技术创新。}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Transformer——Attention Is All You Need}
+
+\subsection{为什么需要Transformer}
+
+第11章中我们讨论了RNN的两个根本缺陷：
+\begin{enumerate}
+    \item \textbf{顺序计算}——第 $t$ 步必须在第 $t-1$ 步完成后才能计算，无法并行
+    \item \textbf{长程依赖困难}——梯度需经 $O(T)$ 步反向传播，信息路径过长
+\end{enumerate}
+
+Transformer通过\textbf{全注意力}机制解决这两个问题：每个位置直接关注所有其他位置，信息传播路径长度为 $O(1)$，所有位置的计算完全并行。
+
+\subsection{整体架构}
+
+Transformer由\textbf{编码器}（Encoder）和\textbf{解码器}（Decoder）组成，每部分由多个相同结构的层堆叠而成。
+
+\begin{figure}[H]\centering
+\begin{tikzpicture}[
+    myblock/.style={rectangle, draw=blue!60, thick, fill=blue!5, minimum width=3.5cm, minimum height=0.8cm, font=\footnotesize, rounded corners=3pt},
+    myarrow/.style={->, >=stealth, thick, gray!70},
+    node distance=0.5cm,
+]
+% Encoder side
+\node[myblock, fill=blue!20] (enc-in) at (0,5) {输入嵌入 + 位置编码};
+\node[myblock] (enc1) at (0,3) {多头自注意力};
+\node[myblock] (enc2) at (0,1.5) {前馈网络};
+\node[myblock, fill=blue!20] (enc-out) at (0,0) {编码器输出（$N\times$）};
+
+% Decoder side
+\node[myblock, fill=red!20] (dec-in) at (6,5) {输出嵌入 + 位置编码};
+\node[myblock] (dec1) at (6,3) {掩码多头自注意力};
+\node[myblock] (dec2) at (6,1.5) {交叉注意力};
+\node[myblock] (dec3) at (6,0) {前馈网络};
+\node[myblock, fill=red!20] (dec-out) at (6,-1.5) {线性 + Softmax};
+
+\draw[myarrow] (enc-in) -- (enc1);
+\draw[myarrow] (enc1) -- (enc2);
+\draw[myarrow] (enc2) -- (enc-out);
+\draw[myarrow] (dec-in) -- (dec1);
+\draw[myarrow] (dec1) -- (dec2);
+\draw[myarrow] (dec2) -- (dec3);
+\draw[myarrow] (dec3) -- (dec-out);
+
+% Cross attention from encoder
+\draw[myarrow, red!70] (enc-out.east) -- (dec2.west) node[midway, above, font=\tiny, red!70] {K, V};
+
+\node[font=\small\bfseries, blue!70] at (0,6.0) {编码器（$N$层）};
+\node[font=\small\bfseries, red!70] at (6,6.0) {解码器（$N$层）};
+
+\node[font=\footnotesize] at (3,-2.5) {原始论文：$N=6$, $d_{\text{model}}=512$, $h=8$ heads};
+\end{tikzpicture}
+\caption{Transformer的编码器-解码器架构。编码器将输入序列编码为连续表示，解码器根据编码器输出和已生成的输出序列自回归地生成目标序列}
+\label{fig:transformer-arch}
+\end{figure}
+
+\subsection{多头自注意力——Transformer的心脏}
+
+单头自注意力允许模型在单一表示子空间中关注其他位置。\textbf{多头注意力}通过并行运行多个注意力头，让模型在\textbf{不同的表示子空间}中同时学习多类依赖关系：
+
+\begin{myformula}
+\begin{aligned}
+\text{MultiHead}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) &= \text{Concat}(\text{head}_1, \dots, \text{head}_h)\mathbf{W}^O \\
+\text{head}_i &= \text{Attention}(\mathbf{Q}\mathbf{W}_i^Q,\; \mathbf{K}\mathbf{W}_i^K,\; \mathbf{V}\mathbf{W}_i^V)
+\end{aligned}
+\end{myformula}
+
+其中 $\mathbf{W}_i^Q, \mathbf{W}_i^K \in \R^{d_{\text{model}} \times d_k}$，$\mathbf{W}_i^V \in \R^{d_{\text{model}} \times d_v}$，$\mathbf{W}^O \in \R^{h d_v \times d_{\text{model}}}$。论文中 $d_k = d_v = d_{\text{model}} / h = 64$。
+
+\begin{myTheorem}{多头注意力的优势}
+单头注意力只能学习一种类型的依赖模式（如语法依存或语义相似性），多头注意力通过低维投影将 $d_{\text{model}}=512$ 维空间划分为 $h=8$ 个 $d_k=64$ 维子空间，每个头在独立的低维子空间中学习不同类型的注意力模式，最后合并所有头学到的信息。总计算量与单头全维度注意力相同。
+\end{myTheorem}
+
+\subsection{位置编码——赋予序列顺序信息}
+
+注意力机制本身对位置\textbf{完全不变}（permutation invariant）——交换两个输入的位置，自注意力的输出也相应交换但值不变。为了让模型感知序列顺序，Transformer在输入嵌入上\textbf{加}位置编码。
+
+\textbf{正弦位置编码}（原论文）：
+
+\[
+\begin{aligned}
+PE_{(pos, 2i)} &= \sin\!\left(\frac{pos}{10000^{2i / d_{\text{model}}}}\right) \\
+PE_{(pos, 2i+1)} &= \cos\!\left(\frac{pos}{10000^{2i / d_{\text{model}}}}\right)
+\end{aligned}
+\]
+
+其中 $pos$ 是位置，$i$ 是维度索引。这种设计使得：不同维度编码不同频率的正弦波，任何偏移 $k$ 的关系 $PE_{pos+k}$ 都可以表示为 $PE_{pos}$ 的线性函数——这一性质使模型可能学到了相对位置关系。
+
+现代大模型（GPT、Llama）多使用\textbf{可学习的位置编码}或\textbf{RoPE}（旋转位置编码）——后者通过在注意力计算中引入旋转矩阵来编码相对位置信息，具有更优的外推能力。
+
+\subsection{前馈网络}
+
+每个注意力子层之后是一个\textbf{位置独立的前馈网络}（Position-wise FFN）：
+
+\[
+\text{FFN}(\mathbf{x}) = \text{ReLU}(\mathbf{x}\mathbf{W}_1 + \mathbf{b}_1)\mathbf{W}_2 + \mathbf{b}_2
+\]
+
+其中隐藏层维度 $d_{ff}$ 通常为 $4 \times d_{\text{model}} = 2048$。前馈网络在每个位置独立应用相同的参数，为模型提供非线性变换能力。
+
+GPT系列使用\textbf{GELU}激活函数替代ReLU；Llama使用\textbf{SwiGLU}——一种门控变体，将激活函数整合到门控线性单元中：
+
+\[
+\text{SwiGLU}(\mathbf{x}) = (\mathbf{x}\mathbf{W}_1 \odot \text{SiLU}(\mathbf{x}\mathbf{W}_2))\mathbf{W}_3
+\]
+
+\subsection{Add \& Norm——残差连接与层归一化}
+
+每个子层（注意力或前馈网络）之后都有残差连接和层归一化：
+
+\[
+\text{LayerNorm}(\mathbf{x} + \text{Sublayer}(\mathbf{x}))
+\]
+
+原论文使用\textbf{后归一化}（Post-LN），但现代架构（GPT-2及以后）改用\textbf{前归一化}（Pre-LN）——在子层输入前而非输出后进行归一化。Pre-LN在训练深层Transformer时更稳定，允许更少的学习率预热。
+
+\subsection{掩码自注意力——解码器中的因果性}
+
+在解码器中，自注意力必须是\textbf{因果的}（causal）——位置 $i$ 只能关注位置 $1$ 到 $i$（不能看到未来的token）。这通过在Softmax前将未来位置的分数设置为 $-\infty$（掩码）来实现：
+
+\[
+\text{MaskedAttention} = \text{softmax}\!\left(\frac{\mathbf{Q}\mathbf{K}^{\top}}{\sqrt{d_k}} + \mathbf{M}\right)\mathbf{V}
+\]
+
+其中 $\mathbf{M}$ 是上三角矩阵，$\mathbf{M}_{ij} = -\infty$（当 $j > i$），其余为 $0$。
+
+\begin{mycode}{从头实现 Transformer（PyTorch）}
+\begin{lstlisting}[language=Python]
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import math
+import copy
+
+class MultiHeadAttention(nn.Module):
+    def __init__(self, d_model, n_heads, dropout=0.1):
+        super().__init__()
+        assert d_model % n_heads == 0
+        self.d_k = d_model // n_heads
+        self.n_heads = n_heads
+
+        self.W_q = nn.Linear(d_model, d_model)
+        self.W_k = nn.Linear(d_model, d_model)
+        self.W_v = nn.Linear(d_model, d_model)
+        self.W_o = nn.Linear(d_model, d_model)
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, q, k, v, mask=None):
+        batch_size = q.size(0)
+
+        # 线性投影并分割为多头
+        Q = self.W_q(q).view(batch_size, -1,
+            self.n_heads, self.d_k).transpose(1, 2)
+        K = self.W_k(k).view(batch_size, -1,
+            self.n_heads, self.d_k).transpose(1, 2)
+        V = self.W_v(v).view(batch_size, -1,
+            self.n_heads, self.d_k).transpose(1, 2)
+
+        # 缩放点积注意力
+        scores = Q @ K.transpose(-2, -1) / math.sqrt(self.d_k)
+        if mask is not None:
+            scores = scores.masked_fill(mask == 0, -1e9)
+        attn = F.softmax(scores, dim=-1)
+        attn = self.dropout(attn)
+
+        # 合并多头
+        out = attn @ V
+        out = out.transpose(1, 2).contiguous().view(
+            batch_size, -1, self.n_heads * self.d_k)
+        return self.W_o(out), attn
+
+class FeedForward(nn.Module):
+    def __init__(self, d_model, d_ff, dropout=0.1):
+        super().__init__()
+        self.linear1 = nn.Linear(d_model, d_ff)
+        self.linear2 = nn.Linear(d_ff, d_model)
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, x):
+        return self.linear2(
+            self.dropout(F.gelu(self.linear1(x)))
+        )
+
+class TransformerEncoderLayer(nn.Module):
+    def __init__(self, d_model, n_heads, d_ff, dropout=0.1):
+        super().__init__()
+        self.self_attn = MultiHeadAttention(
+            d_model, n_heads, dropout)
+        self.ffn = FeedForward(d_model, d_ff, dropout)
+        self.norm1 = nn.LayerNorm(d_model)
+        self.norm2 = nn.LayerNorm(d_model)
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, x, mask=None):
+        # Pre-LN: norm -> attn -> residual
+        attn_out, _ = self.self_attn(
+            self.norm1(x), self.norm1(x),
+            self.norm1(x), mask)
+        x = x + self.dropout(attn_out)
+
+        # Pre-LN: norm -> ffn -> residual
+        x = x + self.dropout(
+            self.ffn(self.norm2(x)))
+        return x
+
+class TransformerEncoder(nn.Module):
+    def __init__(self, n_layers, d_model, n_heads,
+                 d_ff, vocab_size, max_len, dropout=0.1):
+        super().__init__()
+        self.embed = nn.Embedding(vocab_size, d_model)
+        self.pos_embed = nn.Embedding(max_len, d_model)
+        self.layers = nn.ModuleList([
+            TransformerEncoderLayer(
+                d_model, n_heads, d_ff, dropout)
+            for _ in range(n_layers)
+        ])
+        self.norm = nn.LayerNorm(d_model)
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, x, mask=None):
+        seq_len = x.size(1)
+        positions = torch.arange(
+            seq_len, device=x.device).unsqueeze(0)
+        x = self.dropout(
+            self.embed(x) + self.pos_embed(positions)
+        )
+        for layer in self.layers:
+            x = layer(x, mask)
+        return self.norm(x)
+
+# 测试
+encoder = TransformerEncoder(
+    n_layers=6, d_model=512, n_heads=8, d_ff=2048,
+    vocab_size=30000, max_len=512
+)
+x = torch.randint(0, 30000, (2, 50))
+out = encoder(x)
+print(f"Encoder output: {out.shape}")  # (2, 50, 512)
+\end{lstlisting}
+\end{mycode}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{BERT——双向编码器表示}
+
+BERT（Bidirectional Encoder Representations from Transformers）仅使用Transformer的\textbf{编码器}部分，通过大规模无监督预训练学习深层的双向上下文表示。
+
+\subsection{预训练任务}
+
+BERT通过两个无监督任务进行预训练：
+\begin{enumerate}
+    \item \textbf{掩码语言模型}（Masked Language Model, MLM）——随机遮盖输入中15\%的token（其中80\%替换为\texttt{[MASK]}，10\%替换为随机token，10\%保持原样），让模型根据双向上下文预测原始token。这迫使模型学习深层的语义理解。
+
+    \item \textbf{下一句预测}（Next Sentence Prediction, NSP）——给定两个句子A和B，判断B是否是A的下一句。这一任务促使模型理解句子之间的关系（但后续研究表明NSP的贡献有限，RoBERTa去掉了NSP）。
+\end{enumerate}
+
+BERT的输入表示由三部分相加构成：Token嵌入 + 段落嵌入（Segment Embedding，标识两个句子） + 位置嵌入。
+
+\subsection{BERT微调}
+
+预训练完成后，BERT可以通过添加少量任务特定参数在下游任务上微调：
+\begin{itemize}
+    \item \textbf{文本分类}——使用\texttt{[CLS]} token的最后一层隐藏状态输入线性分类器
+    \item \textbf{命名实体识别}——每个token的最后一层隐藏状态输入线性分类器
+    \item \textbf{问答}——输入问题和段落的拼接，预测答案的起始和终止位置
+    \item \textbf{句子对分类}——判断两句话的关系（蕴含、矛盾、中立）
+\end{itemize}
+
+BERT系列的关键改进：\textbf{RoBERTa}去掉NSP、使用更大的batch size和更多数据；\textbf{ALBERT}通过参数共享和嵌入因式分解大幅减少参数；\textbf{DeBERTa}引入了解耦的注意力机制。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{GPT——生成式预训练Transformer}
+
+GPT系列采用Transformer\textbf{仅解码器}（decoder-only）架构，使用\textbf{自回归语言建模}目标进行预训练：给定前 $i-1$ 个token，预测第 $i$ 个token。
+
+\subsection{GPT的演进}
+
+\textbf{GPT-1（2018年）}：117M参数，12层Transformer解码器，首次证明了生成式预训练 + 下游微调范式的有效性。核心假设：语言模型本身可以在无监督数据上学到通用的世界知识和语言能力。
+
+\textbf{GPT-2（2019年）}：1.5B参数，48层。核心贡献是发现了\textbf{零样本迁移}——一个足够大的语言模型即使不经过任何微调也能执行下游任务（翻译、摘要、问答等）。这颠覆了"预训练+微调"的范式。
+
+\textbf{GPT-3（2020年）}：175B参数，96层。将零样本/少样本学习推向了极致——仅通过提示词（prompt）中的少量示例（in-context learning），无需梯度更新即可适应新任务。规模足够大时，涌现出了新的能力。
+
+\textbf{GPT-4（2023年）}：多模态（文本+图像输入），在推理能力、事实准确性和指令遵循方面有质的飞跃。具体架构和参数规模未公开。
+
+\begin{figure}[H]\centering
+\begin{tikzpicture}[
+    myblock/.style={rectangle, draw=blue!60, thick, fill=blue!5, minimum width=2.8cm, minimum height=0.8cm, font=\footnotesize, rounded corners=3pt, align=center},
+    myarrow/.style={->, >=stealth, thick, gray!60},
+]
+\node[myblock, fill=green!10] (gpt1) at (0,4) {GPT-1 (2018)\\\footnotesize 117M, 12层};
+\node[myblock, fill=green!15] (gpt2) at (0,2) {GPT-2 (2019)\\\footnotesize 1.5B, 48层};
+\node[myblock, fill=orange!15] (gpt3) at (0,0) {GPT-3 (2020)\\\footnotesize 175B, 96层};
+\node[myblock, fill=red!15] (gpt4) at (0,-2) {GPT-4 (2023)\\\footnotesize 多模态};
+\node[myblock, fill=red!20] (gpt5) at (0,-4) {...};
+
+\draw[myarrow] (gpt1) -- (gpt2);
+\draw[myarrow] (gpt2) -- (gpt3);
+\draw[myarrow] (gpt3) -- (gpt4);
+\draw[myarrow] (gpt4) -- (gpt5);
+
+\node[font=\small, anchor=west] at (4,4) {预训练 + 微调范式};
+\node[font=\small, anchor=west] at (4,2) {零样本迁移};
+\node[font=\small, anchor=west] at (4,0) {in-context learning};
+\node[font=\small, anchor=west] at (4,-2) {多模态 + 推理};
+\end{tikzpicture}
+\caption{GPT系列的演进路线。每代模型在规模和能力上都有质的飞跃，完成了从任务特定微调到通用能力涌现的范式转变}
+\label{fig:gpt-evolution}
+\end{figure}
+
+\subsection{自回归生成与KV-Cache}
+
+GPT在推理时逐token生成文本。为了提高效率，使用\textbf{KV-Cache}：将已生成的token的Key和Value矩阵缓存，生成下一个token时只需计算新token的Q、K、V，然后与缓存的K、V做注意力计算。
+
+\begin{mycode}{GPT风格的因果自注意力（带KV-Cache）}
+\begin{lstlisting}[language=Python]
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import math
+
+class CausalSelfAttention(nn.Module):
+    def __init__(self, d_model, n_heads, max_len=1024):
+        super().__init__()
+        self.n_heads = n_heads
+        self.d_k = d_model // n_heads
+
+        self.q_proj = nn.Linear(d_model, d_model, bias=False)
+        self.k_proj = nn.Linear(d_model, d_model, bias=False)
+        self.v_proj = nn.Linear(d_model, d_model, bias=False)
+        self.out_proj = nn.Linear(d_model, d_model, bias=False)
+
+        # 因果掩码（上三角 = -inf）
+        mask = torch.triu(torch.ones(max_len, max_len),
+                          diagonal=1).bool()
+        self.register_buffer('causal_mask', mask)
+
+    def forward(self, x, kv_cache=None):
+        B, T, C = x.shape
+
+        q = self.q_proj(x).view(B, T, self.n_heads,
+                                self.d_k).transpose(1, 2)
+        k = self.k_proj(x).view(B, T, self.n_heads,
+                                self.d_k).transpose(1, 2)
+        v = self.v_proj(x).view(B, T, self.n_heads,
+                                self.d_k).transpose(1, 2)
+
+        # KV-Cache: 如果存在缓存，则拼接
+        if kv_cache is not None:
+            k_cache, v_cache = kv_cache
+            k = torch.cat([k_cache, k], dim=2)
+            v = torch.cat([v_cache, v], dim=2)
+
+        # 缩放点积注意力
+        att = (q @ k.transpose(-2, -1)) / math.sqrt(self.d_k)
+
+        # 因果掩码
+        mask = self.causal_mask[:T, :k.size(2)]
+        att = att.masked_fill(mask, float('-inf'))
+        att = F.softmax(att, dim=-1)
+
+        y = att @ v
+        y = y.transpose(1, 2).contiguous().view(B, T, C)
+        y = self.out_proj(y)
+
+        return y, (k, v)  # 返回KV缓存
+
+# 自回归生成示例
+def generate(model, start_tokens, max_new_tokens, device):
+    model.eval()
+    tokens = start_tokens.clone()
+    kv_cache = None
+
+    for _ in range(max_new_tokens):
+        # 只对最后一个token做前向（KV-Cache下的优化）
+        if kv_cache is None:
+            logits, kv_cache = model(tokens)
+        else:
+            logits, kv_cache = model(tokens[:, -1:],
+                                     kv_cache)
+        # 取最后一个位置的logits
+        logits = logits[:, -1, :]
+        # 采样
+        probs = F.softmax(logits / temperature, dim=-1)
+        next_token = torch.multinomial(probs, 1)
+        tokens = torch.cat([tokens, next_token], dim=1)
+
+    return tokens
+\end{lstlisting}
+\end{mycode}
+
+\subsection{缩放定律}
+
+OpenAI的研究发现了一个关键的经验规律——\textbf{缩放定律}（Scaling Laws）：模型在语言建模任务上的交叉熵损失随着模型参数量、训练数据量和计算量的增加，呈现出可预测的幂律关系。具体来说，损失 $L$ 与计算量 $C$ 的关系近似为：
+
+\[
+L(C) \approx \left(\frac{C_0}{C}\right)^{\alpha_C} + L_{\infty}
+\]
+
+其中 $\alpha_C$ 是缩放指数（经验上约0.05-0.1），$L_{\infty}$ 是不可约损失。这意味着：每将计算量翻倍，损失约减少5\%——要获得显著的性能提升，需要指数级增加的资源。
+
+\textbf{Chinchilla缩放定律}（2022年）修正了此前的结论：对于给定的计算预算，模型参数量和训练token数应该\textbf{同等比例}缩放。此前的大模型（如GPT-3、Gopher）都严重训练不足——它们有太多参数却训练了太少的token。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Llama——开源大模型的前沿}
+
+Meta的Llama系列代表了开源大模型的最前沿水平。
+
+\subsection{Llama系列的演进}
+
+\textbf{Llama 1（2023年2月）}：7B/13B/33B/65B四个规模。核心创新在于：使用纯公开数据训练，证明了用高质量数据训练的小模型可以在多数基准上超越更大的模型。65B的Llama在1.4T tokens上训练，在多个基准上接近或超越了175B的GPT-3。
+
+\textbf{Llama 2（2023年7月）}：7B/13B/70B，使用2T tokens训练。关键改进包括：
+\begin{itemize}
+    \item \textbf{RMSNorm}前归一化（而非LayerNorm），计算更高效
+    \item \textbf{SwiGLU}激活函数替代ReLU，提升FFN的表达能力
+    \item \textbf{RoPE}（旋转位置编码）替代绝对位置编码，提升上下文长度的外推能力
+    \item \textbf{分组查询注意力}（Grouped-Query Attention, GQA）——将查询头分组，每组共享键和值头，减少KV-Cache的内存占用
+    \item \textbf{40\%更多训练数据}（2T vs 1.4T tokens）
+\end{itemize}
+
+\textbf{Llama 3（2024年）}：8B/70B/405B。使用超过15T tokens训练。在推理、代码、多语言和长上下文方面有显著提升。405B的Llama 3在多数基准上接近或达到了GPT-4的水平。
+
+\begin{myTheorem}{Llama的技术创新集成}
+Llama系列的成功并非单一突破，而是多项精巧设计的有机结合：(1) RMSNorm提升归一化效率；(2) SwiGLU增强非线性表达；(3) RoPE提供优越的位置建模；(4) GQA平衡速度和性能；(5) 大量高质量训练数据的精心筛选。
+\end{myTheorem}
+
+\subsection{RMSNorm——简化的层归一化}
+
+RMSNorm去除了LayerNorm中的均值中心化步骤，仅使用均方根（Root Mean Square）进行缩放：
+
+\[
+\text{RMSNorm}(\mathbf{x}) = \frac{\mathbf{x}}{\sqrt{\frac{1}{d}\sum_{i=1}^{d} x_i^2 + \varepsilon}} \odot \gamma
+\]
+
+相比LayerNorm，RMSNorm去掉了均值减去的计算，速度更快，且在Transformer中表现无差甚至略好。
+
+\subsection{RoPE——旋转位置编码}
+
+RoPE（Rotary Position Embedding）不通过加法来注入位置信息，而是通过\textbf{旋转}查询和键向量来实现位置感知：
+
+\[
+\mathbf{q}_m = \mathbf{R}_m\mathbf{q}, \quad \mathbf{k}_n = \mathbf{R}_n\mathbf{k}
+\]
+
+其中 $\mathbf{R}_m$ 是一个块对角旋转矩阵，其第 $i$ 个 $2\times2$ 块的旋转角为 $\theta_i = 10000^{-2i/d}$。RoPE的优雅之处在于：两个位置间的注意力分数自然包含了相对位置信息：$\mathbf{q}_m^{\top}\mathbf{k}_n = \mathbf{q}^{\top}\mathbf{R}_m^{\top}\mathbf{R}_n\mathbf{k} = \mathbf{q}^{\top}\mathbf{R}_{n-m}\mathbf{k}$，仅依赖于相对位置 $n-m$。
+
+\subsection{分组查询注意力}
+
+标准多头注意力中，每个注意力头都有自己的Q、K、V投影。\textbf{多查询注意力}（MQA）让所有头共享K和V，大幅减少KV-Cache但可能降低模型质量。\textbf{分组查询注意力}（GQA）是两种方法的折中方案——将注意力头分组，每组内的头共享相同的K和V。
+
+GQA在几乎不影响模型质量的情况下，将KV-Cache的内存占用减少了约 $n_{\text{heads}} / n_{\text{groups}}$ 倍，对长序列推理的效率提升尤为显著。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{DeepSeek——中国大模型的崛起}
+
+DeepSeek系列代表了中国在大语言模型领域的前沿水平，其技术创新备受国际关注。
+
+\subsection{DeepSeek-V2与Multi-head Latent Attention}
+
+DeepSeek-V2引入了\textbf{MLA}（Multi-head Latent Attention），通过将Key和Value压缩到一个低维的潜在空间来大幅减少KV-Cache：
+
+\[
+\mathbf{c}_t^{KV} = \mathbf{W}^{DKV}\mathbf{h}_t, \quad
+\mathbf{k}_t = \mathbf{W}^{UK}\mathbf{c}_t^{KV}, \quad
+\mathbf{v}_t = \mathbf{W}^{UV}\mathbf{c}_t^{KV}
+\]
+
+其中 $\mathbf{c}_t^{KV} \in \R^{d_c}$ 是低维的潜在表示（$d_c \ll n_{\text{heads}} \times d_k$）。MLA用低维瓶颈来强制高效的KV表示，比GQA更进一步降低了推理时的内存占用。
+
+\subsection{DeepSeek-V3与混合专家模型}
+
+DeepSeek-V3采用了\textbf{Mixture of Experts}（MoE）架构：总参数量超600B，但每个token只激活约37B参数（通过路由选择top-K专家）。这使得训练和推理的计算成本大幅降低。
+
+MoE的核心机制是\textbf{路由}（routing）：对于每个token，一个轻量的路由器（通常是一个线性层+Softmax）计算该token应该被发送到哪个或哪几个专家处理。
+
+\subsection{DeepSeek-R1——推理增强}
+
+DeepSeek-R1通过大规模\textbf{强化学习}（RL）来提升模型的推理能力。核心理念：不需要人工标注的推理链（Chain-of-Thought）监督数据，仅通过RL奖励函数（最终答案是否正确）来激励模型自发产生更强的推理过程。R1展示了模型可以通过RL自主涌现出验证、回溯、自我纠错等复杂的思维模式。
+
+\begin{myTheorem}{DeepSeek的技术路线}
+DeepSeek系列的技术演进清晰地展示了三个方向：(1) MLA减少推理内存；(2) MoE增加总容量但保持推理效率；(3) RL增强推理能力。这三条线分别优化了推理成本、知识容量和思考深度。
+\end{myTheorem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Transformer的变体与优化}
+
+\subsection{FlashAttention——IO感知的注意力优化}
+
+标准注意力需要将整个 $T \times T$ 的注意力矩阵从GPU显存（HBM）读写到SRAM，这成为了显存带宽的瓶颈。\textbf{FlashAttention}通过分块（tiling）和重新计算（recomputation）技术，在SRAM中完成小块的计算并立即写回结果，消除了对完整注意力矩阵的显存读写，将注意力机制从显存带宽瓶颈变为计算瓶颈。
+
+FlashAttention在不改变计算结果的条件下，将标准注意力的显存复杂度从 $O(T^2)$ 降至 $O(T)$（按比例），并实现了2-4倍的速度提升。FlashAttention-2和FlashAttention-3进一步优化了GPU线程块调度和非均匀分布的负载。
+
+\subsection{Mamba与状态空间模型}
+
+近来，\textbf{状态空间模型}（State Space Models, SSMs）作为一种Transformer的替代架构获得了大量关注。Mamba应用了\textbf{选择性扫描}机制——与传统的SSM使用固定的状态转移矩阵不同，Mamba的转移矩阵依赖于输入（输入感知），使得模型能够根据输入内容的不同选择性地忽略或保留信息。
+
+Mamba声称在保持训练和推理线性复杂度（$O(T)$ 而非Transformer的 $O(T^2)$）的同时，达到了与Transformer相当的性能，在长序列建模方面具有天然优势。但其在大规模训练和生态兼容性方面仍在追赶Transformer。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{指令微调与RLHF}
+
+\subsection{指令微调}
+
+预训练的大模型虽然具备强大的语言能力，但不会遵循人类的指令（它只是一个``续写''模型）。\textbf{指令微调}（Instruction Tuning）通过构造多样化的（指令-回答）对来微调模型，使其学会遵循指令。
+
+InstructGPT/GPT-3.5的关键发现：经过精细的指令微调后，一个1.3B的模型在人类评估中可以优于未微调的175B模型。
+
+\subsection{RLHF——基于人类反馈的强化学习}
+
+\textbf{RLHF}（Reinforcement Learning from Human Feedback）是将人类偏好编码到模型中的核心框架，包含三个步骤：
+
+\begin{enumerate}
+    \item \textbf{监督微调}（SFT）——使用高质量的人类标注数据进行初步微调
+    \item \textbf{奖励模型训练}——收集人类对多个模型回答的偏好比较数据，训练一个奖励模型 $r_{\phi}(\mathbf{x}, \mathbf{y})$ 来预测人类偏好
+    \item \textbf{PPO强化学习}——使用PPO算法优化SFT模型，最大化奖励模型的得分，同时用KL散度惩罚约束模型不偏离SFT分布太远：
+\end{enumerate}
+
+\[
+\max_{\theta} \E_{\mathbf{x}\sim\mathcal{D},\mathbf{y}\sim\pi_{\theta}}\!\left[r_{\phi}(\mathbf{x}, \mathbf{y}) - \beta\,\text{KL}(\pi_{\theta}(\mathbf{y}|\mathbf{x}) \| \pi_{\text{ref}}(\mathbf{y}|\mathbf{x}))\right]
+\]
+
+\textbf{DPO}（Direct Preference Optimization, 2023年）是对RLHF的重大简化：它直接在偏好数据上训练语言模型，跳过了显式的奖励模型训练和PPO阶段，通过一个巧妙的数学变换将RLHF目标转化为二元交叉熵损失。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{本章小结}
+
+本章覆盖了从Transformer到现代大模型的完整技术脉络：
+\begin{itemize}
+    \item \textbf{自注意力}以 $O(1)$ 路径长度连接序列中的任意两个位置，是Transformer能够高效并行和长程建模的根本原因
+    \item \textbf{BERT}通过掩码语言模型的预训练学习双向语义表示，改写了NLP领域的研究范式
+    \item \textbf{GPT}系列用自回归生成 + 规模化证明了``大力出奇迹''的可行性，涌现出in-context learning等新能力
+    \item \textbf{Llama}通过RMSNorm、SwiGLU、RoPE和GQA等技术集成，证明了高质量数据训练的小模型可以超越更大的模型
+    \item \textbf{DeepSeek}的MLA、MoE和RL增强推理代表了中国大模型技术的前沿探索
+    \item \textbf{缩放定律}揭示了模型性能与资源投入之间的可预测关系，指导着大模型的高效训练
+    \item RLHF/DPO等技术将人类偏好对齐到模型行为中，使大模型从``完成句子''进化为``遵循指令''
+\end{itemize}

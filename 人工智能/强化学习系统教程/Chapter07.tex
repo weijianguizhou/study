@@ -77,7 +77,7 @@ L_{\theta_{\text{old}}}(\theta) = \E_{(s_t, a_t) \sim \pi_{\theta_{\text{old}}}}
 
 虽然期望为 1，但当两个分布差异较大时，某些样本的权重可能远远超过 1，另一些则趋近于 0。极端情况下，$\pi_{\text{old}}(a)$ 很小但 $\pi_\theta(a)$ 很大，导致权重 $\frac{\pi_\theta}{\pi_{\text{old}}} \gg 1$，使得个别样本主导整个梯度估计，有效样本量大幅下降。
 
-\begin{mydefinition}{有效样本量（Effective Sample Size, ESS）}
+\begin{mydefinition}{{有效样本量（Effective Sample Size, ESS）}}
 给定重要性权重 $w_i = \frac{\pi_\theta(a_i)}{\pi_{\text{old}}(a_i)}$，有效样本量定义为：
 
 \[
@@ -740,13 +740,13 @@ PPO 的完整损失函数包含一个熵正则项（Entropy Bonus），用于鼓
 \centering
 \begin{tikzpicture}[node distance=2cm, auto,
     block/.style={rectangle, draw=blue!60, fill=blue!10, thick, minimum width=4cm, minimum height=0.8cm, align=center},
-    diamond/.style={diamond, draw=red!60, fill=red!10, thick, minimum width=2.5cm, minimum height=0.8cm, align=center, aspect=2},
+    diamondnode/.style={diamond, draw=red!60, fill=red!10, thick, minimum width=2.5cm, minimum height=0.8cm, align=center, aspect=2},
     arrow/.style={->, >=stealth, thick}]
     
     \node[block] (collect) {数据收集\\使用 $\pi_{\theta_k}$ 交互 $N$ 步};
     \node[block, below=of collect] (gae) {计算 GAE 优势\\和价值目标};
     \node[block, below=of gae] (norm) {优势归一化};
-    \node[diamond, below=of norm] (epoch) {for epoch = 1..K};
+    \node[diamondnode, below=of norm] (epoch) {for epoch = 1..K};
     \node[block, below=of epoch, xshift=-3cm] (minibatch) {Mini-batch 训练\\计算 $\mathcal{L}^{\text{CLIP}}$, $\mathcal{L}^{\text{VF}}$, $\mathcal{L}^{\text{ENT}}$};
     \node[block, below=of epoch, xshift=3cm] (update) {Adam 更新\\$\theta$, $\phi$};
     \node[block, below=of minibatch] (done) {完成本 iteration};
@@ -846,4 +846,3 @@ PPO 已被成功应用于远超原论文范畴的广泛领域：
 
 本章系统介绍了从策略梯度到 PPO 的发展脉络。TRPO 为策略更新提供了优雅的约束优化框架，但其复杂的二阶优化限制了工程适用性。GAE($\lambda$) 在优势估计的偏差-方差权衡上给出了灵活的调节手段。PPO 通过简洁的裁剪机制，保留了 TRPO 的"保守更新"思想，同时大幅简化了实现，成为事实上的 RL 标准算法。下一章我们将转向连续动作空间中的深度强化学习方法。
 
-\end{chapter}

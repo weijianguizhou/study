@@ -65,7 +65,7 @@ $$\hat{v}(s, \mathbf{w}) = f_L(\mathbf{W}_L \cdot f_{L-1}(\cdots f_1(\mathbf{W}_
 
 在函数近似框架下，我们无法再对每个状态进行完美的估计。学习的目标变为最小化某种分布加权下的预测误差。
 
-\begin{mydefinition}{均方值误差（Mean Squared Value Error, MSVE）}
+\begin{mydefinition}{{均方值误差（Mean Squared Value Error, MSVE）}}
 令 $\mu(s)$ 为状态 $s$ 的\textbf{访问分布}（on-policy distribution）——在策略 $\pi$ 下状态 $s$ 被访问到的稳态概率。则加权均方误差为：
 $$\overline{\text{VE}}(\mathbf{w}) \doteq \sum_{s \in \states} \mu(s) \left[ v_{\pi}(s) - \hat{v}(s, \mathbf{w}) \right]^2$$
 \end{mydefinition}
@@ -79,10 +79,8 @@ $$\overline{\text{VE}}(\mathbf{w}) \doteq \sum_{s \in \states} \mu(s) \left[ v_{
 假设我们可以对每个状态 $s$ 获得一个"监督信号" $U_t$（代表对 $v_{\pi}(S_t)$ 的某种估计），则随机梯度下降（SGD）的更新规则为：
 
 \begin{myformula}
-\textbf{值函数近似的 SGD 更新}
-$$\mathbf{w}_{t+1} \doteq \mathbf{w}_t - \frac{1}{2}\alpha \nabla_{\mathbf{w}} \left[ U_t - \hat{v}(S_t, \mathbf{w}_t) \right]^2$$
-$$= \mathbf{w}_t + \alpha \left[ U_t - \hat{v}(S_t, \mathbf{w}_t) \right] \nabla_{\mathbf{w}} \hat{v}(S_t, \mathbf{w}_t)$$
-\end{myformula}
+\text{值函数近似的 SGD 更新}
+\mathbf{w}_{t+1} \doteq \mathbf{w}_t - \frac{1}{2}\alpha \nabla_{\mathbf{w}} \left[ U_t - \hat{v}(S_t, \mathbf{w}_t) \right]^2= \mathbf{w}_t + \alpha \left[ U_t - \hat{v}(S_t, \mathbf{w}_t) \right] \nabla_{\mathbf{w}} \hat{v}(S_t, \mathbf{w}_t)\end{myformula}
 
 对于线性情形 $\hat{v}(s,\mathbf{w}) = \mathbf{w}\T \mathbf{x}(s)$，梯度化简为：
 $$\mathbf{w}_{t+1} = \mathbf{w}_t + \alpha \left[ U_t - \mathbf{w}_t\T \mathbf{x}(S_t) \right] \mathbf{x}(S_t)$$
@@ -267,9 +265,8 @@ DQN 在 49 款 Atari 2600 游戏中进行了测试，使用完全相同的网络
 Double DQN（van Hasselt et al., 2016）将前文讨论的 Double Q-Learning 的思想融入 DQN 框架，以解决过估计问题。
 
 \begin{myformula}
-\textbf{Double DQN 的 TD 目标}
-$$y_t^{\text{DDQN}} = R_{t+1} + \gamma \hat{Q}\left(S_{t+1}, \arg\max_{a} \hat{Q}(S_{t+1}, a; \mathbf{w}); \mathbf{w}^{-}\right)$$
-\end{myformula}
+\text{Double DQN 的 TD 目标}
+y_t^{\text{DDQN}} = R_{t+1} + \gamma \hat{Q}\left(S_{t+1}, \arg\max_{a} \hat{Q}(S_{t+1}, a; \mathbf{w}); \mathbf{w}^{-}\right)\end{myformula}
 
 关键的改变：用\textbf{在线网络} $\mathbf{w}$ 选择最优动作（arg max），用\textbf{目标网络} $\mathbf{w}^{-}$ 评估该动作的值。这两个网络使用不同的参数，估计噪声（部分）独立，从而降低过估计。
 
@@ -350,9 +347,8 @@ $$w_i = \left(\frac{1}{N \cdot P(i)}\right)^{\beta}$$
 将 TD(0) 替换为 $n$-步回报，可以在偏差和方差之间取得更好的折中：
 
 \begin{myformula}
-\textbf{$n$-步 DQN 的 TD 目标}
-$$y_t^{(n)} = \sum_{k=0}^{n-1} \gamma^k R_{t+k+1} + \gamma^n \max_{a} \hat{Q}(S_{t+n}, a; \mathbf{w}^{-})$$
-\end{myformula}
+\text{$n$-步 DQN 的 TD 目标}
+y_t^{(n)} = \sum_{k=0}^{n-1} \gamma^k R_{t+k+1} + \gamma^n \max_{a} \hat{Q}(S_{t+n}, a; \mathbf{w}^{-})\end{myformula}
 
 Multi-step 方法使奖励信号传播得更快（每次更新覆盖更长的轨迹段），在奖励稀疏的任务中效果尤为显著。
 

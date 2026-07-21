@@ -249,7 +249,7 @@ ADR 本质上实现了自动化的课程学习：策略先学习在简单（窄�
     \draw[->,thick] (sampler.east) -- (env3.west);
     
     % RL algorithm
-    \node[draw,rectangle,rounded corners,fill=green!10,minimum width=3cm,minimum height=2.5cm] (rl) at (9,2.5) {RL 算法\\(PPO/SAC/TD3)};
+    \node[draw,rectangle,rounded corners,fill=green!10,minimum width=3cm,minimum height=2.5cm,align=center] (rl) at (9,2.5) {RL 算法\\(PPO/SAC/TD3)};
     
     % Arrows from envs to RL
     \draw[->,thick] (env1.east) -- (rl.west);
@@ -264,7 +264,7 @@ ADR 本质上实现了自动化的课程学习：策略先学习在简单（窄�
     \draw[->,thick,dashed,blue!60!black] (policy.west) -- (policy.west -| env1.east);
     
     % Real robot
-    \node[draw,circle,minimum size=1.5cm,fill=red!10] (robot) at (12,2.5) {真实\\机器人};
+    \node[draw,circle,minimum size=1.5cm,fill=red!10,align=center] (robot) at (12,2.5) {真实\\机器人};
     \draw[->,very thick,red!70!black] (policy.east) -- (policy.east -| robot.west) node[midway,above,font=\footnotesize]{部署};
     
     % Annotation
@@ -373,10 +373,10 @@ G_{\text{R}\to\text{S}} &: \text{真实图像} \to \text{仿真风格图像}
 \centering
 \begin{tikzpicture}[>=stealth, scale=0.9]
     % Sim domain
-    \node[draw,rectangle,rounded corners,fill=blue!10,minimum width=3cm,minimum height=2cm] (sim) at (0,0) {仿真域\\$\states_{\text{sim}}$};
+    \node[draw,rectangle,rounded corners,fill=blue!10,minimum width=3cm,minimum height=2cm,align=center] (sim) at (0,0) {仿真域\\$\states_{\text{sim}}$};
     
     % Real domain
-    \node[draw,rectangle,rounded corners,fill=red!10,minimum width=3cm,minimum height=2cm] (real) at (10,0) {真实域\\$\states_{\text{real}}$};
+    \node[draw,rectangle,rounded corners,fill=red!10,minimum width=3cm,minimum height=2cm,align=center] (real) at (10,0) {真实域\\$\states_{\text{real}}$};
     
     % Feature extractor
     \node[draw,rectangle,rounded corners,fill=green!10,minimum width=2cm,minimum height=1.2cm] (phi) at (5,2.5) {特征提取器 $\phi$};
@@ -654,7 +654,7 @@ RL for Science的核心挑战在于：很多科学实验的"环境"是真实的�
 \centering
 \begin{tikzpicture}[>=stealth, scale=1.0]
     % Center: "Sim-to-Real Hub"
-    \node[draw,circle,fill=yellow!20,minimum size=3cm] (center) at (0,0) {Sim-to-Real\\迁移};
+    \node[draw,circle,fill=yellow!20,minimum size=3cm,align=center] (center) at (0,0) {Sim-to-Real\\迁移};
     
     % Five subfields around
     \node[draw,rectangle,rounded corners,fill=blue!10,minimum width=2.2cm,minimum height=0.8cm] (dr) at (0,2.5) {域随机化};

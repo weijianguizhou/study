@@ -1,0 +1,903 @@
+\chapter{PyTorch入门}
+
+\intro{PyTorch 是目前最流行的深度学习框架之一，以其动态计算图、Pythonic 的编程风格和强大的 GPU 加速能力而受到研究者广泛喜爱。本章从零开始介绍 PyTorch 的核心概念：张量操作、自动求导、神经网络模块、优化器、数据加载，以及完整的训练流程。}
+
+\section{张量基础}
+
+\subsection{创建张量}
+
+张量（Tensor）是 PyTorch 中的核心数据结构，类似于 NumPy 的 ndarray，但额外支持 GPU 加速和自动微分。
+
+\begin{mycode}{张量创建与基本操作}
+\begin{lstlisting}[language=Python]
+import torch
+
+# 创建张量
+a = torch.tensor([1, 2, 3])
+b = torch.zeros(2, 3)
+c = torch.ones(3, 4)
+d = torch.randn(3, 3)      # 标准正态分布
+e = torch.arange(0, 10, 2) # 0到10，步长2
+f = torch.eye(3)           # 3x3单位矩阵
+
+print(f"a: {a}, 形状: {a.shape}")
+print(f"b:\n{b}")
+print(f"d:\n{d}")
+
+# 从NumPy转换
+import numpy as np
+np_arr = np.array([[1, 2], [3, 4]])
+torch_arr = torch.from_numpy(np_arr)
+back_to_np = torch_arr.numpy()
+\end{lstlisting}
+\end{mycode}
+
+\subsection{张量属性与运算}
+
+\begin{mycode}{张量属性与运算}
+\begin{lstlisting}[language=Python]
+import torch
+
+x = torch.randn(2, 3, 4)
+print(f"形状: {x.shape}")
+print(f"维度数: {x.ndim}")
+print(f"元素总数: {x.numel()}")
+print(f"数据类型: {x.dtype}")
+print(f"所在设备: {x.device}")
+
+# 基本运算
+a = torch.tensor([1., 2., 3.])
+b = torch.tensor([4., 5., 6.])
+print(f"加法: {a + b}")
+print(f"乘法(逐元素): {a * b}")
+print(f"点积: {torch.dot(a, b)}")
+
+# 矩阵运算
+A = torch.randn(3, 4)
+B = torch.randn(4, 2)
+C = A @ B  # 矩阵乘法
+print(f"矩阵乘法结果形状: {C.shape}")
+
+# 维度操作
+x = torch.randn(2, 3, 4)
+print(f"reshape: {x.reshape(6, 4).shape}")
+print(f"转置: {x.transpose(0, 2).shape}")
+print(f"permute: {x.permute(2, 1, 0).shape}")
+print(f"unsqueeze: {x.unsqueeze(0).shape}")  # 增加维度
+print(f"squeeze: {x.unsqueeze(0).squeeze(0).shape}")
+
+# 拼接
+a = torch.randn(2, 3); b = torch.randn(2, 3)
+print(f"cat(dim=0): {torch.cat([a, b], dim=0).shape}")
+print(f"cat(dim=1): {torch.cat([a, b], dim=1).shape}")
+print(f"stack: {torch.stack([a, b], dim=0).shape}")
+\end{lstlisting}
+\end{mycode}
+
+\subsection{索引与切片}
+
+张量的索引和切片与 NumPy 类似，支持高级索引。关键概念：\textbf{视图（view）与副本（copy）}——大多数切片操作返回视图（共享底层数据），使用 \texttt{.clone()} 创建独立副本。
+
+\begin{mycode}{张量索引与切片}
+\begin{lstlisting}[language=Python]
+import torch
+
+x = torch.arange(24).reshape(2, 3, 4)
+print(f"张量形状: {x.shape}")
+
+# 基本索引
+print(f"x[0]:\n{x[0]}")           # 第一个3x4矩阵
+print(f"x[0, 1]: {x[0, 1]}")     # 第一矩阵的第二行
+print(f"x[:, :2, :]:\n{x[:, :2, :]}")  # 所有批次的前两行
+
+# 花式索引
+indices = torch.tensor([0, 2])
+print(f"x[:, :, [0,2]]:\n{x[:, :, indices]}")
+
+# 布尔索引
+mask = x > 10
+print(f"大于10的元素: {x[mask]}")
+
+# view与副本
+y = x.view(6, 4)  # 视图（共享数据）
+z = x.clone()      # 独立副本
+y[0, 0] = 999
+print(f"修改view后原始张量x[0,0,0]: {x[0,0,0]}")  # 已被修改!
+\end{lstlisting}
+\end{mycode}
+
+\section{GPU加速}
+
+PyTorch 的一大优势是无缝的 GPU 支持。张量可以在 CPU 和 GPU 之间轻松移动：
+
+\begin{mycode}{GPU操作}
+\begin{lstlisting}[language=Python]
+import torch
+
+# 检查GPU可用性
+print(f"CUDA可用: {torch.cuda.is_available()}")
+if torch.cuda.is_available():
+    print(f"GPU数量: {torch.cuda.device_count()}")
+    print(f"当前GPU: {torch.cuda.get_device_name(0)}")
+
+# 在指定设备上创建张量
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+x_cpu = torch.randn(1000, 1000)
+x_gpu = x_cpu.to(device)       # 移动到GPU
+x_back = x_gpu.cpu()           # 移回CPU
+
+# 直接在目标设备创建
+y = torch.randn(1000, 1000, device=device)
+
+# GPU加速矩阵乘法
+import time
+A = torch.randn(5000, 5000, device=device)
+B = torch.randn(5000, 5000, device=device)
+
+if device.type == 'cuda':
+    torch.cuda.synchronize()
+t0 = time.time()
+C = A @ B
+if device.type == 'cuda':
+    torch.cuda.synchronize()
+print(f"GPU 矩阵乘法时间: {time.time()-t0:.3f}s")
+
+# 内存管理
+print(f"GPU内存分配: {torch.cuda.memory_allocated()/1e9:.2f} GB")
+print(f"GPU内存缓存: {torch.cuda.memory_reserved()/1e9:.2f} GB")
+torch.cuda.empty_cache()  # 清理缓存
+\end{lstlisting}
+\end{mycode}
+
+\section{自动求导}
+
+自动求导（Autograd）是 PyTorch 的核心功能，它自动计算计算图中任意参数的梯度。
+
+\subsection{计算图}
+
+PyTorch 在每次前向传播时动态构建计算图。设置 \texttt{requires\_grad=True} 的张量会记录其上的所有操作，调用 \texttt{.backward()} 后自动计算梯度。
+
+\begin{mycode}{自动求导基础}
+\begin{lstlisting}[language=Python]
+import torch
+
+# 需要梯度的张量
+x = torch.tensor([2.0, 3.0], requires_grad=True)
+w = torch.tensor([1.0, -1.0], requires_grad=True)
+b = torch.tensor([0.5], requires_grad=True)
+
+# 前向计算: y = w·x + b
+y = torch.dot(w, x) + b
+
+# 反向传播
+y.backward()
+
+print(f"y = {y.item()}")
+print(f"dy/dw = {w.grad}")  # 应为 x = [2, 3]
+print(f"dy/dx = {x.grad}")  # 应为 w = [1, -1]
+print(f"dy/db = {b.grad}")  # 应为 1
+
+# 多次反向传播需要 retain_graph=True
+x = torch.tensor(3.0, requires_grad=True)
+y = x ** 2
+y.backward(retain_graph=True)
+print(f"dy/dx = {x.grad}")  # 2*x = 6
+
+# 高阶导数
+x = torch.tensor(2.0, requires_grad=True)
+y = x ** 3
+grad1 = torch.autograd.grad(y, x, create_graph=True)[0]
+print(f"一阶导数 (3x^2 at x=2): {grad1.item()}")  # 12
+grad2 = torch.autograd.grad(grad1, x)[0]
+print(f"二阶导数 (6x at x=2): {grad2.item()}")    # 12
+\end{lstlisting}
+\end{mycode}
+
+\subsection{梯度在神经网络中的应用}
+
+\begin{mycode}{使用autograd训练简单模型}
+\begin{lstlisting}[language=Python]
+import torch
+
+torch.manual_seed(42)
+m, d = 200, 5
+X = torch.randn(m, d)
+true_w = torch.tensor([2.0, -1.0, 3.0, -0.5, 1.5])
+y = X @ true_w + 2.0 + 0.3 * torch.randn(m)
+
+w = torch.randn(d, requires_grad=True)
+b = torch.zeros(1, requires_grad=True)
+lr = 0.05
+
+for epoch in range(500):
+    # 前向
+    y_pred = X @ w + b
+    loss = 0.5 * torch.mean((y_pred - y) ** 2)
+
+    # 反向
+    loss.backward()
+
+    # 参数更新（手动，之后会介绍优化器）
+    with torch.no_grad():
+        w -= lr * w.grad
+        b -= lr * b.grad
+        w.grad.zero_()
+        b.grad.zero_()
+
+    if epoch % 100 == 0:
+        print(f"Epoch {epoch:3d}, Loss: {loss.item():.6f}")
+
+print(f"\n真实w: {true_w}")
+print(f"学习w: {w.data}")
+print(f"学习b: {b.item():.4f}")
+\end{lstlisting}
+\end{mycode}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    mynode/.style={rectangle, draw=blue!60, fill=blue!5, minimum width=1.5cm, minimum height=0.7cm, rounded corners=2pt},
+    mygrad/.style={rectangle, draw=red!60, fill=red!5, minimum width=1.5cm, minimum height=0.7cm, rounded corners=2pt},
+    myedge/.style={->, >=stealth, thick, blue!70},
+    mygrada/.style={->, >=stealth, thick, red!70, bend right},
+    mylabel/.style={font=\footnotesize}
+]
+    % Input
+    \node[mynode] (X) at (0, 3) {$\mathbf{X}$};
+    \node[mynode] (W) at (0, 1.5) {$\mathbf{w}$};
+    \node[mynode] (b) at (0, 0) {$b$};
+
+    % Operations
+    \node[mynode, draw=green!60, fill=green!5] (mul) at (3, 2) {$\cdot$};
+    \node[mynode, draw=green!60, fill=green!5] (add) at (5.5, 1.5) {$+$};
+    \node[mynode, draw=green!60, fill=green!5] (mse) at (8, 1.5) {MSE};
+
+    % Output
+    \node[mygrad] (L) at (10, 1.5) {Loss};
+
+    % Forward edges
+    \draw[myedge] (X) |- (mul);
+    \draw[myedge] (W) -- (mul);
+    \draw[myedge] (mul) -- (add);
+    \draw[myedge] (b) |- (add);
+    \draw[myedge] (add) -- (mse);
+    \draw[myedge] (mse) -- (L);
+
+    % Gradient edges
+    \draw[mygrada] (L) -- (mse);
+    \draw[mygrada] (mse) -- (add);
+    \draw[mygrada] (add) -- (mul);
+    \draw[mygrada] (add) |- (b);
+    \draw[mygrada] (mul) -- (W);
+    \draw[mygrada] (mul) |- (X);
+
+    % Labels
+    \node[mylabel, red!70] at (4, 0.2) {反向传播（梯度流）};
+    \node[mylabel, blue!70] at (6.5, 3.5) {前向传播（计算流）};
+\end{tikzpicture}
+\caption{PyTorch 自动求导的计算图。蓝色实线是前向传播，红色虚线是反向传播的梯度流。每个节点记录局部导数，通过链式法则自动合成完整梯度。}
+\label{fig:computation-graph}
+\end{figure}
+
+\section{nn.Module：构建神经网络}
+
+\texttt{torch.nn.Module} 是 PyTorch 中构建神经网络的基类。它封装了参数、前向传播逻辑以及参数管理。
+
+\begin{mycode}{定义神经网络模块}
+\begin{lstlisting}[language=Python]
+import torch
+import torch.nn as nn
+
+class SimpleNet(nn.Module):
+    def __init__(self, input_dim, hidden_dim, output_dim):
+        super().__init__()
+        self.fc1 = nn.Linear(input_dim, hidden_dim)
+        self.relu = nn.ReLU()
+        self.fc2 = nn.Linear(hidden_dim, hidden_dim)
+        self.fc3 = nn.Linear(hidden_dim, output_dim)
+
+    def forward(self, x):
+        x = self.fc1(x)
+        x = self.relu(x)
+        x = self.fc2(x)
+        x = self.relu(x)
+        x = self.fc3(x)
+        return x
+
+# 创建模型
+model = SimpleNet(input_dim=10, hidden_dim=32, output_dim=3)
+print(model)
+
+# 查看参数
+for name, param in model.named_parameters():
+    print(f"{name}: {param.shape}")
+
+# 总参数量
+total_params = sum(p.numel() for p in model.parameters())
+trainable_params = sum(p.numel() for p in model.parameters()
+                       if p.requires_grad)
+print(f"\n总参数: {total_params}, 可训练: {trainable_params}")
+\end{lstlisting}
+\end{mycode}
+
+\subsection{常用层}
+
+\begin{mycode}{常用神经网络层}
+\begin{lstlisting}[language=Python]
+import torch.nn as nn
+
+# 线性层（全连接层）
+fc = nn.Linear(in_features=128, out_features=64)
+
+# 激活函数
+relu = nn.ReLU()
+gelu = nn.GELU()
+sigmoid = nn.Sigmoid()
+tanh = nn.Tanh()
+leaky_relu = nn.LeakyReLU(negative_slope=0.01)
+
+# 卷积层
+conv1d = nn.Conv1d(in_channels=3, out_channels=16, kernel_size=3)
+conv2d = nn.Conv2d(in_channels=3, out_channels=32,
+                   kernel_size=3, padding=1, stride=2)
+
+# 池化层
+maxpool = nn.MaxPool2d(kernel_size=2)
+avgpool = nn.AvgPool2d(kernel_size=2)
+adaptive_pool = nn.AdaptiveAvgPool2d((1, 1))
+
+# 归一化层
+batch_norm = nn.BatchNorm1d(64)
+layer_norm = nn.LayerNorm(128)
+
+# 正则化
+dropout = nn.Dropout(p=0.5)
+
+# 循环层
+lstm = nn.LSTM(input_size=64, hidden_size=128,
+               num_layers=2, batch_first=True)
+gru = nn.GRU(input_size=64, hidden_size=128, batch_first=True)
+
+# 嵌入层
+embedding = nn.Embedding(num_embeddings=10000, embedding_dim=256)
+
+# 打印参数量
+print(f"Conv2d参数量: {sum(p.numel() for p in conv2d.parameters())}")
+print(f"LSTM参数量: {sum(p.numel() for p in lstm.parameters())}")
+\end{lstlisting}
+\end{mycode}
+
+\subsection{Sequential 容器}
+
+对于简单的顺序模型，可以使用 \texttt{nn.Sequential} 简化代码：
+
+\begin{mycode}{Sequential容器}
+\begin{lstlisting}[language=Python]
+import torch.nn as nn
+
+# 方式1: 按顺序传入层
+model = nn.Sequential(
+    nn.Linear(28*28, 512),
+    nn.ReLU(),
+    nn.Dropout(0.2),
+    nn.Linear(512, 256),
+    nn.ReLU(),
+    nn.Dropout(0.2),
+    nn.Linear(256, 10)
+)
+
+# 方式2: 使用OrderedDict命名各层
+from collections import OrderedDict
+model_named = nn.Sequential(OrderedDict([
+    ('fc1', nn.Linear(28*28, 512)),
+    ('relu1', nn.ReLU()),
+    ('fc2', nn.Linear(512, 256)),
+    ('relu2', nn.ReLU()),
+    ('fc3', nn.Linear(256, 10))
+]))
+
+print(model)
+x = torch.randn(4, 28*28)  # batch of 4
+out = model(x)
+print(f"输出形状: {out.shape}")  # (4, 10)
+\end{lstlisting}
+\end{mycode}
+
+\section{损失函数与优化器}
+
+PyTorch 提供了丰富的损失函数和优化器：
+
+\begin{mycode}{损失函数}
+\begin{lstlisting}[language=Python]
+import torch
+import torch.nn as nn
+
+# 回归损失
+mse_loss = nn.MSELoss()
+l1_loss = nn.L1Loss()
+huber_loss = nn.SmoothL1Loss()
+
+# 二分类损失
+bce_loss = nn.BCELoss()              # 需要sigmoid后的输出
+bce_logits = nn.BCEWithLogitsLoss()  # 包含sigmoid（更稳定）
+
+# 多分类损失
+ce_loss = nn.CrossEntropyLoss()  # 包含log_softmax
+
+# 测试
+# 回归示例
+y_pred = torch.randn(32, 1)
+y_true = torch.randn(32, 1)
+print(f"MSE: {mse_loss(y_pred, y_true):.4f}")
+
+# 分类示例
+logits = torch.randn(32, 10)  # 原始分数（未归一化）
+labels = torch.randint(0, 10, (32,))
+print(f"交叉熵: {ce_loss(logits, labels):.4f}")
+\end{lstlisting}
+\end{mycode}
+
+\begin{mycode}{优化器}
+\begin{lstlisting}[language=Python]
+import torch
+import torch.nn as nn
+import torch.optim as optim
+
+model = nn.Linear(10, 3)
+
+# SGD
+sgd = optim.SGD(model.parameters(), lr=0.01, momentum=0.9,
+                weight_decay=1e-4, nesterov=True)
+
+# Adam
+adam = optim.Adam(model.parameters(), lr=0.001,
+                  betas=(0.9, 0.999), weight_decay=1e-4)
+
+# AdamW (Adam + 解耦权重衰减，推荐使用)
+adamw = optim.AdamW(model.parameters(), lr=0.001, weight_decay=0.01)
+
+# RMSprop
+rmsprop = optim.RMSprop(model.parameters(), lr=0.001, alpha=0.99)
+
+# 学习率调度
+optimizer = optim.AdamW(model.parameters(), lr=0.01)
+
+# 阶梯衰减
+scheduler_step = optim.lr_scheduler.StepLR(
+    optimizer, step_size=30, gamma=0.1)
+
+# 余弦退火
+scheduler_cos = optim.lr_scheduler.CosineAnnealingLR(
+    optimizer, T_max=100, eta_min=1e-6)
+
+# OneCycleLR
+scheduler_1cycle = optim.lr_scheduler.OneCycleLR(
+    optimizer, max_lr=0.01, total_steps=1000)
+
+# 训练中使用
+for epoch in range(10):
+    # ... 训练代码 ...
+    optimizer.step()
+    scheduler_cos.step()  # 每个epoch更新
+    print(f"Epoch {epoch}: lr = {scheduler_cos.get_last_lr()[0]:.6f}")
+\end{lstlisting}
+\end{mycode}
+
+\section{数据加载}
+
+PyTorch 的 \texttt{torch.utils.data} 模块提供了标准的数据加载方式：
+
+\begin{mycode}{Dataset与DataLoader}
+\begin{lstlisting}[language=Python]
+import torch
+from torch.utils.data import Dataset, DataLoader, random_split
+import numpy as np
+
+# 自定义Dataset
+class MyDataset(Dataset):
+    def __init__(self, n_samples=1000, n_features=10):
+        self.X = torch.randn(n_samples, n_features)
+        self.y = (self.X.sum(dim=1) > 0).long()
+
+    def __len__(self):
+        return len(self.X)
+
+    def __getitem__(self, idx):
+        return self.X[idx], self.y[idx]
+
+# 创建数据集
+dataset = MyDataset(n_samples=1000)
+
+# 划分训练/验证集
+train_size = int(0.8 * len(dataset))
+val_size = len(dataset) - train_size
+train_dataset, val_dataset = random_split(
+    dataset, [train_size, val_size])
+
+# DataLoader
+train_loader = DataLoader(train_dataset, batch_size=32,
+                          shuffle=True, num_workers=0,
+                          drop_last=True)
+val_loader = DataLoader(val_dataset, batch_size=32,
+                        shuffle=False, num_workers=0)
+
+# 使用
+for batch_idx, (data, target) in enumerate(train_loader):
+    print(f"Batch {batch_idx}: data {data.shape}, target {target.shape}")
+    if batch_idx >= 2:
+        break
+\end{lstlisting}
+\end{mycode}
+
+\subsection{内置数据集}
+
+PyTorch 的 \texttt{torchvision} 提供了常用图像数据集：
+
+\begin{mycode}{使用torchvision加载MNIST}
+\begin{lstlisting}[language=Python]
+import torch
+from torch.utils.data import DataLoader
+from torchvision import datasets, transforms
+
+# 数据预处理
+transform = transforms.Compose([
+    transforms.ToTensor(),  # 转为张量并归一化到[0,1]
+    transforms.Normalize((0.1307,), (0.3081,))  # MNIST均值/标准差
+])
+
+# 加载数据集
+train_dataset = datasets.MNIST(
+    root='./data', train=True, download=True,
+    transform=transform)
+test_dataset = datasets.MNIST(
+    root='./data', train=False, download=True,
+    transform=transform)
+
+train_loader = DataLoader(train_dataset, batch_size=64,
+                          shuffle=True)
+test_loader = DataLoader(test_dataset, batch_size=1000,
+                         shuffle=False)
+
+# 查看数据
+images, labels = next(iter(train_loader))
+print(f"图像形状: {images.shape}")  # (64, 1, 28, 28)
+print(f"标签形状: {labels.shape}")  # (64,)
+print(f"标签值范围: [{labels.min()}, {labels.max()}]")
+\end{lstlisting}
+\end{mycode}
+
+\section{训练循环}
+
+一个完整的训练循环需要包含：训练模式设置、梯度清零、前向传播、损失计算、反向传播、参数更新和评估。
+
+\begin{mycode}{完整的训练流程}
+\begin{lstlisting}[language=Python]
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import DataLoader, random_split
+
+# 准备数据
+class ToyDataset(torch.utils.data.Dataset):
+    def __init__(self, n=3000, d=20, n_classes=5):
+        self.X = torch.randn(n, d)
+        self.y = torch.randint(0, n_classes, (n,))
+
+    def __len__(self): return len(self.X)
+    def __getitem__(self, idx): return self.X[idx], self.y[idx]
+
+dataset = ToyDataset()
+train_ds, val_ds = random_split(dataset, [2400, 600])
+train_loader = DataLoader(train_ds, batch_size=64, shuffle=True)
+val_loader = DataLoader(val_ds, batch_size=64, shuffle=False)
+
+# 创建模型
+class MLP(nn.Module):
+    def __init__(self, in_dim, hidden, n_classes):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(in_dim, hidden),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(hidden, hidden // 2),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(hidden // 2, n_classes)
+        )
+
+    def forward(self, x):
+        return self.net(x)
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+model = MLP(in_dim=20, hidden=128, n_classes=5).to(device)
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.AdamW(model.parameters(), lr=0.001, weight_decay=1e-4)
+scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=50)
+
+# 训练循环
+def train_epoch(model, loader, criterion, optimizer, device):
+    model.train()
+    total_loss, correct, total = 0.0, 0, 0
+
+    for data, target in loader:
+        data, target = data.to(device), target.to(device)
+
+        optimizer.zero_grad()
+        output = model(data)
+        loss = criterion(output, target)
+        loss.backward()
+        optimizer.step()
+
+        total_loss += loss.item() * data.size(0)
+        pred = output.argmax(dim=1)
+        correct += pred.eq(target).sum().item()
+        total += data.size(0)
+
+    return total_loss / total, correct / total
+
+@torch.no_grad()
+def evaluate(model, loader, criterion, device):
+    model.eval()
+    total_loss, correct, total = 0.0, 0, 0
+
+    for data, target in loader:
+        data, target = data.to(device), target.to(device)
+        output = model(data)
+        loss = criterion(output, target)
+
+        total_loss += loss.item() * data.size(0)
+        pred = output.argmax(dim=1)
+        correct += pred.eq(target).sum().item()
+        total += data.size(0)
+
+    return total_loss / total, correct / total
+
+# 运行训练
+epochs = 50
+best_acc = 0.0
+history = {'train_loss': [], 'train_acc': [], 'val_loss': [], 'val_acc': []}
+
+for epoch in range(epochs):
+    train_loss, train_acc = train_epoch(
+        model, train_loader, criterion, optimizer, device)
+    val_loss, val_acc = evaluate(
+        model, val_loader, criterion, device)
+    scheduler.step()
+
+    history['train_loss'].append(train_loss)
+    history['train_acc'].append(train_acc)
+    history['val_loss'].append(val_loss)
+    history['val_acc'].append(val_acc)
+
+    if val_acc > best_acc:
+        best_acc = val_acc
+        torch.save(model.state_dict(), 'best_model.pt')
+
+    if epoch % 10 == 0 or epoch == epochs - 1:
+        print(f"Epoch {epoch:3d}: "
+              f"Train Loss {train_loss:.4f}, Acc {train_acc:.3f} | "
+              f"Val Loss {val_loss:.4f}, Acc {val_acc:.3f}")
+
+print(f"\n最佳验证准确率: {best_acc:.3f}")
+
+# 加载最佳模型
+model.load_state_dict(torch.load('best_model.pt'))
+\end{lstlisting}
+\end{mycode}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    mybox/.style={rectangle, draw=blue!60, fill=blue!5, minimum width=3.5cm, minimum height=0.8cm, font=\small, rounded corners=3pt},
+    myarrow/.style={->, >=stealth, thick, blue!70},
+    mylabel/.style={font=\footnotesize}
+]
+    % Training loop flow
+    \node[mybox] (data) at (0, 5) {加载数据};
+    \node[mybox] (fwd) at (0, 3.2) {前向传播};
+    \node[mybox] (loss) at (0, 1.4) {计算损失};
+    \node[mybox] (zero) at (0, -0.4) {梯度清零};
+    \node[mybox] (bwd) at (0, -2.2) {反向传播};
+    \node[mybox] (step) at (0, -4.0) {参数更新};
+
+    \node[mybox, draw=green!60, fill=green!5] (eval) at (4, 1) {验证/评估};
+    \node[mybox, draw=red!60, fill=red!5] at (4, -0.5) {(每N个epoch)};
+
+    \draw[myarrow] (data) -- (fwd);
+    \draw[myarrow] (fwd) -- (loss);
+    \draw[myarrow] (loss) -- (zero);
+    \draw[myarrow] (zero) -- (bwd);
+    \draw[myarrow] (bwd) -- (step);
+
+    \draw[myarrow, bend right=50] (step.east) to (data.east);
+    \node[mylabel] at (2.5, 0.5) {下一个epoch};
+
+    \draw[myarrow, green!70, dashed] (2.5, 5.5) |- (eval);
+
+    \node[mylabel, blue!70] at (2.8, 5.8) {训练阶段};
+    \node[mylabel, green!70] at (5.2, 0.5) {评估阶段};
+\end{tikzpicture}
+\caption{完整的 PyTorch 训练循环流程。每个 epoch 包含训练阶段（数据加载、前向反向、参数更新）和周期性验证评估。}
+\label{fig:training-loop}
+\end{figure}
+
+\section{模型保存与加载}
+
+PyTorch 提供两种模型保存方式：
+
+\begin{mycode}{模型保存与加载}
+\begin{lstlisting}[language=Python]
+import torch
+import torch.nn as nn
+
+model = nn.Sequential(
+    nn.Linear(10, 20), nn.ReLU(), nn.Linear(20, 3))
+
+# 方式1: 保存整个模型（不推荐，耦合度高）
+torch.save(model, 'full_model.pt')
+loaded_model = torch.load('full_model.pt')
+
+# 方式2: 只保存参数（推荐）
+torch.save(model.state_dict(), 'model_params.pt')
+
+# 加载参数
+new_model = nn.Sequential(
+    nn.Linear(10, 20), nn.ReLU(), nn.Linear(20, 3))
+new_model.load_state_dict(torch.load('model_params.pt'))
+
+# 保存检查点（checkpoint）
+checkpoint = {
+    'epoch': 50,
+    'model_state_dict': model.state_dict(),
+    'optimizer_state_dict': optimizer.state_dict(),
+    'loss': 0.0234,
+    'best_acc': 0.95,
+}
+torch.save(checkpoint, 'checkpoint.pt')
+
+# 恢复训练
+checkpoint = torch.load('checkpoint.pt')
+model.load_state_dict(checkpoint['model_state_dict'])
+optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+start_epoch = checkpoint['epoch']
+\end{lstlisting}
+\end{mycode}
+
+\section{完整实例：MNIST手写数字识别}
+
+\begin{mycode}{MNIST分类完整实现}
+\begin{lstlisting}[language=Python]
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import DataLoader
+from torchvision import datasets, transforms
+
+# 超参数
+batch_size = 128
+epochs = 10
+lr = 0.001
+
+# 数据准备
+transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize((0.1307,), (0.3081,))
+])
+
+train_dataset = datasets.MNIST(
+    './data', train=True, download=True, transform=transform)
+test_dataset = datasets.MNIST(
+    './data', train=False, transform=transform)
+
+train_loader = DataLoader(train_dataset, batch_size=batch_size,
+                          shuffle=True)
+test_loader = DataLoader(test_dataset, batch_size=batch_size,
+                         shuffle=False)
+
+# CNN模型
+class CNN(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv1 = nn.Conv2d(1, 32, 3, padding=1)
+        self.conv2 = nn.Conv2d(32, 64, 3, padding=1)
+        self.pool = nn.MaxPool2d(2, 2)
+        self.fc1 = nn.Linear(64 * 7 * 7, 128)
+        self.fc2 = nn.Linear(128, 10)
+        self.dropout = nn.Dropout(0.25)
+        self.relu = nn.ReLU()
+
+    def forward(self, x):
+        x = self.pool(self.relu(self.conv1(x)))
+        x = self.pool(self.relu(self.conv2(x)))
+        x = x.view(x.size(0), -1)  # 展平
+        x = self.relu(self.fc1(x))
+        x = self.dropout(x)
+        x = self.fc2(x)
+        return x
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+model = CNN().to(device)
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(model.parameters(), lr=lr)
+
+# 训练
+for epoch in range(epochs):
+    model.train()
+    running_loss = 0.0
+    for batch_idx, (data, target) in enumerate(train_loader):
+        data, target = data.to(device), target.to(device)
+
+        optimizer.zero_grad()
+        output = model(data)
+        loss = criterion(output, target)
+        loss.backward()
+        optimizer.step()
+
+        running_loss += loss.item()
+        if batch_idx % 100 == 99:
+            avg_loss = running_loss / 100
+            print(f'Epoch {epoch+1}, Batch {batch_idx+1}, Loss: {avg_loss:.4f}')
+            running_loss = 0.0
+
+# 测试
+model.eval()
+correct, total = 0, 0
+with torch.no_grad():
+    for data, target in test_loader:
+        data, target = data.to(device), target.to(device)
+        output = model(data)
+        pred = output.argmax(dim=1)
+        correct += pred.eq(target).sum().item()
+        total += data.size(0)
+
+print(f'\n测试准确率: {100 * correct / total:.2f}%')
+\end{lstlisting}
+\end{mycode}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    mybox/.style={rectangle, draw=blue!60, fill=blue!5, minimum width=2.5cm, minimum height=0.8cm, font=\small, rounded corners=3pt, align=center},
+    myarrow/.style={->, >=stealth, thick, blue!70}
+]
+    % CNN architecture
+    \node[mybox] (inp) at (0, 0) {输入\\\footnotesize 28$\times$28$\times$1};
+    \node[mybox] (c1) at (2.8, 0) {Conv1\\\footnotesize 28$\times$28$\times$32};
+    \node[mybox] (p1) at (5.6, 0) {Pool1\\\footnotesize 14$\times$14$\times$32};
+    \node[mybox] (c2) at (8.4, 0) {Conv2\\\footnotesize 14$\times$14$\times$64};
+    \node[mybox] (p2) at (11.2, 0) {Pool2\\\footnotesize 7$\times$7$\times$64};
+    \node[mybox, draw=red!60, fill=red!5] (flat) at (14.0, 0) {展平\\\footnotesize 3136};
+    \node[mybox] (fc1) at (16.5, 0) {FC1\\\footnotesize 128};
+    \node[mybox] (fc2) at (19.0, 0) {FC2\\\footnotesize 10};
+
+    \draw[myarrow] (inp) -- (c1);
+    \draw[myarrow] (c1) -- (p1);
+    \draw[myarrow] (p1) -- (c2);
+    \draw[myarrow] (c2) -- (p2);
+    \draw[myarrow] (p2) -- (flat);
+    \draw[myarrow] (flat) -- (fc1);
+    \draw[myarrow] (fc1) -- (fc2);
+
+    \node[font=\footnotesize] at (9.5, -1.2) {卷积部分\;\;$\to$\;\;全连接部分};
+\end{tikzpicture}
+\caption{MNIST CNN 模型结构。输入 28x28 灰度图，经过两层卷积+池化提取特征，展平后通过两层全连接层输出 10 类概率。}
+\label{fig:cnn-architecture}
+\end{figure}
+
+\section{本章小结}
+
+本章介绍了 PyTorch 的核心使用方法：
+\begin{itemize}
+    \item 张量是 PyTorch 的基础数据结构，支持 GPU 加速和自动微分
+    \item 自动求导（Autograd）自动计算梯度，是实现反向传播的基础
+    \item \texttt{nn.Module} 封装了神经网络层和参数管理
+    \item PyTorch 提供了丰富的损失函数和优化器（SGD、Adam、AdamW 等）
+    \item \texttt{Dataset} 和 \texttt{DataLoader} 规范了数据加载和批处理流程
+    \item 完整的训练循环包括：训练模式设置、梯度清零、前向、损失计算、反向、参数更新
+    \item 模型保存推荐使用 \texttt{state\_dict} 方式
+
+    掌握这些 PyTorch 基础知识后，读者可以继续学习更高级的主题
+如卷积神经网络、循环神经网络、Transformer、生成模型等。
+\end{itemize}
+

@@ -214,9 +214,9 @@ R'(s, a, s') = R(s, a, s') + \gamma \Phi(s') - \Phi(s)
 则 $R'$ 与 $R$ 拥有相同的最优策略。这里的关键是成形项 $F(s, s') = \gamma\Phi(s') - \Phi(s)$ 必须满足势差形式。
 \end{mydefinition}
 
-\begin{mytheorem}{势函数成形的最优策略不变性}
+\begin{myTheorem}{势函数成形的最优策略不变性}
 对于任意势函数 $\Phi$，使用奖励 $R' = R + \gamma\Phi(s') - \Phi(s)$ 的MDP与使用原始奖励 $R$ 的MDP具有相同的最优策略。
-\end{mytheorem}
+\end{myTheorem}
 
 \begin{proof}
 令 $Q_R^*(s,a)$ 和 $Q_{R'}^*(s,a)$ 分别为原始MDP和成形后MDP的最优Q函数。由 \bellman{} 最优方程：
@@ -304,7 +304,7 @@ Reward Hacking（奖励黑客）是指策略找到了满足奖励函数但不符
     \node[red] at (5.5,5.3) {Reward Hacking};
     
     % Annotations
-    \draw[->,gray] (3,4.5) -- (2.5,3.5) node[left,text width=2cm]{策略找到\\了捷径};
+    \draw[->,gray] (3,4.5) -- (2.5,3.5) node[left,text width=2cm,align=left]{策略找到\\了捷径};
     \draw[->,gray] (6,4.0) -- (5.5,3.2) node[right,text width=2cm,align=left]{真正期望\\的行为};
     
     % Legend
@@ -688,17 +688,17 @@ Curriculum Learning（课程学习）的思想源自人类教育：从简单任�
 \begin{tikzpicture}[>=stealth, scale=0.9]
     % Three stages as boxes with increasing width
     \draw[thick,fill=green!10] (0,0) rectangle (3,1.5);
-    \node at (1.5,0.75) {\small 阶段 1：慢速行走\\{\footnotesize 目标速度 0.5 m/s}};
+    \node at (1.5,0.75) [align=center] {\small 阶段 1：慢速行走\\{\footnotesize 目标速度 0.5 m/s}};
     
     \draw[->,thick] (3,0.75) -- (4,0.75);
     
     \draw[thick,fill=yellow!15] (4,0) rectangle (7.5,1.5);
-    \node at (5.75,0.75) {\small 阶段 2：正常行走\\{\footnotesize 目标速度 1.5 m/s}};
+    \node at (5.75,0.75) [align=center] {\small 阶段 2：正常行走\\{\footnotesize 目标速度 1.5 m/s}};
     
     \draw[->,thick] (7.5,0.75) -- (8.5,0.75);
     
     \draw[thick,fill=red!10] (8.5,0) rectangle (12.5,1.5);
-    \node at (10.5,0.75) {\small 阶段 3：崎岖地形奔跑\\{\footnotesize 目标速度 3.0 m/s}};
+    \node at (10.5,0.75) [align=center] {\small 阶段 3：崎岖地形奔跑\\{\footnotesize 目标速度 3.0 m/s}};
     
     % Annotations below
     \node at (1.5,-0.5) {\footnotesize 简单};
@@ -771,9 +771,9 @@ HER 是解决稀疏奖励问题的经典方法，由 Andrychowicz 等人于2017�
 \end{enumerate}
 \end{myalgorithm}
 
-\begin{mytheorem}{HER的探索效率}
+\begin{myTheorem}{HER的探索效率}
 对于 $N$ 维连续目标的抓取任务，随机探索首次偶然成功的概率在指数级上趋近于0（对于如 $\pm 1\text{cm}$ 的容差，成功率 $\propto (0.02)^3 = 8\times 10^{-6}$）。HER将每条轨迹转化为 $k+1$ 条"成功"示范，使得即使从未真正成功的策略也能从失败中学到"如何到达某些状态"。
-\end{mytheorem}
+\end{myTheorem}
 
 HER在Fetch Robot Arm系列任务中取得了突破性成果——特别是在FetchPickAndPlace这样的复杂任务中，标准的DDPG几乎完全无法学习，而DDPG+HER可以稳定地解决这些任务。
 
@@ -856,7 +856,5 @@ RL策略的推理必须在控制周期内完成。对于 100Hz 的控制频率�
 \section{本章小结}
 
 本章系统介绍了强化学习在机器人控制中的应用方法论。我们从将机器人控制问题转换为MDP入手，讨论了状态空间和动作空间的设计，以及如何将复杂的动力学方程融入RL框架。奖励函数设计是机器人RL最核心的工程挑战——从目标导向到势函数成形，从稀疏奖励的困境到HER的创新解决方案。我们介绍了主流的仿真环境和训练策略，包括PPO和SAC在连续控制任务中的实战配置和调优技巧。最后概述了真实机器人部署面临的挑战，为下一章的深度讨论做了铺垫。
-
-\end{myformula}
 
 % --- END OF CHAPTER 11 ---

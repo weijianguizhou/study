@@ -1,0 +1,605 @@
+\chapter{微积分基础}
+
+\intro{微积分是理解深度学习优化算法的关键。梯度下降法建立在导数和梯度的概念之上，反向传播算法本质上是链式法则的系统应用。本章系统介绍极限与导数、偏导数与梯度、链式法则、Hessian矩阵、Taylor展开、凸优化等核心主题。}
+
+\section{极限与连续性}
+
+\subsection{极限的定义}
+
+\begin{mydefinition}{函数的极限}
+设函数 $f(x)$ 在点 $x_0$ 的某个去心邻域内有定义。若存在常数 $L$，使得当 $x$ 无限接近 $x_0$ 时，$f(x)$ 无限接近 $L$，则称 $L$ 为 $x\to x_0$ 时 $f(x)$ 的极限，记为：
+\[
+\lim_{x\to x_0} f(x) = L
+\]
+\end{mydefinition}
+
+精确的 $\varepsilon$-$\delta$ 定义：$\forall\varepsilon>0$，$\exists\delta>0$，当 $0<|x-x_0|<\delta$ 时，有 $|f(x)-L|<\varepsilon$。
+
+\subsection{连续性}
+
+若 $\lim_{x\to x_0}f(x)=f(x_0)$，则称 $f$ 在 $x_0$ 处连续。深度学习中的常见激活函数（ReLU、sigmoid、tanh）在定义域上都是连续的，但ReLU在 $x=0$ 处的导数不连续，这在数学上不影响优化（因为梯度下降使用的是次梯度）。
+
+\section{导数}
+
+\subsection{导数的定义}
+
+\begin{mydefinition}{导数}
+函数 $f(x)$ 在点 $x$ 处的导数定义为：
+\[
+f'(x) = \lim_{h\to 0} \frac{f(x+h)-f(x)}{h}
+\]
+若该极限存在，则称 $f$ 在 $x$ 处可导。
+\end{mydefinition}
+
+导数的几何意义是函数曲线在该点处切线的斜率，物理意义是瞬时变化率。在深度学习中，导数衡量了损失函数关于参数的"瞬时"变化率，指示了调整参数的方向——沿着负梯度方向移动可以减小损失函数的值。
+
+\subsection{基本导数公式}
+
+\begin{myformula}
+\frac{d}{dx}(c) &= 0 \\
+\frac{d}{dx}(x^n) &= n x^{n-1} \\
+\frac{d}{dx}(e^x) &= e^x \\
+\frac{d}{dx}(\ln x) &= \frac{1}{x} \\
+\frac{d}{dx}(\sin x) &= \cos x \\
+\frac{d}{dx}(\cos x) &= -\sin x \\
+\frac{d}{dx}(a^x) &= a^x \ln a
+\end{myformula}
+
+\subsection{导数的运算法则}
+
+\begin{myTheorem}{导数运算法则}
+设 $f$ 和 $g$ 在 $x$ 处可导，则：
+\begin{itemize}
+    \item \textbf{线性性}：$(af+bg)' = af' + bg'$（其中 $a,b$ 为常数）
+    \item \textbf{乘法法则}：$(fg)' = f'g + fg'$
+    \item \textbf{除法法则}：$\left(\frac{f}{g}\right)' = \frac{f'g-fg'}{g^2}$
+    \item \textbf{链式法则}：$(f(g(x)))' = f'(g(x)) \cdot g'(x)$
+\end{itemize}
+\end{myTheorem}
+
+\subsection{常见激活函数的导数}
+
+深度学习中的激活函数及其导数具有重要地位：
+
+\begin{itemize}
+    \item \textbf{Sigmoid}：$\sigma(x)=\frac{1}{1+e^{-x}}$，$\sigma'(x)=\sigma(x)(1-\sigma(x))$
+    \item \textbf{Tanh}：$\tanh(x)=\frac{e^x-e^{-x}}{e^x+e^{-x}}$，$\tanh'(x)=1-\tanh^2(x)$
+    \item \textbf{ReLU}：$\operatorname{ReLU}(x)=\max(0,x)$，$\operatorname{ReLU}'(x)=\begin{cases}0 & x<0\\1 & x>0\end{cases}$（在 $x=0$ 处导数未定义，实践中通常取 $0$ 或使用次梯度）
+    \item \textbf{Leaky ReLU}：$f(x)=\max(\alpha x, x)$，$\alpha$ 为一个小的正数（如 $0.01$）
+    \item \textbf{GELU}：高斯误差线性单元，常用于Transformer模型
+\end{itemize}
+
+\begin{mycode}{Python中的激活函数与导数}
+\begin{lstlisting}[language=Python]
+import numpy as np
+
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+def sigmoid_derivative(x):
+    s = sigmoid(x)
+    return s * (1 - s)
+
+def relu(x):
+    return np.maximum(0, x)
+
+def relu_derivative(x):
+    return (x > 0).astype(float)
+
+def tanh_derivative(x):
+    t = np.tanh(x)
+    return 1 - t ** 2
+
+# 测试
+x = np.array([-2.0, -1.0, 0.0, 1.0, 2.0])
+print(f"x: {x}")
+print(f"sigmoid(x): {sigmoid(x)}")
+print(f"sigmoid'(x): {sigmoid_derivative(x)}")
+print(f"ReLU(x): {relu(x)}")
+print(f"ReLU'(x): {relu_derivative(x)}")
+\end{lstlisting}
+\end{mycode}
+
+\section{偏导数与梯度}
+
+\subsection{偏导数}
+
+对于多元函数 $f(x_1,x_2,\ldots,x_n)$，关于 $x_i$ 的偏导数定义为在固定其他变量情况下，$f$ 关于 $x_i$ 的变化率：
+
+\[
+\frac{\partial f}{\partial x_i} = \lim_{h\to 0} \frac{f(x_1,\ldots,x_i+h,\ldots,x_n)-f(x_1,\ldots,x_i,\ldots,x_n)}{h}
+\]
+
+偏导数的计算规则与一元导数相同，只是将其他变量视为常数。
+
+\begin{example}
+求 $f(x,y)=x^2y+3xy^2$ 的偏导数。
+
+\[
+\frac{\partial f}{\partial x} = 2xy + 3y^2, \quad \frac{\partial f}{\partial y} = x^2 + 6xy
+\]
+\end{example}
+
+\subsection{梯度}
+
+\begin{mydefinition}{梯度}
+函数 $f(x_1,x_2,\ldots,x_n)$ 的梯度是由所有偏导数组成的向量：
+\[
+\nabla f = \begin{bmatrix}
+\frac{\partial f}{\partial x_1} & \frac{\partial f}{\partial x_2} & \cdots & \frac{\partial f}{\partial x_n}
+\end{bmatrix}^{\top}
+\]
+\end{mydefinition}
+
+梯度的几何意义：梯度向量 $\nabla f$ 指向函数值增长最快的方向，其模长表示该方向上的最大变化率。因此，$-\nabla f$ 指向函数值下降最快的方向——这正是梯度下降算法的核心思想。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    myarrow/.style={->, >=stealth, thick},
+    mylabel/.style={font=\small}
+]
+    % 3D-like contour plot
+    \draw[->, >=stealth] (-4, 0) -- (4, 0) node[right] {$x_1$};
+    \draw[->, >=stealth] (0, -4) -- (0, 4) node[above] {$x_2$};
+
+    % Contour lines (concentric ellipses)
+    \foreach \r in {0.5, 1, 1.5, 2, 2.5, 3, 3.5} {
+        \draw[blue!40, thick, rotate around={30:(0,0)}]
+            (0, 0) ellipse ({\r*1.5} and \r);
+    }
+
+    % Point
+    \fill[red] (2.5, 1.5) circle (3pt);
+    \node[mylabel, red, right] at (2.5, 1.5) {$\mathbf{x}$};
+
+    % Gradient vector
+    \draw[myarrow, red!80] (2.5, 1.5) -- (1.5, 0.5);
+    \node[mylabel, red!80] at (1.3, 0.3) {$-\nabla f$};
+
+    % Tangent to contour
+    \draw[blue!60, dashed, thick] (1.5, 2.2) -- (3.5, 0.8);
+
+    \node[mylabel] at (3, -3) {等高线越密，梯度越大};
+    \node[mylabel] at (3, -3.5) {梯度方向$\perp$等高线};
+\end{tikzpicture}
+\caption{梯度的几何意义。梯度方向与函数等高线垂直，指向函数值增长最快的方向。负梯度方向指向函数值下降最快的方向。}
+\label{fig:gradient}
+\end{figure}
+
+\subsection{Jacobian 矩阵}
+
+当输出是多维向量时（如神经网络的某一层输出），推广梯度概念得到 Jacobian 矩阵。设 $\mathbf{f}:\R^n\to\R^m$，其中 $\mathbf{f}(\mathbf{x})=[f_1(\mathbf{x}),\ldots,f_m(\mathbf{x})]^{\top}$，则 Jacobian 矩阵为：
+
+\[
+\mathbf{J} = \frac{\partial \mathbf{f}}{\partial \mathbf{x}} =
+\begin{bmatrix}
+\frac{\partial f_1}{\partial x_1} & \cdots & \frac{\partial f_1}{\partial x_n} \\
+\vdots & \ddots & \vdots \\
+\frac{\partial f_m}{\partial x_1} & \cdots & \frac{\partial f_m}{\partial x_n}
+\end{bmatrix} \in \R^{m\times n}
+\]
+
+Jacobian 矩阵的每一行是对应输出分量关于所有输入变量的梯度，每一列是某一输入对所有输出的影响。在反向传播中，Jacobian 矩阵描述了每一层的局部导数。
+
+\begin{mycode}{Python中的梯度计算（数值微分）}
+\begin{lstlisting}[language=Python]
+import numpy as np
+
+def numerical_gradient(f, x, h=1e-5):
+    """用中心差分法计算 f 在 x 处的梯度"""
+    grad = np.zeros_like(x)
+    it = np.nditer(x, flags=['multi_index'])
+    while not it.finished:
+        idx = it.multi_index
+        x_plus = x.copy()
+        x_minus = x.copy()
+        x_plus[idx] += h
+        x_minus[idx] -= h
+        grad[idx] = (f(x_plus) - f(x_minus)) / (2 * h)
+        it.iternext()
+    return grad
+
+# 测试函数: f(x, y) = x^2 + y^2
+def f(x):
+    return x[0]**2 + x[1]**2
+
+x0 = np.array([3.0, 4.0])
+grad = numerical_gradient(f, x0)
+print(f"f(x) = x0^2 + x1^2")
+print(f"在 x={x0} 处的数值梯度: {grad}")
+print(f"解析梯度 (2x): {2 * x0}")
+
+# 测试: f(x, y) = x^2 * y + sin(y)
+def g(x):
+    return x[0]**2 * x[1] + np.sin(x[1])
+
+x1 = np.array([2.0, np.pi/4])
+grad_g = numerical_gradient(g, x1)
+print(f"\n在 x={x1} 处的梯度: {grad_g}")
+# 解析: [2xy, x^2 + cos(y)]
+analytic = np.array([2*2*np.pi/4, 4 + np.cos(np.pi/4)])
+print(f"解析梯度: {analytic}")
+\end{lstlisting}
+\end{mycode}
+
+\section{链式法则}
+
+\subsection{一元函数的链式法则}
+
+若 $y=f(u)$ 且 $u=g(x)$，则复合函数 $y=f(g(x))$ 的导数为：
+
+\[
+\frac{dy}{dx} = \frac{dy}{du} \cdot \frac{du}{dx} = f'(g(x)) \cdot g'(x)
+\]
+
+\subsection{多元函数的链式法则}
+
+对于多元复合函数 $z=f(u,v)$ 其中 $u=g(x,y)$、$v=h(x,y)$：
+
+\[
+\frac{\partial z}{\partial x} = \frac{\partial z}{\partial u}\frac{\partial u}{\partial x} + \frac{\partial z}{\partial v}\frac{\partial v}{\partial x}
+\]
+
+类似地求 $\frac{\partial z}{\partial y}$。这可以推广到任意多个中间变量。
+
+\subsection{反向传播与链式法则}
+
+反向传播（Backpropagation）本质上是链式法则在计算图上的高效实现。考虑一个简单的三层网络：
+
+\[
+\mathbf{h}^{(1)} = \sigma(\mathbf{W}^{(1)}\mathbf{x}), \quad
+\mathbf{h}^{(2)} = \sigma(\mathbf{W}^{(2)}\mathbf{h}^{(1)}), \quad
+\hat{\mathbf{y}} = \mathbf{W}^{(3)}\mathbf{h}^{(2)}
+\]
+
+损失函数 $L = \ell(\hat{\mathbf{y}}, \mathbf{y})$。梯度计算如下：
+
+\[
+\frac{\partial L}{\partial \mathbf{W}^{(3)}} = \frac{\partial L}{\partial \hat{\mathbf{y}}} \cdot \frac{\partial \hat{\mathbf{y}}}{\partial \mathbf{W}^{(3)}}
+\]
+
+\[
+\frac{\partial L}{\partial \mathbf{W}^{(2)}} = \frac{\partial L}{\partial \hat{\mathbf{y}}} \cdot
+\frac{\partial \hat{\mathbf{y}}}{\partial \mathbf{h}^{(2)}} \cdot
+\frac{\partial \mathbf{h}^{(2)}}{\partial \mathbf{W}^{(2)}}
+\]
+
+\[
+\frac{\partial L}{\partial \mathbf{W}^{(1)}} = \frac{\partial L}{\partial \hat{\mathbf{y}}} \cdot
+\frac{\partial \hat{\mathbf{y}}}{\partial \mathbf{h}^{(2)}} \cdot
+\frac{\partial \mathbf{h}^{(2)}}{\partial \mathbf{h}^{(1)}} \cdot
+\frac{\partial \mathbf{h}^{(1)}}{\partial \mathbf{W}^{(1)}}
+\]
+
+注意每一步需要乘以上一层的局部梯度（Jacobian矩阵），这正是"反向"的含义——梯度从输出层逐层传播回输入层。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    mynode/.style={circle, draw=blue!60, fill=blue!10, minimum size=0.8cm, font=\small},
+    myedge/.style={->, >=stealth, thick},
+    mygrad/.style={->, >=stealth, thick, red!70, bend right=30},
+    mylabel/.style={font=\footnotesize}
+]
+    % Forward pass nodes
+    \node[mynode] (x) at (0, 0) {$\mathbf{x}$};
+    \node[mynode] (h1) at (2.5, 0) {$\mathbf{h}^{(1)}$};
+    \node[mynode] (h2) at (5, 0) {$\mathbf{h}^{(2)}$};
+    \node[mynode] (y) at (7.5, 0) {$\hat{\mathbf{y}}$};
+    \node[mynode, fill=red!10, draw=red!60] (L) at (10, 0) {$L$};
+
+    % Forward edges
+    \draw[myedge, blue!70] (x) -- (h1) node[midway, above] {\tiny $\mathbf{W}^{(1)}$};
+    \draw[myedge, blue!70] (h1) -- (h2) node[midway, above] {\tiny $\mathbf{W}^{(2)}$};
+    \draw[myedge, blue!70] (h2) -- (y) node[midway, above] {\tiny $\mathbf{W}^{(3)}$};
+    \draw[myedge, blue!70] (y) -- (L);
+
+    % Gradient edges (backward)
+    \draw[mygrad] (L) to[bend right=40] node[below] {\tiny $\frac{\partial L}{\partial\mathbf{W}^{(3)}}$} (y);
+    \draw[mygrad] (L) to[bend right=50] node[below=0.7cm] {\tiny $\frac{\partial L}{\partial\mathbf{W}^{(2)}}$} (h2);
+    \draw[mygrad] (L) to[bend right=60] node[below=1.4cm] {\tiny $\frac{\partial L}{\partial\mathbf{W}^{(1)}}$} (h1);
+
+    \node[mylabel] at (5, -2.2) {红色：反向传播路径};
+    \node[mylabel] at (5, -2.7) {蓝色：前向传播路径};
+\end{tikzpicture}
+\caption{反向传播示意图。前向传播（蓝色）计算每一层的输出，反向传播（红色）从损失函数出发，利用链式法则逐层计算梯度。}
+\label{fig:backprop}
+\end{figure}
+
+\begin{mycode}{Python中的简单反向传播实现}
+\begin{lstlisting}[language=Python]
+import numpy as np
+
+np.random.seed(42)
+
+# 简单三层网络
+n_input = 4; n_hidden1 = 3; n_hidden2 = 2; n_output = 1
+
+W1 = np.random.randn(n_hidden1, n_input) * 0.1
+W2 = np.random.randn(n_hidden2, n_hidden1) * 0.1
+W3 = np.random.randn(n_output, n_hidden2) * 0.1
+
+x = np.random.randn(n_input, 1)
+y_true = np.array([[1.0]])
+
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))
+
+# 前向传播
+z1 = W1 @ x;            a1 = sigmoid(z1)
+z2 = W2 @ a1;           a2 = sigmoid(z2)
+z3 = W3 @ a2;           a3 = z3  # 线性输出
+
+# 损失 (MSE)
+loss = 0.5 * np.sum((a3 - y_true) ** 2)
+print(f"前向损失: {loss:.6f}")
+
+# 反向传播
+delta3 = a3 - y_true                         # dL/da3
+dW3 = delta3 @ a2.T                          # dL/dW3
+
+delta2 = (W3.T @ delta3) * (a2 * (1 - a2))  # dL/da2 -> dL/dz2
+dW2 = delta2 @ a1.T                          # dL/dW2
+
+delta1 = (W2.T @ delta2) * (a1 * (1 - a1))  # dL/da1 -> dL/dz1
+dW1 = delta1 @ x.T                           # dL/dW1
+
+print(f"dL/dW3 形状: {dW3.shape}")
+print(f"dL/dW2 形状: {dW2.shape}")
+print(f"dL/dW1 形状: {dW1.shape}")
+
+# 手动梯度下降一步
+lr = 0.01
+W3 -= lr * dW3
+W2 -= lr * dW2
+W1 -= lr * dW1
+print(f"一步更新后的权重大小: {np.sum(np.abs(W1)):.4f}")
+\end{lstlisting}
+\end{mycode}
+
+\section{Hessian 矩阵}
+
+\begin{mydefinition}{Hessian 矩阵}
+对于二阶可导的函数 $f:\R^n\to\R$，其 Hessian 矩阵 $\mathbf{H}$ 是由所有二阶偏导数组成的 $n\times n$ 矩阵：
+\[
+\mathbf{H}_{ij} = \frac{\partial^2 f}{\partial x_i \partial x_j}
+\]
+\end{mydefinition}
+
+Hessian 矩阵是对称矩阵（当二阶混合偏导数连续时，即 $\frac{\partial^2 f}{\partial x_i\partial x_j}=\frac{\partial^2 f}{\partial x_j\partial x_i}$）。
+
+Hessian 矩阵在深度学习中的作用：
+\begin{itemize}
+    \item \textbf{驻点判断}：若 $\nabla f(\mathbf{x}^*)=0$ 且 $\mathbf{H}(\mathbf{x}^*)$ 正定，则 $\mathbf{x}^*$ 是局部极小点。
+    \item \textbf{牛顿法}：利用 Hessian 信息实现二阶优化：$\mathbf{x}_{t+1}=\mathbf{x}_t-\mathbf{H}^{-1}\nabla f(\mathbf{x}_t)$。
+    \item \textbf{曲率信息}：Hessian 的特征值反映损失函数在不同方向上的弯曲程度。最大特征值对应最陡峭的方向，最小特征值对应最平坦的方向。
+    \item \textbf{鞍点分析}：在高维优化中，Hessian 同时有正负特征值意味着存在鞍点，这是深度学习优化的主要挑战之一。
+\end{itemize}
+
+由于深度学习参数数量巨大，直接计算和存储完整的 Hessian 矩阵不现实，因此实际中常用近似方法（如 BFGS、L-BFGS、Hessian-Free优化）。
+
+\section{Taylor 展开}
+
+Taylor 展开是将函数在某点附近用多项式逼近的方法。它是理解优化算法收敛性的理论基础。
+
+\subsection{一元函数的 Taylor 展开}
+
+若 $f$ 在 $x_0$ 处 $n+1$ 阶可导，则在 $x_0$ 附近：
+
+\[
+f(x) = \sum_{k=0}^{n} \frac{f^{(k)}(x_0)}{k!}(x-x_0)^k + R_n(x)
+\]
+
+其中 $R_n(x)=\frac{f^{(n+1)}(\xi)}{(n+1)!}(x-x_0)^{n+1}$ 为 Lagrange 余项，$\xi$ 在 $x$ 和 $x_0$ 之间。
+
+常用的一阶和二阶 Taylor 展开：
+\begin{itemize}
+    \item 一阶：$f(x)\approx f(x_0)+f'(x_0)(x-x_0)$（线性近似）
+    \item 二阶：$f(x)\approx f(x_0)+f'(x_0)(x-x_0)+\frac{1}{2}f''(x_0)(x-x_0)^2$（二次近似）
+\end{itemize}
+
+\subsection{多元函数的 Taylor 展开}
+
+对于多元函数 $f(\mathbf{x})$，在 $\mathbf{x}_0$ 附近的二阶 Taylor 展开为：
+
+\[
+f(\mathbf{x}) \approx f(\mathbf{x}_0) + \nabla f(\mathbf{x}_0)^{\top}(\mathbf{x}-\mathbf{x}_0) + \frac{1}{2}(\mathbf{x}-\mathbf{x}_0)^{\top}\mathbf{H}(\mathbf{x}_0)(\mathbf{x}-\mathbf{x}_0)
+\]
+
+这一展开式在分析梯度下降的收敛性时非常重要。例如，用二阶 Taylor 展开分析学习率对收敛性的影响：设 $\mathbf{x}_{t+1}=\mathbf{x}_t-\eta\nabla f(\mathbf{x}_t)$，代入上式得：
+
+\[
+f(\mathbf{x}_{t+1}) \approx f(\mathbf{x}_t) - \eta\|\nabla f(\mathbf{x}_t)\|^2 + \frac{\eta^2}{2}\nabla f(\mathbf{x}_t)^{\top}\mathbf{H}\nabla f(\mathbf{x}_t)
+\]
+
+为使损失下降，需要 $\eta < \frac{2\|\nabla f\|^2}{\nabla f^{\top}\mathbf{H}\nabla f}$。
+
+\begin{mycode}{Python中的Taylor展开验证}
+\begin{lstlisting}[language=Python]
+import numpy as np
+import matplotlib.pyplot as plt
+
+def f(x):
+    return np.sin(x) + 0.1 * x**2
+
+def f_prime(x):
+    return np.cos(x) + 0.2 * x
+
+def f_double_prime(x):
+    return -np.sin(x) + 0.2
+
+x0 = 1.0  # 展开点
+
+# 计算Taylor展开
+x = np.linspace(-2, 4, 200)
+fx = f(x)
+
+# 一阶Taylor
+taylor1 = f(x0) + f_prime(x0) * (x - x0)
+
+# 二阶Taylor
+taylor2 = taylor1 + 0.5 * f_double_prime(x0) * (x - x0)**2
+
+# 三阶Taylor
+f_triple = lambda x: -np.cos(x)
+taylor3 = taylor2 + (f_triple(x0) / 6) * (x - x0)**3
+
+print(f"展开点 x0 = {x0}")
+print(f"f(x0) = {f(x0):.4f}")
+print(f"在 x=0.5 处:")
+print(f"  真实值: {f(0.5):.4f}")
+print(f"  一阶近似: {f(x0) + f_prime(x0)*(0.5-x0):.4f}")
+print(f"  二阶近似: {f(x0) + f_prime(x0)*(0.5-x0) + 0.5*f_double_prime(x0)*(0.5-x0)**2:.4f}")
+\end{lstlisting}
+\end{mycode}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    mycurve/.style={thick, smooth},
+    mypoint/.style={circle, fill=red, inner sep=2pt}
+]
+    % Axes
+    \draw[->, >=stealth] (-3, 0) -- (5, 0) node[right] {$x$};
+    \draw[->, >=stealth] (0, -2) -- (0, 3) node[above] {$f(x)$};
+
+    % True function (like sin(x))
+    \draw[mycurve, blue!70, domain=-2.5:4.5, samples=100]
+        plot (\x, {sin(\x r) + 0.1*\x*\x});
+
+    % First order Taylor at x0=1
+    \draw[mycurve, red!70, domain=-1:3]
+        plot (\x, {sin(1 r) + 0.1 + (cos(1 r) + 0.2)*(\x - 1)});
+
+    % Second order Taylor
+    \draw[mycurve, green!50!black, domain=-1:3, samples=100]
+        plot (\x, {sin(1 r)+0.1+(cos(1 r)+0.2)*(\x-1)+0.5*(-sin(1 r)+0.2)*(\x-1)*(\x-1)});
+
+    % Expansion point
+    \node[mypoint] at (1, {sin(1 r)+0.1}) {};
+    \node[font=\small] at (1.2, {sin(1 r)+0.1+0.3}) {$x_0$};
+
+    % Legend
+    \node[font=\small, blue!70, right] at (4, 2) {原函数};
+    \node[font=\small, red!70, right] at (4, 1.5) {一阶Taylor};
+    \node[font=\small, green!50!black, right] at (4, 1) {二阶Taylor};
+\end{tikzpicture}
+\caption{函数在一阶和二阶 Taylor 展开下的近似。在展开点附近，二阶近似比一阶近似更精确，但远离展开点时近似误差会增大。}
+\label{fig:taylor}
+\end{figure}
+
+\section{凸优化基础}
+
+\subsection{凸集与凸函数}
+
+\begin{mydefinition}{凸集}
+集合 $C\subseteq\R^n$ 是凸集，若对任意 $\mathbf{x},\mathbf{y}\in C$ 和任意 $\lambda\in[0,1]$，有 $\lambda\mathbf{x}+(1-\lambda)\mathbf{y}\in C$。即连接集合中任意两点的线段完全包含在集合中。
+\end{mydefinition}
+
+\begin{mydefinition}{凸函数}
+定义在凸集 $C$ 上的函数 $f$ 是凸函数，若对任意 $\mathbf{x},\mathbf{y}\in C$ 和任意 $\lambda\in[0,1]$，有：
+\[
+f(\lambda\mathbf{x}+(1-\lambda)\mathbf{y}) \leq \lambda f(\mathbf{x}) + (1-\lambda)f(\mathbf{y})
+\]
+即函数图像在连接任意两点的线段下方。
+\end{mydefinition}
+
+若不等式严格成立（$\mathbf{x}\neq\mathbf{y}$ 且 $\lambda\in(0,1)$ 时），则称 $f$ 为严格凸函数。
+
+\subsection{凸函数的判定条件}
+
+\begin{myTheorem}{凸函数的判定}
+设 $f:\R^n\to\R$ 二阶可导，则：
+\begin{itemize}
+    \item $f$ 是凸函数当且仅当其 Hessian 矩阵处处半正定：$\mathbf{H}(\mathbf{x})\succeq 0$，$\forall\mathbf{x}$
+    \item 若 $\mathbf{H}(\mathbf{x})\succ 0$（正定），则 $f$ 是严格凸函数
+\end{itemize}
+\end{myTheorem}
+
+对于一元函数，条件简化为 $f''(x)\geq 0$（处处成立）。
+
+常见的凸函数：
+\begin{itemize}
+    \item $f(x)=x^2$：严格凸
+    \item $f(x)=e^x$：严格凸
+    \item $f(x)=|x|$：凸但不严格
+    \item $f(x)=x\log x$（$x>0$）：严格凸
+    \item MSE 损失 $f(\mathbf{w})=\|\mathbf{X}\mathbf{w}-\mathbf{y}\|_2^2$：凸
+    \item 带有 $L^2$ 正则化的线性回归损失：严格凸
+\end{itemize}
+
+\subsection{凸优化的性质}
+
+凸优化问题具有优良的性质：
+
+\begin{enumerate}
+    \item \textbf{局部极小即全局极小}：对凸函数，任何局部极小点都是全局极小点。
+    \item \textbf{驻点即极小点}：若 $\nabla f(\mathbf{x}^*)=0$，则 $\mathbf{x}^*$ 是全局极小点。
+    \item \textbf{梯度下降收敛到全局最优}：对于凸函数，梯度下降可以保证收敛到全局最优解。
+\end{enumerate}
+
+然而，深度学习的损失函数通常是高度非凸的，存在大量局部极小点和鞍点。但实践表明，SGD 等方法在深度网络中表现良好，部分原因在于：
+\begin{itemize}
+    \item 高维空间中的鞍点比局部极小点更常见
+    \item SGD的随机噪声有助于逃离鞍点
+    \item 过参数化的网络往往使优化问题变得"更容易"
+\end{itemize}
+
+\begin{mycode}{Python中的凸函数与非凸函数对比}
+\begin{lstlisting}[language=Python]
+import numpy as np
+
+# 凸函数: f(x) = x^2
+def convex_f(x):
+    return x**2
+
+# 非凸函数: f(x) = sin(x) + 0.1 * x^2
+def nonconvex_f(x):
+    return np.sin(3*x) + 0.1 * x**2
+
+# 验证凸性: 检查 Jensen 不等式
+def check_convexity(f, x1, x2, n_points=100):
+    violations = 0
+    for lam in np.linspace(0, 1, n_points):
+        mid = lam * x1 + (1 - lam) * x2
+        f_mid = f(mid)
+        bound = lam * f(x1) + (1 - lam) * f(x2)
+        if f_mid > bound + 1e-10:
+            violations += 1
+    return violations
+
+v1 = check_convexity(convex_f, -2, 3)
+v2 = check_convexity(nonconvex_f, -2, 3)
+print(f"f(x)=x^2 违反凸性次数: {v1} (应为0)")
+print(f"f(x)=sin(3x)+0.1x^2 违反凸性次数: {v2} (预期>0)")
+\end{lstlisting}
+\end{mycode}
+
+\section{约束优化与 Lagrange 乘子法}
+
+在深度学习中，有时需要在约束条件下优化目标函数。Lagrange 乘子法是处理等式约束优化的基本方法。
+
+\begin{myTheorem}{Lagrange 乘子法}
+考虑约束优化问题：$\min_{\mathbf{x}} f(\mathbf{x})$，满足 $g(\mathbf{x})=0$。构造 Lagrange 函数：
+\[
+\mathcal{L}(\mathbf{x},\lambda) = f(\mathbf{x}) + \lambda g(\mathbf{x})
+\]
+则最优解满足 $\nabla_{\mathbf{x}}\mathcal{L}=0$ 和 $\nabla_{\lambda}\mathcal{L}=g(\mathbf{x})=0$。
+\end{myTheorem}
+
+对于不等式约束 $g(\mathbf{x})\leq 0$，使用 KKT 条件（Karush-Kuhn-Tucker conditions）进行推广。SVM（支持向量机）的对偶推导就是 Lagrange 乘子法的典型应用。
+
+\section{本章小结}
+
+本章介绍了深度学习所需的微积分基础知识：
+\begin{itemize}
+    \item 导数和偏导数描述了函数的变化率，梯度指向函数增长最快的方向
+    \item 链式法则是反向传播算法的数学基础
+    \item Hessian 矩阵提供了二阶曲率信息，用于判断驻点类型
+    \item Taylor 展开将复杂函数局部近似为多项式
+    \item 凸函数保证局部极小即全局极小
+    \item 在深度学习中，梯度下降、牛顿法和各种优化器都建立在微积分理论之上
+\end{itemize}
+
+这些概念将在后续章节中反复出现。下一章将介绍概率论与统计学基础，为理解损失函数的概率解释和贝叶斯方法做准备。

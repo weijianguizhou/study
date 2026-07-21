@@ -843,7 +843,7 @@ Newton-Euler递推算法是当前几乎所有机器人仿真引擎（MuJoCo、Bu
 
 其中 $[\mathbf{r}]_\times$ 是从点 $Q$ 指向点 $P$ 的向量 $\mathbf{r}$ 的叉积矩阵（skew-symmetric matrix），定义为：
 \begin{myformula}
-[\mathbf{r}]_\times = \begin{bmatrix} 0 & -r_z & r_y \\ r_z & 0 & -r_x \\ -r_y & r_x & 0 \end{bmatrix}
+{}[\mathbf{r}]_\times = \begin{bmatrix} 0 & -r_z & r_y \\ r_z & 0 & -r_x \\ -r_y & r_x & 0 \end{bmatrix}
 \end{myformula}
 
 \subsection{空间力}
@@ -990,7 +990,5 @@ m[\mathbf{c}]_\times^{\T} & m\mathbf{I}_3
 本章系统介绍了机器人学的基础理论框架，涵盖了从刚体运动描述到动力学建模的核心内容。我们首先学习了刚体运动的描述方法——旋转矩阵、齐次变换矩阵和欧拉角等表示工具。在此基础上，DH参数法为串联机器人运动学的系统化建模提供了标准范式。雅可比矩阵建立了关节运动与末端运动（速度和力）之间的联系，是运动控制和力控制的理论基石。Lagrangian动力学和Newton-Euler递推算法从不同角度给出了机器人动力学方程的求解方法。最后，空间向量代数作为现代机器人学的核心工具，统一了运动学和动力学的描述。
 
 这些基础知识是理解第11章中强化学习在机器人控制中应用的前提。无论是状态空间的设计、动作空间的选取，还是仿真环境的物理学基础，都离不开本章所建立的机器人学理论支撑。
-
-\end{myformula}
 
 % --- END OF CHAPTER 10 ---

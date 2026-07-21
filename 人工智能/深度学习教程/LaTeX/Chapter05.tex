@@ -1,0 +1,484 @@
+\chapter{逻辑回归与分类}
+
+\intro{分类问题是机器学习中与回归并列的另一大类监督学习任务。逻辑回归（Logistic Regression）是分类问题中最基础且应用广泛的模型之一。尽管名称中含有"回归"，它实际上是一个分类模型。本章从逻辑回归的二分类出发，逐步推广到多分类的 softmax 回归，并介绍分类模型的评估指标。}
+
+\section{逻辑回归模型}
+
+\subsection{从线性回归到逻辑回归}
+
+线性回归输出实数值，不能直接用于分类。逻辑回归在线性组合 $\mathbf{w}^{\top}\mathbf{x}+b$ 的基础上，使用 sigmoid 函数将输出映射到 $(0,1)$ 区间：
+
+\[
+\hat{y} = \sigma(\mathbf{w}^{\top}\mathbf{x} + b) = \frac{1}{1 + e^{-(\mathbf{w}^{\top}\mathbf{x} + b)}}
+\]
+
+其中 $\sigma(z)=\frac{1}{1+e^{-z}}$ 是 sigmoid 函数（也称为 logistic 函数），具有以下性质：
+
+\begin{itemize}
+    \item $\sigma(z)\in(0,1)$，可以将输出解释为概率
+    \item $\sigma(0)=0.5$
+    \item $\lim_{z\to\infty}\sigma(z)=1$，$\lim_{z\to-\infty}\sigma(z)=0$
+    \item $\sigma'(z)=\sigma(z)(1-\sigma(z))$（便于计算梯度）
+    \item $\sigma(-z)=1-\sigma(z)$
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    mycurve/.style={thick, smooth},
+    mydash/.style={thin, dashed, gray},
+    mylabel/.style={font=\small}
+]
+    \draw[->, >=stealth] (-5, 0) -- (5, 0) node[right] {$z$};
+    \draw[->, >=stealth] (0, -0.2) -- (0, 4.5) node[above] {$\sigma(z)$};
+
+    \draw[mycurve, blue!70, domain=-5:5, samples=100]
+        plot (\x, {4/(1 + exp(-\x))});
+    \node[mylabel, blue!70] at (0.5, 3.8) {$\sigma(z)=\frac{1}{1+e^{-z}}$};
+
+    \draw[mydash] (-5, 0) -- (5, 0);
+    \draw[mydash] (-5, 4) -- (5, 4);
+    \node[mylabel, left] at (-5.1, 4) {$1$};
+
+    \fill[red] (0, {4/2}) circle (2pt);
+    \node[mylabel, red, right] at (0.2, 1.8) {$\sigma(0)=0.5$};
+\end{tikzpicture}
+\caption{Sigmoid 函数的图像。$z=0$ 时输出 $0.5$，$z\to\infty$ 时输出趋近于 $1$，$z\to-\infty$ 时输出趋近于 $0$。}
+\label{fig:sigmoid}
+\end{figure}
+
+\subsection{决策边界}
+
+将 $\hat{y}=\sigma(\mathbf{w}^{\top}\mathbf{x}+b)$ 的输出解释为 $P(y=1\mid\mathbf{x})$（即样本属于正类的概率）。分类决策规则为：
+
+\[
+\text{若 } \hat{y} \geq 0.5 \text{，则预测为正类；否则预测为负类}
+\]
+
+由于 $\sigma(z)\geq 0.5 \iff z\geq 0$，决策规则简化为：
+
+\[
+\text{若 } \mathbf{w}^{\top}\mathbf{x}+b \geq 0 \text{，则预测为正类}
+\]
+
+因此，决策边界是超平面 $\mathbf{w}^{\top}\mathbf{x}+b=0$，逻辑回归本质上是线性分类器。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    mypos/.style={circle, fill=blue!50, inner sep=2pt},
+    myneg/.style={circle, draw=red!60, fill=red!20, inner sep=2pt},
+    myline/.style={green!50!black, very thick},
+    mylabel/.style={font=\small}
+]
+    \draw[->, >=stealth] (-1, 0) -- (6, 0) node[right] {$x_1$};
+    \draw[->, >=stealth] (0, -1) -- (0, 5) node[above] {$x_2$};
+
+    % Decision boundary: 2x1 + x2 - 6 = 0 -> x2 = -2x1 + 6
+    \draw[myline, domain=1:5] plot (\x, {-2*\x + 6});
+    \node[mylabel, green!50!black] at (4.8, -0.8) {$\mathbf{w}^{\top}\mathbf{x}+b=0$};
+
+    % Positive region (+)
+    \node[mylabel, green!50!black!80] at (5, 4.5) {正类区域};
+    \node[mylabel, green!50!black!80] at (5, 4.1) {$\mathbf{w}^{\top}\mathbf{x}+b>0$};
+
+    % Negative region (-)
+    \node[mylabel, red!70] at (1.5, 1) {$\mathbf{w}^{\top}\mathbf{x}+b<0$};
+    \node[mylabel, red!70] at (1.5, 0.6) {负类区域};
+
+    % Data points
+    \node[mypos] at (3.5, 4.0) {}; \node[mypos] at (4.0, 4.2) {};
+    \node[mypos] at (4.5, 3.8) {}; \node[mypos] at (5.0, 4.5) {};
+    \node[mypos] at (3.8, 3.5) {}; \node[mypos] at (5.2, 3.8) {};
+
+    \node[myneg] at (1.0, 1.5) {}; \node[myneg] at (1.5, 2.0) {};
+    \node[myneg] at (2.0, 1.0) {}; \node[myneg] at (1.8, 0.5) {};
+    \node[myneg] at (2.5, 1.5) {}; \node[myneg] at (0.8, 0.8) {};
+\end{tikzpicture}
+\caption{逻辑回归的线性决策边界。决策边界是超平面 $\mathbf{w}^{\top}\mathbf{x}+b=0$，将特征空间划分为正类区域和负类区域。}
+\label{fig:decision-boundary}
+\end{figure}
+
+\section{交叉熵损失}
+
+\subsection{概率解释}
+
+设 $y\in\{0,1\}$ 为二分类标签。逻辑回归模型的输出可解释为条件概率：
+
+\[
+P(y=1\mid\mathbf{x};\mathbf{w}) = \sigma(\mathbf{w}^{\top}\mathbf{x}), \quad
+P(y=0\mid\mathbf{x};\mathbf{w}) = 1 - \sigma(\mathbf{w}^{\top}\mathbf{x})
+\]
+
+这等价于 Bernoulli 分布：
+\[
+P(y\mid\mathbf{x};\mathbf{w}) = \hat{y}^y \cdot (1-\hat{y})^{1-y}
+\]
+
+其中 $\hat{y} = \sigma(\mathbf{w}^{\top}\mathbf{x})$。
+
+\subsection{最大似然推导}
+
+给定独立同分布的数据 $\{(\mathbf{x}^{(i)}, y^{(i)})\}_{i=1}^{m}$，似然函数为：
+
+\[
+L(\mathbf{w}) = \prod_{i=1}^{m} \hat{y}_i^{y_i} (1-\hat{y}_i)^{1-y_i}
+\]
+
+取负对数似然得到交叉熵损失（Binary Cross-Entropy, BCE）：
+
+\[
+J(\mathbf{w}) = -\frac{1}{m}\sum_{i=1}^{m} \left[y_i\log\hat{y}_i + (1-y_i)\log(1-\hat{y}_i)\right]
+\]
+
+交叉熵损失的直观理解：当 $y_i=1$ 时，损失为 $-\log\hat{y}_i$。若模型输出 $\hat{y}_i\approx 1$，损失接近 $0$；若 $\hat{y}_i\approx 0$，损失趋于 $+\infty$（严重惩罚错误的自信预测）。
+
+交叉熵损失的梯度：
+
+\[
+\nabla_{\mathbf{w}} J(\mathbf{w}) = \frac{1}{m}\sum_{i=1}^{m} (\hat{y}_i - y_i)\mathbf{x}^{(i)}
+= \frac{1}{m}\mathbf{X}^{\top}(\hat{\mathbf{y}} - \mathbf{y})
+\]
+
+这个梯度形式与线性回归的梯度 $\frac{1}{m}\mathbf{X}^{\top}(\mathbf{X}\mathbf{w} - \mathbf{y})$ 惊人地相似——唯一的区别在于预测值的计算方式（sigmoid vs 线性）。
+
+\begin{mycode}{Python中的逻辑回归从零实现}
+\begin{lstlisting}[language=Python]
+import numpy as np
+
+np.random.seed(42)
+m, d = 200, 3
+X = np.random.randn(m, d)
+true_w = np.array([2.0, -1.0, 1.5])
+logits = X @ true_w
+probs = 1 / (1 + np.exp(-logits))
+y = (np.random.random(m) < probs).astype(float)
+
+# Sigmoid函数
+def sigmoid(z):
+    return 1 / (1 + np.exp(-np.clip(z, -500, 500)))
+
+# 交叉熵损失
+def bce_loss(w, X, y):
+    z = X @ w; y_hat = sigmoid(z)
+    eps = 1e-15
+    return -np.mean(y * np.log(y_hat + eps) + (1 - y) * np.log(1 - y_hat + eps))
+
+# 交叉熵梯度
+def bce_gradient(w, X, y):
+    z = X @ w; y_hat = sigmoid(z)
+    return X.T @ (y_hat - y) / len(y)
+
+# 梯度下降
+w = np.zeros(d)
+lr = 0.1
+for t in range(1000):
+    grad = bce_gradient(w, X, y)
+    w -= lr * grad
+    if t % 200 == 0:
+        print(f"Epoch {t:4d}, Loss: {bce_loss(w, X, y):.6f}")
+
+print(f"\n真实w: {true_w}")
+print(f"学习w: {w.round(3)}")
+
+# 准确率
+y_pred = (sigmoid(X @ w) >= 0.5).astype(float)
+accuracy = np.mean(y_pred == y)
+print(f"训练准确率: {accuracy:.2%}")
+\end{lstlisting}
+\end{mycode}
+
+\section{多分类：Softmax 回归}
+
+\subsection{模型定义}
+
+对于 $K$ 类分类问题（$K>2$），Softmax 回归（也称为多项逻辑回归）将逻辑回归推广到多类别。模型为每个类别学习一个权重向量 $\mathbf{w}_k\in\R^d$，输入 $\mathbf{x}$ 属于第 $k$ 类的概率为：
+
+\[
+P(y=k\mid\mathbf{x}) = \frac{\exp(\mathbf{w}_k^{\top}\mathbf{x})}{\sum_{j=1}^{K}\exp(\mathbf{w}_j^{\top}\mathbf{x})}
+\]
+
+其中 $\mathbf{W}=[\mathbf{w}_1,\mathbf{w}_2,\ldots,\mathbf{w}_K]\in\R^{d\times K}$ 是权重矩阵。Softmax 函数 $\operatorname{softmax}(\mathbf{z})_k = \frac{e^{z_k}}{\sum_j e^{z_j}}$ 将 $K$ 维实数向量 $\mathbf{z}=\mathbf{W}^{\top}\mathbf{x}$ 映射为概率分布。
+
+Softmax 的性质：
+\begin{itemize}
+    \item 输出为概率分布：$\sum_{k=1}^{K} \hat{y}_k = 1$，$\hat{y}_k\in[0,1]$
+    \item 平移不变性：$\operatorname{softmax}(\mathbf{z}+\mathbf{c}) = \operatorname{softmax}(\mathbf{z})$（$\mathbf{c}$ 所有分量相等）
+    \item 数值稳定性：实践中减去 $\max(z_k)$ 防止指数溢出
+    \item 当 $K=2$ 时，Softmax 回归等价于逻辑回归（参数过参数化）
+\end{itemize}
+
+\subsection{交叉熵损失}
+
+对于多分类问题，使用分类交叉熵损失（Categorical Cross-Entropy）。设真实标签的 one-hot 编码为 $\mathbf{y}^{(i)}\in\{0,1\}^K$，预测概率为 $\hat{\mathbf{y}}^{(i)}$：
+
+\[
+J(\mathbf{W}) = -\frac{1}{m}\sum_{i=1}^{m}\sum_{k=1}^{K} y_k^{(i)} \log \hat{y}_k^{(i)}
+\]
+
+由于 $\mathbf{y}^{(i)}$ 是 one-hot 向量，上式可简化为：
+
+\[
+J(\mathbf{W}) = -\frac{1}{m}\sum_{i=1}^{m} \log \hat{y}_{y^{(i)}}^{(i)}
+\]
+
+其中 $y^{(i)}$ 是第 $i$ 个样本的真实类别索引。这就是深度学习框架中常用的交叉熵损失。
+
+\begin{mycode}{Python中的Softmax回归实现}
+\begin{lstlisting}[language=Python]
+import numpy as np
+
+np.random.seed(42)
+m, d, K = 500, 4, 3  # 500样本, 4特征, 3类别
+
+X = np.random.randn(m, d)
+W_true = np.random.randn(d, K)
+logits_true = X @ W_true
+y = np.argmax(logits_true + 0.3 * np.random.randn(m, K), axis=1)
+
+def softmax(z):
+    z_max = np.max(z, axis=1, keepdims=True)
+    exp_z = np.exp(z - z_max)
+    return exp_z / np.sum(exp_z, axis=1, keepdims=True)
+
+def cross_entropy_loss(W, X, y, K):
+    z = X @ W; probs = softmax(z)
+    m = len(y)
+    eps = 1e-15
+    log_likelihood = -np.log(probs[np.arange(m), y] + eps)
+    return np.mean(log_likelihood)
+
+def cross_entropy_gradient(W, X, y, K):
+    z = X @ W; probs = softmax(z)
+    m = len(y)
+    y_onehot = np.eye(K)[y]
+    return X.T @ (probs - y_onehot) / m
+
+# 训练
+W = np.random.randn(d, K) * 0.1
+lr = 0.5
+for t in range(500):
+    grad = cross_entropy_gradient(W, X, y, K)
+    W -= lr * grad
+    if t % 100 == 0:
+        loss = cross_entropy_loss(W, X, y, K)
+        acc = np.mean(np.argmax(X @ W, axis=1) == y)
+        print(f"Epoch {t:3d}, Loss: {loss:.4f}, Acc: {acc:.2%}")
+
+print(f"\n最终准确率: {np.mean(np.argmax(X @ W, axis=1) == y):.2%}")
+\end{lstlisting}
+\end{mycode}
+
+\section{分类评估指标}
+
+\subsection{混淆矩阵}
+
+混淆矩阵是分类模型预测结果的 $K\times K$ 总结：
+
+对于二分类：
+\begin{itemize}
+    \item \textbf{TP（True Positive）}：正类样本被正确预测为正类
+    \item \textbf{TN（True Negative）}：负类样本被正确预测为负类
+    \item \textbf{FP（False Positive）}：负类样本被错误预测为正类（假阳性）
+    \item \textbf{FN（False Negative）}：正类样本被错误预测为负类（假阴性）
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    mycell/.style={rectangle, draw=black, minimum width=2.5cm, minimum height=1.2cm, align=center, font=\small},
+    myheader/.style={rectangle, draw=black, fill=blue!15, minimum width=2.5cm, minimum height=1cm, align=center, font=\small\bfseries},
+    mylabel/.style={font=\small}
+]
+    \node[myheader] at (0, 3) {预测为正};
+    \node[myheader] at (2.5, 3) {预测为负};
+    \node[myheader, fill=red!10] at (-2.5, 2) {实际为正};
+    \node[myheader, fill=red!10] at (-2.5, 0.8) {实际为负};
+
+    \node[mycell, fill=green!20] at (0, 2) {TP\\\small 真正例};
+    \node[mycell, fill=red!20] at (2.5, 2) {FN\\\small 假阴性};
+    \node[mycell, fill=red!20] at (0, 0.8) {FP\\\small 假阳性};
+    \node[mycell, fill=green!20] at (2.5, 0.8) {TN\\\small 真阴性};
+\end{tikzpicture}
+\caption{二分类混淆矩阵。对角线上是正确分类的样本（TP和TN），反对角线上是错误分类的样本（FP和FN）。}
+\label{fig:confusion-matrix}
+\end{figure}
+
+\subsection{准确率、精确率、召回率与F1分数}
+
+\textbf{准确率}是最直观的指标：
+
+\[
+\text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FP} + \text{FN}}
+\]
+
+在类别不平衡时（如正类仅占 $1\%$），准确率不再可靠——总是预测负类即可获得 $99\%$ 准确率。
+
+\textbf{精确率（Precision）}衡量预测为正的样本中有多少是真正的正类：
+
+\[
+\text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}
+\]
+
+\textbf{召回率（Recall）}衡量真正的正类中有多少被正确识别：
+
+\[
+\text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}
+\]
+
+\textbf{F1 分数}是精确率和召回率的调和平均：
+
+\[
+F_1 = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}
+\]
+
+\begin{myTheorem}{F1 分数与调和平均}
+调和平均赋予较小值更高的权重：若 Precision 为 $0.1$，Recall 为 $0.9$，则算术平均为 $0.5$，但 F1 仅为 $0.18$。这确保 F1 只有在精确率和召回率都高时才高。
+\end{myTheorem}
+
+\subsection{ROC 曲线与 AUC}
+
+逻辑回归输出的概率可以设置不同的阈值来调整分类决策。ROC 曲线（Receiver Operating Characteristic curve）描述了在不同阈值下，真阳性率（TPR=Recall）和假阳性率（FPR=FP/(FP+TN)）的权衡关系。
+
+\begin{itemize}
+    \item \textbf{AUC（Area Under Curve）}：ROC 曲线下的面积，取值范围 $[0,1]$。AUC 不依赖于阈值选择，是衡量模型排序能力的指标。
+    \item AUC = 1：完美分类器
+    \item AUC = 0.5：随机猜测
+    \item AUC < 0.5：比随机猜测还差
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    mycurve/.style={thick, smooth},
+    mylabel/.style={font=\small}
+]
+    \draw[->, >=stealth] (0, 0) -- (6, 0) node[right] {FPR (假阳性率)};
+    \draw[->, >=stealth] (0, 0) -- (0, 5) node[above] {TPR (真阳性率)};
+
+    % Diagonal (random)
+    \draw[gray, dashed] (0, 0) -- (5, 5);
+    \node[mylabel, gray] at (2, 1.5) {随机 (AUC=0.5)};
+
+    % Good ROC
+    \draw[mycurve, blue!70] (0, 0)
+        .. controls (0.3, 3) and (0.8, 4.5) .. (5, 5);
+    \node[mylabel, blue!70] at (2, 4.2) {较好模型};
+
+    % Excellent ROC
+    \draw[mycurve, red!70] (0, 0)
+        .. controls (0.05, 3.5) and (0.2, 4.8) .. (5, 5);
+    \node[mylabel, red!70] at (1, 4.8) {优秀模型};
+
+    \fill[blue!20, opacity=0.3] (0, 0)
+        .. controls (0.3, 3) and (0.8, 4.5) .. (5, 5) -- (5, 0) -- cycle;
+    \node[mylabel, blue!70] at (4.2, 2) {AUC};
+\end{tikzpicture}
+\caption{ROC 曲线示意图。曲线越靠近左上角，模型性能越好。AUC 是曲线下的面积。}
+\label{fig:roc}
+\end{figure}
+
+\section{多分类的评估指标}
+
+对于多分类问题，可以将评估指标推广：
+
+\begin{itemize}
+    \item \textbf{宏平均（Macro-averaging）}：对每个类别独立计算指标，然后取平均。每个类别权重相等，适合关注小类。
+    \item \textbf{微平均（Micro-averaging）}：合并所有类别的 TP/FP/FN/TN，然后计算指标。每个样本权重相等，适合关注大类。
+    \item \textbf{加权平均（Weighted-averaging）}：宏平均但按每个类别的样本数加权。
+\end{itemize}
+
+\section{类别不平衡问题}
+
+在实际应用中，类别不平衡（如欺诈检测中欺诈交易远少于正常交易）是常见挑战：
+
+\begin{itemize}
+    \item \textbf{重采样}：过采样少数类（如 SMOTE 算法合成新样本）或欠采样多数类
+    \item \textbf{类别权重}：在损失函数中为少数类赋予更高权重
+    \item \textbf{Focal Loss}：$L = -\alpha(1-\hat{y})^{\gamma}y\log\hat{y}$，减少易分类样本的权重，使模型专注于难分类样本
+    \item \textbf{阈值移动}：调整分类决策阈值来平衡精确率和召回率
+\end{itemize}
+
+\begin{mycode}{Python中的分类评估指标}
+\begin{lstlisting}[language=Python]
+import numpy as np
+from sklearn.metrics import (confusion_matrix, accuracy_score,
+    precision_score, recall_score, f1_score,
+    roc_auc_score, classification_report)
+
+np.random.seed(42)
+n = 500
+# 模拟预测：正类概率
+y_true = (np.random.random(n) > 0.7).astype(int)
+y_score = y_true * 0.7 + (1 - y_true) * 0.3 + 0.2 * np.random.randn(n)
+y_score = np.clip(y_score, 0.01, 0.99)
+y_pred = (y_score > 0.5).astype(int)
+
+print("混淆矩阵:")
+print(confusion_matrix(y_true, y_pred))
+
+print(f"\n准确率: {accuracy_score(y_true, y_pred):.3f}")
+print(f"精确率: {precision_score(y_true, y_pred):.3f}")
+print(f"召回率: {recall_score(y_true, y_pred):.3f}")
+print(f"F1分数: {f1_score(y_true, y_pred):.3f}")
+print(f"AUC-ROC: {roc_auc_score(y_true, y_score):.3f}")
+
+print("\n详细报告:")
+print(classification_report(y_true, y_pred,
+      target_names=['负类', '正类']))
+\end{lstlisting}
+\end{mycode}
+
+\section{逻辑回归与深度学习}
+
+逻辑回归可以视为单层神经网络（不含隐藏层）使用 sigmoid 激活函数。它在深度学习中扮演两个重要角色：
+
+\begin{itemize}
+    \item \textbf{最后一层（二分类）}：在神经网络末端使用 sigmoid 激活 + BCE 损失进行二分类。
+    \item \textbf{最后一层（多分类）}：在神经网络末端使用 softmax 激活 + 交叉熵损失进行多分类。
+    \item \textbf{基础构建块}：理解逻辑回归的损失函数和梯度推导，有助于理解更复杂网络的反向传播。
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    mynode/.style={circle, draw=blue!60, fill=blue!8, minimum size=0.7cm, font=\small},
+    myedge/.style={->, >=stealth, thick},
+    mylabel/.style={font=\small}
+]
+    % Input layer
+    \node[mynode] (x1) at (0, 1.5) {$x_1$};
+    \node[mynode] (x2) at (0, 0) {$x_2$};
+    \node[mynode] (x3) at (0, -1.5) {$x_3$};
+
+    % Output node
+    \node[mynode, fill=red!8, draw=red!60] (y) at (4, 0) {$\hat{y}$};
+
+    % Weights
+    \draw[myedge] (x1) -- (y) node[midway, above, mylabel] {$w_1$};
+    \draw[myedge] (x2) -- (y) node[midway, above, mylabel] {$w_2$};
+    \draw[myedge] (x3) -- (y) node[midway, below, mylabel] {$w_3$};
+
+    % Labels
+    \node[mylabel] at (0, 2.5) {输入层};
+    \node[mylabel] at (4, 1.2) {输出层};
+
+    % Formula
+    \node[mylabel] at (2, -2.5) {$\hat{y} = \sigma(\sum_i w_i x_i + b)$};
+    \node[mylabel] at (2, -3.0) {$J = -y\log\hat{y} - (1-y)\log(1-\hat{y})$};
+\end{tikzpicture}
+\caption{逻辑回归作为单层神经网络。输入特征通过加权求和后经 sigmoid 激活，输出分类概率。}
+\label{fig:logreg-nn}
+\end{figure}
+
+\section{本章小结}
+
+本章介绍了逻辑回归与分类的核心内容：
+\begin{itemize}
+    \item 逻辑回归使用 sigmoid 函数将线性输出映射为概率
+    \item 交叉熵损失从最大似然估计自然导出，是分类任务的标准损失
+    \item Softmax 回归将逻辑回归推广到多分类
+    \item 混淆矩阵、精确率、召回率、F1 和 ROC/AUC 是分类模型的核心评估指标
+    \item 类别不平衡问题需要特殊处理方法
+    \item 逻辑回归是神经网络的基本构建块
+\end{itemize}

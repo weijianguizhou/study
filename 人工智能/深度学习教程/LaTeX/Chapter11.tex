@@ -1,0 +1,588 @@
+
+\chapter{循环神经网络与注意力机制}
+
+\intro{CNN擅长处理空间模式，而序列数据则需要循环神经网络（RNN）来捕捉时间依赖性。本章从基础RNN出发，深入长短期记忆网络（LSTM）和门控循环单元（GRU）的精妙门控设计，最终引出注意力机制——它彻底改变了对序列建模的方式，并为下一章的Transformer架构铺平了道路。}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{序列建模的核心挑战}
+
+\subsection{为什么需要特殊的网络结构}
+
+文本、语音、视频、时间序列等数据具有天然的\textbf{顺序依赖}关系——当前时刻的输出不仅依赖于当前输入，还依赖于历史信息。全连接网络和CNN难以处理这种可变长的时间依赖：
+
+\begin{itemize}
+    \item \textbf{变长输入}——序列长度不固定，无法用固定大小的输入层
+    \item \textbf{长程依赖}——句子开头的主语可能影响100个词后的动词形态
+    \item \textbf{参数共享}——同样的模式可能在不同位置出现（如在任意位置的"not"都翻转句意）
+\end{itemize}
+
+\subsection{RNN的基本思想}
+
+RNN的核心是一个\textbf{循环连接}——隐藏状态 $\mathbf{h}_t$ 既依赖于当前输入 $\mathbf{x}_t$，也依赖于前一步的隐藏状态 $\mathbf{h}_{t-1}$：
+
+\[
+\mathbf{h}_t = \tanh(\mathbf{W}_{xh}\mathbf{x}_t + \mathbf{W}_{hh}\mathbf{h}_{t-1} + \mathbf{b}_h)
+\]
+
+这一简单的递归定义赋予了RNN在理论上处理任意长序列的能力——每个时间步的信息都通过 $\mathbf{h}_t$ 传递到下一步。
+
+\begin{figure}[H]\centering
+\begin{tikzpicture}[
+    mynode/.style={rectangle, draw=blue!60, thick, fill=blue!5, minimum size=0.8cm, font=\footnotesize, rounded corners=2pt},
+    myarrow/.style={->, >=stealth, thick},
+    node distance=1.5cm,
+]
+% Unrolled in time
+\node[mynode] (h0) at (0,0) {$\mathbf{h}_0$};
+\node[mynode] (h1) at (2.5,0) {$\mathbf{h}_1$};
+\node[mynode] (h2) at (5.0,0) {$\mathbf{h}_2$};
+\node[mynode] (h3) at (7.5,0) {$\mathbf{h}_3$};
+\node[] at (9.5,0) {$\cdots$};
+
+\node[mynode, fill=green!10, draw=green!60!black] (x1) at (2.5,-1.5) {$\mathbf{x}_1$};
+\node[mynode, fill=green!10, draw=green!60!black] (x2) at (5.0,-1.5) {$\mathbf{x}_2$};
+\node[mynode, fill=green!10, draw=green!60!black] (x3) at (7.5,-1.5) {$\mathbf{x}_3$};
+
+\node[mynode, fill=orange!10, draw=orange!80] (y1) at (2.5,1.5) {$\mathbf{y}_1$};
+\node[mynode, fill=orange!10, draw=orange!80] (y2) at (5.0,1.5) {$\mathbf{y}_2$};
+\node[mynode, fill=orange!10, draw=orange!80] (y3) at (7.5,1.5) {$\mathbf{y}_3$};
+
+\draw[myarrow] (h0) -- (h1);
+\draw[myarrow] (h1) -- (h2);
+\draw[myarrow] (h2) -- (h3);
+\draw[myarrow] (x1) -- (h1);
+\draw[myarrow] (x2) -- (h2);
+\draw[myarrow] (x3) -- (h3);
+\draw[myarrow] (h1) -- (y1);
+\draw[myarrow] (h2) -- (y2);
+\draw[myarrow] (h3) -- (y3);
+
+% Shared weights annotation
+\draw[decorate, decoration={brace, mirror, raise=2pt}, very thick, red!50]
+    (h1.south west) -- (h3.south east)
+    node[midway, below=0.3cm, font=\footnotesize, red!70!black] {共享参数 $\mathbf{W}_{xh}, \mathbf{W}_{hh}, \mathbf{W}_{hy}$};
+\end{tikzpicture}
+\caption{RNN在时间维度上的展开。每个时间步使用相同的参数，隐藏状态$\mathbf{h}_t$在时间轴上进行传递，携带历史信息}
+\label{fig:rnn-unrolled}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{循环神经网络——前向传播与反向传播}
+
+\subsection{前向传播}
+
+\textbf{Vanilla RNN}的前向传播公式：
+
+\begin{myformula}
+\begin{aligned}
+\mathbf{h}_t &= \tanh(\mathbf{W}_{xh}\mathbf{x}_t + \mathbf{W}_{hh}\mathbf{h}_{t-1} + \mathbf{b}_h) \\
+\hat{\mathbf{y}}_t &= \text{softmax}(\mathbf{W}_{hy}\mathbf{h}_t + \mathbf{b}_y)
+\end{aligned}
+\end{myformula}
+
+其中 $\mathbf{W}_{xh} \in \R^{d_h \times d_x}$，$\mathbf{W}_{hh} \in \R^{d_h \times d_h}$，$\mathbf{W}_{hy} \in \R^{d_y \times d_h}$。所有时间步共享这三组参数。
+
+\subsection{时间反向传播（BPTT）}
+
+RNN的梯度需要通过\textbf{时间反向传播}（Backpropagation Through Time, BPTT）来计算。将RNN在时间上展开为深度为 $T$ 的前馈网络后，应用标准反向传播。
+
+关键是隐藏状态对前一隐藏状态的梯度：
+
+\[
+\frac{\partial \mathbf{h}_t}{\partial \mathbf{h}_{t-1}} = \mathbf{W}_{hh}^{\top}\,\text{diag}(\tanh'(\mathbf{z}_t))
+\]
+
+式中 $\tanh'$ 的值范围在 $[0, 1]$ 内，对于大多输入最终趋近于0。从时间步 $t$ 到时间步 $k$（$k \ll t$）的梯度需经过 $t-k$ 次连乘：
+
+\[
+\frac{\partial \mathcal{L}_t}{\partial \mathbf{h}_k} = \frac{\partial \mathcal{L}_t}{\partial \mathbf{h}_t} \prod_{i=k+1}^{t} \frac{\partial \mathbf{h}_i}{\partial \mathbf{h}_{i-1}}
+\]
+
+这揭示了RNN训练的核心困难：当 $\|\frac{\partial \mathbf{h}_i}{\partial \mathbf{h}_{i-1}}\| < 1$ 时梯度\textbf{指数级衰减}（消失），模型无法捕捉长程依赖；当范数大于1时梯度\textbf{指数级增长}（爆炸）。
+
+\begin{myTheorem}{RNN中的梯度消失与爆炸}
+对于Vanilla RNN，隐藏状态之间的雅可比矩阵 $\frac{\partial \mathbf{h}_t}{\partial \mathbf{h}_{t-1}}$ 的特征值若持续小于1，$t-k$ 步后的梯度呈指数衰减。$\tanh$ 激活函数的导数最大为1（在输入为0处），实际中大多数输入落在饱和区导致导数趋近于0。
+\end{myTheorem}
+
+\subsection{RNN的变体}
+
+\textbf{多层RNN}：将多个RNN层堆叠，下层的隐藏状态作为上层的输入序列：
+
+\[
+\mathbf{h}_t^{(l)} = \tanh(\mathbf{W}_{hh}^{(l)}\mathbf{h}_{t-1}^{(l)} + \mathbf{W}_{xh}^{(l)}\mathbf{h}_t^{(l-1)} + \mathbf{b}_h^{(l)})
+\]
+
+\textbf{双向RNN}：同时从前向和后向两个方向处理序列，对于句子中的单词可以同时获取其左右的上下文信息：
+
+\[
+\mathbf{h}_t = \left[\overrightarrow{\mathbf{h}}_t; \overleftarrow{\mathbf{h}}_t\right]
+\]
+
+双向RNN在自然语言处理中广泛使用（如命名实体识别、词性标注），因为某位置的标注通常同时依赖左右上下文。但双向RNN不适用于自回归生成任务（生成时未来的token不可见）。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{LSTM——长短期记忆网络}
+
+1997年由Hochreiter和Schmidhuber提出的LSTM通过精心设计的\textbf{门控机制}从根本上解决了RNN的梯度消失问题。
+
+\subsection{LSTM的核心思想——细胞状态}
+
+LSTM引入了\textbf{细胞状态}（cell state）$\mathbf{c}_t$——一条贯穿时间步的``传送带''，信息可以在上面畅通无阻地流动：
+
+\begin{figure}[H]\centering
+\begin{tikzpicture}[
+    myblock/.style={rectangle, draw=blue!60, thick, fill=blue!5, minimum width=1.6cm, minimum height=0.7cm, font=\footnotesize, rounded corners=2pt},
+    mynode/.style={rectangle, draw=orange!80, thick, fill=orange!10, minimum size=0.7cm},
+    mygate/.style={rectangle, draw=red!60, thick, fill=red!5, minimum width=1.2cm, minimum height=0.5cm, font=\footnotesize\ttfamily, rounded corners=2pt},
+    myarrow/.style={->, >=stealth, thick},
+    mycell/.style={->, >=stealth, very thick, blue!60},
+    node distance=1.0cm,
+]
+% Cell state highway
+\draw[mycell] (-1,1.5) -- (11,1.5) node[midway, above, font=\footnotesize, blue!70] {细胞状态 $\mathbf{c}_t$};
+
+% Gates
+\node[mygate, fill=red!10] (forget) at (0.5, 1.5) {$f_t$ 遗忘门};
+\node[mygate, fill=green!10, draw=green!60!black] (input-gate) at (4.5, 1.5) {$i_t$ 输入门};
+\node[circle, draw=orange!80, thick, fill=orange!10, minimum size=0.4cm] (add1) at (2.5,1.5) {$+$};
+\node[circle, draw=orange!80, thick, fill=orange!10, minimum size=0.4cm] (add2) at (6.5,1.5) {$+$};
+\node[mygate, fill=violet!10, draw=violet!60!black] (output-gate) at (8.5,1.5) {$o_t$ 输出门};
+
+% Hidden state
+\node[mynode, draw=orange!80, fill=orange!10] (ht-1) at (0,-0.5) {$\mathbf{h}_{t-1}$};
+\node[myblock] (candidate) at (3,-0.5) {$\tilde{\mathbf{c}}_t$};
+
+\draw[myarrow] (ht-1) -- (forget);
+\draw[myarrow] (ht-1) -- (input-gate);
+\draw[myarrow] (ht-1) -- (output-gate);
+\draw[myarrow] (ht-1) -- (candidate);
+
+\node[mynode, draw=orange!80, fill=orange!10] (ht) at (10.5,-0.5) {$\mathbf{h}_t$};
+
+\node[font=\tiny] at (3,-1.2) {$\tanh$};
+\draw[myarrow] (candidate) -- (add2);
+\draw[myarrow] (add1) -- (add2);
+\draw[myarrow] (add2) -- (output-gate);
+\end{tikzpicture}
+\caption{LSTM的内部结构概览。细胞状态$\mathbf{c}_t$如传送带贯穿各时间步，三个门控（遗忘、输入、输出）精确控制信息的选择性记忆与遗忘}
+\label{fig:lstm-overview}
+\end{figure}
+
+\subsection{四个门控的精确数学公式}
+
+\begin{myformula}
+\begin{aligned}
+\mathbf{f}_t &= \sigma(\mathbf{W}_{xf}\mathbf{x}_t + \mathbf{W}_{hf}\mathbf{h}_{t-1} + \mathbf{b}_f) \quad \text{（遗忘门——决定丢弃什么）}\\
+\mathbf{i}_t &= \sigma(\mathbf{W}_{xi}\mathbf{x}_t + \mathbf{W}_{hi}\mathbf{h}_{t-1} + \mathbf{b}_i) \quad \text{（输入门——决定存储什么）}\\[4pt]
+\tilde{\mathbf{c}}_t &= \tanh(\mathbf{W}_{xc}\mathbf{x}_t + \mathbf{W}_{hc}\mathbf{h}_{t-1} + \mathbf{b}_c) \quad \text{（候选记忆——新信息）}\\[4pt]
+\mathbf{c}_t &= \mathbf{f}_t \odot \mathbf{c}_{t-1} + \mathbf{i}_t \odot \tilde{\mathbf{c}}_t \quad \text{（细胞状态更新）}\\[4pt]
+\mathbf{o}_t &= \sigma(\mathbf{W}_{xo}\mathbf{x}_t + \mathbf{W}_{ho}\mathbf{h}_{t-1} + \mathbf{b}_o) \quad \text{（输出门——决定输出什么）}\\[4pt]
+\mathbf{h}_t &= \mathbf{o}_t \odot \tanh(\mathbf{c}_t) \quad \text{（隐藏状态输出）}
+\end{aligned}
+\end{myformula}
+
+其中 $\sigma$ 是Sigmoid函数（输出在0到1之间，充当门控的``开关''），$\odot$ 表示逐元素乘法。
+
+\subsection{梯度流动——为什么LSTM有效}
+
+细胞状态 $\mathbf{c}_t$ 的递归更新不含Sigmoid或Tanh的非线性（门控是对 $\mathbf{c}_{t-1}$ 的逐元素缩放，而非复合函数）：
+
+\[
+\frac{\partial \mathbf{c}_t}{\partial \mathbf{c}_{t-1}} = \mathbf{f}_t
+\]
+
+梯度在细胞状态通路中传播时，每一时间步只乘以遗忘门的输出 $\mathbf{f}_t$（$0 \sim 1$之间的逐元素值）。如果 $\mathbf{f}_t \approx 1$，梯度几乎无衰减地传播。这正是LSTM能够捕捉数百步甚至更长距离依赖的根本原因——细胞状态提供了一条\textbf{梯度高速公路}，类比于ResNet中的跳跃连接。
+
+\begin{figure}[H]\centering
+\begin{tikzpicture}[
+    mynode/.style={rectangle, draw=orange!80, thick, fill=orange!5, minimum width=1.5cm, minimum height=0.7cm, font=\footnotesize, rounded corners=2pt},
+    myarrow/.style={->, >=stealth, thick},
+    node distance=2.0cm,
+]
+\node[mynode] (ct-1) at (0,1.5) {$\mathbf{c}_{t-1}$};
+\node[circle, draw=green!60!black, thick, fill=green!10, minimum size=0.5cm, font=\tiny] (mul) at (2.5,1.5) {$\times$};
+\node[circle, draw=orange!80, thick, fill=orange!10, minimum size=0.5cm] (add) at (5,1.5) {$+$};
+\node[mynode] (ct) at (7.5,1.5) {$\mathbf{c}_t$};
+
+\node[mynode, fill=red!10, draw=red!60] (ft) at (2.5,3.0) {$\mathbf{f}_t$};
+\node[mynode, fill=green!10, draw=green!60!black] (it) at (5,3.0) {$\mathbf{i}_t$};
+\node[mynode] (c-tilde) at (5,0.0) {$\tilde{\mathbf{c}}_t$};
+
+\draw[myarrow] (ct-1) -- (mul);
+\draw[myarrow] (ft) -- (mul) node[midway, right, font=\tiny] {遗忘};
+\draw[myarrow] (mul) -- (add) node[midway, above, font=\tiny] {$\mathbf{f}_t\odot\mathbf{c}_{t-1}$};
+\draw[myarrow] (it) -- (add) node[midway, right, font=\tiny] {输入};
+\draw[myarrow] (c-tilde) -- (add) node[midway, right, font=\tiny] {新信息};
+\draw[myarrow] (add) -- (ct);
+
+\node[font=\footnotesize, red!70!black] at (2.5,4.0) {$\frac{\partial\mathbf{c}_t}{\partial\mathbf{c}_{t-1}} = \mathbf{f}_t$};
+\node[font=\footnotesize, red!70!black] at (2.5,3.5) {无乘法嵌套！};
+
+\end{tikzpicture}
+\caption{LSTM细胞状态更新的关键在于：梯度在$\mathbf{c}_t$通路上只需乘以遗忘门$\mathbf{f}_t$（而非复合函数的导数），避免了梯度消失}
+\label{fig:lstm-gradient}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{GRU——门控循环单元}
+
+GRU（Gated Recurrent Unit）是LSTM的精简版，将遗忘门和输入门合并为一个\textbf{更新门}，并将细胞状态和隐藏状态合并：
+
+\begin{myformula}
+\begin{aligned}
+\mathbf{z}_t &= \sigma(\mathbf{W}_{xz}\mathbf{x}_t + \mathbf{W}_{hz}\mathbf{h}_{t-1} + \mathbf{b}_z) \quad \text{（更新门——控制历史保留 vs 新信息引入）}\\
+\mathbf{r}_t &= \sigma(\mathbf{W}_{xr}\mathbf{x}_t + \mathbf{W}_{hr}\mathbf{h}_{t-1} + \mathbf{b}_r) \quad \text{（重置门——控制忽略多少历史）}\\[4pt]
+\tilde{\mathbf{h}}_t &= \tanh(\mathbf{W}_{xh}\mathbf{x}_t + \mathbf{W}_{hh}(\mathbf{r}_t \odot \mathbf{h}_{t-1}) + \mathbf{b}_h) \quad \text{（候选隐藏状态）}\\[4pt]
+\mathbf{h}_t &= (1 - \mathbf{z}_t) \odot \mathbf{h}_{t-1} + \mathbf{z}_t \odot \tilde{\mathbf{h}}_t \quad \text{（最终隐藏状态）}
+\end{aligned}
+\end{myformula}
+
+GRU仅有两个门（更新门和重置门），参数量比LSTM少约25\%，在实践中两者的性能通常相当。更新门 $\mathbf{z}_t$ 同时扮演了LSTM中遗忘门和输入门的角色。当 $\mathbf{z}_t = 0$ 时，完全保留历史；当 $\mathbf{z}_t = 1$ 时，完全用新信息替换历史。
+
+\begin{mycode}{PyTorch 中的 LSTM 与 GRU}
+\begin{lstlisting}[language=Python]
+import torch
+import torch.nn as nn
+
+# ========== LSTM ==========
+lstm = nn.LSTM(
+    input_size=128,      # 输入特征维度
+    hidden_size=256,     # 隐藏状态维度
+    num_layers=2,        # 堆叠层数
+    batch_first=True,    # 输入shape: (batch, seq, features)
+    bidirectional=False, # 是否双向
+    dropout=0.3          # 层间Dropout
+)
+
+# 输入: (batch_size, seq_len, input_size)
+x = torch.randn(32, 50, 128)
+
+# output: (batch, seq, hidden*directions)
+# h_n: (num_layers*directions, batch, hidden)
+# c_n: (num_layers*directions, batch, hidden)
+output, (h_n, c_n) = lstm(x)
+print(f"LSTM output: {output.shape}")   # (32, 50, 256)
+print(f"LSTM h_n: {h_n.shape}")         # (2, 32, 256)
+print(f"LSTM c_n: {c_n.shape}")         # (2, 32, 256)
+
+# ========== GRU ==========
+gru = nn.GRU(
+    input_size=128,
+    hidden_size=256,
+    num_layers=2,
+    batch_first=True,
+    dropout=0.3
+)
+
+output, h_n = gru(x)
+print(f"GRU output: {output.shape}")    # (32, 50, 256)
+print(f"GRU h_n: {h_n.shape}")          # (2, 32, 256)
+
+# ========== 双向 LSTM ==========
+bilstm = nn.LSTM(128, 256, num_layers=2,
+                 batch_first=True, bidirectional=True)
+output, (h_n, c_n) = bilstm(x)
+print(f"BiLSTM output: {output.shape}") # (32, 50, 512)
+
+# ========== 手动LSTM（理解原理）==========
+class LSTMCell(nn.Module):
+    def __init__(self, input_size, hidden_size):
+        super().__init__()
+        # 四个门控的线性变换合并为一个大矩阵乘法
+        self.W = nn.Linear(input_size + hidden_size,
+                           4 * hidden_size)
+
+    def forward(self, x, state):
+        h_prev, c_prev = state
+        combined = torch.cat([x, h_prev], dim=-1)
+        gates = self.W(combined)
+
+        # 拆分为四个门
+        f, i, g, o = gates.chunk(4, dim=-1)
+
+        f = torch.sigmoid(f)   # 遗忘门
+        i = torch.sigmoid(i)   # 输入门
+        g = torch.tanh(g)      # 候选记忆
+        o = torch.sigmoid(o)   # 输出门
+
+        c = f * c_prev + i * g
+        h = o * torch.tanh(c)
+
+        return h, (h, c)
+
+# 测试
+cell = LSTMCell(128, 256)
+x = torch.randn(4, 128)
+h0 = torch.zeros(4, 256)
+c0 = torch.zeros(4, 256)
+h, (hn, cn) = cell(x, (h0, c0))
+print(f"Manual LSTM output: {h.shape}")
+\end{lstlisting}
+\end{mycode}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{序列到序列模型（Seq2Seq）}
+
+Seq2Seq模型将变长输入序列映射为变长输出序列，由\textbf{编码器}和\textbf{解码器}两个RNN组成。
+
+\begin{figure}[H]\centering
+\begin{tikzpicture}[
+    mynode/.style={rectangle, draw=blue!60, thick, fill=blue!5, minimum size=0.7cm, font=\footnotesize, rounded corners=2pt},
+    myarrow/.style={->, >=stealth, thick},
+]
+% Encoder
+\node[mynode] (e1) at (0,0) {$h_1^e$};
+\node[mynode] (e2) at (1.5,0) {$h_2^e$};
+\node[mynode] (e3) at (3.0,0) {$h_3^e$};
+\node at (4.2,0) {$\cdots$};
+\node[mynode] (en) at (5.5,0) {$h_T^e$};
+
+\node[mynode, fill=green!10, draw=green!60!black] (x1) at (0,-1.5) {我};
+\node[mynode, fill=green!10, draw=green!60!black] (x2) at (1.5,-1.5) {爱};
+\node[mynode, fill=green!10, draw=green!60!black] (x3) at (3.0,-1.5) {深度};
+\node[mynode, fill=green!10, draw=green!60!black] (xn) at (5.5,-1.5) {学习};
+
+\draw[myarrow] (x1) -- (e1);
+\draw[myarrow] (x2) -- (e2);
+\draw[myarrow] (x3) -- (e3);
+\draw[myarrow] (xn) -- (en);
+\draw[myarrow] (e1) -- (e2);
+\draw[myarrow] (e2) -- (e3);
+\draw[myarrow] (e3) -- (en);
+
+% Context vector
+\draw[myarrow, very thick, blue!70] (en.east) -- (7.5,0) node[midway, above, font=\footnotesize, blue!70] {$\mathbf{c}$（上下文向量）};
+
+% Decoder
+\node[mynode, fill=orange!10, draw=orange!80] (d1) at (9,0) {$s_1$};
+\node[mynode, fill=orange!10, draw=orange!80] (d2) at (10.5,0) {$s_2$};
+\node[mynode, fill=orange!10, draw=orange!80] (dm) at (12.0,0) {$s_M$};
+
+\node[mynode, fill=red!10, draw=red!80] (y0) at (9,-1.5) {\texttt{<sos>}};
+\node[mynode, fill=red!10, draw=red!80] (y1) at (10.5,-1.5) {I};
+\node[mynode, fill=red!10, draw=red!80] (ym) at (12.0,-1.5) {love};
+
+\draw[myarrow] (y0) -- (d1);
+\draw[myarrow] (y1) -- (d2);
+\draw[myarrow] (d1) -- (d2);
+\draw[myarrow] (d2) -- (dm);
+\draw[myarrow] (d1) -- (y1);
+\draw[myarrow] (d2) -- (ym);
+
+\node[font=\small\bfseries, blue!70] at (2.75,0.8) {编码器};
+\node[font=\small\bfseries, orange!80] at (10.5,0.8) {解码器};
+
+\end{tikzpicture}
+\caption{Seq2Seq模型。编码器将输入序列压缩为固定长度的上下文向量$\mathbf{c}$，解码器根据$\mathbf{c}$自回归地生成输出序列}
+\label{fig:seq2seq}
+\end{figure}
+
+\begin{myTheorem}{Seq2Seq的信息瓶颈}
+基础Seq2Seq模型将整个输入序列压缩为一个固定长度的上下文向量 $\mathbf{c}$。当输入序列较长时，这一瓶颈严重限制了模型对长输入的处理能力——这就是注意力机制被引入的动机。
+\end{myTheorem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{注意力机制——从瓶颈到动态加权}
+
+\subsection{Bahdanau注意力（2015年）}
+
+Bahdanau等人提出的注意力机制允许解码器在每一个生成步骤\textbf{动态地关注输入序列中的不同位置}，而非被迫使用固定的上下文向量：
+
+\[
+\mathbf{c}_t = \sum_{j=1}^{T} \alpha_{tj}\,\mathbf{h}_j^e
+\]
+
+其中注意力权重 $\alpha_{tj}$ 经Softmax归一化，表示了在第 $t$ 步解码时，编码器第 $j$ 个位置的重要性：
+
+\[
+e_{tj} = \mathbf{v}_a^{\top}\tanh(\mathbf{W}_a\mathbf{s}_{t-1} + \mathbf{U}_a\mathbf{h}_j^e), \quad
+\alpha_{tj} = \frac{\exp(e_{tj})}{\sum_{k=1}^{T}\exp(e_{tk})}
+\]
+
+这里 $\mathbf{s}_{t-1}$ 是解码器的前一步隐藏状态，$\mathbf{h}_j^e$ 是编码器第 $j$ 步的隐藏状态。注意力机制通过\textbf{加性注意力}（additive attention）计算查询（query）和键（key）之间的匹配分数。
+
+\begin{figure}[H]\centering
+\begin{tikzpicture}[
+    mynode/.style={rectangle, draw=blue!60, thick, fill=blue!5, minimum size=0.8cm, font=\footnotesize, rounded corners=2pt},
+    myarrow/.style={->, >=stealth, thick},
+    node distance=1.2cm,
+]
+% Encoder outputs
+\node[mynode] (h1) at (0,2.5) {$\mathbf{h}_1^e$};
+\node[mynode] (h2) at (1.5,2.5) {$\mathbf{h}_2^e$};
+\node[mynode] (h3) at (3.0,2.5) {$\mathbf{h}_3^e$};
+\node[mynode] (h4) at (4.5,2.5) {$\mathbf{h}_4^e$};
+
+% Attention distribution
+\node[font=\small] at (2.25,1.2) {$\alpha_{t1}\quad\alpha_{t2}\quad\alpha_{t3}\quad\alpha_{t4}$};
+
+\draw[myarrow, red!60, opacity=0.3] (0,2.5) -- (0,1.5);
+\draw[myarrow, red!60, opacity=0.7] (1.5,2.5) -- (1.5,1.5);
+\draw[myarrow, red!60, opacity=0.9] (3.0,2.5) -- (3.0,1.5);
+\draw[myarrow, red!60, opacity=0.4] (4.5,2.5) -- (4.5,1.5);
+
+\draw[myarrow, blue!70, very thick] (0,1.5) -- (2.25,0);
+\draw[myarrow, blue!70, very thick] (1.5,1.5) -- (2.25,0);
+\draw[myarrow, blue!70, very thick] (3.0,1.5) -- (2.25,0);
+\draw[myarrow, blue!70, very thick] (4.5,1.5) -- (2.25,0);
+
+% Context
+\node[mynode, fill=blue!20] (ctx) at (2.25,0) {$\mathbf{c}_t = \sum\alpha_{tj}\mathbf{h}_j^e$};
+
+% Decoder
+\node[mynode, fill=orange!10, draw=orange!80] (st-1) at (5.5,0) {$\mathbf{s}_{t-1}$};
+
+\draw[myarrow] (st-1) -- (ctx);
+\draw[myarrow, dashed, gray] (st-1) -- (7.0,-0.8) node[font=\footnotesize] {用于计算 $\alpha_{tj}$};
+
+\node[font=\footnotesize, red!70!black] at (2.25,3.3) {软注意力：加权平均而非硬选择};
+\end{tikzpicture}
+\caption{Bahdanau注意力机制的示意图。解码器在每个时间步根据前一步状态$\mathbf{s}_{t-1}$动态计算编码器各位置的权重，生成加权的上下文向量$\mathbf{c}_t$}
+\label{fig:bahdanau-attention}
+\end{figure}
+
+\subsection{Luong注意力——三种评分方式}
+
+Luong等人提出了更简洁的注意力机制，并系统对比了三种评分函数：
+
+\begin{itemize}
+    \item \textbf{点积}（dot）：$\text{score}(\mathbf{s}_t, \mathbf{h}_j) = \mathbf{s}_t^{\top}\mathbf{h}_j$
+    \item \textbf{通用}（general）：$\text{score}(\mathbf{s}_t, \mathbf{h}_j) = \mathbf{s}_t^{\top}\mathbf{W}_a\mathbf{h}_j$
+    \item \textbf{拼接}（concat）：$\text{score}(\mathbf{s}_t, \mathbf{h}_j) = \mathbf{v}_a^{\top}\tanh(\mathbf{W}_a[\mathbf{s}_t; \mathbf{h}_j])$
+\end{itemize}
+
+\subsection{缩放点积注意力——通往Transformer的桥梁}
+
+当向量维度较大时，点积的结果会很大——因为点积值随维度 $d$ 线性增长，导致Softmax进入梯度极小的区域。解决方案是除以 $\sqrt{d}$：
+
+\[
+\text{Attention}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) = \text{softmax}\!\left(\frac{\mathbf{Q}\mathbf{K}^{\top}}{\sqrt{d_k}}\right)\mathbf{V}
+\]
+
+这一缩放因子是Transformer中注意力机制的关键设计。在 $d_k$ 维度下，假设查询和键的每个分量是独立的零均值单位方差随机变量，点积的均值为0，方差为 $d_k$。除以 $\sqrt{d_k}$ 将方差控制为1。
+
+\begin{mycode}{注意力机制的 PyTorch 实现}
+\begin{lstlisting}[language=Python]
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import math
+
+class BahdanauAttention(nn.Module):
+    """Bahdanau 加性注意力"""
+    def __init__(self, enc_hidden, dec_hidden, attn_dim):
+        super().__init__()
+        self.W = nn.Linear(dec_hidden, attn_dim, bias=False)
+        self.U = nn.Linear(enc_hidden, attn_dim, bias=False)
+        self.v = nn.Linear(attn_dim, 1, bias=False)
+
+    def forward(self, decoder_state, encoder_outputs):
+        """
+        decoder_state: (batch, dec_hidden)
+        encoder_outputs: (batch, seq_len, enc_hidden)
+        """
+        # (batch, attn_dim) -> (batch, 1, attn_dim)
+        dec_proj = self.W(decoder_state).unsqueeze(1)
+        # (batch, seq_len, attn_dim)
+        enc_proj = self.U(encoder_outputs)
+
+        # (batch, seq_len, 1)
+        scores = self.v(torch.tanh(dec_proj + enc_proj))
+        scores = scores.squeeze(-1)
+
+        attn_weights = F.softmax(scores, dim=-1)  # (batch, seq_len)
+
+        # (batch, enc_hidden)
+        context = torch.bmm(
+            attn_weights.unsqueeze(1),
+            encoder_outputs
+        ).squeeze(1)
+        return context, attn_weights
+
+# ========== 缩放点积注意力 ==========
+def scaled_dot_product_attention(Q, K, V, mask=None):
+    """
+    Q: (batch, ..., seq_len, d_k)
+    K: (batch, ..., seq_len, d_k)
+    V: (batch, ..., seq_len, d_v)
+    """
+    d_k = Q.size(-1)
+    scores = Q @ K.transpose(-2, -1) / math.sqrt(d_k)
+
+    if mask is not None:
+        scores = scores.masked_fill(mask == 0, -1e9)
+
+    attn = F.softmax(scores, dim=-1)
+    output = attn @ V
+    return output, attn
+
+# 测试
+batch_size, seq_len, d_k, d_v = 4, 10, 64, 64
+Q = torch.randn(batch_size, seq_len, d_k)
+K = torch.randn(batch_size, seq_len, d_k)
+V = torch.randn(batch_size, seq_len, d_v)
+
+output, attn_weights = scaled_dot_product_attention(Q, K, V)
+print(f"Scaled dot-product attention:")
+print(f"  Output: {output.shape}")
+print(f"  Weights: {attn_weights.shape}")
+\end{lstlisting}
+\end{mycode}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{自注意力——序列内部的注意力}
+
+\textbf{自注意力}（Self-Attention）是注意力机制的一种特殊形式：查询 $\mathbf{Q}$、键 $\mathbf{K}$ 和值 $\mathbf{V}$ 都来自\textbf{同一序列}。这意味着序列中的每个位置都关注序列中的所有其他位置（包括自身），从而在单层内建立全局依赖。
+
+\begin{figure}[H]\centering
+\begin{tikzpicture}[
+    mynode/.style={rectangle, draw=blue!60, thick, fill=blue!5, minimum size=0.8cm, font=\footnotesize\ttfamily, rounded corners=2pt},
+    myarrow/.style={->, >=stealth, thick, opacity=0.4},
+]
+% Input sequence tokens
+\node[mynode] (x1) at (0,0) {The};
+\node[mynode] (x2) at (1.5,0) {cat};
+\node[mynode] (x3) at (3.0,0) {sat};
+\node[mynode] (x4) at (4.5,0) {on};
+\node[mynode] (x5) at (6.0,0) {mat};
+
+% Self-attention edges (all-to-all)
+\foreach \i in {1,...,5} {
+    \foreach \j in {1,...,5} {
+        \draw[myarrow] (1.5*\i-1.5, 0.05) to[bend left=15]
+            (1.5*\j-1.5, -0.05);
+    }
+}
+
+\node[font=\footnotesize] at (3,-1.2) {每个词关注所有词（包括自身）};
+\end{tikzpicture}
+\caption{自注意力的全连接特性。序列中的每个位置都通过注意力权重与所有其他位置建立直接联系，使得信息可以在单层内实现全局流动}
+\label{fig:self-attention}
+\end{figure}
+
+自注意力相比RNN的核心优势：
+\begin{itemize}
+    \item \textbf{恒定路径长度}——任意两个位置之间的信息传播只需 $O(1)$ 步（单层），而RNN需要 $O(T)$ 步
+    \item \textbf{并行计算}——所有位置的计算相互独立，可完全并行化
+    \item \textbf{可解释性}——注意力权重提供了位置之间依赖强度的直观可视化
+\end{itemize}
+
+其代价是：
+\begin{itemize}
+    \item \textbf{计算复杂度} $O(T^2)$——每一层需要计算所有位置之间的注意力分数
+    \item \textbf{记忆复杂度} $O(T^2)$——需要存储注意力权重矩阵
+    \item \textbf{缺乏位置信息}——自注意力本身对位置的排列不敏感，需要额外的位置编码
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{本章小结}
+
+本章完成了从RNN到注意力机制的完整探索：
+\begin{itemize}
+    \item RNN通过隐藏状态的递归传递来建模序列依赖，但梯度消失在长序列上成为致命短板
+    \item LSTM用细胞状态和精心设计的门控机制（遗忘门、输入门、输出门）构建了梯度的``高速公路''
+    \item GRU将LSTM的门控精简为两个门，以更少的参数实现了几乎同等的效果
+    \item 注意力机制打破了Seq2Seq中的信息瓶颈——每个解码步骤可以动态关注输入的不同部分
+    \item 缩放点积注意力将点积值除以 $\sqrt{d_k}$，确保Softmax不进入饱和区
+    \item 自注意力在序列内部实现全局交互，是Transformer架构的核心组件——这就是下一章的内容
+\end{itemize}

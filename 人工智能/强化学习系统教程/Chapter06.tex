@@ -72,9 +72,8 @@ $$\pi_{\boldsymbol{\theta}}(a|s) = \Pr(A_t = a \mid S_t = s, \boldsymbol{\theta}
 在深入推导策略梯度定理之前，我们需要一个关键的数学工具——\textbf{对数导数技巧}（log-derivative trick），也称为\textbf{似然比技巧}（likelihood ratio trick）。
 
 \begin{myformula}
-\textbf{对数导数技巧}
-$$\nabla_{\boldsymbol{\theta}} \pi_{\boldsymbol{\theta}}(a|s) = \pi_{\boldsymbol{\theta}}(a|s) \cdot \frac{\nabla_{\boldsymbol{\theta}} \pi_{\boldsymbol{\theta}}(a|s)}{\pi_{\boldsymbol{\theta}}(a|s)} = \pi_{\boldsymbol{\theta}}(a|s) \cdot \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(a|s)$$
-\end{myformula}
+\text{对数导数技巧}
+\nabla_{\boldsymbol{\theta}} \pi_{\boldsymbol{\theta}}(a|s) = \pi_{\boldsymbol{\theta}}(a|s) \cdot \frac{\nabla_{\boldsymbol{\theta}} \pi_{\boldsymbol{\theta}}(a|s)}{\pi_{\boldsymbol{\theta}}(a|s)} = \pi_{\boldsymbol{\theta}}(a|s) \cdot \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(a|s)\end{myformula}
 
 这个技巧之所以重要，是因为它将梯度表达为"概率 $\times$ 对数概率的梯度"的形式。当我们需要计算涉及概率分布采样的期望的梯度时，这个技巧允许我们将梯度"移入"期望内部，从而可以用 Monte Carlo 采样来估计。
 
@@ -83,9 +82,8 @@ $$\nabla_{\boldsymbol{\theta}} \pi_{\boldsymbol{\theta}}(a|s) = \pi_{\boldsymbol
 考虑一条轨迹 $\tau = (S_0, A_0, R_1, S_1, A_1, R_2, \ldots, S_{T-1}, A_{T-1}, R_T, S_T)$。在策略 $\pi_{\boldsymbol{\theta}}$ 和环境动态 $\trans$ 下，轨迹的概率为：
 
 \begin{myformula}
-\textbf{轨迹概率}
-$$P(\tau \mid \boldsymbol{\theta}) = p_0(S_0) \prod_{t=0}^{T-1} \pi_{\boldsymbol{\theta}}(A_t \mid S_t) \cdot \trans(S_{t+1} \mid S_t, A_t)$$
-\end{myformula}
+\text{轨迹概率}
+P(\tau \mid \boldsymbol{\theta}) = p_0(S_0) \prod_{t=0}^{T-1} \pi_{\boldsymbol{\theta}}(A_t \mid S_t) \cdot \trans(S_{t+1} \mid S_t, A_t)\end{myformula}
 
 对两边取对数：
 $$\log P(\tau \mid \boldsymbol{\theta}) = \log p_0(S_0) + \sum_{t=0}^{T-1} \left[ \log \pi_{\boldsymbol{\theta}}(A_t \mid S_t) + \log \trans(S_{t+1} \mid S_t, A_t) \right]$$
@@ -93,9 +91,8 @@ $$\log P(\tau \mid \boldsymbol{\theta}) = \log p_0(S_0) + \sum_{t=0}^{T-1} \left
 对 $\boldsymbol{\theta}$ 求梯度——关键洞察出现了：
 
 \begin{myformula}
-\textbf{轨迹对数概率的梯度}
-$$\nabla_{\boldsymbol{\theta}} \log P(\tau \mid \boldsymbol{\theta}) = \sum_{t=0}^{T-1} \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(A_t \mid S_t)$$
-\end{myformula}
+\text{轨迹对数概率的梯度}
+\nabla_{\boldsymbol{\theta}} \log P(\tau \mid \boldsymbol{\theta}) = \sum_{t=0}^{T-1} \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(A_t \mid S_t)\end{myformula}
 
 \textbf{环境转移项 $\trans(S_{t+1} \mid S_t, A_t)$ 消失了！}因为 $\trans$ 不依赖于 $\boldsymbol{\theta}$。这是一个极为重要的结果：\textbf{策略梯度不需要环境模型}。我们只需要轨迹中每一步的对数策略梯度之和。
 
@@ -159,9 +156,8 @@ $$J(\boldsymbol{\theta}) = \E_{\tau \sim P(\cdot\mid\boldsymbol{\theta})}[G_0(\t
 REINFORCE（Williams, 1992）是策略梯度定理的最直接实现：使用 Monte Carlo 方法来估计梯度。
 
 \begin{myformula}
-\textbf{REINFORCE 的梯度估计}
-$$\nabla_{\boldsymbol{\theta}} J(\boldsymbol{\theta}) \approx \frac{1}{N}\sum_{i=1}^{N}\sum_{t=0}^{T_i-1} G_t^{(i)} \cdot \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(A_t^{(i)} \mid S_t^{(i)})$$
-\end{myformula}
+\text{REINFORCE 的梯度估计}
+\nabla_{\boldsymbol{\theta}} J(\boldsymbol{\theta}) \approx \frac{1}{N}\sum_{i=1}^{N}\sum_{t=0}^{T_i-1} G_t^{(i)} \cdot \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(A_t^{(i)} \mid S_t^{(i)})\end{myformula}
 
 对应的参数更新公式：
 $$\boldsymbol{\theta} \leftarrow \boldsymbol{\theta} + \alpha \cdot G_t \cdot \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(A_t \mid S_t)$$
@@ -215,10 +211,10 @@ REINFORCE 最大的问题是\textbf{高方差}。方差来源包括：
 减小策略梯度方差的第一个标准技巧是引入\textbf{基线（baseline）}函数。
 
 \begin{myformula}
-\textbf{带基线的策略梯度}
-$$\nabla_{\boldsymbol{\theta}} J(\boldsymbol{\theta}) = \E_{\pi_{\boldsymbol{\theta}}}\left[ \sum_{t=0}^{T-1} (G_t - b(S_t)) \cdot \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(A_t \mid S_t) \right]$$
-其中 $b(s)$ 是任意\textbf{仅依赖于状态}（不依赖于动作）的函数。
+\text{带基线的策略梯度}
+\nabla_{\boldsymbol{\theta}} J(\boldsymbol{\theta}) = \E_{\pi_{\boldsymbol{\theta}}}\left[ \sum_{t=0}^{T-1} (G_t - b(S_t)) \cdot \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(A_t \mid S_t) \right]
 \end{myformula}
+其中 $b(s)$ 是任意\text{仅依赖于状态}（不依赖于动作）的函数。
 
 \begin{proof}[基线不减梯度的期望]
 我们需要证明 $\E_{\pi_{\boldsymbol{\theta}}}[b(S_t) \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(A_t \mid S_t)] = 0$：

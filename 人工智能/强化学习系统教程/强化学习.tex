@@ -52,6 +52,11 @@
 \usepackage{tikz}
 \usetikzlibrary{angles, quotes, arrows.meta, calc, patterns, backgrounds, decorations.pathreplacing, positioning, shapes, fit, matrix, intersections}
 
+% === 按章编译开关 ====================
+% 只编当前章时取消下面这行的注释，填章节号：
+% \includeonly{Chapter05}
+% =====================================
+
 \usepackage{titlesec, titletoc}
 \linespread{1.25}
 
@@ -121,7 +126,7 @@
 \definecolor{DarkBlue}{RGB}{0,0,139}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\E}{\mathbb{E}}
-\newcommand{\T}{\ensuremath{^{\mathsf{T}}}}
+\newcommand{\T}{^{\mathsf{T}}}
 \newcommand{\states}{\mathcal{S}}
 \newcommand{\actions}{\mathcal{A}}
 \newcommand{\trans}{\mathcal{P}}
@@ -134,9 +139,12 @@
 	\begin{titlepage}
 		\begin{tikzpicture}[remember picture, overlay]
 			\fill[white] (current page.south west) rectangle (current page.north east);
-			\fill[DarkBlue] ([yshift=-10cm]current page.north west) rectangle ([yshift=-10.3cm]current page.north east);
 			
-			\node[anchor=center, text=DarkBlue] at ([yshift=-16cm]current page.north) {
+			\node[anchor=north] at (current page.north) {
+				\includegraphics[width=\paperwidth]{Figure/30.jpg}
+			};
+			
+			\node[anchor=center, text=DarkBlue] at ([yshift=-20cm]current page.north) {
 				\begin{minipage}{0.85\paperwidth}
 					\centering
 					{\fontsize{36}{44}\sffamily\bfseries 强化学习} \\[0.5cm]
@@ -175,17 +183,17 @@
 	\newpage
 	
 	% === CHAPTERS ===
-	\input{Chapter01}
-	\input{Chapter02}
-	\input{Chapter03}
-	\input{Chapter04}
-	\input{Chapter05}
-	\input{Chapter06}
-	\input{Chapter07}
-	\input{Chapter08}
-	\input{Chapter09}
-	\input{Chapter10}
-	\input{Chapter11}
-	\input{Chapter12}
+	\include{Chapter01}
+	\include{Chapter02}
+	\include{Chapter03}
+	\include{Chapter04}
+	\include{Chapter05}
+	\include{Chapter06}
+	\include{Chapter07}
+	\include{Chapter08}
+	\include{Chapter09}
+	\include{Chapter10}
+	\include{Chapter11}
+	\include{Chapter12}
 	
 \end{document}

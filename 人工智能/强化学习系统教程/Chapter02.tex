@@ -324,7 +324,7 @@ $V^{\pi}(s)$ 回答了``处于状态 $s$ 有多好''的问题。它是长期累�
 \subsection{动作值函数}
 % ----------------------------------------------------------------------
 
-\begin{mydefinition}{动作值函数 $Q^{\pi}(s, a)$}
+\begin{mydefinition}{{动作值函数 $Q^{\pi}(s, a)$}}
 在策略 $\pi$ 下，在状态 $s$ 执行动作 $a$（之后仍遵循 $\pi$）的期望回报：
 \begin{myformula}
 Q^{\pi}(s, a) = \E_{\pi}[G_t \mid S_t = s, A_t = a] = \E_{\pi}\left[\sum_{k=0}^{\infty} \gamma^k R_{t+k+1} \;\middle|\; S_t = s, A_t = a\right]
