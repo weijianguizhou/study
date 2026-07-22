@@ -1,0 +1,664 @@
+\chapter{流体力学前沿研究与应用}
+
+\intro{流体力学正经历从经典理论到数据驱动、从宏观连续到多尺度耦合、从理想条件到极端环境的深刻范式转变。本章纵览流体力学十余个前沿研究领域，涵盖机器学习融合、流动控制、生物流体、多相流、微纳尺度、环境与天体物理流体力学以及量子流体——力图展现当代流体力学研究的广度、深度与活力。}
+
+\section{机器学习与流体力学}
+
+\subsection{范式转变}
+
+在过去的十年中，机器学习（特别是深度学习）与流体力学的交叉研究呈爆发式增长（Brunton, Noack \& Koumoutsakos, 2020）。其驱动力来自三个方向：
+\begin{itemize}
+  \item \textbf{算力红利：}GPU并行计算使得神经网络训练在经济上可行。
+  \item \textbf{数据爆炸：}DNS数据库、高分辨率PIV/PTV实验数据和传感器网络提供了前所未有的数据量。
+  \item \textbf{模型瓶颈：}经典湍流模型的近三十年进展缓慢，数据驱动方法提供了新可能。
+\end{itemize}
+
+\subsection{物理信息神经网络}
+
+Raissi, Perdikaris \& Karniadakis（2019）提出的\textbf{物理信息神经网络}（Physics-Informed Neural Networks, PINN）将物理定律嵌入神经网络的损失函数中，实现了无数据或少数据条件下偏微分方程的求解。
+
+\begin{myTheorem}{PINN的基本原理}
+对于控制方程$\mathcal{N}[u(\mathbf{x},t)] = f(\mathbf{x},t)$（其中$\mathcal{N}$为微分算子），PINN将神经网络$u_{\theta}(\mathbf{x},t)$（参数$\theta$）代入方程，定义损失函数：
+\begin{myformula}
+\mathcal{L}(\theta) = \frac{1}{N_f}\sum_{j=1}^{N_f}\|\mathcal{N}[u_{\theta}(\mathbf{x}_j,t_j)] - f(\mathbf{x}_j,t_j)\|^{2} + \frac{1}{N_b}\sum_{k=1}^{N_b}\|\mathcal{B}[u_{\theta}(\mathbf{x}_k,t_k)] - g_k\|^{2}
+\end{myformula}
+第一项为\textbf{方程残差}（物理约束），第二项为\textbf{边界/初始条件}（数据约束）。
+\end{myTheorem}
+
+PINN求解NS方程时不需网格——它直接在连续时空域中采样配点（collocation points），以最小化残差为目标优化网络参数。这与传统CFD方法有本质不同。
+
+\subsection{PINN求解Navier-Stokes方程}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.85]
+  % Neural network representation
+  \node[ch12nnlayera] at (0,4.5)  {\textbf{输入：}$(x,y,t)$};
+  
+  % Hidden layers
+  \foreach \l in {1,2,3,4} {
+    \node[ch12nnlayer,minimum width=1.2cm,minimum height=2.5cm] at (2.5*\l,2.5) {};
+    \node[ch12nnlayera] at (2.5*\l,4.5) {隐藏层 \l};
+    \node[ch12nnlayera] at (2.5*\l,3.9) {$\sigma(\mathbf{W}\mathbf{z}+\mathbf{b})$};
+  }
+  
+  % Output layer
+  \node[ch12nnout] at (12.5,2.5) {$(u,v,p)$};
+  
+  % Arrows between layers
+  \foreach \f/\t in {1.7/2.5,5.0/5.0,7.5/7.5,10.0/10.0} {
+    \draw[->,ch12nnarrow] (\f,2.5) -- (\t-0.5,2.5);
+  }
+  
+  % Physics loss branch
+  \node[ch12nnphys] at (6.25,1.0) {\textbf{物理损失} $\mathcal{L}_f$};
+  \draw[->,ch12physarrow,thick] (6.25,2.5-1.25) -- (6.25,1.0+0.5);
+  
+  % Auto-diff for derivatives
+  \node[ch12nnphys] at (6.25,0.3) {$\frac{\partial u}{\partial t}+u\frac{\partial u}{\partial x}+\cdots=0$};
+  \draw[->,ch12physarrow] (6.25,1.0-0.5) -- (6.25,0.3+0.3);
+  
+  % Data loss branch  
+  \node[ch12nndata] at (9.5,1.0) {\textbf{数据损失} $\mathcal{L}_b$};
+  \draw[->,ch12dataarrow,thick] (9.5,2.5-1.25) -- (9.5,1.0+0.5);
+  
+  % Total loss
+  \draw[->,ch12nnarrow,thick] (7,-0.3) -- (4.5,-0.3) -- (4.5,0.2);
+  \node[ch12label] at (6,-0.1) {反向传播};
+  
+  \node[ch12label] at (6.25,-0.7) {$\mathcal{L} = \mathcal{L}_f + \lambda\mathcal{L}_b \to$ 梯度下降优化$\theta$};
+\end{tikzpicture}
+\caption{PINN架构示意图：神经网络接收时空坐标$(x,y,t)$，输出速度场和压力$(u,v,p)$。损失函数由PDE残差（物理项）和边界条件数据组成，利用自动微分计算所需的偏导数。}
+\label{fig:pinn_architecture}
+\end{figure}
+
+\subsection{PINN的Python实现}
+
+下面给出用PyTorch实现PINN求解二维稳态Navier-Stokes方程（圆柱绕流问题）的代码框架：
+
+\begin{lstlisting}[language=Python]
+import torch
+import torch.nn as nn
+import numpy as np
+
+class PINN(nn.Module):
+    """Physics-Informed Neural Network for 2D steady Navier-Stokes"""
+    def __init__(self, layers, nu=0.01):
+        """
+        layers : list of int
+            Architecture: [2, 64, 64, 64, 64, 64, 3]
+            Input: (x, y), Output: (u, v, p)
+        nu : float
+            Kinematic viscosity (1/Re)
+        """
+        super(PINN, self).__init__()
+        self.nu = nu
+        
+        # Build fully-connected layers
+        self.network = nn.ModuleList()
+        for i in range(len(layers) - 1):
+            self.network.append(nn.Linear(layers[i], layers[i+1]))
+            if i < len(layers) - 2:  # No activation after last layer
+                self.network.append(nn.Tanh())
+        
+        # Xavier initialization
+        for m in self.network:
+            if isinstance(m, nn.Linear):
+                nn.init.xavier_normal_(m.weight)
+                nn.init.zeros_(m.bias)
+    
+    def forward(self, x, y):
+        """Forward pass: (x, y) -> (u, v, p)"""
+        inputs = torch.cat([x, y], dim=1)
+        out = inputs
+        for layer in self.network:
+            out = layer(out)
+        
+        u = out[:, 0:1]
+        v = out[:, 1:2]
+        p = out[:, 2:3]
+        
+        return u, v, p
+    
+    def compute_derivatives(self, x, y):
+        """Compute PDE residuals using automatic differentiation"""
+        x.requires_grad_(True)
+        y.requires_grad_(True)
+        
+        u, v, p = self.forward(x, y)
+        
+        # First derivatives
+        u_x = torch.autograd.grad(u, x, grad_outputs=torch.ones_like(u),
+                                  create_graph=True)[0]
+        u_y = torch.autograd.grad(u, y, grad_outputs=torch.ones_like(u),
+                                  create_graph=True)[0]
+        v_x = torch.autograd.grad(v, x, grad_outputs=torch.ones_like(v),
+                                  create_graph=True)[0]
+        v_y = torch.autograd.grad(v, y, grad_outputs=torch.ones_like(v),
+                                  create_graph=True)[0]
+        p_x = torch.autograd.grad(p, x, grad_outputs=torch.ones_like(p),
+                                  create_graph=True)[0]
+        p_y = torch.autograd.grad(p, y, grad_outputs=torch.ones_like(p),
+                                  create_graph=True)[0]
+        
+        # Second derivatives
+        u_xx = torch.autograd.grad(u_x, x, grad_outputs=torch.ones_like(u_x),
+                                   create_graph=True)[0]
+        u_yy = torch.autograd.grad(u_y, y, grad_outputs=torch.ones_like(u_y),
+                                   create_graph=True)[0]
+        v_xx = torch.autograd.grad(v_x, x, grad_outputs=torch.ones_like(v_x),
+                                   create_graph=True)[0]
+        v_yy = torch.autograd.grad(v_y, y, grad_outputs=torch.ones_like(v_y),
+                                   create_graph=True)[0]
+        
+        # PDE residuals
+        # Continuity: u_x + v_y = 0
+        f_cont = u_x + v_y
+        
+        # x-Momentum: u*u_x + v*u_y + p_x - nu*(u_xx + u_yy) = 0
+        f_mom_x = u * u_x + v * u_y + p_x - self.nu * (u_xx + u_yy)
+        
+        # y-Momentum: u*v_x + v*v_y + p_y - nu*(v_xx + v_yy) = 0
+        f_mom_y = u * v_x + v * v_y + p_y - self.nu * (v_xx + v_yy)
+        
+        return f_cont, f_mom_x, f_mom_y, u, v, p
+
+
+def train_pinn(model, device, epochs=20000):
+    """Train PINN for 2D steady cylinder wake flow"""
+    model = model.to(device)
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 
+        step_size=5000, gamma=0.5)
+    
+    # Collocation points for PDE residual
+    N_f = 10000
+    x_f = (torch.rand(N_f, 1) * 4.0 - 2.0).to(device)
+    y_f = (torch.rand(N_f, 1) * 2.0 - 1.0).to(device)
+    
+    # Boundary condition points
+    N_b = 2000
+    # Inlet (x=-2): u=1, v=0
+    x_in = (-2.0 * torch.ones(N_b//4, 1)).to(device)
+    y_in = (torch.rand(N_b//4, 1) * 2.0 - 1.0).to(device)
+    u_in = torch.ones(N_b//4, 1).to(device)
+    v_in = torch.zeros(N_b//4, 1).to(device)
+    
+    # Top/Bottom walls: u=v=0 (no-slip)
+    x_wall = (torch.rand(N_b//4, 1) * 4.0 - 2.0).to(device)
+    y_wall = (torch.ones(N_b//4, 1)).to(device)  # y=1
+    u_wall = torch.zeros(N_b//4, 1).to(device)
+    v_wall = torch.zeros(N_b//4, 1).to(device)
+    
+    # Outlet: p=0 (reference pressure)
+    x_out = (2.0 * torch.ones(N_b//4, 1)).to(device)
+    y_out = (torch.rand(N_b//4, 1) * 2.0 - 1.0).to(device)
+    p_out = torch.zeros(N_b//4, 1).to(device)
+    
+    # Cylinder surface: u=v=0
+    theta = torch.rand(N_b//4, 1) * 2 * np.pi
+    x_cyl = (0.25 * torch.cos(theta)).to(device)
+    y_cyl = (0.25 * torch.sin(theta)).to(device)
+    
+    loss_history = []
+    
+    for epoch in range(epochs):
+        optimizer.zero_grad()
+        
+        # PDE residual loss
+        f_c, f_mx, f_my, _, _, _ = model.compute_derivatives(x_f, y_f)
+        loss_f = (torch.mean(f_c**2) + torch.mean(f_mx**2) + 
+                  torch.mean(f_my**2))
+        
+        # Boundary condition losses
+        u_in_p, v_in_p, _ = model(x_in, y_in)
+        loss_in = torch.mean((u_in_p - u_in)**2) + torch.mean((v_in_p - v_in)**2)
+        
+        u_w, v_w, _ = model(x_wall, y_wall)
+        loss_wall = torch.mean(u_w**2) + torch.mean(v_w**2)
+        
+        _, _, p_out_p = model(x_out, y_out)
+        loss_out = torch.mean((p_out_p - p_out)**2)
+        
+        u_c, v_c, _ = model(x_cyl, y_cyl)
+        loss_cyl = torch.mean(u_c**2) + torch.mean(v_c**2)
+        
+        # Total loss with weighting
+        total_loss = loss_f + 10.0 * (loss_in + loss_wall + loss_out + loss_cyl)
+        total_loss.backward()
+        optimizer.step()
+        scheduler.step()
+        
+        loss_history.append(total_loss.item())
+        
+        if epoch % 2000 == 0:
+            print(f"Epoch {epoch:5d}, Loss: {total_loss.item():.4e}, "
+                  f"PDE: {loss_f.item():.4e}, "
+                  f"BC: {(loss_in+loss_wall+loss_out+loss_cyl).item():.4e}")
+    
+    return loss_history
+\end{lstlisting}
+
+\begin{remark}
+PINN提供了一条与传统CFD网格方法完全不同的道路——无需网格生成、适配复杂/移动边界自然、可直接融合实验数据。但其收敛性、所有权重选取和计算效率仍是活跃的研究课题。对高Reynolds数湍流流动，当前的PINN方法尚未达到可实用水平。
+\end{remark}
+
+\subsection{数据驱动的湍流模型}
+
+机器学习在湍流建模中的应用可分为三个层次：
+
+\vspace{4pt}
+\noindent\textbf{1. 湍流模型常数标定（Model Calibration）}
+
+利用DNS或实验数据，通过贝叶斯推断或梯度优化重新标定两方程模型的系数，使模型预测与高保真数据在统计意义上一致。
+
+\noindent\textbf{2. 雷诺应力偏差修正（Field Inversion \& Machine Learning）}
+
+传统RANS模型预测的雷诺应力与DNS数据之间的差异（$\Delta\tau_{ij} = \tau_{ij}^{\text{DNS}} - \tau_{ij}^{\text{RANS}}$）存在系统性模式。机器学习可学习这一差异与平均流场特征（应变率张量不变量、旋转张量不变量、湍流Reynolds数等）之间的映射关系：
+
+\begin{myformula}
+\mathbf{b} = f_{\text{NN}}\!\left(\lambda_1,\lambda_2,\dots,\lambda_n; \theta\right),\qquad b_{ij} = \frac{\tau_{ij}}{2k} - \frac{1}{3}\delta_{ij}
+\end{myformula}
+
+其中$\mathbf{b}$为各向异性应力张量，$\lambda_i$为张量基不变量（Pope, 1975）。
+
+\noindent\textbf{3. 全数据驱动的亚格子模型}
+
+在LES框架下，用神经网络学习$\tau_{ij}^{\text{SGS}}$与滤波速度场之间的映射。CNN（卷积神经网络）和GNN（图神经网络）在空间局部性和可迁移性方面表现优于全连接网络。
+
+\subsection{流场降阶建模}
+
+\textbf{本征正交分解}（Proper Orthogonal Decomposition, POD）和\textbf{动态模态分解}（Dynamic Mode Decomposition, DMD）是流场分析的两大降阶工具。POD捕获能量最优的模态，DMD捕获频率和增长/衰减率确定的模态。将它们与Galerkin投影结合，可建立低维动力学系统——这种降阶模型（Reduced-Order Model, ROM）比完整CFD快数个数量级，适用于实时控制和多参数优化。
+
+\section{流动控制}
+
+流动控制的目标是通过外部激励改变流体的自然行为，实现减阻、降噪、增强混合或延迟分离等目的。
+
+\subsection{主动与被动控制}
+
+\noindent\textbf{被动控制：}不需外部能量输入。例子包括：
+\begin{itemize}
+  \item 涡流发生器——诱导流向涡增强近壁动量交换，延迟分离
+  \item Riblet（微沟槽）——沿流向的微沟槽（高约$15\mu$m）可降低湍流摩阻达$8\%$
+  \item 分流板——破坏脱落涡的规则性（烟囱、海上立管）
+\end{itemize}
+
+\noindent\textbf{主动控制：}需外部能量输入。按能量消耗进一步分为：
+
+\begin{itemize}
+  \item \textbf{预设开环控制：}不依赖传感器反馈。如在翼表面施加周期性吹吸扰动，扰乱分离泡的形成。
+  \item \textbf{反馈闭环控制：}传感器测量壁面压力/剪应力$\to$控制器决策$\to$执行器动作。代表性工作有Choi, Moin \& Kim（1994）的壁面吹吸减阻DNS（展向吹吸可减少湍流摩阻约$20\%$）。
+  \item \textbf{机器学习控制：}利用强化学习（Reinforcement Learning, RL）训练智能体在流动环境中学习最优策略。RL方法在Clifford分析的圆柱减阻和翼型失速延迟等案例中取得了令人瞩目的成果。
+\end{itemize}
+
+\subsection{等离子体激励器}
+
+介质阻挡放电（Dielectric Barrier Discharge, DBD）等离子体激励器是一种无活动部件的电控流动控制装置。其原理是：在高电压交流电场下，绝缘层表面产生微放电，加速局部空气形成"离子风"。DBD激励器具有响应快（ms量级）、无活动部件、适合微型化的优点。
+
+主要控制机制：动量注入（离子风效应）和焦耳热效应。在低Reynolds数（$Re\lesssim 10^{5}$）分离控制中效果尤为显著。
+
+\subsection{合成射流}
+
+合成射流（或零净质量通量射流）通过压电膜或活塞的周期性振动，从孔口交替吸入和喷出流体，形成具有净动量输出的涡环序列而没有净质量输运。合成射流广泛应用于边界层分离控制、推力矢量控制和电子设备冷却。
+
+\begin{myformula}
+C_{\mu} = \frac{\rho_j U_j^{2} h}{\frac{1}{2}\rho_{\infty}U_{\infty}^{2} c}
+\end{myformula}
+
+其中$C_{\mu}$为动量系数，度量控制输入相对于来流动量的大小。
+
+\section{生物流体力学}
+
+\subsection{心血管流动}
+
+人体循环系统中的血液流动涉及一系列复杂的流体力学现象：
+\begin{itemize}
+  \item \textbf{脉动流：}心脏周期性的泵送使动脉血管中的流动具有强烈的非定常特征。Womersley数$\alpha = R\sqrt{\omega/\nu}$（其中$R$为血管半径，$\omega$为心率对应的角频率）是表征非定常惯性力与黏性力之比的参数。主动脉中$\alpha\approx 10-15$。
+  \item \textbf{可变形管流：}血管壁具有弹性，血液流动与管壁变形是双向耦合的（流固耦合, FSI）。脉搏波的传播速度由Moens-Korteweg公式描述。
+  \item \textbf{非牛顿效应：}血液是复杂悬浮液（红细胞占体积分数约45%），在低剪切率下呈现剪切稀化（shear-thinning）行为。Casson模型和Carreau-Yasuda模型常用于拟合血液的流变特性。
+  \item \textbf{动脉粥样硬化与CFD：}血流动力学参数（壁面剪应力WSS、振荡剪指数OSI、粒子停留时间RRT）与动脉粥样硬化斑块的形成位置高度相关——斑块倾向于在低震荡剪应力区（血管分支外壁、弯曲内侧）形成。
+\end{itemize}
+
+\subsection{昆虫飞行的非定常空气动力学}
+
+昆虫的飞行Reynolds数通常很低（$Re\sim 10^{2}\sim 10^{4}$），远低于飞机巡航的$Re$。在这个Reynolds数范围内，稳态定常流动的升力系数远不足以维持昆虫的体重——必须依赖非定常气动机制：
+
+\begin{itemize}
+  \item \textbf{前缘涡（Leading-Edge Vortex, LEV）：}翅膀在高攻角拍动时，前缘形成附着涡，产生持续的负压区。LEV的稳定存在是昆虫最重要的升力增强机制。Ellington等人（1996）首次在烟草天蛾（Manduca sexta）上通过烟线流动显示证实了这一机制。
+  \item \textbf{尾迹捕获（Wake Capture）：}翅膀在回程中穿过前一次拍打留下的尾迹，从中提取动能。
+  \item \textbf{快速翻转（Rapid Pitch-up）}和\textbf{Clap-and-Fling：}在拍动的上死点和下死点，翅膀的快速翻转产生非定常环量增强；小型昆虫（如蓟马）利用双翅在背部的合拢-分开（Weis-Fogh机构）显著增加升力。
+\end{itemize}
+
+\subsection{鱼类游动的推进机制}
+
+水生动物利用流体与身体的相互作用产生推力。按推进方式分为：
+
+\noindent\textbf{波动推进（Body-Caudal Fin, BCF）：}身体和尾鳍的后行波运动产生推力。波速大于游速时（$c/U>1$），尾部释放反向涡街，产生正向推力——这与鸟类/昆虫翅膀的推力产生的方向关系相反。
+
+运动的无量纲化参数包括Reynolds数、Strouhal数$St = fA/U$（其中$f$为拍动频率，$A$为尾迹宽度）和游动数$Sw = fA/\nu$。大多数鱼类的$St$落在$0.2\sim 0.4$的最优区间，对应的是尾迹中反Kármán涡街的形成。
+
+\noindent\textbf{射流推进（Median-Paired Fin, MPF）：}水母、鱿鱼和部分利用胸鳍游动的鱼类通过周期性地排出一股流体（喷流）获得反冲力。鱿鱼通过外套膜的收缩-舒张循环喷水推进，是海洋中最高效的游泳者之一。
+
+\section{多相流}
+
+\subsection{多相流分类}
+
+多相流涉及两个或更多热力学相的同时运动。按相态组合分为：
+
+\begin{table}[H]
+\centering
+\caption{多相流的主要类型}
+\label{tab:multiphase}
+\begin{tabular}{lll}
+\toprule
+\textbf{相组合} & \textbf{典型例子} & \textbf{重要参数} \\
+\midrule
+气-液 & 气泡柱、波浪破碎、沸腾 & $Bo, We, Mo$ \\
+液-液 & 油-水乳浊液、液-液萃取 & $Ca, \lambda$（黏度比） \\
+气-固 & 流化床、气力输送 & $Ar, u/u_{mf}$ \\
+液-固 & 浆体管道、沉降 & $Re_p, \phi$（体积分数） \\
+气-液-固 & 三相流化床 & 组合参数 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+无量纲数的核心作用：Bond数$Bo = \Delta\rho g D^{2}/\sigma$表征重力与表面张力之比；Weber数$We = \rho U^{2} D/\sigma$表征惯性力与表面张力之比；Morton数$Mo = g\mu^{4}\Delta\rho/(\rho^{2}\sigma^{3})$仅取决于流体物性。
+
+\subsection{界面追踪方法}
+
+多相流数值模拟的核心挑战是跟踪相界面的运动。主要有三类方法：
+
+\noindent\textbf{1. VOF方法（Volume of Fluid, Hirt \& Nichols, 1981）}
+
+定义流体体积分数$\alpha$（$\alpha=0$为纯气相，$\alpha=1$为纯液相，$0<\alpha<1$为界面区域）。$\alpha$满足纯对流输运方程：
+
+\begin{myformula}
+\frac{\partial\alpha}{\partial t} + \mathbf{u}\cdot\nabla\alpha = 0
+\end{myformula}
+
+界面重构是VOF方法的核心：在每一时间步，从$\alpha$场中重构出尖锐的界面位置（PLIC——分段线性界面构造），然后用于计算界面曲率$\kappa = \nabla\cdot\mathbf{n}$（其中$\mathbf{n}=\nabla\alpha/|\nabla\alpha|$）以确定表面张力$\mathbf{F}_{\sigma} = \sigma\kappa\mathbf{n}\delta_S$。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Grid
+  \draw[ch12grid,step=1.0] (0,0) grid (6,5);
+  
+  % Interface line
+  \draw[ch12interface,ultra thick] (0.5,1) -- (3,4.5) -- (5.5,3.5);
+  
+  % Cells with phase fractions
+  \node[ch12label] at (1.5,0.5) {$\alpha=0.0$};
+  \node[ch12label] at (1.5,1.5) {$\alpha=0.35$};
+  \node[ch12label] at (2.5,1.5) {$\alpha=0.12$};
+  \node[ch12label] at (0.5,2.5) {$\alpha=0.88$};
+  \node[ch12label] at (2.5,2.5) {$\alpha=0.67$};
+  \node[ch12label] at (3.5,2.5) {$\alpha=0.10$};
+  \node[ch12label] at (0.5,3.5) {$\alpha=1.0$};
+  \node[ch12label] at (2.5,4.5) {$\alpha=0.92$};
+  \node[ch12label] at (1.5,3.5) {$\alpha=0.76$};
+  
+  % Labels
+  \node[ch12label] at (3,5.5) {\textbf{VOF方法示意}};
+  \node[ch12label] at (6.8,3) {气};
+  \node[ch12label] at (6.8,1) {液};
+\end{tikzpicture}
+\caption{VOF方法中体积分数$\alpha$的网格存储和界面重构示意。界面上各单元的$\alpha$值在0和1之间，远离界面的区域$\alpha=0$或$1$。}
+\label{fig:vof_method}
+\end{figure}
+
+\noindent\textbf{2. Level Set方法（Osher \& Sethian, 1988）}
+
+引入水平集函数$\phi(\mathbf{x},t)$，界面定义为$\phi=0$的等值面。$\phi$满足：
+
+\begin{myformula}
+\frac{\partial\phi}{\partial t} + \mathbf{u}\cdot\nabla\phi = 0
+\end{myformula}
+
+$\phi$通常取为到界面的符号距离函数（$|\nabla\phi|=1$），使得曲率计算极为简洁：$\kappa = \nabla\cdot(\nabla\phi/|\nabla\phi|)$。但纯对流会使$\phi$不再保持距离函数性质，需周期性地进行"重距离化"（reinitialization）。
+
+\noindent\textbf{3. 相场方法（Phase-Field Method）}
+
+基于Cahn-Hilliard方程（或Allen-Cahn方程），将尖锐界面替换为厚度可控的连续过渡层。序参量$\psi$满足：
+
+\begin{myformula}
+\frac{\partial\psi}{\partial t} + \mathbf{u}\cdot\nabla\psi = \nabla\cdot[M\nabla(\mu_{\psi})]
+\end{myformula}
+
+其中$\mu_{\psi}$为化学势。相场方法的优势在于自然地处理界面拓扑变化（合并、断裂），缺点是需要解析界面厚度——对网格分辨率要求高。
+
+\section{微纳尺度流动}
+
+\subsection{连续介质假设的极限——Knudsen数}
+
+\begin{mydefinition}{Knudsen数}
+Knudsen数定义为分子的平均自由程$\lambda$与流动特征尺度$L$之比：
+\begin{myformula}
+Kn = \frac{\lambda}{L}
+\end{myformula}
+它是判断连续介质假设是否成立的关键参数。
+\end{mydefinition}
+
+根据Knudsen数，流动分四个区域：
+\begin{itemize}
+  \item $Kn < 0.001$：连续介质区，Navier-Stokes方程适用（无滑移壁面）。
+  \item $0.001 < Kn < 0.1$：滑移流区，NS方程仍适用，但壁面需用滑移边界条件代替无滑移。
+  \item $0.1 < Kn < 10$：过渡区，连续介质方程系统性失效，需求解Boltzmann方程。
+  \item $Kn > 10$：自由分子流区，分子间碰撞可忽略。
+\end{itemize}
+
+对于微流控芯片（特征尺寸$\sim 100\,\mu$m），空气的标准平均自由程约$68\,\text{nm}$，$Kn\approx 6.8\times 10^{-4}$——处于连续介质区。但对于纳米孔（$L\sim 10\,\text{nm}$），$Kn\approx 6.8$，过渡区效应显著。
+
+\subsection{滑移边界条件}
+
+在滑移流区（$0.001<Kn<0.1$），可保留NS方程但使用Maxwell一阶滑移边界条件代替无滑移：
+
+\begin{myformula}
+u_{\text{slip}} = u_{\text{wall}} - u_{\text{fluid}} \approx \frac{2-\sigma_u}{\sigma_u}\lambda\left.\frac{\partial u}{\partial n}\right|_{\text{wall}}
+\end{myformula}
+
+其中$\sigma_u$为切向动量适应系数（Tangential Momentum Accommodation Coefficient, TMAC）。$\sigma_u=0$对应完全镜面反射（无动量传递），$\sigma_u=1$对应完全漫反射（经典气体动力学）。
+
+\subsection{微流控芯片}
+
+微流控（Microfluidics）是研究微米至亚毫米尺度下流体行为的交叉学科，近年来在生物医学（Lab-on-a-Chip、器官芯片、单细胞测序）和化学合成（微反应器）中取得了革命性进展。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.8]
+  % Chip outline
+  \draw[ch12chip,fill=ch12chipfill!20,rounded corners] (-5,-3) rectangle (5,3);
+  \node[ch12label] at (0,3.5) {\textbf{微流控芯片示意}};
+  
+  % Channel 1: T-junction droplet generator
+  \draw[ch12channel,ultra thick] (-4.5,1.5) -- (0,1.5);
+  \draw[ch12channel,ultra thick] (-1.5,3) -- (-1.5,0);
+  \node[ch12label,font=\footnotesize] at (-1.5,2.7) {离散相};
+  \node[ch12label,font=\footnotesize] at (-4.5,1.8) {连续相};
+  
+  % Droplets in main channel
+  \foreach \x in {0,0.8,1.6,2.4} {
+    \draw[ch12droplet,fill=ch12dropletfill!40] ({\x-0.3},0.8) ellipse (0.3 and 0.4);
+  }
+  
+  % Channel 2: Spiral for mixing
+  \draw[ch12channel,ultra thick] plot[smooth] coordinates {
+    (2.5,-1.5)(2.8,-1.0)(3.5,-0.8)(3.7,-1.5)(4.1,-2.2)(3.3,-2.4)(2.7,-2.0)
+  };
+  
+  % Channel 3: Detection zone
+  \draw[ch12channel,ultra thick] (-4,-1.5) -- (-2,-1.5);
+  \filldraw[ch12detector] (-3,-1.5) circle (0.5);
+  \node[ch12label,font=\footnotesize] at (-3,-2.8) {检测区};
+  
+  % Inlet/Outlet labels
+  \node[ch12label,font=\footnotesize] at (-5.5,1.5) {入口};
+  \node[ch12label,font=\footnotesize] at (-2.5,3.5) {入口};
+  \node[ch12label,font=\footnotesize] at (5.2,-2) {出口};
+\end{tikzpicture}
+\caption{微流控芯片示意图：包含T型液滴生成器、螺旋混合通道和光学检测区。}
+\label{fig:microfluidics}
+\end{figure}
+
+微流控中的关键无量纲参数包括：
+\begin{itemize}
+  \item \textbf{Peclet数（质量传递）：}$Pe = UL/D$，当$Pe\gg 1$时对流主导传质，混合困难。
+  \item \textbf{毛细管数：}$Ca = \mu U/\sigma$，液滴生成和驱替过程中的主导参数。
+  \item \textbf{Reynolds数：}由于尺度极小，$Re$通常很低（$\ll 1$），流动为Stokes流（爬流）——忽略惯性项的线性NS方程。
+\end{itemize}
+
+微流控中特有的物理现象包括：电动流动（由壁面双电层在外电场下驱动的电渗流）、介电泳（DEP）、声表面波驱动的微混合等。
+
+\section{环境流体力学}
+
+\subsection{大气边界层}
+
+大气边界层（Atmospheric Boundary Layer, ABL）是地球表面至$1-2\,\text{km}$高度的大气层，直接受地面摩擦和热力作用的驱动。ABL的日变化由太阳辐射驱动的对流和夜间辐射冷却导致的稳定层结决定。
+
+表征热分层对湍流影响的关键参数是Obukhov长度$L_{\text{MO}}$：
+
+\begin{myformula}
+L_{\text{MO}} = -\frac{u_{*}^{3}}{\kappa(g/T_0)(H/\rho c_p)}
+\end{myformula}
+
+其中$u_{*}$为摩擦速度，$H$为地表感热通量。当$L_{\text{MO}}<0$（不稳定，热通量向上），浮力增强湍流混合；当$L_{\text{MO}}>0$（稳定，夜间），浮力抑制湍流。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.9]
+  % Ground
+  \fill[ch12ground,fill=ch12groundfill!60] (-5,0) rectangle (5,-0.5);
+  \node[ch12label] at (0,-0.25) {地面};
+  
+  % Boundary layer height
+  \draw[ch12abl,thick] (-5,3.5) -- (5,3.5);
+  \node[ch12label] at (-5.5,3.5) {$z_i$};
+  
+  % Layers
+  \draw[ch12abl,thick] (-5,0.5) -- (5,0.5);
+  \node[ch12label] at (-5.5,0.5) {$z_{SL}$};
+  
+  % Surface layer
+  \fill[ch12surfacelayer,opacity=0.15] (-5,0) rectangle (5,0.5);
+  \node[ch12label] at (0,0.25) {表面层};
+  
+  % Mixed layer
+  \fill[ch12mixedlayer,opacity=0.1] (-5,0.5) rectangle (5,3.5);
+  \node[ch12label] at (0,2.0) {混合层};
+  
+  % Free atmosphere
+  \node[ch12label] at (0,4.5) {自由大气};
+  
+  % Thermals
+  \foreach \x/\y in {-3/1.0,-1/1.8,1.5/1.2,3/2.2} {
+    \draw[ch12thermal,->,thick] (\x,\y) .. controls (\x+0.3,\y+0.6) and (\x+0.2,\y+1.0) .. (\x,\y+1.3);
+  }
+  \node[ch12label] at (-3,2.8) {热泡};
+  
+  % Wind profile
+  \draw[ch12windprofile,ultra thick,->] (4,0) .. controls (4.2,0.3) and (4.4,0.6) .. (4.6,1.2) 
+    .. controls (4.8,2.0) and (4.9,2.8) .. (5.0,3.8);
+  \node[ch12label,font=\footnotesize] at (5.8,2) {风速\\廓线};
+  
+  % Entrainment
+  \draw[<->,ch12dim] (-2,3.5) -- (-2,3.0);
+  \node[ch12label,font=\footnotesize] at (-3.5,3.25) {夹卷带};
+\end{tikzpicture}
+\caption{对流大气边界层的分层结构：表面层（近地常数通量层）、混合层（强湍流混合）和自由大气。热泡向上运动，在边界层顶部引起夹卷。}
+\label{fig:abl}
+\end{figure}
+
+\subsection{污染物扩散}
+
+污染物在大气中的扩散是环境流体力学的核心应用。Gaussian烟羽模型是最简单的工程估计方法，但仅在平坦均质地形和定常气象条件下成立。对于复杂地形（城市街道峡谷、山丘、海岸），必须使用CFD耦合中尺度气象模型。
+
+拉格朗日粒子扩散模型追踪大量虚拟粒子的轨迹，适用于模拟事故性泄漏的非稳态扩散过程：
+
+\begin{myformula}
+\mathrm{d}\mathbf{X}_p = \overline{\mathbf{u}}(\mathbf{X}_p,t)\,\mathrm{d}t + \sqrt{2K}\,\mathrm{d}\mathbf{W}_t
+\end{myformula}
+
+其中第一项为平均风速下的输运，第二项为布朗运动（Wiener过程）模拟的湍流扩散（$K$为湍流扩散系数）。
+
+\subsection{海洋环流}
+
+海洋环流驱动全球热量和碳的再分配，是地球气候系统的关键组成部分。大尺度海洋环流由风应力驱动的Ekman输运和热盐环流（密度驱动）组成。位涡（Potential Vorticity）守恒与Sverdrup平衡是海洋环流理论的基石：
+
+\begin{myformula}
+\beta v = f\frac{\partial w}{\partial z}
+\end{myformula}
+
+其中$\beta = \mathrm{d}f/\mathrm{d}y$为科里奥利参数的经向梯度，$f=2\Omega\sin\phi$。
+
+\section{天体物理流体力学}
+
+\subsection{吸积盘}
+
+吸积盘是物质在引力作用下沿轨道绕中心天体运动并逐渐向内螺旋的旋转盘状结构。吸积盘的动力学涉及磁性旋转不稳定性（MRI）驱动的湍流输运——这是导致物质角动量向外输运、质量向内输送的主要机制。
+
+标准的$\alpha$盘模型（Shakura \& Sunyaev, 1973）将湍流黏度参数化为：
+
+\begin{myformula}
+\nu = \alpha c_s H
+\end{myformula}
+
+其中$c_s$为声速，$H$为盘厚度，$\alpha\lesssim1$为无量纲参数。
+
+\subsection{恒星对流}
+
+恒星内部（如太阳对流层）的能量输运由对流主导。Reynolds数极高（$\sim 10^{12}$），Prandtl数极低（$\sim 10^{-7}$，因辐射热传导极强）。这种极端参数下的湍流对流是当前CFD无法DNS模拟的——混合长度理论仍然是恒星结构计算的标准工具。
+
+\section{超流体与量子流体}
+
+\subsection{氦II的两流体模型}
+
+液氦在温度低于$T_{\lambda}=2.17\,\text{K}$时发生相变，成为超流体（He II）。超流体现象由Tisza（1938）和Landau（1941）的两流体模型描述：氦II可视作正常流体组分（黏性，携带熵）和超流体组分（无黏性，零熵）的混合物。
+
+超流体组分的速度满足势流条件（$\nabla\times\mathbf{v}_s=0$）。旋转通过量子化涡丝承载——超流体环量必须以$\kappa = h/m_4 = 9.97\times 10^{-8}\,\text{m}^{2}/\text{s}$的整数倍量子化。
+
+\subsection{Bose-Einstein凝聚}
+
+稀释原子气体的Bose-Einstein凝聚（BEC）为研究量子流体提供了高度可控的实验平台。Gross-Pitaevskii方程描述BEC的动力学：
+
+\begin{myformula}
+i\hbar\frac{\partial\psi}{\partial t} = -\frac{\hbar^{2}}{2m}\nabla^{2}\psi + V_{\text{ext}}\psi + g|\psi|^{2}\psi
+\end{myformula}
+
+其中$\psi$为序参量（凝聚体波函数），$g=4\pi\hbar^{2}a_s/m$为相互作用强度。通过Madelung变换$\psi = \sqrt{n}e^{iS}$，可将Gross-Pitaevskii方程映射为无黏可压缩Euler方程——建立量子流体与经典流体之间的深刻类比。
+
+\subsection{量子涡旋动力学}
+
+量子化涡旋的动力学与经典涡旋有本质区别。涡旋重联（vortex reconnection）——两根涡丝相遇、断开并重新连接的过程——在超流体中以量子化方式发生，没有奇性（经典Euler方程中涡丝重联伴随速度发散）。
+
+量子涡旋的动力学由Biot-Savart定律（远场）和局部诱导近似（近场）联合描述。
+
+\section{流体力学中的未解问题}
+
+\subsection{NS方程的数学存在性和光滑性}
+
+Clay数学研究所将三维不可压缩Navier-Stokes方程在光滑初始条件下的整体解的存在性与光滑性列入"千禧年七大数学难题"之一。具体表述为：对于任意光滑的初始速度场，是否存在在整个时间域上定义的光滑解？
+
+二维情形已被Ladyzhenskaya（1969）解决——二维NS方程存在唯一光滑整体解。三维情形仍是开放的。当前已知的结果表明：如果存在奇性，其Hausdorff维数必须不小于1（Caffarelli, Kohn \& Nirenberg, 1982）。这一方向上的任何实质性进展都将具有划时代意义。
+
+\subsection{湍流封闭问题}
+
+尽管Kolmogorov理论成功描述了惯性子区的统计特征，间歇性和相干结构的存在使得经典的K41理论需要修正（K62修正和多重分形模型）。从第一性原理推导湍流封闭关系——无需经验常数和调参——是湍流研究的"圣杯"。
+
+从另一个角度看：为什么Boussinesq涡黏假设这样极其简化的近似在如此众多的情况下表现尚可？是否存在一个更基本的原理（如重整化群、最大熵原理）可以为涡黏模型提供严格的基础？
+
+\subsection{转捩预测}
+
+从层流到湍流的转捩是经典物理学中最长久的挑战之一。尽管线性稳定性理论和旁路转捩理论已经相对完善，但对复杂三维几何在任意流动条件下转捩位置的可靠预测仍遥不可及。边界层接受外界扰动（感受性）、不稳定波的初始增长（线性）、非线性饱和以及最终向湍流的破碎——这一连续过程的全尺度高保真模拟和物理理解仍是开放的。
+
+\vspace{12pt}
+
+\noindent\textbf{本章要点回顾：}
+\begin{enumerate}
+  \item 机器学习（PINN、数据驱动湍流模型、降阶模型）正在重塑流体力学的建模范式。
+  \item 流动控制系统地利用外部激励（被动/主动/强化学习）实现减阻、降噪和分离控制。
+  \item 生物流体力学将非定常空气动力学和弹性体流体相互作用理论应用于昆虫飞行、鱼类游动和心血管流动。
+  \item 多相流的界面追踪方法（VOF、Level Set、相场）是数值模拟的核心技术。
+  \item 微纳尺度流动中连续介质假设随$Kn$增大而失效，滑移边界和动电效应成为主导。
+  \item 环境与天体物理流体力学涵盖大气边界层、海洋环流、吸积盘和恒星对流等跨尺度物理系统。
+  \item NS方程的存在光滑性、湍流封闭和转捩预测仍是流体力学中最深刻的三个未解问题。
+\end{enumerate}

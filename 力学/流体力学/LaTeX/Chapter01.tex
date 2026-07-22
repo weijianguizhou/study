@@ -1,0 +1,671 @@
+\chapter{引言与数学基础}
+
+\intro{流体力学是研究流体（液体和气体）的机械运动规律及其应用的学科。它是连续介质力学的重要分支，与固体力学并列构成了经典力学的两大支柱。本章将介绍流体力学的发展历程、基本概念以及所需的数学工具，为后续深入学习打下坚实基础。}
+
+\section{流体力学概述}
+
+\subsection{流体力学的发展简史}
+
+流体的运动规律自古以来就吸引着人类的注意。古希腊学者阿基米德（Archimedes，公元前287--212年）在其著作《论浮体》中首次提出了浮力原理，标志着流体静力学的诞生。这一理论至今仍是船舶设计和浮体稳定性分析的基础。
+
+文艺复兴时期，达·芬奇（Leonardo da Vinci，1452--1519年）对水流和飞鸟的飞行进行了细致观察，留下了大量关于涡旋和湍流的手稿。他提出的"物体在流体中运动所受阻力"的概念预示了后来的流体动力学。
+
+牛顿（Isaac Newton，1643--1727年）在《自然哲学的数学原理》中研究了流体中的阻力问题，提出了牛顿内摩擦定律，即切应力与速度梯度成正比。这一定律奠定了粘性流体力学的基础：
+
+\begin{myformula}
+\tau = \mu \frac{du}{dy}
+\end{myformula}
+
+其中 \(\tau\) 为切应力，\(\mu\) 为动力粘度，\(du/dy\) 为速度梯度。满足这一线性关系的流体称为牛顿流体（Newtonian fluid）。
+
+欧拉（Leonhard Euler，1707--1783年）于1755年建立了理想流体运动的基本方程——欧拉方程。他将牛顿第二定律应用于流体质点，得到了描述无粘流体运动的偏微分方程组。欧拉方程是流体动力学发展的里程碑。
+
+十九世纪，纳维（Claude-Louis Navier，1821年）和斯托克斯（George Gabriel Stokes，1845年）分别从不同角度考虑了流体的粘性效应，将欧拉方程推广为纳维—斯托克斯方程（Navier-Stokes equations，简称N-S方程）。这组方程描述了粘性不可压缩流体的运动：
+
+\begin{myformula}
+\rho\left(\frac{\partial \mathbf{u}}{\partial t} + \mathbf{u}\cdot\Nabla\mathbf{u}\right) = -\Nabla p + \mu \Nabla^2 \mathbf{u} + \rho \mathbf{g}
+\end{myformula}
+
+N-S方程是流体力学理论的核心，但因其高度非线性，至今仍无法求得一般形式的解析解。其解的存在性和光滑性是克雷数学研究所（Clay Mathematics Institute）提出的七个千禧年大奖问题之一。
+
+普朗特（Ludwig Prandtl，1875--1953年）于1904年提出了边界层理论，揭示了在大雷诺数流动中，粘性效应主要集中在靠近物面的薄层内，而外部流动可近似为无粘流动。这一理论架起了理想流体和粘性流体之间的桥梁，被誉为现代流体力学诞生的标志。
+
+二十世纪以来，随着计算机技术的发展，计算流体力学（Computational Fluid Dynamics，CFD）取得了长足进步。湍流模型、大涡模拟（LES）、直接数值模拟（DNS）等方法使得复杂工程流动问题的数值求解成为可能。同时，实验技术如粒子图像测速（PIV）、激光多普勒测速（LDV）的发展也为流场测量提供了高精度手段。
+
+\subsection{流体力学的应用领域}
+
+流体力学在众多领域有着广泛的应用。
+
+在航空航天领域，飞行器的气动外形设计、升力和阻力的计算、跨声速和超声速流动中的激波现象等都需要流体力学理论的支持。机翼绕流、喷气发动机内部流动、再入大气层飞行器的热防护等都是典型的流体力学问题。
+
+在海洋工程领域，舰船阻力与推进、潜艇水动力学、海上浮式结构物的波浪载荷、海流能利用等都与流体力学密切相关。海洋内波、风暴潮等环境流动的预测也依赖于流体力学模型。
+
+在生物医学领域，血液在血管中的流动（血流动力学）、呼吸道中的气流、游泳和飞行生物的运动机制等都属于生物流体力学的范畴。心脑血管疾病的诊断和治疗也与血流动力学分析密不可分。
+
+在环境工程领域，大气污染物的扩散、河流与湖泊中的污染物迁移、地下水渗流、风沙运动等都是流体力学的研究对象。天气预报和气候模拟等数值模式的核心也是地球物理流体动力学。
+
+在能源与化工领域，管道输送、反应器内的混合与传质、燃烧室中的湍流燃烧、燃料电池中的多相流等过程都需要流体力学分析。核反应堆的热工水力设计更是离不开对冷却剂流动和传热的精确计算。
+
+在土木工程领域，高层建筑的风载荷、桥梁的风致振动（如塔科马海峡大桥的颤振失稳）、城市通风与热岛效应等都与风工程——钝体空气动力学密切相关。
+
+\section{流体的基本概念}
+
+\subsection{连续介质假设}
+
+流体由大量分子组成，分子之间存在空隙且不停地做无规则热运动。在微观尺度上，流体的物理量（如密度、速度）在空间和时间上都是不连续的。然而，在绝大多数工程问题中，我们关心的特征尺度远大于分子平均自由程。因此，可以忽略流体的离散分子结构，将流体视为连续介质（continuum）。
+
+\begin{mydefinition}{连续介质假设}
+流体所占据的空间由连续分布的流体质点所充满，流体的物理性质（密度、速度、压强、温度等）都是空间坐标和时间的连续可微函数。
+\end{mydefinition}
+
+连续介质假设的适用性由克努森数（Knudsen number）来判断：
+
+\begin{myformula}
+Kn = \frac{\lambda}{L}
+\end{myformula}
+
+其中 \(\lambda\) 为分子平均自由程，\(L\) 为流动的特征尺度。当 \(Kn < 0.01\) 时，连续介质假设成立；当 \(0.01 < Kn < 0.1\) 时，需要考虑滑移边界条件；当 \(Kn > 0.1\) 时，必须采用分子动力学或稀薄气体动力学方法。
+
+对于标准状况下的空气，分子平均自由程约为 \(6.8\times 10^{-8}\,\text{m}\)，远小于常规工程问题的特征尺度（如飞机的弦长约为米量级），因此连续介质假设完全适用。但在高超声速稀薄气体流动、微纳尺度流动等特殊情况下，连续介质假设可能失效。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.2]
+    \fill[blue!10] (0,0) rectangle (6,4);
+    \draw[blue!30,step=0.8] (0,0) grid (6,4);
+    \foreach \x in {0.8,1.6,2.4,3.2,4.0,4.8} {
+        \foreach \y in {0.8,1.6,2.4,3.2} {
+            \shade[ball color=blue!40] (\x,\y) circle (0.25);
+        }
+    }
+    \node at (0.8,0.8) {\tiny $\rho_1$};
+    \node at (2.4,0.8) {\tiny $\rho_2$};
+    \node at (4.0,0.8) {\tiny $\rho_3$};
+    \node at (0.8,2.4) {\tiny $\rho_4$};
+    \node at (2.4,2.4) {\tiny $\rho_5$};
+    \node at (4.0,2.4) {\tiny $\rho_6$};
+    \draw[->] (0,-0.5) -- (6,-0.5) node[right] {$x$};
+    \draw[->] (0,-0.5) -- (0,0.5) node[above] {$\rho(x)$};
+    \draw[red,thick] plot[smooth] coordinates {(0,0.1)(1.5,0.3)(3,0.2)(4.5,0.35)(6,0.15)};
+    \node at (3,-1.2) {连续介质中的密度连续分布};
+\end{tikzpicture}
+\caption{连续介质假设示意图：流体被视为由连续分布的质点组成，物理量在空间上连续变化}
+\label{fig:continuum}
+\end{figure}
+
+\subsection{流体质点}
+
+在连续介质框架下，我们引入流体质点（fluid particle）的概念。流体质点是流体宏观运动的最小物质单元，它包含足够多的分子，使得对其定义的宏观物理量（密度、速度、温度等）具有统计意义，同时又足够小，在宏观上可视为一个几何点。
+
+流体质点的尺度 \(\ell\) 满足：
+\begin{myformula}
+\lambda \ll \ell \ll L
+\end{myformula}
+
+其中 \(\lambda\) 为分子平均自由程，\(L\) 为宏观特征尺度。例如，对于标准状况下的空气，取 \(\ell \sim 10^{-6}\,\text{m}\) 即可满足这一要求：它包含约 \(3\times 10^{10}\) 个分子（统计意义充分），同时又远小于典型的宏观尺度。
+
+在数学描述中，流体质点的位置 \(\mathbf{x}\) 和速度 \(\mathbf{u}\) 都是时间 \(t\) 的函数。流体质点的概念使我们能够运用微积分等数学工具来描述流体运动。
+
+\subsection{流体的主要物理性质}
+
+\subsubsection{密度与压缩性}
+
+流体的密度定义为单位体积内的质量：
+
+\begin{myformula}
+\rho = \lim_{\Delta V \to \Delta V_0} \frac{\Delta m}{\Delta V}
+\end{myformula}
+
+其中 \(\Delta V_0\) 是流体质点尺度的体积。密度的倒数称为比体积（specific volume）\(v = 1/\rho\)。
+
+流体的压缩性用体积弹性模量（bulk modulus）来表征：
+
+\begin{myformula}
+E_v = -V\frac{dp}{dV} = \rho\frac{dp}{d\rho}
+\end{myformula}
+
+或等效地用等温压缩系数 \(\beta\)：
+\begin{myformula}
+\beta = -\frac{1}{V}\left(\frac{\partial V}{\partial p}\right)_T
+\end{myformula}
+
+对于不可压缩流动，我们假设 \(\rho = \text{const}\)，即 \(D\rho/Dt = 0\)。实际上，所有流体在一定程度上都是可压缩的，但在低速流动（马赫数 \(Ma = U/c < 0.3\)）中，密度变化很小（通常小于 \(5\%\)），可近似为不可压缩。水的体积弹性模量很大（约 \(2.2\times 10^9\,\text{Pa}\)），在多数情况下可视为不可压缩。
+
+\subsubsection{粘性}
+
+粘性是流体抵抗剪切变形的能力。当流体的相邻两层以不同速度运动时，层间存在内摩擦力（切应力）。牛顿内摩擦定律给出了切应力与速度梯度之间的线性关系：
+
+\begin{myformula}
+\tau = \mu \frac{du}{dy}
+\end{myformula}
+
+其中动力粘度 \(\mu\) 的单位为 \(\text{Pa}\cdot\text{s}\)。在流体力学中，常使用运动粘度（kinematic viscosity）：
+
+\begin{myformula}
+\nu = \frac{\mu}{\rho}
+\end{myformula}
+
+运动粘度的单位为 \(\text{m}^2/\text{s}\)。
+
+空气在 \(20^\circ\text{C}\) 时的运动粘度约为 \(1.5\times 10^{-5}\,\text{m}^2/\text{s}\)，水在 \(20^\circ\text{C}\) 时的运动粘度约为 \(1.0\times 10^{-6}\,\text{m}^2/\text{s}\)。常见流体的粘度随温度的变化规律不同：气体的粘度随温度升高而增大（分子热运动加剧），液体的粘度随温度升高而减小（分子间作用力减弱）。
+
+\subsubsection{牛顿流体与非牛顿流体}
+
+满足牛顿内摩擦定律（切应力与速度梯度成线性关系）的流体称为牛顿流体。水、空气、酒精、甘油等都是典型的牛顿流体。不满足这一线性关系的流体称为非牛顿流体。
+
+非牛顿流体包括以下几类：
+
+\begin{itemize}
+    \item 剪切变稀（shear-thinning）流体，如高分子溶液、油漆、熔融塑料等，其表观粘度随剪切率的增大而减小。
+    \item 剪切变稠（shear-thickening）流体，如浓淀粉溶液，其表观粘度随剪切率的增大而增大。
+    \item 宾汉塑性（Bingham plastic）流体，如牙膏、钻井泥浆、番茄酱等，它们需要克服一定的屈服应力后才会开始流动。
+    \item 粘弹性（viscoelastic）流体，如高分子熔体，同时具有粘性和弹性的特征。
+\end{itemize}
+
+在本课程中，如无特别说明，我们讨论的都是牛顿流体。
+
+\section{矢量与张量分析基础}
+
+\subsection{矢量微分算子}
+
+在流体力学中，我们频繁使用矢量微分算子。定义Nabla算子\(\Nabla\)为：
+
+\begin{myformula}
+\Nabla = \mathbf{i}\frac{\partial}{\partial x} + \mathbf{j}\frac{\partial}{\partial y} + \mathbf{k}\frac{\partial}{\partial z}
+\end{myformula}
+
+其中 \(\mathbf{i},\mathbf{j},\mathbf{k}\) 为直角坐标系的单位基矢量。
+
+对于标量场 \(\phi(\mathbf{x},t)\)，其梯度定义为：
+
+\begin{myformula}
+\Nabla\phi = \operatorname{grad}\phi = \frac{\partial\phi}{\partial x}\mathbf{i} + \frac{\partial\phi}{\partial y}\mathbf{j} + \frac{\partial\phi}{\partial z}\mathbf{k}
+\end{myformula}
+
+梯度的方向是函数增长最快的方向，其大小为该方向的方向导数。
+
+对于矢量场 \(\mathbf{u}(\mathbf{x},t) = (u_x, u_y, u_z)\)，其散度定义为：
+
+\begin{myformula}
+\Nabla \cdot \mathbf{u} = \operatorname{div}\mathbf{u} = \frac{\partial u_x}{\partial x} + \frac{\partial u_y}{\partial y} + \frac{\partial u_z}{\partial z}
+\end{myformula}
+
+散度表示矢量场在某点的"源"或"汇"的强度。对于不可压缩流动，\(\Nabla \cdot \mathbf{u} = 0\)。
+
+矢量场的旋度定义为：
+
+\begin{myformula}
+\Nabla \times \mathbf{u} = \operatorname{curl}\mathbf{u} = \begin{vmatrix}
+\mathbf{i} & \mathbf{j} & \mathbf{k} \\[2pt]
+\frac{\partial}{\partial x} & \frac{\partial}{\partial y} & \frac{\partial}{\partial z} \\[2pt]
+u_x & u_y & u_z
+\end{vmatrix}
+\end{myformula}
+
+旋度等于流体微团旋转角速度的两倍：\(\boldsymbol{\omega} = \Nabla\times\mathbf{u} = 2\boldsymbol{\Omega}\)。
+
+拉普拉斯算子（Laplacian）定义为梯度的散度：
+
+\begin{myformula}
+\Nabla^2 \phi = \Nabla\cdot(\Nabla\phi) = \frac{\partial^2\phi}{\partial x^2} + \frac{\partial^2\phi}{\partial y^2} + \frac{\partial^2\phi}{\partial z^2}
+\end{myformula}
+
+矢量场的拉普拉斯运算恒等式：
+\begin{myformula}
+\Nabla^2 \mathbf{u} = \Nabla(\Nabla\cdot\mathbf{u}) - \Nabla\times(\Nabla\times\mathbf{u})
+\end{myformula}
+
+\subsection{积分定理}
+
+高斯散度定理（Gauss's divergence theorem，或称奥氏定理）将体积分与面积分联系起来：
+
+\begin{myTheorem}{高斯散度定理}
+设 \(V\) 为空间中的一个区域，其边界为封闭曲面 \(S\)，\(\mathbf{n}\) 为 \(S\) 的单位外法向矢量，则对于任意连续可微的矢量场 \(\mathbf{F}\)，有：
+\begin{myformula}
+\iiint_V \Nabla \cdot \mathbf{F} \, dV = \oiint_S \mathbf{F} \cdot \mathbf{n} \, dS
+\end{myformula}
+\end{myTheorem}
+
+高斯定理的物理意义是：矢量场通过封闭曲面的通量等于该矢量场的散度在曲面所围区域内的体积分。在流体力学中，这一公式被广泛用于推导积分形式的控制方程。
+
+斯托克斯定理（Stokes' theorem）将线积分和面积分联系起来：
+
+\begin{myTheorem}{斯托克斯定理}
+设 \(S\) 为以闭合曲线 \(C\) 为边界的曲面，\(\mathbf{t}\) 为 \(C\) 的单位切向矢量，\(\mathbf{n}\) 为 \(S\) 的单位法向矢量（方向按右手法则确定），则：
+\begin{myformula}
+\oint_C \mathbf{F} \cdot d\mathbf{r} = \iint_S (\Nabla \times \mathbf{F}) \cdot \mathbf{n} \, dS
+\end{myformula}
+\end{myTheorem}
+
+斯托克斯定理将速度环量与涡通量联系起来，在涡动力学中起到核心作用。
+
+\subsection{张量基础}
+
+\subsubsection{张量的定义与表示}
+
+在笛卡尔坐标系中，张量是标量和矢量概念的推广。标量是零阶张量（1个分量），矢量是一阶张量（3个分量），二阶张量有9个分量。
+
+二阶张量在流体力学中极为重要。应力张量 \(\sigma_{ij}\) 和应变率张量 \(\varepsilon_{ij}\) 是典型的二阶张量。一个二阶张量可以表示为矩阵形式：
+
+\begin{myformula}
+\boldsymbol{\sigma} = [\sigma_{ij}] = \begin{pmatrix}
+\sigma_{11} & \sigma_{12} & \sigma_{13} \\
+\sigma_{21} & \sigma_{22} & \sigma_{23} \\
+\sigma_{31} & \sigma_{32} & \sigma_{33}
+\end{pmatrix}
+\end{myformula}
+
+其中第一个下标表示作用面的法向方向，第二个下标表示应力的方向。
+
+在流体力学中，通常使用爱因斯坦求和约定（Einstein summation convention）：重复的下标表示对该下标在取值范围内求和。例如：
+
+\begin{myformula}
+\sigma_{ii} = \sum_{i=1}^{3} \sigma_{ii} = \sigma_{11} + \sigma_{22} + \sigma_{33}
+\end{myformula}
+
+\begin{myformula}
+a_i b_i = \sum_{i=1}^{3} a_i b_i = a_1 b_1 + a_2 b_2 + a_3 b_3
+\end{myformula}
+
+\subsubsection{克罗内克符号与置换符号}
+
+克罗内克符号（Kronecker delta）\(\delta_{ij}\) 定义为：
+
+\begin{myformula}
+\delta_{ij} = \begin{cases}
+1, & i = j \\
+0, & i \neq j
+\end{cases}
+\end{myformula}
+
+\(\delta_{ij}\) 是二阶各向同性张量，满足 \(a_i \delta_{ij} = a_j\)。在流体力学中，压强对面积的作用力可以写为 \(-p\delta_{ij} n_j\)。
+
+置换符号（Levi-Civita symbol）\(\varepsilon_{ijk}\) 定义为：
+
+\begin{myformula}
+\varepsilon_{ijk} = \begin{cases}
++1, & (i,j,k) \text{ 为 } (1,2,3) \text{ 的偶排列} \\
+-1, & (i,j,k) \text{ 为 } (1,2,3) \text{ 的奇排列} \\
+0, & \text{有重复下标}
+\end{cases}
+\end{myformula}
+
+利用置换符号，叉乘可以简洁地表示为：
+
+\begin{myformula}
+(\mathbf{a} \times \mathbf{b})_i = \varepsilon_{ijk} a_j b_k
+\end{myformula}
+
+旋度的分量表示为：
+\begin{myformula}
+(\Nabla \times \mathbf{u})_i = \varepsilon_{ijk} \frac{\partial u_k}{\partial x_j}
+\end{myformula}
+
+一个重要恒等式：
+\begin{myformula}
+\varepsilon_{ijk}\varepsilon_{imn} = \delta_{jm}\delta_{kn} - \delta_{jn}\delta_{km}
+\end{myformula}
+
+\subsubsection{张量的运算}
+
+张量的缩并（contraction）是指令两个下标相等并求和，从而降低张量的阶数。例如，二阶张量 \(\sigma_{ij}\) 的缩并 \(\sigma_{ii}\) 是一个标量。
+
+两个矢量的并积（dyadic product）得到一个二阶张量：
+\begin{myformula}
+(\mathbf{a} \otimes \mathbf{b})_{ij} = a_i b_j
+\end{myformula}
+
+两个二阶张量的双点积（double dot product）是一个标量：
+\begin{myformula}
+\mathbf{A} : \mathbf{B} = A_{ij} B_{ij}
+\end{myformula}
+
+\subsubsection{各向同性张量}
+
+一个张量如果在任意正交变换下其分量保持不变，则称为各向同性张量。零阶张量（标量）和各向同性一阶张量（除零矢量外）比较简单。二阶各向同性张量的形式为 \(c\delta_{ij}\)，即与单位张量成比例。
+
+在牛顿流体的本构关系中，应力张量被表示为各向同性部分（压强）和偏斜部分的组合：
+
+\begin{myformula}
+\sigma_{ij} = -p\delta_{ij} + \tau_{ij}
+\end{myformula}
+
+其中 \(-p\delta_{ij}\) 为各向同性压强，\(\tau_{ij}\) 为偏应力张量。
+
+\subsection{常用矢量恒等式}
+
+以下恒等式在流体力学推导中频繁使用：
+
+\begin{myformula}
+\Nabla \times (\Nabla \phi) = \mathbf{0}
+\end{myformula}
+
+\begin{myformula}
+\Nabla \cdot (\Nabla \times \mathbf{u}) = 0
+\end{myformula}
+
+\begin{myformula}
+\Nabla \cdot (\phi \mathbf{u}) = \phi \Nabla \cdot \mathbf{u} + \mathbf{u} \cdot \Nabla \phi
+\end{myformula}
+
+\begin{myformula}
+\Nabla \times (\phi \mathbf{u}) = \Nabla \phi \times \mathbf{u} + \phi (\Nabla \times \mathbf{u})
+\end{myformula}
+
+\begin{myformula}
+\Nabla (\mathbf{u} \cdot \mathbf{v}) = \mathbf{u} \cdot \Nabla \mathbf{v} + \mathbf{v} \cdot \Nabla \mathbf{u} + \mathbf{u} \times (\Nabla \times \mathbf{v}) + \mathbf{v} \times (\Nabla \times \mathbf{u})
+\end{myformula}
+
+\begin{myformula}
+\mathbf{u} \cdot \Nabla \mathbf{u} = \Nabla\left(\frac{1}{2}|\mathbf{u}|^2\right) - \mathbf{u} \times (\Nabla \times \mathbf{u})
+\end{myformula}
+
+最后一个恒等式在推导伯努利方程时特别有用，因为它将非线性对流项分解为动能梯度和涡量的叉积。
+
+\section{物质导数}
+
+\subsection{拉格朗日描述与欧拉描述}
+
+在连续介质力学中，有两种基本的运动描述方法：拉格朗日描述和欧拉描述。
+
+拉格朗日描述（Lagrangian description）以物质坐标为自变量，跟随每个流体质点，追踪其位置、速度等物理量随时间的变化。设流体质点在初始时刻 \(t_0\) 的坐标为 \(\mathbf{X} = (X_1, X_2, X_3)\)（称为物质坐标或拉格朗日坐标），则质点在任意时刻 \(t\) 的位置为 \(\mathbf{x} = \mathbf{x}(\mathbf{X}, t)\)。这个函数给出了物质体的位置和形状的变化。
+
+欧拉描述（Eulerian description）以空间坐标 \(\mathbf{x} = (x_1, x_2, x_3)\) 和时间 \(t\) 为自变量，考察空间中固定点上的流体物理量随时间的变化。例如，速度场 \(\mathbf{u}(\mathbf{x}, t)\) 表示在时刻 \(t\)、位置 \(\mathbf{x}\) 处的流体质点的速度。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.0]
+    \draw[->] (0,0) -- (5.5,0) node[right] {$x$};
+    \draw[->] (0,0) -- (0,4.5) node[above] {$y$};
+    \draw[red,thick] (0.5,0.5) .. controls (1.5,1.5) and (2,0.8) .. (3.5,1.2);
+    \draw[blue,thick] (0.5,1.5) .. controls (1.5,2.5) and (2,1.8) .. (3.5,2.5);
+    \draw[green!60!black,thick] (0.5,2.5) .. controls (1.5,3.5) and (2,2.8) .. (3.5,3.8);
+    \fill[red] (0.5,0.5) circle (0.08) node[left] {$\mathbf{X}_1$};
+    \fill[blue] (0.5,1.5) circle (0.08) node[left] {$\mathbf{X}_2$};
+    \fill[green!60!black] (0.5,2.5) circle (0.08) node[left] {$\mathbf{X}_3$};
+    \node at (2.5,-0.8) {拉格朗日描述：跟随流体质点};
+    \begin{scope}[shift={(7,0)}]
+        \draw[->] (0,0) -- (5.5,0) node[right] {$x$};
+        \draw[->] (0,0) -- (0,4.5) node[above] {$y$};
+        \foreach \x in {1,2,3,4} {
+            \foreach \y in {1,2,3} {
+                \fill (\x,\y) circle (0.05);
+                \draw[->] (\x,\y) -- ++(0.3,0.2);
+            }
+        }
+        \node at (2.5,-0.8) {欧拉描述：固定空间点上的速度};
+    \end{scope}
+\end{tikzpicture}
+\caption{拉格朗日描述与欧拉描述对比}
+\label{fig:lagrange-euler}
+\end{figure}
+
+两种描述各有优缺点。拉格朗日描述直观且容易追踪物质变化，但流体的变形极大时难以处理。欧拉描述适合处理流体的大变形，是流体力学中最常用的框架。本课程主要采用欧拉描述。
+
+\subsection{物质导数的定义}
+
+在欧拉描述中，我们考察的是空间中固定点的物理量变化 \(\partial/\partial t\)（当地导数或局部导数）。但流体质点在运动过程中其物理量也会随之变化。物理量 \(f(\mathbf{x},t)\) 跟随流体质点的变化率称为物质导数（material derivative）或随体导数（substantial derivative），记作 \(Df/Dt\)。
+
+考虑一个流体质点，其位置 \(\mathbf{x}(t)\) 满足 \(d\mathbf{x}/dt = \mathbf{u}(\mathbf{x},t)\)。物理量 \(f(\mathbf{x}(t), t)\) 随该质点的时间变化率为：
+
+\begin{myformula}
+\frac{Df}{Dt} = \frac{\partial f}{\partial t} + \frac{\partial f}{\partial x}\frac{dx}{dt} + \frac{\partial f}{\partial y}\frac{dy}{dt} + \frac{\partial f}{\partial z}\frac{dz}{dt} = \frac{\partial f}{\partial t} + \mathbf{u}\cdot\Nabla f
+\end{myformula}
+
+因此：
+
+\begin{myTheorem}{物质导数公式}
+物理量 \(f(\mathbf{x},t)\) 的物质导数为：
+\begin{myformula}
+\frac{Df}{Dt} = \frac{\partial f}{\partial t} + \mathbf{u}\cdot\Nabla f
+\end{myformula}
+其中 \(\partial f/\partial t\) 是当地导数（local derivative），表示固定空间点上的变化率；\(\mathbf{u}\cdot\Nabla f\) 是对流导数（convective derivative），表示由于流体质点运动到不同位置而引起的物理量变化。
+\end{myTheorem}
+
+对于速度场本身的物质导数（即加速度）：
+
+\begin{myformula}
+\mathbf{a} = \frac{D\mathbf{u}}{Dt} = \frac{\partial \mathbf{u}}{\partial t} + \mathbf{u}\cdot\Nabla \mathbf{u}
+\end{myformula}
+
+在直角坐标系中：
+\begin{myformula}
+\frac{Du_i}{Dt} = \frac{\partial u_i}{\partial t} + u_j \frac{\partial u_i}{\partial x_j}
+\end{myformula}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.3]
+    \draw[->] (0,0) -- (5,0) node[right] {$x$};
+    \draw[->] (0,0) -- (0,4) node[above] {$t$};
+    \draw[blue,thick] (0.5,0.3) .. controls (1.5,1) and (1,2) .. (2,2.5) .. controls (3,3) and (3.5,2) .. (4.5,3.5);
+    \node[blue] at (4.8,3.8) {$\mathbf{x}(t)$};
+    \draw[->,red,thick] (2,2.5) -- (2.8,2.9);
+    \node[red] at (3.0,3.1) {$\frac{Df}{Dt}$};
+    \draw[dashed] (2,0) -- (2,2.5);
+    \draw[dashed] (3.1,0) -- (3.1,3.0);
+    \node at (2,-0.3) {$t$};
+    \node at (3.1,-0.3) {$t+\Delta t$};
+    \draw[->,green!60!black,thick] (1,0.6) -- (3,0.6);
+    \node[green!60!black] at (2,0.4) {$\mathbf{u}\cdot\Nabla f$ (对流)};
+    \draw[->,orange,thick] (3.5,0.5) -- (3.5,2.5);
+    \node[orange] at (4.0,1.5) {$\frac{\partial f}{\partial t}$ (当地)};
+\end{tikzpicture}
+\caption{物质导数的几何解释：当地变化与对流变化}
+\label{fig:material-derivative}
+\end{figure}
+
+\subsection{定常与非定常流动}
+
+定常流动（steady flow）是指任意固定空间点上的流动参数均不随时间变化的流动，即 \(\partial/\partial t = 0\)。在定常流动中，流线、迹线和流管均保持不变。需要注意的是，在定常流动中物质导数不一定为零，因为流体微团在运动中由一点运动到另一点时，其物理量仍可能发生变化。
+
+非定常流动（unsteady flow）是指流动参数随时间变化的流动。
+
+\begin{example}
+考虑一维速度场 \(u(x,t) = a x / (1 + b t)\)，其中 \(a\)、\(b\) 为常数。该速度场是否为定常的？计算物质加速度。
+
+解：当地加速度：
+\[
+\frac{\partial u}{\partial t} = -\frac{a b x}{(1 + b t)^2}
+\]
+
+对流加速度：
+\[
+u\frac{\partial u}{\partial x} = \frac{a x}{1 + b t} \cdot \frac{a}{1 + b t} = \frac{a^2 x}{(1 + b t)^2}
+\]
+
+物质加速度：
+\[
+\frac{Du}{Dt} = \frac{\partial u}{\partial t} + u\frac{\partial u}{\partial x} = \frac{a x (a - b)}{(1 + b t)^2}
+\]
+
+该流动是非定常的（\(\partial u/\partial t \neq 0\)，除非 \(b=0\)）。当速度分布为线性时，流体微团受到拉伸或压缩，其加速度与位置成正比。
+\end{example}
+
+\section{雷诺输运定理}
+
+\subsection{控制体与物质体}
+
+在推导流体力学基本方程时，我们需要考虑某个区域的物理量（如质量、动量、能量）随时间的变化率。有两种类型的区域：
+
+控制体（control volume）：固定在空间中（或按给定规律运动）的几何区域，流体可以穿过其边界。控制体的边界称为控制面（control surface）。
+
+物质体（material volume）：始终由同一组流体质点所占据的区域，其边界随流体一起运动，无流体穿过边界。物质体也称为系统（system）。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.2]
+    \draw[thick,blue,fill=blue!5] (0.5,1) ellipse (1.5 and 1);
+    \node[blue] at (0.5,2.3) {控制体 (CV)};
+    \draw[->,blue!60] (-1.5,1) -- (-0.3,1);
+    \draw[->,blue!60] (1.3,1) -- (2.5,1);
+    \node[blue] at (2,0.5) {控制面 (CS)};
+    \draw[->,blue,thick] (2,0.5) -- (1.8,1.0);
+    \begin{scope}[shift={(5,0)}]
+        \draw[thick,red,fill=red!5] (0.5,1) ellipse (1.5 and 1);
+        \node[red] at (0.5,2.3) {物质体 (MV)};
+        \draw[->,red] (2.2,1) -- (3.2,1.5);
+        \node[red] at (3.2,1.8) {$\mathbf{u}$};
+        \draw[thick,red,dashed] (1.2,1.5) ellipse (1.5 and 1);
+    \end{scope}
+\end{tikzpicture}
+\caption{控制体与物质体示意}
+\label{fig:cv-mv}
+\end{figure}
+
+\subsection{输运公式的推导}
+
+设 \(V(t)\) 为时刻 \(t\) 的物质体积，\(S(t)\) 为其边界。令 \(f(\mathbf{x},t)\) 为流体的某种物理量密度（可以是标量、矢量或张量），我们需要计算物质体积内 \(f\) 的总量随时间的变化率：
+
+\begin{myformula}
+\frac{d}{dt} \iiint_{V(t)} f(\mathbf{x},t) \, dV
+\end{myformula}
+
+由于积分区域 \(V(t)\) 本身随时间变化（跟随流体质点运动），我们不能直接将求导移到积分号内。利用雅可比行列式的物质导数 \(DJ/Dt = J(\Nabla\cdot\mathbf{u})\)，经过推导可得到：
+
+\begin{myTheorem}{雷诺输运定理}
+设 \(V(t)\) 为物质体积，\(S(t)\) 为其边界，则：
+\begin{myformula}
+\frac{d}{dt} \iiint_{V(t)} f \, dV = \iiint_{V(t)} \frac{\partial f}{\partial t} \, dV + \oiint_{S(t)} f(\mathbf{u}\cdot\mathbf{n}) \, dS
+\end{myformula}
+或等价地：
+\begin{myformula}
+\frac{d}{dt} \iiint_{V(t)} f \, dV = \iiint_{V(t)} \left[\frac{\partial f}{\partial t} + \Nabla\cdot(f\mathbf{u})\right] dV
+\end{myformula}
+\end{myTheorem}
+
+输运定理的物理意义非常直观：物质体系内某物理量的增加率等于控制体内该物理量的当地增加率加上通过控制面净流入的该物理量的通量。
+
+利用高斯散度定理，输运定理还有另一种等价形式：
+
+\begin{myformula}
+\frac{d}{dt} \iiint_{V(t)} f \, dV = \iiint_{V(t)} \left[\frac{Df}{Dt} + f(\Nabla\cdot\mathbf{u})\right] dV
+\end{myformula}
+
+\begin{proof}
+设 \(\mathbf{x} = \mathbf{x}(\mathbf{X}, t)\) 为从拉格朗日坐标 \(\mathbf{X}\) 到欧拉坐标 \(\mathbf{x}\) 的映射。物质体积积分可变换为：
+\[
+\iiint_{V(t)} f \, dV = \iiint_{V_0} f(\mathbf{x}(\mathbf{X},t), t) \, J \, dV_0
+\]
+其中 \(J = \det(\partial x_i/\partial X_j)\) 为雅可比行列式。对时间求导：
+\[
+\frac{d}{dt}\iiint_{V(t)} f \, dV = \iiint_{V_0} \left(\frac{Df}{Dt} J + f \frac{DJ}{Dt}\right) dV_0
+\]
+利用 \(DJ/Dt = J(\Nabla\cdot\mathbf{u})\)：
+\[
+= \iiint_{V_0} \left(\frac{Df}{Dt} + f(\Nabla\cdot\mathbf{u})\right) J \, dV_0 = \iiint_{V(t)} \left(\frac{Df}{Dt} + f(\Nabla\cdot\mathbf{u})\right) dV
+\]
+又因为 \(\frac{Df}{Dt} + f(\Nabla\cdot\mathbf{u}) = \frac{\partial f}{\partial t} + \Nabla\cdot(f\mathbf{u})\)，代入即得输运定理的散度形式。
+\end{proof}
+
+\subsection{输运定理的应用}
+
+雷诺输运定理是推导流体力学基本方程的基础工具。对不同的物理量取 \(f\)，可得到不同的守恒方程。
+
+\subsubsection{质量守恒（连续方程）}
+
+取 \(f = \rho\)，由质量守恒原理：物质体内总质量不变：
+\[
+\frac{d}{dt}\iiint_{V(t)} \rho \, dV = 0
+\]
+
+应用输运定理：
+\[
+\iiint_{V(t)} \left[\frac{\partial\rho}{\partial t} + \Nabla\cdot(\rho\mathbf{u})\right] dV = 0
+\]
+
+由积分区域的任意性，得到微分形式的质量守恒方程（连续性方程）：
+
+\begin{myformula}
+\frac{\partial\rho}{\partial t} + \Nabla\cdot(\rho\mathbf{u}) = 0
+\end{myformula}
+
+或等价地：
+\begin{myformula}
+\frac{D\rho}{Dt} + \rho(\Nabla\cdot\mathbf{u}) = 0
+\end{myformula}
+
+对于不可压缩流动，\(\rho = \text{const}\)，连续性方程简化为：
+
+\begin{myformula}
+\Nabla\cdot\mathbf{u} = 0 \quad \text{或} \quad \frac{\partial u_i}{\partial x_i} = 0
+\end{myformula}
+
+\subsubsection{动量守恒}
+
+取 \(f = \rho \mathbf{u}\)，由牛顿第二定律：物质体的动量变化率等于作用在其上的外力和：
+\[
+\frac{d}{dt}\iiint_{V(t)} \rho\mathbf{u} \, dV = \sum \mathbf{F}_{\text{ext}}
+\]
+
+外力包括体积力（如重力）\(\iiint_{V} \rho \mathbf{g} \, dV\) 和表面力 \(\oiint_{S} \boldsymbol{\sigma}\cdot\mathbf{n} \, dS\)，应用输运定理并利用散度定理，可得微分形式的动量方程（即柯西动量方程）：
+
+\begin{myformula}
+\rho\frac{D\mathbf{u}}{Dt} = \Nabla\cdot\boldsymbol{\sigma} + \rho\mathbf{g}
+\end{myformula}
+
+这是流体动力学中最基本的动量方程形式，适用于任何连续介质。
+
+\subsubsection{能量守恒}
+
+取 \(f = \rho(e + |\mathbf{u}|^2/2)\)，其中 \(e\) 为单位质量的内能，应用热力学第一定律可得能量方程。这将在后续章节中详细讨论。
+
+\subsection{输运定理的推广形式}
+
+对于固定的控制体 \(V\)，输运定理简化为：
+
+\begin{myformula}
+\frac{d}{dt} \iiint_{V} f \, dV = \iiint_{V} \frac{\partial f}{\partial t} \, dV
+\end{myformula}
+
+对于以速度 \(\mathbf{u}_s\) 运动的控制面 \(S(t)\)，广义的输运定理为：
+
+\begin{myformula}
+\frac{d}{dt} \iiint_{V(t)} f \, dV = \iiint_{V(t)} \frac{\partial f}{\partial t} \, dV + \oiint_{S(t)} f(\mathbf{u}_s\cdot\mathbf{n}) \, dS
+\end{myformula}
+
+这类形式在动网格问题（如自由表面流动、流体—结构耦合问题）中十分有用。
+
+\begin{example}
+在一维管流中，控制体由截面1和截面2围成。设密度为常数，截面面积分别为 \(A_1\) 和 \(A_2\)，速度分别为 \(u_1\) 和 \(u_2\)。由连续性方程，流入控制体的质量等于流出控制体的质量：
+\[
+\rho u_1 A_1 = \rho u_2 A_2
+\]
+即：
+\[
+u_1 A_1 = u_2 A_2
+\]
+这就是一维定常不可压缩流动的连续性条件：体积流量守恒。
+\end{example}
+
+\subsection{本章小结}
+
+本章介绍了流体力学的学科概貌、发展历程和主要应用领域。我们建立了连续介质假设和流体质点的概念，讨论了流体的主要物理性质（密度、压缩性、粘性），区分了牛顿流体与非牛顿流体。回顾了矢量与张量分析的基本工具，包括梯度、散度、旋度、高斯定理、斯托克斯定理以及克罗内克符号、置换符号和张量缩并运算。详细讨论了物质导数的概念和拉格朗日与欧拉两种描述框架。最后，推导了雷诺输运定理，并展示了它如何用于导出质量守恒和动量守恒方程。这些基础知识将为后续各章的学习提供必要的数学和物理基础。
+
+\begin{myalgorithm}{不可压缩流动的速度场计算框架}
+\begin{mycode}
+import numpy as np
+# 二维不可压缩流动：涡旋叠加均匀流
+# 速度场: u = U0 + Gamma/(2*pi) * (-y/(x^2+y^2))
+#           v = Gamma/(2*pi) * x/(x^2+y^2)
+
+def velocity_field(x, y, U0=1.0, Gamma=2.0):
+    r2 = x**2 + y**2
+    r2 = np.maximum(r2, 1e-10)
+    u = U0 - Gamma / (2*np.pi) * y / r2
+    v = Gamma / (2*np.pi) * x / r2
+    return u, v
+
+def check_divergence(x, y, dx=1e-6):
+    u_p, v_p = velocity_field(x+dx, y)
+    u_m, v_m = velocity_field(x-dx, y)
+    _, v_t = velocity_field(x, y+dx)
+    _, v_b = velocity_field(x, y-dx)
+    div = (u_p - u_m)/(2*dx) + (v_t - v_b)/(2*dx)
+    return div
+
+x_test, y_test = 1.0, 2.0
+print(f"Divergence at ({x_test}, {y_test}): "
+      f"{check_divergence(x_test, y_test):.2e}")
+\end{mycode}
+\end{myalgorithm}

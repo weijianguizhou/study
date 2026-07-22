@@ -1,0 +1,958 @@
+\chapter{计算流体力学导论}
+
+\intro{当流动的控制方程无法用解析方法求解时，数值方法成为唯一选择。计算流体力学（Computational Fluid Dynamics, CFD）利用计算机求解Navier-Stokes方程或其简化形式，已成为与理论和实验并列的第三种流体力学研究手段。}
+
+\section{CFD概述}
+
+\subsection{数值方法的必要性}
+
+流体力学控制方程——Navier-Stokes方程——是一组强非线性耦合偏微分方程。解析解极为稀少（Poiseuille流、Couette流、Stokes第一/二问题等），几乎没有任何实际工程流动可以获得完整的解析解。即使对于简化后的边界层方程（Blasius方程），也只能获得级数解或数值解。
+
+数值方法提供了一条全面而系统的替代途径：
+\begin{itemize}
+  \item 处理任意复杂的几何形状
+  \item 涵盖完整的非线性效应
+  \item 模拟实际工况（高$Re$、压缩性、多相、湍流）
+  \item 以远低于实验的成本提供全场信息
+\end{itemize}
+
+\begin{remark}
+CFD不替代理论和实验，而是补充它们。Richardson（1922）首次尝试用数值方法求解天气预报方程，拉开了数值模拟的序幕。现代CFD始于1960年代Harlow和Fromm的工作。
+\end{remark}
+
+\subsection{CFD工作流程}
+
+CFD的标准工作流程分为三个主要阶段：
+
+\begin{enumerate}
+  \item \textbf{前处理（Pre-processing）。}几何建模、网格生成（结构化/非结构化/笛卡尔自适应网格）、物理模型选择、边界条件与初始条件设定、物性参数定义。
+  \item \textbf{求解（Solving）。}控制方程离散化（FDM/FVM/FEM）、代数方程组求解（直接法/迭代法）、时间推进（显式/隐式）、收敛监控。
+  \item \textbf{后处理（Post-processing）。}流场可视化（速度矢量图、压力云图、流线、等值面）、积分量提取（升力系数、阻力系数、传热率）、验证（verification）与确认（validation）。
+\end{enumerate}
+
+\begin{remark}
+验证（Verification）回答"我们是否正确地求解了方程"——关注数值误差（离散误差、迭代误差、舍入误差）。确认（Validation）回答"我们是否求解了正确的方程"——关注物理模型与真实物理的符合程度。二者不可混淆。
+\end{remark}
+
+\section{控制方程的离散化}
+
+\subsection{三大离散化方法概述}
+
+将连续的偏微分方程转化为离散的代数方程组有三种基本途径：
+
+\begin{table}[H]
+\centering
+\caption{三种离散化方法对比}
+\label{tab:discretization_comparison}
+\begin{tabular}{p{2cm}p{3.5cm}p{3.5cm}p{3.5cm}}
+\toprule
+\textbf{项目} & \textbf{FDM} & \textbf{FVM} & \textbf{FEM} \\
+\midrule
+基本原理 & 用差分代替微分 & 积分形式的守恒律 & 加权余量法/变分原理 \\
+网格 & 结构化网格为主 & 支持各种网格 & 非结构化网格 \\
+守恒性 & 需特殊格式才守恒 & 天然守恒 & 弱守恒 \\
+数学基础 & Taylor展开 & Gauss散度定理 & 泛函分析 \\
+主流应用 & 学术研究/简单位置 & 绝大多数商业CFD软件 & 固体力学、蠕变流 \\
+代表软件 & -- & ANSYS Fluent, OpenFOAM & COMSOL, FEniCS \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+有限体积法以其天然的守恒性质成为现代工程CFD的主流方法，但有限差分法因其简单直观而最适合作为教学起点。本章以FDM为主线展开，结合Python代码说明实现细节。
+
+\subsection{有限差分法基本原理}
+
+考虑连续的标量函数$u(x)$，将其定义域用间距为$\Delta x$的均匀网格离散。网格节点$x_i = i\Delta x$上的函数值记作$u_i \equiv u(x_i)$。
+
+函数在$x_i$处的导数的定义是：
+
+\begin{myformula}
+\left.\frac{\mathrm{d}u}{\mathrm{d}x}\right|_{x_i} = \lim_{\Delta x\to 0}\frac{u(x_i+\Delta x) - u(x_i)}{\Delta x}
+\end{myformula}
+
+有限差分法的核心思想是：用有限间距的差商近似极限形式的导数。差商的构造不是唯一的，不同的构造方式产生不同的差分格式。
+
+\subsection{Taylor展开与截断误差}
+
+将$u(x_i + \Delta x)$在$x_i$处作Taylor展开：
+
+\begin{myformula}
+u(x_i + \Delta x) = u_i + \Delta x\left.\frac{\mathrm{d}u}{\mathrm{d}x}\right|_{x_i} + \frac{\Delta x^{2}}{2!}\left.\frac{\mathrm{d}^{2}u}{\mathrm{d}x^{2}}\right|_{x_i} + \frac{\Delta x^{3}}{3!}\left.\frac{\mathrm{d}^{3}u}{\mathrm{d}x^{3}}\right|_{x_i} + O(\Delta x^{4})
+\end{myformula}
+
+将$u(x_i - \Delta x)$在$x_i$处展开：
+
+\begin{myformula}
+u(x_i - \Delta x) = u_i - \Delta x\left.\frac{\mathrm{d}u}{\mathrm{d}x}\right|_{x_i} + \frac{\Delta x^{2}}{2!}\left.\frac{\mathrm{d}^{2}u}{\mathrm{d}x^{2}}\right|_{x_i} - \frac{\Delta x^{3}}{3!}\left.\frac{\mathrm{d}^{3}u}{\mathrm{d}x^{3}}\right|_{x_i} + O(\Delta x^{4})
+\end{myformula}
+
+\subsubsection{一阶导数的一阶精度差分}
+
+从正Taylor展开式解出$u'(x_i)$：
+
+\begin{myformula}
+\left.\frac{\mathrm{d}u}{\mathrm{d}x}\right|_{x_i} = \frac{u_{i+1} - u_i}{\Delta x} + O(\Delta x) \quad\text{(前向差分)}
+\end{myformula}
+
+从负Taylor展开式解出$u'(x_i)$：
+
+\begin{myformula}
+\left.\frac{\mathrm{d}u}{\mathrm{d}x}\right|_{x_i} = \frac{u_i - u_{i-1}}{\Delta x} + O(\Delta x) \quad\text{(后向差分)}
+\end{myformula}
+
+\subsubsection{一阶导数的二阶精度差分}
+
+将正负Taylor展开式相减，消去二阶导数项：
+
+\begin{myformula}
+\left.\frac{\mathrm{d}u}{\mathrm{d}x}\right|_{x_i} = \frac{u_{i+1} - u_{i-1}}{2\Delta x} + O(\Delta x^{2}) \quad\text{(中心差分)}
+\end{myformula}
+
+由于截断误差的阶数更高，中心差分通常给出更精确的结果。
+
+\subsubsection{二阶导数的二阶精度差分}
+
+将正负Taylor展开式相加，消去一阶导数项：
+
+\begin{myformula}
+\left.\frac{\mathrm{d}^{2}u}{\mathrm{d}x^{2}}\right|_{x_i} = \frac{u_{i+1} - 2u_i + u_{i-1}}{\Delta x^{2}} + O(\Delta x^{2})
+\end{myformula}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.9]
+  % Grid
+  \draw[ch10grid,step=1.5] (0,-0.5) grid (12,1);
+  
+  % Points
+  \foreach \x/\label in {1.5/$i-2$,3/$i-1$,4.5/$i$,6/$i+1$,7.5/$i+2$} {
+    \filldraw (\x,0) circle (2pt);
+    \node[below] at (\x,-0.3) {\label};
+  }
+  
+  % Arrows
+  \draw[<->,ch10arrow] (3,0.8) -- (6,0.8) node[midway,above] {中心差分 $2\Delta x$};
+  \draw[->,ch10arrow] (4.5,0.6) -- (6,0.6) node[midway,above] {前向 $\Delta x$};
+  \draw[->,ch10arrow,red] (6,0.4) -- (4.5,0.4) node[midway,below] {后向 $\Delta x$};
+  
+  \node[ch10label] at (6,1.5) {\Large 有限差分网格};
+  \node[ch10label] at (11,0) {$\cdots$};
+  \node[ch10label] at (-0.5,0) {$\cdots$};
+\end{tikzpicture}
+\caption{一维均匀网格上的有限差分近似示意}
+\label{fig:fdm_grid}
+\end{figure}
+
+\subsection{有限体积法简介}
+
+有限体积法不直接离散控制方程的微分形式，而是对每个网格控制体积积分守恒方程。对通用输运方程：
+
+\begin{myformula}
+\frac{\partial(\rho\phi)}{\partial t} + \nabla\cdot(\rho\mathbf{u}\phi) = \nabla\cdot(\Gamma\nabla\phi) + S_{\phi}
+\end{myformula}
+
+在控制体积$V$上积分并应用Gauss散度定理：
+
+\begin{myformula}
+\frac{\mathrm{d}}{\mathrm{d}t}\int_{V}\rho\phi\,\mathrm{d}V + \oint_{\partial V}\rho\phi\mathbf{u}\cdot\mathbf{n}\,\mathrm{d}A = \oint_{\partial V}\Gamma\nabla\phi\cdot\mathbf{n}\,\mathrm{d}A + \int_{V}S_{\phi}\,\mathrm{d}V
+\end{myformula}
+
+FVM在每个控制体积内自动满足守恒律，这是其相对于FDM的核心优势。
+
+\section{有限差分法详解}
+
+\subsection{一维稳态对流-扩散方程}
+
+作为FDM的入门实例，考虑一维稳态对流-扩散方程（这是流体力学中最基本的模型方程）：
+
+\begin{myformula}
+u\frac{\mathrm{d}\phi}{\mathrm{d}x} - \nu\frac{\mathrm{d}^{2}\phi}{\mathrm{d}x^{2}} = 0,\quad 0\leq x\leq L
+\end{myformula}
+
+边界条件：$\phi(0)=0$，$\phi(L)=1$。解析解为：
+
+\begin{myformula}
+\phi(x) = \frac{1-\exp(P e \cdot x/L)}{1-\exp(P e)}
+\end{myformula}
+
+其中$Pe = uL/\nu$为Peclet数，表征对流与扩散的相对强弱。
+
+利用二阶中心差分离散化：
+
+\begin{myformula}
+u\frac{\phi_{i+1}-\phi_{i-1}}{2\Delta x} - \nu\frac{\phi_{i+1}-2\phi_i+\phi_{i-1}}{\Delta x^{2}} = 0
+\end{myformula}
+
+整理为三对角形式：
+
+\begin{myformula}
+-\left(2+\frac{u\Delta x}{\nu}\right)\phi_{i-1} + 4\phi_i - \left(2-\frac{u\Delta x}{\nu}\right)\phi_{i+1} = 0
+\end{myformula}
+
+当网格Peclet数$Pe_{\Delta} = u\Delta x/\nu > 2$时，系数矩阵失去对角占优性，中心差分格式产生非物理振荡。此时需采用迎风格式（upwind scheme）：
+
+\begin{myformula}
+u\frac{\phi_i-\phi_{i-1}}{\Delta x} - \nu\frac{\phi_{i+1}-2\phi_i+\phi_{i-1}}{\Delta x^{2}} = 0, \quad u>0
+\end{myformula}
+
+迎风格式永远保持对角占优，但引入一阶精度的人工耗散（数值耗散）。
+
+\subsection{高精度格式}
+
+一阶迎风格式虽然稳定，但数值耗散过强，抹平了真实的物理梯度。高精度格式在稳定性和精度之间寻求平衡。
+
+\noindent\textbf{QUICK格式（Leonard, 1979）}在控制体积界面上用三个上游节点的二次插值构造对流项：
+
+\begin{myformula}
+\phi_e = \frac{3}{8}\phi_i + \frac{6}{8}\phi_{i+1} - \frac{1}{8}\phi_{i-1} \quad (u>0)
+\end{myformula}
+
+QUICK格式具有三阶精度，广泛应用于传热与流动问题。
+
+\noindent\textbf{TVD格式（Total Variation Diminishing）}确保总变差不会随时间增加——在激波附近不产生伪振荡。Harten（1983）提出的TVD条件是高分辨率激波捕捉格式的理论基石。当格式的"
+
+\noindent\textbf{WENO格式（Weighted Essentially Non-Oscillatory）}在多个候选模板上分别重构，然后以光滑度指示器为权重进行凸组合——在光滑区获得高精度，在间断处自动降阶。
+
+\section{一维对流方程}
+
+\subsection{方程与物理意义}
+
+一维对流方程（又称线性对流方程或一维波动方程）是CFD中最基本的模型方程：
+
+\begin{myformula}
+\frac{\partial u}{\partial t} + c\frac{\partial u}{\partial x} = 0
+\end{myformula}
+
+其中$c$为对流速度（常数）。该方程的通解为$u(x,t) = u_0(x - ct)$，即初始波形以速度$c$传播而不改变形状。
+
+尽管方程形式极为简单，其数值求解却暴露了计算流体力学中几乎所有的核心困难——数值耗散、数值色散、稳定性条件、迎风特性。
+
+\subsection{FTCS格式（不稳定）}
+
+最"自然"的差分离散是FTCS（Forward Time Central Space）：
+
+\begin{myformula}
+\frac{u_i^{n+1}-u_i^{n}}{\Delta t} + c\frac{u_{i+1}^{n}-u_{i-1}^{n}}{2\Delta x} = 0
+\end{myformula}
+
+von Neumann稳定性分析（见第6节）表明FTCS格式是无条件不稳定的——无论$\Delta t$多小，舍入误差都会随时间指数放大。这是一个"看似合理、实则无用"的格式，极具警示意义。
+
+\subsection{迎风格式}
+
+将空间差分替换为与对流方向一致的单侧差分：
+
+\begin{myformula}
+\frac{u_i^{n+1}-u_i^{n}}{\Delta t} + c\frac{u_i^{n}-u_{i-1}^{n}}{\Delta x} = 0 \quad (c>0)
+\end{myformula}
+
+稳定性条件为$0 \leq \text{CFL} = c\Delta t/\Delta x \leq 1$（其中CFL为Courant-Friedrichs-Lewy数）。迎风格式无条件满足此条件的局部约束。
+
+迎风格式截断误差的Taylor展开表明其等价于求解以下"修改方程"（modified equation）：
+
+\begin{myformula}
+\frac{\partial u}{\partial t} + c\frac{\partial u}{\partial x} = \frac{c\Delta x}{2}\left(1-\frac{c\Delta t}{\Delta x}\right)\frac{\partial^{2}u}{\partial x^{2}} + O(\Delta x^{2})
+\end{myformula}
+
+等式右端的二阶导数项是格式的数值耗散——它使波幅衰减。对于传播数十倍波长距离的声波模拟，一阶迎风会完全抹平波形。
+
+\subsection{Lax-Wendroff格式}
+
+Lax和Wendroff（1960）提出的二阶精度格式在CFD历史上具有里程碑意义。其构造思路是：先用半步长Lax格式推进，再在此中间状态上用中心差分：
+
+\textbf{第一步（半步预测）：}
+
+\begin{myformula}
+u_{i+1/2}^{n+1/2} = \frac{1}{2}(u_i^{n}+u_{i+1}^{n}) - \frac{c\Delta t}{2\Delta x}(u_{i+1}^{n} - u_i^{n})
+\end{myformula}
+
+\textbf{第二步（整步修正）：}
+
+\begin{myformula}
+u_i^{n+1} = u_i^{n} - \frac{c\Delta t}{\Delta x}\left(u_{i+1/2}^{n+1/2} - u_{i-1/2}^{n+1/2}\right)
+\end{myformula}
+
+合并为单步形式：
+
+\begin{myformula}
+u_i^{n+1} = u_i^{n} - \frac{c\Delta t}{2\Delta x}(u_{i+1}^{n}-u_{i-1}^{n}) + \frac{c^{2}\Delta t^{2}}{2\Delta x^{2}}(u_{i+1}^{n}-2u_i^{n}+u_{i-1}^{n})
+\end{myformula}
+
+Lax-Wendroff格式在$0< \text{CFL}<1$时条件稳定，其修改方程的耗散项为$O(\Delta x^{2})$，远小于迎风格式的$O(\Delta x)$。但同时引入了三阶色散项，导致波包变形——在激波附近产生"后缘振荡"。
+
+\subsection{修正方程的物理诠释}
+
+所有数值格式的截断误差都可视作在原始PDE上叠加了高阶导数项。偶阶导数项（$\partial^{2}u/\partial x^{2}$、$\partial^{4}u/\partial x^{4}$等）产生耗散——衰减波的幅度。奇阶导数项（$\partial^{3}u/\partial x^{3}$、$\partial^{5}u/\partial x^{5}$等）产生色散——不同波数的波以不同速度传播，导致波包变形。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Plot area
+  \draw[->] (0,0) -- (8,0) node[right] {$x$};
+  \draw[->] (0,-1.5) -- (0,1.5) node[above] {$u$};
+  
+  % Exact solution
+  \draw[ch10exact,ultra thick] plot[smooth] coordinates {
+    (0,0) (0.5,0.1) (1.0,0.8) (1.5,1.2) (2.0,1.0) (2.5,0.2) (3,0) (3.5,-0.4) (4,-0.5) (4.5,-0.2) (5,0)
+  };
+  \node[ch10label] at (5.8,0.5) {精确解};
+  
+  % Dissipation
+  \draw[ch10dissipation,thick] plot[smooth] coordinates {
+    (0,0) (0.5,0.05) (1.0,0.55) (1.5,0.9) (2.0,0.75) (2.5,0.15) (3,0) (3.5,-0.25) (4,-0.35) (4.5,-0.12) (5,0)
+  };
+  \node[ch10label] at (5.8,0.9) {数值耗散};
+  
+  % Dispersion  
+  \draw[ch10dispersion,thick,dashed] plot[smooth] coordinates {
+    (0,0) (0.5,0.15) (1.0,0.9) (1.5,0.6) (2.0,1.1) (2.5,0.1) (3,0.3) (3.5,-0.5) (4,-0.3) (4.5,-0.1) (5,0.1)
+  };
+  \node[ch10label] at (5.8,1.4) {数值色散};
+\end{tikzpicture}
+\caption{数值耗散（波幅衰减）与数值色散（波形错位）的对比}
+\label{fig:dissipation_dispersion}
+\end{figure}
+
+\section{一维扩散方程}
+
+\subsection{方程描述}
+
+一维非稳态扩散方程（热传导方程）：
+
+\begin{myformula}
+\frac{\partial u}{\partial t} = \nu\frac{\partial^{2}u}{\partial x^{2}}
+\end{myformula}
+
+其中$\nu$为扩散系数。初始条件$u(x,0)=u_0(x)$，边界条件为Dirichlet或Neumann型。
+
+\subsection{显式FTCS格式}
+
+时间前向、空间中心差分：
+
+\begin{myformula}
+\frac{u_i^{n+1} - u_i^{n}}{\Delta t} = \nu\frac{u_{i+1}^{n} - 2u_i^{n} + u_{i-1}^{n}}{\Delta x^{2}}
+\end{myformula}
+
+整理得显式推进公式：
+
+\begin{myformula}
+u_i^{n+1} = u_i^{n} + \frac{\nu\Delta t}{\Delta x^{2}}(u_{i+1}^{n} - 2u_i^{n} + u_{i-1}^{n})
+\end{myformula}
+
+von Neumann稳定性分析给出稳定性条件：
+
+\begin{myTheorem}{扩散方程显式格式的稳定性条件}
+FTCS格式求解扩散方程的稳定性条件为：
+\begin{myformula}
+d = \frac{\nu\Delta t}{\Delta x^{2}} \leq \frac{1}{2}
+\end{myformula}
+其中$d$为扩散数（扩散CFL数）。这比对流方程的CFL条件$c\Delta t/\Delta x\leq 1$更为苛刻——当网格加密时，$\Delta t$必须以$\Delta x^{2}$的比例减小。
+\end{myTheorem}
+
+\subsection{隐式格式}
+
+为避免显式格式的严格稳定性限制，采用隐式时间离散：
+
+\begin{myformula}
+\frac{u_i^{n+1} - u_i^{n}}{\Delta t} = \nu\frac{u_{i+1}^{n+1} - 2u_i^{n+1} + u_{i-1}^{n+1}}{\Delta x^{2}}
+\end{myformula}
+
+整理为三对角线性系统：
+
+\begin{myformula}
+-d\,u_{i-1}^{n+1} + (1+2d)\,u_i^{n+1} - d\,u_{i+1}^{n+1} = u_i^{n}
+\end{myformula}
+
+隐式格式为无条件稳定（von Neumann分析给出$|G|\leq 1$，对所有$\Delta t>0$成立），但每时间步需求解三对角线性系统（可用Thomas算法高效求解，$O(N)$运算量）。
+
+\subsection{Crank-Nicolson格式}
+
+Crank和Nicolson（1947）提出的格式在时间上取$n$和$n+1$时刻空间离散的算术平均：
+
+\begin{myformula}
+\frac{u_i^{n+1}-u_i^{n}}{\Delta t} = \frac{\nu}{2}\left[\frac{u_{i+1}^{n+1}-2u_i^{n+1}+u_{i-1}^{n+1}}{\Delta x^{2}} + \frac{u_{i+1}^{n}-2u_i^{n}+u_{i-1}^{n}}{\Delta x^{2}}\right]
+\end{myformula}
+
+Crank-Nicolson格式：
+\begin{itemize}
+  \item 无条件稳定
+  \item 时间截断误差$O(\Delta t^{2})$，空间截断误差$O(\Delta x^{2})$
+  \item 每时间步需求解三对角系统（与全隐式同）
+  \item 对高频分量缺乏耗散，可能产生非物理振荡
+\end{itemize}
+
+\section{稳定性分析}
+
+\subsection{von Neumann方法}
+
+von Neumann方法（又称Fourier稳定性分析）是线性PDE有限差分离散的经典稳定性分析工具。其步骤为：
+
+\begin{enumerate}
+  \item 将数值解分解为Fourier级数：$u_j^{n} = \sum_{k} G^{n} e^{ikj\Delta x}$。
+  \item 代入差分格式，得到放大因子$G(k)$。
+  \item 格式稳定的充要条件为$|G(k)| \leq 1$，对所有波数$k$。
+\end{enumerate}
+
+对一维对流方程的FTCS格式，放大因子为$G = 1 - i\text{CFL}\sin(k\Delta x)$，$|G| = \sqrt{1 + \text{CFL}^{2}\sin^{2}(k\Delta x)} \geq 1$——格式无条件不稳定。
+
+对Lax-Wendroff格式，$|G|^{2} = 1 - \text{CFL}^{2}(1-\text{CFL}^{2})[1-\cos(k\Delta x)]^{2}$，当$0\leq\text{CFL}\leq1$时$|G|\leq 1$——格式条件稳定。
+
+\subsection{CFL条件}
+
+\begin{myTheorem}{CFL条件}
+对双曲型方程的显式差分格式，数值依赖域必须包含物理依赖域，即：
+\begin{myformula}
+\text{CFL} = \frac{|c|\Delta t}{\Delta x} \leq 1
+\end{myformula}
+这是稳定的必要条件（非充分条件）。
+\end{myTheorem}
+
+CFL条件的物理意义是：在一个时间步内，流动信息传播的距离不得超过一个网格间距。如果CFL条件被违反，数值格式"看不到"来自邻点的信息，必然不稳定。
+
+对于扩散方程，稳定性条件的形式与CFL条件不同——扩散是个无限速度传播的过程（抛物型），不需要有限速度的约束，但显式步长仍受$d\leq 1/2$的限制以确保数值稳定。
+
+\subsection{耗散与色散误差的定量描述}
+
+修改方程分析（Warming \& Hyett, 1974）通过将差分格式的截断误差代入原始PDE，导出数值方法实际求解的"修改方程"。修改方程的偶阶导数项系数$\mu_{2n}$和奇阶导数项系数$\mu_{2n+1}$分别度量耗散和色散。
+
+对一维对流方程的迎风格式，修改方程为：
+
+\begin{myformula}
+\frac{\partial u}{\partial t} + c\frac{\partial u}{\partial x} = \frac{c\Delta x}{2}(1-\text{CFL})\frac{\partial^{2}u}{\partial x^{2}}
++ \frac{c\Delta x^{2}}{6}(2\text{CFL}^{2}-3\text{CFL}+1)\frac{\partial^{3}u}{\partial x^{3}}
++ O(\Delta x^{3})
+\end{myformula}
+
+当$\text{CFL}=1$时，耗散项系数为零——这就是为什么$\text{CFL}=1$时迎风格式给出精确解的原因。
+
+\section{不可压NS方程的数值求解}
+
+\subsection{压力-速度耦合问题}
+
+对于不可压缩流动，连续性方程$\nabla\cdot\mathbf{u}=0$对速度施加了散度为零的约束，而动量方程中压力以梯度形式出现——压力没有独立的演化方程。这种压力-速度耦合是不可压NS方程数值求解的核心困难。
+
+从动量方程取散度，利用$\nabla\cdot\mathbf{u}=0$，得到压力Poisson方程：
+
+\begin{myformula}
+-\nabla^{2}p = \nabla\cdot(\mathbf{u}\cdot\nabla\mathbf{u}) = \frac{\partial^{2}(u_i u_j)}{\partial x_i \partial x_j}
+\end{myformula}
+
+这一Poisson方程是椭圆型的，需要在整个流场上同时满足——这体现了不可压缩性的"全局性"。
+
+\subsection{投影法}
+
+Chorin（1967, 1968）提出的投影法（又称分数步法或Chorin投影法）是解决压力-速度耦合问题的经典方案：
+
+\begin{myenum}
+  \item \textbf{预测步（动量步）：}求解不含压力梯度的动量方程，得到中间速度$\mathbf{u}^{*}$：
+  \begin{myformula}
+  \frac{\mathbf{u}^{*} - \mathbf{u}^{n}}{\Delta t} = -(\mathbf{u}^{n}\cdot\nabla)\mathbf{u}^{n} + \nu\nabla^{2}\mathbf{u}^{n}
+  \end{myformula}
+  
+  \item \textbf{投影步（压力修正步）：}利用$\nabla\cdot\mathbf{u}^{n+1}=0$将中间速度投影到无散度空间：
+  \begin{myformula}
+  \frac{\mathbf{u}^{n+1} - \mathbf{u}^{*}}{\Delta t} = -\nabla p^{n+1}
+  \end{myformula}
+  
+  \item \textbf{求解压力Poisson方程：}对投影步骤取散度并利用$\nabla\cdot\mathbf{u}^{n+1}=0$：
+  \begin{myformula}
+  \nabla^{2}p^{n+1} = \frac{1}{\Delta t}\nabla\cdot\mathbf{u}^{*}
+  \end{myformula}
+  
+  \item \textbf{速度修正：}
+  \begin{myformula}
+  \mathbf{u}^{n+1} = \mathbf{u}^{*} - \Delta t\,\nabla p^{n+1}
+  \end{myformula}
+\end{myenum}
+
+投影法的思想在数学上等价于Hodge分解定理：任何矢量场可以唯一地分解为无散分量和一个标量的梯度之和。
+
+\subsection{SIMPLE算法}
+
+SIMPLE（Semi-Implicit Method for Pressure-Linked Equations, Patankar \& Spalding, 1972）是压力基求解器中应用最广的算法。其核心迭代步骤为：
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=1.2cm, auto]
+  \tikzset{ch10block/.style={rectangle, draw, thick, rounded corners, minimum width=4.5cm, minimum height=0.8cm, font=\small}}
+  \tikzset{ch10arrow/.style={->, >=stealth, thick}}
+  
+  \node[ch10block] (init) {1. 假定压力场$p^{*}$};
+  \node[ch10block] (momentum) [below of=init] {2. 求解动量方程→$u^{*},v^{*}$};
+  \node[ch10block] (pcorrect) [below of=momentum] {3. 求解压力修正方程→$p'$};
+  \node[ch10block] (correct) [below of=pcorrect] {4. 修正速度和压力};
+  \node[ch10block] (other) [below of=correct] {5. 求解其他标量方程($k,\varepsilon,\dots$)};
+  \node[ch10block] (check) [below of=other] {6. 收敛？};
+  \node[ch10block] (end) [below of=check, fill=ch10final!30] {结束};
+  
+  \draw[ch10arrow] (init) -- (momentum);
+  \draw[ch10arrow] (momentum) -- (pcorrect);
+  \draw[ch10arrow] (pcorrect) -- (correct);
+  \draw[ch10arrow] (correct) -- (other);
+  \draw[ch10arrow] (other) -- (check);
+  \draw[ch10arrow] (check) -- node[right] {是} (end);
+  \draw[ch10arrow] (check.east) -- ++(1.5,0) |- node[right,pos=0.75] {否} (momentum.east);
+\end{tikzpicture}
+\caption{SIMPLE算法迭代流程}
+\label{fig:simple}
+\end{figure}
+
+SIMPLE的关键是推导"压力修正方程"。将速度修正量$u',v'$与压力修正量$p'$通过简化的动量方程连接，代入离散连续性方程，得到关于$p'$的线性系统。由于简化假设，SIMPLE通常需要欠松弛以确保收敛。
+
+\section{Python数值示例}
+
+本节通过Python代码实现本章前各节讨论的算法，将理论转化为可运行的数值实验。
+
+\subsection{一维对流方程求解}
+
+\begin{lstlisting}[language=Python]
+import numpy as np
+import matplotlib.pyplot as plt
+
+##################################################
+# 1D Linear Convection Equation
+# du/dt + c * du/dx = 0
+# Multiple schemes: FTCS, Upwind, Lax-Wendroff
+##################################################
+
+def convection_1d(nx=81, c=1.0, dx=0.025, dt=0.0125, timesteps=100,
+                  scheme='upwind'):
+    """
+    Solve 1D convection equation with periodic BC.
+    
+    Parameters
+    ----------
+    nx : int
+        Number of grid points
+    c : float
+        Convection speed
+    dx : float
+        Grid spacing
+    dt : float
+        Time step
+    timesteps : int
+        Number of time steps
+    scheme : str
+        'ftcs', 'upwind', or 'lax-wendroff'
+    """
+    # CFL number
+    cfl = c * dt / dx
+    print(f"CFL = {cfl:.4f}")
+    
+    # Initial condition: Gaussian wave packet
+    x = np.linspace(0, 2.0, nx)
+    u0 = np.exp(-((x - 0.5) / 0.1) ** 2)
+    u = u0.copy()
+    u_old = np.zeros_like(u)
+    
+    # Storage for plotting
+    u_history = [u0.copy()]
+    
+    for n in range(timesteps):
+        u_old[:] = u[:]
+        
+        if scheme == 'ftcs':
+            # FTCS (unstable for cfl > 0.5)
+            for i in range(1, nx - 1):
+                u[i] = u_old[i] - cfl / 2.0 * (u_old[i + 1] - u_old[i - 1])
+        
+        elif scheme == 'upwind':
+            # First-order upwind
+            for i in range(1, nx - 1):
+                u[i] = u_old[i] - cfl * (u_old[i] - u_old[i - 1])
+        
+        elif scheme == 'lax-wendroff':
+            # Lax-Wendroff second-order
+            for i in range(1, nx - 1):
+                u[i] = (u_old[i] 
+                        - cfl / 2.0 * (u_old[i + 1] - u_old[i - 1])
+                        + cfl**2 / 2.0 * (u_old[i + 1] - 2 * u_old[i] 
+                                          + u_old[i - 1]))
+        
+        # Periodic boundary conditions
+        u[0] = u[-2]
+        u[-1] = u[1]
+        
+        if n % 20 == 0:
+            u_history.append(u.copy())
+    
+    return x, u, u_history
+
+# Run and plot
+x, u, hist = convection_1d(nx=101, c=1.0, dx=0.02, dt=0.01,
+                           timesteps=120, scheme='lax-wendroff')
+
+plt.figure(figsize=(8, 4))
+for k, uk in enumerate(hist):
+    plt.plot(x, uk, label=f't = {k * 20 * 0.01:.2f}')
+plt.xlabel('x')
+plt.ylabel('u')
+plt.title('1D Convection — Lax-Wendroff')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.show()
+\end{lstlisting}
+
+\begin{remark}
+将上述代码中的`scheme`参数改为`'ftcs'`并运行，可观察到即使$\text{CFL}<1$，FTCS格式依然不稳定——稳定性和收敛性并非同一概念。
+\end{remark}
+
+\subsection{一维扩散方程求解}
+
+\begin{lstlisting}[language=Python]
+import numpy as np
+from scipy.linalg import solve_banded
+
+def diffusion_1d(nx=41, nu=0.3, dx=0.05, dt=0.00125, timesteps=500,
+                 method='explicit'):
+    """
+    Solve 1D diffusion equation: du/dt = nu * d^2u/dx^2
+    Boundary conditions: u(0) = 1, u(L) = 0
+    
+    Parameters
+    ----------
+    method : str
+        'explicit' (FTCS), 'implicit' (backward Euler), 
+        or 'crank-nicolson'
+    """
+    # Diffusion number
+    d = nu * dt / dx**2
+    print(f"Diffusion number d = {d:.4f}")
+    
+    if method == 'explicit' and d > 0.5:
+        raise ValueError(f"Explicit scheme unstable: d={d:.4f} > 0.5")
+    
+    x = np.linspace(0, 2.0, nx)
+    
+    # Initial condition: step function
+    u = np.ones(nx) * 0.0
+    u[0] = 1.0  # Left BC
+    u[-1] = 0.0  # Right BC
+    
+    for n in range(timesteps):
+        if method == 'explicit':
+            # FTCS explicit
+            u_new = u.copy()
+            for i in range(1, nx - 1):
+                u_new[i] = u[i] + d * (u[i + 1] - 2 * u[i] + u[i - 1])
+            u = u_new
+        
+        elif method == 'implicit':
+            # Backward Euler: tridiagonal system
+            a = np.ones(nx - 2) * (-d)
+            b = np.ones(nx - 2) * (1 + 2 * d)
+            c_vec = np.ones(nx - 2) * (-d)
+            
+            # Build banded matrix for solve_banded
+            ab = np.zeros((3, nx - 2))
+            ab[0, 1:] = c_vec[:-1]  # upper diagonal
+            ab[1, :] = b             # main diagonal
+            ab[2, :-1] = a[1:]       # lower diagonal
+            
+            rhs = u[1:nx-1].copy()
+            
+            # Solve tridiagonal system
+            u_interior = solve_banded((1, 1), ab, rhs)
+            u[1:nx-1] = u_interior
+        
+        elif method == 'crank-nicolson':
+            # Crank-Nicolson: also tridiagonal
+            a = np.ones(nx - 2) * (-d / 2)
+            b = np.ones(nx - 2) * (1 + d)
+            c_vec = np.ones(nx - 2) * (-d / 2)
+            
+            ab = np.zeros((3, nx - 2))
+            ab[0, 1:] = c_vec[:-1]
+            ab[1, :] = b
+            ab[2, :-1] = a[1:]
+            
+            rhs = np.zeros(nx - 2)
+            for i in range(1, nx - 1):
+                j = i - 1
+                rhs[j] = (d / 2) * u[i + 1] + (1 - d) * u[i] + (d / 2) * u[i - 1]
+            
+            u_interior = solve_banded((1, 1), ab, rhs)
+            u[1:nx-1] = u_interior
+        
+        u[0] = 1.0
+        u[-1] = 0.0
+    
+    return x, u
+
+# Comparison of methods
+x_exp, u_exp = diffusion_1d(method='explicit', dt=0.000625, timesteps=800)
+x_imp, u_imp = diffusion_1d(method='implicit', dt=0.005, timesteps=100)
+x_cn, u_cn = diffusion_1d(method='crank-nicolson', dt=0.005, timesteps=100)
+
+plt.figure(figsize=(8, 4))
+plt.plot(x_exp, u_exp, 'o-', label='Explicit (small dt)', ms=3)
+plt.plot(x_imp, u_imp, 's-', label='Implicit (large dt)', ms=3)
+plt.plot(x_cn, u_cn, '^-', label='Crank-Nicolson (large dt)', ms=3)
+plt.xlabel('x')
+plt.ylabel('u')
+plt.title('1D Diffusion — Method Comparison')
+plt.legend()
+plt.grid(alpha=0.3)
+plt.show()
+\end{lstlisting}
+
+\subsection{二维Poisson方程求解}
+
+\begin{lstlisting}[language=Python]
+import numpy as np
+
+def poisson_2d(nx=51, ny=51, Lx=1.0, Ly=1.0, tol=1e-5, max_iter=10000,
+               method='gauss-seidel'):
+    """
+    Solve 2D Poisson equation:
+    d^2p/dx^2 + d^2p/dy^2 = b(x,y)
+    with p = 0 on all boundaries.
+    
+    The source term b represents -div(u·grad u) 
+    from the pressure Poisson equation.
+    
+    Parameters
+    ----------
+    method : str
+        'jacobi' or 'gauss-seidel'
+    """
+    dx = Lx / (nx - 1)
+    dy = Ly / (ny - 1)
+    
+    # Source term: 2*sin(pi*x)*sin(pi*y) + ...
+    x = np.linspace(0, Lx, nx)
+    y = np.linspace(0, Ly, ny)
+    X, Y = np.meshgrid(x, y)
+    
+    # Analytical solution: p_exact = sin(pi*x)*sin(2*pi*y)
+    p_exact = np.sin(np.pi * X) * np.sin(2 * np.pi * Y)
+    
+    # Corresponding source term: b = -Laplacian(p_exact)
+    b = (np.pi**2 + 4 * np.pi**2) * p_exact
+    
+    # Initial guess
+    p = np.zeros((ny, nx))
+    p_new = np.zeros_like(p)
+    
+    # Boundary conditions (Dirichlet: p=0)
+    p[0, :] = 0.0
+    p[-1, :] = 0.0
+    p[:, 0] = 0.0
+    p[:, -1] = 0.0
+    
+    # Iteration
+    residuals = []
+    
+    for iteration in range(max_iter):
+        if method == 'jacobi':
+            # Jacobi iteration
+            p_new[1:-1, 1:-1] = (
+                dy**2 * (p[1:-1, 2:] + p[1:-1, :-2]) +
+                dx**2 * (p[2:, 1:-1] + p[:-2, 1:-1]) -
+                dx**2 * dy**2 * b[1:-1, 1:-1]
+            ) / (2 * (dx**2 + dy**2))
+            
+            p_new[0, :] = 0.0; p_new[-1, :] = 0.0
+            p_new[:, 0] = 0.0; p_new[:, -1] = 0.0
+            
+            # Residual
+            residual = np.linalg.norm(p_new - p) / np.linalg.norm(p_new)
+            residuals.append(residual)
+            
+            p = p_new.copy()
+        
+        elif method == 'gauss-seidel':
+            # Gauss-Seidel iteration (in-place)
+            p_old_norm = np.linalg.norm(p)
+            
+            for j in range(1, ny - 1):
+                for i in range(1, nx - 1):
+                    p[j, i] = (
+                        dy**2 * (p[j, i + 1] + p[j, i - 1]) +
+                        dx**2 * (p[j + 1, i] + p[j - 1, i]) -
+                        dx**2 * dy**2 * b[j, i]
+                    ) / (2 * (dx**2 + dy**2))
+            
+            residual = np.linalg.norm(b[1:-1,1:-1] -
+                ((p[1:-1,2:] - 2*p[1:-1,1:-1] + p[1:-1,:-2])/dx**2 +
+                 (p[2:,1:-1] - 2*p[1:-1,1:-1] + p[:-2,1:-1])/dy**2)
+            ) / np.linalg.norm(b)
+            residuals.append(residual)
+        
+        if residual < tol:
+            print(f"Converged in {iteration + 1} iterations, "
+                  f"residual = {residual:.2e}")
+            break
+    
+    # Error analysis
+    error = np.linalg.norm(p - p_exact) / np.linalg.norm(p_exact)
+    print(f"Relative L2 error = {error:.2e}")
+    
+    return x, y, p, p_exact, residuals
+
+# Run and visualize
+x, y, p_num, p_exact, res = poisson_2d(nx=65, ny=65, method='gauss-seidel')
+
+fig, axes = plt.subplots(1, 3, figsize=(15, 4))
+c0 = axes[0].contourf(x, y, p_exact, levels=20, cmap='RdBu_r')
+axes[0].set_title('Exact Solution')
+plt.colorbar(c0, ax=axes[0])
+
+c1 = axes[1].contourf(x, y, p_num, levels=20, cmap='RdBu_r')
+axes[1].set_title('Numerical (Gauss-Seidel)')
+plt.colorbar(c1, ax=axes[1])
+
+c2 = axes[2].contourf(x, y, p_num - p_exact, levels=20, cmap='RdBu_r')
+axes[2].set_title('Error')
+plt.colorbar(c2, ax=axes[2])
+
+for ax in axes:
+    ax.set_aspect('equal')
+plt.tight_layout()
+plt.show()
+
+# Convergence history
+plt.figure(figsize=(6, 4))
+plt.semilogy(res, 'b-', linewidth=1)
+plt.xlabel('Iteration')
+plt.ylabel('Residual')
+plt.title('Gauss-Seidel Convergence')
+plt.grid(alpha=0.3)
+plt.show()
+\end{lstlisting}
+
+\subsection{二维Poiseuille流动求解器}
+
+\begin{lstlisting}[language=Python]
+def poiseuille_2d_solver(nx=41, ny=41, Re=100, dt=0.001, nt=500):
+    """
+    Solve 2D incompressible Navier-Stokes for channel flow
+    using Chorin's projection method on a staggered grid.
+    
+    Domain: [0, Lx] x [-h, h], h = 0.5
+    Periodic in x, no-slip walls at y = ±h.
+    Constant pressure gradient dp/dx drives the flow.
+    """
+    Lx, Ly = 4.0, 1.0
+    dx = Lx / (nx - 1)
+    dy = Ly / (ny - 1)
+    
+    # Staggered grid: u at (i+0.5, j), v at (i, j+0.5), p at (i, j)
+    x = np.linspace(0, Lx, nx)
+    y = np.linspace(-Ly/2, Ly/2, ny)
+    X, Y = np.meshgrid(x, y)
+    
+    # Initialize fields
+    u = np.zeros((ny, nx))
+    v = np.zeros((ny, nx))
+    p = np.zeros((ny, nx))
+    
+    # Constants
+    nu = 1.0 / Re
+    dpdx = -2.0 * nu / (Ly/2)**2  # Pressure gradient for Poiseuille flow
+    
+    # Body force (pressure gradient)
+    fx = -dpdx * np.ones((ny, nx))
+    
+    for n in range(nt):
+        # ====== STEP 1: Predictor (diffusion + convection) ======
+        # Convection terms (central difference on staggered grid)
+        u_conv = np.zeros_like(u)
+        v_conv = np.zeros_like(v)
+        
+        # d(uu)/dx + d(uv)/dy for u-momentum
+        for j in range(1, ny - 1):
+            for i in range(1, nx - 1):
+                ue = 0.5 * (u[j, i] + u[j, i + 1])
+                uw = 0.5 * (u[j, i - 1] + u[j, i])
+                un = 0.5 * (u[j, i] + u[j + 1, i])
+                us = 0.5 * (u[j - 1, i] + u[j, i])
+                vn = 0.5 * (v[j, i] + v[j, i + 1])
+                vs = 0.5 * (v[j - 1, i] + v[j - 1, i + 1])
+                
+                u_conv[j, i] = ((ue**2 - uw**2) / dx + 
+                                (un * vn - us * vs) / dy)
+        
+        # Diffusion (2nd order central)
+        lap_u = np.zeros_like(u)
+        lap_v = np.zeros_like(v)
+        
+        lap_u[1:-1, 1:-1] = (
+            (u[1:-1, 2:] - 2 * u[1:-1, 1:-1] + u[1:-1, :-2]) / dx**2 +
+            (u[2:, 1:-1] - 2 * u[1:-1, 1:-1] + u[:-2, 1:-1]) / dy**2
+        )
+        
+        # Intermediate velocity
+        u_star = u + dt * (-u_conv + nu * lap_u + fx)
+        
+        # ====== STEP 2: Pressure Poisson equation ======
+        rhs = np.zeros((ny, nx))
+        rhs[1:-1, 1:-1] = (
+            (u_star[1:-1, 2:] - u_star[1:-1, :-2]) / (2 * dx) +
+            (v[2:, 1:-1] - v[:-2, 1:-1]) / (2 * dy)
+        ) / dt
+        
+        # Solve Poisson equation for pressure correction
+        # (Simplified: Gauss-Seidel with over-relaxation)
+        omega = 1.7  # SOR parameter
+        p_new = np.zeros_like(p)
+        
+        for _ in range(50):  # Inner iterations
+            p_new[1:-1, 1:-1] = (
+                dy**2 * (p_new[1:-1, 2:] + p_new[1:-1, :-2]) +
+                dx**2 * (p_new[2:, 1:-1] + p_new[:-2, 1:-1]) -
+                dx**2 * dy**2 * rhs[1:-1, 1:-1]
+            ) / (2 * (dx**2 + dy**2))
+            
+            # Periodic BC in x
+            p_new[1:-1, 0] = p_new[1:-1, -2]
+            p_new[1:-1, -1] = p_new[1:-1, 1]
+        
+        p = p_new.copy()
+        
+        # ====== STEP 3: Velocity correction ======
+        u[1:-1, 1:-1] = u_star[1:-1, 1:-1] - dt * (
+            p[1:-1, 2:] - p[1:-1, :-2]
+        ) / (2 * dx)
+        
+        # No-slip walls
+        u[0, :] = 0.0; u[-1, :] = 0.0
+    
+    # Check against analytical Poiseuille profile
+    y_mid = y
+    u_analytical = -dpdx / (2 * nu) * ((Ly/2)**2 - y_mid**2)
+    
+    return x, y, u, v, p, u_analytical
+
+# Run and compare
+x_p, y_p, u_p, v_p, p_p, u_ana = poiseuille_2d_solver(
+    nx=41, ny=41, Re=100, dt=0.0005, nt=1000)
+
+u_center = u_p[:, nx//2]
+print(f"Max velocity error: {np.max(np.abs(u_center - u_ana)):.4e}")
+
+plt.figure(figsize=(8, 4))
+plt.plot(y_p, u_center, 'ro', label='CFD', ms=4)
+plt.plot(y_p, u_ana, 'b-', label='Analytical', lw=2)
+plt.xlabel('y')
+plt.ylabel('u(y)')
+plt.title('Poiseuille Flow Validation')
+plt.legend()
+plt.grid(alpha=0.3)
+plt.show()
+\end{lstlisting}
+
+\begin{remark}
+以上Python示例展示了CFD代码的核心组件：网格定义、离散格式实现、边界条件处理、线性系统求解以及后处理比较。实际工程CFD软件（OpenFOAM、ANSYS Fluent等）在这些基本原理之上增加了自适应网格、并行计算、复杂几何处理和物理模型库，但核心算法与本节所示代码本质相同。
+\end{remark}
+
+\vspace{12pt}
+
+\noindent\textbf{本章要点回顾：}
+\begin{enumerate}
+  \item CFD的核心是将偏微分方程通过FDM/FVM/FEM转化为代数方程组。
+  \item 有限差分构造基于Taylor展开，截断误差决定格式的精度阶数。
+  \item 稳定性分析（von Neumann方法）和CFL条件是显式格式设计和使用的基石。
+  \item 数值耗散和数值色散是所有离散格式的固有特征，通过修改方程分析可定量理解。
+  \item 不可压NS方程的压力-速度耦合通过投影法或SIMPLE类算法解决。
+  \item 本章提供的Python代码覆盖了对流、扩散和Poisson方程的完整求解，可作为学习CFD的数值实验平台。
+\end{enumerate}

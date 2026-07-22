@@ -1,0 +1,483 @@
+\chapter{湍流模型与数值模拟}
+
+\intro{湍流被称为"经典物理学中最后一个未解决的问题"。从工程角度，完全解析湍流的全部尺度在绝大多数情况下既不可行也不必要。本章系统介绍湍流数值模拟的三条主要途径——RANS、LES和DNS——以及各类湍流模型的理论基础、适用范围和数值实现。}
+
+\section{湍流的多尺度本质}
+
+\subsection{从层流到湍流——转捩}
+
+Reynolds（1883）的经典圆管染色实验首次系统揭示了两种本质不同的流动状态：层流（有序、光滑）和湍流（无序、脉动）。从层流到湍流的转捩取决于Reynolds数：
+
+\begin{myformula}
+Re = \frac{UL}{\nu}
+\end{myformula}
+
+在圆管中，转捩的临界Reynolds数约为2300（取决于入口扰动水平）。在边界层中，转捩涉及更为复杂的过程：感受性（receptivity）→线性失稳（Tollmien-Schlichting波）→非线性相互作用→二次失稳→湍斑（turbulent spots）→充分发展湍流。
+
+\subsection{Kolmogorov的能量级串}
+
+Richardson（1922）提出了能量级串的定性图像，Kolmogorov（1941）用统计理论将其定量化。湍流可视为由尺度跨度极大的涡结构组成，其范围从积分尺度$L$（与流动几何尺寸同量级）到Kolmogorov耗散尺度$\eta$（在此尺度上动能被黏性耗散为热）。
+
+从量纲分析出发，Kolmogorov假设：在充分发展的湍流中，惯性子区的统计性质仅取决于能量耗散率$\varepsilon$和运动黏度$\nu$。由此导出Kolmogorov尺度：
+
+\begin{myformula}
+\eta = \left(\frac{\nu^{3}}{\varepsilon}\right)^{1/4},\qquad
+u_{\eta} = (\nu\varepsilon)^{1/4},\qquad
+\tau_{\eta} = \left(\frac{\nu}{\varepsilon}\right)^{1/2}
+\end{myformula}
+
+其中$\eta$为Kolmogorov长度尺度，$u_{\eta}$为速度尺度，$\tau_{\eta}$为时间尺度。
+
+\subsection{尺度分离与数值分辨率需求}
+
+\begin{myTheorem}{DNS的网格需求}
+积分尺度$L$与耗散尺度$\eta$之比为：
+\begin{myformula}
+\frac{L}{\eta} \sim Re^{3/4}
+\end{myformula}
+在三维空间中，直接数值模拟所需的总网格数为：
+\begin{myformula}
+N_{\text{DNS}} \sim \left(\frac{L}{\eta}\right)^{3} \sim Re^{9/4}
+\end{myformula}
+\end{myTheorem}
+
+\begin{example}
+对于$Re = 10^{6}$的边界层，DNS需要约$N \sim (10^{6})^{9/4} = 3.2\times 10^{13}$个网格点。假设每个网格点的求解需要$10^{3}$次浮点运算，总运算量约为$3\times 10^{16}$浮点运算。以目前最快的超级计算机（约$10^{18}$FLOPS）也需要数百小时——这还不考虑时间步长和统计收敛的需求。
+\end{example}
+
+\section{湍流数值模拟的三种途径}
+
+\subsection{方法总览}
+
+\begin{table}[H]
+\centering
+\caption{DNS、LES、RANS的对比}
+\label{tab:dns_les_rans}
+\begin{tabular}{p{2.2cm}p{3.5cm}p{3.5cm}p{3.5cm}}
+\toprule
+\textbf{特征} & \textbf{DNS} & \textbf{LES} & \textbf{RANS} \\
+\midrule
+分辨尺度 & 全部（含耗散尺度） & 大尺度（含惯性子区） & 仅平均量 \\
+亚格子/湍流模型 & 无 & 亚格子模型（SGS） & 雷诺应力模型 \\
+网格需求 & $Re^{9/4}$ & $Re^{0.4}\sim Re^{1.8}$ & 网格无关 \\
+计算成本 & 极高 & 中等至高 & 低 \\
+适用范围 & 低$Re$基础研究 & 中高$Re$，复杂几何 & 工程设计 \\
+输出 & 瞬时全场 & 滤波场+亚格子量 & 平均量+二阶矩 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Turbulence spectrum - log-log plot
+  % E(k) vs k
+  \draw[->] (0,0) -- (10,0) node[right] {$\log k$};
+  \draw[->] (0,0) -- (0,5.5) node[above] {$\log E(k)$};
+  
+  % Energy-containing range
+  \draw[ch11dns,ultra thick] (0.5,5) .. controls (2,4.5) and (2.5,3) .. (3.3,2.7);
+  \node[ch11label] at (1.5,3.8) {含能区\\$k^{-0}\sim k^{-2}$};
+  
+  % Inertial range (k^{-5/3})
+  \draw[ch11les,ultra thick] (3.3,2.7) -- (7.5,0.6);
+  \node[ch11label] at (5.5,2.0) {惯性子区\\$k^{-5/3}$};
+  
+  % Dissipation range
+  \draw[ch11rans,ultra thick] (7.5,0.6) .. controls (8.5,0.3) and (9.2,0.1) .. (10,0);
+  \node[ch11label] at (8.8,0.8) {耗散区};
+  
+  % Vertical lines for DNS/LES/RANS
+  \draw[ch11dns,thick,dashed] (9.2,-0.3) -- (9.2,4.5);
+  \node[ch11label] at (9.2,-0.7) {DNS\\全解析};
+  
+  \draw[ch11les,thick,dashed] (7.5,-0.3) -- (7.5,3.5);
+  \node[ch11label] at (7.5,-0.7) {LES\\截断};
+  
+  \draw[ch11rans,thick,dashed] (3.3,-0.3) -- (3.3,2.0);
+  \node[ch11label] at (3.3,-0.7) {RANS\\建模全部};
+  
+  % Annotations
+  \draw[<->,ch11dim] (0.3,1.5) -- (3.3,1.5) node[midway,below] {\footnotesize 建模};
+  \draw[<->,ch11dim] (3.3,1.5) -- (7.5,1.5) node[midway,below] {\footnotesize 模拟};
+  \draw[<->,ch11dim] (7.5,1.5) -- (9.5,1.5) node[midway,below] {\footnotesize 解析};
+\end{tikzpicture}
+\caption{湍流能谱与三种模拟方法的对应关系。DNS全解析所有尺度；LES截断于惯性子区中，小于截断尺度的涡需建模；RANS将所有尺度的脉动全部建模。}
+\label{fig:spectrum_schemes}
+\end{figure}
+
+\section{DNS——直接数值模拟}
+
+\subsection{DNS的数学描述}
+
+DNS不引入任何湍流模型，直接数值求解完整的非定常三维Navier-Stokes方程：
+
+\begin{myformula}
+\frac{\partial u_i}{\partial t} + u_j\frac{\partial u_i}{\partial x_j} = -\frac{1}{\rho}\frac{\partial p}{\partial x_i} + \nu\frac{\partial^{2}u_i}{\partial x_j\partial x_j},\qquad
+\frac{\partial u_i}{\partial x_i} = 0
+\end{myformula}
+
+由于不放宽任何尺度，DNS必须使用极细的网格和时间步长。空间方向一般采用谱方法（Fourier-Galerkin）或高精度紧致差分（Padé），时间方向采用低存储Runge-Kutta或半隐格式。
+
+\subsection{谱方法的优越性与局限性}
+
+对于简单几何（槽道、平板边界层、各向同性湍流），谱方法是最精确的离散手段。其核心思想是将解展开为一组基函数的级数：
+
+\begin{myformula}
+\mathbf{u}(\mathbf{x},t) = \sum_{\mathbf{k}} \hat{\mathbf{u}}_{\mathbf{k}}(t)\; e^{i\mathbf{k}\cdot\mathbf{x}}
+\end{myformula}
+
+代入NS方程后，非线性项（$\mathbf{u}\cdot\nabla\mathbf{u}$）成为谱空间中的卷积和。谱方法具有"指数收敛"——误差随$N$以$\exp(-cN)$的速度下降，远优于有限差分的代数收敛$O(\Delta x^{p})$。
+
+然而，谱方法仅适用于规则区域。对于复杂几何，高精度紧凑差分或谱元法（Patera, 1984）是折中的选择。
+
+\subsection{DNS的里程碑计算}
+
+\begin{itemize}
+  \item \textbf{Kim, Moin \& Moser（1987）：}槽道湍流，$Re_{\tau}=180$，约$4\times 10^{6}$网格点，验证了湍流结构的许多理论预测。
+  \item \textbf{Moser, Kim \& Mansour（1999）：}$Re_{\tau}=590$，约$1.28\times 10^{7}$网格点。
+  \item \textbf{Lee \& Moser（2015）：}$Re_{\tau}=5200$，约$2.4\times 10^{10}$网格点，当前DNS的上限。
+\end{itemize}
+
+\begin{remark}
+DNS的最大价值不在于工程应用，而在于为低精度模型（RANS和LES）提供"数值实验数据"——DNS数据库已成为湍流模型开发不可或缺的基准。
+\end{remark}
+
+\section{RANS湍流模型}
+
+\subsection{Reynolds平均}
+
+将瞬时速度分解为系综平均和脉动：
+
+\begin{myformula}
+u_i = \overline{u}_i + u'_i,\qquad \overline{u'_i} = 0
+\end{myformula}
+
+代入NS方程并取系综平均，得到Reynolds平均Navier-Stokes方程（RANS方程）：
+
+\begin{myformula}
+\frac{\partial\overline{u}_i}{\partial t} + \overline{u}_j\frac{\partial\overline{u}_i}{\partial x_j} = -\frac{1}{\rho}\frac{\partial\overline{p}}{\partial x_i} + \nu\frac{\partial^{2}\overline{u}_i}{\partial x_j\partial x_j} - \frac{\partial\overline{u'_i u'_j}}{\partial x_j}
+\end{myformula}
+
+其中$-\rho\overline{u'_i u'_j}$为\textbf{雷诺应力}（Reynolds stress）。雷诺应力是一个对称二阶张量，含有6个独立分量——它们是新未知量，使得RANS方程不封闭。湍流建模的核心就是构造雷诺应力与平均流动量之间的关系。
+
+\subsection{Boussinesq涡黏假设}
+
+Boussinesq（1877）类比牛顿黏性定律，假设雷诺应力与平均应变率成比例：
+
+\begin{myformula}
+-\overline{u'_i u'_j} = \nu_t\left(\frac{\partial\overline{u}_i}{\partial x_j} + \frac{\partial\overline{u}_j}{\partial x_i}\right) - \frac{2}{3}k\delta_{ij}
+\end{myformula}
+
+其中$\nu_t$为\textbf{湍流涡黏度}（eddy viscosity），$k = \frac{1}{2}\overline{u'_i u'_i}$为湍动能。这一假设将封闭问题从确定六个应力分量简化为确定一个标量$\nu_t$。
+
+\begin{remark}
+涡黏假设隐含了"湍流各向同性"和"局部平衡"两个假设——雷诺应力与平均应变率呈即时线性关系，不包含历史效应。对于分离流、强曲率流和二次流，这一假设失效。
+\end{remark}
+
+\subsection{零方程模型}
+
+零方程模型不引入额外的输运方程，直接用代数关系确定$\nu_t$。
+
+\noindent\textbf{Prandtl混合长度模型}是最早的湍流模型。在自由剪切流中：
+
+\begin{myformula}
+\nu_t = \ell_m^{2}\left|\frac{\partial\overline{u}}{\partial y}\right|,\qquad \ell_m = \kappa y\;\text{(边界层内层)}
+\end{myformula}
+
+其中$\kappa\approx 0.41$为von Kármán常数。混合长度模型极其简单，仅需指定$\ell_m$的分布。其缺点是：（1）对复杂流动需要经验指定$\ell_m$；（2）在分离点（$\partial\overline{u}/\partial y=0$）$\nu_t=0$，物理上不合理；（3）无法描述湍流的输运和扩散。
+
+\noindent\textbf{Baldwin-Lomax模型（1978）}是混合长度模型在航空航天领域的工程推广。它将边界层分为内层和外层，内层使用修改的Prandtl混合长度，外层使用尾迹函数。由于无需寻找边界层边缘，Baldwin-Lomax模型比积分边界层方法更适用于分离流动和复杂几何。
+
+\subsection{一方程模型}
+
+一方程模型在连续性方程和动量方程之外额外引入一个输运方程——通常是湍动能$k$方程。
+
+\noindent\textbf{Spalart-Allmaras模型（1992）}求解涡黏度$\tilde{\nu}$自身的输运方程：
+
+\begin{myformula}
+\frac{\partial\tilde{\nu}}{\partial t} + \overline{u}_j\frac{\partial\tilde{\nu}}{\partial x_j} = c_{b1}(1-f_{t2})\tilde{S}\tilde{\nu} + \frac{1}{\sigma}\left[\frac{\partial}{\partial x_j}\left((\nu+\tilde{\nu})\frac{\partial\tilde{\nu}}{\partial x_j}\right) + c_{b2}\frac{\partial\tilde{\nu}}{\partial x_j}\frac{\partial\tilde{\nu}}{\partial x_j}\right] - \left(c_{w1}f_{w} - \frac{c_{b1}}{\kappa^{2}}f_{t2}\right)\left(\frac{\tilde{\nu}}{d}\right)^{2}
+\end{myformula}
+
+\vspace{4pt}
+其中$\tilde{S}$为修正的涡量大小，$d$为到壁面的距离。Spalart-Allmaras模型是航空航天CFD中最成功的一方程模型，以其在附着流和轻微分离流中的良好性能以及实现的简洁性而著称。
+
+\subsection{两方程模型}
+
+两方程模型求解两个输运方程以确定速度和长度（或时间）尺度。
+
+\subsubsection{标准$k$-$\varepsilon$模型}
+
+$k$-$\varepsilon$模型（Launder \& Spalding, 1974）求解湍动能$k$和湍动能耗散率$\varepsilon$的输运方程：
+
+\begin{myformula}
+\frac{\partial k}{\partial t} + \overline{u}_j\frac{\partial k}{\partial x_j} = \mathcal{P}_k - \varepsilon + \frac{\partial}{\partial x_j}\left[\left(\nu + \frac{\nu_t}{\sigma_k}\right)\frac{\partial k}{\partial x_j}\right]
+\end{myformula}
+
+\begin{myformula}
+\frac{\partial\varepsilon}{\partial t} + \overline{u}_j\frac{\partial\varepsilon}{\partial x_j} = C_{\varepsilon 1}\frac{\varepsilon}{k}\mathcal{P}_k - C_{\varepsilon 2}\frac{\varepsilon^{2}}{k} + \frac{\partial}{\partial x_j}\left[\left(\nu + \frac{\nu_t}{\sigma_{\varepsilon}}\right)\frac{\partial\varepsilon}{\partial x_j}\right]
+\end{myformula}
+
+涡黏度由$k$和$\varepsilon$确定：
+
+\begin{myformula}
+\nu_t = C_{\mu}\frac{k^{2}}{\varepsilon}
+\end{myformula}
+
+标准系数为：$C_{\mu}=0.09$，$C_{\varepsilon 1}=1.44$，$C_{\varepsilon 2}=1.92$，$\sigma_k=1.0$，$\sigma_{\varepsilon}=1.3$。产生项$\mathcal{P}_k = -\overline{u'_i u'_j}\,\partial\overline{u}_i/\partial x_j$。
+
+$k$-$\varepsilon$模型是最早被广泛工程应用的两方程模型。它以数值鲁棒性好、对自由剪切流精度高而著称，但在近壁区域和逆压梯度流动中表现不佳——壁面处需要壁面函数进行桥接。
+
+\subsubsection{标准$k$-$\omega$模型}
+
+Wilcox（1988）提出的$k$-$\omega$模型用湍流频率$\omega = \varepsilon/(C_{\mu}k)$替代$\varepsilon$作为第二个变量：
+
+\begin{myformula}
+\frac{\partial k}{\partial t} + \overline{u}_j\frac{\partial k}{\partial x_j} = \mathcal{P}_k - \beta^{*}k\omega + \frac{\partial}{\partial x_j}\left[(\nu + \sigma^{*}\nu_t)\frac{\partial k}{\partial x_j}\right]
+\end{myformula}
+
+\begin{myformula}
+\frac{\partial\omega}{\partial t} + \overline{u}_j\frac{\partial\omega}{\partial x_j} = \alpha\frac{\omega}{k}\mathcal{P}_k - \beta\omega^{2} + \frac{\partial}{\partial x_j}\left[(\nu + \sigma\nu_t)\frac{\partial\omega}{\partial x_j}\right]
+\end{myformula}
+
+涡黏度：$\nu_t = k/\omega$。
+
+$k$-$\omega$模型的主要优势在于近壁处理——可直接积分到壁面，无需壁面函数。但其对自由流中$\omega$的边界条件高度敏感，在剪切层外缘会产生非物理行为。
+
+\subsubsection{SST$k$-$\omega$模型}
+
+Menter（1994）提出的SST（Shear Stress Transport）模型结合了$k$-$\omega$模型在近壁区域的精度和$k$-$\varepsilon$模型在自由流中的鲁棒性。其核心思想是：（1）将$k$-$\varepsilon$模型改写为$k$-$\omega$形式；（2）通过混合函数$F_1$在两种模型之间插值；（3）引入湍流剪应力的输运效应（Bradshaw假设）。
+
+混合函数$F_1$在近壁处趋向1（启用$k$-$\omega$），远离壁面趋向0（启用$k$-$\varepsilon$）。此外，SST模型对涡黏度增加了限制器：
+
+\begin{myformula}
+\nu_t = \frac{a_1 k}{\max(a_1\omega, S F_2)}
+\end{myformula}
+
+其中$S$为应变率的模，$F_2$为第二混合函数。此限制器确保了在逆压梯度分离区域，湍流剪应力不超过$a_1 k$（Bradshaw常数$a_1=0.31$）。
+
+\begin{remark}
+SST $k$-$\omega$模型是目前工程CFD中使用最广泛的湍流模型之一，在NASA的多个标准验证案例中表现优异。对于边界层分离预测，SST模型显著优于标准$k$-$\varepsilon$和$k$-$\omega$模型。
+\end{remark}
+
+\subsection{雷诺应力模型}
+
+雷诺应力模型完全放弃Boussinesq涡黏假设，转而直接求解6个雷诺应力分量的输运方程：
+
+\begin{myformula}
+\frac{\mathrm{D}\overline{u'_i u'_j}}{\mathrm{D}t} = P_{ij} + D_{ij}^{\nu} + D_{ij}^{t} + \Phi_{ij} - \varepsilon_{ij}
+\end{myformula}
+
+各项的物理意义分别为：（1）产生项$P_{ij}$（精确的）；（2）黏性扩散$D_{ij}^{\nu}$（精确的）；（3）湍流扩散$D_{ij}^{t}$（需建模）；（4）压力-应变关联$\Phi_{ij}$（需建模，最强非线性，也称"再分配项"）；（5）耗散项$\varepsilon_{ij}$（需建模）。
+
+压力-应变关联$\Phi_{ij}$是RSM模型的核心与难点。物理上，它既不像产生项那样"创造"湍动能，也不像耗散项那样"消灭"它——而是将能量在各个分量之间重新分配，驱动湍流趋向各向同性。Launder, Reece \& Rodi（1975）的经典模型将$\Phi_{ij}$分解为慢项、快项和壁面反射项。
+
+RSM可以考虑湍流各向异性的显著效应：
+\begin{itemize}
+  \item 弯曲流道中的二次流（Dean涡）
+  \item 旋转框架中的湍流
+  \item 强流线曲率效应
+  \item 浮力驱动的各向异性湍流
+\end{itemize}
+
+\begin{remark}
+RSM虽然物理上更为完备，但7个（6个应力+1个尺度方程）耦合非线性PDE的计算成本是两方程模型的3-5倍，且数值刚性更强。在工程实践中，SST $k$-$\omega$往往以更低的成本提供可比的精度，仅在旋转流和强各向异性流中RSM才表现出显著优势。
+\end{remark}
+
+\subsection{壁面处理}
+
+高雷诺数湍流模型（标准$k$-$\varepsilon$）不能直接积分到壁面——壁面附近黏性底层内湍流Reynolds数极低，模型假设失效。标准做法是使用\textbf{壁面函数}：
+
+\vspace{4pt}
+\noindent\textbf{对数律壁面函数：}
+
+\begin{myformula}
+u^{+} = \frac{\overline{u}}{u_{\tau}} = \frac{1}{\kappa}\ln y^{+} + B
+\end{myformula}
+
+其中$u_{\tau} = \sqrt{\tau_w/\rho}$为摩擦速度，$y^{+} = yu_{\tau}/\nu$，$B\approx 5.0$。壁面函数要求第一层网格节点位于对数律区（$y^{+} \gtrsim 30$），在此无需解析黏性底层。
+
+\noindent\textbf{低雷诺数修正}允许两方程模型直接积分到壁面（用衰减函数抑制黏性底层中的湍流混合）。SST $k$-$\omega$和低Re $k$-$\varepsilon$模型均使用此方法。要求第一层网格节点的$y^{+}\approx 1$，使得壁面法向网格分辨率成为模拟成败的关键因素。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.1]
+  % Boundary layer velocity profile
+  \draw[->] (0,0) -- (10,0) node[right] {$\log y^{+}$};
+  \draw[->] (0,0) -- (0,5.5) node[above] {$u^{+}$};
+  
+  % Viscous sublayer: u+ = y+
+  \draw[ch11bl,thick] (0,0) -- (1.6,1.6);
+  \node[ch11label] at (0.8,1.0) {$u^{+}=y^{+}$};
+  
+  % Buffer layer (transition)
+  \draw[ch11bl,thick,dashed] (1.6,1.6) .. controls (2.5,3.5) and (2.8,4.2) .. (3.0,4.8);
+  \node[ch11label] at (2.3,3.0) {过渡层};
+  
+  % Log-law region
+  \draw[ch11bl,thick] (3.0,4.8) -- (9,5.2);
+  \node[ch11label] at (6.5,5.5) {$u^{+}=\frac{1}{\kappa}\ln y^{+}+B$};
+  
+  % Vertical markers
+  \draw[ch11dim,densely dotted] (0.3,-0.2) -- (0.3,2.5);
+  \node[ch11label] at (0.3,-0.6) {$y^{+}=1$};
+  \draw[ch11dim,densely dotted] (3.8,-0.2) -- (3.8,3);
+  \node[ch11label] at (3.8,-0.6) {$y^{+}=30$};
+  \draw[ch11dim,densely dotted] (8.5,-0.2) -- (8.5,2);
+  \node[ch11label] at (8.5,-0.6) {$y^{+}\sim 10^{3}$};
+  
+  % Region labels
+  \draw[<->,ch11dim] (0.5,2.5) -- (1.6,2.5);
+  \node[ch11label] at (1.1,2.9) {黏性底层};
+  \draw[<->,ch11dim] (3.8,1.5) -- (8.5,1.5);
+  \node[ch11label] at (6.2,1.9) {对数律区};
+  \draw[<->,ch11dim] (0.5,3.5) -- (3.0,3.5);
+  \node[ch11label] at (1.8,3.9) {低Re模型};
+  \draw[<->,ch11dim] (3.8,3.5) -- (8.5,3.5);
+  \node[ch11label] at (6.2,3.9) {壁面函数};
+\end{tikzpicture}
+\caption{湍流边界层的分层结构与壁面处理策略}
+\label{fig:boundary_layer}
+\end{figure}
+
+\section{LES——大涡模拟}
+
+\subsection{滤波操作}
+
+LES的基本思想是：大尺度涡（含能涡）在网格上直接数值求解，小尺度涡对动量输运的影响通过亚格子（SGS）模型模化。通过空间滤波操作将变量分解为可解（滤波）部分$\overline{f}$和亚格子部分$f'$：
+
+\begin{myformula}
+\overline{f}(\mathbf{x}) = \int_{\Omega} f(\mathbf{y})\,G(\mathbf{x}-\mathbf{y},\Delta)\,\mathrm{d}\mathbf{y}
+\end{myformula}
+
+其中$G$为滤波核函数（通常为盒式滤波或Gaussian滤波），$\Delta$为滤波宽度（通常取$(\Delta x\Delta y\Delta z)^{1/3}$）。对不可压NS方程滤波后得到LES控制方程：
+
+\begin{myformula}
+\frac{\partial\overline{u}_i}{\partial t} + \frac{\partial(\overline{u}_i\overline{u}_j)}{\partial x_j} = -\frac{1}{\rho}\frac{\partial\overline{p}}{\partial x_i} + \nu\frac{\partial^{2}\overline{u}_i}{\partial x_j\partial x_j} - \frac{\partial\tau_{ij}^{\text{SGS}}}{\partial x_j}
+\end{myformula}
+
+其中$\tau_{ij}^{\text{SGS}} = \overline{u_i u_j} - \overline{u}_i\overline{u}_j$为亚格子应力张量。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.1]
+  % Original signal
+  \draw[->] (0,0) -- (10,0) node[right] {$x$};
+  \draw[->] (0,0) -- (0,4) node[above] {$u$};
+  
+  % Full signal
+  \draw[ch11full,thin,gray!50] plot[smooth] coordinates {
+    (0,1.5)(0.3,2.2)(0.6,1.8)(0.9,2.5)(1.2,1.2)(1.5,2.8)
+    (1.8,0.9)(2.1,2.1)(2.4,1.6)(2.7,2.0)(3.0,1.3)(3.3,2.6)
+    (3.6,1.1)(3.9,2.3)(4.2,1.5)(4.5,1.9)(4.8,1.4)(5.1,2.4)
+    (5.4,1.0)(5.7,2.2)(6.0,1.4)(6.3,2.1)(6.6,1.3)(6.9,2.3)
+    (7.2,1.2)(7.5,2.0)(7.8,1.5)(8.1,2.1)(8.4,1.3)(8.7,1.8)
+    (9.0,1.5)(9.3,1.9)(9.6,1.4)
+  };
+  \node[ch11label] at (3,3.5) {\footnotesize 原始信号$u(x)$};
+  
+  % Filtered signal
+  \draw[ch11filter,ultra thick] plot[mark=*,mark size=0.5pt] coordinates {
+    (0.5,2.0)(1.5,2.1)(2.5,1.7)(3.5,2.0)(4.5,1.8)(5.5,2.0)
+    (6.5,1.9)(7.5,1.8)(8.5,1.7)(9.5,1.7)
+  };
+  \draw[ch11filter,ultra thick] plot[smooth] coordinates {
+    (0.5,2.0)(1.5,2.1)(2.5,1.7)(3.5,2.0)(4.5,1.8)(5.5,2.0)
+    (6.5,1.9)(7.5,1.8)(8.5,1.7)(9.5,1.7)
+  };
+  \node[ch11label] at (7.5,3.5) {\footnotesize 滤波后信号$\overline{u}(x)$};
+  
+  % Filter width
+  \draw[<->,ch11dim] (1.0,0.4) -- (2.0,0.4) node[midway,above] {$\Delta$};
+\end{tikzpicture}
+\caption{一维信号的空间滤波示意。滤波操作移除小于$\Delta$的尺度波动，保留大尺度结构。}
+\label{fig:les_filter}
+\end{figure}
+
+\subsection{Smagorinsky亚格子模型}
+
+Smagorinsky（1963）模型是最简单、历史最悠久的SGS模型。它采用涡黏假设将亚格子应力与滤波应变率关联：
+
+\begin{myformula}
+\tau_{ij}^{\text{SGS}} - \frac{1}{3}\tau_{kk}^{\text{SGS}}\delta_{ij} = -2\nu_{\text{SGS}}\,\overline{S}_{ij}
+\end{myformula}
+
+\begin{myformula}
+\nu_{\text{SGS}} = (C_S\Delta)^{2}|\overline{S}|,\qquad |\overline{S}| = \sqrt{2\overline{S}_{ij}\overline{S}_{ij}}
+\end{myformula}
+
+其中$C_S$为Smagorinsky常数（对各向同性湍流，$C_S\approx 0.18$）。$\overline{S}_{ij} = \frac{1}{2}(\partial\overline{u}_i/\partial x_j + \partial\overline{u}_j/\partial x_i)$为滤波应变率。
+
+Smagorinsky模型的优点在于实现简单、数值鲁棒。其缺点同样显著：（1）$C_S$非普适常数——不同的流动需要不同的$C_S$；（2）层流区亚格子应力不为零——模型无法区分湍流和剪切层；（3）近壁处涡黏度衰减不当——需加Van Driest衰减函数。
+
+\subsection{动态Smagorinsky模型}
+
+Germano等人（1991）解决了固定$C_S$的问题。核心思想是引入第二重滤波$\hat{(\cdot)}$（测试滤波，$\hat{\Delta}>\Delta$），假设$C_S$在两个滤波器宽度下取值相同，则可以从两个滤波层的应力中动态确定$C_S$：
+
+\begin{myformula}
+C_S^{2} = \frac{\langle L_{ij}M_{ij}\rangle}{\langle M_{kl}M_{kl}\rangle}
+\end{myformula}
+
+其中$L_{ij} = \widehat{\overline{u}_i\overline{u}_j} - \hat{\overline{u}}_i\hat{\overline{u}}_j$为Germano恒等式给出的解析量，$M_{ij}$为模型表达式中提取$C_S^{2}$后的部分。$\langle\cdot\rangle$表示在均匀方向或局部体积上的平均（避免分母过小）。
+
+动态模型自动在层流区给出$C_S\approx 0$，在湍流区给出合适的$C_S$值，在近壁衰减中不需要人为修正——是对Smagorinsky标准的质的改进。
+
+\subsection{壁面模型与LES}
+
+LES的基本缺点是不能像RANS那样通过壁面函数回避壁面问题——近壁湍流结构的特征尺度极小（准流向涡的直径约为$30\sim 50\nu/u_{\tau}$），即使在中等Reynolds数下，解析壁面所有尺度的成本也接近DNS。
+
+解决方法包括：
+\begin{itemize}
+  \item \textbf{壁面解析LES（Wall-resolved LES, WRLES）：}在壁面法向加密到$y^{+}\approx 1$。适用于低至中等Reynolds数（$Re_{\tau}\lesssim 5000$）。
+  \item \textbf{壁面建模LES（Wall-modeled LES, WMLES）：}在近壁处使用壁面模型（平衡应力模型、RANS薄层等）替代直接解析。理论上成本与Reynolds数无关，为高Reynolds数工程LES开辟了道路。WMLES是当前的研究热点，但在分离流、激波-边界层干扰和转捩流中仍存在准确性挑战。
+\end{itemize}
+
+\section{DES——分离涡模拟}
+
+DES（Detached Eddy Simulation）由Spalart等人于1997年提出，是RANS和LES的混合方法。其基本思路是：在近壁边界层中使用RANS（如Spalart-Allmaras或SST $k$-$\omega$），避免LES的高昂壁面解析成本；在远离壁面的分离区切换到LES模式，捕捉非定常的大尺度涡结构。
+
+DES通过修改湍流模型的长度尺度实现RANS-LES切换。在Spalart-Allmaras DES中，壁面距离$d$被替换为：
+
+\begin{myformula}
+\tilde{d} = \min(d, C_{\text{DES}}\Delta)
+\end{myformula}
+
+在边界层中$d < C_{\text{DES}}\Delta$，模型保持RANS行为；在分离区$\Delta < d/C_{\text{DES}}$，长度尺度变为亚格子长度，模型切换为LES模式。
+
+\begin{remark}
+DES在航空航天（大攻角分离、起落架舱、弹舱空腔）和汽车空气动力学（A柱涡脱落）中取得了显著成功。然而，当网格在边界层中过细但未达到WRLES标准时（如过度加密的RANS网格），DES可能出现"网格诱导分离"——RANS模式过早切换为LES，导致非物理的分离预测（MSD, Modeled-Stress Depletion）。DDES（Delayed DES, 2006）通过引入"保护函数"解决了这一问题。
+\end{remark}
+
+\section{湍流模型的选择指南}
+
+没有"最好"的湍流模型，只有"最合适"的。选择需综合考量：
+
+\begin{table}[H]
+\centering
+\caption{湍流模型适用场景总结}
+\label{tab:model_selection}
+\begin{tabular}{p{4.5cm}p{8.5cm}}
+\toprule
+\textbf{模型} & \textbf{推荐应用场景} \\
+\midrule
+Spalart-Allmaras & 航空航天外流，附着流和轻微分离流，快速评估 \\
+$k$-$\varepsilon$标准 & 自由剪切流，充分发展管流，传热 \\
+$k$-$\varepsilon$ RNG & 旋转流，中等曲率流 \\
+$k$-$\omega$ SST & 通用工程——逆压梯度分离，翼型失速 \\
+RSM & 强旋流（旋风分离器），强制对流换热 \\
+DES/DDES & 大攻角分离，气动噪声源预测，空腔流 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{12pt}
+
+\noindent\textbf{本章要点回顾：}
+\begin{enumerate}
+  \item DNS全解析所有湍流尺度，但成本随$Re^{9/4}$增长，仅适用于低Reynolds数基础研究。
+  \item RANS模型化了全部湍流脉动，从零方程（混合长度）到二阶矩封闭（RSM），适用于工程设计。
+  \item $k$-$\omega$ SST模型综合了近壁精度和自由流鲁棒性，是当前最通用的工程湍流模型。
+  \item LES直接解析大涡，模化小涡（亚格子模型）。动态Smagorinsky模型自动适应当地流动状态。
+  \item DES将RANS（近壁）与LES（分离区）结合，在高Reynolds数工业流动中平衡了成本与精度。
+  \item 湍流模型的选择涉及Reynolds数、分离程度、几何复杂度和精度需求的综合权衡。
+\end{enumerate}
