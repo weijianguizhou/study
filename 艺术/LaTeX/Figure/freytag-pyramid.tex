@@ -1,0 +1,22 @@
+% Freytag's Pyramid — 五幕剧结构示意
+\begin{tikzpicture}[scale=1.2, every node/.style={font=\small}]
+  % 坐标轴
+  \draw[->, gray!60] (-0.3,0) -- (6.5,0) node[right] {时间};
+  \draw[->, gray!60] (0,-0.3) -- (0,4.5) node[above] {紧张度};
+
+  % 金字塔轮廓
+  \draw[thick, blue!70!black]
+    (0,0)    node[below] {开端}
+    -- (1.5,1.5)
+    -- (3,4) node[above] {高潮}
+    -- (4.5,1.5)
+    -- (6,0) node[below] {结局};
+
+  % 标注
+  \node[below] at (0.75,0.6)  {\small 上升行动};
+  \node[below] at (3.75,0.6)  {\small 下降行动};
+
+  % 虚线标注
+  \draw[dashed] (1.5,1.5) -- (1.5,0) node[below] {\small 触发事件};
+  \draw[dashed] (4.5,1.5) -- (4.5,0) node[below] {\small 最后悬念};
+\end{tikzpicture}

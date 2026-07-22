@@ -1,0 +1,28 @@
+% 表演流派谱系示意
+\begin{tikzpicture}[scale=1.0]
+  % 横轴
+  \draw[->, thick] (-5,0) -- (5,0) node[right] {\small 体验 $\longleftrightarrow$ 表现};
+
+  % 各流派定位
+  \node[draw, fill=blue!20, rounded corners] at (-3.5,1)   {\textbf{斯坦尼斯拉夫斯基}};
+  \node[draw, fill=blue!10, rounded corners] at (-2.5,2.2) {迈斯纳方法};
+  \node[draw, fill=green!20, rounded corners] at (0.5,1)   {\textbf{迈克尔·契诃夫}};
+  \node[draw, fill=orange!20, rounded corners] at (2.5,2.2)   {布莱希特};
+  \node[draw, fill=red!20, rounded corners] at (3.5,1)   {\textbf{格洛托夫斯基}};
+
+  % 连接线
+  \draw[blue!40] (-3.5,0.5) -- (-3.5,0);
+  \draw[blue!40] (-2.5,1.7) -- (-2.5,0);
+  \draw[green!40] (0.5,0.5) -- (0.5,0);
+  \draw[orange!40] (2.5,1.7) -- (2.5,0);
+  \draw[red!40] (3.5,0.5) -- (3.5,0);
+
+  % 标注点
+  \fill (-3.5,0) circle (3pt);
+  \fill (-2.5,0) circle (3pt);
+  \fill (0.5,0)  circle (3pt);
+  \fill (2.5,0)  circle (3pt);
+  \fill (3.5,0)  circle (3pt);
+
+  \node[below, gray] at (0,-0.5) {\small 体验派 $\cdot\cdot\cdot\cdot\cdot\cdot\cdot\cdot\cdot\cdot\cdot\cdot\cdot\cdot\cdot\cdot\cdot\cdot$ 表现派};
+\end{tikzpicture}

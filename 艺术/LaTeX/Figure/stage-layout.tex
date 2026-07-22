@@ -1,0 +1,34 @@
+% 镜框式舞台区域划分
+\begin{tikzpicture}[scale=0.9, every node/.style={font=\small}]
+  % 观众席
+  \fill[gray!15] (-4,-2) rectangle (4,0);
+  \node[gray!50] at (0,-1) {观 众 席};
+
+  % 舞台
+  \fill[orange!10, draw=black, thick] (-4,0) rectangle (4,4);
+
+  % 区域划分虚线
+  \draw[dashed, gray] (-1.33,0) -- (-1.33,4);
+  \draw[dashed, gray] (1.33,0) -- (1.33,4);
+  \draw[dashed, gray] (-4,1.33) -- (4,1.33);
+  \draw[dashed, gray] (-4,2.67) -- (4,2.67);
+
+  % 区域标签
+  \node at (0,0.5) {\textbf{台口} (Apron)};
+  \node at (-2.5,2) {\textbf{舞台左侧}};
+  \node at (2.5,2)  {\textbf{舞台右侧}};
+
+  \node[align=center] at (0,1.8)  {\small 前区\\Downstage};
+  \node[align=center] at (0,3.3)  {\small 后区\\Upstage};
+
+  % 中心点标记
+  \fill[red] (0,1.33) circle (2pt) node[above right] {\small \textbf{中心点}};
+
+  % 大幕线
+  \draw[decorate, decoration={coil,aspect=0.5,amplitude=2pt,segment length=3pt}, red!70!black, thick] (-4,0) -- (4,0);
+  \node[red!70!black, above left] at (-4,0) {\small 大幕线};
+
+  % 箭头标注
+  \draw[->, blue] (2.5,3.5) -- (3.8,2.5) node[right] {\small 上场门 (SR)};
+  \draw[->, blue] (-2.5,3.5) -- (-3.8,2.5) node[left] {\small 下场门 (SL)};
+\end{tikzpicture}

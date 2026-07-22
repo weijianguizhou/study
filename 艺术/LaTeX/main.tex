@@ -1,0 +1,70 @@
+% !TEX program = xelatex
+% !TEX encoding = UTF-8
+% !BIB program = bibtex
+
+\documentclass[12pt,a4paper,openany]{ctexbook}
+
+%% ── 数学与字体 ──
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{unicode-math}
+
+%% ── TikZ 绘图 ──
+\usepackage{tikz,pgfplots}
+\usetikzlibrary{arrows.meta,shapes,calc,decorations.pathmorphing,positioning,backgrounds}
+\usepackage{graphicx}
+
+%% ── 彩色盒子 ──
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable,listings,theorems}
+
+%% ── 中文引号 ──
+\usepackage{csquotes}
+
+%% ── 引用与超链接 ──
+\usepackage[backend=bibtex,style=gb7714-2015]{biblatex}
+\addbibresource{ref.bib}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=red,urlcolor=blue}
+
+%% ── 页面 ──
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=3cm,right=3cm}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{\leftmark}
+\fancyfoot[C]{\thepage}
+
+%% ── 自定义定理环境 ──
+\newtheorem{myTheorem}{定理}[chapter]
+\newtheorem{mydefinition}{定义}[chapter]
+\newtheorem{example}{例}[chapter]
+\newtheorem{remark}{注}[chapter]
+
+%% ── tcolorbox 自定义环境 ──
+\newtcbtheorem[]{myformula}{公式}{colback=blue!5,colframe=blue!60!black,fonttitle=\bfseries}{}
+\newtcbtheorem[]{mycode}{代码}{colback=gray!5,colframe=gray!60!black,fonttitle=\bfseries,listing engine=listings}{}
+\newtcbtheorem[]{myalgorithm}{算法}{colback=green!5,colframe=green!50!black,fonttitle=\bfseries}{}
+
+%% ── 章节简介命令 ──
+\newcommand{\intro}[1]{\begin{center}\large\itshape#1\end{center}\bigskip}
+
+%% ── 文档信息 ──
+\title{\Huge 话剧艺术教程 \\ \large 从编剧、舞台安排到表演}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\include{chapter01}
+\include{chapter02}
+\include{chapter03}
+
+\printbibliography[heading=bibliography,title=参考文献]
+
+\end{document}
