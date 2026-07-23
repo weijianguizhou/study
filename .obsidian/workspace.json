@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "198162ea0d0801ce",
+        "id": "f74daeeb6ec6de47",
         "type": "tabs",
         "children": [
           {
-            "id": "8a43ab2428db4960",
+            "id": "ee68c95cb553597d",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "数理基础/微分几何.md",
+                "file": "人工智能/马尔可夫决策过程 (Markov Decision Process, MDP).md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "微分几何"
+              "title": "马尔可夫决策过程 (Markov Decision Process, MDP)"
             }
           }
         ]
@@ -191,19 +191,26 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "8a43ab2428db4960",
+  "active": "ee68c95cb553597d",
   "lastOpenFiles": [
+    "力学/流体力学/LaTeX/流体力学.synctex(busy)",
+    "力学/流体力学/LaTeX/流体力学.synctex.gz",
+    "力学/流体力学/LaTeX/流体力学.listing",
+    "力学/流体力学/LaTeX/流体力学.pdf",
+    "力学/流体力学/LaTeX/流体力学.toc",
+    "力学/流体力学/LaTeX/流体力学.out",
+    "力学/流体力学/LaTeX/流体力学.aux",
+    "力学/流体力学/LaTeX/流体力学.log",
+    "力学/流体力学/LaTeX/流体力学.tex",
+    "力学/流体力学/LaTeX/main.synctex(busy)",
     "艺术/LaTeX/main.synctex(busy)",
-    "艺术/LaTeX/main.synctex.gz",
-    "艺术/LaTeX/main.bbl",
-    "艺术/LaTeX/main.blg",
-    "艺术/LaTeX/main.run.xml",
-    "艺术/LaTeX/chapter03.aux",
-    "艺术/LaTeX/chapter02.aux",
-    "艺术/LaTeX/main.pdf",
-    "艺术/LaTeX/chapter01.aux",
-    "艺术/LaTeX/main.toc",
-    "艺术/LaTeX/main.out",
+    "人工智能/RL-DQN与值函数近似.md",
+    "刚体动力学算法/空间向量代数/0.数学知识预备.md",
+    "刚体动力学算法/空间向量代数/1.空间速度 (Spatial Velocity).md",
+    "机器人学/DH参数法/DH参数法.md",
+    "力学/多体系统传递矩阵法.md",
+    "00-知识索引.md",
+    "数理基础/微分几何.md",
     "艺术/LaTeX教程/12-进阶技巧与资源.md",
     "艺术/LaTeX教程/11-编译工具链与调试.md",
     "艺术/LaTeX教程/10-Beamer演示文稿.md",
@@ -222,13 +229,6 @@
     "艺术/02-舞台安排教程.md",
     "艺术/04-参考书目.md",
     "艺术/00-话剧教程MOC.md",
-    "LaTeX报错修复说明.md",
-    "AI写教程.md",
-    "数理基础/微分几何.md",
-    "力学/流体力学/01-引言与数学基础.md",
-    "力学/流体力学/00-流体力学MOC.md",
-    "README.md",
-    "人工智能/深度学习教程/09-卷积神经网络CNN.md",
     "人工智能/强化学习系统教程/30.jpg",
     "Pasted image 20260629220006.jpg",
     "Pasted image 20260629220331.jpg"
