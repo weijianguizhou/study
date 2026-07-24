@@ -1,0 +1,707 @@
+\chapter{线性二次型最优控制}
+
+\intro{
+前面章节介绍的极点配置方法解决了"将极点配置到期望位置"的问题，但如何选择"最优的"极点位置？当系统有多个控制输入时，如何权衡控制性能和控制能量？线性二次型最优控制（LQR/LQG）给出了系统的答案：通过引入二次型性能指标，将控制问题转化为数学优化问题，用Riccati方程给出最优解。本章全面介绍LQR理论、Kalman滤波、LQG分离定理及其扩展EKF，并结合Python实现帮助读者掌握最优控制的建模与求解。
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{最优控制问题的提法}
+
+\subsection{性能指标（代价函数）}
+
+控制系统的"最优性"需要量化的评判标准，这就是性能指标（Performance Index）或称代价函数（Cost Function）。一般形式的最优控制问题是：寻找控制律$\mathbf{u}^*(\cdot)$使以下性能指标最小化：
+\[
+J = \phi(\mathbf{x}(t_f), t_f) + \int_{t_0}^{t_f} L(\mathbf{x}(t), \mathbf{u}(t), t)\,dt
+\]
+其中$\phi$是终端代价，$L$是运行代价。
+
+对于线性二次型问题，取无限时域二次型性能指标：
+\begin{myformula}
+J = \int_0^{\infty} \bigl(\mathbf{x}^{\top}(t) Q \mathbf{x}(t) + \mathbf{u}^{\top}(t) R \mathbf{u}(t)\bigr)\,dt
+\end{myformula}
+其中$Q \in \R^{n \times n}$是\textbf{状态权重矩阵}（半正定，$Q \succeq 0$），$R \in \R^{m \times m}$是\textbf{控制权重矩阵}（正定，$R \succ 0$）。
+
+\subsection{$Q$和$R$的物理意义}
+
+\begin{mydefinition}{权重矩阵的选取准则}
+\begin{enumerate}
+\item \textbf{状态权重矩阵$Q$}：$Q$的元素$q_{ii}$反映了对状态分量$x_i$偏离期望值的惩罚程度。$q_{ii}$越大，对应的状态分量收敛越快，但可能需要更大的控制能量；
+\item \textbf{控制权重矩阵$R$}：$R$的元素$r_{jj}$反映了对控制信号$u_j$幅值的惩罚程度。$r_{jj}$越大，控制行为越"保守"（响应慢、节省能量）；$r_{jj}$越小，控制越"激进"（响应快、耗费能量）；
+\item \textbf{交叉项}：性能指标$\mathbf{x}^{\top}Q\mathbf{x} + \mathbf{u}^{\top}R\mathbf{u}$中两项的相对大小决定了性能最优性与控制经济性之间的权衡关系。
+\end{enumerate}
+\end{mydefinition}
+
+\begin{remark}
+在实际调参中，通常先将$Q$和$R$取为对角矩阵，然后根据闭环响应逐步调整。一种常用的初始化策略是Bryson法则：取$q_{ii} = 1/(x_i^{\max})^2$，$r_{jj} = 1/(u_j^{\max})^2$，其中上标$\max$表示对应量的最大允许值。
+\end{remark}
+
+\subsection{最优控制问题的Hamiltonian}
+
+引入协态向量$\boldsymbol{\lambda}(t) \in \R^n$，定义Hamiltonian函数
+\[
+\mathcal{H}(\mathbf{x}, \mathbf{u}, \boldsymbol{\lambda}) = \mathbf{x}^{\top}Q\mathbf{x} + \mathbf{u}^{\top}R\mathbf{u} + \boldsymbol{\lambda}^{\top}(A\mathbf{x} + B\mathbf{u})
+\]
+
+Pontryagin极小值原理指出，最优控制$\mathbf{u}^*$和最优轨线$\mathbf{x}^*$必须满足：
+\begin{align}
+\dot{\mathbf{x}}^* &= \Nabla_{\boldsymbol{\lambda}} \mathcal{H} = A\mathbf{x}^* + B\mathbf{u}^* \label{eq:ch10_state_eq}\\
+-\dot{\boldsymbol{\lambda}} &= \Nabla_{\mathbf{x}} \mathcal{H} = 2Q\mathbf{x}^* + A^{\top}\boldsymbol{\lambda} \label{eq:ch10_costate_eq}\\
+0 &= \Nabla_{\mathbf{u}} \mathcal{H} = 2R\mathbf{u}^* + B^{\top}\boldsymbol{\lambda} \label{eq:ch10_control_eq}
+\end{align}
+
+从式(\ref{eq:ch10_control_eq})可得最优控制的表达式：
+\[
+\mathbf{u}^* = -\frac{1}{2}R^{-1}B^{\top}\boldsymbol{\lambda}
+\]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{连续时间LQR}
+
+\subsection{Riccati微分方程与代数方程}
+
+对于无限时域问题，假设协态向量与状态向量呈线性关系：
+\[
+\boldsymbol{\lambda} = 2P\mathbf{x}
+\]
+其中$P \in \R^{n \times n}$为对称正定矩阵（待求）。代入最优控制表达得
+\[
+\mathbf{u}^* = -R^{-1}B^{\top}P\mathbf{x} = -K\mathbf{x},\quad K = R^{-1}B^{\top}P
+\]
+
+将协态和状态方程结合，并注意到在稳态时$\dot{P} = 0$，得到连续时间代数Riccati方程（CARE）：
+\begin{myformula}
+A^{\top}P + PA - PBR^{-1}B^{\top}P + Q = 0
+\end{myformula}
+
+\begin{myTheorem}{连续时间LQR的稳定性}
+若$(A,B)$能稳且$(A,Q^{1/2})$能检测，则CARE存在唯一对称正定解$P^*$，并且闭环系统
+\[
+\dot{\mathbf{x}} = (A - BR^{-1}B^{\top}P^*)\mathbf{x}
+\]
+是渐近稳定的，即$A - BK$的所有特征值具有负实部。
+\end{myTheorem}
+
+\subsection{最优增益的推导}
+
+从Riccati方程求解得到$P$后，最优状态反馈增益矩阵为：
+\begin{myformula}
+K = R^{-1}B^{\top}P
+\end{myformula}
+最优性能指标的值为
+\[
+J^* = \mathbf{x}_0^{\top} P \mathbf{x}_0
+\]
+其中$\mathbf{x}_0$是初始状态。这一结果说明$P$矩阵的每一个元素都直接关系到最优性能的取值。
+
+\begin{myTheorem}{LQR的频域特性——回路传递恢复}
+LQR设计具有优良的鲁棒性：在单输入系统中，状态反馈LQR控制器具有至少$60^\circ$的相位裕度和$-6$到$+\infty$ dB的增益裕度。但对于基于观测器的LQR，此鲁棒性可能会丧失。
+\end{myTheorem}
+
+\subsection{加权矩阵的选择与极点移动趋势}
+
+通过让$R \to 0$（控制代价极低），部分闭环极点趋向于系统的不变零点（如果它们是稳定的）或其镜像（如果它们是不稳定的）；通过让$R \to \infty$（控制代价极高），部分闭环极点趋向于开环的稳定极点。这种渐近行为被称为"廉价格控制"和"贵价格控制"分析，为加权矩阵的选择提供了直觉指导。
+
+\begin{example}[一阶系统的LQR设计]
+考虑$A = 1, B = 1$（不稳定一阶系统），$Q = 1, R = \rho$。Riccati方程为
+\[
+1 \cdot P + P \cdot 1 - P \cdot 1 \cdot \frac{1}{\rho} \cdot 1 \cdot P + 1 = 0
+\]
+整理得$P^2 - 2\rho P - \rho = 0$，解得
+\[
+P = \rho + \sqrt{\rho^2 + \rho}
+\]
+最优增益$K = P/\rho = 1 + \sqrt{1 + 1/\rho}$。闭环极点$A-BK = -\sqrt{1 + 1/\rho} < 0$，稳定。当$\rho \to 0$时$K \to \infty$（极快的响应）；当$\rho \to \infty$时$K \to 2$（适中的响应）。
+\end{example}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[lqrPoleStyle/.style={thick}, lqrPoleArrow/.style={->, >=stealth, thick}]
+    \draw[lqrPoleStyle, ->] (-3.5, 0) -- (1.5, 0) node[right] {$\operatorname{Re}$};
+    \draw[lqrPoleStyle, ->] (0, -2.5) -- (0, 2.5) node[above] {$\operatorname{Im}$};
+    
+    \draw[red!60, fill=red!60] (-1.8, 1.5) circle (2.5pt) node[above right] {$\lambda_{\mathrm{ol}}$（开环）};
+    \draw[blue!60, fill=blue!60] (-2.4, 1.0) circle (2.5pt) node[left] {$R$大};
+    \draw[blue!80, fill=blue!80] (-3.2, 0.6) circle (2.5pt) node[left] {$R$中};
+    \draw[blue, fill=blue] (-4.5, 0) circle (2.5pt) node[below] {$R \to 0$};
+    
+    \draw[blue!60, dashed, ->] (-1.8, 1.5) -- (-2.4, 1.0);
+    \draw[blue!80, dashed, ->] (-2.4, 1.0) -- (-3.2, 0.6);
+    \draw[blue, dashed, ->] (-3.2, 0.6) -- (-4.5, 0);
+    
+    \node[font=\footnotesize, blue!60] at (-2.8, 1.8) {$R \text{递减} \Rightarrow$};
+    \node[font=\footnotesize, blue!60] at (-3.0, 2.1) {$| \operatorname{Re}(\lambda) | \text{递增}$};
+    
+    \draw[lqrPoleArrow, red!60] (-1.5, -1.5) -- node[below, sloped] {贵控制（保守）} (-2.5, -1.0);
+    \draw[lqrPoleArrow, blue] (-3.5, -0.3) -- node[below, sloped] {廉控制（激进）} (-5.0, -0.8);
+\end{tikzpicture}
+\caption{LQR加权矩阵$R$对闭环极点位置的影响。$R \to \infty$（高控制代价）时极点靠近开环稳定极点，$R \to 0$（低控制代价）时极点趋向于更负的实部（部分趋向不稳定零点的镜像）。}
+\label{fig:ch10_lqr_pole_movement}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[lqrStyle/.style={draw, minimum width=2.2cm, minimum height=0.9cm, align=center},
+    lqrSum/.style={draw, circle, inner sep=0pt, minimum size=6mm},
+    lqrBlock/.style={draw, fill=cyan!10, minimum width=2.2cm, minimum height=0.9cm, align=center},
+    lqrArrow/.style={->, >=stealth, thick}]
+    
+    \node (lqrV) at (-1, 2) {$\mathbf{v} = \mathbf{0}$};
+    \node[lqrSum] (sum) at (2, 0) {$-$};
+    \node[lqrBlock] (lqrB) at (4.5, 0) {$B$};
+    \node[lqrSum] (sum2) at (6.5, 0) {$+$};
+    \node[lqrBlock] (int) at (9, 0) {$\int$};
+    \node (lqrX) at (11, 0) {$\mathbf{x}$};
+    \node[lqrBlock] (lqrA) at (9, 1.8) {$A$};
+    \node[lqrBlock, fill=red!15] (lqrK) at (9, -3) {$K = R^{-1}B^{\top}P$};
+    
+    \node[lqrBlock, fill=yellow!15] (care) at (0, -3) {CARE求解\\$A^{\top}P+PA$\\$-PBR^{-1}B^{\top}P+Q=0$};
+    
+    \draw[lqrArrow] (lqrV) -- (sum.north);
+    \draw[lqrArrow] (sum) -- (lqrB);
+    \draw[lqrArrow] (lqrB) -- (sum2);
+    \draw[lqrArrow] (sum2) -- (int);
+    \draw[lqrArrow] (int) -- (lqrX);
+    \draw[lqrArrow] (10.5, 0.3) |- (lqrA.west);
+    \draw[lqrArrow] (lqrA.east) -| (sum2.north);
+    \draw[lqrArrow] (10.5, -0.3) |- (lqrK.west);
+    \draw[lqrArrow] (lqrK.east) -| (sum.south);
+    
+    \draw[lqrArrow, dashed] (care.north) -- node[left] {$P$} (lqrK.west |- care.north);
+\end{tikzpicture}
+\caption{LQR最优状态反馈结构。Riccati方程的解$P$赋予最优增益$K$，使得二次型性能指标最小化。}
+\label{fig:ch10_lqr_structure}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{离散时间LQR与LQG问题}
+
+\subsection{离散时间LQR}
+
+对于离散线性系统$\mathbf{x}_{k+1} = A_d\mathbf{x}_k + B_d\mathbf{u}_k$，二次型性能指标为
+\[
+J = \sum_{k=0}^{\infty} (\mathbf{x}_k^{\top}Q\mathbf{x}_k + \mathbf{u}_k^{\top}R\mathbf{u}_k)
+\]
+离散时间代数Riccati方程（DARE）为
+\begin{myformula}
+P = A_d^{\top}PA_d - A_d^{\top}PB_d(R + B_d^{\top}PB_d)^{-1}B_d^{\top}PA_d + Q
+\end{myformula}
+最优反馈增益$K = (R + B_d^{\top}PB_d)^{-1}B_d^{\top}PA_d$。
+
+\subsection{LQG问题的提法}
+
+在LQR框架中，假设全部状态可测。当只有噪声污染的输出可测时，问题转化为Linear Quadratic Gaussian (LQG) 问题：
+\[
+\dot{\mathbf{x}} = A\mathbf{x} + B\mathbf{u} + \mathbf{w},\quad \mathbf{y} = C\mathbf{x} + \mathbf{v}
+\]
+其中$\mathbf{w} \sim \mathcal{N}(0, W)$是过程噪声，$\mathbf{v} \sim \mathcal{N}(0, V)$是测量噪声，两者互不相关。性能指标取为随机期望：
+\[
+J = \E\left[ \int_0^{\infty} (\mathbf{x}^{\top}Q\mathbf{x} + \mathbf{u}^{\top}R\mathbf{u})\,dt \right]
+\]
+
+\begin{myTheorem}{LQG分离定理}
+LQG问题的最优解由两部分独立组成：
+\begin{enumerate}
+\item \textbf{Kalman滤波器}：根据含噪声测量$\mathbf{y}$给出状态的最优估计$\hat{\mathbf{x}}$；
+\item \textbf{LQR控制器}：将Kalman滤波器的状态估计$\hat{\mathbf{x}}$代入LQR控制律$\mathbf{u} = -K\hat{\mathbf{x}}$。
+\end{enumerate}
+两部分独立设计：滤波器的增益取决于噪声协方差$W$和$V$，控制器的增益取决于性能加权矩阵$Q$和$R$。
+\end{myTheorem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Kalman滤波器}
+
+\subsection{问题描述与推导思路}
+
+Kalman滤波器是线性高斯系统的最小方差状态估计器。考虑离散时间系统：
+\[
+\mathbf{x}_{k+1} = A_d\mathbf{x}_k + B_d\mathbf{u}_k + \mathbf{w}_k,\qquad
+\mathbf{y}_k = C\mathbf{x}_k + \mathbf{v}_k
+\]
+其中$\mathbf{w}_k \sim \mathcal{N}(0, W)$，$\mathbf{v}_k \sim \mathcal{N}(0, V)$，且$\E[\mathbf{w}_k\mathbf{v}_j^{\top}] = 0$。
+
+\subsection{离散Kalman滤波五大公式}
+
+Kalman滤波按"预测-更新"循环递推，每个时间步由以下五组公式构成：
+
+\begin{myalgorithm}{离散时间Kalman滤波器}
+\begin{enumerate}
+\item \textbf{状态预测：}
+\[
+\hat{\mathbf{x}}_{k|k-1} = A_d\hat{\mathbf{x}}_{k-1|k-1} + B_d\mathbf{u}_{k-1}
+\]
+\item \textbf{误差协方差预测：}
+\[
+P_{k|k-1} = A_d P_{k-1|k-1} A_d^{\top} + W
+\]
+\item \textbf{Kalman增益：}
+\[
+K_k = P_{k|k-1}C^{\top}(C P_{k|k-1}C^{\top} + V)^{-1}
+\]
+\item \textbf{状态更新：}
+\[
+\hat{\mathbf{x}}_{k|k} = \hat{\mathbf{x}}_{k|k-1} + K_k(\mathbf{y}_k - C\hat{\mathbf{x}}_{k|k-1})
+\]
+\item \textbf{误差协方差更新：}
+\[
+P_{k|k} = (I - K_k C)P_{k|k-1}
+\]
+\end{enumerate}
+\end{myalgorithm}
+
+\begin{remark}
+符号约定：$\hat{\mathbf{x}}_{k|k-1}$表示基于到$k-1$时刻的测量值对$k$时刻状态的先验估计，$\hat{\mathbf{x}}_{k|k}$表示获得第$k$个测量值后的后验估计。$P_{k|k-1}$和$P_{k|k}$分别是相应的误差协方差矩阵。Kalman增益$K_k$在最小化后验协方差矩阵的迹的意义下是最优的。
+\end{remark}
+
+\begin{proof}[Kalman增益的推导概要]
+定义后验估计误差$\tilde{\mathbf{x}}_{k|k} = \mathbf{x}_k - \hat{\mathbf{x}}_{k|k}$，其后验协方差为
+\[
+P_{k|k} = \E[\tilde{\mathbf{x}}_{k|k}\tilde{\mathbf{x}}_{k|k}^{\top}]
+\]
+代入更新方程，得到
+\[
+P_{k|k} = (I - K_k C)P_{k|k-1}(I - K_k C)^{\top} + K_k V K_k^{\top}
+\]
+对$K_k$求偏导并令$\partial \operatorname{tr}(P_{k|k})/\partial K_k = 0$，解出最优增益表达式。
+\end{proof}
+
+\subsection{Kalman滤波的稳定性}
+
+对于线性时不变系统，若$(A_d, C)$能检测且$(A_d, W^{1/2})$能稳，则Kalman滤波的估计误差协方差收敛到一个稳态值$P_{\infty}$，它是离散时间代数Riccati方程
+\[
+P = A_d P A_d^{\top} - A_d P C^{\top}(C P C^{\top} + V)^{-1} C P A_d^{\top} + W
+\]
+的对称正定解。滤波器的极点由$A_d - K_{\infty}C$决定。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[kfStyle/.style={draw, minimum width=2.4cm, minimum height=0.8cm, align=center},
+    kfBlock/.style={draw, fill=teal!10, minimum width=2.4cm, minimum height=0.8cm, align=center},
+    kfSum/.style={draw, circle, inner sep=0pt, minimum size=5mm},
+    kfArrow/.style={->, >=stealth, thick},
+    kfDashArrow/.style={->, >=stealth, thick, dashed}]
+    
+    % Prediction block
+    \node[kfBlock, fill=blue!8] (pred) at (0, 3) {\textbf{预测}};
+    \node (pred1) at (0, 2.2) {$\hat{\mathbf{x}}_{k|k-1} = A_d\hat{\mathbf{x}}_{k-1|k-1}$};
+    \node (pred2) at (0, 1.7) {$P_{k|k-1} = A_d P_{k-1|k-1}A_d^{\top} + W$};
+    \draw[rounded corners] (-2.5, 1.3) rectangle (2.5, 3.5);
+    
+    % Update block
+    \node[kfBlock, fill=red!8] (upd) at (0, -1.5) {\textbf{更新}};
+    \node (upd1) at (0, -2.3) {$K_k = P_{k|k-1}C^{\top}(\cdots)^{-1}$};
+    \node (upd2) at (0, -2.8) {$\hat{\mathbf{x}}_{k|k} = \hat{\mathbf{x}}_{k|k-1} + K_k(\mathbf{y}_k - C\hat{\mathbf{x}}_{k|k-1})$};
+    \node (upd3) at (0, -3.3) {$P_{k|k} = (I - K_k C)P_{k|k-1}$};
+    \draw[rounded corners] (-3, -4) rectangle (3, -1);
+    
+    \draw[kfArrow] (2.5, 1.8) -| (3.5, 1.8) |- (3, -1.5) -- (3, -1.5);
+    \draw[kfArrow] (-3, -3.2) -| (-4, -3.2) |- (-2.5, 1.8);
+    
+    \node at (4.5, 0) {$\mathbf{y}_k$};
+    \draw[kfArrow] (4, 0) -- (3, -2.5);
+    
+    \node at (-2, -4.8) {$\hat{\mathbf{x}}_{k|k}$};
+    \draw[kfArrow] (-2, -4) -- (-2, -4.8);
+\end{tikzpicture}
+\caption{Kalman滤波器的预测-更新递推流程。每个时间步先执行状态和协方差的预测，再利用测量值进行修正更新。}
+\label{fig:ch10_kalman_flow}
+\end{figure}
+
+\subsection{连续时间Kalman-Bucy滤波器}
+
+对于连续时间系统，等价的结果是Kalman-Bucy滤波器：
+\[
+\dot{\hat{\mathbf{x}}} = A\hat{\mathbf{x}} + B\mathbf{u} + L(\mathbf{y} - C\hat{\mathbf{x}})
+\]
+其中$L = P C^{\top} V^{-1}$，$P$满足连续时间滤波Riccati方程
+\begin{myformula}
+AP + PA^{\top} - PC^{\top}V^{-1}CP + W = 0
+\end{myformula}
+注意此方程与LQR Riccati方程（CARE）的对偶关系：将$A \to A^{\top}$，$B \to C^{\top}$，$Q \to W$，$R \to V$，即可从CARE得到滤波Riccati方程。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{扩展Kalman滤波器}
+
+\subsection{非线性系统的线性化}
+
+对于非线性系统
+\[
+\mathbf{x}_{k+1} = \mathbf{f}(\mathbf{x}_k, \mathbf{u}_k) + \mathbf{w}_k,\qquad
+\mathbf{y}_k = \mathbf{h}(\mathbf{x}_k) + \mathbf{v}_k
+\]
+EKF在每个时间步计算Jacobian矩阵（局部线性化）：
+\[
+F_{k-1} = \left.\frac{\partial \mathbf{f}}{\partial \mathbf{x}}\right|_{\hat{\mathbf{x}}_{k-1|k-1}, \mathbf{u}_{k-1}},\qquad
+H_k = \left.\frac{\partial \mathbf{h}}{\partial \mathbf{x}}\right|_{\hat{\mathbf{x}}_{k|k-1}}
+\]
+然后直接套用线性Kalman滤波的预测-更新公式。
+
+\begin{myalgorithm}{扩展Kalman滤波器}
+\begin{enumerate}
+\item \textbf{预测步骤：}
+\begin{align*}
+\hat{\mathbf{x}}_{k|k-1} &= \mathbf{f}(\hat{\mathbf{x}}_{k-1|k-1}, \mathbf{u}_{k-1}) \\
+P_{k|k-1} &= F_{k-1} P_{k-1|k-1} F_{k-1}^{\top} + W
+\end{align*}
+\item \textbf{更新步骤：}
+\begin{align*}
+K_k &= P_{k|k-1} H_k^{\top}(H_k P_{k|k-1} H_k^{\top} + V)^{-1} \\
+\hat{\mathbf{x}}_{k|k} &= \hat{\mathbf{x}}_{k|k-1} + K_k(\mathbf{y}_k - \mathbf{h}(\hat{\mathbf{x}}_{k|k-1})) \\
+P_{k|k} &= (I - K_k H_k)P_{k|k-1}
+\end{align*}
+\end{enumerate}
+\end{myalgorithm}
+
+\begin{remark}
+EKF的局限性包括：(1) 当系统非线性较强时，一阶Taylor展开近似不够精确，可能导致滤波器发散；(2) Jacobian矩阵的计算在高维情况下计算量大；(3) EKF给出的状态估计不一定是无偏的，估计协方差可能严重低估真实误差。作为改进，无迹Kalman滤波（UKF）和粒子滤波（PF）在强非线性场景下表现更优。
+\end{remark}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[lqgStyle/.style={draw, minimum width=2.8cm, minimum height=0.9cm, align=center},
+    lqgBlock/.style={draw, fill=blue!8, minimum width=2.8cm, minimum height=0.9cm, align=center},
+    lqgGreen/.style={draw, fill=green!8, minimum width=2.8cm, minimum height=0.9cm, align=center},
+    lqgSum/.style={draw, circle, inner sep=0pt, minimum size=5mm},
+    lqgArrow/.style={->, >=stealth, thick}]
+    
+    \node (lqgV) at (-1, 2) {$\mathbf{v}$};
+    \node[lqgSum] (sum) at (2, 2) {$-$};
+    \node[lqgBlock] (Kctrl) at (5.5, 2) {LQR\\$K = \operatorname{CARE}$};
+    \node[lqgBlock] (plant) at (5.5, -1) {被控对象\\$A, B, C$};
+    \node[lqgGreen] (kf) at (5.5, -4.5) {Kalman滤波器\\$L = \operatorname{FARE}$};
+    
+    \node[lqgSum] (noise) at (9, -1) {$+$};
+    \node (lqgW) at (11, 0) {$\mathbf{w}$};
+    \node (lqgYk) at (11, -1.5) {$\mathbf{y}$};
+    
+    \draw[lqgArrow] (lqgV) -- (sum);
+    \draw[lqgArrow] (sum) -- (Kctrl);
+    \draw[lqgArrow] (Kctrl) -| (4, 0.5) |- (plant.west);
+    \draw[lqgArrow] (plant.east) -- (noise);
+    \draw[lqgArrow] (noise) -- (lqgYk);
+    \draw[lqgArrow] (lqgW) -- (noise.north);
+    
+    \draw[lqgArrow] (lqgYk) |- (kf.east);
+    \draw[lqgArrow] (kf.west) -| (1, -3) |- (sum.south);
+    
+    \node[lqgStyle, draw=none] at (5.5, -6.5) {\textbf{LQG}=LQR+Kalman};
+\end{tikzpicture}
+\caption{LQG控制结构：LQR最优控制器与Kalman滤波器级联。分离定理保证了二者的独立设计和组合使用。}
+\label{fig:ch10_lqg_structure}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Python实现}
+
+\subsection{LQR求解与仿真}
+
+\begin{mycode}{Python LQR求解器}
+\begin{lstlisting}[language=Python]
+import numpy as np
+from scipy import linalg
+import matplotlib.pyplot as plt
+
+def lqr(A, B, Q, R):
+    """求解连续时间LQR问题，返回增益矩阵K和解P"""
+    # 求解连续时间代数Riccati方程
+    P = linalg.solve_continuous_are(A, B, Q, R)
+    # 计算最优反馈增益
+    K = linalg.solve(R, B.T @ P)
+    return K, P
+
+# 例：倒立摆LQR
+g, L, m = 9.81, 0.5, 0.2
+A = np.array([[0, 1],
+              [g/L, 0]])
+B = np.array([[0], [1/(m*L**2)]])
+
+# 权重矩阵
+Q = np.diag([100, 10])  # 重视角度和角速度
+R = np.array([[0.1]])   # 适度惩罚控制
+
+K, P = lqr(A, B, Q, R)
+print(f"LQR增益 K = {K}")
+print(f"Riccati解 P =\n{P}")
+print(f"闭环极点: {linalg.eigvals(A - B @ K)}")
+
+# 仿真
+dt = 0.01
+t = np.arange(0, 5, dt)
+n_steps = len(t)
+x = np.zeros((2, n_steps))
+x[:, 0] = [0.2, 0]  # 初始角度0.2 rad
+
+for i in range(n_steps - 1):
+    u = -K @ x[:, i]
+    xdot = A @ x[:, i] + B.flatten() * u
+    x[:, i+1] = x[:, i] + xdot * dt
+
+fig, axes = plt.subplots(2, 1, figsize=(8, 6))
+axes[0].plot(t, x[0])
+axes[0].set_ylabel(r'$\theta$ (rad)')
+axes[0].grid(True)
+axes[1].plot(t, -K @ x)
+axes[1].set_ylabel('Control u')
+axes[1].set_xlabel('Time [s]')
+axes[1].grid(True)
+plt.show()
+\end{lstlisting}
+\end{mycode}
+
+\subsection{Kalman滤波仿真}
+
+\begin{mycode}{Python Kalman滤波器实现}
+\begin{lstlisting}[language=Python]
+import numpy as np
+import matplotlib.pyplot as plt
+
+class KalmanFilter:
+    def __init__(self, A, B, C, W, V, x0, P0):
+        self.A = A
+        self.B = B
+        self.C = C
+        self.W = W  # 过程噪声协方差
+        self.V = V  # 测量噪声协方差
+        self.x = x0  # 状态估计
+        self.P = P0  # 误差协方差
+        self.n = A.shape[0]
+
+    def predict(self, u=0):
+        self.x = self.A @ self.x + self.B @ u
+        self.P = self.A @ self.P @ self.A.T + self.W
+        return self.x
+
+    def update(self, y):
+        S = self.C @ self.P @ self.C.T + self.V
+        K = self.P @ self.C.T @ np.linalg.inv(S)
+        self.x = self.x + K @ (y - self.C @ self.x)
+        self.P = (np.eye(self.n) - K @ self.C) @ self.P
+        return self.x
+
+# 一维匀加速运动的Kalman滤波
+dt = 0.1
+A = np.array([[1, dt, 0.5*dt**2],
+              [0, 1, dt],
+              [0, 0, 1]])
+B = np.zeros((3, 1))
+C = np.array([[1, 0, 0]])  # 只测位置
+
+W = np.diag([0.01, 0.01, 0.01])  # 过程噪声
+V = np.array([[1.0]])             # 测量噪声
+
+# 真实轨迹
+n_steps = 200
+x_true = np.zeros((3, n_steps))
+x_true[:, 0] = [0, 1, 0.05]
+for k in range(n_steps - 1):
+    w = np.random.multivariate_normal([0, 0, 0], W)
+    x_true[:, k+1] = A @ x_true[:, k] + w
+
+# 测量值
+y_meas = C @ x_true + np.random.randn(n_steps) * np.sqrt(V[0, 0])
+
+# Kalman滤波
+kf = KalmanFilter(A, B, C, W, V, np.zeros(3), np.eye(3))
+x_est = np.zeros((3, n_steps))
+for k in range(n_steps):
+    if k > 0:
+        kf.predict()
+    x_est[:, k] = kf.update(y_meas[:, k])
+
+t_axis = np.arange(n_steps) * dt
+fig, axes = plt.subplots(3, 1, figsize=(10, 8))
+labels = ['Position', 'Velocity', 'Acceleration']
+for i in range(3):
+    axes[i].plot(t_axis, x_true[i], 'b-', label='True')
+    axes[i].plot(t_axis, x_est[i], 'r--', label='KF Estimate')
+    axes[i].plot(t_axis, y_meas.flatten() if i == 0 else [],
+                 'k.', alpha=0.3, label='Meas' if i == 0 else '')
+    axes[i].set_ylabel(labels[i])
+    axes[i].legend(loc='best')
+    axes[i].grid(True)
+axes[-1].set_xlabel('Time [s]')
+plt.tight_layout()
+plt.show()
+\end{lstlisting}
+\end{mycode}
+
+\subsection{EKF示例——非线性振荡器}
+
+\begin{mycode}{Python扩展Kalman滤波器}
+\begin{lstlisting}[language=Python]
+import numpy as np
+import matplotlib.pyplot as plt
+
+class ExtendedKalmanFilter:
+    def __init__(self, f, h, F_jac, H_jac, W, V, x0, P0):
+        self.f = f       # 状态转移函数
+        self.h = h       # 观测函数
+        self.F_jac = F_jac  # 状态转移Jacobian
+        self.H_jac = H_jac  # 观测Jacobian
+        self.W = W
+        self.V = V
+        self.x = x0
+        self.P = P0
+        self.n = len(x0)
+
+    def predict(self, u=0):
+        self.x = self.f(self.x, u)
+        F = self.F_jac(self.x, u)
+        self.P = F @ self.P @ F.T + self.W
+        return self.x
+
+    def update(self, y):
+        H = self.H_jac(self.x)
+        S = H @ self.P @ H.T + self.V
+        K = self.P @ H.T @ np.linalg.inv(S)
+        self.x = self.x + K @ (y - self.h(self.x))
+        self.P = (np.eye(self.n) - K @ H) @ self.P
+        return self.x
+
+# Van der Pol振荡器
+mu = 1.0
+dt = 0.05
+
+def f(x, u):
+    """x = [x1, x2]^T"""
+    x1, x2 = x[0], x[1]
+    return np.array([x1 + dt * x2,
+                     x2 + dt * (mu * (1 - x1**2) * x2 - x1)])
+
+def h(x):
+    return np.array([x[0]])  # 只测x1
+
+def F_jac(x, u):
+    x1, x2 = x[0], x[1]
+    return np.array([
+        [1, dt],
+        [-dt * (2 * mu * x1 * x2 + 1), 1 + dt * mu * (1 - x1**2)]
+    ])
+
+def H_jac(x):
+    return np.array([[1, 0]])
+
+W = np.diag([0.01, 0.01])
+V = np.array([[0.5]])
+ekf = ExtendedKalmanFilter(f, h, F_jac, H_jac, W, V,
+                           np.array([2.0, 0.0]), np.eye(2))
+
+n_steps = 300
+x_true = np.zeros((2, n_steps))
+x_true[:, 0] = [2.0, 0.0]
+for k in range(n_steps - 1):
+    w = np.random.multivariate_normal([0, 0], W)
+    x_true[:, k+1] = f(x_true[:, k], 0) + w
+
+y_meas = h(x_true[0, :]) + np.random.randn(n_steps) * np.sqrt(V[0, 0])
+
+x_est = np.zeros((2, n_steps))
+for k in range(n_steps):
+    if k > 0:
+        ekf.predict()
+    x_est[:, k] = ekf.update(y_meas[:, k])
+
+t_axis = np.arange(n_steps) * dt
+fig, axes = plt.subplots(2, 1, figsize=(10, 6))
+for i, label in enumerate(['x1', 'x2']):
+    axes[i].plot(t_axis, x_true[i], 'b-', label='True')
+    axes[i].plot(t_axis, x_est[i], 'r--', label='EKF')
+    axes[i].set_ylabel(label)
+    axes[i].legend()
+    axes[i].grid(True)
+axes[-1].set_xlabel('Time [s]')
+plt.show()
+\end{lstlisting}
+\end{mycode}
+
+\subsection{离散LQR与Kalman结合的LQG仿真}
+
+\begin{mycode}{Python离散LQG控制器}
+\begin{lstlisting}[language=Python]
+import numpy as np
+from scipy import linalg
+import matplotlib.pyplot as plt
+
+# 离散系统
+dt = 0.1
+A_d = np.array([[1, dt], [0, 1]])
+B_d = np.array([[0.5*dt**2], [dt]])
+C = np.array([[1, 0]])
+
+# LQR设计
+Q = np.diag([10, 1])
+R = np.array([[0.01]])
+P_dare = linalg.solve_discrete_are(A_d, B_d, Q, R)
+K_lqr = linalg.solve(B_d.T @ P_dare @ B_d + R,
+                     B_d.T @ P_dare @ A_d)
+print(f"离散LQR增益 K = {K_lqr}")
+
+# Kalman滤波器
+W = np.diag([0.001, 0.001])
+V = np.array([[0.1]])
+S_dare = linalg.solve_discrete_are(A_d.T, C.T, W, V)
+L_kf = linalg.solve(C @ S_dare @ C.T + V,
+                    C @ S_dare).T
+print(f"稳态Kalman增益 L =\n{L_kf}")
+
+# LQG仿真
+n_steps = 200
+x_true = np.zeros((2, n_steps))
+x_true[:, 0] = [1, 0]
+x_est = np.zeros((2, n_steps))
+x_est[:, 0] = [0, 0]
+u = np.zeros(n_steps)
+y = np.zeros(n_steps)
+
+for k in range(n_steps - 1):
+    # 控制
+    u[k] = -K_lqr @ x_est[:, k]
+    # 过程噪声
+    w = np.random.multivariate_normal([0, 0], W)
+    # 状态更新
+    x_true[:, k+1] = A_d @ x_true[:, k] + B_d.flatten() * u[k] + w
+    # 测量
+    v = np.random.randn() * np.sqrt(V[0, 0])
+    y[k+1] = C @ x_true[:, k+1] + v
+    # Kalman预测
+    x_pred = A_d @ x_est[:, k] + B_d.flatten() * u[k]
+    # Kalman更新
+    x_est[:, k+1] = x_pred + L_kf.flatten() * (y[k+1] - C @ x_pred)
+
+fig, axes = plt.subplots(3, 1, figsize=(10, 8))
+axes[0].plot(x_true[0], 'b', label='True x1')
+axes[0].plot(x_est[0], 'r--', label='Est x1')
+axes[0].legend()
+axes[0].set_ylabel('x1')
+axes[0].grid(True)
+axes[1].plot(x_true[1], 'b', label='True x2')
+axes[1].plot(x_est[1], 'r--', label='Est x2')
+axes[1].legend()
+axes[1].set_ylabel('x2')
+axes[1].grid(True)
+axes[2].plot(u, 'g')
+axes[2].set_ylabel('u')
+axes[2].set_xlabel('Step')
+axes[2].grid(True)
+plt.tight_layout()
+plt.show()
+\end{lstlisting}
+\end{mycode}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{从LQR到MPC的联系}
+
+LQR为线性系统的最优控制提供了完整的开/闭环解。然而，实际的物理系统总存在输入和状态的约束（如执行器饱和、安全边界等），LQR本身无法直接处理约束。模型预测控制（MPC）可以看作是"带约束的递归LQR"——在每个采样时刻求解一个有限时域的最优控制问题（通常转化为二次规划），只实施第一步控制，然后滚动到下一时刻重新求解。这种"滚动时域"策略使得MPC既能像LQR一样利用最优化理论，又能灵活处理约束条件。有关MPC的详细介绍将在第12章展开。
+
+同时，LQR给出的最优增益$K$与闭环系统的Riccati解之间存在密切关系。在鲁棒控制理论中，由Riccati方程构造的LQR控制器天然具有优良的增益裕度和相位裕度，这一性质引出了回路传递恢复（Loop Transfer Recovery, LTR）设计方法——通过调节Kalman滤波器的噪声参数，使基于观测器的LQG控制器恢复LQR的鲁棒特性。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{小结}
+
+本章围绕线性二次型最优控制这条主线，系统介绍了最优性能指标的定义、连续和离散时间代数Riccati方程的导出、Kalman滤波器的推导与实现、以及LQG分离定理。核心结论：
+\begin{enumerate}
+\item \textbf{LQR}通过求解Riccati方程给出最优线性状态反馈，闭环系统具有优越的稳定裕度；
+\item \textbf{Kalman滤波器}是最小方差意义下的最优状态估计器，为不可测状态的重构提供了精确算法；
+\item \textbf{LQG分离定理}将最优状态估计与最优控制解耦，是随机最优控制理论的基石；
+\item \textbf{EKF}通过对非线性系统的局部线性化将Kalman滤波推广至非线性领域，尽管存在局限性，但在工程实际中仍应用广泛。
+\end{enumerate}
+最优控制理论的进一步发展催生了鲁棒控制（$H_{\infty}$控制）、模型预测控制（MPC）和强化学习控制等现代方法，将在后续章节中逐一介绍。

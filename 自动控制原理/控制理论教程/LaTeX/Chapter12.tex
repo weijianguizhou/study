@@ -1,0 +1,691 @@
+\chapter{高级控制方法}
+
+\intro{
+前几章介绍的极点配置、LQR和滑模控制等方法构成了经典现代控制理论的基础。然而，随着工业过程日益复杂和对控制系统性能要求的不断提高，一系列更为先进的控制方法应运而生。本章系统介绍模型预测控制（MPC）、鲁棒控制（\(H_{\infty}\)）、自适应控制、强化学习与控制、以及智能控制方法。这些方法各有侧重：MPC擅长处理约束与多变量耦合，鲁棒控制保障不确定性下的性能，自适应控制在线调节参数，强化学习在未知环境中探索最优策略，智能控制借鉴人类推理和生物学习机制。理解各方法的原理、优势和局限，是综合运用它们解决实际工程问题的前提。
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{模型预测控制}
+
+\subsection{三大基本原理}
+
+模型预测控制（Model Predictive Control, MPC）并非单一算法，而是一类基于在线优化的控制策略，其核心由三大原理构成。
+
+\begin{mydefinition}{MPC的三大原理}
+\begin{enumerate}
+\item \textbf{预测模型}：利用系统的数学模型预测未来一段时间（预测时域\(N_p\)）内的输出响应。模型可以是状态空间模型、传递函数、卷积模型（FIR/FSR）或非线性模型；
+\item \textbf{滚动优化}：在每个采样时刻求解一个有限时域最优控制问题，计算最优控制序列\(\mathbf{u}^*(k), \mathbf{u}^*(k+1), \dots, \mathbf{u}^*(k+N_c-1)\)（\(N_c \le N_p\)为控制时域），但仅实施第一步\(\mathbf{u}^*(k)\)。下一采样时刻重新测量状态，重复优化过程——即"滚动"；
+\item \textbf{反馈校正}：利用实时测量信息修正预测偏差，补偿模型失配和未知扰动的影响，构成闭环机制。
+\end{enumerate}
+\end{mydefinition}
+
+\subsection{MPC的数学表述——二次规划形式}
+
+考虑离散时间线性时不变系统：
+\[
+\mathbf{x}_{k+1} = A\mathbf{x}_k + B\mathbf{u}_k,\quad \mathbf{y}_k = C\mathbf{x}_k
+\]
+MPC在每个采样时刻\(k\)求解以下优化问题：
+
+\begin{myformula}
+\min_{\mathbf{U}_k}\; \sum_{i=0}^{N_p-1} \bigl(\mathbf{x}_{k+i|k}^{\top}Q\mathbf{x}_{k+i|k} + \mathbf{u}_{k+i}^{\top}R\mathbf{u}_{k+i}\bigr) + \mathbf{x}_{k+N_p|k}^{\top}Q_f\mathbf{x}_{k+N_p|k}
+\end{myformula}
+
+满足约束条件：
+\begin{align*}
+\mathbf{x}_{k+i+1|k} &= A\mathbf{x}_{k+i|k} + B\mathbf{u}_{k+i},\quad i = 0, \dots, N_p-1 \\
+\mathbf{x}_{k|k} &= \mathbf{x}_k \\
+\mathbf{x}_{k+i|k} &\in \mathcal{X},\quad i = 1, \dots, N_p \\
+\mathbf{u}_{k+i} &\in \mathcal{U},\quad i = 0, \dots, N_c-1
+\end{align*}
+其中\(\mathbf{U}_k = [\mathbf{u}_k^{\top}, \dots, \mathbf{u}_{k+N_c-1}^{\top}]^{\top}\)是决策变量，\(\mathcal{X}\)和\(\mathcal{U}\)分别为状态约束集和输入约束集（通常为多面体），\(Q_f\)是终端代价矩阵。
+
+\subsection{预测方程的推导}
+
+利用递推关系，未来\(N_p\)步的状态预测可以紧凑地表示为当前状态和未来控制的函数：
+\[
+\begin{bmatrix} \mathbf{x}_{k+1|k} \\ \mathbf{x}_{k+2|k} \\ \vdots \\ \mathbf{x}_{k+N_p|k} \end{bmatrix}
+= \underbrace{\begin{bmatrix} A \\ A^2 \\ \vdots \\ A^{N_p} \end{bmatrix}}_{\Phi}
+\mathbf{x}_k +
+\underbrace{\begin{bmatrix}
+B & 0 & \cdots & 0 \\
+AB & B & \cdots & 0 \\
+\vdots & \vdots & \ddots & \vdots \\
+A^{N_p-1}B & A^{N_p-2}B & \cdots & B
+\end{bmatrix}}_{\Gamma}
+\begin{bmatrix} \mathbf{u}_k \\ \mathbf{u}_{k+1} \\ \vdots \\ \mathbf{u}_{k+N_c-1} \end{bmatrix}
+\]
+
+代入目标函数，可得紧凑的二次规划（QP）形式：
+\[
+\min_{\mathbf{U}_k}\; \frac{1}{2}\mathbf{U}_k^{\top}H\mathbf{U}_k + \mathbf{x}_k^{\top}F^{\top}\mathbf{U}_k
+\]
+其中\(H \succ 0\)（正定Hessian矩阵），约束为线性不等式\(G\mathbf{U}_k \le \mathbf{h}\)。这种标准的凸QP问题可以用内点法或有效集法高效求解。
+
+\subsection{约束处理}
+
+MPC相较于LQR的根本优势在于直接处理约束。典型约束包括：
+\begin{itemize}
+\item \textbf{输入约束}：\(\mathbf{u}_{\min} \le \mathbf{u}_k \le \mathbf{u}_{\max}\)（执行器饱和）；
+\item \textbf{输入速率约束}：\(\Delta\mathbf{u}_{\min} \le \mathbf{u}_k - \mathbf{u}_{k-1} \le \Delta\mathbf{u}_{\max}\)；
+\item \textbf{状态约束}：\(\mathbf{x}_{\min} \le \mathbf{x}_k \le \mathbf{x}_{\max}\)（安全边界）。
+\end{itemize}
+这些约束在QP中被编码为线性矩阵不等式。
+
+\subsection{可行性与稳定性}
+
+MPC的稳定性分析比LQR复杂，因为终端约束和终端代价的选择影响闭环稳定性。保证稳定性的常用策略包括：
+\begin{enumerate}
+\item \textbf{终端等式约束}：强制\(\mathbf{x}_{k+N_p|k} = \mathbf{0}\)（但可能损害可行性）；
+\item \textbf{终端代价+终端约束集}：选取\(Q_f\)为LQR的Riccati解\(P\)，并令终端约束集为LQR的最大不变集——保证递归可行性和渐近稳定性；
+\item \textbf{无限预测时域等价}：通过恰当的终端条件使有限时域MPC等价于无限时域LQR。
+\end{enumerate}
+
+\begin{remark}
+MPC的工业应用极其广泛，涵盖炼油、化工、电力、交通等领域。据估计，全球90\%以上的先进过程控制（APC）应用基于某种形式的MPC技术。其计算负担在嵌入式平台上面临挑战，但专用QP求解器（如qpOASES、OSQP）和显式MPC技术正推动MPC向更快采样频率的应用拓展。
+\end{remark}
+
+\subsection{非线性MPC与分布式MPC}
+
+非线性MPC（NMPC）直接使用非线性模型预测，每次求解非线性规划（NLP）而非QP。NMPC对强非线性过程可获得更好的预测精度，但计算代价更高，且可能受局部极小的困扰。
+
+分布式MPC将大规模系统（如电网、交通网络）分解为多个相互耦合的子系统，各子系统分别求解局部MPC问题，并通过通信交换信息实现协调控制。这种方法兼顾了全局最优性和计算可行性。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[mpcRStyle/.style={thick}, mpcRArrow/.style={->, >=stealth, thick}]
+    \draw[mpcRStyle, ->] (1, 3.5) -- (13.5, 3.5) node[right] {$t$};
+    \draw (1, 3.3) -- (1, 3.7) node[below] {$k$};
+    \draw (4, 3.3) -- (4, 3.7) node[below] {$k+1$};
+    \draw (7, 3.3) -- (7, 3.7) node[below] {$k+2$};
+    \draw (10, 3.3) -- (10, 3.7) node[below] {$k+3$};
+    
+    \draw[blue, very thick] (1, 2.8) -- (4, 2.3) -- (7, 1.5) -- (10, 0.8);
+    \node[blue] at (10.5, 0.6) {参考轨迹};
+    
+    \draw[red, thick, ->] (4, -0.2) -- (4.8, 2.1) -- (7, 1.8) -- (9, 1.1);
+    \node[red] at (4.5, -0.5) {$k$时刻预测};
+    
+    \draw[green!50!black, thick, dashed, ->] (7, -0.2) -- (7.5, 1.8) -- (10, 0.9);
+    \node[green!50!black] at (7.2, -0.5) {$k+1$时刻预测};
+    
+    \draw[orange, ultra thick] (4, 2.0) -- (5.5, 2.1);
+    \node[orange] at (5.5, 2.5) {实施第一步};
+    
+    \fill[blue!15, opacity=0.3] (4, 0) rectangle (10, 3.2);
+    \node at (7, 3.3) {预测时域 $N_p$};
+    \fill[green!15, opacity=0.3] (7, 0) rectangle (13, 3.2);
+\end{tikzpicture}
+\caption{MPC滚动优化原理。在每个采样时刻求解有限时域的最优控制问题（红色/绿色虚线），但仅实施第一步控制（橙色实线）。采样时刻推进后，预测时域窗口向前滚动，重新优化。}
+\label{fig:ch12_mpc_receding_horizon}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{鲁棒控制}
+
+\subsection{不确定性的描述}
+
+实际系统与数学模型之间总存在差异，这些差异统称为"不确定性"。鲁棒控制的目标是设计控制器，使得闭环系统在存在不确定性时仍能保持稳定并满足一定的性能要求。
+
+不确定性的主要描述方式包括：
+\begin{enumerate}
+\item \textbf{加性不确定性}：\(G_p(s) = G(s) + \Delta_a(s)\)，其中\(\|\Delta_a(j\omega)\|\)有界；
+\item \textbf{乘性不确定性}：\(G_p(s) = G(s)(I + \Delta_m(s))\)，更适合描述高频建模误差；
+\item \textbf{互质因子不确定性}：\(G_p = (M + \Delta_M)^{-1}(N + \Delta_N)\)，覆盖更广的不确定性类型。
+\end{enumerate}
+
+\begin{mydefinition}{小增益定理}
+设\(M(s)\)为稳定传递函数矩阵。若\(\|M\|_{\infty} < 1\)，则对于任何稳定且满足\(\|\Delta\|_{\infty} \le 1\)的不确定性\(\Delta\)，闭环系统\(M \star \Delta\)对所有\(\Delta\)是稳定的。这里\(\|\cdot\|_{\infty}\)表示\(H_{\infty}\)范数：
+\[
+\|G\|_{\infty} = \sup_{\omega} \bar{\sigma}(G(j\omega))
+\]
+\end{mydefinition}
+
+小增益定理是鲁棒稳定性分析的基石。当\(M(s)\)与\(\Delta(s)\)的\(H_{\infty}\)范数乘积小于1时，任何范数有界的扰动都不会破坏系统稳定性。
+
+\subsection{\(H_{\infty}\)控制问题}
+
+\(H_{\infty}\)控制的基本问题是：设计控制器\(K(s)\)使得闭环系统的\(H_{\infty}\)范数最小——即最小化扰动到输出的最坏情况能量增益。
+
+考虑广义被控对象\(P(s)\)：
+\[
+\begin{bmatrix} \mathbf{z} \\ \mathbf{y} \end{bmatrix} =
+\begin{bmatrix} P_{11} & P_{12} \\ P_{21} & P_{22} \end{bmatrix}
+\begin{bmatrix} \mathbf{w} \\ \mathbf{u} \end{bmatrix}
+\]
+其中\(\mathbf{w}\)是外生输入（参考、扰动、噪声），\(\mathbf{u}\)是控制输入，\(\mathbf{z}\)是被控输出（跟踪误差、控制代价），\(\mathbf{y}\)是测量输出。反馈连接\(\mathbf{u} = K\mathbf{y}\)后，从\(\mathbf{w}\)到\(\mathbf{z}\)的闭环传递函数为
+\[
+T_{zw} = P_{11} + P_{12}K(I - P_{22}K)^{-1}P_{21}
+\]
+
+\(H_{\infty}\)最优控制问题是求解
+\[
+\min_{K\text{稳定化}} \|T_{zw}\|_{\infty}
+\]
+而\(H_{\infty}\)次优控制问题是：给定\(\gamma > 0\)，寻找稳定化控制器\(K\)使得\(\|T_{zw}\|_{\infty} < \gamma\)。
+
+\subsection{标准\(H_{\infty}\)框架与Riccati方法}
+
+对于正则的\(H_{\infty}\)问题，Glover和Doyle（1988）给出了基于两个Riccati方程的解。设广义被控对象的状态空间实现为
+\begin{align*}
+\dot{\mathbf{x}} &= A\mathbf{x} + B_1\mathbf{w} + B_2\mathbf{u} \\
+\mathbf{z} &= C_1\mathbf{x} + D_{11}\mathbf{w} + D_{12}\mathbf{u} \\
+\mathbf{y} &= C_2\mathbf{x} + D_{21}\mathbf{w} + D_{22}\mathbf{u}
+\end{align*}
+
+在标准假设下（\((A,B_1)\)能稳，\((A,B_2)\)能稳，\((C_1,A)\)能检测，\((C_2,A)\)能检测；\(D_{12}^{\top}D_{12} = I\)，\(D_{21}D_{21}^{\top} = I\)；\(D_{11}=0, D_{22}=0\)），存在次优\(H_{\infty}\)控制器的充要条件是以下两个Riccati方程存在正定解\(X_{\infty}\)和\(Y_{\infty}\)：
+\begin{align*}
+A^{\top}X_{\infty} + X_{\infty}A + C_1^{\top}C_1 + X_{\infty}(\gamma^{-2}B_1B_1^{\top} - B_2B_2^{\top})X_{\infty} &= 0 \\
+AY_{\infty} + Y_{\infty}A^{\top} + B_1B_1^{\top} + Y_{\infty}(\gamma^{-2}C_1^{\top}C_1 - C_2^{\top}C_2)Y_{\infty} &= 0
+\end{align*}
+且\(\rho(X_{\infty}Y_{\infty}) < \gamma^2\)。中心控制器为：
+\[
+K_{\infty}(s) = \begin{bmatrix} A_{\infty} & -Z_{\infty}L_{\infty} \\ F_{\infty} & 0 \end{bmatrix}
+\]
+其中各项由Riccati解给出。
+
+\subsection{\(\mu\)综合简介}
+
+对于非结构不确定性，\(H_{\infty}\)方法十分有效。但当不确定性具有结构化（如每个通道独立变化）时，\(H_{\infty}\)条件会过度保守。\(\mu\)综合将结构化奇异值\(\mu_{\Delta}(M)\)作为鲁棒稳定性的度量：
+\[
+\text{鲁棒稳定} \iff \sup_{\omega} \mu_{\Delta}(M(j\omega)) < 1
+\]
+\(\mu\)综合通过"\(D\)-\(K\)迭代"交替优化控制器和尺度矩阵，通常能得到比纯\(H_{\infty}\)更优的结果，但计算复杂度较高。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[hinfStyle/.style={draw, minimum width=2.2cm, minimum height=0.8cm, align=center},
+    hinfBlock/.style={draw, fill=orange!12, minimum width=2.5cm, minimum height=1.8cm, align=center},
+    hinfCtrl/.style={draw, fill=cyan!12, minimum width=2.2cm, minimum height=0.9cm, align=center},
+    hinfArrow/.style={->, >=stealth, thick}]
+    
+    \node[hinfBlock] (hinfP) at (0, 0) {广义被控对象\\$P(s)$};
+    \node[hinfCtrl] (hinfK) at (0, -3) {控制器\\$K(s)$};
+    
+    \node[align=center] (hinfW) at (-4, 1.2) {$\mathbf{w}$\\（扰动/参考）};
+    \node[align=center] (hinfZ) at (4, 1.2) {$\mathbf{z}$\\（被控输出）};
+    \node (hinfU) at (2, -0.8) {$\mathbf{u}$};
+    \node (hinfY) at (-2, -0.8) {$\mathbf{y}$};
+    
+    \draw[hinfArrow] (hinfW) -- (-2, 1.2) -- (-2, 0.5) -- (hinfP.west |- 0, 0.5);
+    \draw[hinfArrow] (hinfP.east |- 0, 0.5) -- (2, 0.5) -- (2, 1.2) -- (hinfZ);
+    \draw[hinfArrow] (hinfP.east |- 0, -0.5) -- (2, -0.5) -- node[right] {} (hinfU);
+    \draw[hinfArrow] (hinfY) -- (-2, -0.5) -- (hinfP.west |- 0, -0.5);
+    \draw[hinfArrow] (hinfU) |- (hinfK.east);
+    \draw[hinfArrow] (hinfK.west) -| (hinfY);
+    
+    \node at (0, -4.5) {$\min_K \|T_{zw}\|_{\infty}$};
+\end{tikzpicture}
+\caption{\(H_{\infty}\)控制的标准框架。广义被控对象\(P(s)\)囊括了被控对象本身、加权函数和互联结构，控制器\(K(s)\)通过测量输出\(\mathbf{y}\)产生控制\(\mathbf{u}\)以最小化扰动\(\mathbf{w}\)到被控输出\(\mathbf{z}\)的\(H_{\infty}\)增益。}
+\label{fig:ch12_hinf_framework}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{自适应控制}
+
+\subsection{模型参考自适应控制}
+
+模型参考自适应控制（Model Reference Adaptive Control, MRAC）的基本思想是：设计一个参考模型来描述期望的闭环响应特性，然后通过调节控制器的参数使得被控对象的输出渐近跟踪参考模型的输出。
+
+参考模型通常是一个稳定的线性系统：
+\[
+\dot{\mathbf{x}}_m = A_m\mathbf{x}_m + B_m\mathbf{r}
+\]
+被控对象含未知参数\(\boldsymbol{\theta}\)：
+\[
+\dot{\mathbf{x}} = A(\boldsymbol{\theta})\mathbf{x} + B(\boldsymbol{\theta})\mathbf{u}
+\]
+控制律为\(\mathbf{u} = \hat{K}(t)\mathbf{x} + \hat{L}(t)\mathbf{r}\)，其中\(\hat{K}(t)\)和\(\hat{L}(t)\)由自适应律在线调整。
+
+跟踪误差\(\mathbf{e} = \mathbf{x} - \mathbf{x}_m\)的动态为
+\[
+\dot{\mathbf{e}} = A_m\mathbf{e} + B(\boldsymbol{\theta})(\tilde{K}\mathbf{x} + \tilde{L}\mathbf{r})
+\]
+取Lyapunov函数
+\[
+V = \mathbf{e}^{\top}P\mathbf{e} + \operatorname{tr}\bigl(\tilde{K}^{\top}\Gamma^{-1}\tilde{K}\bigr) + \operatorname{tr}\bigl(\tilde{L}^{\top}\Gamma^{-1}\tilde{L}\bigr)
+\]
+其中\(P\)满足Lyapunov方程\(A_m^{\top}P + PA_m = -Q\)（\(Q \succ 0\)）。自适应律取为
+\[
+\dot{\hat{K}} = -\Gamma B^{\top}P\mathbf{e}\mathbf{x}^{\top},\quad
+\dot{\hat{L}} = -\Gamma B^{\top}P\mathbf{e}\mathbf{r}^{\top}
+\]
+可证明\(\dot{V} = -\mathbf{e}^{\top}Q\mathbf{e} \le 0\)，跟踪误差渐近收敛到零。
+
+\subsection{自校正控制}
+
+自校正控制（Self-Tuning Control, STC）采用"辨识-控制"两步法：
+\begin{enumerate}
+\item \textbf{在线参数辨识}：利用递推最小二乘（RLS）等方法实时估计系统参数；
+\item \textbf{控制器设计}：将参数估计值代入某种控制设计算法（如极点配置、LQR、最小方差控制），计算控制信号。
+\end{enumerate}
+
+递推最小二乘（RLS）是STC中最常用的参数估计算法。对于线性回归模型
+\[
+y_k = \boldsymbol{\varphi}_k^{\top}\boldsymbol{\theta} + \varepsilon_k
+\]
+RLS的递推公式为
+\begin{myformula}
+\hat{\boldsymbol{\theta}}_k &= \hat{\boldsymbol{\theta}}_{k-1} + \mathbf{L}_k(y_k - \boldsymbol{\varphi}_k^{\top}\hat{\boldsymbol{\theta}}_{k-1}) \\
+\mathbf{L}_k &= \frac{P_{k-1}\boldsymbol{\varphi}_k}{\lambda + \boldsymbol{\varphi}_k^{\top}P_{k-1}\boldsymbol{\varphi}_k} \\
+P_k &= \frac{1}{\lambda}\bigl(I - \mathbf{L}_k\boldsymbol{\varphi}_k^{\top}\bigr)P_{k-1}
+\end{myformula}
+其中\(0 < \lambda \le 1\)为遗忘因子（\(\lambda = 1\)对应标准RLS，\(\lambda < 1\)赋予近期数据更高的权重，以适应时变系统）。
+
+\begin{remark}
+MRAC关注跟踪误差的直接稳定性（直接自适应），其理论分析基于Lyapunov方法；STC遵循"确定性等价原理"——将参数估计视同真值用于控制器设计（间接自适应）。MRAC通常收敛速度可调，但需要匹配条件（如被控对象与参考模型同阶）；STC更灵活，但辨识阶段的持续激励条件和瞬态性能保障是设计的难点。
+\end{remark}
+
+\subsection{MIT规则与归一化自适应律}
+
+除Lyapunov方法外，MIT规则（以MIT Instrumentation Lab命名）是一种基于梯度下降的参数调节方法。定义损失函数\(J = \frac{1}{2}e^2\)，参数调整方向为
+\[
+\dot{\hat{\theta}} = -\gamma \frac{\partial J}{\partial \hat{\theta}} = -\gamma e \frac{\partial e}{\partial \hat{\theta}}
+\]
+其中\(\frac{\partial e}{\partial \hat{\theta}}\)是"灵敏度导数"。MIT规则直观简单，但缺乏稳定性保证，在非匹配不确定性下可能发散。
+
+归一化自适应律通过在自适应增益中引入\(\mathbf{x}^{\top}\mathbf{x}\)的正则项来增强鲁棒性：
+\[
+\dot{\hat{K}} = -\frac{\Gamma B^{\top}P\mathbf{e}\mathbf{x}^{\top}}{1 + \mathbf{x}^{\top}\mathbf{x}}
+\]
+归一化可以防止参数漂移，但足以保证跟踪误差的收敛。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{强化学习与控制}
+
+\subsection{MDP与最优控制的等价性}
+
+马尔可夫决策过程（MDP）是强化学习（RL）的基本数学框架。有趣的是，确定性LQR问题可以完全嵌入RL的框架：
+\begin{itemize}
+\item \textbf{状态}：\(\mathbf{x}_k\)（对应MDP状态\(s_k\)）；
+\item \textbf{动作}：\(\mathbf{u}_k\)（对应MDP动作\(a_k\)）；
+\item \textbf{奖励}：\(r_k = -(\mathbf{x}_k^{\top}Q\mathbf{x}_k + \mathbf{u}_k^{\top}R\mathbf{u}_k)\)（性能代价的负值）；
+\item \textbf{价值函数}：\(V(\mathbf{x}_k) = \mathbf{x}_k^{\top}P\mathbf{x}_k\)（恰好是Riccati方程的解）。
+\end{itemize}
+
+\begin{myTheorem}{LQR与最优价值函数的等价性}
+对于离散LQR问题，最优价值函数是状态的二次型\(V^*(\mathbf{x}) = \mathbf{x}^{\top}P\mathbf{x}\)，其中\(P\)是离散Riccati方程的解。最优策略为\(\mathbf{u}^* = -K\mathbf{x}\)，其中\(K = (R + B^{\top}PB)^{-1}B^{\top}PA\)。这精确对应了RL中的Bellman最优方程。
+\end{myTheorem}
+
+\subsection{Policy Iteration求解LQR}
+
+当系统矩阵\(A\)和\(B\)未知时，可以使用Policy Iteration方法在线求解LQR；在RL语境中这被称为"策略迭代"：
+
+\begin{myalgorithm}{面向LQR的Policy Iteration（离线/在线）}
+\begin{enumerate}
+\item \textbf{初始化}：选取初始稳定化增益\(K_0\)（即\(\rho(A - BK_0) < 1\)）；
+\item \textbf{策略评估}：解Lyapunov方程求\(P_j\)：
+\[
+(A - BK_j)^{\top}P_j(A - BK_j) - P_j + Q + K_j^{\top}RK_j = 0
+\]
+\item \textbf{策略改进}：更新增益
+\[
+K_{j+1} = (R + B^{\top}P_j B)^{-1}B^{\top}P_j A
+\]
+\item 重复步骤2--3直到收敛。
+\end{enumerate}
+\end{myalgorithm}
+
+当模型\((A,B)\)未知时，策略评估可通过政策评估（On-policy）或Q-学习（Off-policy）的RL方法在线收集数据完成，实现无模型的最优控制设计。
+
+\subsection{自适应动态规划（ADP）}
+
+自适应动态规划（Adaptive Dynamic Programming, ADP）是控制与RL交汇的重要分支。ADP使用函数逼近器（如神经网络）来近似最优价值函数，然后通过策略迭代或值迭代求解近似最优控制律。
+
+基本的启发式动态规划（HDP）结构包括三个网络：
+\begin{itemize}
+\item \textbf{模型网络}：近似系统动力学\(\hat{\mathbf{x}}_{k+1} = \hat{f}(\mathbf{x}_k, \mathbf{u}_k)\)；
+\item \textbf{评价网络（Critic）}：近似价值函数\(\hat{V}(\mathbf{x})\)；
+\item \textbf{执行网络（Actor）}：近似最优策略\(\hat{\mathbf{u}} = \hat{\pi}(\mathbf{x})\)。
+\end{itemize}
+
+训练过程交替进行Critic更新（最小化Bellman残差）和Actor更新（沿价值函数的负梯度方向改进策略）。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[mdpStyle/.style={draw, minimum width=2.2cm, minimum height=0.9cm, align=center},
+    mdpBlock/.style={draw, fill=purple!8, minimum width=2.5cm, minimum height=2.2cm, align=center},
+    mdpArrow/.style={->, >=stealth, thick}]
+    
+    \node[mdpBlock] (agent) at (-3, 0) {\textbf{Agent}\\（控制器）};
+    \node[mdpBlock, fill=green!8] (env) at (3, 0) {\textbf{Environment}\\（被控对象）};
+    
+    \draw[mdpArrow] (agent.east) -- node[above] {动作 $\mathbf{u}_k$} (env.west);
+    \draw[mdpArrow] (env.west) -- node[below, xshift=8] {状态 $\mathbf{x}_{k+1}$} (agent.east |- 0, -0.8);
+    \draw[mdpArrow] (env.west) -- node[below, xshift=8] {奖励 $r_k$} (agent.east |- 0, -1.3);
+    
+    \node at (0, 1.5) {MDP循环};
+    
+    \node[font=\footnotesize] at (-3, -2) {Policy: $\pi(\mathbf{u}|\mathbf{x})$};
+    \node[font=\footnotesize] at (3, -2) {Dynamics: $p(\mathbf{x}'|\mathbf{x},\mathbf{u})$};
+    
+    \node at (0, -3) {\textbf{Bellman方程}：$V^*(\mathbf{x}) = \max_{\mathbf{u}} [r + \gamma V^*(\mathbf{x}')]$};
+\end{tikzpicture}
+\caption{强化学习与控制问题的MDP框架。控制器（Agent）根据状态\(\mathbf{x}_k\)选择动作\(\mathbf{u}_k\)，被控对象（Environment）转移到新状态\(\mathbf{x}_{k+1}\)并反馈奖励信号\(r_k\)。策略优化即最大化长期累积奖励的期望。}
+\label{fig:ch12_mdp_framework}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{智能控制}
+
+\subsection{模糊控制}
+
+模糊控制基于模糊集合理论和模糊逻辑推理，最早由Zadeh（1965）提出理论，Mamdani（1974）首次应用于蒸汽机控制。其三大组成部分为：
+
+\begin{enumerate}
+\item \textbf{模糊化}：将精确的输入量（如"误差=0.7"）映射到模糊集合（如"正大"，"正中"，"零"等），用隶属度函数\(\mu_A(x) \in [0,1]\)量化隶属程度；
+\item \textbf{模糊推理}：基于IF-THEN规则库进行推理。典型规则形式为：
+\[\text{IF } e \text{ is NB AND } \dot{e} \text{ is PB THEN } u \text{ is ZE}\]
+规则库编码了领域专家的控制经验和知识；
+\item \textbf{去模糊化}：将模糊推理的输出（模糊集合）转化为精确的控制信号。常用方法有重心法（COG）和最大隶属度法。
+\end{enumerate}
+
+模糊控制器的核心优势在于：不需要精确的数学模型，能直接利用人类专家的定性经验，对参数变化和干扰具有较好的鲁棒性。其局限性在于缺乏严格的稳定性分析和系统的设计方法。
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[fzyStyle/.style={draw, minimum width=2.5cm, minimum height=0.9cm, align=center},
+    fzyBlock/.style={draw, fill=orange!12, minimum width=2.5cm, minimum height=0.9cm, align=center},
+    fzyArrow/.style={->, >=stealth, thick}]
+    
+    \node (fzyE) at (-4, 0) {参考 $r$};
+    \node[draw, circle, inner sep=0pt, minimum size=6mm] (sum) at (-1.5, 0) {$-$};
+    \node[fzyBlock] (fuzz) at (1.5, 1.5) {模糊化};
+    \node[fzyBlock] (infer) at (4, 1.5) {模糊推理\\（规则库）};
+    \node[fzyBlock] (defuzz) at (6.5, 1.5) {去模糊化};
+    \node[fzyBlock, fill=green!12] (plant) at (4, -0.5) {被控对象};
+    \node (fzyY) at (7, -0.5) {$y$};
+    \node (de) at (-1.5, 1.5) {$\dot{e}$};
+    
+    \draw[fzyArrow] (fzyE) -- (sum);
+    \draw[fzyArrow] (sum) -- node[midway, below] {$e$} (0.5, 0) |- (fuzz);
+    \draw[fzyArrow] (sum) |- (-1.5, 1.5) -- (0.5, 1.5);
+    \draw[fzyArrow] (fuzz) -- (infer);
+    \draw[fzyArrow] (infer) -- (defuzz);
+    \draw[fzyArrow] (defuzz) |- (6.5, 0.5) -| (plant.east);
+    \draw[fzyArrow] (plant.east) -- (fzyY);
+    \draw[fzyArrow] (7, -1) -- (-1.5, -1) -- (sum.south);
+    
+    \draw[dashed] (0.8, 0.8) rectangle (7.2, 2.2);
+    \node at (4, 2.5) {模糊控制器 (FLC)};
+\end{tikzpicture}
+\caption{模糊控制系统的基本架构。误差$e$和误差变化率$\dot{e}$经模糊化转换为模糊量，通过IF-THEN规则库进行模糊推理，再经去模糊化转换为精确控制量作用于被控对象。}
+\label{fig:ch12_fuzzy_architecture}
+\end{figure}
+
+\subsection{神经网络控制}
+
+神经网络控制利用人工神经网络的万能逼近能力进行控制设计。主要范式包括：
+
+\begin{enumerate}
+\item \textbf{系统辨识}：用神经网络逼近未知动力学：
+\[
+\mathbf{x}_{k+1} = \hat{f}_{NN}(\mathbf{x}_k, \mathbf{u}_k; \mathbf{w})
+\]
+通过最小化预测误差训练网络权重\(\mathbf{w}\)；
+\item \textbf{逆模控制}：训练神经网络学习系统的逆动力学映射，使控制器输出恰好产生期望的系统响应；
+\item \textbf{NARMA-L2控制}：一种基于线性化近似的神经网络控制方案。将系统近似为NARMA模型后，设计一个简单的线性控制律，利用神经网络计算控制所需的系统Jacobian信息。
+\end{enumerate}
+
+NARMA-L2模型的数学表述为
+\[
+y_{k+d} = f(y_k, \dots, y_{k-n+1}, u_{k-1}, \dots, u_{k-n+1}) + g(\cdots) \cdot u_k
+\]
+控制律直接取为
+\[
+u_k = \frac{y_{k+d}^{\text{des}} - \hat{f}(\cdot)}{\hat{g}(\cdot)}
+\]
+其中\(\hat{f}\)和\(\hat{g}\)是两个并行训练的神经网络。
+
+\begin{remark}
+模糊控制与神经网络各有侧重：模糊控制擅长利用定性知识，解释性强；神经网络擅长从数据中学习，拟合能力强。将两者融合的\textbf{模糊神经网络}（ANFIS）兼具两者的优势，通过神经网络自动调节模糊系统的隶属度参数，近年来在工业过程控制中获得广泛应用。
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{前沿方向}
+
+\subsection{学习型MPC}
+
+传统MPC依赖于精确的数学模型，而学习型MPC（Learning-based MPC）利用机器学习——尤其是高斯过程（GP）和贝叶斯优化——从数据中在线学习模型的剩余不确定性，然后将学习到的不确定性边界纳入MPC的约束处理中，实现"安全+最优"的权衡。其核心公式为：在标准MPC代价中加入数据驱动的约束收紧项：
+\[
+\mathbf{x}_{k+i|k} \in \mathcal{X} \ominus \mathcal{B}_{\text{learned}}(\mathbf{x}_{k+i|k})
+\]
+其中\(\mathcal{B}_{\text{learned}}\)是从数据习得的不确定性边界。
+
+\subsection{Safe RL}
+
+强化学习在游戏和仿真中取得了瞩目成就，但在物理系统中的部署面临严重的安全挑战——探索过程中的随机动作可能导致灾难性后果。Safe RL旨在：
+\begin{itemize}
+\item 利用控制屏障函数（Control Barrier Function, CBF）约束RL的策略空间；
+\item 将安全约束编码为CMDP（Constrained MDP）框架下的期望约束或概率约束；
+\item 结合MPC的在线优化确保每个决策都安全可执行——形成RL-MPC混合架构。
+\end{itemize}
+
+\subsection{基于控制理论的深度学习解释}
+
+近年来，深度学习与控制理论的交叉成为热点。代表性成果包括：
+\begin{itemize}
+\item \textbf{神经常微分方程（Neural ODE）}：将ResNet的层间映射解释为ODE的离散化，用伴随灵敏度方法高效计算梯度；
+\item \textbf{Lipschitz网络}：利用控制理论中的耗散性和无源性概念约束神经网络的Lipschitz常数，提高鲁棒性；
+\item \textbf{Pontryagin的神经网络}：将最优控制中的必要条件嵌入神经网络结构，使得网络结构本身就编码了最优性。
+\end{itemize}
+
+Neural ODE的数学形式简洁而深刻：
+\begin{myformula}
+\frac{d\mathbf{h}(t)}{dt} = \mathbf{f}_{\boldsymbol{\theta}}(\mathbf{h}(t), t),\quad \mathbf{h}(t_0) = \mathbf{x}
+\end{myformula}
+输出\(y = \mathbf{h}(t_1)\)。训练采用伴随方法（Adjoint Method）——这正是最优控制理论中Pontryagin极小值原理的协态方程。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Python实现}
+
+\subsection{简单MPC的QP求解}
+
+\begin{mycode}{Python线性MPC实现}
+\begin{lstlisting}[language=Python]
+import numpy as np
+from scipy import linalg
+import matplotlib.pyplot as plt
+
+dt = 0.1
+A = np.array([[1, dt], [0, 1]])
+B = np.array([[0.5*dt**2], [dt]])
+n_states, n_inputs = 2, 1
+
+N = 10  # 预测时域
+Q = np.diag([10, 1])
+R = np.array([[0.1]])
+
+# 构造QP矩阵
+def build_mpc_qp(A, B, Q, R, N):
+    n = A.shape[0]
+    m = B.shape[1]
+    
+    Phi = np.vstack([np.linalg.matrix_power(A, i+1) for i in range(N)])
+    Gamma = np.zeros((N*n, N*m))
+    for i in range(N):
+        for j in range(i+1):
+            Gamma[i*n:(i+1)*n, j*m:(j+1)*m] = (
+                np.linalg.matrix_power(A, i-j) @ B)
+    
+    Qbar = linalg.block_diag(*([Q]*(N-1) + [Q]))
+    Rbar = linalg.block_diag(*([R]*N))
+    
+    H = Gamma.T @ Qbar @ Gamma + Rbar
+    F = Gamma.T @ Qbar @ Phi
+    return H, F, Phi, Gamma
+
+H, F, Phi, Gamma = build_mpc_qp(A, B, Q, R, N)
+
+# MPC仿真
+x0 = np.array([1.0, 0.0])
+n_sim = 100
+x_hist = np.zeros((2, n_sim+1))
+u_hist = np.zeros(n_sim)
+x_hist[:, 0] = x0
+
+for k in range(n_sim):
+    xk = x_hist[:, k]
+    u = -np.linalg.solve(H, F.T @ xk)
+    u_hist[k] = u[0]
+    x_hist[:, k+1] = A @ xk + B.flatten() * u[0]
+
+fig, axes = plt.subplots(3, 1, figsize=(10, 8))
+axes[0].plot(x_hist[0])
+axes[0].set_ylabel('Position')
+axes[0].grid(True)
+axes[0].set_title('MPC仿真 (无约束)')
+axes[1].plot(x_hist[1])
+axes[1].set_ylabel('Velocity')
+axes[1].grid(True)
+axes[2].stairs(u_hist, np.arange(n_sim))
+axes[2].set_ylabel('Control')
+axes[2].set_xlabel('Step')
+axes[2].grid(True)
+plt.tight_layout()
+plt.show()
+\end{lstlisting}
+\end{mycode}
+
+\subsection{RL求解LQR}
+
+\begin{mycode}{Python Policy Iteration求解LQR}
+\begin{lstlisting}[language=Python]
+import numpy as np
+from scipy import linalg
+
+def policy_iteration_lqr(A, B, Q, R, K0=None, max_iter=100, tol=1e-6):
+    n, m = A.shape[0], B.shape[1]
+    if K0 is None:
+        K0 = np.zeros((m, n))
+    K = K0.copy()
+    cost_history = []
+    
+    for iteration in range(max_iter):
+        # 策略评估：解Lyapunov方程
+        A_cl = A - B @ K
+        P = linalg.solve_discrete_lyapunov(A_cl.T, Q + K.T @ R @ K)
+        
+        # 策略改进
+        K_new = linalg.solve(R + B.T @ P @ B, B.T @ P @ A)
+        
+        cost = np.trace(P)
+        cost_history.append(cost)
+        
+        if np.linalg.norm(K_new - K) < tol:
+            K = K_new
+            break
+        K = K_new
+    
+    return K, P, cost_history
+
+# 数值示例
+dt = 0.1
+A = np.array([[1, dt], [0, 1]])
+B = np.array([[0.5*dt**2], [dt]])
+Q = np.diag([10, 1])
+R = np.array([[0.1]])
+
+K_star, P_star, costs = policy_iteration_lqr(A, B, Q, R)
+
+# 与解析解对比
+P_dare = linalg.solve_discrete_are(A, B, Q, R)
+K_dare = linalg.inv(R + B.T @ P_dare @ B) @ B.T @ P_dare @ A
+
+print("Policy Iteration结果:")
+print(f"K* = {K_star.flatten()}")
+print(f"P* =\n{P_star}")
+print(f"\nDARE解析解:")
+print(f"K = {K_dare.flatten()}")
+print(f"\n收敛所需迭代次数: {len(costs)}")
+print(f"每次迭代后的代价: {costs}")
+\end{lstlisting}
+\end{mycode}
+
+\subsection{模糊控制器的简单实现}
+
+\begin{mycode}{Python模糊PID控制器}
+\begin{lstlisting}[language=Python]
+import numpy as np
+import matplotlib.pyplot as plt
+
+class FuzzyPID:
+    def __init__(self, Ke=1.0, Kde=1.0, Ku=1.0):
+        self.Ke = Ke
+        self.Kde = Kde
+        self.Ku = Ku
+        self.prev_e = 0.0
+    
+    def membership(self, x, centers, widths):
+        return np.exp(-0.5 * ((x - centers) / widths)**2)
+    
+    def inference(self, e, de):
+        e_n = self.Ke * e
+        de_n = self.Kde * de
+        
+        r1 = self.membership(e_n, -1, 0.3) * self.membership(de_n, -1, 0.3)
+        r2 = self.membership(e_n, 0, 0.3) * self.membership(de_n, 0, 0.3)
+        r3 = self.membership(e_n, 1, 0.3) * self.membership(de_n, 1, 0.3)
+        
+        u1 = -2; u2 = 0; u3 = 2
+        u_fuzzy = (r1*u1 + r2*u2 + r3*u3) / (r1 + r2 + r3 + 1e-10)
+        return self.Ku * u_fuzzy
+
+# 一阶系统仿真
+class FirstOrderSys:
+    def __init__(self, a=1.0, b=5.0):
+        self.a = a
+        self.b = b
+        self.y = 0.0
+    
+    def step(self, u, dt=0.01):
+        self.y += (-self.a * self.y + self.b * u) * dt
+        return self.y
+
+fpid = FuzzyPID(Ke=2.0, Kde=0.5, Ku=3.0)
+plant = FirstOrderSys()
+
+dt = 0.01
+t = np.arange(0, 5, dt)
+y_ref = np.ones_like(t)
+y = np.zeros_like(t)
+u = np.zeros_like(t)
+
+for i in range(len(t)):
+    y[i] = plant.y
+    e = y_ref[i] - y[i]
+    de = (e - fpid.prev_e) / dt
+    u[i] = fpid.inference(e, de)
+    plant.step(u[i], dt)
+    fpid.prev_e = e
+
+fig, axes = plt.subplots(2, 1, figsize=(10, 6))
+axes[0].plot(t, y_ref, 'r--', label='Reference')
+axes[0].plot(t, y, 'b', label='Output')
+axes[0].legend()
+axes[0].set_ylabel('y')
+axes[0].grid(True)
+axes[0].set_title('模糊PID控制')
+axes[1].plot(t, u, 'g')
+axes[1].set_ylabel('u')
+axes[1].set_xlabel('Time [s]')
+axes[1].grid(True)
+plt.tight_layout()
+plt.show()
+\end{lstlisting}
+\end{mycode}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{小结}
+
+本章介绍了五种高级控制方法的理论基础、关键算法和应用特点：
+
+\begin{enumerate}
+\item \textbf{模型预测控制（MPC）}：基于滚动优化和反馈校正的在线约束最优控制方法，擅长处理多变量耦合和硬约束问题，工业应用最为广泛；
+\item \textbf{鲁棒控制}：利用\(H_{\infty}\)范数和\(\mu\)分析来处理模型不确定性，为控制系统在最坏情况扰动下的性能提供严格保障；
+\item \textbf{自适应控制}：通过在线参数调节（MRAC）或在线辨识-控制（STC）来应对系统参数变化，适用于具有时变特性的被控对象；
+\item \textbf{强化学习与控制}：MDP与LQR的数学等价性架起了RL与传统控制的桥梁。Policy Iteration和ADP为无模型最优控制提供了实用算法；
+\item \textbf{智能控制}：模糊控制利用专家经验，神经网络利用数据驱动，模糊神经网络融合两者的优势，在复杂工业场景中发挥着不可替代的作用。
+\end{enumerate}
+
+这些方法的共同特点是：不再依赖单一的精确数学模型，而是通过在线优化、鲁棒设计、数据学习和知识推理等途径赋予控制系统更强的灵活性和智能性。现代控制理论正朝着\textbf{"数据+模型+优化+智能"}深度融合的方向发展，学习型MPC、Safe RL和控制启发的深度学习架构代表了这一趋势的最前沿。

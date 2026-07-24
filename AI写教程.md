@@ -64,6 +64,8 @@
 | `\dfrac` 在行内 | `\frac` | 行内公式使用 `\dfrac` 导致行距异常 |
 | `\begin{equation*}` 在 `myformula` 内 | 直接写 `\[...\]` 或 `$$...$$` | 嵌套 equation 环境报错 |
 | `\newtcbtheorem[]{myformula}{...}` 带括号标题 | `\newtcbtheorem[]{myformula}{}{...}` | tcolorbox 标题中的 `)` 导致参数解析错误 |
+| tcolorbox 标题文本含中文/英文括号 `(.*)` 或 `（.*）` | 将括号部分裹入 `{}`，如 `{极点配置定理{(Wonham, 1967)}}` | 括号被当作 tcb key 解析 |
+| `\iddots` | `\ddots` | `\iddots` 不存在，反向对角点也用 `\ddots` |
 
 ### 3.2 环境名称（大小写敏感）
 ```
@@ -75,8 +77,25 @@
 - **样式名必须加前缀**（如 `fluidNeuron` 而非 `neuron`，`ch09shock` 而非 `shock`）
 - 节点中换行：`align=center` + `\\`，不能在 LR 模式直接用 `\\`
 - 所有 `.tikz` 图片必须在 `main.tex` 中通过 `\input{}` 加载
+- **电路图**（如 RLC 电路）：需 `\usepackage{circuitikz}`，提供 `V`/`R`/`L`/`C` 等组件键
+- **画弹簧/线圈**：`decoration={coil,...}` 需要加载 `decorations.pathmorphing` 库
+- **函数绘图**（Bode 图等）：domain 中的 `10^(\x)` 避免超出约 16000 的上限，否则触发 `Dimension too large`
+- **浮点计算**：TikZ 内部用 TeX 维度（上限约 16384pt），大数值需 `fpu` 库：
+  ```latex
+  \pgfkeys{/pgf/fpu=true,/pgf/fpu/output format=fixed}
+  \draw[style, domain=..., samples=...] plot (\x, {表达式});
+  \pgfkeys{/pgf/fpu=false}
+  ```
+  （`atan2` 虽不直接溢出，但中间量的 `10^(2*\x)` 仍会超限，一并包住）
 
-### 3.4 其他
+### 3.4 字体规则
+- **楷体 (`\kaishu`) 和仿宋 (`\fangsong`) 无粗体变体**。`\textbf{}`/`\bfseries` 不能与它们同时使用
+- 中文加粗：使用 `\heiti{...}`（黑体），或 `\sffamily\bfseries ...`
+- **等宽字体**（`lmmono`/`\ttfamily`）不含希腊字符，代码注释中避免使用 `ε` 等希腊字母
+- 章标题中 `\kaishu` + `\bfseries` 会导致字体回退警告：移除 `\bfseries` 或改用 `\heiti`
+- **`proof` 环境标题定义**：不能用 `{\kaishu\uline{\textbf{#1.}}}` 组合（楷体无粗体）。直接用 `{\heiti\uline{#1.}}`，黑体本身就有强调效果
+
+### 3.5 其他
 - `\mathbf` 仅在数学模式内使用
 - `\item` 仅在 `enumerate` 或 `itemize` 内使用
 - 标题（section/subsection/tcolorbox title）中不能出现数学公式
@@ -84,7 +103,7 @@
 - `\chapter{}` 后立即接 `\intro{}`
 - 章节编号由 `\chapter{}` 自动生成，不要在 `\chapter` 内手动编号
 
-### 3.5 导言区必含宏包
+### 3.6 导言区必含宏包
 ```
 \usepackage{amsmath,amssymb,amsfonts,amsthm}
 \usepackage{esint}           % \oiint 二重闭曲面积分
@@ -93,9 +112,11 @@
 \usepackage{unicode-math}
 \usepackage{tikz,pgfplots}
 \usetikzlibrary{arrows.meta,shapes,calc,decorations.pathmorphing,positioning}
+\usepackage{circuitikz}      % 电路图组件 (V, R, L, C)
 \usepackage{tcolorbox}
 \tcbuselibrary{skins,breakable,listings}  % listings 必须含，否则 # 报错
 ```
+- 定义数学运算符：`\DeclareMathOperator{\Res}{Res}`（留数）、`\DeclareMathOperator{\sgn}{sgn}` 等
 
 ---
 
@@ -111,6 +132,17 @@
 | 6 | `! LaTeX Error: Environment myenum undefined` | 自定义环境未定义 | `\newenvironment{myenum}{\begin{enumerate}}{\end{enumerate}}` |
 | 7 | `! Not allowed in LR mode` | `\\` 在 TikZ node 内未设 `align=center` | 给节点样式加 `align=center` |
 | 8 | `! Undefined control sequence \end{Chapter01}` | 错误的 `\end{Chapter01}` | 删除 `\end{...}`，LaTeX 章节不需要 `\end` |
+| 9 | `! Undefined control sequence \Res` | 留数运算符未定义 | `\DeclareMathOperator{\Res}{Res}` |
+| 10 | `Package pgfkeys Error: I do not know the key '/tikz/V' (or /R, /L, /C)` | 缺少 `circuitikz` 宏包 | `\usepackage{circuitikz}` |
+| 11 | `Package pgfkeys Error: I do not know the key '/pgf/decoration/coil'` | 缺少 `decorations.pathmorphing` 库 | 在 `\usetikzlibrary` 中加入 `decorations.pathmorphing` |
+| 12 | xelatex 报 `unrecognized option '-pdf'` | XeTeX 已默认输出 PDF，不用 `-pdf` | 直接用 `xelatex` 不加该选项 |
+| 13 | `Font shape 'TU/KaiTi(0)/b/n' undefined` | 楷体/仿宋无粗体变体，`\textbf{}`/`\bfseries` 与 `\kaishu`/`\fangsong` 冲突 | 中文加粗改用 `\heiti{...}`（黑体），或移除粗体 |
+| 14 | `Missing character: There is no ε in font lmmono` | 等宽字体 `lmmono` 不含希腊字符 | 代码注释中避免用希腊字母，改用英文如 `eps` |
+| 15 | PGF Math 报 `sqrt of negative number` + `Dimension too large` | `10^(2*\x)` 在高频端超 TeX 维度上限 | ① 缩减 domain（如 `-1:1.5`）；② 用 `\pgfkeys{/pgf/fpu=true}` 包住整条 `\draw[...] plot (...)`，画完后 `\pgfkeys{/pgf/fpu=false}` |
+| 16 | `Overfull \vbox (56pt too high)` | 长 `lstlisting` 代码块无法在当前页放下 | 在其前插入 `\newpage` 强制分页 |
+| 17 | `proof` 环境标题触发 `TU/KaiTi(0)/b/n' undefined` | 定义 `{\kaishu\uline{\textbf{#1.}}}` 中 kaishu 内嵌 `\textbf` | 改为 `{\heiti\uline{#1.}}`，黑体自带强调无需 `\textbf` |
+| 18 | `Undefined control sequence \iddots` | `\iddots` 不存在，拼写错误 | 改为 `\ddots`（无论正向/反向对角点均用这个） |
+| 19 | `Package pgfkeys Error: '/tcb/1967）'` | tcolorbox 标题 `极点配置定理（Wonham, 1967）` 中括号被解析为 key | 括号部分裹入 `{}`：`极点配置定理{(Wonham, 1967)}` |
 
 ---
 

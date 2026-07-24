@@ -1,0 +1,625 @@
+% ============================================================
+% Chapter 06 — 系统校正与 PID 控制
+% ============================================================
+
+\chapter{系统校正与PID控制}
+
+\intro{系统校正（Compensation）是指在原有控制系统的基础上，通过引入附加装置（校正器或补偿器）来改善系统的性能，使其满足给定的性能指标要求。PID 控制作为最经典、最广泛应用的校正方法，在工业过程控制中占据主导地位。}
+
+% ============================================================
+\section{校正的基本概念}
+% ============================================================
+
+\subsection{校正的分类}
+
+按校正装置在系统中的连接方式，可分为：
+
+\begin{mydefinition}{校正方式的分类}
+\begin{itemize}
+    \item \textbf{串联校正}：校正器 $G_c(s)$ 与固有部分 $G_0(s)$ 串联。结构简单，是最常用的校正方式。
+    \item \textbf{反馈校正}：校正器 $H_c(s)$ 包围部分固有环节构成局部反馈回路。可抑制参数变化和干扰的影响。
+    \item \textbf{前馈校正}：校正器 $G_f(s)$ 根据参考输入或干扰直接产生补偿信号，不改变系统稳定性。
+    \item \textbf{复合校正}：同时使用上述两种以上的校正方式。
+\end{itemize}
+\end{mydefinition}
+
+\subsection{频率法校正的目标}
+
+从频域角度，对系统开环对数频率特性的期望形状可概括为"低、中、高"三段：
+
+\begin{mydefinition}{开环对数幅频特性的三段期望}
+\begin{enumerate}
+    \item \textbf{低频段}（$\omega < \omega_1$）：反映稳态精度。应有较大的增益和足够的斜率（$-20\nu$ dB/dec），以保证稳态误差小。
+    \item \textbf{中频段}（$\omega_1 \sim \omega_2$，含截止频率 $\omega_c$）：决定稳定性和动态品质。应以 $-20$ dB/dec 斜率穿越 0 dB 线，且中频段应有足够宽度（$h = \omega_2/\omega_1$ 称为中频宽）。
+    \item \textbf{高频段}（$\omega > \omega_2$）：影响抗高频噪声能力。斜率应尽可能陡（如 $-40$ 或 $-60$ dB/dec）。
+\end{enumerate}
+\end{mydefinition}
+
+\begin{myTheorem}{中频宽与相位裕度的关系}
+对于典型的中频段形状（$-40 \to -20 \to -40$），设中频宽 $h = \omega_2/\omega_1$，相位裕度近似为
+\[
+\gamma \approx \arcsin\frac{h-1}{h+1}
+\]
+$h$ 越大，$\gamma$ 越大，系统相对稳定性越好。
+\end{myTheorem}
+
+% ============================================================
+\section{超前校正}
+% ============================================================
+
+\subsection{超前校正的传递函数}
+
+\begin{mydefinition}{超前校正器}
+超前校正器（Lead Compensator）的传递函数为
+\[
+G_c(s) = K_c\,\frac{\alpha Ts + 1}{Ts + 1},\quad \alpha > 1
+\]
+其中 $\alpha$ 为超前因子，$T$ 为时间常数，$K_c$ 为增益。
+\end{mydefinition}
+
+其零极点分布为：零点 $z = -1/(\alpha T)$，极点 $p = -1/T$。由于 $\alpha > 1$，零点比极点更靠近虚轴，$|z| < |p|$。
+
+\subsection{超前校正的频域特性}
+
+频率特性：
+\[
+G_c(j\omega) = K_c\,\frac{1 + j\alpha\omega T}{1 + j\omega T}
+\]
+
+对数幅频：低频段 $L = 20\lg K_c$，经过 $\omega = 1/(\alpha T)$（零点交接频率）后斜率变为 $+20$ dB/dec，再经过 $\omega = 1/T$（极点交接频率）后恢复水平线。最大相角出现在 $\omega_m$ 处。
+
+\begin{myformula}
+\varphi_c(\omega) = \arctan(\alpha\omega T) - \arctan(\omega T)
+\end{myformula}
+
+令 $d\varphi_c/d\omega = 0$ 得：
+
+\begin{myformula}
+\omega_m = \frac{1}{T\sqrt{\alpha}},\quad
+\varphi_{\max} = \arcsin\frac{\alpha - 1}{\alpha + 1}
+\end{myformula}
+
+在 $\omega_m$ 处的对数幅值为：
+\[
+L_c(\omega_m) = 20\lg K_c + 10\lg \alpha
+\]
+
+\begin{remark}
+超前校正提供正相角，可提高系统的相位裕度；同时在中频段引入 $+20$ dB/dec 的幅频斜率变化，有助于提升截止频率 $\omega_c$，加快系统响应速度。
+\end{remark}
+
+\subsection{超前校正的设计步骤}
+
+\begin{myalgorithm}{超前校正的频率法设计步骤}
+\begin{enumerate}
+    \item 根据稳态误差要求确定开环增益 $K$。
+    \item 绘制未校正系统的 Bode 图，求取当前的相位裕度 $\gamma_0$ 和截止频率 $\omega_{c0}$。
+    \item 确定需要补充的最大超前相角 $\varphi_m = \gamma^* - \gamma_0 + \Delta$，其中 $\gamma^*$ 为期望相位裕度，$\Delta = 5^{\circ}\sim 15^{\circ}$ 为补偿超前校正引入后 $\omega_c$ 右移造成的相位损失。
+    \item 由 $\varphi_m$ 计算 $\alpha$：
+    \[
+    \alpha = \frac{1 + \sin\varphi_m}{1 - \sin\varphi_m}
+    \]
+    \item 确定校正后的 $\omega_c$：在未校正系统的 Bode 图上，找到满足 $L_0(\omega) = -10\lg\alpha$ 的频率即为 $\omega_c$。
+    \item 确定时间常数 $T$：
+    \[
+    T = \frac{1}{\omega_c\sqrt{\alpha}}
+    \]
+    \item 写出校正器传递函数 $G_c(s) = K_c(\alpha Ts + 1)/(Ts + 1)$，其中 $K_c = \alpha$ 或另行调整。
+    \item 校验校正后系统的各项性能指标。
+\end{enumerate}
+\end{myalgorithm}
+
+\begin{example}
+单位反馈系统固有部分 $G_0(s) = \frac{4}{s(s+2)}$。要求：速度误差系数 $K_v \geq 20$，相位裕度 $\gamma \geq 50^{\circ}$，截止频率 $\omega_c \geq 4$ rad/s。设计超前校正器。
+
+解：（1）$K_v = \lim_{s\to 0}sG(s) = 2K_c$，令 $K_c=10$ 满足 $K_v=20$。
+（2）未校正系统 $G(s) = \frac{20}{s(0.5s+1)}$，得 $\omega_{c0} \approx 6.3$ rad/s，$\gamma_0 \approx 18^{\circ}$。
+（3）需补充相角 $\varphi_m = 50^{\circ} - 18^{\circ} + 10^{\circ} = 42^{\circ}$。
+（4）$\alpha \approx 5.0$。
+（5）找到 $L_0(\omega) = -10\lg 5 \approx -7$ dB 对应的频率为 $\omega_c \approx 9$ rad/s。
+（6）$T = 1/(9\sqrt{5}) \approx 0.05$。
+（7）$G_c(s) = \frac{0.25s+1}{0.05s+1}$。
+校验：校正后 $\gamma \approx 52^{\circ}$，满足要求。
+\end{example}
+
+% --- 超前/滞后 Bode 图对比 TikZ ---
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    ctrlLeadLagGridStyle/.style={gray!40, very thin},
+    ctrlLeadMagStyle/.style={blue, thick},
+    ctrlLagMagStyle/.style={red, thick},
+    ctrlLeadPhaseStyle/.style={blue!60, thick},
+    ctrlLagPhaseStyle/.style={red!60, thick},
+    >=stealth
+]
+    % --- 幅频 ---
+    \begin{scope}
+        \draw[ctrlLeadLagGridStyle] (-1,-2) grid[step=0.5] (4,3);
+        \draw[->] (-1.2,0) -- (4.5,0) node[right] {$\lg\omega$};
+        \draw[->] (0,-2.5) -- (0,3.5) node[above] {dB};
+
+        % 超前校正幅频
+        \draw[ctrlLeadMagStyle, domain=-0.5:0.7, samples=50, smooth]
+            plot (\x, {0});
+        \draw[ctrlLeadMagStyle, domain=0.7:1.7, samples=50, smooth]
+            plot (\x, {20*(\x-0.7)});
+        \draw[ctrlLeadMagStyle, domain=1.7:4, samples=50, smooth]
+            plot (\x, {2});
+        \node[blue, right] at (2.5, 2) {超前校正 $(+20)$};
+
+        % 滞后校正幅频
+        \draw[ctrlLagMagStyle, domain=-0.5:0.3, samples=50, smooth]
+            plot (\x, {0});
+        \draw[ctrlLagMagStyle, domain=0.3:1.3, samples=50, smooth]
+            plot (\x, {-20*(\x-0.3)});
+        \draw[ctrlLagMagStyle, domain=1.3:4, samples=50, smooth]
+            plot (\x, {-2});
+        \node[red, right] at (2.5, -2) {滞后校正 $(-20)$};
+    \end{scope}
+
+    % --- 相频 ---
+    \begin{scope}[yshift=-6cm]
+        \draw[ctrlLeadLagGridStyle] (-1,-2) grid[step=0.5] (4,2);
+        \draw[->] (-1.2,0) -- (4.5,0) node[right] {$\lg\omega$};
+        \draw[->] (0,-2.5) -- (0,2.5) node[above] {$\varphi$ ($^{\circ}$)};
+
+        % 超前校正相频
+        \draw[ctrlLeadPhaseStyle, domain=-0.5:4, samples=100, smooth]
+            plot (\x, {1.5*sin(1.5*(\x-1) r) * ((\x>-0.5) && (\x<3.5) ? 1 : 0)});
+        \node[blue!60, right] at (3.2, 1.5) {超前校正 $(+\varphi)$};
+
+        % 滞后校正相频
+        \draw[ctrlLagPhaseStyle, domain=-0.5:4, samples=100, smooth]
+            plot (\x, {-1.2*sin(1.2*(\x-0.8) r) * ((\x>-0.5) && (\x<3.5) ? 1 : 0)});
+        \node[red!60, right] at (3.2, -1.2) {滞后校正 $(-\varphi)$};
+    \end{scope}
+\end{tikzpicture}
+\caption{超前校正与滞后校正的 Bode 图对比}
+\label{fig:lead-lag-bode}
+\end{figure}
+
+% ============================================================
+\section{滞后校正}
+% ============================================================
+
+\subsection{滞后校正的传递函数}
+
+\begin{mydefinition}{滞后校正器}
+滞后校正器（Lag Compensator）的传递函数为
+\[
+G_c(s) = K_c\,\frac{Ts + 1}{\beta Ts + 1},\quad \beta > 1
+\]
+其中 $\beta$ 为滞后因子。极点 $p = -1/(\beta T)$ 比零点 $z = -1/T$ 更靠近虚轴。
+\end{mydefinition}
+
+频率特性：
+\[
+G_c(j\omega) = K_c\,\frac{1 + j\omega T}{1 + j\beta\omega T}
+\]
+
+\begin{myformula}
+\varphi_c(\omega) = \arctan(\omega T) - \arctan(\beta\omega T) < 0
+\end{myformula}
+
+最大滞后相角出现在 $\omega_m = 1/(T\sqrt{\beta})$，值为
+\[
+\varphi_{\max} = \arcsin\frac{1 - \beta}{1 + \beta} \quad (\text{负值})
+\]
+
+\begin{remark}
+滞后校正不利用其负相角，而是利用其高频衰减特性（$20\lg\beta$ dB 的幅值衰减），将截止频率降低到相位裕度较大的区域，从而提高稳定裕度。设计时应将滞后校正的交接频率 $1/T$ 和 $1/(\beta T)$ 安排在远离 $\omega_c$ 的低频段，使其负相角不影响中频段的相位裕度。
+\end{remark}
+
+\subsection{滞后校正的设计步骤}
+
+\begin{myalgorithm}{滞后校正的频率法设计步骤}
+\begin{enumerate}
+    \item 根据稳态误差确定开环增益 $K$。
+    \item 绘制未校正系统的 Bode 图。
+    \item 在未校正系统的相频曲线上，找到满足 $\varphi_0(\omega) = -180^{\circ} + \gamma^* + \Delta$（其中 $\Delta = 5^{\circ}\sim 12^{\circ}$ 为滞后校正引入的相位损失）的频率，作为校正后的 $\omega_c$。
+    \item 确定参数 $\beta$：$\beta = |G_0(j\omega_c)|$（即未校正系统在 $\omega_c$ 处的幅值）。
+    \item 将滞后校正的零点交接频率 $1/T$ 取为 $\omega_c/5 \sim \omega_c/10$，以减小负相角影响。
+    \item 计算 $T = (5\sim 10)/\omega_c$。
+    \item 写出校正器 $G_c(s) = K_c\frac{Ts + 1}{\beta Ts + 1}$。
+    \item 校验性能指标。
+\end{enumerate}
+\end{myalgorithm}
+
+\begin{example}
+系统 $G_0(s) = \frac{K}{s(s+1)(0.5s+1)}$，要求 $K_v \geq 5$，$\gamma \geq 40^{\circ}$，$\omega_c \geq 0.5$ rad/s。
+
+解：取 $K=5$。未校正系统 $\omega_{c0} \approx 2.1$ rad/s，$\gamma_0 \approx -20^{\circ}$（不稳定）。采用滞后校正。期望 $\gamma^* = 40^{\circ}$，考虑 $\Delta=6^{\circ}$，寻找 $\varphi=-180^{\circ}+46^{\circ}=-134^{\circ}$ 对应的频率 $\omega \approx 0.5$ rad/s，此处 $|G_0(j\omega)| \approx 10$，即 $\beta=10$。取 $1/T = \omega_c/10 = 0.05$ rad/s，$T=20$。得
+\[
+G_c(s) = \frac{20s+1}{200s+1}
+\]
+校验：校正后 $\gamma \approx 42^{\circ}$，满足要求。
+\end{example}
+
+% ============================================================
+\section{滞后-超前校正}
+% ============================================================
+
+滞后-超前校正（Lag-Lead Compensator）结合了超前校正（改善动态性能）和滞后校正（改善稳态精度）的优点。
+
+\begin{mydefinition}{滞后-超前校正器}
+传递函数的一般形式为
+\[
+G_c(s) = K_c\,\frac{(\tau_1 s + 1)(\tau_2 s + 1)}{(\alpha\tau_1 s + 1)(\frac{\tau_2}{\beta}s + 1)},\quad \alpha>1,\;\beta>1
+\]
+其中超前部分的参数为 $\alpha$、$\tau_1$，滞后部分的参数为 $\beta$、$\tau_2$。
+\end{mydefinition}
+
+通常先设计超前部分以满足动态性能（$\gamma$、$\omega_c$），再设计滞后部分以满足稳态精度（$K_v$、$K_a$ 等）。
+
+典型实现电路（有源 RC 网络）：
+\begin{itemize}
+    \item 采用运算放大器实现，超前网络通过输入电容和反馈电阻构成
+    \item 滞后-超前网络通过两组 RC 元件组合实现
+\end{itemize}
+
+\begin{example}
+某系统的设计规范同时要求大的静态增益和充分的相位裕度。可先采用超前校正达到要求的 $\omega_c$ 和 $\gamma$，然后串联滞后校正提高低频增益而不影响中频段特性。
+\end{example}
+
+% ============================================================
+\section{PID 控制}
+% ============================================================
+
+\subsection{PID 控制的基本原理}
+
+PID 控制器由比例（P）、积分（I）和微分（D）三个环节并联组成。
+
+\begin{mydefinition}{PID 控制律}
+连续时间 PID 控制律的时域表达式为
+\[
+u(t) = K_p\,e(t) + K_i\int_0^t e(\tau)\,d\tau + K_d\,\frac{de(t)}{dt}
+\]
+传递函数形式：
+\[
+G_c(s) = K_p + \frac{K_i}{s} + K_d s = K_p\left(1 + \frac{1}{T_i s} + T_d s\right)
+\]
+其中 $T_i = K_p/K_i$ 为积分时间常数，$T_d = K_d/K_p$ 为微分时间常数。
+\end{mydefinition}
+
+\subsection{各环节的作用}
+
+\begin{myTheorem}{PID 各环节的控制作用}
+\begin{itemize}
+    \item \textbf{比例作用 (P)}：产生与误差成比例的控制量。增大 $K_p$ 可加快响应速度、减小稳态误差，但过大会导致振荡甚至不稳定。
+    \item \textbf{积分作用 (I)}：对误差进行累积，用于消除稳态误差。$T_i$ 越小积分作用越强，但会降低稳定性。
+    \item \textbf{微分作用 (D)}：对误差变化率作出响应，具有"预见性"，可改善动态性能、减小超调。$T_d$ 越大微分作用越强，但会放大高频噪声。
+\end{itemize}
+\end{myTheorem}
+
+\subsection{位置式与增量式 PID}
+
+在数字控制系统中，PID 控制律需要离散化。
+
+\begin{mydefinition}{位置式 PID 算法}
+对连续 PID 控制律进行矩形数值积分近似：
+\[
+u(k) = K_p e(k) + K_i T_s \sum_{j=0}^{k} e(j) + \frac{K_d}{T_s}[e(k) - e(k-1)]
+\]
+\end{mydefinition}
+
+\begin{mydefinition}{增量式 PID 算法}
+计算控制量的增量：
+\begin{align}
+\Delta u(k) &= u(k) - u(k-1) \\
+&= K_p[e(k)-e(k-1)] + K_i T_s e(k) \\
+&\quad + \frac{K_d}{T_s}[e(k) - 2e(k-1) + e(k-2)]
+\end{align}
+\end{mydefinition}
+
+增量式 PID 的优点：计算量小，输出为增量，便于实现无扰动切换；不产生积分饱和。
+
+\begin{remark}
+积分饱和（Integral Windup）是实际 PID 控制中的常见问题。当执行器饱和时，积分器持续累积误差，导致系统超调增大、调节时间延长。常用的解决方法包括积分分离法、遇限削弱积分法和反计算抗饱和法。
+\end{remark}
+
+% --- PID 控制框图 TikZ ---
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    ctrlPIDBlockStyle/.style={draw, minimum width=1.8cm, minimum height=0.9cm, align=center},
+    ctrlPIDSumStyle/.style={draw, circle, inner sep=0pt, minimum size=6mm},
+    ctrlPIDArrowStyle/.style={->, >=stealth, thick},
+    ctrlPIDLabelStyle/.style={font=\footnotesize}
+]
+    % 输入节点
+    \node (ref) at (0, 0) {};
+    \node[ctrlPIDSumStyle] (sum) at (1.5, 0) {};
+    \draw[ctrlPIDArrowStyle] (ref) -- (sum) node[midway, above] {$r(t)$};
+
+    % P 通道
+    \node[ctrlPIDBlockStyle] (pidP) at (4, 2) {$K_p$};
+    \draw[ctrlPIDArrowStyle] (sum) |- (pidP);
+
+    % I 通道
+    \node[ctrlPIDBlockStyle] (pidI) at (4, 0) {$\frac{K_i}{s}$};
+    \draw[ctrlPIDArrowStyle] (sum) -- (pidI);
+
+    % D 通道
+    \node[ctrlPIDBlockStyle] (pidD) at (4, -2) {$K_d s$};
+    \draw[ctrlPIDArrowStyle] (sum) |- (pidD);
+
+    % 求和节点
+    \node[ctrlPIDSumStyle] (sum2) at (7, 0) {$\Sigma$};
+    \draw[ctrlPIDArrowStyle] (pidP) -| (sum2);
+    \draw[ctrlPIDArrowStyle] (pidI) -- (sum2);
+    \draw[ctrlPIDArrowStyle] (pidD) -| (sum2);
+
+    % 被控对象
+    \node[ctrlPIDBlockStyle] (plant) at (10, 0) {$G_p(s)$};
+    \draw[ctrlPIDArrowStyle] (sum2) -- (plant) node[midway, above] {$u(t)$};
+
+    % 输出
+    \node (out) at (12.5, 0) {};
+    \draw[ctrlPIDArrowStyle] (plant) -- (out) node[midway, above] {$y(t)$};
+
+    % 反馈
+    \draw[ctrlPIDArrowStyle] (12, 0) |- ++(0, -2) -| (sum) node[pos=0.25, right] {$-$};
+
+    % 标签
+    \node[ctrlPIDLabelStyle, above=0.1cm] at (sum) {$e(t)$};
+
+    % 虚线框 — PID 控制器
+    \draw[dashed, gray, thick] (2.5, -3) rectangle (8.5, 3);
+    \node[gray] at (8.5, 3.2) [above left] {PID 控制器};
+\end{tikzpicture}
+\caption{PID 控制器结构框图（P、I、D 三通道并联）}
+\label{fig:pid-block}
+\end{figure}
+
+\subsection{Ziegler-Nichols 整定方法}
+
+Ziegler-Nichols 方法是工程上最经典的 PID 参数整定方法，分为两种：
+
+\begin{myalgorithm}{Ziegler-Nichols 第一法（阶跃响应法）}
+对开环系统施加阶跃输入，记录其响应曲线。在响应曲线的拐点处作切线，得到等效滞后时间 $L$ 和等效时间常数 $T$。根据下表确定 PID 参数：
+\begin{itemize}
+    \item P 控制：$K_p = T/L$
+    \item PI 控制：$K_p = 0.9\,T/L$，$T_i = L/0.3$
+    \item PID 控制：$K_p = 1.2\,T/L$，$T_i = 2L$，$T_d = 0.5L$
+\end{itemize}
+\end{myalgorithm}
+
+\begin{myalgorithm}{Ziegler-Nichols 第二法（临界比例度法/临界振荡法）}
+\begin{enumerate}
+    \item 将控制器设为纯比例控制（$T_i = \infty$，$T_d = 0$）。
+    \item 逐渐增大 $K_p$，直至系统输出出现等幅振荡（临界稳定状态）。
+    \item 记录此时的临界增益 $K_u$ 和临界振荡周期 $T_u$。
+    \item 根据下表确定 PID 参数：
+    \begin{itemize}
+        \item P 控制：$K_p = 0.5K_u$
+        \item PI 控制：$K_p = 0.45K_u$，$T_i = 0.85\,T_u$
+        \item PID 控制：$K_p = 0.6K_u$，$T_i = 0.5\,T_u$，$T_d = 0.125\,T_u$
+    \end{itemize}
+\end{enumerate}
+\end{myalgorithm}
+
+% --- Ziegler-Nichols 临界振荡示意 TikZ ---
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    ctrlZNGridStyle/.style={gray!40, very thin},
+    ctrlZNCurveStyle/.style={blue, thick},
+    ctrlZNDashStyle/.style={red, dashed},
+    >=stealth
+]
+    % 网格
+    \draw[ctrlZNGridStyle] (-0.5,-2) grid[step=0.5] (10,2);
+
+    % 坐标轴
+    \draw[->] (-0.5,0) -- (10.5,0) node[right] {$t$};
+    \draw[->] (0,-2.5) -- (0,2.5) node[above] {$y(t)$};
+
+    % 等幅振荡曲线
+    \draw[ctrlZNCurveStyle, domain=0:10, samples=200, smooth]
+        plot (\x, {2*sin(360*0.5*\x)});
+
+    % 标注周期
+    \draw[ctrlZNDashStyle, <->] (2, 2.2) -- (4, 2.2);
+    \node at (3, 2.5) {$T_u$};
+
+    \draw[ctrlZNDashStyle, <->] (4, 2.2) -- (6, 2.2);
+    \node at (5, 2.5) {$T_u$};
+
+    % 标注幅值
+    \draw[<->] (0.5, 0) -- (0.5, 2);
+    \node[right] at (0.5, 1) {$K_u$};
+
+    \node[red] at (8, 1.5) {等幅振荡};
+    \node[red] at (8, 1.0) {（临界稳定）};
+\end{tikzpicture}
+\caption{Ziegler-Nichols 临界振荡法示意}
+\label{fig:zn-oscillation}
+\end{figure}
+
+\subsection{PID 参数对系统性能的影响}
+
+\begin{table}[H]
+\centering
+\caption{PID 参数增大时对系统性能的影响}
+\begin{tabular}{lcccc}
+\hline
+\textbf{参数} & \textbf{上升时间} & \textbf{超调量} & \textbf{调节时间} & \textbf{稳态误差} \\
+\hline
+$K_p$ & 减小 & 增大 & 影响小 & 减小 \\
+$K_i$ & 减小 & 增大 & 增大 & 消除 \\
+$K_d$ & 影响小 & 减小 & 减小 & 影响小 \\
+\hline
+\end{tabular}
+\end{table}
+
+% ============================================================
+\section{前馈-反馈复合校正}
+% ============================================================
+
+\subsection{不变性原理}
+
+\begin{myTheorem}{不变性原理（扰动补偿）}
+设扰动 $d(t)$ 通过传递函数 $G_d(s)$ 影响系统输出。若在扰动作用点之前引入前馈补偿器 $G_f(s)$，使得
+\[
+G_f(s)G(s) + G_d(s) = 0
+\]
+即
+\[
+G_f(s) = -\frac{G_d(s)}{G(s)}
+\]
+则系统输出对扰动 $d(t)$ 完全不变（完全补偿）。
+\end{myTheorem}
+
+实际应用中，由于 $G_f(s)$ 可能需要微分环节或非因果系统，通常只能实现部分不变性（稳态补偿）。最常见的是按扰动的不变性调节，也称前馈控制。
+
+\subsection{前馈-反馈复合控制}
+
+前馈控制单独使用时对模型精度要求很高。将前馈控制与反馈控制结合，可以：
+\begin{itemize}
+    \item 前馈补偿主要扰动，快速减小偏差
+    \item 反馈补偿消除剩余误差及其他未建模扰动
+\end{itemize}
+
+\begin{mydefinition}{复合校正的结构}
+设前馈控制器的传递函数为 $G_{ff}(s)$，反馈控制器为 $G_c(s)$，对象为 $G_p(s)$。当
+\[
+G_{ff}(s) = \frac{1}{G_p(s)}
+\]
+时，系统对参考输入的跟踪可实现完全不变性。
+\end{mydefinition}
+
+% ============================================================
+\section{Smith 预估器}
+% ============================================================
+
+对于含有纯滞后的过程：
+\[
+G_p(s) = G_0(s) e^{-\tau s}
+\]
+其中 $\tau$ 为滞后时间。纯滞后的存在使系统的相位严重滞后，常规 PID 控制往往难以获得满意效果。
+
+\begin{mydefinition}{Smith 预估器}
+Smith 预估器的基本思想：利用被控对象的数学模型，将滞后环节从闭环特征方程中"移出"。其结构为在常规 PID 控制器基础上，并联一个预估模型：
+\[
+G_m(s) = \hat{G}_0(s)(1 - e^{-\hat{\tau} s})
+\]
+其中 $\hat{G}_0(s)$ 和 $\hat{\tau}$ 分别为 $G_0(s)$ 和 $\tau$ 的模型估计值。
+\end{mydefinition}
+
+当模型完全准确（$\hat{G}_0 = G_0$，$\hat{\tau} = \tau$）时，Smith 预估器将闭环特征方程中的滞后项消除，使控制器设计等同于对无滞后对象 $G_0(s)$ 的设计，从而可以选用较高的增益，获得更好的控制性能。
+
+\begin{remark}
+Smith 预估器的主要局限性在于对模型精度的敏感性。当模型存在误差时，性能可能显著下降，甚至出现不稳定。因此，Smith 预估器常与自适应控制或鲁棒控制结合使用。
+\end{remark}
+
+% ============================================================
+\section{Python PID 控制器仿真}
+% ============================================================
+
+以下 Python 代码演示了 PID 控制器的数字仿真，包括 Ziegler-Nichols 参数整定和阶跃响应分析。
+
+\begin{lstlisting}[language=Python]
+import numpy as np
+import matplotlib.pyplot as plt
+try:
+    import control as ct
+except ImportError:
+    print("pip install control")
+    exit(1)
+
+class PIDController:
+    def __init__(self, Kp, Ki, Kd, Ts, setpoint=0):
+        self.Kp = Kp
+        self.Ki = Ki
+        self.Kd = Kd
+        self.Ts = Ts
+        self.setpoint = setpoint
+        self.reset()
+
+    def reset(self):
+        self.prev_error = 0.0
+        self.prev_prev_error = 0.0
+        self.integral = 0.0
+        self.output = 0.0
+
+    def update(self, measurement):
+        error = self.setpoint - measurement
+        # 增量式 PID
+        P_term = self.Kp * (error - self.prev_error)
+        I_term = self.Ki * self.Ts * error
+        D_term = (self.Kd / self.Ts) * (error - 2*self.prev_error
+                                          + self.prev_prev_error)
+        delta_u = P_term + I_term + D_term
+        self.output += delta_u
+        # 抗积分饱和（简单限幅）
+        self.output = np.clip(self.output, -10, 10)
+        self.prev_prev_error = self.prev_error
+        self.prev_error = error
+        return self.output
+
+def simulate_pid():
+    # 被控对象: G(s) = 1 / (s^2 + 2s + 1)
+    num = [1]
+    den = [1, 2, 1]
+    G = ct.TransferFunction(num, den)
+
+    # Ziegler-Nichols 第二法参数（示例）
+    Ku = 2.0      # 临界增益
+    Tu = 3.14     # 临界振荡周期
+    # PID 参数
+    Kp = 0.6 * Ku
+    Ki = Kp / (0.5 * Tu)
+    Kd = Kp * 0.125 * Tu
+
+    print(f"Z-N 整定: Kp={Kp:.3f}, Ki={Ki:.3f}, Kd={Kd:.3f}")
+
+    # 仿真
+    Ts = 0.01
+    t_end = 20
+    t = np.arange(0, t_end, Ts)
+
+    pid = PIDController(Kp, Ki, Kd, Ts, setpoint=1.0)
+    y = np.zeros_like(t)
+    u = np.zeros_like(t)
+
+    # 简单离散仿真（欧拉法）
+    x = np.array([0.0, 0.0])  # [x1, x2] = [y, dy/dt]
+    for i in range(1, len(t)):
+        u[i] = pid.update(y[i-1])
+        # 状态空间离散: A=[0 1; -1 -2], B=[0; 1]
+        dx = np.array([x[1], -x[0] - 2*x[1] + u[i]])
+        x = x + Ts * dx
+        y[i] = x[0]
+
+    # 绘图
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 6))
+    ax1.plot(t, y, 'b-', linewidth=1.5)
+    ax1.axhline(y=1.0, color='gray', linestyle='--')
+    ax1.set_ylabel('输出 $y(t)$')
+    ax1.set_title('PID 控制阶跃响应')
+    ax1.grid(True)
+    ax2.plot(t, u, 'r-', linewidth=1.0)
+    ax2.set_ylabel('控制量 $u(t)$')
+    ax2.set_xlabel('时间 (s)')
+    ax2.grid(True)
+    plt.tight_layout()
+    plt.show()
+
+    # 计算性能指标
+    overshoot = (np.max(y) - 1.0) / 1.0 * 100
+    steady_error = np.abs(y[-1] - 1.0)
+    print(f"超调量 = {overshoot:.2f}%")
+    print(f"稳态误差 = {steady_error:.4f}")
+
+if __name__ == "__main__":
+    simulate_pid()
+\end{lstlisting}
+
+% ============================================================
+\section{本章小结}
+% ============================================================
+
+本章系统介绍了控制系统的校正方法。串联校正是最常用的校正方式，超前校正提供正相角以改善动态性能，滞后校正利用高频衰减提高稳态精度，滞后-超前校正结合了两者优点。PID 控制作为工业标准，通过 P、I、D 三个环节的配合实现灵活的控制策略，Ziegler-Nichols 方法提供了简洁实用的参数整定途径。对于存在纯滞后的对象，Smith 预估器能够有效补偿滞后效应。前馈-反馈复合校正则利用不变性原理进一步提高系统性能。
+
+在后续章节中，我们将进入现代控制理论部分，从状态空间的视角重新审视控制系统的分析与设计问题。

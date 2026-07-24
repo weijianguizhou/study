@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "人工智能/马尔可夫决策过程 (Markov Decision Process, MDP).md",
+                "file": "README.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "马尔可夫决策过程 (Markov Decision Process, MDP)"
+              "title": "README"
             }
           }
         ]
@@ -193,6 +193,9 @@
   },
   "active": "ee68c95cb553597d",
   "lastOpenFiles": [
+    "数理基础/群论.md",
+    "机器人学/DH参数法/DH参数法.synctex(busy)",
+    "人工智能/马尔可夫决策过程 (Markov Decision Process, MDP).md",
     "力学/流体力学/LaTeX/流体力学.synctex(busy)",
     "力学/流体力学/LaTeX/流体力学.synctex.gz",
     "力学/流体力学/LaTeX/流体力学.listing",
@@ -202,8 +205,6 @@
     "力学/流体力学/LaTeX/流体力学.aux",
     "力学/流体力学/LaTeX/流体力学.log",
     "力学/流体力学/LaTeX/流体力学.tex",
-    "力学/流体力学/LaTeX/main.synctex(busy)",
-    "艺术/LaTeX/main.synctex(busy)",
     "人工智能/RL-DQN与值函数近似.md",
     "刚体动力学算法/空间向量代数/0.数学知识预备.md",
     "刚体动力学算法/空间向量代数/1.空间速度 (Spatial Velocity).md",
@@ -228,7 +229,6 @@
     "艺术/03-表演艺术教程.md",
     "艺术/02-舞台安排教程.md",
     "艺术/04-参考书目.md",
-    "艺术/00-话剧教程MOC.md",
     "人工智能/强化学习系统教程/30.jpg",
     "Pasted image 20260629220006.jpg",
     "Pasted image 20260629220331.jpg"

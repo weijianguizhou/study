@@ -18,10 +18,12 @@
 \contentsline {section}{\numberline {3.1}连杆与关节的编号}{9}{section.3.1}%
 \contentsline {section}{\numberline {3.2}四个 DH 参数的几何意义}{9}{section.3.2}%
 \contentsline {subsection}{\numberline {3.2.1}参数的进一步解释}{10}{subsection.3.2.1}%
-\contentsline {section}{\numberline {3.3}连杆坐标系的建立规则}{11}{section.3.3}%
+\contentsline {subsection}{\numberline {3.2.2}几何直觉：两步对准}{11}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}参数确定口诀}{11}{subsection.3.2.3}%
+\contentsline {section}{\numberline {3.3}连杆坐标系的建立规则}{12}{section.3.3}%
 \contentsline {subsection}{\numberline {3.3.1}基坐标系 $\{0\}$ 和末端坐标系 $\{n\}$ 的处理}{12}{subsection.3.3.1}%
-\contentsline {section}{\numberline {3.4}DH 参数表的建立}{12}{section.3.4}%
-\contentsline {section}{\numberline {3.5}完整的参数赋值步骤}{12}{section.3.5}%
+\contentsline {section}{\numberline {3.4}DH 参数表的建立}{13}{section.3.4}%
+\contentsline {section}{\numberline {3.5}完整的参数赋值步骤}{13}{section.3.5}%
 \contentsline {subsection}{\numberline {3.5.1}特例处理}{13}{subsection.3.5.1}%
 \contentsline {chapter}{\numberline {4}DH 变换矩阵的推导}{15}{chapter.4}%
 \contentsline {section}{\numberline {4.1}从 $\{i-1\}$ 到 $\{i\}$ 的四步变换}{15}{section.4.1}%

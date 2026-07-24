@@ -1,0 +1,746 @@
+% ============================================================
+% Chapter 07 — 状态空间基础
+% ============================================================
+
+\chapter{状态空间基础}
+
+\intro{状态空间法是现代控制理论的基石。与经典控制理论仅关注输入-输出关系不同，状态空间法通过引入系统内部的状态变量，可以完整描述系统的内部结构和动态行为，适用于多输入多输出（MIMO）系统、时变系统和非线性系统。}
+
+% ============================================================
+\section{状态空间的基本概念}
+% ============================================================
+
+\subsection{状态与状态变量}
+
+\begin{mydefinition}{状态变量}
+系统的\textbf{状态变量}是一组能够完全描述系统动态行为的\textbf{最小}变量集合。设 $n$ 个状态变量为 $x_1(t), x_2(t), \ldots, x_n(t)$，则只要知道这些状态变量在 $t_0$ 时刻的值以及 $t \geq t_0$ 时刻的输入，就能唯一确定系统在 $t \geq t_0$ 任何时刻的行为。
+\end{mydefinition}
+
+\begin{mydefinition}{状态向量与状态空间}
+将 $n$ 个状态变量组成 $n$ 维列向量
+\[
+\mathbf{x}(t) = [x_1(t), x_2(t), \ldots, x_n(t)]^{\top} \in \R^n
+\]
+称为\textbf{状态向量}。以 $x_1, x_2, \ldots, x_n$ 为坐标轴张成的 $n$ 维空间称为\textbf{状态空间}。
+\end{mydefinition}
+
+\begin{itemize}
+    \item 状态变量的选取不是唯一的，但个数 $n$（即系统阶数）是确定的。
+    \item 物理上可测量的量（如位置、速度）常被选为状态变量。
+    \item 最小性意味着状态变量之间是线性无关的。
+\end{itemize}
+
+\subsection{状态方程与输出方程}
+
+线性定常连续系统的状态空间描述由两个矩阵方程组成：
+
+\begin{mydefinition}{状态空间模型}
+\begin{align}
+    \dot{\mathbf{x}}(t) &= A\mathbf{x}(t) + B\mathbf{u}(t) \\
+    \mathbf{y}(t) &= C\mathbf{x}(t) + D\mathbf{u}(t)
+\end{align}
+
+其中：
+\begin{itemize}
+    \item $\mathbf{x}(t) \in \R^n$ 为 $n$ 维状态向量
+    \item $\mathbf{u}(t) \in \R^m$ 为 $m$ 维输入（控制）向量
+    \item $\mathbf{y}(t) \in \R^p$ 为 $p$ 维输出向量
+    \item $A \in \R^{n \times n}$ 为系统矩阵（状态矩阵）
+    \item $B \in \R^{n \times m}$ 为输入矩阵（控制矩阵）
+    \item $C \in \R^{p \times n}$ 为输出矩阵
+    \item $D \in \R^{p \times m}$ 为直接传递矩阵（前馈矩阵）
+\end{itemize}
+\end{mydefinition}
+
+方程 $\dot{\mathbf{x}} = A\mathbf{x} + B\mathbf{u}$ 称为\textbf{状态方程}（一阶向量微分方程），$\mathbf{y} = C\mathbf{x} + D\mathbf{u}$ 称为\textbf{输出方程}（代数方程）。
+
+% --- 状态空间 MIMO 框图 TikZ ---
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    ctrlSSBlockStyle/.style={draw, minimum width=2cm, minimum height=1cm, align=center, fill=blue!10},
+    ctrlSSMatrixStyle/.style={draw, minimum width=1.2cm, minimum height=1.2cm, align=center, fill=green!10},
+    ctrlSSSumStyle/.style={draw, circle, inner sep=0pt, minimum size=7mm},
+    ctrlSSArrowStyle/.style={->, >=stealth, thick},
+    ctrlSSIntStyle/.style={draw, minimum width=1cm, minimum height=0.8cm, fill=yellow!20}
+]
+    % 输入
+    \node (uin) at (0, 0) {};
+    \draw[ctrlSSArrowStyle] (-0.8, 0) -- (0, 0) node[above left] {$\mathbf{u}$};
+
+    % B 矩阵
+    \node[ctrlSSMatrixStyle] (ctrlB) at (1.8, 0) {$B$};
+    \draw[ctrlSSArrowStyle] (0, 0) -- (ctrlB);
+
+    % 求和节点
+    \node[ctrlSSSumStyle] (sum) at (3.8, 0) {$\Sigma$};
+    \draw[ctrlSSArrowStyle] (ctrlB) -- (sum);
+
+    % 积分器
+    \node[ctrlSSIntStyle] (integral) at (6.5, 0) {$\displaystyle\int$};
+    \draw[ctrlSSArrowStyle] (sum) -- (integral) node[midway, above] {$\dot{\mathbf{x}}$};
+
+    % 状态输出
+    \node (xout) at (8.5, 0) {};
+    \draw[ctrlSSArrowStyle] (integral) -- (xout) node[midway, above] {$\mathbf{x}$};
+
+    % C 矩阵
+    \node[ctrlSSMatrixStyle] (ctrlC) at (8.5, -2) {$C$};
+    \draw[ctrlSSArrowStyle] (xout) |- (ctrlC);
+
+    % D 矩阵
+    \node[ctrlSSMatrixStyle] (ctrlD) at (0, -3.5) {$D$};
+    \draw[ctrlSSArrowStyle] (0, 0) |- (ctrlD);
+
+    % 输出求和
+    \node[ctrlSSSumStyle] (sumb) at (10.5, -2) {$\Sigma$};
+    \draw[ctrlSSArrowStyle] (ctrlC) -- (sumb);
+    \draw[ctrlSSArrowStyle] (ctrlD) -| (sumb);
+
+    % 输出
+    \draw[ctrlSSArrowStyle] (sumb) -- (12, -2) node[right] {$\mathbf{y}$};
+
+    % A 反馈
+    \node[ctrlSSMatrixStyle] (ctrlA) at (8.5, 2) {$A$};
+    \draw[ctrlSSArrowStyle] (xout) |- (ctrlA);
+    \draw[ctrlSSArrowStyle] (ctrlA) -| (sum);
+
+    % 标签
+    \node[gray] at (1.8, -1.8) {输入矩阵};
+    \node[gray] at (8.5, 3.2) {系统矩阵};
+    \node[gray] at (8.5, -3.2) {输出矩阵};
+    \node[gray] at (0.2, -4.5) {前馈矩阵};
+\end{tikzpicture}
+\caption{线性定常系统的状态空间框图（MIMO 结构）}
+\label{fig:state-space-block}
+\end{figure}
+
+% ============================================================
+\section{从传递函数到状态空间}
+% ============================================================
+
+同一个传递函数可以对应无穷多种状态空间实现。以下是几种常用的\textbf{标准型}实现。
+
+\subsection{能控标准型}
+
+设单输入单输出（SISO）系统的传递函数为
+\[
+G(s) = \frac{Y(s)}{U(s)} = \frac{b_0 s^{n} + b_1 s^{n-1} + \cdots + b_n}{s^{n} + a_1 s^{n-1} + \cdots + a_n}
+\]
+
+当系统严格真（$b_0 = 0$，即分母次数高于分子）时，能控标准型为：
+
+\begin{myformula}
+A_c = \begin{bmatrix}
+0 & 1 & 0 & \cdots & 0 \\
+0 & 0 & 1 & \cdots & 0 \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+0 & 0 & 0 & \cdots & 1 \\
+-a_n & -a_{n-1} & -a_{n-2} & \cdots & -a_1
+\end{bmatrix},\quad
+B_c = \begin{bmatrix}
+0 \\ 0 \\ \vdots \\ 0 \\ 1
+\end{bmatrix}
+\end{myformula}
+
+\[
+C_c = [b_n-a_n b_0,\; b_{n-1}-a_{n-1}b_0,\; \ldots,\; b_1-a_1 b_0] + b_0 [0,\ldots,0]
+\]
+
+当 $b_0=0$ 时简化为 $C_c = [b_n, b_{n-1}, \ldots, b_1]$。
+
+\begin{mydefinition}{能控标准型的特点}
+能控标准型中，$A_c$ 的最后一行是分母多项式系数的负值（按升幂排列），$B_c$ 的最后一行元素为 $1$，其余为 $0$。该实现一定是能控的。
+\end{mydefinition}
+
+\subsection{能观标准型}
+
+能观标准型可以通过对偶关系从能控标准型得到：
+
+\begin{myformula}
+A_o = A_c^{\top},\quad
+B_o = C_c^{\top},\quad
+C_o = B_c^{\top}
+\end{myformula}
+
+\subsection{对角标准型与 Jordan 标准型}
+
+当传递函数的分母多项式可分解为互异特征根时，可化为对角标准型。设
+\[
+G(s) = \sum_{i=1}^{n} \frac{r_i}{s - \lambda_i}
+\]
+其中 $\lambda_i$ 为极点，$r_i$ 为对应的留数。
+
+\begin{myformula}
+A = \begin{bmatrix}
+\lambda_1 & 0 & \cdots & 0 \\
+0 & \lambda_2 & \cdots & 0 \\
+\vdots & \vdots & \ddots & \vdots \\
+0 & 0 & \cdots & \lambda_n
+\end{bmatrix},\quad
+B = \begin{bmatrix}
+1 \\ 1 \\ \vdots \\ 1
+\end{bmatrix},\quad
+C = [r_1, r_2, \ldots, r_n]
+\end{myformula}
+
+对角标准型的优点：各状态变量之间完全解耦（$A$ 为对角阵），便于分析和设计。
+
+若存在重根，则需用 Jordan 标准型。对 $m$ 重特征值 $\lambda$，对应的 Jordan 块为：
+\[
+J = \begin{bmatrix}
+\lambda & 1 & 0 & \cdots & 0 \\
+0 & \lambda & 1 & \cdots & 0 \\
+\vdots & \vdots & \ddots & \ddots & \vdots \\
+0 & 0 & \cdots & \lambda & 1 \\
+0 & 0 & \cdots & 0 & \lambda
+\end{bmatrix}_{m \times m}
+\]
+
+\begin{example}
+将传递函数 $G(s) = \frac{2s+3}{s^2+3s+2}$ 化为能控标准型和对角标准型。
+
+（1）分母：$s^2+3s+2 = (s+1)(s+2)$，$a_1=3$，$a_2=2$。分子：$b_1=2$，$b_2=3$（$b_0=0$）。
+
+能控标准型：
+\[
+A_c = \begin{bmatrix} 0 & 1 \\ -2 & -3 \end{bmatrix},\;
+B_c = \begin{bmatrix} 0 \\ 1 \end{bmatrix},\;
+C_c = [3, 2]
+\]
+
+（2）对角标准型：部分分式展开
+\[
+G(s) = \frac{2s+3}{(s+1)(s+2)} = \frac{1}{s+1} + \frac{1}{s+2}
+\]
+\[
+A = \begin{bmatrix} -1 & 0 \\ 0 & -2 \end{bmatrix},\;
+B = \begin{bmatrix} 1 \\ 1 \end{bmatrix},\;
+C = [1, 1]
+\]
+\end{example}
+
+% ============================================================
+\section{从状态空间到传递函数}
+% ============================================================
+
+\subsection{传递函数矩阵的推导}
+
+对状态方程两边取 Laplace 变换（零初始条件）：
+\[
+s\mathbf{X}(s) = A\mathbf{X}(s) + B\mathbf{U}(s)
+\]
+\[
+\mathbf{X}(s) = (sI - A)^{-1} B\mathbf{U}(s)
+\]
+
+代入输出方程：
+\[
+\mathbf{Y}(s) = C(sI - A)^{-1} B\mathbf{U}(s) + D\mathbf{U}(s)
+\]
+
+\begin{myTheorem}{传递函数矩阵}
+对于状态空间模型 $(A,B,C,D)$，系统的\textbf{传递函数矩阵}为
+\[
+G(s) = C(sI - A)^{-1} B + D
+\]
+其维度为 $p \times m$（输出数 $\times$ 输入数）。
+\end{myTheorem}
+
+\begin{myformula}
+(sI - A)^{-1} = \frac{\operatorname{adj}(sI - A)}{\det(sI - A)}
+\end{myformula}
+
+$\det(sI - A)$ 即为系统的特征多项式。
+
+\begin{example}
+求系统 $A = \begin{bmatrix} 0 & 1 \\ -2 & -3 \end{bmatrix}$，$B = \begin{bmatrix} 0 \\ 1 \end{bmatrix}$，$C = [3, 2]$，$D=0$ 的传递函数。
+
+\[
+sI - A = \begin{bmatrix} s & -1 \\ 2 & s+3 \end{bmatrix},\quad
+\det(sI - A) = s^2 + 3s + 2
+\]
+
+\[
+(sI - A)^{-1} = \frac{1}{s^2+3s+2}\begin{bmatrix} s+3 & 1 \\ -2 & s \end{bmatrix}
+\]
+
+\[
+G(s) = C(sI-A)^{-1}B = \frac{1}{s^2+3s+2}[3, 2]\begin{bmatrix} s+3 & 1 \\ -2 & s \end{bmatrix}\begin{bmatrix} 0 \\ 1 \end{bmatrix} = \frac{2s+3}{s^2+3s+2}
+\]
+
+与第7.2节的例一致，验证了状态空间实现与传递函数之间的等价性。
+\end{example}
+
+% --- 传函 ↔ 状态空间等价示意 TikZ ---
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    ctrlEquivBlockStyle/.style={draw, minimum width=2.8cm, minimum height=1.2cm, align=center, rounded corners},
+    ctrlEquivArrowStyle/.style={->, >=stealth, thick, blue!60},
+    ctrlEquivBidirStyle/.style={<->, >=stealth, thick, blue!60}
+]
+    \node[ctrlEquivBlockStyle, fill=blue!10] (tf) at (0, 0) {
+        \textbf{传递函数}\\[2pt]
+        $G(s) = \frac{N(s)}{D(s)}$
+    };
+
+    \node[ctrlEquivBlockStyle, fill=green!10] (ss) at (9, 0) {
+        \textbf{状态空间}\\[2pt]
+        $\dot{\mathbf{x}}=A\mathbf{x}+B\mathbf{u}$\\
+        $\mathbf{y}=C\mathbf{x}+D\mathbf{u}$
+    };
+
+    % 正向箭头：传函 → 状态空间（实现）
+    \draw[ctrlEquivArrowStyle] (tf.east) -- (ss.west)
+        node[midway, above] {\textbf{实现}};
+
+    % 反向箭头：状态空间 → 传函
+    \draw[ctrlEquivArrowStyle] (ss.south) |- ++(0, -1.5) -| (tf.south)
+        node[pos=0.25, below] {$G(s)=C(sI-A)^{-1}B+D$};
+
+    \node[draw, dashed, gray] at (4.5, -2.0) {不唯一（无穷多种实现）};
+    \node[draw, dashed, gray] at (4.5, -2.5) {唯一（若零极点无对消）};
+
+    % 标准型列举
+    \node[font=\footnotesize, align=left] at (4.5, 1.5) {
+        能控标准型 $\cdot$ 能观标准型 \\
+        对角标准型 $\cdot$ Jordan 标准型
+    };
+\end{tikzpicture}
+\caption{传递函数与状态空间之间的转换关系}
+\label{fig:tf-ss-equivalence}
+\end{figure}
+
+% ============================================================
+\section{状态方程的解}
+% ============================================================
+
+\subsection{状态转移矩阵}
+
+齐次状态方程 $\dot{\mathbf{x}} = A\mathbf{x}$（无输入情况）的解为
+\[
+\mathbf{x}(t) = e^{At}\,\mathbf{x}(0)
+\]
+
+其中矩阵指数 $e^{At}$ 称为\textbf{状态转移矩阵}，记为 $\Phi(t)$。
+
+\begin{mydefinition}{矩阵指数}
+\[
+\Phi(t) = e^{At} \triangleq I + At + \frac{1}{2!}A^2 t^2 + \cdots = \sum_{k=0}^{\infty} \frac{A^k t^k}{k!}
+\]
+该级数对任意方阵 $A$ 和 $t \geq 0$ 均收敛。
+\end{mydefinition}
+
+非齐次状态方程 $\dot{\mathbf{x}} = A\mathbf{x} + B\mathbf{u}$ 的解为
+\[
+\mathbf{x}(t) = e^{At}\mathbf{x}(0) + \int_0^t e^{A(t-\tau)} B\mathbf{u}(\tau)\,d\tau
+\]
+
+该形式称为\textbf{状态转移公式}，第一项为零输入响应，第二项为零状态响应。
+
+\subsection{Laplace 变换法}
+
+对状态方程取 Laplace 变换：
+\[
+s\mathbf{X}(s) - \mathbf{x}(0) = A\mathbf{X}(s) + B\mathbf{U}(s)
+\]
+\[
+\mathbf{X}(s) = (sI - A)^{-1}\mathbf{x}(0) + (sI - A)^{-1}B\mathbf{U}(s)
+\]
+
+取 Laplace 反变换：
+\[
+\mathbf{x}(t) = \mathcal{L}^{-1}\{(sI-A)^{-1}\}\,\mathbf{x}(0) + \mathcal{L}^{-1}\{(sI-A)^{-1}B\mathbf{U}(s)\}
+\]
+
+由此得到状态转移矩阵的 Laplace 变换表示：
+\[
+\Phi(t) = e^{At} = \mathcal{L}^{-1}\{(sI - A)^{-1}\}
+\]
+
+\subsection{Cayley-Hamilton 法}
+
+\begin{myTheorem}{Cayley-Hamilton 定理}
+设 $A \in \R^{n \times n}$ 的特征多项式为
+\[
+\Delta(\lambda) = \det(\lambda I - A) = \lambda^n + a_1\lambda^{n-1} + \cdots + a_n
+\]
+则矩阵 $A$ 满足自身的特征方程：
+\[
+A^n + a_1 A^{n-1} + \cdots + a_n I = 0
+\]
+\end{myTheorem}
+
+利用 Cayley-Hamilton 定理，$A^n$ 及更高次幂均可表示为 $I, A, \ldots, A^{n-1}$ 的线性组合，从而：
+\[
+e^{At} = \alpha_0(t)I + \alpha_1(t)A + \cdots + \alpha_{n-1}(t)A^{n-1}
+\]
+其中 $\alpha_i(t)$ 由特征值确定。
+
+\begin{myalgorithm}{Cayley-Hamilton 法计算 $\Phi(t)$}
+\begin{enumerate}
+    \item 求 $A$ 的特征值 $\lambda_1,\lambda_2,\ldots,\lambda_n$。
+    \item 若特征值互异，解 Vandermonde 方程组：
+    \[
+    e^{\lambda_i t} = \alpha_0 + \alpha_1\lambda_i + \cdots + \alpha_{n-1}\lambda_i^{n-1},\quad i=1,\ldots,n
+    \]
+    \item 若有重特征值，对重根附加求导条件。
+    \item 代入 $\Phi(t) = \sum_{k=0}^{n-1} \alpha_k(t) A^k$。
+\end{enumerate}
+\end{myalgorithm}
+
+\begin{example}
+计算 $A = \begin{bmatrix} 0 & 1 \\ 0 & -2 \end{bmatrix}$ 的状态转移矩阵。
+
+特征值：$\lambda_1=0$，$\lambda_2=-2$（互异）。
+\[
+\begin{cases}
+e^{0\cdot t} = 1 = \alpha_0 \\
+e^{-2t} = \alpha_0 - 2\alpha_1
+\end{cases}
+\]
+解得 $\alpha_0 = 1$，$\alpha_1 = (1 - e^{-2t})/2$。
+
+\[
+\Phi(t) = \alpha_0 I + \alpha_1 A = \begin{bmatrix} 1 & \frac{1-e^{-2t}}{2} \\ 0 & e^{-2t} \end{bmatrix}
+\]
+\end{example}
+
+% ============================================================
+\section{状态转移矩阵的性质}
+% ============================================================
+
+\begin{myTheorem}{状态转移矩阵的基本性质}
+状态转移矩阵 $\Phi(t) = e^{At}$ 满足以下性质：
+
+\begin{enumerate}
+    \item \textbf{初始条件}：$\Phi(0) = I$（$n$ 阶单位矩阵）
+    \item \textbf{群性质（半群性质）}：
+    \[
+    \Phi(t_1 + t_2) = \Phi(t_1)\Phi(t_2) = \Phi(t_2)\Phi(t_1),\quad \forall t_1, t_2
+    \]
+    \item \textbf{可逆性}：
+    \[
+    \Phi^{-1}(t) = \Phi(-t)
+    \]
+    \item \textbf{求导性质}：
+    \[
+    \frac{d}{dt}\Phi(t) = A\Phi(t) = \Phi(t)A
+    \]
+    \item \textbf{状态转移}：对任意初始时刻 $t_0$，
+    \[
+    \mathbf{x}(t) = \Phi(t - t_0)\mathbf{x}(t_0)
+    \]
+    \item \textbf{乘积性质}：
+    \[
+    \Phi(t_2 - t_0) = \Phi(t_2 - t_1)\Phi(t_1 - t_0)
+    \]
+    \item \textbf{斜对称性}：
+    \[
+    \Phi^{\top}(-t) = [\Phi^{-1}(t)]^{\top}
+    \]
+\end{enumerate}
+\end{myTheorem}
+
+\begin{proof}（证明性质 2 — 群性质）
+由矩阵指数的定义：
+\[
+\Phi(t_1 + t_2) = e^{A(t_1 + t_2)} = e^{At_1} \cdot e^{At_2}
+\]
+因为 $At_1$ 与 $At_2$ 可交换（二者均为 $A$ 的标量倍），所以矩阵指数的乘法性质成立。同理可证可逆性和求导性质。
+\end{proof}
+
+\begin{remark}
+群性质 $\Phi(t_1 + t_2) = \Phi(t_1)\Phi(t_2)$ 表明状态转移矩阵构成一个单参数变换群，这是线性定常系统的重要特征。对于线性时变系统，状态转移矩阵 $\Phi(t, t_0)$ 不具有此性质（依赖于两个参数），但仍满足 $\Phi(t_2,t_0) = \Phi(t_2,t_1)\Phi(t_1,t_0)$。
+\end{remark}
+
+% --- 状态轨迹相平面 TikZ ---
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    ctrlPhaseGridStyle/.style={gray!30, very thin},
+    ctrlPhaseTrajStyle/.style={blue, thick},
+    ctrlPhaseArrowStyle/.style={->, >=stealth, blue!60},
+    ctrlPhasePointStyle/.style={fill=red, circle, inner sep=2pt}
+]
+    % 坐标
+    \draw[ctrlPhaseGridStyle] (-3.5,-3.5) grid[step=0.5] (3.5,3.5);
+    \draw[->] (-4, 0) -- (4, 0) node[right] {$x_1$};
+    \draw[->] (0, -4) -- (0, 4) node[above] {$x_2$};
+
+    % 轨迹1：稳定焦点（螺旋收敛到原点）
+    \draw[ctrlPhaseTrajStyle,
+        domain=0:6.28*3, samples=200, smooth,
+        variable=\t]
+        plot ({2*exp(-0.2*\t)*cos(\t r)},
+             {2*exp(-0.2*\t)*sin(\t r)});
+
+    % 轨迹2：从不稳定方向进入稳定方向（鞍点）
+    \draw[ctrlPhaseTrajStyle, red!70, thick,
+        domain=-2.5:2.5, samples=100, smooth]
+        plot (\x, {0.5*tanh(\x)});
+
+    \draw[ctrlPhaseTrajStyle, red!70, thick,
+        domain=-2.5:2.5, samples=100, smooth]
+        plot (\x, {-0.5*tanh(\x)});
+
+    % 矢量场箭头（简化表示）
+    \foreach \x in {-2,-1,0,1,2} {
+        \foreach \y in {-2,-1,0,1,2} {
+            \draw[ctrlPhaseArrowStyle, opacity=0.3]
+                (\x, \y) -- ++({-0.3*\x - 0.5*\y}, {-0.5*\x - 0.3*\y});
+        }
+    }
+
+    % 初始点标注
+    \node[ctrlPhasePointStyle] at (2, 0) {};
+    \node[right] at (2, 0) {$\mathbf{x}(0)$};
+    \node[ctrlPhasePointStyle] at (0, 0) {};
+    \node[below left] at (0, 0) {原点（平衡点）};
+
+    \node[blue, right] at (1.5, -2) {状态轨迹};
+\end{tikzpicture}
+\caption{二维状态空间中的状态轨迹（相平面图）}
+\label{fig:phase-portrait}
+\end{figure}
+
+% ============================================================
+\section{线性变换与特征结构}
+% ============================================================
+
+\subsection{坐标变换}
+
+对状态向量作非奇异线性变换 $\bar{\mathbf{x}} = P\mathbf{x}$（$P$ 为 $n \times n$ 非奇异阵），则状态空间模型变为：
+
+\begin{myformula}
+\bar{A} = P A P^{-1},\quad
+\bar{B} = P B,\quad
+\bar{C} = C P^{-1},\quad
+\bar{D} = D
+\end{myformula}
+
+\begin{myTheorem}{线性变换下的不变性}
+在非奇异线性变换 $\bar{\mathbf{x}} = P\mathbf{x}$ 下，以下量保持不变：
+\begin{enumerate}
+    \item 特征值：$\det(\lambda I - \bar{A}) = \det(\lambda I - A)$
+    \item 传递函数矩阵：$G(s) = \bar{C}(sI - \bar{A})^{-1}\bar{B} + \bar{D} = C(sI-A)^{-1}B + D$
+    \item 能控性和能观性
+    \item 特征多项式
+\end{enumerate}
+\end{myTheorem}
+
+\subsection{特征值与特征向量}
+
+\begin{mydefinition}{特征值与特征向量}
+对于矩阵 $A \in \R^{n \times n}$，若存在标量 $\lambda$ 和非零向量 $\mathbf{v}$ 满足
+\[
+A\mathbf{v} = \lambda\mathbf{v}
+\]
+则称 $\lambda$ 为 $A$ 的\textbf{特征值}，$\mathbf{v}$ 为对应的\textbf{特征向量}。
+\end{mydefinition}
+
+特征值由特征方程 $\det(\lambda I - A) = 0$ 确定。特征值决定了系统的动态特性：
+\begin{itemize}
+    \item 实部为负的特征值对应衰减（稳定）模态
+    \item 实部为正的特征值对应发散（不稳定）模态
+    \item 虚部不为零的特征值对应振荡模态
+    \item 特征值的模决定衰减/发散的速度
+\end{itemize}
+
+\subsection{对角化与模态分解}
+
+若 $A$ 有 $n$ 个线性无关的特征向量 $\mathbf{v}_1, \ldots, \mathbf{v}_n$，则取变换矩阵
+\[
+P^{-1} = [\mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_n]
+\]
+可使 $\bar{A} = P A P^{-1}$ 化为对角阵 $\Lambda = \operatorname{diag}(\lambda_1, \ldots, \lambda_n)$。
+
+在对角化形式下，各状态变量（称为\textbf{模态坐标}）相互解耦，齐次解为
+\[
+\mathbf{x}(t) = \sum_{i=1}^{n} c_i \mathbf{v}_i e^{\lambda_i t}
+\]
+其中系数 $c_i$ 由初始条件确定。每个模态独立地按 $e^{\lambda_i t}$ 的规律演化。
+
+% ============================================================
+\section{离散时间状态空间}
+% ============================================================
+
+\subsection{离散状态空间模型}
+
+线性定常离散时间系统的状态空间描述为：
+
+\begin{mydefinition}{离散状态空间模型}
+\begin{align}
+    \mathbf{x}_{k+1} &= G\mathbf{x}_k + H\mathbf{u}_k \\
+    \mathbf{y}_k &= C\mathbf{x}_k + D\mathbf{u}_k
+\end{align}
+其中 $G \in \R^{n\times n}$，$H \in \R^{n\times m}$，$k$ 为采样时刻。
+\end{mydefinition}
+
+离散系统的解：
+\[
+\mathbf{x}_k = G^k \mathbf{x}_0 + \sum_{j=0}^{k-1} G^{k-1-j} H\mathbf{u}_j
+\]
+
+离散传递函数矩阵：
+\[
+G(z) = C(zI - G)^{-1} H + D
+\]
+
+\subsection{连续系统的离散化}
+
+将连续系统 $\dot{\mathbf{x}} = A\mathbf{x} + B\mathbf{u}$ 以采样周期 $T_s$ 离散化。
+
+\textbf{精确离散化}（零阶保持器假设）：
+\begin{myformula}
+G = e^{A T_s},\quad
+H = \left(\int_0^{T_s} e^{A\tau}\,d\tau\right) B
+\end{myformula}
+
+\textbf{近似离散化}（欧拉法）：
+\begin{myformula}
+G \approx I + A T_s,\quad
+H \approx B T_s
+\end{myformula}
+
+\textbf{双线性变换（Tustin 法）}：
+\begin{myformula}
+G \approx \left(I - \frac{T_s}{2}A\right)^{-1}\left(I + \frac{T_s}{2}A\right),\quad
+H \approx \left(I - \frac{T_s}{2}A\right)^{-1} B\sqrt{T_s}
+\end{myformula}
+
+\begin{myTheorem}{离散化的稳定性保留条件}
+当连续系统采用零阶保持器精确离散化时，连续系统的稳定性被精确保留到离散系统：连续特征值 $\lambda_i$ 映射为离散特征值 $e^{\lambda_i T_s}$。若 $\Re(\lambda_i) < 0$，则 $|e^{\lambda_i T_s}| < 1$。
+\end{myTheorem}
+
+\subsection{离散系统的稳定性}
+
+离散系统的稳定条件：所有特征值的模均小于 1（即特征值位于单位圆内）。
+
+\[
+|\lambda_i(G)| < 1,\quad i = 1, 2, \ldots, n
+\]
+
+\begin{example}
+连续系统 $A = \begin{bmatrix} 0 & 1 \\ -2 & -3 \end{bmatrix}$，$T_s = 0.1$，离散化。
+
+精确离散化（使用 Python 计算）：
+\[
+G = e^{AT_s} \approx \begin{bmatrix} 0.9909 & 0.0861 \\ -0.1722 & 0.7326 \end{bmatrix}
+\]
+两个特征值均位于单位圆内，离散系统稳定。
+\end{example}
+
+% ============================================================
+\section{Python 状态方程数值求解}
+% ============================================================
+
+以下代码演示了使用 SciPy 的 odeint 求解状态方程，以及连续系统离散化和状态转移矩阵的计算。
+
+\begin{lstlisting}[language=Python]
+import numpy as np
+from scipy.integrate import odeint
+from scipy.linalg import expm, eig
+import matplotlib.pyplot as plt
+
+# 定义连续系统
+A = np.array([[0, 1],
+              [-2, -3]])
+B = np.array([[0],
+              [1]])
+C = np.array([[3, 2]])
+D = np.array([[0]])
+
+# 1. 状态方程数值求解
+def state_equation(x, t, u_func):
+    u = u_func(t)
+    return A @ x + B.flatten() * u
+
+def u_step(t):
+    return 1.0 if t >= 0 else 0.0
+
+t = np.linspace(0, 10, 1000)
+x0 = np.array([0.0, 0.0])
+sol = odeint(state_equation, x0, t, args=(u_step,))
+
+# 绘图
+fig, axes = plt.subplots(2, 1, figsize=(10, 6))
+axes[0].plot(t, sol[:, 0], 'b-', label='$x_1(t)$')
+axes[0].plot(t, sol[:, 1], 'r--', label='$x_2(t)$')
+axes[0].set_ylabel('状态变量')
+axes[0].legend()
+axes[0].grid(True)
+axes[0].set_title('状态方程数值解 (odeint)')
+
+y = sol @ C.T
+axes[1].plot(t, y, 'g-', linewidth=1.5)
+axes[1].set_ylabel('输出 $y(t)$')
+axes[1].set_xlabel('时间 (s)')
+axes[1].grid(True)
+plt.tight_layout()
+plt.show()
+
+# 2. 计算状态转移矩阵
+t_val = 1.0
+Phi = expm(A * t_val)
+print(f"状态转移矩阵 Phi({t_val}) =")
+print(Phi)
+
+# 验证性质
+Phi0 = expm(A * 0)
+print(f"\nPhi(0) = I? {np.allclose(Phi0, np.eye(2))}")
+Phi_neg = expm(A * (-t_val))
+print(f"Phi(-t) = Phi(t)^(-1)? {np.allclose(Phi_neg, np.linalg.inv(Phi))}")
+
+# 验证群性质
+t1, t2 = 0.5, 0.7
+Phi_sum = expm(A * (t1 + t2))
+Phi_prod = expm(A * t1) @ expm(A * t2)
+print(f"Phi(t1+t2) = Phi(t1)*Phi(t2)? "
+      f"{np.allclose(Phi_sum, Phi_prod)}")
+
+# 3. 连续系统离散化（零阶保持器）
+Ts = 0.1
+G = expm(A * Ts)
+# H = integral_0^Ts exp(A*tau) * B dtau
+n = A.shape[0]
+M = np.zeros((n+1, n+1))
+M[:n, :n] = A
+M[:n, n] = B.flatten()
+M_exp = expm(M * Ts)
+G_d = M_exp[:n, :n]
+H_d = M_exp[:n, n].reshape(-1, 1)
+
+print(f"\n离散化 (Ts={Ts}):")
+print(f"G = \n{G_d}")
+print(f"H = \n{H_d}")
+
+# 验证传递函数等价
+import control as ct
+sys_c = ct.ss(A, B, C, D)
+sys_d = ct.ss(G_d, H_d, C, D, Ts)
+print(f"\n连续极点: {np.linalg.eigvals(A)}")
+print(f"离散极点: {np.linalg.eigvals(G_d)}")
+
+# 4. 特征结构分析
+eigvals, eigvecs = eig(A)
+print(f"\n特征值: {eigvals}")
+print(f"特征向量矩阵: \n{eigvecs}")
+
+# 对角化验证
+if np.linalg.matrix_rank(eigvecs) == n:
+    Lambda = np.diag(eigvals)
+    A_diag = eigvecs @ Lambda @ np.linalg.inv(eigvecs)
+    print(f"对角化验证: {np.allclose(A_diag, A)}")
+
+plt.show()
+\end{lstlisting}
+
+% ============================================================
+\section{本章小结}
+% ============================================================
+
+本章建立了现代控制理论的基本框架——状态空间方法。我们从状态变量的概念出发，定义了状态方程和输出方程，引入了系统矩阵 $A$、输入矩阵 $B$、输出矩阵 $C$ 和前馈矩阵 $D$ 四个核心矩阵。在传递函数与状态空间之间，能控标准型、能观标准型和对角标准型提供了标准的实现途径。状态转移矩阵 $\Phi(t) = e^{At}$ 是分析状态方程解的核心工具，其群性质揭示了线性定常系统的本质结构。线性变换保持系统的输入-输出特性不变，特征值则决定了各模态的动态行为。最后，我们讨论了离散时间状态空间模型及其与连续模型的联系，为数字控制系统的分析与设计奠定了基础。
+
+下一章将深入探讨状态空间的两个基本结构性质——能控性与能观性，它们是现代控制理论的精髓所在。

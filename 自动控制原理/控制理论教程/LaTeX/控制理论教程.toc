@@ -1,0 +1,290 @@
+\contentsline {chapter}{\numberline {1}引言与数学基础}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}控制理论概述}{1}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}控制理论的发展简史}{1}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}开环控制与闭环控制}{1}{subsection.1.1.2}%
+\contentsline {section}{\numberline {1.2}数学预备知识}{2}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}复数与复变函数回顾}{2}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}Laplace变换}{3}{subsection.1.2.2}%
+\contentsline {subsection}{\numberline {1.2.3}Laplace逆变换与部分分式展开法}{4}{subsection.1.2.3}%
+\contentsline {section}{\numberline {1.3}微分方程与线性系统}{5}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}线性常微分方程}{5}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}自由响应与强迫响应}{5}{subsection.1.3.2}%
+\contentsline {subsection}{\numberline {1.3.3}系统的微分方程求解}{6}{subsection.1.3.3}%
+\contentsline {section}{\numberline {1.4}传递函数概念}{6}{section.1.4}%
+\contentsline {subsection}{\numberline {1.4.1}传递函数的定义}{6}{subsection.1.4.1}%
+\contentsline {subsection}{\numberline {1.4.2}极点和零点}{7}{subsection.1.4.2}%
+\contentsline {subsection}{\numberline {1.4.3}极点位置与系统响应关系}{7}{subsection.1.4.3}%
+\contentsline {section}{\numberline {1.5}控制系统的基本要求}{7}{section.1.5}%
+\contentsline {subsection}{\numberline {1.5.1}稳定性}{7}{subsection.1.5.1}%
+\contentsline {subsection}{\numberline {1.5.2}快速性（动态性能）}{8}{subsection.1.5.2}%
+\contentsline {subsection}{\numberline {1.5.3}准确性（稳态性能）}{8}{subsection.1.5.3}%
+\contentsline {chapter}{\numberline {2}控制系统数学模型}{11}{chapter.2}%
+\contentsline {section}{\numberline {2.1}微分方程建模}{11}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}RLC电路}{11}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}质量-弹簧-阻尼系统}{12}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}直流电机}{12}{subsection.2.1.3}%
+\contentsline {section}{\numberline {2.2}传递函数与典型环节}{13}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}典型环节的传递函数}{13}{subsection.2.2.1}%
+\contentsline {section}{\numberline {2.3}框图及其化简}{14}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}方框图的基本连接方式}{14}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}框图等效变换规则}{14}{subsection.2.3.2}%
+\contentsline {section}{\numberline {2.4}信号流图与Mason增益公式}{16}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}信号流图的基本概念}{16}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Mason增益公式}{16}{subsection.2.4.2}%
+\contentsline {section}{\numberline {2.5}典型系统的传递函数}{17}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}闭环控制系统的基本传递函数}{17}{subsection.2.5.1}%
+\contentsline {chapter}{\numberline {3}时域分析}{21}{chapter.3}%
+\contentsline {section}{\numberline {3.1}典型输入信号}{21}{section.3.1}%
+\contentsline {section}{\numberline {3.2}一阶系统的时域分析}{21}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}一阶系统的数学模型}{21}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}一阶系统的单位阶跃响应}{21}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}一阶系统的单位斜坡响应}{22}{subsection.3.2.3}%
+\contentsline {section}{\numberline {3.3}二阶系统的时域分析}{22}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}标准二阶系统的传递函数}{22}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}欠阻尼二阶系统的单位阶跃响应}{23}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}临界阻尼与过阻尼响应}{23}{subsection.3.3.3}%
+\contentsline {section}{\numberline {3.4}时域性能指标}{24}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}上升时间 $t_r$}{24}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}峰值时间 $t_p$}{24}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}超调量 $\sigma \%$}{24}{subsection.3.4.3}%
+\contentsline {subsection}{\numberline {3.4.4}调节时间 $t_s$}{24}{subsection.3.4.4}%
+\contentsline {section}{\numberline {3.5}稳态误差分析}{25}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}终值定理与稳态误差}{25}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}系统型别与静态误差系数}{26}{subsection.3.5.2}%
+\contentsline {section}{\numberline {3.6}稳定性代数判据}{27}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}稳定性概念与充要条件}{27}{subsection.3.6.1}%
+\contentsline {subsection}{\numberline {3.6.2}Routh-Hurwitz判据}{27}{subsection.3.6.2}%
+\contentsline {subsection}{\numberline {3.6.3}Routh表的构造}{27}{subsection.3.6.3}%
+\contentsline {subsection}{\numberline {3.6.4}Routh判据的特殊情况}{28}{subsection.3.6.4}%
+\contentsline {chapter}{\numberline {4}根轨迹法}{31}{chapter.4}%
+\contentsline {section}{\numberline {4.1}根轨迹的基本概念}{31}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}问题的提出}{31}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}开环传递函数与闭环极点的关系}{31}{subsection.4.1.2}%
+\contentsline {section}{\numberline {4.2}幅值条件与相角条件}{32}{section.4.2}%
+\contentsline {section}{\numberline {4.3}根轨迹的绘制规则}{32}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}绘制规则的应用示例——二阶系统}{34}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}三阶系统的根轨迹}{34}{subsection.4.3.2}%
+\contentsline {section}{\numberline {4.4}参数根轨迹}{37}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}非增益参数变化的根轨迹}{37}{subsection.4.4.1}%
+\contentsline {section}{\numberline {4.5}基于根轨迹的系统性能分析}{37}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}主导极点概念}{37}{subsection.4.5.1}%
+\contentsline {subsection}{\numberline {4.5.2}附加极点对系统性能的影响}{38}{subsection.4.5.2}%
+\contentsline {subsection}{\numberline {4.5.3}附加零点对系统性能的影响}{38}{subsection.4.5.3}%
+\contentsline {section}{\numberline {4.6}基于根轨迹的补偿设计}{38}{section.4.6}%
+\contentsline {subsection}{\numberline {4.6.1}超前补偿（相位超前网络）}{39}{subsection.4.6.1}%
+\contentsline {subsection}{\numberline {4.6.2}滞后补偿（相位滞后网络）}{39}{subsection.4.6.2}%
+\contentsline {subsection}{\numberline {4.6.3}设计流程}{39}{subsection.4.6.3}%
+\contentsline {chapter}{\numberline {5}频域分析}{41}{chapter.5}%
+\contentsline {section}{\numberline {5.1}频率特性的基本概念}{41}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}频率特性的定义}{41}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}频率特性的几何表示}{41}{subsection.5.1.2}%
+\contentsline {section}{\numberline {5.2}典型环节的频率特性}{42}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}比例环节}{42}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}积分环节}{42}{subsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.2.3}微分环节}{42}{subsection.5.2.3}%
+\contentsline {subsection}{\numberline {5.2.4}惯性环节}{42}{subsection.5.2.4}%
+\contentsline {subsection}{\numberline {5.2.5}振荡环节}{43}{subsection.5.2.5}%
+\contentsline {subsection}{\numberline {5.2.6}滞后环节}{43}{subsection.5.2.6}%
+\contentsline {subsection}{\numberline {5.2.7}一阶微分环节}{43}{subsection.5.2.7}%
+\contentsline {section}{\numberline {5.3}Bode 图}{44}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}对数频率特性的坐标}{44}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}系统辨识中的 Bode 图应用}{44}{subsection.5.3.2}%
+\contentsline {section}{\numberline {5.4}Nyquist 图与稳定性判据}{46}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}Nyquist 图的基本概念}{46}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}Cauchy 定理与 Nyquist 稳定判据}{46}{subsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4.3}Nyquist 图的绘制}{47}{subsection.5.4.3}%
+\contentsline {section}{\numberline {5.5}稳定裕度}{47}{section.5.5}%
+\contentsline {subsection}{\numberline {5.5.1}幅值裕度}{47}{subsection.5.5.1}%
+\contentsline {subsection}{\numberline {5.5.2}相位裕度}{48}{subsection.5.5.2}%
+\contentsline {subsection}{\numberline {5.5.3}从 Bode 图和 Nyquist 图求取稳定裕度}{48}{subsection.5.5.3}%
+\contentsline {section}{\numberline {5.6}闭环频率特性}{50}{section.5.6}%
+\contentsline {subsection}{\numberline {5.6.1}闭环频域指标}{50}{subsection.5.6.1}%
+\contentsline {subsection}{\numberline {5.6.2}Nichols 图}{50}{subsection.5.6.2}%
+\contentsline {section}{\numberline {5.7}频域特性与时域指标的关系}{51}{section.5.7}%
+\contentsline {subsection}{\numberline {5.7.1}二阶系统的频域-时域关系}{51}{subsection.5.7.1}%
+\contentsline {subsection}{\numberline {5.7.2}由频域指标设计系统}{52}{subsection.5.7.2}%
+\contentsline {section}{\numberline {5.8}Python 频域分析仿真}{52}{section.5.8}%
+\contentsline {section}{\numberline {5.9}本章小结}{54}{section.5.9}%
+\contentsline {chapter}{\numberline {6}系统校正与PID控制}{55}{chapter.6}%
+\contentsline {section}{\numberline {6.1}校正的基本概念}{55}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}校正的分类}{55}{subsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.1.2}频率法校正的目标}{55}{subsection.6.1.2}%
+\contentsline {section}{\numberline {6.2}超前校正}{56}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}超前校正的传递函数}{56}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}超前校正的频域特性}{56}{subsection.6.2.2}%
+\contentsline {subsection}{\numberline {6.2.3}超前校正的设计步骤}{57}{subsection.6.2.3}%
+\contentsline {section}{\numberline {6.3}滞后校正}{59}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}滞后校正的传递函数}{59}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}滞后校正的设计步骤}{59}{subsection.6.3.2}%
+\contentsline {section}{\numberline {6.4}滞后-超前校正}{60}{section.6.4}%
+\contentsline {section}{\numberline {6.5}PID 控制}{60}{section.6.5}%
+\contentsline {subsection}{\numberline {6.5.1}PID 控制的基本原理}{60}{subsection.6.5.1}%
+\contentsline {subsection}{\numberline {6.5.2}各环节的作用}{61}{subsection.6.5.2}%
+\contentsline {subsection}{\numberline {6.5.3}位置式与增量式 PID}{61}{subsection.6.5.3}%
+\contentsline {subsection}{\numberline {6.5.4}Ziegler-Nichols 整定方法}{62}{subsection.6.5.4}%
+\contentsline {subsection}{\numberline {6.5.5}PID 参数对系统性能的影响}{63}{subsection.6.5.5}%
+\contentsline {section}{\numberline {6.6}前馈-反馈复合校正}{63}{section.6.6}%
+\contentsline {subsection}{\numberline {6.6.1}不变性原理}{63}{subsection.6.6.1}%
+\contentsline {subsection}{\numberline {6.6.2}前馈-反馈复合控制}{63}{subsection.6.6.2}%
+\contentsline {section}{\numberline {6.7}Smith 预估器}{64}{section.6.7}%
+\contentsline {section}{\numberline {6.8}Python PID 控制器仿真}{64}{section.6.8}%
+\contentsline {section}{\numberline {6.9}本章小结}{66}{section.6.9}%
+\contentsline {chapter}{\numberline {7}状态空间基础}{67}{chapter.7}%
+\contentsline {section}{\numberline {7.1}状态空间的基本概念}{67}{section.7.1}%
+\contentsline {subsection}{\numberline {7.1.1}状态与状态变量}{67}{subsection.7.1.1}%
+\contentsline {subsection}{\numberline {7.1.2}状态方程与输出方程}{67}{subsection.7.1.2}%
+\contentsline {section}{\numberline {7.2}从传递函数到状态空间}{68}{section.7.2}%
+\contentsline {subsection}{\numberline {7.2.1}能控标准型}{69}{subsection.7.2.1}%
+\contentsline {subsection}{\numberline {7.2.2}能观标准型}{69}{subsection.7.2.2}%
+\contentsline {subsection}{\numberline {7.2.3}对角标准型与 Jordan 标准型}{69}{subsection.7.2.3}%
+\contentsline {section}{\numberline {7.3}从状态空间到传递函数}{70}{section.7.3}%
+\contentsline {subsection}{\numberline {7.3.1}传递函数矩阵的推导}{70}{subsection.7.3.1}%
+\contentsline {section}{\numberline {7.4}状态方程的解}{71}{section.7.4}%
+\contentsline {subsection}{\numberline {7.4.1}状态转移矩阵}{71}{subsection.7.4.1}%
+\contentsline {subsection}{\numberline {7.4.2}Laplace 变换法}{72}{subsection.7.4.2}%
+\contentsline {subsection}{\numberline {7.4.3}Cayley-Hamilton 法}{72}{subsection.7.4.3}%
+\contentsline {section}{\numberline {7.5}状态转移矩阵的性质}{73}{section.7.5}%
+\contentsline {section}{\numberline {7.6}线性变换与特征结构}{74}{section.7.6}%
+\contentsline {subsection}{\numberline {7.6.1}坐标变换}{74}{subsection.7.6.1}%
+\contentsline {subsection}{\numberline {7.6.2}特征值与特征向量}{75}{subsection.7.6.2}%
+\contentsline {subsection}{\numberline {7.6.3}对角化与模态分解}{75}{subsection.7.6.3}%
+\contentsline {section}{\numberline {7.7}离散时间状态空间}{75}{section.7.7}%
+\contentsline {subsection}{\numberline {7.7.1}离散状态空间模型}{75}{subsection.7.7.1}%
+\contentsline {subsection}{\numberline {7.7.2}连续系统的离散化}{76}{subsection.7.7.2}%
+\contentsline {subsection}{\numberline {7.7.3}离散系统的稳定性}{76}{subsection.7.7.3}%
+\contentsline {section}{\numberline {7.8}Python 状态方程数值求解}{76}{section.7.8}%
+\contentsline {section}{\numberline {7.9}本章小结}{78}{section.7.9}%
+\contentsline {chapter}{\numberline {8}能控性与能观性}{81}{chapter.8}%
+\contentsline {section}{\numberline {8.1}能控性的基本概念}{81}{section.8.1}%
+\contentsline {subsection}{\numberline {8.1.1}能控性的定义}{81}{subsection.8.1.1}%
+\contentsline {section}{\numberline {8.2}能控性判据}{82}{section.8.2}%
+\contentsline {subsection}{\numberline {8.2.1}能控性矩阵与秩判据}{82}{subsection.8.2.1}%
+\contentsline {subsection}{\numberline {8.2.2}PBH 判据}{82}{subsection.8.2.2}%
+\contentsline {subsection}{\numberline {8.2.3}能控标准型与能控性}{83}{subsection.8.2.3}%
+\contentsline {section}{\numberline {8.3}能观性的基本概念}{83}{section.8.3}%
+\contentsline {subsection}{\numberline {8.3.1}能观性的定义}{83}{subsection.8.3.1}%
+\contentsline {section}{\numberline {8.4}能观性判据}{84}{section.8.4}%
+\contentsline {subsection}{\numberline {8.4.1}能观性矩阵与秩判据}{84}{subsection.8.4.1}%
+\contentsline {subsection}{\numberline {8.4.2}PBH 能观性判据}{84}{subsection.8.4.2}%
+\contentsline {section}{\numberline {8.5}对偶原理}{85}{section.8.5}%
+\contentsline {subsection}{\numberline {8.5.1}对偶原理的应用}{85}{subsection.8.5.1}%
+\contentsline {section}{\numberline {8.6}Kalman 分解}{85}{section.8.6}%
+\contentsline {subsection}{\numberline {8.6.1}结构分解的基本思想}{85}{subsection.8.6.1}%
+\contentsline {subsection}{\numberline {8.6.2}Kalman 分解的构造方法}{86}{subsection.8.6.2}%
+\contentsline {section}{\numberline {8.7}最小实现}{87}{section.8.7}%
+\contentsline {subsection}{\numberline {8.7.1}最小实现的定义}{87}{subsection.8.7.1}%
+\contentsline {subsection}{\numberline {8.7.2}不可约传递函数}{87}{subsection.8.7.2}%
+\contentsline {section}{\numberline {8.8}Python 能控性与能观性分析}{88}{section.8.8}%
+\contentsline {section}{\numberline {8.9}本章小结}{90}{section.8.9}%
+\contentsline {chapter}{\numberline {9}极点配置与状态反馈}{91}{chapter.9}%
+\contentsline {section}{\numberline {9.1}状态反馈的基本概念}{91}{section.9.1}%
+\contentsline {subsection}{\numberline {9.1.1}状态反馈的结构}{91}{subsection.9.1.1}%
+\contentsline {subsection}{\numberline {9.1.2}闭环系统的特征值}{92}{subsection.9.1.2}%
+\contentsline {section}{\numberline {9.2}极点配置定理}{92}{section.9.2}%
+\contentsline {subsection}{\numberline {9.2.1}能控性与极点配置的等价性}{92}{subsection.9.2.1}%
+\contentsline {subsection}{\numberline {9.2.2}多输入系统的极点配置}{93}{subsection.9.2.2}%
+\contentsline {section}{\numberline {9.3}Ackermann公式}{93}{section.9.3}%
+\contentsline {subsection}{\numberline {9.3.1}公式推导}{93}{subsection.9.3.1}%
+\contentsline {subsection}{\numberline {9.3.2}计算步骤与应用}{94}{subsection.9.3.2}%
+\contentsline {section}{\numberline {9.4}状态观测器}{95}{section.9.4}%
+\contentsline {subsection}{\numberline {9.4.1}开环与闭环观测器}{95}{subsection.9.4.1}%
+\contentsline {subsection}{\numberline {9.4.2}观测器增益的设计}{96}{subsection.9.4.2}%
+\contentsline {section}{\numberline {9.5}分离原理}{96}{section.9.5}%
+\contentsline {subsection}{\numberline {9.5.1}控制器与观测器的独立设计}{96}{subsection.9.5.1}%
+\contentsline {subsection}{\numberline {9.5.2}观测器增益的极点配置（对偶设计）}{97}{subsection.9.5.2}%
+\contentsline {section}{\numberline {9.6}基于观测器的输出反馈}{98}{section.9.6}%
+\contentsline {subsection}{\numberline {9.6.1}完整结构}{98}{subsection.9.6.1}%
+\contentsline {subsection}{\numberline {9.6.2}传递函数的实现——二自由度结构}{98}{subsection.9.6.2}%
+\contentsline {section}{\numberline {9.7}MATLAB与Python实现}{99}{section.9.7}%
+\contentsline {subsection}{\numberline {9.7.1}MATLAB实现}{99}{subsection.9.7.1}%
+\contentsline {subsection}{\numberline {9.7.2}Python实现}{100}{subsection.9.7.2}%
+\contentsline {section}{\numberline {9.8}小结}{103}{section.9.8}%
+\contentsline {chapter}{\numberline {10}线性二次型最优控制}{105}{chapter.10}%
+\contentsline {section}{\numberline {10.1}最优控制问题的提法}{105}{section.10.1}%
+\contentsline {subsection}{\numberline {10.1.1}性能指标（代价函数）}{105}{subsection.10.1.1}%
+\contentsline {subsection}{\numberline {10.1.2}$Q$和$R$的物理意义}{105}{subsection.10.1.2}%
+\contentsline {subsection}{\numberline {10.1.3}最优控制问题的Hamiltonian}{106}{subsection.10.1.3}%
+\contentsline {section}{\numberline {10.2}连续时间LQR}{106}{section.10.2}%
+\contentsline {subsection}{\numberline {10.2.1}Riccati微分方程与代数方程}{106}{subsection.10.2.1}%
+\contentsline {subsection}{\numberline {10.2.2}最优增益的推导}{106}{subsection.10.2.2}%
+\contentsline {subsection}{\numberline {10.2.3}加权矩阵的选择与极点移动趋势}{107}{subsection.10.2.3}%
+\contentsline {section}{\numberline {10.3}离散时间LQR与LQG问题}{108}{section.10.3}%
+\contentsline {subsection}{\numberline {10.3.1}离散时间LQR}{108}{subsection.10.3.1}%
+\contentsline {subsection}{\numberline {10.3.2}LQG问题的提法}{108}{subsection.10.3.2}%
+\contentsline {section}{\numberline {10.4}Kalman滤波器}{109}{section.10.4}%
+\contentsline {subsection}{\numberline {10.4.1}问题描述与推导思路}{109}{subsection.10.4.1}%
+\contentsline {subsection}{\numberline {10.4.2}离散Kalman滤波五大公式}{109}{subsection.10.4.2}%
+\contentsline {subsection}{\numberline {10.4.3}Kalman滤波的稳定性}{109}{subsection.10.4.3}%
+\contentsline {subsection}{\numberline {10.4.4}连续时间Kalman-Bucy滤波器}{110}{subsection.10.4.4}%
+\contentsline {section}{\numberline {10.5}扩展Kalman滤波器}{110}{section.10.5}%
+\contentsline {subsection}{\numberline {10.5.1}非线性系统的线性化}{110}{subsection.10.5.1}%
+\contentsline {section}{\numberline {10.6}Python实现}{112}{section.10.6}%
+\contentsline {subsection}{\numberline {10.6.1}LQR求解与仿真}{112}{subsection.10.6.1}%
+\contentsline {subsection}{\numberline {10.6.2}Kalman滤波仿真}{114}{subsection.10.6.2}%
+\contentsline {subsection}{\numberline {10.6.3}EKF示例——非线性振荡器}{116}{subsection.10.6.3}%
+\contentsline {subsection}{\numberline {10.6.4}离散LQR与Kalman结合的LQG仿真}{118}{subsection.10.6.4}%
+\contentsline {section}{\numberline {10.7}从LQR到MPC的联系}{119}{section.10.7}%
+\contentsline {section}{\numberline {10.8}小结}{119}{section.10.8}%
+\contentsline {chapter}{\numberline {11}非线性控制}{121}{chapter.11}%
+\contentsline {section}{\numberline {11.1}非线性系统的特性}{121}{section.11.1}%
+\contentsline {subsection}{\numberline {11.1.1}非线性系统的基本描述}{121}{subsection.11.1.1}%
+\contentsline {subsection}{\numberline {11.1.2}叠加原理的失效与多平衡点}{121}{subsection.11.1.2}%
+\contentsline {subsection}{\numberline {11.1.3}极限环、混沌与分岔}{122}{subsection.11.1.3}%
+\contentsline {section}{\numberline {11.2}Lyapunov稳定性理论}{123}{section.11.2}%
+\contentsline {subsection}{\numberline {11.2.1}自治系统的稳定性概念}{123}{subsection.11.2.1}%
+\contentsline {subsection}{\numberline {11.2.2}Lyapunov直接法（能量法）}{123}{subsection.11.2.2}%
+\contentsline {subsection}{\numberline {11.2.3}Lyapunov函数的构造方法}{123}{subsection.11.2.3}%
+\contentsline {subsection}{\numberline {11.2.4}Lasalle不变原理}{124}{subsection.11.2.4}%
+\contentsline {section}{\numberline {11.3}滑模控制}{124}{section.11.3}%
+\contentsline {subsection}{\numberline {11.3.1}滑模控制的基本原理}{124}{subsection.11.3.1}%
+\contentsline {subsection}{\numberline {11.3.2}滑模面的设计}{125}{subsection.11.3.2}%
+\contentsline {subsection}{\numberline {11.3.3}趋近律设计}{125}{subsection.11.3.3}%
+\contentsline {subsection}{\numberline {11.3.4}抖振问题与边界层方法}{125}{subsection.11.3.4}%
+\contentsline {section}{\numberline {11.4}反馈线性化}{126}{section.11.4}%
+\contentsline {subsection}{\numberline {11.4.1}输入-状态线性化}{126}{subsection.11.4.1}%
+\contentsline {subsection}{\numberline {11.4.2}Lie导数与Lie括号}{126}{subsection.11.4.2}%
+\contentsline {subsection}{\numberline {11.4.3}相对阶与输入-输出线性化}{127}{subsection.11.4.3}%
+\contentsline {section}{\numberline {11.5}Backstepping设计方法}{127}{section.11.5}%
+\contentsline {subsection}{\numberline {11.5.1}Backstepping的基本思想}{127}{subsection.11.5.1}%
+\contentsline {subsection}{\numberline {11.5.2}严格反馈形式}{128}{subsection.11.5.2}%
+\contentsline {subsection}{\numberline {11.5.3}二阶系统的Backstepping设计范例}{128}{subsection.11.5.3}%
+\contentsline {subsection}{\numberline {11.5.4}自适应Backstepping}{128}{subsection.11.5.4}%
+\contentsline {section}{\numberline {11.6}非线性观测器}{129}{section.11.6}%
+\contentsline {subsection}{\numberline {11.6.1}高增益观测器}{129}{subsection.11.6.1}%
+\contentsline {subsection}{\numberline {11.6.2}滑模观测器}{129}{subsection.11.6.2}%
+\contentsline {section}{\numberline {11.7}Python实现：倒立摆的滑模控制仿真}{130}{section.11.7}%
+\contentsline {section}{\numberline {11.8}小结}{132}{section.11.8}%
+\contentsline {chapter}{\numberline {12}高级控制方法}{133}{chapter.12}%
+\contentsline {section}{\numberline {12.1}模型预测控制}{133}{section.12.1}%
+\contentsline {subsection}{\numberline {12.1.1}三大基本原理}{133}{subsection.12.1.1}%
+\contentsline {subsection}{\numberline {12.1.2}MPC的数学表述——二次规划形式}{133}{subsection.12.1.2}%
+\contentsline {subsection}{\numberline {12.1.3}预测方程的推导}{134}{subsection.12.1.3}%
+\contentsline {subsection}{\numberline {12.1.4}约束处理}{134}{subsection.12.1.4}%
+\contentsline {subsection}{\numberline {12.1.5}可行性与稳定性}{134}{subsection.12.1.5}%
+\contentsline {subsection}{\numberline {12.1.6}非线性MPC与分布式MPC}{135}{subsection.12.1.6}%
+\contentsline {section}{\numberline {12.2}鲁棒控制}{135}{section.12.2}%
+\contentsline {subsection}{\numberline {12.2.1}不确定性的描述}{135}{subsection.12.2.1}%
+\contentsline {subsection}{\numberline {12.2.2}\(H_{\infty }\)控制问题}{136}{subsection.12.2.2}%
+\contentsline {subsection}{\numberline {12.2.3}标准\(H_{\infty }\)框架与Riccati方法}{136}{subsection.12.2.3}%
+\contentsline {subsection}{\numberline {12.2.4}\(\mu \)综合简介}{136}{subsection.12.2.4}%
+\contentsline {section}{\numberline {12.3}自适应控制}{137}{section.12.3}%
+\contentsline {subsection}{\numberline {12.3.1}模型参考自适应控制}{137}{subsection.12.3.1}%
+\contentsline {subsection}{\numberline {12.3.2}自校正控制}{137}{subsection.12.3.2}%
+\contentsline {subsection}{\numberline {12.3.3}MIT规则与归一化自适应律}{138}{subsection.12.3.3}%
+\contentsline {section}{\numberline {12.4}强化学习与控制}{138}{section.12.4}%
+\contentsline {subsection}{\numberline {12.4.1}MDP与最优控制的等价性}{138}{subsection.12.4.1}%
+\contentsline {subsection}{\numberline {12.4.2}Policy Iteration求解LQR}{139}{subsection.12.4.2}%
+\contentsline {subsection}{\numberline {12.4.3}自适应动态规划（ADP）}{139}{subsection.12.4.3}%
+\contentsline {section}{\numberline {12.5}智能控制}{140}{section.12.5}%
+\contentsline {subsection}{\numberline {12.5.1}模糊控制}{140}{subsection.12.5.1}%
+\contentsline {subsection}{\numberline {12.5.2}神经网络控制}{141}{subsection.12.5.2}%
+\contentsline {section}{\numberline {12.6}前沿方向}{141}{section.12.6}%
+\contentsline {subsection}{\numberline {12.6.1}学习型MPC}{141}{subsection.12.6.1}%
+\contentsline {subsection}{\numberline {12.6.2}Safe RL}{141}{subsection.12.6.2}%
+\contentsline {subsection}{\numberline {12.6.3}基于控制理论的深度学习解释}{142}{subsection.12.6.3}%
+\contentsline {section}{\numberline {12.7}Python实现}{143}{section.12.7}%
+\contentsline {subsection}{\numberline {12.7.1}简单MPC的QP求解}{143}{subsection.12.7.1}%
+\contentsline {subsection}{\numberline {12.7.2}RL求解LQR}{145}{subsection.12.7.2}%
+\contentsline {subsection}{\numberline {12.7.3}模糊控制器的简单实现}{147}{subsection.12.7.3}%
+\contentsline {section}{\numberline {12.8}小结}{148}{section.12.8}%
+\contentsfinish 

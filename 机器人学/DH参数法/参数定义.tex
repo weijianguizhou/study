@@ -124,13 +124,13 @@
 \subsection{参数的进一步解释}
 
 \begin{enumerate}
-	\item \textbf{$a_{i-1}$（连杆长度）}：这是公垂线的长度，恒为非负。如果两轴平行，可在公垂线族中任选一条，通常选与前一公垂线相交的那一条。如果两轴相交，$a_{i-1}=0$。
+	\item \textbf{$a_{i-1}$（连杆长度，Link Length）}：沿 $x_{i-1}$ 轴方向，从 $z_{i-1}$ 到 $z_i$ 的\textbf{公垂线长度}，即两相邻关节轴线之间的最短距离。恒为非负且永远为常数。若两轴相交，$a_{i-1}=0$；若两轴平行，可在无穷多条等长公垂线中任选一条，通常选与前一公垂线相交的那一条以保证 $d_i$ 的确定性。
 	
-	\item \textbf{$\alpha_{i-1}$（连杆扭角）}：描述了关节轴 $i$ 相对于关节轴 $i-1$ 的空间倾斜程度。借助右手定则：右手拇指指向 $x_{i-1}$，四指弯曲方向为 $\alpha_{i-1}$ 的正方向。
+	\item \textbf{$\alpha_{i-1}$（连杆扭角，Link Twist）}：绕 $x_{i-1}$ 轴旋转、将 $z_{i-1}$ 转向 $z_i$ 所需的角度。描述了两关节轴线在空间中的夹角，恒为常数，范围通常取 $[-\pi, \pi]$。右手定则：右手拇指指向 $x_{i-1}$ 正向，四指弯曲方向为 $\alpha_{i-1}$ 的正方向。两轴平行同向时 $\alpha_{i-1}=0$，平行反向时 $\alpha_{i-1}=\pi$。
 	
-	\item \textbf{$d_i$（连杆偏距）}：对于\textbf{移动关节}，$d_i$ 是关节变量；对于\textbf{旋转关节}，$d_i$ 是常数。
+	\item \textbf{$d_i$（连杆偏距，Link Offset）}：沿 $z_{i-1}$ 轴方向，从 $x_{i-1}$ 到 $x_i$ 的轴向距离，描述相邻两根公垂线在关节轴上的偏移量。沿 $z_{i-1}$ 正向为正。对于\textbf{移动关节}，$d_i$ 是关节变量；对于\textbf{旋转关节}，$d_i$ 是常数。
 	
-	\item \textbf{$\theta_i$（关节转角）}：对于\textbf{旋转关节}，$\theta_i$ 是关节变量；对于\textbf{移动关节}，$\theta_i$ 是常数。
+	\item \textbf{$\theta_i$（关节转角，Joint Angle）}：绕 $z_{i-1}$ 轴旋转、将 $x_{i-1}$ 转向 $x_i$ 所需的角度。对于\textbf{旋转关节}，$\theta_i$ 是关节变量；对于\textbf{移动关节}，$\theta_i$ 是常数。
 \end{enumerate}
 
 \begin{myTheorem}{DH 参数的变量性}
@@ -147,6 +147,36 @@
 \end{myTheorem}
 
 \textbf{注意：}无论哪种关节类型，$a_{i-1}$ 和 $\alpha_{i-1}$ 始终是常量（由机械结构决定），它们是对连杆本身的描述。而 $\theta_i$ 和 $d_i$ 中恰好有一个描述关节运动。
+
+\subsection{几何直觉：两步对准}
+
+将相邻连杆的连接理解为\textbf{两步空间对准}过程：
+
+\begin{enumerate}
+	\item \textbf{空间对齐轴线}（由 $a_{i-1}$、$\alpha_{i-1}$ 完成）：改变 $z$ 轴的位置与方向，使轴 $i-1$（$z_{i-1}$）与轴 $i$（$z_i$）重合。这一步由连杆本身的几何形状决定，对应 $T_x(a_{i-1})$ 和 $R_x(\alpha_{i-1})$ 两个变换。
+	\item \textbf{沿轴线微调}（由 $d_i$、$\theta_i$ 完成）：在两 $z$ 轴已重合的前提下，沿共享的 $z$ 轴进行平移和旋转，使 $x_{i-1}$ 与 $x_i$ 对齐。这一步描述关节运动，对应 $R_z(\theta_i)$ 和 $T_z(d_i)$ 两个变换。
+\end{enumerate}
+
+对应的变换顺序（标准DH）为：
+
+\begin{myformula}
+	{}^{i-1}_{i}\mathbf{T} = R_z(\theta_i) \cdot T_z(d_i) \cdot T_x(a_{i-1}) \cdot R_x(\alpha_{i-1})
+\end{myformula}
+
+其物理含义为：先在关节 $i-1$ 处绕 $z_{i-1}$ 旋转 $\theta_i$，沿 $z_{i-1}$ 平移 $d_i$，再沿新 $x$ 轴平移 $a_{i-1}$，最后绕新 $x$ 轴旋转 $\alpha_{i-1}$，即可到达坐标系 $\{i\}$。
+
+\subsection{参数确定口诀}
+
+\begin{center}
+	\fbox{\bfseries 绕 $z$ 转 $\theta$，沿 $z$ 移 $d$，沿 $x$ 移 $a$，绕 $x$ 转 $\alpha$}
+\end{center}
+
+按此顺序逐次递推坐标系即可得到 ${}^{i-1}_{i}\mathbf{T}$。关节类型速判：
+\begin{itemize}
+	\item 旋转关节：$\theta_i$ 为变量，$d_i$ 为常数
+	\item 移动关节：$d_i$ 为变量，$\theta_i$ 为常数
+	\item $a_{i-1}$、$\alpha_{i-1}$ \textbf{无论如何都是常数}
+\end{itemize}
 
 \section{连杆坐标系的建立规则}
 

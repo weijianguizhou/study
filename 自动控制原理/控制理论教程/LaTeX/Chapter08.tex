@@ -1,0 +1,591 @@
+% ============================================================
+% Chapter 08 - 能控性与能观性
+% ============================================================
+
+\chapter{能控性与能观性}
+
+\intro{能控性（Controllability）和能观性（Observability）是 Rudolf Kalman 于 1960 年提出的现代控制理论的两个核心概念。能控性研究输入能否将系统状态驱动到任意期望值，能观性研究输出能否唯一确定系统的内部状态。二者共同构成了系统结构分析的基础。}
+
+% ============================================================
+\section{能控性的基本概念}
+% ============================================================
+
+\subsection{能控性的定义}
+
+\begin{mydefinition}{状态能控性}
+对于线性定常系统 $\dot{\mathbf{x}} = A\mathbf{x} + B\mathbf{u}$，若对任意初始状态 $\mathbf{x}(0) = \mathbf{x}_0$ 和任意终端状态 $\mathbf{x}_f$，存在有限时刻 $t_f > 0$ 和定义在 $[0, t_f]$ 上的输入 $\mathbf{u}(t)$，使得 $\mathbf{x}(t_f) = \mathbf{x}_f$，则称系统是\textbf{状态完全能控}的，简称系统能控。
+\end{mydefinition}
+
+物理意义：输入信号能否将系统的状态从任意初始点"驱动"到任意目标点。
+
+\begin{example}
+考虑系统
+\[
+\dot{\mathbf{x}} = \begin{bmatrix} -1 & 0 \\ 0 & -2 \end{bmatrix}\mathbf{x} + \begin{bmatrix} 1 \\ 0 \end{bmatrix}u
+\]
+状态 $x_2$ 的运动方程为 $\dot{x}_2 = -2x_2$，与输入 $u$ 无关。因此无论 $u(t)$ 如何选取，都无法改变 $x_2$ 的演化，系统{\heiti 不完全能控}。
+\end{example}
+
+不完全能控意味着系统包含"孤立"于输入之外的状态变量（或状态子空间），这些状态是输入无法影响的。
+
+% --- 能控性示意 TikZ ---
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    ctrlContBlockStyle/.style={draw, minimum width=1.8cm, minimum height=0.9cm, align=center, fill=orange!15},
+    ctrlContArrowStyle/.style={->, >=stealth, thick},
+    ctrlContStateStyle/.style={fill=blue!30, circle, minimum size=1.5cm},
+    ctrlContInputStyle/.style={fill=red!20, circle, minimum size=0.8cm}
+]
+    \node[ctrlContInputStyle] (ctrlU) at (0, 0) {$\mathbf{u}$};
+    \node[below] at (0, -0.6) {输入};
+
+    \node[ctrlContBlockStyle] (sys) at (3, 0) {$\dot{\mathbf{x}}=A\mathbf{x}+B\mathbf{u}$};
+    \draw[ctrlContArrowStyle] (ctrlU) -- (sys);
+
+    \node[ctrlContStateStyle] (state) at (7, 0) {};
+    \node at (7, -0.7) {状态空间};
+
+    \fill (6.7, 0.5) circle (2pt) node[left] {$\mathbf{x}_0$};
+    \fill (7.5, -0.2) circle (2pt) node[right] {$\mathbf{x}_f$};
+
+    \draw[ctrlContArrowStyle, dashed, brown] (sys) -- (state)
+        node[midway, above] {控制};
+
+    \draw[brown, thick, ->] (6.7, 0.5) to[out=-30, in=120] (7.5, -0.2);
+    \node[brown, above] at (7.2, 0.3) {轨迹};
+
+    \node[text width=4cm, align=center, font=\footnotesize] at (3, -2) {
+        能否找到 $\mathbf{u}(t)$ 将系统\\
+        从 $\mathbf{x}_0$ 驱动到 $\mathbf{x}_f$？
+    };
+\end{tikzpicture}
+\caption{能控性的物理意义示意}
+\label{fig:controllability}
+\end{figure}
+
+% ============================================================
+\section{能控性判据}
+% ============================================================
+
+\subsection{能控性矩阵与秩判据}
+
+\begin{myTheorem}{能控性秩判据（Kalman 秩判据）}
+线性定常系统 $(A, B)$ 状态完全能控的充分必要条件是能控性矩阵
+\[
+\mathcal{C} = [B,\; AB,\; A^2B,\; \ldots,\; A^{n-1}B]
+\]
+满秩，即
+\[
+\operatorname{rank}(\mathcal{C}) = n
+\]
+\end{myTheorem}
+
+\begin{proof}
+由状态方程的解：
+\[
+\mathbf{x}(t_f) = e^{At_f}\mathbf{x}(0) + \int_0^{t_f} e^{A(t_f - \tau)} B\mathbf{u}(\tau)\,d\tau
+\]
+整理得
+\[
+\int_0^{t_f} e^{-A\tau} B\mathbf{u}(\tau)\,d\tau = e^{-At_f}\mathbf{x}(t_f) - \mathbf{x}(0) \triangleq \mathbf{w}
+\]
+
+由 Cayley-Hamilton 定理，$e^{-A\tau}$ 可表为 $I, A, \ldots, A^{n-1}$ 的线性组合：
+\[
+e^{-A\tau} = \sum_{k=0}^{n-1} \alpha_k(\tau) A^k
+\]
+代入得
+\[
+\sum_{k=0}^{n-1} A^k B \int_0^{t_f} \alpha_k(\tau)\mathbf{u}(\tau)\,d\tau = \mathbf{w}
+\]
+要使对任意 $\mathbf{w}$ 存在解 $\mathbf{u}(\tau)$，$\mathcal{C}$ 必须行满秩。
+\end{proof}
+
+能控性矩阵 $\mathcal{C}$ 的维度为 $n \times (n \cdot m)$。对于单输入系统 ($m=1$)，$\mathcal{C}$ 是 $n \times n$ 方阵，能控条件简化为 $\det(\mathcal{C}) \neq 0$。
+
+\subsection{PBH 判据}
+
+\begin{myTheorem}{PBH (Popov-Belevitch-Hautus) 能控性判据}
+系统 $(A, B)$ 能控的充要条件是：对 $A$ 的每个特征值 $\lambda_i$，有
+\[
+\operatorname{rank}\bigl([\lambda_i I - A,\; B]\bigr) = n
+\]
+\end{myTheorem}
+
+\begin{myTheorem}{PBH 特征向量判据}
+系统 $(A, B)$ 能控的充要条件是：不存在 $A$ 的左特征向量 $\mathbf{w} \neq 0$ 使得 $\mathbf{w}^{\top} B = 0$。换言之，$A$ 的左特征向量不能与 $B$ 的所有列正交。
+\end{myTheorem}
+
+PBH 判据的优势是直接利用特征值信息，可判断出哪些模态不能控。
+
+\begin{example}
+系统 $A = \begin{bmatrix} -1 & 0 \\ 0 & -2 \end{bmatrix}$，$B = \begin{bmatrix} 1 \\ 0 \end{bmatrix}$。
+
+能控性矩阵：
+\[
+\mathcal{C} = [B, AB] = \begin{bmatrix} 1 & -1 \\ 0 & 0 \end{bmatrix},\quad
+\operatorname{rank}(\mathcal{C}) = 1 < 2
+\]
+系统不能控。
+
+PBH 检验（特征值 $\lambda_2 = -2$）：
+\[
+[-2I - A, B] = \begin{bmatrix} -1 & 0 & 1 \\ 0 & 0 & 0 \end{bmatrix},\quad
+\operatorname{rank} = 1 < 2
+\]
+
+$\lambda_2 = -2$ 对应的左特征向量 $\mathbf{w} = [0, 1]^{\top}$ 满足 $\mathbf{w}^{\top} B = 0$，对应模态不能控。
+\end{example}
+
+\subsection{能控标准型与能控性}
+
+在第7章中介绍的能控标准型 $(A_c, B_c)$ 一定是能控的。验证如下：对 $n$ 阶能控标准型，
+\[
+\mathcal{C} = [B_c, A_c B_c, \ldots, A_c^{n-1}B_c] = \begin{bmatrix}
+0 & 0 & \cdots & 0 & 1 \\
+0 & 0 & \cdots & 1 & * \\
+\vdots & \vdots & \ddots & \vdots & \vdots \\
+0 & 1 & \cdots & * & * \\
+1 & * & \cdots & * & *
+\end{bmatrix}
+\]
+该矩阵为下三角形式的伴随矩阵，行列式为 $\pm 1$，因此满秩。
+
+% ============================================================
+\section{能观性的基本概念}
+% ============================================================
+
+\subsection{能观性的定义}
+
+\begin{mydefinition}{状态能观性}
+对于线性定常系统
+\[
+\dot{\mathbf{x}} = A\mathbf{x} + B\mathbf{u},\quad \mathbf{y} = C\mathbf{x} + D\mathbf{u}
+\]
+若对任意初始状态 $\mathbf{x}(0) = \mathbf{x}_0$，存在有限时刻 $t_f > 0$，使得 $\mathbf{x}_0$ 可由 $[0, t_f]$ 上的输入 $\mathbf{u}(t)$ 和输出 $\mathbf{y}(t)$ 唯一确定，则称系统是\textbf{状态完全能观}的，简称系统能观。
+\end{mydefinition}
+
+物理意义：仅通过测量系统的输入和输出，能否"反推"出系统内部所有状态变量的初始值（或当前值）。
+
+\begin{remark}
+能观性不依赖于输入 $\mathbf{u}(t)$，因为输入的影响可以通过计算扣除。因此，检验能观性时通常令 $\mathbf{u}(t) \equiv 0$，即仅分析齐次系统。
+\end{remark}
+
+% --- 能观性示意 TikZ ---
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    ctrlObsBlockStyle/.style={draw, minimum width=2cm, minimum height=0.9cm, align=center, fill=teal!10},
+    ctrlObsArrowStyle/.style={->, >=stealth, thick},
+    ctrlObsStateStyle/.style={fill=blue!30, circle, minimum size=1.5cm}
+]
+    \node[ctrlObsStateStyle] (state) at (0, 0) {};
+    \node at (0, -0.7) {状态空间 $\mathbf{x}$};
+
+    \foreach \i in {1,...,5} {
+        \pgfmathsetmacro{\angle}{18 + 72*\i}
+        \pgfmathsetmacro{\rx}{cos(\angle)*0.35}
+        \pgfmathsetmacro{\ry}{sin(\angle)*0.35}
+        \fill (\rx, \ry) circle (1.2pt);
+    }
+
+    \node[ctrlObsBlockStyle] (sys) at (3.5, 0) {$A,B,C,D$};
+    \draw[ctrlObsArrowStyle] (state) -- (sys) node[midway, above] {内部};
+
+    \node[draw, fill=green!20, minimum width=1cm, minimum height=0.8cm] (out) at (7, 0) {$\mathbf{y}$};
+    \draw[ctrlObsArrowStyle] (sys) -- (out) node[midway, above] {可测};
+
+    \node[draw, fill=green!20, minimum width=1cm, minimum height=0.8cm] (inp) at (3.5, 1.5) {$\mathbf{u}$};
+    \draw[ctrlObsArrowStyle] (inp) -- (sys);
+
+    \node[red, font=\Large] at (0, 1.2) {?};
+    \draw[red, ->, thick] (out.south) to[out=-60, in=0] (2, -1.5)
+        node[below, text width=7cm, align=center, font=\footnotesize]
+        {能否从可测量的 $\mathbf{u}(t)$ 和 $\mathbf{y}(t)$ 反推出内部状态 $\mathbf{x}(t)$？};
+\end{tikzpicture}
+\caption{能观性的物理意义示意}
+\label{fig:observability}
+\end{figure}
+
+% ============================================================
+\section{能观性判据}
+% ============================================================
+
+\subsection{能观性矩阵与秩判据}
+
+\begin{myTheorem}{能观性秩判据（Kalman 秩判据）}
+线性定常系统 $(A, C)$ 状态完全能观的充分必要条件是能观性矩阵
+\[
+\mathcal{O} = \begin{bmatrix}
+C \\ CA \\ CA^2 \\ \vdots \\ CA^{n-1}
+\end{bmatrix}
+\]
+满秩，即
+\[
+\operatorname{rank}(\mathcal{O}) = n
+\]
+\end{myTheorem}
+
+能观性矩阵 $\mathcal{O}$ 的维度为 $(n \cdot p) \times n$。对于单输出系统 ($p=1$)，$\mathcal{O}$ 是 $n \times n$ 方阵。
+
+\begin{proof}
+令 $\mathbf{u}(t) \equiv 0$，则输出为 $\mathbf{y}(t) = C e^{At}\mathbf{x}(0)$。利用 Cayley-Hamilton 定理将 $e^{At}$ 展开，对输出及其各阶导数在 $t=0$ 处求值，得
+\[
+\begin{bmatrix}
+\mathbf{y}(0) \\ \dot{\mathbf{y}}(0) \\ \vdots \\ \mathbf{y}^{(n-1)}(0)
+\end{bmatrix} = \mathcal{O}\,\mathbf{x}(0)
+\]
+要从输出信息唯一确定 $\mathbf{x}(0)$，$\mathcal{O}$ 必须列满秩。
+\end{proof}
+
+\subsection{PBH 能观性判据}
+
+\begin{myTheorem}{PBH 能观性判据}
+系统 $(A, C)$ 能观的充要条件是：对 $A$ 的每个特征值 $\lambda_i$，有
+\[
+\operatorname{rank}\!\begin{bmatrix} \lambda_i I - A \\ C \end{bmatrix} = n
+\]
+\end{myTheorem}
+
+\begin{myTheorem}{PBH 特征向量判据（能观性）}
+系统 $(A, C)$ 能观的充要条件是：不存在 $A$ 的右特征向量 $\mathbf{v} \neq 0$ 使得 $C\mathbf{v} = 0$。换言之，$A$ 的特征向量不能落在 $C$ 的零空间中。
+\end{myTheorem}
+
+\begin{example}
+系统 $A = \begin{bmatrix} -1 & 0 \\ 0 & -2 \end{bmatrix}$，$C = [1, 0]$。
+
+能观性矩阵：
+\[
+\mathcal{O} = \begin{bmatrix} C \\ CA \end{bmatrix} = \begin{bmatrix} 1 & 0 \\ -1 & 0 \end{bmatrix},\quad
+\operatorname{rank}(\mathcal{O}) = 1 < 2
+\]
+系统不能观。$\lambda=-2$ 对应的特征向量 $\mathbf{v} = [0, 1]^{\top}$ 满足 $C\mathbf{v} = 0$，该模态在输出中不可见。
+\end{example}
+
+\begin{remark}
+能观性判据的物理含义是：系统必须保证每一个模态（特征向量方向上的运动）都能在输出中留下"痕迹"。如果某个特征向量 $\mathbf{v}_i$ 满足 $C\mathbf{v}_i = 0$，则该模态对输出毫无贡献，自然无法从输出反推。
+\end{remark}
+
+% ============================================================
+\section{对偶原理}
+% ============================================================
+
+\begin{myTheorem}{对偶原理}
+对于两个系统：
+\[
+\Sigma_1 = (A, B, C),\qquad
+\Sigma_2 = (A^{\top}, C^{\top}, B^{\top})
+\]
+则 $\Sigma_1$ 能控的充要条件是 $\Sigma_2$ 能观；$\Sigma_1$ 能观的充要条件是 $\Sigma_2$ 能控。
+\end{myTheorem}
+
+\begin{proof}
+$\Sigma_1$ 的能控性矩阵为
+\[
+\mathcal{C}_{\Sigma_1} = [B, AB, \ldots, A^{n-1}B]
+\]
+
+$\Sigma_2$ 的能观性矩阵为
+\[
+\mathcal{O}_{\Sigma_2} = \begin{bmatrix}
+B^{\top} \\ B^{\top} A^{\top} \\ \vdots \\ B^{\top} (A^{\top})^{n-1}
+\end{bmatrix} = \mathcal{C}_{\Sigma_1}^{\top}
+\]
+
+因此 $\operatorname{rank}(\mathcal{C}_{\Sigma_1}) = \operatorname{rank}(\mathcal{O}_{\Sigma_2})$。同理 $\operatorname{rank}(\mathcal{O}_{\Sigma_1}) = \operatorname{rank}(\mathcal{C}_{\Sigma_2})$。
+\end{proof}
+
+\begin{remark}
+对偶原理揭示了能控性和能观性在数学上的完美对称性。这在工程上有重要应用：能控性分析的结果可以直接"对偶"地转化为能观性结论，反之亦然。
+\end{remark}
+
+\subsection{对偶原理的应用}
+
+对偶原理为控制系统的设计提供了重要工具：
+\begin{itemize}
+    \item 状态反馈极点配置问题（对能控系统）与全维状态观测器设计问题（对能观系统）是对偶的
+    \item 最优控制问题（LQR）与最优估计问题（Kalman 滤波）在数学结构上对偶
+    \item 可设计对偶变换，将状态观测器设计转化为一个"对偶系统"的状态反馈设计
+\end{itemize}
+
+% ============================================================
+\section{Kalman 分解}
+% ============================================================
+
+\subsection{结构分解的基本思想}
+
+对于不完全能控和/或不完全能观的系统，可以通过适当的坐标变换将其分解为四个具有不同结构特性的子系统。
+
+\begin{myTheorem}{Kalman 规范分解定理}
+对于任意线性定常系统 $(A, B, C)$，存在非奇异变换 $\bar{\mathbf{x}} = P\mathbf{x}$，使变换后的系统具有以下分块结构：
+
+\begin{align}
+\begin{bmatrix} \dot{\bar{\mathbf{x}}}_{co} \\ \dot{\bar{\mathbf{x}}}_{c\bar{o}} \\ \dot{\bar{\mathbf{x}}}_{\bar{c}o} \\ \dot{\bar{\mathbf{x}}}_{\bar{c}\bar{o}} \end{bmatrix} &=
+\begin{bmatrix}
+A_{11} & 0 & A_{13} & 0 \\
+A_{21} & A_{22} & A_{23} & A_{24} \\
+0 & 0 & A_{33} & 0 \\
+0 & 0 & A_{43} & A_{44}
+\end{bmatrix}
+\begin{bmatrix} \bar{\mathbf{x}}_{co} \\ \bar{\mathbf{x}}_{c\bar{o}} \\ \bar{\mathbf{x}}_{\bar{c}o} \\ \bar{\mathbf{x}}_{\bar{c}\bar{o}} \end{bmatrix}
++ \begin{bmatrix}
+B_1 \\ B_2 \\ 0 \\ 0
+\end{bmatrix} \mathbf{u} \\[8pt]
+\mathbf{y} &= \begin{bmatrix}
+C_1 & 0 & C_3 & 0
+\end{bmatrix}
+\begin{bmatrix} \bar{\mathbf{x}}_{co} \\ \bar{\mathbf{x}}_{c\bar{o}} \\ \bar{\mathbf{x}}_{\bar{c}o} \\ \bar{\mathbf{x}}_{\bar{c}\bar{o}} \end{bmatrix} + D\mathbf{u}
+\end{align}
+\end{myTheorem}
+
+四个子系统的含义：
+
+\begin{mydefinition}{Kalman 分解的四个子系统}
+\begin{enumerate}
+    \item $\bar{\mathbf{x}}_{co}$：\textbf{能控且能观}子系统 --- 传递函数对应的最小实现部分。
+    \item $\bar{\mathbf{x}}_{c\bar{o}}$：\textbf{能控不能观}子系统 --- 输入可驱动，但输出中不可见。
+    \item $\bar{\mathbf{x}}_{\bar{c}o}$：\textbf{不能控能观}子系统 --- 输出中可见，但输入无法影响。
+    \item $\bar{\mathbf{x}}_{\bar{c}\bar{o}}$：\textbf{不能控不能观}子系统 --- 输入无法影响，输出中不可见。
+\end{enumerate}
+\end{mydefinition}
+
+系统传递函数矩阵仅由子系统 $co$（能控能观部分）决定：
+\[
+G(s) = C_1(sI - A_{11})^{-1} B_1 + D
+\]
+
+% --- Kalman 分解结构图 TikZ ---
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    ctrlKalmBlockStyle/.style={draw, minimum width=2.4cm, minimum height=0.9cm, align=center, rounded corners=3pt},
+    ctrlKalmArrowStyle/.style={->, >=stealth, thick},
+    ctrlKalmDashStyle/.style={->, >=stealth, dashed, gray!70}
+]
+    \node[ctrlKalmBlockStyle, fill=green!25] (co) at (0, 4) {$\bar{\mathbf{x}}_{co}$\\能控且能观};
+    \node[ctrlKalmBlockStyle, fill=blue!15] (cn) at (5, 4) {$\bar{\mathbf{x}}_{c\bar{o}}$\\能控不能观};
+    \node[ctrlKalmBlockStyle, fill=yellow!20] (nc) at (0, 0) {$\bar{\mathbf{x}}_{\bar{c}o}$\\不能控能观};
+    \node[ctrlKalmBlockStyle, fill=red!15] (nn) at (5, 0) {$\bar{\mathbf{x}}_{\bar{c}\bar{o}}$\\不能控不能观};
+
+    \node (uin) at (-3.5, 4) {$\mathbf{u}$};
+    \draw[ctrlKalmArrowStyle] (uin) -- (co);
+    \draw[ctrlKalmArrowStyle] (uin) |- (cn);
+
+    \draw[ctrlKalmArrowStyle] (co) -- (cn) node[midway, above] {$A_{21}$};
+    \draw[ctrlKalmArrowStyle] (co.south) -- (nc.north) node[midway, left] {$A_{13}$};
+    \draw[ctrlKalmDashStyle] (co.south east) -- (nn.north west);
+    \draw[ctrlKalmDashStyle] (cn.south) -- (nn.north) node[midway, right] {$A_{24}$};
+    \draw[ctrlKalmDashStyle] (nc.east) -- (nn.west) node[midway, above] {$A_{43}$};
+
+    \node (yout) at (8.5, 4) {$\mathbf{y}$};
+    \draw[ctrlKalmArrowStyle] (co.east) -| (7.5, 4.7) -- (yout) node[pos=0.3, above] {$C_1$};
+    \draw[ctrlKalmArrowStyle] (nc.east) -| (7.3, 3.5) -- ++(1.2, 0) node[pos=0.3, below] {$C_3$};
+
+    \draw[thick, dashed, gray] (-1.5, -1.5) rectangle (7.3, 5.5);
+    \node[gray, right] at (7.3, 5.3) {完整系统};
+\end{tikzpicture}
+\caption{Kalman 分解的四部分结构}
+\label{fig:kalman-decomposition}
+\end{figure}
+
+\subsection{Kalman 分解的构造方法}
+
+构造 Kalman 分解的步骤：
+
+\begin{enumerate}
+    \item 计算能控性矩阵 $\mathcal{C}$，设其秩为 $n_c < n$。取 $\mathcal{C}$ 中 $n_c$ 个线性无关列作为能控子空间的基，并扩充为 $\R^n$ 的基，构成变换矩阵的前 $n_c$ 列。
+    \item 同理或利用对偶性处理能观子空间。
+    \item 将能控子空间和能观子空间求交集、并集，构造四个子空间的基向量。
+    \item 组成变换矩阵 $P$，计算 $\bar{A}=PAP^{-1}$、$\bar{B}=PB$、$\bar{C}=CP^{-1}$。
+\end{enumerate}
+
+\begin{example}
+考虑系统
+\[
+A = \begin{bmatrix} -2 & 0 \\ 0 & -2 \end{bmatrix},\;
+B = \begin{bmatrix} 1 \\ 0 \end{bmatrix},\;
+C = [0, 1],\; D = 0
+\]
+
+能控性：$\operatorname{rank}(\mathcal{C}) = 1$（$x_2$ 不能控）。能观性：$\operatorname{rank}(\mathcal{O}) = 1$（$x_1$ 不能观）。经 Kalman 分解：
+\[
+\bar{A} = \begin{bmatrix} -2 & 0 \\ 0 & -2 \end{bmatrix},\;
+\bar{B} = \begin{bmatrix} 1 \\ 0 \end{bmatrix},\;
+\bar{C} = [0, 1]
+\]
+能控能观子空间维数为 0，系统传递函数为 $G(s) = 0$（零极相消）。
+\end{example}
+
+% ============================================================
+\section{最小实现}
+% ============================================================
+
+\subsection{最小实现的定义}
+
+\begin{mydefinition}{最小实现}
+对于给定的传递函数矩阵 $G(s)$，若存在状态空间实现 $(A,B,C,D)$ 使得
+\[
+G(s) = C(sI - A)^{-1}B + D
+\]
+且该实现的阶数 $n$ 是所有可能实现中最小的，则称 $(A,B,C,D)$ 为 $G(s)$ 的\textbf{最小实现}。
+\end{mydefinition}
+
+\begin{myTheorem}{最小实现的充要条件}
+状态空间实现 $(A,B,C,D)$ 是最小实现的充分必要条件是系统既能控又能观。
+\end{myTheorem}
+
+\begin{proof}
+若系统不能控或不能观，根据 Kalman 分解，其传递函数仅由能控能观子部分 $(A_{11}, B_1, C_1)$ 决定，而该子部分的阶数小于原系统的阶数，因此原实现不是最小的。反之，若系统既能控又能观，则传递函数的任何实现阶数都不小于 $n$。
+\end{proof}
+
+\subsection{不可约传递函数}
+
+当传递函数的分子分母多项式存在公因子（零极点对消）时，任何状态空间实现的阶数都将大于最小实现的阶数。具体来说：
+
+\begin{itemize}
+    \item 若 SISO 传递函数 $G(s) = N(s)/D(s)$ 有零极点对消，则消去公因子后的阶数为最小实现的阶数。
+    \item 在消去公因子后，系统既能控又能观。
+    \item 对消的零极点对对应的模态要么不能控，要么不能观（或两者兼有），它们不出现在传递函数中。
+\end{itemize}
+
+\begin{example}
+传递函数 $G(s) = \frac{s+1}{(s+1)(s+2)} = \frac{1}{s+2}$。分母分子有公因子 $(s+1)$，发生零极对消。最小实现为一阶系统，$\tilde{A} = -2$，$\tilde{B} = 1$，$\tilde{C} = 1$。若实现为二阶（保存对消因式），则为不能控或不能观的非最小实现。
+\end{example}
+
+\begin{remark}
+最小实现的概念在系统辨识和控制器降阶设计中非常重要。实际应用中，通常希望获得阶数尽可能低的模型，以简化分析和控制器设计。
+\end{remark}
+
+% ============================================================
+\section{Python 能控性与能观性分析}
+% ============================================================
+
+以下 Python 代码演示了能控性矩阵、能观性矩阵的计算，秩检验，PBH 检验以及 Kalman 分解的数值实现。
+
+\begin{lstlisting}[language=Python]
+import numpy as np
+from scipy.linalg import eig, null_space, matrix_rank
+import control as ct
+
+def controllability_matrix(A, B):
+    n = A.shape[0]
+    B = np.atleast_2d(B)
+    if B.shape[1] == 1:
+        B = B.reshape(-1, 1)
+    Ctrb = B.copy()
+    for i in range(1, n):
+        Ctrb = np.hstack([Ctrb, np.linalg.matrix_power(A, i) @ B])
+    return Ctrb
+
+def observability_matrix(A, C):
+    n = A.shape[0]
+    C = np.atleast_2d(C)
+    Obsv = C.copy()
+    for i in range(1, n):
+        Obsv = np.vstack([Obsv, C @ np.linalg.matrix_power(A, i)])
+    return Obsv
+
+def is_controllable(A, B):
+    n = A.shape[0]
+    Ctrb = controllability_matrix(A, B)
+    r = np.linalg.matrix_rank(Ctrb)
+    print(f"能控性矩阵秩: {r} / {n}")
+    return r == n
+
+def is_observable(A, C):
+    n = A.shape[0]
+    Obsv = observability_matrix(A, C)
+    r = np.linalg.matrix_rank(Obsv)
+    print(f"能观性矩阵秩: {r} / {n}")
+    return r == n
+
+def pbh_test_controllability(A, B):
+    n = A.shape[0]
+    eigvals = np.linalg.eigvals(A)
+    controllable = True
+    for lam in eigvals:
+        M = np.hstack([lam * np.eye(n) - A, B])
+        r = np.linalg.matrix_rank(M)
+        if r < n:
+            print(f"PBH: lambda={lam:.4f} 秩={r}<{n} -> 不能控")
+            controllable = False
+    return controllable
+
+def pbh_test_observability(A, C):
+    n = A.shape[0]
+    eigvals = np.linalg.eigvals(A)
+    observable = True
+    for lam in eigvals:
+        M = np.vstack([lam * np.eye(n) - A, C])
+        r = np.linalg.matrix_rank(M)
+        if r < n:
+            print(f"PBH: lambda={lam:.4f} 秩={r}<{n} -> 不能观")
+            observable = False
+    return observable
+
+# --- 示例 1: 能控/能观检验 ---
+print("=" * 50)
+print("示例 1: 典型二阶系统")
+A1 = np.array([[0, 1],
+               [-2, -3]])
+B1 = np.array([[0],
+               [1]])
+C1 = np.array([[1, 0]])
+
+print("能控性检验:")
+print(f"  能控: {is_controllable(A1, B1)}")
+print("能观性检验:")
+print(f"  能观: {is_observable(A1, C1)}")
+
+# --- 示例 2: 不完全能控系统 ---
+print("\n" + "=" * 50)
+print("示例 2: 不完全能控系统")
+A2 = np.array([[-1, 0],
+               [0, -2]])
+B2 = np.array([[1],
+               [0]])
+C2 = np.array([[1, 1]])
+
+print("能控性矩阵:")
+Ctrb2 = controllability_matrix(A2, B2)
+print(Ctrb2)
+print(f"rank = {np.linalg.matrix_rank(Ctrb2)}")
+print(f"能控: {is_controllable(A2, B2)}")
+print(f"能观: {is_observable(A2, C2)}")
+
+# --- 示例 3: PBH 检验 ---
+print("\n" + "=" * 50)
+print("示例 3: PBH 判据检验")
+print("PBH 能控性检验 (A2, B2):")
+pbh_test_controllability(A2, B2)
+print("PBH 能观性检验 (A2, C2):")
+pbh_test_observability(A2, C2)
+
+# --- 示例 4: 最小实现验证 ---
+print("\n" + "=" * 50)
+print("示例 4: 最小实现与传递函数")
+sys = ct.ss(A1, B1, C1, 0)
+G = ct.ss2tf(sys)
+print("传递函数:", G)
+
+# 验证对偶原理
+A_dual = A1.T
+B_dual = C1.T
+C_dual = B1.T
+print(f"\n原系统 能控={is_controllable(A1,B1)}, 能观={is_observable(A1,C1)}")
+print(f"对偶系统 能控={is_controllable(A_dual,B_dual)}, "
+      f"能观={is_observable(A_dual,C_dual)}")
+\end{lstlisting}
+
+% ============================================================
+\section{本章小结}
+% ============================================================
+
+能控性和能观性共同构成了现代控制理论的两根支柱。本章系统阐述了这两个概念的定义、物理意义和严格的数学判据。
+
+能控性矩阵 $\mathcal{C} = [B, AB, \ldots, A^{n-1}B]$ 和能观性矩阵 $\mathcal{O}$ 的秩条件是检验系统结构性质的基本工具。PBH 判据则从特征值和特征向量的角度提供了更深层的洞察——某个模态不能控当且仅当存在 $A$ 的左特征向量与 $B$ 的所有列正交；某个模态不能观当且仅当存在 $A$ 的右特征向量落在 $C$ 的零空间中。
+
+对偶原理 $(A,B,C) \leftrightarrow (A^{\top}, C^{\top}, B^{\top})$ 揭示了能控性与能观性之间的优美对称性，并将两者统一在同一个数学框架下。Kalman 分解将任意系统规范地分解为四个部分，其核心结论是：系统的传递函数仅由能控能观子部分决定。由此自然地引出最小实现的概念——既能控又能观的状态空间实现。
+
+在后续的现代控制理论内容中，能控性是状态反馈极点配置的前提，能观性是状态观测器设计的前提，二者共同为控制器-观测器综合奠定了理论基石。
