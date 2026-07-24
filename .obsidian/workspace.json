@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "README.md",
+                "file": "数理基础/代数/Linear algebra.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "README"
+              "title": "Linear algebra"
             }
           }
         ]
@@ -191,20 +191,24 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "ee68c95cb553597d",
+  "active": "b275d19387b88fb4",
   "lastOpenFiles": [
-    "数理基础/群论.md",
-    "机器人学/DH参数法/DH参数法.synctex(busy)",
+    "数理基础/代数/域论与伽罗瓦理论.md",
+    "数理基础/代数/模论.md",
+    "数理基础/代数/环论.md",
+    "README.md",
+    "教材/代数基础/Matrix Analysis and Applied Linear Algebra (Carl D. Meyer).pdf",
+    "教材/代数基础/Linear Algebra Done Right (Sheldon Axler).pdf",
+    "教材/代数基础/Linear Algebra (M. Thamban Nair, Arindama Singh).pdf",
+    "教材/代数基础/Advanced Modern Algebra (Joseph J. Rotman).pdf",
+    "教材/代数基础",
+    "教材/Linear Algebra Done Right (Sheldon Axler).pdf",
+    "教材/Linear Algebra (M. Thamban Nair, Arindama Singh).pdf",
+    "教材/Advanced Modern Algebra (Joseph J. Rotman).pdf",
+    "教材/Matrix Analysis and Applied Linear Algebra (Carl D. Meyer).pdf",
+    "教材",
+    "数理基础/代数/群论.md",
     "人工智能/马尔可夫决策过程 (Markov Decision Process, MDP).md",
-    "力学/流体力学/LaTeX/流体力学.synctex(busy)",
-    "力学/流体力学/LaTeX/流体力学.synctex.gz",
-    "力学/流体力学/LaTeX/流体力学.listing",
-    "力学/流体力学/LaTeX/流体力学.pdf",
-    "力学/流体力学/LaTeX/流体力学.toc",
-    "力学/流体力学/LaTeX/流体力学.out",
-    "力学/流体力学/LaTeX/流体力学.aux",
-    "力学/流体力学/LaTeX/流体力学.log",
-    "力学/流体力学/LaTeX/流体力学.tex",
     "人工智能/RL-DQN与值函数近似.md",
     "刚体动力学算法/空间向量代数/0.数学知识预备.md",
     "刚体动力学算法/空间向量代数/1.空间速度 (Spatial Velocity).md",
@@ -225,10 +229,6 @@
     "艺术/LaTeX教程/06-章节、目录与交叉引用.md",
     "艺术/LaTeX教程/05-图片、表格与浮动体.md",
     "艺术/LaTeX教程/00-LaTeX教程MOC.md",
-    "艺术/01-话剧编剧教程.md",
-    "艺术/03-表演艺术教程.md",
-    "艺术/02-舞台安排教程.md",
-    "艺术/04-参考书目.md",
     "人工智能/强化学习系统教程/30.jpg",
     "Pasted image 20260629220006.jpg",
     "Pasted image 20260629220331.jpg"
