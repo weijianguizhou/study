@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "57703db370a3a0ff",
+        "id": "5540fbcdd6241e3d",
         "type": "tabs",
         "children": [
           {
-            "id": "41d16a3129bdd700",
+            "id": "adffc34d3806a5c2",
             "type": "leaf",
             "state": {
-              "type": "split-diff-view",
-              "state": {
-                "aFile": "计算机类/Eigen库使用指南",
-                "bFile": "计算机类/Eigen库使用指南",
-                "aRef": ""
-              },
-              "icon": "diff",
-              "title": "Diff: Eigen库使用指南  (Working Tree)"
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "新标签页"
             }
           }
         ]
@@ -191,7 +187,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "437ab6934dc5f66d",
+  "active": "b275d19387b88fb4",
   "lastOpenFiles": [
     "刚体动力学算法/picture/GUI.png",
     "计算机类/Eigen库使用指南/08-分解概述与选择.md",
