@@ -4,19 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "f74daeeb6ec6de47",
+        "id": "cb9dd318da6f845a",
         "type": "tabs",
         "children": [
           {
-            "id": "ee68c95cb553597d",
+            "id": "fdc7c97ff9fd7c65",
             "type": "leaf",
             "state": {
-              "type": "pdf",
+              "type": "markdown",
               "state": {
-                "file": "电类/电工学/电工学笔记.pdf"
+                "file": "计算机类/Eigen库使用指南/08-分解概述与选择.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-file-text",
-              "title": "电工学笔记"
+              "icon": "lucide-file",
+              "title": "08-分解概述与选择"
             }
           }
         ]
@@ -189,13 +191,36 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "ee68c95cb553597d",
+  "active": "fdc7c97ff9fd7c65",
   "lastOpenFiles": [
+    "计算机类/Eigen库使用指南/Eigen.png",
+    "计算机类/Eigen库使用指南/未确认 342016.crdownload",
+    "计算机类/Eigen库使用指南/稠密矩阵和数组操作/03-数组类和系数运算.md",
+    "计算机类/Eigen库使用指南/稠密矩阵和数组操作/02-矩阵和向量运算.md",
+    "计算机类/Eigen库使用指南/稠密矩阵和数组操作/01-Matrix类.md",
+    "计算机类/Eigen库使用指南/实战实例合集.md",
+    "计算机类/Eigen库使用指南/数值求解与性能技巧.md",
+    "计算机类/Eigen库使用指南/卡尔曼滤波与点云配准.md",
+    "计算机类/Eigen库使用指南/最小二乘与PCA.md",
+    "计算机类/Eigen库使用指南/几何实战.md",
+    "计算机类/Eigen库使用指南/仿射变换.md",
+    "计算机类/Eigen库使用指南/旋转的表达.md",
+    "计算机类/Eigen库使用指南/特征值与特征向量.md",
+    "计算机类/Eigen库使用指南/SVD分解.md",
+    "计算机类/Eigen库使用指南/Cholesky分解.md",
+    "计算机类/Eigen库使用指南/QR分解与最小二乘.md",
+    "计算机类/Eigen库使用指南/LU分解.md",
+    "计算机类/Eigen库使用指南/分解概述与选择.md",
+    "计算机类/Eigen库使用指南/线性求解与矩阵分解.md",
+    "计算机类/Eigen库使用指南/几何变换模块.md",
+    "README.md",
+    "README.en.md",
+    "计算机类/Eigen库使用指南/README.md",
+    "电类/电工学/电工学笔记.pdf",
     "写作与排版/LaTeX教程/00-LaTeX教程MOC.md",
     "数理基础/代数/Linear algebra.md",
     "计算机类/数据结构作业.md",
     "计算机类/数据结构.md",
-    "计算机类/常用Git 命令.md",
     "计算机类/图片/队列.png",
     "计算机类/图片/树.png",
     "计算机类/图片/栈.png",
@@ -207,35 +232,12 @@
     "计算机类/图片/数据结构分类.png",
     "计算机类/图片/折叠法.png",
     "计算机类/图片",
-    "计算机类/洛谷错题整理/P1002 [NOIP 2002 普及组] 过河卒.md",
     "计算机类/洛谷错题整理",
-    "计算机类/TensorFlow/TensorFlow入门.md",
-    "计算机类/Eigen库使用指南/稠密矩阵和数组操作/高级初始化.md",
-    "计算机类/Eigen库使用指南/稠密矩阵和数组操作/数组类和系数运算.md",
-    "计算机类/Eigen库使用指南/稠密矩阵和数组操作/矩阵和向量运算.md",
-    "计算机类/Eigen库使用指南/稠密矩阵和数组操作/归约、访问者与广播.md",
-    "计算机类/Eigen库使用指南/稠密矩阵和数组操作/Matrix类.md",
-    "计算机类/Eigen库使用指南/稠密矩阵和数组操作/块操作.md",
-    "计算机类/Eigen库使用指南/稠密矩阵和数组操作/切片和索引操作.md",
-    "计算机类/Eigen库使用指南/README.md",
     "计算机类/Eigen库使用指南/稠密矩阵和数组操作",
-    "计算机类/Eigen库使用指南/README.en.md",
     "计算机类/Eigen库使用指南",
-    "计算机类/CMake使用指南/VS code中Cmake使用指南.md",
-    "计算机类/CMake使用指南/CMake使用指南.md",
     "计算机类/CMake使用指南",
-    "计算机类/计算机/洛谷错题整理/P1002 [NOIP 2002 普及组] 过河卒.md",
     "计算机类/计算机/洛谷错题整理",
-    "计算机类/计算机/Tensorflow/TensorFlow入门.md",
     "计算机类/计算机/Tensorflow",
-    "计算机类/计算机/Eigen库使用指南/稠密矩阵和数组操作/矩阵和向量运算.md",
-    "计算机类/计算机/Eigen库使用指南/稠密矩阵和数组操作/高级初始化.md",
-    "计算机类/计算机/Eigen库使用指南/稠密矩阵和数组操作/数组类和系数运算.md",
-    "计算机类/计算机/Eigen库使用指南/稠密矩阵和数组操作/块操作.md",
-    "计算机类/计算机/Eigen库使用指南/稠密矩阵和数组操作/归约、访问者与广播.md",
-    "计算机类/计算机/Eigen库使用指南/稠密矩阵和数组操作/切片和索引操作.md",
-    "计算机类/计算机/Eigen库使用指南/稠密矩阵和数组操作",
-    "计算机类/计算机/Eigen库使用指南",
-    "计算机类/计算机/CMake使用指南"
+    "计算机类/计算机/Eigen库使用指南/稠密矩阵和数组操作"
   ]
 }
