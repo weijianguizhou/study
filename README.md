@@ -82,7 +82,7 @@ xelatex main.tex && xelatex main.tex   # 两次编译生成目录
 | 分支 | 内容 | 格式 |
 |------|------|------|
 | **分析学** | `数学分析.md`（极限/导数/积分/级数/Gamma函数, 1241行）、`向量微积分.md`（梯度/散度/旋度/Nabla）、`微分几何.md`（Frenet标架/曲率） | .md |
-| **代数** | `代数/Linear algebra.md`（向量空间）、`代数/代数基础.md`（矩阵/特征值/多项式）、`代数/赫尔维茨矩阵.md`（稳定性判据） | .md |
+| **代数** | `代数/Linear algebra.md`（向量空间/线性映射/谱定理/SVD/Jordan形）、`代数/代数基础.md`（多项式/矩阵/行列式/特征值）、`代数/群论.md`（群/Sylow/Lie群/表示）、`代数/环论.md`（理想/PID/UFD/Noether）、`代数/域论与伽罗瓦理论.md`（域扩张/Galois基本定理）、`代数/模论.md`（PID结构定理/张量积） | .md |
 | **概率与统计** | `概率论.md`（概率公理/随机变量/大数定律/中心极限定理, 400行）、`数理统计.md`（参数估计/假设检验, 580行）、`随机微分方程SDE.md`（Itô积分/布朗运动） | .md |
 | **微分方程** | `ODE常微分方程.md`（存在唯一性/Picard迭代/线性系统, 659行）、`微分方程与动力系统.md`（平衡解/稳定性/极限环）、`里卡蒂方程.md` | .md |
 | **优化与建模** | `凸优化.md`、`数学模型.md`（线性规划） | .md |
@@ -114,13 +114,12 @@ xelatex main.tex && xelatex main.tex   # 两次编译生成目录
 | **现代机器人学** | `现代机器人学笔记.tex`（主教程）、`位形空间.tex` | .tex |
 | **DH 参数法** | `DH参数法/DH参数法.tex`（主文件, 26页）+ `引言.tex`、`数学基础.tex`、`参数定义.tex`、`变换矩阵.tex`、`应用实例.tex` + `DH参数法.md`（速查） | .tex + .md |
 
-### 刚体动力学算法（8 文件：3 .md + 5 .tex）
+### 刚体动力学算法（6 文件：3 .md + 3 .tex）
 
 | 分支 | 内容 | 格式 |
 |------|------|------|
-| **刚体动力学** | `刚体动力学算法.tex`（主教程）+ `Chapter1.tex`、`Chapter2.tex`、`MuJoCo学习笔记.tex` | .tex |
+| **刚体动力学** | `刚体动力学算法.tex`（主教程）+ `Chapter1.tex`、`Chapter2.tex` | .tex |
 | **空间向量代数** | `空间向量代数/0.数学知识预备.md`（对偶空间）、`1.空间速度.md`（Plücker坐标/M⁶模型）、`2.空间力.md` | .md |
-| **航天器动力学** | `Spacecraft_Dynamics/Spacecraft_Dynamics.tex` | .tex |
 
 ### 人工智能（50 文件：25 .md + 25 .tex）
 
@@ -161,13 +160,24 @@ xelatex main.tex && xelatex main.tex   # 两次编译生成目录
 | `RL-PPO理论.md` | PPO完整推导（策略梯度→重要性采样→GAE→PPO-Clip→Critic Loss, 541行） | .md |
 | `RL-机器人控制.md` | MDP机器人映射/MuJoCo/奖励设计/PPO训练/SAC/Sim-to-Real | .md |
 
+#### 框架与机器学习项目
+
+| 文件 | 内容 |
+|------|------|
+| `TensorFlow/0.说明.md` | 环境搭建（Anaconda + TF 2.10） |
+| `TensorFlow/TensorFlow入门.md` | 核心概念、Keras MNIST 实战、Functional API、自定义训练 |
+| `TensorFlow/1.神经网络计算过程.md` | 前向/反向传播完整推导、梯度下降/Adam |
+| `机器学习与深度学习/0.绪论.md` | 深度学习绪论（图灵测试/表示学习） |
+| `机器学习与深度学习/1.机器学习概述.md` | 特征向量/监督/无监督学习 |
+| `机器学习与深度学习/常用符号.md` | 标量/向量/矩阵/张量符号表 |
+| `机器学习项目/YOLO.tex` | YOLO 目标检测（论文级笔记） |
+| `机器学习项目/K-均值聚类的分层初始化方法.tex` | K-means 分层聚类 |
+| `机器学习项目/基于 DBI 指标的分层初始化 K-means.tex` | DBI 优化 |
+
 #### 其他 AI
 
 | 文件 | 内容 |
 |------|------|
-| `机器学习与深度学习/0.绪论.md` | 深度学习绪论（图灵测试/表示学习） |
-| `机器学习与深度学习/1.机器学习概述.md` | 特征向量/监督/无监督学习 |
-| `机器学习与深度学习/常用符号.md` | 标量/向量/矩阵/张量符号表 |
 | `基于Agent的建模 (ABM).md` | Agent-Based Modeling 方法论 |
 | `时间序列预测.md` | ARIMA/深度学习预测/随机控制应用 |
 
@@ -205,18 +215,26 @@ xelatex main.tex && xelatex main.tex   # 两次编译生成目录
 | **机械原理** | `机械原理.tex`（主教程）+ `导论.tex`、`平面机构的结构分析.tex`、`机构运动分析.tex`、`连杆机构.tex`、`凸轮机构.tex`、`齿轮机构.tex` |
 | **机械制图** | `SOLIDWORKS 使用指南.md`（参数化建模/草图/装配体, 125行） |
 
-### 计算机类（22 文件：5 .md + 17 .tex）
+### 计算机科学（10 文件：5 .md + 5 工具类）
 
 | 分支 | 内容 |
 |------|------|
-| **数据结构** | `数据结构.md`（链表/栈/队列/树/图/排序, 1692行）、`数据结构作业.md` | .md |
-| **TensorFlow** | `0.说明.md`、`1.神经网络计算过程.md`、`未命名.md` | .md |
-| **机器学习** | `K-均值聚类的分层初始化方法.tex`、`YOLO.tex`、`基于 DBI 指标的分层初始化 K-means.tex` | .tex |
-| **Python** | `python学习/Python基础.tex` | .tex |
-| **R 语言** | `R语言自学笔记.tex` + `Chapter1~3.tex` | .tex |
-| **LaTeX 教程** | `The_lovely_Miss_Gu_Zixin/` 下 9 份 .tex（LaTeX 入门到进阶, 8 章） | .tex |
+| **数据结构** | `数据结构.md`（链表/栈/队列/树/图/排序, 1696行）、`数据结构作业.md`（7题全解答） | .md |
+| **算法竞赛** | `洛谷错题整理/P1002 过河卒.md`（NOIP DP 题解） | .md |
+| **构建工具** | `CMake使用指南/CMake使用指南.md`（330行教程）、`CMake使用指南/VS code中Cmake使用指南.md` | .md |
+| **Eigen 库** | `Eigen库使用指南/` 下 8 份 .md（矩阵/向量/数组/块操作/索引/归约） | .md |
+| **版本控制** | `常用Git 命令.md`（完整指南, 407行） | .md |
+| **编程语言** | `python学习/Python基础.tex` + 7 个练习脚本、`R语言/R语言自学笔记.tex`（3章） | .tex + .py |
 
-### MuJoCo 仿真（9 文件：4 .md + 5 .tex）
+### 写作与排版（3 个子目录）
+
+| 分支 | 内容 |
+|------|------|
+| **LaTeX 教程** | `LaTeX教程/` 下 13 份 .md（12 章完整教程, 00-MOC~12-进阶技巧）+ 配套 .tex 源文件 |
+| **LaTeX 入门指南** | `LaTeX入门指南/` 下 8 章 .tex（从安装到进阶, 面向初学者的实践教程） |
+| **Markdown** | `Markdown/` 下 Markdown 使用笔记（.tex 编写, 含 PDF 输出） |
+
+### MuJoCo 仿真（10 文件：4 .md + 5 .tex + 1 学习笔记）
 
 | 文件 | 内容 |
 |------|------|
@@ -225,6 +243,7 @@ xelatex main.tex && xelatex main.tex   # 两次编译生成目录
 | `Benchmark 基准.md` | 简化模型/强化学习环境 |
 | `代码设计的方法论Methodology.md` | 控制部分+可视化部分/Python封装, 478行 |
 | `Mujoco.tex` + `Chapter0~3.tex` | LaTeX 系统教程 |
+| `MuJoCo学习笔记.tex` | MuJoCo 算法与仿真笔记 |
 
 ### 学术汇报（3 文件：全部 .tex）
 
@@ -234,11 +253,15 @@ xelatex main.tex && xelatex main.tex   # 两次编译生成目录
 | `英文学术汇报.tex` | 英文报告 |
 | `ALL you need is attention.tex` | Attention 机制专题报告 |
 
-### Markdown 教程（1 文件）
+---
 
-| 文件 | 内容 |
-|------|------|
-| `A_Guide_to_Using_Markdown_for_You.tex` | Markdown 使用指南（LaTeX 格式） |
+## 写作与排版工具
+
+| 教程 | 内容 | 路径 |
+|------|------|------|
+| **LaTeX 教程** | .md + .tex（12 章）| `写作与排版/LaTeX教程/` |
+| **LaTeX 入门指南** | .tex（8 章）| `写作与排版/LaTeX入门指南/` |
+| **Markdown 教程** | .tex | `写作与排版/Markdown/` |
 
 ---
 
