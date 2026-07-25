@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "acacee5efcd8f6ba",
+        "id": "e2f7d0f01451a5ca",
         "type": "tabs",
         "children": [
           {
-            "id": "77cde030140699db",
+            "id": "9943dce2188f80f3",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "00-知识索引.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "00-知识索引"
+              "title": "新标签页"
             }
           }
         ]
@@ -177,8 +173,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -192,8 +187,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "77cde030140699db",
+  "active": "437ab6934dc5f66d",
   "lastOpenFiles": [
+    "力学/分析力学笔记.md",
+    "00-知识索引.md",
     "计算机类/数据结构.md",
     "05-运算符与表达式.md",
     "Mujoco/Benchmark 基准.md",
@@ -218,8 +215,6 @@
     "计算机类/C++学习/20-多文件项目管理.md",
     "计算机类/C++学习/19-CMake基础.md",
     "计算机类/C++学习/18-Visual Studio入门.md",
-    "计算机类/C++学习/17-智能指针与模板.md",
-    "计算机类/C++学习/16-STL算法.md",
     "计算机类/C++学习",
     "刚体动力学算法/picture/GUI.png",
     "计算机类/Eigen库使用指南/Eigen.png",
