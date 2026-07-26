@@ -1,0 +1,645 @@
+\chapter{初等数论}
+\intro{整数有哪些"深处"的结构？为什么古代数学家研究的问题会成为现代密码学的基石？数论研究整数的性质，是RSA加密、椭圆曲线密码等现代信息技术的理论基础。}
+
+\section{整除理论}
+
+\subsection{整除的定义与基本性质}
+
+\begin{mydefinition}{整除}
+设 \(a,b\in\Z\)，\(a\neq 0\)。若存在整数 \(c\) 使 \(b=ac\)，则称 \(a\) \textbf{整除} \(b\)，记作 \(a\mid b\)。否则记作 \(a\nmid b\)。此时 \(a\) 称为 \(b\) 的因数，\(b\) 称为 \(a\) 的倍数。
+\end{mydefinition}
+
+\textbf{基本性质}：
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ll}
+\toprule
+性质 & 表达式 \\
+\midrule
+自反性 & \(a\mid a\) \\
+传递性 & 若 \(a\mid b\) 且 \(b\mid c\)，则 \(a\mid c\) \\
+线性性 & 若 \(a\mid b\) 且 \(a\mid c\)，则 \(a\mid (mb+nc)\)，\(\forall m,n\in\Z\) \\
+反身性 & 若 \(a\mid b\) 且 \(b\mid a\)，则 \(a=\pm b\) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{proof}[线性性的证明]
+由 \(b=ak_1\)，\(c=ak_2\) 得：\(mb+nc = m(ak_1) + n(ak_2) = a(mk_1+nk_2)\)，故 \(a\mid (mb+nc)\)。
+\end{proof}
+
+\subsection{带余除法}
+
+\begin{myTheorem}{带余除法}
+设 \(a\in\Z\)，\(b\in\Z^+\)，则\textbf{存在唯一}的整数 \(q\) 和 \(r\) 满足：
+\[
+a = bq + r, \quad 0 \leqslant r < b
+\]
+其中 \(q\) 称为商，\(r\) 称为余数。余数常记作 \(a\bmod b = r\)。
+\end{myTheorem}
+
+\begin{proof}[证明]
+考虑集合 \(S=\{a-bk\mid k\in\Z,\;a-bk\geqslant 0\}\)。\(S\) 非空（取 \(k\) 足够小），由良序原理 \(S\) 有最小元 \(r\)。令 \(q\) 满足 \(r=a-bq\)，则 \(r\geqslant 0\)。若 \(r\geqslant b\)，则 \(a-b(q+1)=r-b\geqslant 0\) 是 \(S\) 中更小的非负元，矛盾。唯一性：若有两组 \((q_1,r_1)\) 和 \((q_2,r_2)\)，则 \(b(q_1-q_2)=r_2-r_1\)。由于 \(|r_2-r_1|<b\)，只能 \(r_1=r_2\)，从而 \(q_1=q_2\)。
+\end{proof}
+
+\subsection{最大公因数与辗转相除法}
+
+\begin{mydefinition}{最大公因数}
+设 \(a,b\) 是不全为0的整数。集合 \(\{d\mid d\mid a\text{ 且 }d\mid b\}\) 中的最大元素称为 \(a\) 和 \(b\) 的最大公因数，记作 \(\gcd(a,b)\)。
+\end{mydefinition}
+
+性质：\(\gcd(a,b) = \gcd(a\bmod b, b)\)。
+
+\begin{myalgorithm}{辗转相除法}
+\vspace{4pt}
+\begin{minipage}{\textwidth}
+\textbf{输入}: \(a,b\)（不全为0）\\
+\textbf{输出}: \(\gcd(a,b)\)
+
+\begin{verbatim}
+while b != 0:
+    r = a mod b
+    a = b
+    b = r
+return |a|
+\end{verbatim}
+\end{minipage}
+\end{myalgorithm}
+
+\begin{myTheorem}{时间复杂度}
+辗转相除法的时间复杂度为 \(O(\log \min(a,b))\)。
+\end{myTheorem}
+
+\begin{example}
+\(\gcd(252,105)\)：
+\[
+252 = 105\times 2 + 42,\quad
+105 = 42\times 2 + 21,\quad
+42 = 21\times 2 + 0
+\]
+故 \(\gcd(252,105) = 21\)。
+\end{example}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.85]
+\tikzset{
+    dmEuclidBox/.style={rectangle,draw=blue!60,fill=blue!5,minimum width=3.5cm,minimum height=0.7cm,align=center,font=\small},
+    dmEuclidArrow/.style={-{Stealth},thick,draw=red!60},
+}
+\node[dmEuclidBox] (s1) at (0,3) {\(a=252,\;b=105\)};
+\node[dmEuclidBox] (s2) at (0,1.5) {\(a=105,\;b=42\)};
+\node[dmEuclidBox] (s3) at (0,0) {\(a=42,\;b=21\)};
+\node[dmEuclidBox] (s4) at (0,-1.5) {\(a=21,\;b=0\)};
+\node[dmBox] (res) at (0,-3) {\(\gcd = 21\)};
+
+\draw[dmEuclidArrow] (s1) -- (s2) node[midway,right] {\(252\bmod 105 = 42\)};
+\draw[dmEuclidArrow] (s2) -- (s3) node[midway,right] {\(105\bmod 42 = 21\)};
+\draw[dmEuclidArrow] (s3) -- (s4) node[midway,right] {\(42\bmod 21 = 0\)};
+\draw[dmEuclidArrow] (s4) -- (res) node[midway,right] {\(b=0\)停止};
+\end{tikzpicture}
+\captionof{figure}{辗转相除法流程图——每次迭代用余数替换较大的数，直到余数为0。}
+\end{center}
+
+\subsection{最小公倍数}
+
+\begin{mydefinition}{最小公倍数}
+\(a\) 和 \(b\) 的正公倍数中最小的一个称为最小公倍数，记作 \(\lcm(a,b)\)。
+\end{mydefinition}
+
+\begin{myTheorem}{}
+\(|ab| = \gcd(a,b)\cdot\lcm(a,b)\)。
+\end{myTheorem}
+
+\subsection{扩展欧几里得算法与B\'{e}zout定理}
+
+\begin{myTheorem}{B\'{e}zout定理}
+设 \(a,b\) 为不全为0的整数，则存在整数 \(x,y\) 满足：
+\[
+ax + by = \gcd(a,b)
+\]
+且 \(\gcd(a,b)\) 是能被 \(a\) 和 \(b\) 的整系数线性组合表示的最小正整数。
+\end{myTheorem}
+
+扩展欧几里得算法在辗转相除的每一步保持关系 \(r_i = a x_i + b y_i\)：
+\[
+(x_i, y_i) = (x_{i-2} - q_i x_{i-1},\; y_{i-2} - q_i y_{i-1})
+\]
+从初始值 \((x_0,y_0)=(1,0)\)，\((x_1,y_1)=(0,1)\) 开始。
+
+\begin{example}
+求 \(252x+105y=\gcd(252,105)=21\)：
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ccccc}
+\toprule
+\(i\) & \(q_i\) & \(x_i\) & \(y_i\) & \(r_i\) \\
+\midrule
+0 & — & 1 & 0 & 252 \\
+1 & — & 0 & 1 & 105 \\
+2 & 2 & \(1-2\times0=1\) & \(0-2\times1=-2\) & 42 \\
+3 & 2 & \(0-2\times1=-2\) & \(1-2\times(-2)=5\) & 21 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+得 \((x,y)=(-2,5)\)，验证：\(252\times(-2)+105\times5=-504+525=21\)。
+\end{example}
+
+\section{素数}
+
+\subsection{素数与算术基本定理}
+
+\begin{mydefinition}{素数}
+大于1的整数 \(p\) 若只有1和 \(p\) 两个正因数，称为\textbf{素数}；否则称为\textbf{合数}。1既不是素数也不是合数。
+\end{mydefinition}
+
+\begin{myTheorem}{算术基本定理}
+每个大于1的整数 \(n\) 都可以\textbf{唯一地}（不计顺序）表示为素数的乘积：
+\[
+n = p_1^{e_1} p_2^{e_2} \cdots p_k^{e_k}
+\]
+其中 \(p_1<p_2<\cdots<p_k\) 为素数，\(e_i\geqslant 1\)。
+\end{myTheorem}
+
+\subsection{素数有无穷多个}
+
+\begin{myTheorem}{欧几里得定理}
+素数有无穷多个。
+\end{myTheorem}
+
+\begin{proof}[证明]
+假设只有有限个素数 \(p_1,p_2,\dots,p_k\)。考虑 \(N=p_1p_2\cdots p_k+1\)。\(N\) 不能被任何 \(p_i\) 整除（余1），故 \(N\) 要么本身是新的素数，要么有不在列表中的素因子。矛盾。
+\end{proof}
+
+\subsection{素数判定与筛法}
+
+\begin{myalgorithm}{埃拉托斯特尼筛法}
+\begin{enumerate}
+    \item 列出 \(2\) 到 \(n\) 的所有数
+    \item 从 \(p=2\) 开始，标记所有 \(p\) 的倍数（除 \(p\) 本身外）为合数
+    \item 找到下一个未标记的数作为新的 \(p\)，重复步骤2
+    \item 直到 \(p>\sqrt{n}\)
+\end{enumerate}
+复杂度：\(O(n\log\log n)\)。
+\end{myalgorithm}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.65]
+\tikzset{
+    dmSieveCell/.style={rectangle,draw=gray,minimum width=0.85cm,minimum height=0.7cm,align=center,font=\tiny},
+    dmSievePrime/.style={rectangle,draw=red!60,fill=red!10,minimum width=0.85cm,minimum height=0.7cm,align=center,font=\tiny},
+    dmSieveComposite/.style={rectangle,draw=gray!50,fill=gray!20,minimum width=0.85cm,minimum height=0.7cm,align=center,font=\tiny},
+}
+% First row: primes 2-10
+\foreach \n in {2,...,10} {
+    \pgfmathsetmacro\isprime{(\n==2)||(\n==3)||(\n==5)||(\n==7)?1:0}
+    \ifnum\isprime=1
+        \node[dmSievePrime] at ({\n*0.9-1.8},0) {\n};
+    \else
+        \pgfmathsetmacro\iscomp{(\n==4)||(\n==6)||(\n==8)||(\n==9)||(\n==10)?1:0}
+        \ifnum\iscomp=1
+            \node[dmSieveComposite] at ({\n*0.9-1.8},0) {\n};
+        \else
+            \node[dmSieveCell] at ({\n*0.9-1.8},0) {\n};
+        \fi
+    \fi
+}
+% Second row: primes 11-19
+\foreach \n in {11,...,19} {
+    \pgfmathsetmacro\isprime{(\n==11)||(\n==13)||(\n==17)||(\n==19)?1:0}
+    \ifnum\isprime=1
+        \node[dmSievePrime] at ({\n*0.9-10.8},-1.2) {\n};
+    \else
+        \node[dmSieveComposite] at ({\n*0.9-10.8},-1.2) {\n};
+    \fi
+}
+\node at (4.5,-2.2) {\footnotesize 红色：素数 \quad 灰色：被筛掉的合数};
+\end{tikzpicture}
+\captionof{figure}{埃氏筛法可视化——素数被保留（红色），合数被逐一筛掉（灰色）。}
+\end{center}
+
+欧拉线性筛：每个合数仅被其最小素因子筛掉一次，复杂度 \(O(n)\)。
+
+Miller-Rabin概率素性测试：基于费马小定理及其推广。单次测试错误概率 \(\leqslant 1/4\)，执行 \(k\) 次独立测试后错误概率 \(\leqslant (1/4)^k\)。
+
+\subsection{素数定理}
+
+\begin{myTheorem}{素数定理}
+设 \(\pi(x)\) 为不超过 \(x\) 的素数个数，则：
+\[
+\pi(x) \sim \frac{x}{\ln x},\quad (x\to\infty)
+\]
+即 \(\lim_{x\to\infty} \frac{\pi(x)}{x/\ln x}=1\)。\(n\) 附近的素数密度约为 \(\frac{1}{\ln n}\)。
+\end{myTheorem}
+
+\section{同余与模算术}
+
+\subsection{同余的定义}
+
+\begin{mydefinition}{同余}
+设 \(m\in\Z^+\)。若 \(m\mid(a-b)\)，则称 \(a\) 与 \(b\) \textbf{模 \(m\) 同余}，记作：
+\[
+a \equiv b \pmod{m}
+\]
+即 \(a\) 和 \(b\) 除以 \(m\) 的余数相同。
+\end{mydefinition}
+
+\subsection{模算术基本性质}
+
+设 \(a\equiv b\pmod{m}\) 且 \(c\equiv d\pmod{m}\)，则：
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ll}
+\toprule
+运算 & 结果 \\
+\midrule
+加法 & \(a+c \equiv b+d \pmod{m}\) \\
+减法 & \(a-c \equiv b-d \pmod{m}\) \\
+乘法 & \(ac \equiv bd \pmod{m}\) \\
+幂 & \(a^k \equiv b^k \pmod{m}\)（\(k\geqslant 0\)） \\
+多项式 & \(f(a)\equiv f(b)\pmod{m}\)（\(f\)为整系数多项式） \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{线性同余方程}
+
+\begin{myTheorem}{线性同余方程的解}
+方程 \(ax\equiv b\pmod{m}\) 有解当且仅当 \(g=\gcd(a,m)\mid b\)。此时恰好有 \(g\) 个模 \(m\) 不同余的解。
+\end{myTheorem}
+
+解法：
+\begin{enumerate}
+    \item 用扩展欧几里得算法求 \(ax_0+my_0=g\)
+    \item 特解：\(x_0\cdot(b/g)\pmod{m}\)
+    \item 通解：\(x_k = x_0 + k\cdot(m/g),\;k=0,1,\dots,g-1\)
+\end{enumerate}
+
+\begin{example}
+\(14x\equiv 8\pmod{30}\)：
+
+\(\gcd(14,30)=2\mid 8\)，有解。约简为 \(7x\equiv 4\pmod{15}\)。扩展欧几里得得 \(7\cdot13\equiv1\pmod{15}\)。\(x\equiv13\times4=52\equiv7\pmod{15}\)。模30下有两个解：\(x\equiv7,22\pmod{30}\)。
+\end{example}
+
+\subsection{模逆元与费马小定理}
+
+\begin{mydefinition}{模逆元}
+若 \(ab\equiv1\pmod{m}\)，则 \(b\) 称为 \(a\) 的模 \(m\) 逆元，记作 \(a^{-1}\pmod{m}\)。
+\end{mydefinition}
+
+\begin{myTheorem}{逆元存在条件}
+\(a\) 在模 \(m\) 下有逆元当且仅当 \(\gcd(a,m)=1\)。逆元唯一（模 \(m\) 意义下）。用扩展欧几里得算法求 \(ax+my=1\)，则 \(x\equiv a^{-1}\pmod{m}\)。
+\end{myTheorem}
+
+\begin{myTheorem}{费马小定理}
+若 \(p\) 是素数且 \(\gcd(a,p)=1\)，则：
+\[
+a^{p-1} \equiv 1 \pmod{p}
+\]
+等价形式：对任意整数 \(a\)，有 \(a^p\equiv a\pmod{p}\)。
+\end{myTheorem}
+
+\textbf{应用——求模逆元}：在模素数 \(p\) 下，\(a^{-1}\equiv a^{p-2}\pmod{p}\)（因为 \(a\cdot a^{p-2}=a^{p-1}\equiv1\)）。
+
+\section{中国剩余定理}
+
+\begin{myTheorem}{中国剩余定理}
+设 \(m_1,m_2,\dots,m_k\) 是两两互素的正整数，则同余方程组：
+\[
+\begin{cases}
+x \equiv a_1 \pmod{m_1} \\
+x \equiv a_2 \pmod{m_2} \\
+\quad \vdots \\
+x \equiv a_k \pmod{m_k}
+\end{cases}
+\]
+在模 \(M=m_1m_2\cdots m_k\) 下有\textbf{唯一解}。
+\end{myTheorem}
+
+\begin{proof}[构造性证明]
+令 \(M=\prod m_i\)，\(M_i=M/m_i\)。由于 \(\gcd(m_i,M_i)=1\)，存在 \(t_i\) 使 \(M_i t_i\equiv1\pmod{m_i}\)。构造解：
+\[
+x = \sum_{i=1}^{k} a_i M_i t_i \pmod{M}
+\]
+对任意 \(j\)，当 \(i\neq j\) 时 \(m_j\mid M_i\)，故该项 \(\equiv0\pmod{m_j}\)；当 \(i=j\) 时 \(M_jt_j\equiv1\)，该项 \(\equiv a_j\)。因此 \(x\equiv a_j\pmod{m_j}\)。唯一性：若 \(x,y\) 都是解，则 \(x\equiv y\pmod{m_i}\) 对所有 \(i\)，由互素性得 \(x\equiv y\pmod{M}\)。
+\end{proof}
+
+\begin{example}
+解 \(x\equiv2\pmod3,\;x\equiv3\pmod5,\;x\equiv2\pmod7\)：
+\(M=105\)。\(M_1=35\)：\(35t_1\equiv1\pmod3\Rightarrow t_1=2\)。\(M_2=21\)：\(21t_2\equiv1\pmod5\Rightarrow t_2=1\)。\(M_3=15\)：\(15t_3\equiv1\pmod7\Rightarrow t_3=1\)。
+\[
+x = 2\cdot35\cdot2 + 3\cdot21\cdot1 + 2\cdot15\cdot1 = 233 \equiv 23 \pmod{105}
+\]
+验证：\(23\equiv2\pmod3\)，\(23\equiv3\pmod5\)，\(23\equiv2\pmod7\)。
+\end{example}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.85]
+\tikzset{
+    dmCRTCircle/.style={draw=blue!60,fill=blue!5,minimum size=2cm,circle},
+    dmCRTLabel/.style={font=\footnotesize},
+}
+\node[dmCRTCircle] (c1) at (0,2) {};
+\node at (0,2) {\(m_1=3\)};
+\node[dmCRTCircle] (c2) at (3,0) {};
+\node at (3,0) {\(m_2=5\)};
+\node[dmCRTCircle] (c3) at (1.5,3.5) {};
+\node at (1.5,3.5) {\(m_3=7\)};
+
+\node[dmCRTLabel] at (-1.5,1.5) {\(x\equiv2\)};
+\node[dmCRTLabel] at (4.5,0.5) {\(x\equiv3\)};
+\node[dmCRTLabel] at (3,4) {\(x\equiv2\)};
+
+\draw[dmEdge,->] (5,-0.5) -- (5,-1.5) node[right] {\(M=105\)};
+\node[dmBox] at (5,-2) {\(x\equiv23\)};
+\end{tikzpicture}
+\captionof{figure}{中国剩余定理的几何理解——三个独立的模约束（环）在模105下相交于唯一解 \(x=23\)。}
+\end{center}
+
+\section{欧拉定理与RSA密码体制}
+
+\subsection{欧拉函数与欧拉定理}
+
+\begin{mydefinition}{欧拉函数\(\varphi(n)\)}
+\(\varphi(n)\) 表示 \(1\) 到 \(n\) 中与 \(n\) 互素的正整数个数：
+\[
+\varphi(n) = |\{ a\in[1,n] : \gcd(a,n)=1 \}|
+\]
+\end{mydefinition}
+
+\begin{myTheorem}{欧拉函数的计算}
+若 \(n=p_1^{e_1}p_2^{e_2}\cdots p_k^{e_k}\)（素因数分解），则：
+\[
+\varphi(n) = n\prod_{i=1}^{k}\Bigl(1-\frac{1}{p_i}\Bigr) = \prod_{i=1}^{k} p_i^{e_i-1}(p_i-1)
+\]
+特例：\(\varphi(p)=p-1\)，\(\varphi(pq)=(p-1)(q-1)\)，\(\varphi(p^k)=p^k-p^{k-1}\)。
+\end{myTheorem}
+
+\begin{myTheorem}{欧拉定理}
+若 \(\gcd(a,n)=1\)，则：
+\[
+a^{\varphi(n)} \equiv 1 \pmod{n}
+\]
+当 \(n\) 为素数 \(p\) 时，\(\varphi(p)=p-1\)，即得费马小定理。
+\end{myTheorem}
+
+\subsection{RSA密码体制}
+
+RSA由Rivest、Shamir、Adleman于1977年提出，是第一个实用的公钥加密体制。其安全性基于大整数分解的困难性。
+
+\subsubsection{密钥生成}
+
+\begin{enumerate}
+    \item 随机选择两个大素数 \(p\) 和 \(q\)（各约1024位以上）
+    \item 计算 \(n=pq\)，\(\varphi(n)=(p-1)(q-1)\)
+    \item 选择加密指数 \(e\)：满足 \(1<e<\varphi(n)\) 且 \(\gcd(e,\varphi(n))=1\)
+    \item 计算解密指数 \(d\)：满足 \(ed\equiv1\pmod{\varphi(n)}\)
+    \item \textbf{公钥}：\((n,e)\)；\textbf{私钥}：\((n,d)\)（\(p,q\) 必须保密）
+\end{enumerate}
+
+\subsubsection{加密与解密}
+
+消息 \(M\) 需满足 \(0\leqslant M<n\)。密文 \(C=M^e\bmod n\)。解密 \(M=C^d\bmod n\)。
+
+\subsubsection{正确性证明}
+
+需证 \((M^e)^d \equiv M \pmod{n}\)。由 \(ed\equiv1\pmod{\varphi(n)}\)，存在 \(k\) 使 \(ed=1+k\varphi(n)\)。
+
+若 \(\gcd(M,n)=1\)（绝大多数情况），由欧拉定理：
+\[
+M^{ed} = M^{1+k\varphi(n)} = M\cdot (M^{\varphi(n)})^k \equiv M \pmod{n}
+\]
+
+若 \(\gcd(M,n)\neq1\)，不妨设 \(p\mid M\) 且 \(q\nmid M\)。由费马小定理 \(M^{q-1}\equiv1\pmod{q}\)，于是 \(M^{ed}\equiv M\pmod{q}\)。又显然 \(M^{ed}\equiv0\equiv M\pmod{p}\)。由中国剩余定理得 \(M^{ed}\equiv M\pmod{n}\)。
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+\tikzset{
+    dmRSABox/.style={rectangle,draw=green!50!black,fill=green!5,minimum width=3.2cm,minimum height=0.8cm,align=center,font=\small},
+    dmRSAEnc/.style={rectangle,draw=red!60!black,fill=red!5,minimum width=2cm,minimum height=0.7cm,align=center,font=\small},
+}
+\node[dmRSABox] (alice) at (0,3) {Alice\\明文 \(M\)};
+\node[dmRSAEnc] (enc) at (4,3) {加密\\\(C=M^e\bmod n\)};
+\node[dmRSABox] (bob) at (8,3) {Bob\\密文 \(C\)};
+\node[dmRSAEnc] (dec) at (4,1) {解密\\\(M=C^d\bmod n\)};
+\node[dmRSABox] (result) at (0,1) {Alice收到\\明文 \(M\)};
+
+\draw[dmEdge,->] (alice) -- (enc);
+\draw[dmEdge,->] (enc) -- (bob) node[midway,above] {公开信道};
+\draw[dmEdge,->] (bob.south) -- (dec.north);
+\draw[dmEdge,->] (dec) -- (result);
+
+\node[dmBox] at (4,4.2) {公钥 \((n,e)\) —— 公开};
+\node[dmBox] at (4,0.2) {私钥 \((n,d)\) —— 保密};
+\end{tikzpicture}
+\captionof{figure}{RSA加密通信示意图——加密使用公钥（任何人都可加密），解密使用私钥（仅接收方持有）。}
+\end{center}
+
+\subsection{RSA的安全性}
+
+\begin{itemize}
+    \item \textbf{大整数分解}：若能分解 \(n=pq\)，则可算出 \(\varphi(n)\) 和 \(d\)
+    \item \textbf{小指数攻击}：若 \(e=3\)，当 \(M^3<n\) 时计算普通立方根即可破解（必须用填充方案如OAEP）
+    \item \textbf{共模攻击}：不同 \(e\) 共享同一个 \(n\) 非常危险
+    \item \textbf{推荐参数}：\(n\geqslant 2048\) 位，\(e=65537\)
+\end{itemize}
+
+\section{二次剩余}
+
+\begin{mydefinition}{二次剩余}
+设 \(p\) 是奇素数，\(a\in\Z\)。若同余方程 \(x^2\equiv a\pmod{p}\) 有解，则称 \(a\) 是模 \(p\) 的\textbf{二次剩余}；否则称为二次非剩余。
+\end{mydefinition}
+
+\textbf{勒让德符号}：
+\[
+\left(\frac{a}{p}\right) = \begin{cases}
+0, & p\mid a \\
+1, & a\text{ 是二次剩余且 }p\nmid a \\
+-1, & a\text{ 是二次非剩余}
+\end{cases}
+\]
+
+\begin{myTheorem}{欧拉判别法}
+\(\bigl(\frac{a}{p}\bigr) \equiv a^{\frac{p-1}{2}} \pmod{p}\)。
+\end{myTheorem}
+
+\section{编程实现}
+
+\begin{mycode}{扩展欧几里得算法 —— Python}
+\begin{lstlisting}[language=Python]
+def exgcd(a: int, b: int):
+    """返回 (g, x, y) 使 ax + by = g = gcd(a,b)"""
+    if b == 0:
+        return a, 1, 0
+    g, y, x = exgcd(b, a % b)
+    y -= (a // b) * x
+    return g, x, y
+
+def mod_inv(a: int, m: int) -> int:
+    """求 a 在模 m 下的逆元"""
+    g, x, _ = exgcd(a, m)
+    if g != 1:
+        raise ValueError("无逆元")
+    return x % m
+
+# 测试：252x + 105y = 21
+g, x, y = exgcd(252, 105)
+print(f"gcd={g}, x={x}, y={y}")
+print(f"验证: {252*x + 105*y}")
+\end{lstlisting}
+\end{mycode}
+
+\begin{mycode}{扩展欧几里得算法 —— C++}
+\begin{lstlisting}[language=C++]
+#include <iostream>
+using namespace std;
+using ll = long long;
+
+ll exgcd(ll a, ll b, ll &x, ll &y) {
+    if (b == 0) {
+        x = 1; y = 0;
+        return a;
+    }
+    ll g = exgcd(b, a % b, y, x);
+    y -= (a / b) * x;
+    return g;
+}
+
+ll mod_inv(ll a, ll m) {
+    ll x, y;
+    ll g = exgcd(a, m, x, y);
+    if (g != 1) return -1;
+    return (x % m + m) % m;
+}
+
+int main() {
+    ll x, y;
+    ll g = exgcd(252, 105, x, y);
+    cout << "gcd=" << g << " x=" << x << " y=" << y << endl;
+    cout << "252*" << x << "+105*" << y << "=" << 252*x+105*y << endl;
+    return 0;
+}
+\end{lstlisting}
+\end{mycode}
+
+\begin{mycode}{快速幂取模与RSA加解密}
+\begin{lstlisting}[language=Python]
+import random
+from math import gcd
+
+def mod_pow(a: int, b: int, m: int) -> int:
+    """快速幂取模 O(log b)"""
+    res = 1 % m; a %= m
+    while b:
+        if b & 1: res = (res * a) % m
+        a = (a * a) % m; b >>= 1
+    return res
+
+def miller_rabin(n: int, k: int = 20) -> bool:
+    """Miller-Rabin 概率素性测试"""
+    if n < 2: return False
+    if n in (2, 3): return True
+    if n % 2 == 0: return False
+    s, d = 0, n - 1
+    while d % 2 == 0:
+        s += 1; d //= 2
+    def check(a):
+        x = pow(a, d, n)
+        if x == 1 or x == n - 1: return True
+        for _ in range(s - 1):
+            x = (x * x) % n
+            if x == n - 1: return True
+        return False
+    for _ in range(k):
+        a = random.randrange(2, n - 1)
+        if not check(a): return False
+    return True
+
+def generate_prime(bits: int) -> int:
+    while True:
+        n = random.getrandbits(bits) | (1 << (bits - 1)) | 1
+        if miller_rabin(n): return n
+
+def generate_rsa_keys(bits: int = 512):
+    p = generate_prime(bits // 2)
+    q = generate_prime(bits // 2)
+    n = p * q
+    phi_n = (p - 1) * (q - 1)
+    e = 65537
+    d = mod_inv(e, phi_n)
+    return (n, e), (n, d)
+
+def rsa_encrypt(m: int, pub_key: tuple) -> int:
+    return pow(m, pub_key[1], pub_key[0])
+
+def rsa_decrypt(c: int, priv_key: tuple) -> int:
+    return pow(c, priv_key[1], priv_key[0])
+
+pub, priv = generate_rsa_keys(256)
+msg = 123456789
+print(f"原文: {msg}")
+ct = rsa_encrypt(msg, pub)
+print(f"密文: {ct}")
+pt = rsa_decrypt(ct, priv)
+print(f"解密: {pt}, 验证: {msg == pt}")
+\end{lstlisting}
+\end{mycode}
+
+\begin{mycode}{中国剩余定理与素数筛法}
+\begin{lstlisting}[language=Python]
+def crt(remainders: list, moduli: list) -> int:
+    """x ≡ remainders[i] (mod moduli[i])，要求 moduli 两两互素"""
+    M = 1
+    for m in moduli:
+        M *= m
+    x = 0
+    for a, m in zip(remainders, moduli):
+        Mi = M // m
+        ti = mod_inv(Mi, m)
+        x = (x + a * Mi * ti) % M
+    return x
+
+print(crt([2, 3, 2], [3, 5, 7]))  # 输出 23
+
+def sieve_euler(n: int) -> list:
+    """欧拉线性筛 O(n)"""
+    primes = []
+    min_pf = [0] * (n + 1)
+    for i in range(2, n + 1):
+        if min_pf[i] == 0:
+            min_pf[i] = i
+            primes.append(i)
+        for p in primes:
+            if p > min_pf[i] or p * i > n:
+                break
+            min_pf[p * i] = p
+    return primes
+
+print(sieve_euler(50))
+\end{lstlisting}
+\end{mycode}
+
+\section*{本章小结}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lp{10cm}}
+\toprule
+知识模块 & 核心内容 \\
+\midrule
+整除理论 & 整除定义、带余除法、\(\gcd\)与\(\lcm\)、辗转相除法 \(O(\log\min(a,b))\) \\
+B\'{e}zout定理 & \(\exists x,y: ax+by=\gcd(a,b)\)；扩展欧几里得算法求解 \\
+算术基本定理 & 每个大于1的整数可唯一分解为素数乘积 \\
+素数判定 & 试除法 \(O(\sqrt{n})\)、埃氏筛 \(O(n\log\log n)\)、欧拉线性筛 \(O(n)\)、Miller-Rabin \\
+同余与模算术 & 线性同余方程 \(ax\equiv b\pmod{m}\)，\(\gcd(a,m)\mid b\) 时有解 \\
+模逆元 & \(\gcd(a,m)=1\) 时逆元存在；费马小定理下 \(a^{-1}\equiv a^{m-2}\pmod{m}\) \\
+中国剩余定理 & 处理多模同余方程组，模两两互素时有唯一解 \\
+欧拉定理 & \(a^{\varphi(n)}\equiv1\pmod{n}\)（\(\gcd(a,n)=1\)） \\
+RSA密码 & 公钥 \((n,e)\) 加密 \(C=M^e\bmod n\)，私钥 \((n,d)\) 解密 \(M=C^d\bmod n\) \\
+二次剩余 & 勒让德符号、欧拉判别法 \(a^{(p-1)/2}\bmod p\) \\
+\bottomrule
+\end{tabular}
+\end{table}

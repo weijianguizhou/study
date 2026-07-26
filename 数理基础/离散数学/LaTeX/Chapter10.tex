@@ -1,0 +1,498 @@
+\chapter{递推关系与生成函数}
+\intro{如何研究序列中后项与前项之间的关系？递推关系与生成函数是离散数学中两个互为表里、相辅相成的重要工具。}
+
+\section{递推关系的基本概念}
+
+\begin{mydefinition}{递推关系}
+设 \(\{a_n\}_{n=0}^{\infty}\) 是一个序列。若对某个 \(k \geq 1\) 和所有 \(n \geq k\)，\(a_n\) 都可以用 \(a_{n-1},a_{n-2},\dots,a_{n-k}\) 表示，即：
+\[
+a_n = f(a_{n-1},a_{n-2},\dots,a_{n-k},n)
+\]
+则称该等式为一个 \(k\) 阶递推关系。确定唯一序列所必需的 \(k\) 个初始值 \(a_0,a_1,\dots,a_{k-1}\) 称为初始条件。
+\end{mydefinition}
+
+\begin{example}
+\begin{itemize}
+    \item \(a_n = a_{n-1} + 3\) 是1阶递推
+    \item \(a_n = a_{n-1} + a_{n-2}\) 是2阶递推（Fibonacci递推）
+    \item \(a_n = na_{n-1}\) 是1阶递推（阶乘的递推定义）
+\end{itemize}
+\end{example}
+
+若 \(a_n = a_{n-1} + a_{n-2}\)，初始条件为 \(a_0=0,\;a_1=1\)，则得到Fibonacci序列：\(0,1,1,2,3,5,8,13,21,\dots\)。若初始条件为 \(a_0=2,\;a_1=1\)，则得到Lucas序列：\(2,1,3,4,7,11,18,29,\dots\)。
+
+\section{线性递推关系的求解}
+
+\subsection{一阶线性递推}
+
+\begin{myTheorem}{一阶线性递推的通解}
+对 \(a_n = c a_{n-1} + f(n)\)，通解为：
+\[
+a_n = c^n a_0 + \sum_{i=1}^{n} c^{n-i} f(i)
+\]
+\end{myTheorem}
+
+特例——齐次情形（\(f(n)=0\)）：\(a_n = a_0 \cdot c^n\)。
+
+\begin{example}
+\(a_n = 2a_{n-1}+1,\;a_0=1\)：
+\[
+a_n = 2^n\cdot 1 + \sum_{i=1}^{n} 2^{n-i}\cdot 1 = 2^n + (2^n-1) = 2^{n+1}-1
+\]
+\end{example}
+
+\subsection{齐次线性递推的特征方程法}
+
+\subsubsection{二阶齐次递推}
+
+考虑 \(a_n = c_1 a_{n-1} + c_2 a_{n-2}\)。
+
+\textbf{特征方程法}：
+\begin{enumerate}
+    \item 设 \(a_n = r^n\)（\(r\neq 0\)），代入得 \(r^n = c_1 r^{n-1} + c_2 r^{n-2}\)
+    \item 除以 \(r^{n-2}\) 得特征方程：\(r^2 - c_1 r - c_2 = 0\)
+    \item 解特征方程得两根 \(r_1,r_2\)
+\end{enumerate}
+
+\begin{myTheorem}{两个不等实根}
+若 \(r_1 \neq r_2\)，通解为：
+\[
+a_n = \alpha_1 r_1^n + \alpha_2 r_2^n
+\]
+其中 \(\alpha_1,\alpha_2\) 由初始条件确定。
+\end{myTheorem}
+
+\begin{myTheorem}{重根情形}
+若 \(r_1 = r_2 = r\)，通解为：
+\[
+a_n = (\alpha_1 + \alpha_2 n) r^n
+\]
+\end{myTheorem}
+
+\begin{myTheorem}{共轭复根情形}
+若 \(r = \rho(\cos\theta \pm i\sin\theta)\)，通解为：
+\[
+a_n = \rho^n(\alpha_1 \cos n\theta + \alpha_2 \sin n\theta)
+\]
+\end{myTheorem}
+
+\subsubsection{\(k\)阶齐次线性递推}
+
+\begin{myTheorem}{\(k\)阶齐次递推的通解}
+对递推 \(a_n = c_1 a_{n-1} + \cdots + c_k a_{n-k}\)，特征方程为：
+\[
+r^k - c_1 r^{k-1} - c_2 r^{k-2} - \cdots - c_k = 0
+\]
+设 \(r_1,\dots,r_t\) 为不同特征根，重数分别为 \(m_1,\dots,m_t\)（\(\sum m_i = k\)），则通解为：
+\[
+a_n = \sum_{i=1}^{t} \Bigl(\sum_{j=0}^{m_i-1} \alpha_{ij} n^j\Bigr) r_i^n
+\]
+重数为 \(m\) 的根 \(r\) 贡献 \(m\) 个线性无关解：\(r^n, nr^n, n^2r^n, \dots, n^{m-1}r^n\)。
+\end{myTheorem}
+
+\subsection{非齐次线性递推}
+
+\begin{myTheorem}{非齐次递推的通解}
+\(a_n = c_1 a_{n-1} + \cdots + c_k a_{n-k} + f(n)\) 的通解为：
+\[
+a_n = a_n^{(h)} + a_n^{(p)}
+\]
+其中 \(a_n^{(h)}\) 是对应齐次方程的通解，\(a_n^{(p)}\) 是非齐次方程的一个特解。
+\end{myTheorem}
+
+\textbf{待定系数法}——根据 \(f(n)\) 的形式猜测特解形式：
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lll}
+\toprule
+\(f(n)\) 的形式 & 特解 \(a_n^{(p)}\) 的尝试形式 & 条件 \\
+\midrule
+常数 \(C\) & \(A\)（常数） & 1不是特征根 \\
+\(Cn\) & \(An+B\) & 1不是特征根 \\
+\(C\cdot s^n\) & \(A\cdot s^n\) & \(s\) 不是特征根 \\
+\(C\cdot s^n\) & \(A n^m s^n\) & \(s\) 是 \(m\) 重特征根 \\
+多项式 \(P_t(n)\) & \(Q_t(n)\)（同次多项式） & 1不是特征根 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{example}
+\(a_n = 3a_{n-1} + 2^n\)，\(a_0 = 1\)：
+
+齐次解 \(a_n^{(h)} = A\cdot 3^n\)。设特解 \(a_n^{(p)} = B\cdot 2^n\)，代入得 \(B=-2\)。
+\[
+a_n = A\cdot 3^n - 2\cdot 2^n
+\]
+由 \(a_0=1\)：\(A-2=1\Rightarrow A=3\)，故 \(a_n = 3^{n+1} - 2^{n+1}\)。
+\end{example}
+
+\subsection{Fibonacci数列的完整求解}
+
+\begin{mydefinition}{Fibonacci数列}
+\[
+F_n = F_{n-1} + F_{n-2}, \quad F_0 = 0,\; F_1 = 1
+\]
+\end{mydefinition}
+
+\textbf{特征根法求解}：
+\begin{enumerate}
+    \item 特征方程：\(r^2 - r - 1 = 0\)
+    \item 求根：\(r_1 = \frac{1+\sqrt{5}}{2}=\phi\)，\(r_2 = \frac{1-\sqrt{5}}{2} = -\phi^{-1}\)
+    \item 通解：\(F_n = \alpha_1 r_1^n + \alpha_2 r_2^n\)
+    \item 由 \(F_0=0,F_1=1\) 解得 \(\alpha_1=\frac{1}{\sqrt{5}},\;\alpha_2=-\frac{1}{\sqrt{5}}\)
+\end{enumerate}
+
+\begin{myformula}
+\[
+F_n = \frac{1}{\sqrt{5}}\left[\left(\frac{1+\sqrt{5}}{2}\right)^n - \left(\frac{1-\sqrt{5}}{2}\right)^n\right]
+\]
+\end{myformula}
+
+这就是著名的\textbf{Binet公式}。有趣的性质：
+\[
+\lim_{n\to\infty} \frac{F_{n+1}}{F_n} = \phi = \frac{1+\sqrt{5}}{2} \approx 1.618
+\]
+\(F_n\) 是最接近 \(\frac{\phi^n}{\sqrt{5}}\) 的整数。
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+\tikzset{
+    dmFibRect/.style={rectangle,draw=blue!60,fill=blue!10,minimum size=8mm},
+    dmFibLabel/.style={font=\footnotesize},
+}
+\foreach \i/\f in {1/1,2/1,3/2,4/3,5/5,6/8,7/13} {
+    \pgfmathsetmacro\side{sqrt(\f)*0.35}
+    \node[dmFibRect,minimum size=\side cm] (r\i) at ({\i*0.8+0.3*\f*0.35},0) {};
+    \node[dmFibLabel,below=2pt] at (r\i.south) {\(F_{\i}=\f\)};
+}
+\node at (4,-1.5) {Fibonacci正方形螺旋——边长依次为Fibonacci数};
+\end{tikzpicture}
+\captionof{figure}{Fibonacci数列的几何表示——正方形面积对应Fibonacci数，从中可画出黄金螺旋。}
+\end{center}
+
+\section{分治递推与Master定理}
+
+\subsection{分治算法的递推形式}
+
+分治算法的运行时间常具有如下形式：
+\[
+T(n) = aT\!\left(\frac{n}{b}\right) + f(n)
+\]
+其中 \(a \geq 1\) 是子问题个数，\(b > 1\) 是规模缩小因子，\(f(n)\) 是分解与合并的开销。
+
+\subsection{Master定理}
+
+\begin{myTheorem}{Master Theorem}
+对 \(T(n) = aT(n/b) + f(n)\)，比较 \(f(n)\) 与 \(n^{\log_b a}\) 的增长率：
+
+\vspace{4pt}
+\textbf{情形1}：若 \(f(n) = O(n^{\log_b a - \varepsilon})\)，则 \(T(n) = \Theta(n^{\log_b a})\)
+
+\textbf{情形2}：若 \(f(n) = \Theta(n^{\log_b a} \log^k n)\)，则 \(T(n) = \Theta(n^{\log_b a} \log^{k+1} n)\)
+
+\textbf{情形3}：若 \(f(n) = \Omega(n^{\log_b a + \varepsilon})\) 且 \(af(n/b) \leqslant cf(n)\)（\(c<1\)），则 \(T(n) = \Theta(f(n))\)
+\end{myTheorem}
+
+直观理解：
+\begin{itemize}
+    \item 情形1——叶子占主导（递归底层工作量最大）
+    \item 情形2——各层工作量相当
+    \item 情形3——根占主导（顶层合并工作量最大）
+\end{itemize}
+
+\begin{example}
+二分查找 \(T(n) = T(n/2) + O(1)\)：
+\(a=1,b=2,\log_b a=0\)，\(f(n)=\Theta(n^0)\) \(\Rightarrow\) 情形2（\(k=0\)），\(T(n)=\Theta(\log n)\)。
+
+归并排序 \(T(n) = 2T(n/2) + O(n)\)：
+\(a=2,b=2,\log_b a=1\)，\(f(n)=\Theta(n^1)\) \(\Rightarrow\) 情形2（\(k=0\)），\(T(n)=\Theta(n \log n)\)。
+\end{example}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.85]
+\tikzset{
+    dmMasterNode/.style={rectangle,draw=red!60!black,fill=red!5,minimum width=1.8cm,minimum height=0.6cm,align=center,font=\small},
+    dmMasterChild/.style={rectangle,draw=blue!60!black,fill=blue!5,minimum width=1.6cm,minimum height=0.5cm,align=center,font=\footnotesize},
+}
+\node[dmMasterNode] (root) at (0,3) {\(T(n)\)\\\(f(n)\)};
+\node[dmMasterNode] (l1) at (-3,1.5) {\(T(n/b)\)\\\(f(n/b)\)};
+\node[dmMasterNode] (r1) at (3,1.5) {\(T(n/b)\)\\\(f(n/b)\)};
+\node[dmMasterChild] (l2a) at (-4,0) {\(T(n/b^2)\)};
+\node[dmMasterChild] (l2b) at (-2,0) {\(T(n/b^2)\)};
+\node[dmMasterChild] (r2a) at (2,0) {\(T(n/b^2)\)};
+\node[dmMasterChild] (r2b) at (4,0) {\(T(n/b^2)\)};
+
+\draw[dmEdge] (root) -- (l1);
+\draw[dmEdge] (root) -- (r1);
+\draw[dmEdge] (l1) -- (l2a); \draw[dmEdge] (l1) -- (l2b);
+\draw[dmEdge] (r1) -- (r2a); \draw[dmEdge] (r1) -- (r2b);
+
+\node[align=left,font=\small] at (0,-1.5) {第0层: \(f(n)\)\\第1层: \(a\cdot f(n/b)\)\\第2层: \(a^2\cdot f(n/b^2)\)\\\(\vdots\)\\叶子层: \(\Theta(n^{\log_b a})\)};
+\end{tikzpicture}
+\captionof{figure}{Master定理的分治递归树——每层节点表示一个子问题，标注了该层的计算开销。}
+\end{center}
+
+\section{生成函数（母函数）}
+
+\subsection{普通生成函数的定义}
+
+\begin{mydefinition}{普通生成函数}
+给定序列 \(\{a_n\}_{n=0}^{\infty}\)，其\textbf{普通生成函数}定义为形式幂级数：
+\[
+G(x) = \sum_{n=0}^{\infty} a_n x^n = a_0 + a_1 x + a_2 x^2 + \cdots
+\]
+不关心收敛性，只把 \(x\) 当作占位符。记 \([x^n]G(x)\) 表示提取 \(x^n\) 的系数。
+\end{mydefinition}
+
+\subsection{常见序列的生成函数}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lll}
+\toprule
+序列 \(\{a_n\}\) & 生成函数 \(G(x)\) & 闭合形式 \\
+\midrule
+\(a_n = 1\) & \(\sum_{n=0}^{\infty} x^n\) & \(\frac{1}{1-x}\) \\
+\(a_n = c^n\) & \(\sum_{n=0}^{\infty} c^n x^n\) & \(\frac{1}{1-cx}\) \\
+\(a_n = n\) & \(\sum_{n=0}^{\infty} n x^n\) & \(\frac{x}{(1-x)^2}\) \\
+\(a_n = \binom{k}{n}\) & \(\sum_{n=0}^{k} \binom{k}{n} x^n\) & \((1+x)^k\) \\
+\(a_n = \binom{n+k-1}{n}\) & \(\sum_{n=0}^{\infty} \binom{n+k-1}{n} x^n\) & \(\frac{1}{(1-x)^k}\) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{生成函数的运算}
+
+设 \(F(x)=\sum f_n x^n\)，\(G(x)=\sum g_n x^n\)：
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ll}
+\toprule
+运算 & 公式 \\
+\midrule
+加法 & \(F(x)+G(x) = \sum (f_n+g_n)x^n\) \\
+数乘 & \(c\cdot F(x) = \sum (c f_n)x^n\) \\
+乘法{（卷积）} & \(F(x)G(x) = \sum_{n=0}^{\infty} \bigl(\sum_{k=0}^{n} f_k g_{n-k}\bigr) x^n\) \\
+移位{（乘\(x\)）} & \(x F(x) = \sum_{n=1}^{\infty} f_{n-1} x^n\) \\
+导数 & \(F'(x) = \sum_{n=1}^{\infty} n f_n x^{n-1}\) \\
+积分 & \(\int_0^x F(t)dt = \sum_{n=0}^{\infty} \frac{f_n}{n+1} x^{n+1}\) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{用生成函数解Fibonacci递推}
+
+设 \(G(x) = \sum_{n=0}^{\infty} F_n x^n\)。将递推关系 \(F_n=F_{n-1}+F_{n-2}\) 乘以 \(x^n\) 并对 \(n\geq 2\) 求和：
+\[
+\sum_{n=2}^{\infty} F_n x^n = \sum_{n=2}^{\infty} F_{n-1} x^n + \sum_{n=2}^{\infty} F_{n-2} x^n
+\]
+用 \(G(x)\) 表达：
+\[
+(G(x)-x) = x G(x) + x^2 G(x) \;\Rightarrow\; G(x) = \frac{x}{1-x-x^2}
+\]
+
+分解为部分分式。设 \(\phi=\frac{1+\sqrt{5}}{2}\)，\(\widehat{\phi}=\frac{1-\sqrt{5}}{2}\)：
+\[
+G(x) = \frac{1}{\sqrt{5}}\left(\frac{1}{1-\phi x} - \frac{1}{1-\widehat{\phi} x}\right)
+= \frac{1}{\sqrt{5}} \sum_{n=0}^{\infty} (\phi^n - \widehat{\phi}^n) x^n
+\]
+
+提取系数：\(F_n = [x^n]G(x) = \frac{1}{\sqrt{5}}(\phi^n - \widehat{\phi}^n)\)——正是Binet公式。
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+\tikzset{
+    dmGFNode/.style={rectangle,draw=green!50!black,fill=green!5,minimum width=2.5cm,minimum height=0.7cm,align=center,font=\small},
+}
+\node[dmGFNode] (s1) at (0,3) {序列 \(\{F_n\}\)};
+\node[dmGFNode] (s2) at (5,3) {\(G(x)=\sum F_n x^n\)};
+\node[dmGFNode] (s3) at (5,1) {\(G(x)=\frac{x}{1-x-x^2}\)};
+\node[dmGFNode] (s4) at (5,-1) {部分分式分解};
+\node[dmGFNode] (s5) at (0,-1) {\(\frac{1}{\sqrt{5}}\sum(\phi^n-\widehat{\phi}^n)x^n\)};
+\node[dmGFNode] (s6) at (0,-3) {\(F_n=\frac{\phi^n-\widehat{\phi}^n}{\sqrt{5}}\)};
+
+\draw[dmEdge,->] (s1) -- (s2) node[midway,above] {定义};
+\draw[dmEdge,->] (s2) -- (s3);
+\draw[dmEdge,->] (s3) -- (s4);
+\draw[dmEdge,->] (s4) -- (s5);
+\draw[dmEdge,->] (s5) -- (s6) node[midway,left] {提取系数};
+\end{tikzpicture}
+\captionof{figure}{生成函数法求解Fibonacci递推的流程图——生成函数将递推问题转化为代数问题。}
+\end{center}
+
+\subsection{指数生成函数}
+
+\begin{mydefinition}{指数生成函数}
+序列 \(\{a_n\}\) 的\textbf{指数生成函数}定义为：
+\[
+E(x) = \sum_{n=0}^{\infty} a_n \frac{x^n}{n!}
+\]
+当序列涉及排列、有标号结构时使用EGF。
+\end{mydefinition}
+
+\begin{example}
+\(a_n=1\) 的EGF是 \(e^x = \sum_{n=0}^{\infty} \frac{x^n}{n!}\)；\(a_n=2^n\) 的EGF是 \(e^{2x}\)。
+
+EGF的乘法（二项卷积）：
+\[
+F(x)\cdot G(x) = \sum_{n=0}^{\infty} \Bigl(\sum_{k=0}^{n} \binom{n}{k} f_k g_{n-k}\Bigr) \frac{x^n}{n!}
+\]
+\end{example}
+
+\section{生成函数与组合计数}
+
+\subsection{多重集的组合数}
+
+从 \(k\) 种无穷供应的物品中选 \(n\) 个的组合数。生成函数方法：
+\[
+G(x) = \left(\frac{1}{1-x}\right)^k = \sum_{n=0}^{\infty} \binom{n+k-1}{n} x^n
+\]
+答案为 \(\binom{n+k-1}{n} = \binom{n+k-1}{k-1}\)。
+
+\subsection{整数拆分的生成函数}
+
+\begin{mydefinition}{整数拆分}
+将正整数 \(n\) 表示为若干正整数之和的方式数记为 \(p(n)\)。如 \(p(4)=5\)：\(4,\;3+1,\;2+2,\;2+1+1,\;1+1+1+1\)。
+\end{mydefinition}
+
+无限制拆分的生成函数：
+\[
+P(x) = \prod_{k=1}^{\infty} \frac{1}{1-x^k}
+\]
+
+欧拉五边形数定理给出了 \(p(n)\) 的递推公式：
+\[
+p(n) = p(n-1) + p(n-2) - p(n-5) - p(n-7) + p(n-12) + p(n-15) - \cdots
+\]
+
+\section{编程实现}
+
+\begin{mycode}{Fibonacci：递推/矩阵快速幂/Binet公式}
+\begin{lstlisting}[language=Python]
+import math
+from functools import lru_cache
+
+@lru_cache(maxsize=None)
+def fib_memo(n: int) -> int:
+    if n <= 1:
+        return n
+    return fib_memo(n - 1) + fib_memo(n - 2)
+
+def fib_iter(n: int) -> int:
+    if n <= 1:
+        return n
+    a, b = 0, 1
+    for _ in range(2, n + 1):
+        a, b = b, a + b
+    return b
+
+def fib_matrix(n: int) -> int:
+    """矩阵快速幂 O(log n)"""
+    if n <= 1:
+        return n
+    def mat_mul(a, b):
+        return [[a[0][0]*b[0][0] + a[0][1]*b[1][0],
+                 a[0][0]*b[0][1] + a[0][1]*b[1][1]],
+                [a[1][0]*b[0][0] + a[1][1]*b[1][0],
+                 a[1][0]*b[0][1] + a[1][1]*b[1][1]]]
+    def mat_pow(mat, exp):
+        res = [[1, 0], [0, 1]]
+        while exp:
+            if exp & 1: res = mat_mul(res, mat)
+            mat = mat_mul(mat, mat)
+            exp >>= 1
+        return res
+    return mat_pow([[1, 1], [1, 0]], n - 1)[0][0]
+
+SQRT5 = math.sqrt(5)
+PHI = (1 + SQRT5) / 2
+def fib_binet(n: int) -> int:
+    return round(PHI ** n / SQRT5)
+\end{lstlisting}
+\end{mycode}
+
+\begin{mycode}{Fibonacci 矩阵快速幂 C++实现}
+\begin{lstlisting}[language=C++]
+#include <iostream>
+using namespace std;
+using ll = long long;
+
+struct Matrix {
+    ll m[2][2] = {{0,0},{0,0}};
+};
+
+Matrix mul(Matrix a, Matrix b) {
+    Matrix c;
+    for (int i = 0; i < 2; i++)
+        for (int j = 0; j < 2; j++)
+            for (int k = 0; k < 2; k++)
+                c.m[i][j] += a.m[i][k] * b.m[k][j];
+    return c;
+}
+
+Matrix power(Matrix a, ll n) {
+    Matrix res;
+    res.m[0][0] = res.m[1][1] = 1;
+    while (n) {
+        if (n & 1) res = mul(res, a);
+        a = mul(a, a);
+        n >>= 1;
+    }
+    return res;
+}
+
+ll fib_matrix(int n) {
+    if (n <= 1) return n;
+    Matrix base;
+    base.m[0][0] = base.m[0][1] = base.m[1][0] = 1;
+    return power(base, n - 1).m[0][0];
+}
+
+int main() {
+    cout << fib_matrix(50) << endl;  // 12586269025
+    return 0;
+}
+\end{lstlisting}
+\end{mycode}
+
+\begin{mycode}{线性递推的求解程序}
+\begin{lstlisting}[language=Python]
+def solve_linear_recurrence(coeffs, initials, n_terms):
+    """
+    coeffs: [c1, c2, ..., ck] -- a_n = c1*a_{n-1} + ... + ck*a_{n-k}
+    initials: [a_0, a_1, ..., a_{k-1}]
+    """
+    k = len(coeffs)
+    n = len(initials)
+    seq = initials[:]
+    for i in range(k, n_terms):
+        next_val = sum(coeffs[j] * seq[-1-j] for j in range(k))
+        seq.append(next_val)
+    return seq
+
+fib_seq = solve_linear_recurrence([1, 1], [0, 1], 15)
+print(fib_seq)  # [0,1,1,2,3,5,8,13,21,34,55,89,144,233,377]
+\end{lstlisting}
+\end{mycode}
+
+\section*{本章小结}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lp{10cm}}
+\toprule
+知识模块 & 核心内容 \\
+\midrule
+递推关系 & \(k\) 阶递推的定义，初始条件的唯一性 \\
+齐次线性递推 & 特征方程 \(\to\) 特征根 \(\to\) 通解公式（含重根情形） \\
+非齐次递推 & 通解 = 齐次通解 + 特解（待定系数法） \\
+Master定理 & 比较 \(f(n)\) 与 \(n^{\log_b a}\)，分三种情形 \\
+普通生成函数 & 序列 \(\to\) \(G(x)=\sum a_n x^n\)；四则运算与系数提取 \\
+指数生成函数 & \(E(x)=\sum a_n x^n/n!\)；有标号组合计数 \\
+Fibonacci求解 & 特征方程法 \(\to\) Binet公式；生成函数法殊途同归 \\
+组合计数 & 多重集组合数、整数拆分的生成函数表示 \\
+\bottomrule
+\end{tabular}
+\end{table}

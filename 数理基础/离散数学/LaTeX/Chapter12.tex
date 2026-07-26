@@ -1,0 +1,616 @@
+\chapter{算法与计算理论初步}
+\intro{什么是算法？如何判断算法好坏？计算机"能"解决什么、"不能"解决什么？本章是理论计算机科学的入门，从算法分析到计算理论。}
+
+\section{算法的基本概念}
+
+\subsection{算法的定义与特性}
+
+\begin{mydefinition}{算法}
+算法是一组定义明确的有穷指令序列，用于解决特定问题。它必须满足以下五个特性：
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{有限性}：必须在执行有限步骤后终止
+    \item \textbf{确定性}：每一步操作必须精确定义、无歧义
+    \item \textbf{可行性}：每一步都必须足够基本，在有限时间内可执行
+    \item \textbf{输入}：有零个或多个输入
+    \item \textbf{输出}：至少有一个输出（问题的解）
+\end{enumerate}
+\end{mydefinition}
+
+算法 vs 程序：程序是算法在具体编程语言中的实现。程序可以不满足有限性（如操作系统永远运行），但算法必须终止。
+
+\subsection{算法的表示}
+
+\textbf{伪代码}是介于自然语言和编程语言之间的描述方式，强调算法思想而非具体语法。
+
+\begin{myalgorithm}{冒泡排序}
+\begin{verbatim}
+算法: BubbleSort(A[1..n])
+for i = 1 to n-1 do
+    for j = 1 to n-i do
+        if A[j] > A[j+1] then
+            swap(A[j], A[j+1])
+        end if
+    end for
+end for
+\end{verbatim}
+\end{myalgorithm}
+
+流程图通过图形元素（开始/结束框、处理框、判断框、箭头）直观表达算法流程。
+
+\section{算法复杂度分析}
+
+\subsection{渐进记号}
+
+核心思想：当输入规模 \(n\) 趋于无穷大时，关心算法运行时间的增长阶，忽略常数因子和低阶项。
+
+\begin{mydefinition}{大\(O\)记号——上界}
+\(f(n)=O(g(n))\) 若存在正常数 \(c\) 和 \(n_0\)，使得对所有 \(n\geqslant n_0\)，有 \(0\leqslant f(n)\leqslant c\cdot g(n)\)。
+\end{mydefinition}
+
+\begin{mydefinition}{大\(\Omega\)记号——下界}
+\(f(n)=\Omega(g(n))\) 若存在正常数 \(c\) 和 \(n_0\)，使得对所有 \(n\geqslant n_0\)，有 \(0\leqslant c\cdot g(n)\leqslant f(n)\)。
+\end{mydefinition}
+
+\begin{mydefinition}{大\(\Theta\)记号——紧确界}
+\(f(n)=\Theta(g(n))\) 若 \(f(n)=O(g(n))\) 且 \(f(n)=\Omega(g(n))\)。
+\end{mydefinition}
+
+直观理解：\(O\)——不快于，\(\Omega\)——不慢于，\(\Theta\)——恰等于（同阶）。
+
+\begin{example}
+\(3n^2+5n-7 = O(n^2)\)（取 \(c=4,\;n_0=6\)），\(3n^2+5n-7 = \Omega(n^2)\)（取 \(c=1,\;n_0=1\)），故 \(3n^2+5n-7 = \Theta(n^2)\)。
+\end{example}
+
+\subsection{常见复杂度排序}
+
+从快到慢：
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lll}
+\toprule
+复杂度 & 名称 & 常见算法 \\
+\midrule
+\(O(1)\) & 常数 & 哈希表查找、数组索引 \\
+\(O(\log n)\) & 对数 & 二分查找、平衡树操作 \\
+\(O(n)\) & 线性 & 线性搜索、遍历数组 \\
+\(O(n\log n)\) & 线性对数 & 归并排序、堆排序 \\
+\(O(n^2)\) & 平方 & 简单排序、简单DP \\
+\(O(n^3)\) & 立方 & Floyd-Warshall \\
+\(O(2^n)\) & 指数 & 穷举搜索、子集枚举 \\
+\(O(n!)\) & 阶乘 & 旅行商问题穷举 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{空间复杂度}：描述算法执行所需的额外内存空间。如冒泡排序 \(O(1)\)，归并排序 \(O(n)\)。
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+\tikzset{
+    dmCompLine/.style={thick},
+}
+\draw[->] (0,0) -- (10,0) node[right] {\(n\)};
+\draw[->] (0,0) -- (0,7) node[above] {时间};
+
+\draw[dmCompLine,red!80] plot[domain=0:9,samples=100] (\x,{0.15*exp(0.6*\x)}) node[right,red!80] {\(O(2^n)\)};
+\draw[dmCompLine,orange!80] plot[domain=0:3.5,samples=50] (\x,{\x*\x*0.4}) node[right,orange!80] {\(O(n^2)\)};
+\draw[dmCompLine,green!60!black] plot[domain=0:9,samples=100] (\x,{\x*ln(1+\x)*0.25}) node[above,green!60!black] {\(O(n\log n)\)};
+\draw[dmCompLine,blue!80] plot[domain=0:9,samples=100] (\x,{\x*0.5}) node[above right,blue!80] {\(O(n)\)};
+\draw[dmCompLine,purple!80] plot[domain=0.5:9,samples=100] (\x,{ln(1+\x)*1.2}) node[below right,purple!80] {\(O(\log n)\)};
+
+\node at (5,-0.8) {常见复杂度增长率对比——\(O(2^n)\) 增长极快，\(O(\log n)\) 几乎为常数级};
+\end{tikzpicture}
+\captionof{figure}{渐进复杂度增长率对比图——\(O(2^n)\) 以指数爆炸式增长，\(O(\log n)\) 极为平缓。}
+\end{center}
+
+\section{经典算法设计策略}
+
+\subsection{贪心算法}
+
+核心思想：在每一步都做出当前看起来最优的选择（局部最优），希望通过局部最优的累积得到全局最优解。适用条件：贪心选择性质 + 最优子结构。
+
+\begin{example}[找零钱问题]
+人民币面值 \(\{100,50,20,10,5,1\}\)。找零187元：\(187=100+50+20+10+5+1+1\)，共7张。策略：每次选不超过余额的最大面值。
+
+\textbf{注意}：贪心不一定总是最优。若面值为 \(\{1,3,4\}\)，找零6元：贪心给 \(6=4+1+1\)（3张），最优是 \(6=3+3\)（2张）。
+\end{example}
+
+\begin{example}[活动选择问题]
+给定 \(n\) 个活动，各有开始时间和结束时间。选择最大数量的不冲突活动。贪心策略：每次选结束时间最早的兼容活动——可获得最优解。
+\end{example}
+
+\subsection{分治算法}
+
+核心思想：将原问题分解为若干个规模较小的、互相独立的子问题，递归求解后合并。
+
+\textbf{三部曲}：分解 \(\to\) 递归解决 \(\to\) 合并。
+
+\begin{example}[归并排序]
+\[
+\begin{aligned}
+&\text{MergeSort}(A[l..r]): \\
+&\quad \text{if } l \geq r: \text{ return} \\
+&\quad mid = (l+r)/2 \\
+&\quad \text{MergeSort}(A[l..mid]) \quad \text{// 分解+解决左半} \\
+&\quad \text{MergeSort}(A[mid+1..r]) \quad \text{// 分解+解决右半} \\
+&\quad \text{Merge}(A[l..mid], A[mid+1..r]) \quad \text{// 合并}
+\end{aligned}
+\]
+复杂度：\(T(n)=2T(n/2)+O(n)\Rightarrow T(n)=O(n\log n)\)。
+\end{example}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.75]
+\tikzset{
+    dmDCNum/.style={font=\small},
+}
+\node[dmDCNum] at (0,4) {\(3,7,2,5,1,9,4,6\)};
+\node[dmDCNum] at (-2.5,2.5) {\(3,7,2,5\)};
+\node[dmDCNum] at (2.5,2.5) {\(1,9,4,6\)};
+\node[dmDCNum] at (-4,1) {\(3,7\)};
+\node[dmDCNum] at (-1,1) {\(2,5\)};
+\node[dmDCNum] at (1,1) {\(1,9\)};
+\node[dmDCNum] at (4,1) {\(4,6\)};
+\node[dmDCNum] at (-5,-0.5) {\(3\)};
+\node[dmDCNum] at (-3,-0.5) {\(7\)};
+\node[dmDCNum] at (-2,-0.5) {\(2\)};
+\node[dmDCNum] at (0,-0.5) {\(5\)};
+\node[dmDCNum] at (2,-0.5) {\(1\)};
+\node[dmDCNum] at (0,-0.5) {\(9\)};
+\node[dmDCNum] at (3,-0.5) {\(4\)};
+\node[dmDCNum] at (5,-0.5) {\(6\)};
+
+\node[dmDCNum] at (-3,-2.5) {\(3,7\)}; \node[dmDCNum] at (1,-2.5) {\(2,5\)};
+\node[dmDCNum] at (-2,-4) {\(2,3,5,7\)};
+\node[dmDCNum] at (4,-4) {\(1,4,6,9\)};
+\node[dmDCNum] at (0,-5.5) {\(1,2,3,4,5,6,7,9\)};
+
+\draw[->,gray] (0,3.8) -- (-2.5,2.7);
+\draw[->,gray] (0,3.8) -- (2.5,2.7);
+\draw[->,gray] (-2.5,2.3) -- (-4,1.2);
+\draw[->,gray] (-2.5,2.3) -- (-1,1.2);
+\draw[->,gray] (2.5,2.3) -- (1,1.2);
+\draw[->,gray] (2.5,2.3) -- (4,1.2);
+% Bottom: merge upward
+\draw[->,gray,blue!60] (-3,-1.5) -- (-2,-2.8);
+\draw[->,gray,blue!60] (1,-1.5) -- (-2,-2.8);
+\draw[->,gray,blue!60] (-2,-3.2) -- (-1,-4.5);
+\draw[->,gray,blue!60] (4,-3.2) -- (-1,-4.5);
+\draw[->,gray,blue!60] (0,-5) -- (0,-6) node[midway,right] {\small 合并};
+
+\node at (0,5.2) {\textbf{分解（Divide）}};
+\node at (0,-3.5) {\textbf{合并（Conquer + Combine）}};
+\end{tikzpicture}
+\captionof{figure}{归并排序的分治树——先自顶向下分解，再自底向上合并有序子数组。}
+\end{center}
+
+\subsection{动态规划}
+
+核心思想：将问题分解为重叠子问题，自底向上求解，用表格存储子问题的解以避免重复计算。
+
+\textbf{适用条件}：
+\begin{itemize}
+    \item \textbf{最优子结构}：问题的最优解包含子问题的最优解
+    \item \textbf{重叠子问题}：递归过程中同一个子问题被多次求解
+\end{itemize}
+
+DP vs 分治：分治的子问题是独立的;DP的子问题是重叠的。
+
+\subsubsection{0-1背包问题}
+
+有 \(n\) 件物品，第 \(i\) 件重量 \(w_i\)，价值 \(v_i\)，背包容量 \(W\)。每件物品要么全放入要么不放入。求最大总价值。
+
+\begin{mydefinition}{DP解法}
+\begin{itemize}
+    \item \textbf{状态定义}：\(dp[i][j]\) = 考虑前 \(i\) 件物品，容量为 \(j\) 时的最大价值
+    \item \textbf{状态转移}：
+    \[
+    dp[i][j] = \begin{cases}
+    dp[i-1][j], & \text{若 } w_i > j \\
+    \max(dp[i-1][j],\; dp[i-1][j-w_i] + v_i), & \text{否则}
+    \end{cases}
+    \]
+    \item \textbf{时间复杂度}：\(O(nW)\);\textbf{空间优化}：可降至 \(O(W)\)
+\end{itemize}
+\end{mydefinition}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+\tikzset{
+    dmDPCell/.style={rectangle,draw=gray,minimum width=0.9cm,minimum height=0.6cm,align=center,font=\tiny,fill=white},
+    dmDPHead/.style={rectangle,draw=blue!60,fill=blue!10,minimum width=0.9cm,minimum height=0.6cm,align=center,font=\tiny},
+}
+% Header row
+\node[dmDPHead] at (0,1.2) {物品\\backslash 容量};
+\foreach \j in {0,...,8} {
+    \node[dmDPHead] at ({\j*0.9+0.9},1.2) {\(\j\)};
+}
+% Row header
+\node[dmDPHead] at (0,0.6) {0};
+% Data rows
+% i=0 (no items)
+\foreach \j in {0,...,8} {
+    \node[dmDPCell] at ({\j*0.9+0.9},0.6) {0};
+}
+% i=1: w1=2, v1=3
+\node[dmDPHead] at (0,0) {1};
+\foreach \j in {0,...,8} {
+    \pgfmathsetmacro\val{(\j>=2)?3:0}
+    \node[dmDPCell] at ({\j*0.9+0.9},0) {\pgfmathprintnumber{\val}};
+}
+% i=2: w2=3, v2=4
+\node[dmDPHead] at (0,-0.6) {2};
+\foreach \j in {0,...,8} {
+    \pgfmathsetmacro\val{(\j==0||\j==1)?0:((\j==2)?3:( (\j==3||\j==4)?4:(\j==5?7:\j) ))}
+    \node[dmDPCell] at ({\j*0.9+0.9},-0.6) {\pgfmathprintnumber{\val}};
+}
+\node[anchor=west,font=\small] at (10,0) {\(w_1=2,v_1=3\)};
+\node[anchor=west,font=\small,align=left] at (10,-0.6) {\(w_2=3,v_2=4\)\\\(W=8\)时最大价值=10};
+
+\draw[->,red!80,thick] (3.7,0.1) -- (4.6,-0.5);
+\node[red!80,font=\tiny] at (4.5,-0.1) {\(j-w_i\)};
+\end{tikzpicture}
+\captionof{figure}{0-1背包问题的DP表——\(dp[i][j]\) 的值由上方格子和左上方格子转移而来。}
+\end{center}
+
+\subsubsection{最长公共子序列（LCS）}
+
+求两字符串的最长公共子序列（不要求连续）。
+
+\begin{itemize}
+    \item \textbf{定义}：\(dp[i][j]\) = \(X[1..i]\) 和 \(Y[1..j]\) 的LCS长度
+    \item \textbf{转移}：
+    \[
+    dp[i][j] = \begin{cases}
+    dp[i-1][j-1]+1, & X[i]=Y[j] \\
+    \max(dp[i-1][j],\;dp[i][j-1]), & X[i]\neq Y[j]
+    \end{cases}
+    \]
+    \item \textbf{复杂度}：\(O(mn)\)
+\end{itemize}
+
+\section{计算理论入门}
+
+\subsection{形式语言与Chomsky谱系}
+
+\begin{mydefinition}{基本概念}
+\begin{itemize}
+    \item \textbf{字母表} \(\Sigma\)：有限的非空符号集合
+    \item \textbf{字符串}：由 \(\Sigma\) 中符号组成的有限序列;空串记为 \(\varepsilon\)
+    \item \textbf{语言}：\(\Sigma^*\) 的任意子集
+\end{itemize}
+\end{mydefinition}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.85]
+\tikzset{
+    dmChomskyLevel/.style={rectangle,draw,minimum width=5cm,minimum height=0.8cm,align=center,font=\small},
+}
+\node[dmChomskyLevel,fill=red!5,draw=red!60] (l3) at (0,4) {类型3：正则语言（Regular）\\有限自动机 / 正则表达式};
+\node[dmChomskyLevel,fill=orange!5,draw=orange!60] (l2) at (0,3) {类型2：上下文无关语言（CFL）\\下推自动机 / CFG};
+\node[dmChomskyLevel,fill=blue!5,draw=blue!60] (l1) at (0,2) {类型1：上下文有关语言（CSL）\\线性有界自动机};
+\node[dmChomskyLevel,fill=green!5,draw=green!60] (l0) at (0,1) {类型0：递归可枚举语言（RE）\\图灵机};
+
+\draw[->,thick] (4.2,1.2) -- (4.2,4.2) node[midway,right] {包含关系};
+\end{tikzpicture}
+\captionof{figure}{Chomsky谱系的金字塔——类型3在最内层（最小），类型0在最外层（最大），依次包含。}
+\end{center}
+
+\subsection{有限自动机}
+
+\begin{mydefinition}{确定型有限自动机}
+DFA是一个五元组 \(M=(Q,\Sigma,\delta,q_0,F)\)：
+\begin{itemize}
+    \item \(Q\)：有限状态集合
+    \item \(\Sigma\)：输入字母表
+    \item \(\delta: Q\times\Sigma\to Q\)：状态转移函数
+    \item \(q_0\in Q\)：起始状态
+    \item \(F\subseteq Q\)：接受状态集合
+\end{itemize}
+从 \(q_0\) 开始，依次读入输入字符，每步根据当前状态和输入决定下一状态。读完整个字符串后若处于接受状态 \(F\)，则接受该字符串。
+\end{mydefinition}
+
+\begin{example}[识别以01结尾的二进制串]
+\(Q=\{q_0,q_1,q_2\}\)（\(q_0\)起始，\(q_2\)接受），\(\Sigma=\{0,1\}\)。
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ccc}
+\toprule
+当前状态 & 输入0 & 输入1 \\
+\midrule
+\(q_0\) & \(q_1\) & \(q_0\) \\
+\(q_1\) & \(q_1\) & \(q_2\) \\
+\(q_2\) & \(q_1\) & \(q_0\) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+运行举例：输入`1001`：\(q_0\xrightarrow{1}q_0\xrightarrow{0}q_1\xrightarrow{0}q_1\xrightarrow{1}q_2\)（接受）。
+\end{example}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+\tikzset{
+    dmAutomaton/.style={circle,draw=blue!60,fill=blue!10,minimum size=10mm},
+    dmAccept/.style={circle,draw=blue!60,fill=blue!10,minimum size=10mm,double,double distance=2pt},
+    dmTrans/.style={-{Stealth},thick,font=\footnotesize},
+    dmStart/.style={-{Stealth},thick},
+}
+\node[dmAutomaton] (q0) at (0,0) {\(q_0\)};
+\node[dmAutomaton] (q1) at (2.5,0) {\(q_1\)};
+\node[dmAccept] (q2) at (5,0) {\(q_2\)};
+
+\draw[dmStart] (-1.5,0) -- (q0);
+\draw[dmTrans] (q0) edge[loop above] node{1} (q0);
+\draw[dmTrans] (q0) edge[bend left] node[above]{0} (q1);
+\draw[dmTrans] (q1) edge[loop above] node{0} (q1);
+\draw[dmTrans] (q1) edge[bend left] node[above]{1} (q2);
+\draw[dmTrans] (q2) edge[bend left] node[above]{0} (q1);
+\draw[dmTrans] (q2) edge[bend left=40] node[below]{1} (q0);
+\end{tikzpicture}
+\captionof{figure}{识别以01结尾字符串的DFA状态转移图。\(q_2\) 为接受状态（双圈）。}
+\end{center}
+
+\subsection{非确定型有限自动机}
+
+NFA与DFA的主要区别：
+\begin{itemize}
+    \item \(\delta\) 可能返回多个后继状态（或空集）
+    \item 允许 \(\varepsilon\) 转移（不消耗输入的状态转移）
+\end{itemize}
+
+\begin{myTheorem}{NFA与DFA的等价性}
+每个NFA都存在一个等价的DFA（通过子集构造法）。但DFA的状态数最坏可能达到指数级 \(2^{|Q|}\)。
+\end{myTheorem}
+
+\subsection{正则表达式}
+
+正则表达式是描述正则语言的代数表示。
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ll}
+\toprule
+表达式 & 含义 \\
+\midrule
+\(\varnothing\) & 空语言 \\
+\(\varepsilon\) & 仅含空串的语言 \\
+\(a\) & 单字符``a'' \\
+\(R_1R_2\) & 连接：任何 \(R_1\) 匹配的串后接 \(R_2\) 匹配的串 \\
+\(R_1\mid R_2\) & 并：匹配 \(R_1\) 或 \(R_2\) 的串 \\
+\(R^*\) & Kleene星闭包：\(R\) 匹配的串的零次或多次连接 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{example}
+\begin{itemize}
+    \item \texttt{[01]*} —— 所有二进制串
+    \item \texttt{0*10*} —— 恰好含一个1的二进制串
+    \item \texttt{(a|b)*abb} —— 以abb结尾的、由a,b组成的串
+\end{itemize}
+\end{example}
+
+\begin{myTheorem}{Kleene定理}
+正则表达式描述的语言与有限自动机接受的语言完全相同——即都是正则语言。
+\end{myTheorem}
+
+\subsection{图灵机简介}
+
+\begin{mydefinition}{图灵机}
+图灵机是一个七元组 \(M=(Q,\Sigma,\Gamma,\delta,q_0,q_{\text{accept}},q_{\text{reject}})\)，其中：
+\begin{itemize}
+    \item 有一条无限长的纸带，划分为格子，每个格子存一个符号
+    \item 有一个读写头，可在纸带上左右移动、读写符号
+    \item \(\delta: Q\times\Gamma\to Q\times\Gamma\times\{L,R\}\) 为转移函数
+\end{itemize}
+\end{mydefinition}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+\tikzset{
+    dmTapeCell/.style={rectangle,draw=gray,minimum width=0.7cm,minimum height=0.8cm,align=center,font=\small},
+    dmTapeHead/.style={rectangle,draw=red!80,fill=red!10,minimum width=0.7cm,minimum height=0.8cm,align=center,font=\small},
+}
+\foreach \i/\t in {-4/0,-3/1,-2/0,-1/1,0/1,1/0,2/0,3/1,4/0} {
+    \ifnum\i=1
+        \node[dmTapeHead] at ({\i*0.7},0) {\(\t\)};
+    \else
+        \node[dmTapeCell] at ({\i*0.7},0) {\(\t\)};
+    \fi
+}
+\draw[red!80,thick,->] (0.7,-0.7) -- (0.7,-0.3) node[below=2pt,font=\small] {读写头};
+\node[dmBox,minimum width=2cm] at (0.7,-1.5) {状态 \(q_i\)};
+\node at (0,-1.2) {\small 无限纸带 \(\to\)};
+\end{tikzpicture}
+\captionof{figure}{图灵机示意图——无限长纸带上的每个格子存储一个符号，读写头根据当前状态进行读写和移动。}
+\end{center}
+
+图灵机是计算理论中最核心的模型，它可以模拟任何已知的计算过程。
+
+\begin{myTheorem}{Church-Turing论题}
+任何直觉上``可计算''的函数都可以被图灵机计算。这不是定理（无法证明），而是对计算能力的信仰声明——目前没有反例。
+\end{myTheorem}
+
+\section{P与NP问题简介}
+
+\subsection{P类与NP类}
+
+\begin{mydefinition}{P类}
+存在多项式时间确定性算法求解的判定问题的集合。例如：排序、最短路径、最大流——这些都属于P。
+\end{mydefinition}
+
+\begin{mydefinition}{NP类}
+给定一个证书，可以在多项式时间验证其正确性的判定问题的集合。例如：合数判定、哈密顿回路。显然有 \(P\subseteq NP\)。
+\end{mydefinition}
+
+\subsection{NP完全性}
+
+\begin{mydefinition}{多项式时间归约}
+问题 \(A\) 可多项式时间归约到问题 \(B\)（记作 \(A\leq_P B\)），若存在多项式时间的变换 \(f\)，使得 \(x\in A\iff f(x)\in B\)。
+\end{mydefinition}
+
+\begin{mydefinition}{NP-难与NP-完全}
+\begin{itemize}
+    \item \textbf{NP-难}：问题 \(B\) 称为NP-难，若对任意 \(A\in NP\)，有 \(A\leq_P B\)
+    \item \textbf{NP-完全}：问题 \(B\) 称为NP-完全，若 \(B\in NP\) 且 \(B\) 是NP-难的
+\end{itemize}
+\end{mydefinition}
+
+经典NPC问题：SAT（布尔可满足性）、3SAT、顶点覆盖、团问题、哈密顿回路、0-1背包判定问题、旅行商问题判定版。
+
+\subsection{Cook-Levin定理与P=NP问题}
+
+\begin{myTheorem}{Cook-Levin定理}
+SAT（布尔可满足性问题）是NP-完全的。任何NP问题都可多项式时间归约到SAT。
+\end{myTheorem}
+
+\textbf{世纪难题}：\(P=NP\) 还是 \(P\neq NP\)？这是Clay数学研究所的七大千年难题之一。
+
+\begin{itemize}
+    \item \textbf{如果 \(P=NP\)}：所有NPC问题都存在多项式时间算法;密码学（RSA等）将崩溃;AI中的许多困难问题可高效求解
+    \item \textbf{如果 \(P\neq NP\)}：目前已知的NPC问题真的没有多项式算法;基于某些困难假设的密码学依然安全
+\end{itemize}
+
+绝大多数计算机科学家相信 \(P\neq NP\)，但尚无严格证明。
+
+\section{编程实现}
+
+\begin{mycode}{DFA模拟器}
+\begin{lstlisting}[language=Python]
+class DFA:
+    def __init__(self, states, alphabet, transitions,
+                 start_state, accept_states):
+        self.states = set(states)
+        self.alphabet = set(alphabet)
+        self.transitions = transitions
+        self.start_state = start_state
+        self.accept_states = set(accept_states)
+
+    def run(self, input_string: str) -> bool:
+        current = self.start_state
+        for ch in input_string:
+            if (current, ch) not in self.transitions:
+                return False
+            current = self.transitions[(current, ch)]
+        return current in self.accept_states
+
+# 识别以 "01" 结尾的二进制串
+dfa = DFA(
+    states=['q0','q1','q2'], alphabet=['0','1'],
+    transitions={
+        ('q0','0'):'q1',('q0','1'):'q0',
+        ('q1','0'):'q1',('q1','1'):'q2',
+        ('q2','0'):'q1',('q2','1'):'q0',
+    },
+    start_state='q0', accept_states=['q2']
+)
+for s in ['', '01', '101', '1001', '110']:
+    print(f"  '{s}' -> {'接受' if dfa.run(s) else '拒绝'}")
+\end{lstlisting}
+\end{mycode}
+
+\begin{mycode}{0-1背包DP——Python}
+\begin{lstlisting}[language=Python]
+def knapsack_01(weights: list, values: list, capacity: int) -> int:
+    """0-1背包DP，空间优化版 O(nW)时间 O(W)空间"""
+    n = len(weights)
+    dp = [0] * (capacity + 1)
+    for i in range(n):
+        w, v = weights[i], values[i]
+        for j in range(capacity, w - 1, -1):
+            dp[j] = max(dp[j], dp[j - w] + v)
+    return dp[capacity]
+
+print(knapsack_01([2, 3, 4, 5], [3, 4, 5, 6], 8))  # 10
+\end{lstlisting}
+\end{mycode}
+
+\begin{mycode}{0-1背包DP——C++}
+\begin{lstlisting}[language=C++]
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int knapsack_01(const vector<int>& w, const vector<int>& v, int W) {
+    int n = w.size();
+    vector<int> dp(W + 1, 0);
+    for (int i = 0; i < n; i++) {
+        for (int j = W; j >= w[i]; j--) {
+            dp[j] = max(dp[j], dp[j - w[i]] + v[i]);
+        }
+    }
+    return dp[W];
+}
+
+int main() {
+    vector<int> weights = {2, 3, 4, 5};
+    vector<int> values  = {3, 4, 5, 6};
+    cout << knapsack_01(weights, values, 8) << endl;  // 10
+    return 0;
+}
+\end{lstlisting}
+\end{mycode}
+
+\begin{mycode}{最长公共子序列}
+\begin{lstlisting}[language=Python]
+def lcs_length(X: str, Y: str) -> int:
+    m, n = len(X), len(Y)
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if X[i-1] == Y[j-1]:
+                dp[i][j] = dp[i-1][j-1] + 1
+            else:
+                dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+    return dp[m][n]
+
+def get_lcs(X: str, Y: str) -> str:
+    m, n = len(X), len(Y)
+    dp = [[0]*(n+1) for _ in range(m+1)]
+    for i in range(1, m+1):
+        for j in range(1, n+1):
+            if X[i-1]==Y[j-1]:
+                dp[i][j]=dp[i-1][j-1]+1
+            else:
+                dp[i][j]=max(dp[i-1][j],dp[i][j-1])
+    chars = []
+    i, j = m, n
+    while i>0 and j>0:
+        if X[i-1]==Y[j-1]:
+            chars.append(X[i-1])
+            i-=1; j-=1
+        elif dp[i-1][j] > dp[i][j-1]:
+            i-=1
+        else:
+            j-=1
+    return ''.join(reversed(chars))
+
+print(lcs_length("ABCBDAB","BDCABA"))  # 4
+print(get_lcs("ABCBDAB","BDCABA"))      # BCBA
+\end{lstlisting}
+\end{mycode}
+
+\section*{本章小结}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lp{10cm}}
+\toprule
+知识模块 & 核心内容 \\
+\midrule
+算法定义 & 有限、确定、可行、有输入/输出的指令序列 \\
+复杂度分析 & \(O\)（上界）、\(\Omega\)（下界）、\(\Theta\)（紧确界）;\(O(\log n)<O(n)<O(n\log n)<O(n^2)<O(2^n)\) \\
+贪心算法 & 每步选局部最优;找零钱、活动选择 \\
+分治算法 & 分解 \(\to\) 递归解决 \(\to\) 合并;归并排序 \(O(n\log n)\) \\
+动态规划 & 最优子结构+重叠子问题;0-1背包 \(O(nW)\)、LCS \(O(mn)\) \\
+形式语言 & Chomsky谱系：正则(3)\(\to\)CFL(2)\(\to\)CSL(1)\(\to\)RE(0) \\
+有限自动机 & DFA（确定）、NFA（非确定）;子集构造法：NFA\(\to\)DFA \\
+图灵机 & 无限纸带+读写头+转移函数;Church-Turing论题 \\
+P vs NP & P=多项式可解;NP=多项式可验证;NPC=NP中最难的;Cook-Levin定理 \\
+\bottomrule
+\end{tabular}
+\end{table}

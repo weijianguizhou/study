@@ -1,0 +1,560 @@
+\chapter{关系与函数}
+\intro{关系与函数是离散数学的核心主题。关系刻画了集合中元素之间的联系，函数则是特殊的关系（满足单值性）。等价关系和偏序关系是两类最重要的关系，分别刻画了"相等"和"大小"这两种最基本的数学概念。}
+
+\section{二元关系的基本概念}
+
+\begin{mydefinition}{二元关系}
+设 $A$ 和 $B$ 是两个集合，从 $A$ 到 $B$ 的\textbf{二元关系} $R$ 是笛卡尔积 $A \times B$ 的一个子集：
+\[R \subseteq A \times B = \{(a,b) \mid a \in A, b \in B\}\]
+若 $(a,b) \in R$，记作 $aRb$。当 $A = B$ 时，称 $R$ 是 $A$ \textbf{上的关系}。
+\end{mydefinition}
+
+特殊关系：
+\begin{itemize}
+\item \textbf{空关系}：$R = \varnothing$
+\item \textbf{全域关系}：$R = A \times B$
+\item \textbf{恒等关系}：$I_A = \{(a,a) \mid a \in A\}$
+\end{itemize}
+
+\begin{myTheorem}{关系总数}
+设 $|A| = m$，$|B| = n$，则从 $A$ 到 $B$ 的不同关系有 $2^{mn}$ 个。
+
+\textbf{证明}：$A \times B$ 有 $mn$ 个元素，每个元素可选入或不选入 $R$，故总数为 $2^{mn}$。
+\end{myTheorem}
+
+\subsection{关系的表示法}
+
+\subsubsection{关系矩阵}
+
+设 $A = \{a_1,\dots,a_m\}$，$B = \{b_1,\dots,b_n\}$，关系 $R \subseteq A \times B$ 的\textbf{关系矩阵} $M_R = (m_{ij})_{m \times n}$ 定义为：
+\[m_{ij} = \begin{cases} 1, & \text{若 } (a_i,b_j) \in R \\ 0, & \text{若 } (a_i,b_j) \notin R \end{cases}\]
+
+\subsubsection{关系图}
+
+将集合 $A$ 中的元素用点（顶点）表示，若 $(a_i,a_j) \in R$，则从 $a_i$ 到 $a_j$ 画一条有向边（弧）。当 $R$ 是 $A$ 上的关系时，关系图是一个有向图。
+
+\subsection{定义域、值域与域}
+
+$\dom(R) = \{a \in A \mid \exists b \in B, (a,b) \in R\}$，$\ran(R) = \{b \in B \mid \exists a \in A, (a,b) \in R\}$，$\mathrm{fld}(R) = \dom(R) \cup \ran(R)$。
+
+\section{关系的运算}
+
+\subsection{逆关系}
+
+\begin{mydefinition}{逆关系}
+$R^{-1} = \{(b,a) \mid (a,b) \in R\}$，且 $R^{-1} \subseteq B \times A$。
+\end{mydefinition}
+
+性质：$(R^{-1})^{-1} = R$；$M_{R^{-1}} = (M_R)^T$；$\dom(R^{-1}) = \ran(R)$。
+
+\subsection{复合关系}
+
+\begin{mydefinition}{复合关系}
+设 $R \subseteq A \times B$，$S \subseteq B \times C$，则：
+\[R \circ S = \{(a,c) \mid \exists b \in B,\ (a,b) \in R \land (b,c) \in S\}\]
+\end{mydefinition}
+
+性质：
+\begin{itemize}
+\item 结合律：$(R \circ S) \circ T = R \circ (S \circ T)$
+\item $R \circ I_B = R$，$I_A \circ R = R$
+\item $(R \circ S)^{-1} = S^{-1} \circ R^{-1}$（次序颠倒）
+\item 一般 $R \circ S \neq S \circ R$（不满足交换律）
+\end{itemize}
+
+\subsection{关系矩阵的布尔积}
+
+关系复合的矩阵表示使用\textbf{布尔积}：
+\[M_{R \circ S} = M_R \odot M_S,\quad
+(M_R \odot M_S)_{ij} = \bigvee_{k=1}^{n} (m_{ik}^{(R)} \land m_{kj}^{(S)})\]
+即将普通矩阵乘法中的 $+$ 替换为 $\lor$，$\times$ 替换为 $\land$。
+
+% --- TikZ: 关系图示例 ---
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.2]
+\tikzset{
+    dmRelNode/.style={circle,draw=blue!60,fill=blue!10,minimum size=8mm,font=\small},
+    dmRelEdge/.style={-{Stealth},thick,blue!60},
+    dmRelLoop/.style={-{Stealth},thick,red!60,loop above,min distance=5mm}
+}
+\node[dmRelNode] (1) at (0,2) {1};
+\node[dmRelNode] (2) at (2,0) {2};
+\node[dmRelNode] (3) at (0,-2) {3};
+\node[dmRelNode] (4) at (-2,0) {4};
+\draw[dmRelEdge] (1) -- (2);
+\draw[dmRelEdge] (2) -- (3);
+\draw[dmRelEdge] (3) -- (4);
+\draw[dmRelEdge] (4) -- (1);
+\draw[dmRelLoop] (1) to (1);
+\node[font=\small] at (0,-2.8) {关系图 $R=\{(1,1),(1,2),(2,3),(3,4),(4,1)\}$};
+\end{tikzpicture}
+\caption{关系图——有向图表示关系}
+\end{figure}
+
+\section{关系的性质}
+
+设 $R$ 是集合 $A$ 上的关系。
+
+\subsection{自反性与反自反性}
+
+\begin{mydefinition}{自反性}
+若对每个 $a \in A$，都有 $(a,a) \in R$，则称 $R$ 是\textbf{自反的}。矩阵判断：主对角线全为 $1$。关系图判断：每个顶点都有自环。
+
+若对每个 $a \in A$，都有 $(a,a) \notin R$，则称 $R$ 是\textbf{反自反的}。矩阵判断：主对角线全为 $0$。
+\end{mydefinition}
+
+\subsection{对称性与反对称性}
+
+\begin{mydefinition}{对称性与反对称性}
+\textbf{对称的}：$(a,b) \in R \Rightarrow (b,a) \in R$。矩阵判断：$M_R^T = M_R$（对称矩阵）。
+
+\textbf{反对称的}：$(a,b) \in R \land (b,a) \in R \Rightarrow a = b$。矩阵判断：若 $i \neq j$，则 $m_{ij}$ 与 $m_{ji}$ 不能同时为 $1$。
+\end{mydefinition}
+
+\subsection{传递性}
+
+\begin{mydefinition}{传递性}
+$(a,b) \in R \land (b,c) \in R \Rightarrow (a,c) \in R$。矩阵判断：$M_{R \circ R} \preceq M_R$（即 $R \circ R \subseteq R$）。
+\end{mydefinition}
+
+\subsection{性质间的关系}
+
+\begin{center}
+\begin{tabular}{c|c|c|c|c}
+\toprule
+性质 & $R^{-1}$ 保持 & $R \cap S$ 保持 & $R \cup S$ 保持 & $R \circ S$ 保持 \\
+\midrule
+自反性 & ✓ & ✓ & ✓ & ✓ \\
+反自反性 & ✓ & ✓ & ✓ & ✗ \\
+对称性 & ✓ & ✓ & ✓ & ✗ \\
+反对称性 & ✓ & ✓ & ✗ & ✗ \\
+传递性 & ✓ & ✓ & ✗ & ✗ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{myformula}
+\textbf{关系性质与矩阵特征}
+\[
+\begin{aligned}
+\text{自反：}&\quad \forall i,\; m_{ii}=1 \\
+\text{反自反：}&\quad \forall i,\; m_{ii}=0 \\
+\text{对称：}&\quad \forall i,j,\; m_{ij}=m_{ji} \\
+\text{反对称：}&\quad \forall i \neq j,\; m_{ij} \cdot m_{ji}=0 \\
+\text{传递：}&\quad R \circ R \subseteq R
+\end{aligned}
+\]
+\end{myformula}
+
+\section{闭包}
+
+设 $R$ 是 $A$ 上的关系，$R$ 关于性质 $P$ 的\textbf{闭包} $R_P$ 是满足 $R \subseteq R_P$、$R_P$ 具有性质 $P$、且具有最小性的关系。
+
+\begin{center}
+\begin{tabular}{c|c|c}
+\toprule
+符号 & 名称 & 构造方法 \\
+\midrule
+$r(R)$ & 自反闭包 & $r(R) = R \cup I_A$ \\
+$s(R)$ & 对称闭包 & $s(R) = R \cup R^{-1}$ \\
+$t(R)$ & 传递闭包 & $t(R) = \bigcup_{i=1}^{\infty} R^i$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Warshall算法求传递闭包}
+
+\textbf{思想}：逐步构造矩阵序列 $W_0,\dots,W_n$，其中 $W_k[i][j]=1$ 当且仅当存在从 $i$ 到 $j$ 的路径且内部顶点编号不超过 $k$。
+
+\textbf{递推公式}：
+\[W_k[i][j] = W_{k-1}[i][j] \lor (W_{k-1}[i][k] \land W_{k-1}[k][j])\]
+
+$W_0 = M_R$，$W_n = M_{t(R)}$。时间复杂度 $O(n^3)$。
+
+% --- TikZ: Warshall算法流程图 ---
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=1.5cm, auto]
+\tikzset{
+    dmWar/.style={rectangle,draw=orange!60!black,fill=orange!5!white,rounded corners,minimum width=3.2cm,align=center},
+    dmWarArrow/.style={-{Stealth},thick,orange!60!black}
+}
+\node[dmWar] (S1) {$W_0 = M_R$（输入关系矩阵）};
+\node[dmWar,below=of S1] (S2) {$k = 1, 2, \dots, n$（枚举中间节点）};
+\node[dmWar,below=of S2] (S3) {遍历所有 $i,j$：若 $W[i][k] \land W[k][j]$\\则 $W[i][j] = 1$};
+\node[dmWar,below=of S3] (S4) {输出 $W_n = M_{t(R)}$};
+\draw[dmWarArrow] (S1) -- (S2);
+\draw[dmWarArrow] (S2) -- (S3);
+\draw[dmWarArrow] (S3) -- (S4);
+\node[font=\footnotesize,right=of S2,xshift=2cm] {$O(n^3)$};
+\end{tikzpicture}
+\caption{Warshall算法流程图——三重循环求传递闭包}
+\end{figure}
+
+\begin{mycode}{Warshall算法}
+\begin{lstlisting}[language=Python]
+def warshall(W):
+    """Warshall算法求传递闭包"""
+    n = len(W)
+    for k in range(n):
+        for i in range(n):
+            if W[i][k]:
+                for j in range(n):
+                    W[i][j] = W[i][j] or W[k][j]
+    return W
+
+# 示例
+W = [
+    [1, 0, 1, 0],
+    [0, 1, 0, 1],
+    [0, 0, 1, 0],
+    [0, 0, 0, 1]
+]
+result = warshall([row[:] for row in W])
+for row in result:
+    print(row)
+\end{lstlisting}
+\end{mycode}
+
+\begin{mycode}{Warshall算法 C++版本}
+\begin{lstlisting}[language=C++]
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void warshall(vector<vector<int>>& W) {
+    int n = W.size();
+    for (int k = 0; k < n; k++) {
+        for (int i = 0; i < n; i++) {
+            if (W[i][k]) {
+                for (int j = 0; j < n; j++) {
+                    W[i][j] = W[i][j] || W[k][j];
+                }
+            }
+        }
+    }
+}
+
+int main() {
+    int n = 4;
+    vector<vector<int>> W = {
+        {1, 0, 1, 0},
+        {0, 1, 0, 1},
+        {0, 0, 1, 0},
+        {0, 0, 0, 1}
+    };
+    warshall(W);
+    for (auto& row : W) {
+        for (int v : row) cout << v << " ";
+        cout << endl;
+    }
+    return 0;
+}
+\end{lstlisting}
+\end{mycode}
+
+\section{等价关系与划分}
+
+\begin{mydefinition}{等价关系}
+集合 $A$ 上的关系 $R$ 若满足\textbf{自反性、对称性、传递性}，则称 $R$ 为一个\textbf{等价关系}，通常记作 $\sim$。
+\end{mydefinition}
+
+\begin{example}
+模 $n$ 同余关系：在 $\Z$ 上，$a \equiv b \pmod{n}$（即 $n \mid (a-b)$）是等价关系。
+\begin{itemize}
+\item 自反：$a-a=0$ 被任何 $n$ 整除 ✓
+\item 对称：若 $n \mid (a-b)$，则 $n \mid (b-a)$ ✓
+\item 传递：若 $n \mid (a-b)$ 且 $n \mid (b-c)$，则 $n \mid (a-b)+(b-c) = a-c$ ✓
+\end{itemize}
+\end{example}
+
+\subsection{等价类与商集}
+
+\begin{mydefinition}{等价类与商集}
+$a$ 的\textbf{等价类}：$[a]_\sim = \{x \in A \mid x \sim a\}$，$a$ 称为该等价类的\textbf{代表元}。
+
+$A$ 关于 $\sim$ 的\textbf{商集}：$A/{\sim} = \{[a]_\sim \mid a \in A\}$。
+\end{mydefinition}
+
+\begin{myTheorem}{等价类的性质}
+设 $\sim$ 是 $A$ 上的等价关系，$a,b \in A$，则下列三命题等价：
+\begin{enumerate}
+\item $a \sim b$
+\item $[a] = [b]$
+\item $[a] \cap [b] \neq \varnothing$
+\end{enumerate}
+\end{myTheorem}
+
+\subsection{划分与等价关系的一一对应}
+
+\begin{mydefinition}{划分}
+集合 $A$ 的一个\textbf{划分}是一个由 $A$ 的非空子集构成的集合族 $\mathcal{P} = \{A_1,\dots,A_k\}$，满足 $\bigcup A_i = A$ 且 $A_i \cap A_j = \varnothing$（$i \neq j$）。
+\end{mydefinition}
+
+\begin{myTheorem}{核心定理}
+$A$ 上的等价关系与 $A$ 的划分之间存在\textbf{一一对应}：
+\begin{itemize}
+\item 等价关系 $\rightarrow$ 划分：等价类的集合 $A/{\sim}$ 构成 $A$ 的一个划分。
+\item 划分 $\rightarrow$ 等价关系：定义 $a \sim b$ 当 $a$ 与 $b$ 属于划分的同一块。
+\end{itemize}
+\end{myTheorem}
+
+% --- TikZ: 等价类划分图 ---
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.3]
+\tikzset{
+    dmPart/.style={ellipse,draw=blue!60,fill=blue!10,minimum width=2.2cm,minimum height=1.5cm},
+    dmElem/.style={circle,draw=blue!40,fill=blue!5,minimum size=5mm,font=\small}
+}
+% 划分区域
+\node[dmPart] (P1) at (0,0) {$\{1,3\}$};
+\node[dmPart] (P2) at (2.5,0) {$\{2,5\}$};
+\node[dmPart] (P3) at (5,0) {$\{4\}$};
+% 元素
+\node[dmElem] at (P1) {1};
+\node[dmElem] at (-0.3,0.4) {3};
+\node[dmElem] at (P2) {2};
+\node[dmElem] at (2.2,0.4) {5};
+\node[dmElem] at (P3) {4};
+\node[font=\small] at (2.5,-1.2) {$A=\{1,2,3,4,5\}$，划分 $\{\{1,3\},\{2,5\},\{4\}\}$};
+\end{tikzpicture}
+\caption{等价类的划分示意——同一等价类内的元素相互等价}
+\end{figure}
+
+\section{偏序关系}
+
+\begin{mydefinition}{偏序关系}
+集合 $A$ 上的关系 $R$ 若满足\textbf{自反性、反对称性、传递性}，则称 $R$ 为一个\textbf{偏序关系}，记作 $\preceq$。称 $(A,\preceq)$ 为\textbf{偏序集}。
+\end{mydefinition}
+
+典型偏序：$(\R,\leq)$、$(\mathcal{P}(X),\subseteq)$（集合包含）、$(\N,\mid)$（整除关系）。
+
+\begin{mydefinition}{可比性}
+在偏序集 $(A,\preceq)$ 中，若 $a \preceq b$ 或 $b \preceq a$，称 $a$ 与 $b$ \textbf{可比}；否则称\textbf{不可比}。
+\end{mydefinition}
+
+\subsection{哈塞图}
+
+\textbf{哈塞图}绘制规则：
+\begin{enumerate}
+\item 用小圆圈表示每个元素。
+\item 若 $a \prec b$ 且不存在 $c$ 使 $a \prec c \prec b$（即 $b$ \textbf{覆盖} $a$），将 $a$ 放在 $b$ 下方并用线段连接。
+\item 不画自环（自反性）和传递边（传递性）。
+\end{enumerate}
+
+% --- TikZ: 哈塞图 ---
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=1.4cm, auto]
+\tikzset{
+    dmHasNode/.style={circle,draw=blue!60,fill=blue!10,minimum size=8mm,font=\small}
+}
+\node[dmHasNode] (12) at (0,0) {12};
+\node[dmHasNode] (4) at (-1.5,1.8) {4};
+\node[dmHasNode] (6) at (1.5,1.8) {6};
+\node[dmHasNode] (2) at (-1.5,3.6) {2};
+\node[dmHasNode] (3) at (1.5,3.6) {3};
+\node[dmHasNode] (1) at (0,5.4) {1};
+\draw[thick] (1) -- (2);
+\draw[thick] (1) -- (3);
+\draw[thick] (2) -- (4);
+\draw[thick] (2) -- (6);
+\draw[thick] (3) -- (6);
+\draw[thick] (4) -- (12);
+\draw[thick] (6) -- (12);
+\node[font=\footnotesize] at (0,-0.8) {$\{1,2,3,4,6,12\}$ 上整除关系的哈塞图};
+\end{tikzpicture}
+\caption{整除偏序的哈塞图——12覆盖4和6，4和6覆盖2，2和3覆盖1}
+\end{figure}
+
+\subsection{极大元/极小元与最大元/最小元}
+
+\begin{center}
+\begin{tabular}{c|c|c}
+\toprule
+概念 & 定义 & 存在性 \\
+\midrule
+极大元 & 不存在 $b$ 使 $a \prec b$ & 必有，可能多个 \\
+极小元 & 不存在 $b$ 使 $b \prec a$ & 必有，可能多个 \\
+最大元 & 对所有 $b$，$b \preceq a$ & 至多一个 \\
+最小元 & 对所有 $b$，$a \preceq b$ & 至多一个 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{上界/下界与确界}
+
+设 $(A,\preceq)$ 是偏序集，$B \subseteq A$：
+\begin{itemize}
+\item \textbf{上界} $a \in A$：对所有 $b \in B$，$b \preceq a$。
+\item \textbf{下界} $a \in A$：对所有 $b \in B$，$a \preceq b$。
+\item \textbf{上确界} $\sup B$：$B$ 的最小上界。
+\item \textbf{下确界} $\inf B$：$B$ 的最大下界。
+\end{itemize}
+
+\subsection{全序与良序}
+
+\begin{itemize}
+\item \textbf{全序集}（线性序）：偏序集中任意两元素都可比。如 $(\R,\leq)$ 是全序。
+\item \textbf{良序集}：全序集中每个非空子集都有最小元。如 $(\N,\leq)$ 是良序，$(\Z,\leq)$ 不是。
+\end{itemize}
+
+\section{函数}
+
+\begin{mydefinition}{函数}
+设 $f \subseteq A \times B$ 是一个关系，若对每个 $a \in A$，存在\textbf{唯一的} $b \in B$ 使 $(a,b) \in f$，则称 $f$ 为从 $A$ 到 $B$ 的\textbf{函数}，记作 $f: A \to B$，$f(a)=b$。
+\end{mydefinition}
+
+$A$ 为定义域，$B$ 为陪域，$f(A) = \{f(a) \mid a \in A\}$ 为值域。
+
+\subsection{单射、满射、双射}
+
+\begin{center}
+\begin{tabular}{c|c|c}
+\toprule
+类型 & 定义 & 等价条件 \\
+\midrule
+\textbf{单射} & $a_1 \neq a_2 \Rightarrow f(a_1) \neq f(a_2)$ & $f(a_1)=f(a_2) \Rightarrow a_1=a_2$ \\
+\textbf{满射} & $f(A) = B$ & 对每个 $b \in B$，存在 $a \in A$ 使 $f(a)=b$ \\
+\textbf{双射} & 既单射又满射 & $A$ 与 $B$ 之间一一对应 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{函数的复合与逆函数}
+
+函数复合：$(g \circ f)(a) = g(f(a))$，满足结合律。
+
+若 $f$ 是双射，则存在\textbf{逆函数} $f^{-1}: B \to A$，$f^{-1}(b) = a \iff f(a) = b$。
+
+性质：$f^{-1} \circ f = I_A$，$f \circ f^{-1} = I_B$；$(g \circ f)^{-1} = f^{-1} \circ g^{-1}$。
+
+\subsection{几类特殊函数}
+
+\begin{itemize}
+\item \textbf{恒等函数} $I_A(a) = a$
+\item \textbf{特征函数} $\chi_A: U \to \{0,1\}$，$\chi_A(x) = 1$ 当 $x \in A$，否则 $0$
+\item \textbf{取整函数}：下取整 $\lfloor x \rfloor$，上取整 $\lceil x \rceil$
+\end{itemize}
+
+\section{鸽巢原理}
+
+\begin{myTheorem}{鸽巢原理基本形式}
+若把 $n+1$ 个物体放入 $n$ 个盒子，则至少有一个盒子包含至少 $2$ 个物体。
+\end{myTheorem}
+
+\begin{proof}
+反证法。若每个盒子至多包含 $1$ 个物体，则 $n$ 个盒子至多包含 $n$ 个物体，与有 $n+1$ 个物体矛盾。
+\end{proof}
+
+\textbf{加强形式}：若把 $q_1 + q_2 + \dots + q_n - n + 1$ 个物体放入 $n$ 个盒子，则存在某个 $i$ 使第 $i$ 个盒子包含至少 $q_i$ 个物体。
+
+\textbf{平均形式}：若 $m$ 个物体放入 $n$ 个盒子，则至少有一个盒子包含至少 $\lceil m/n \rceil$ 个物体。
+
+% --- TikZ: 鸽巢原理示意图 ---
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.9]
+\tikzset{
+    dmBox/.style={rectangle,draw=blue!60,fill=blue!10,minimum width=2cm,minimum height=1.2cm,align=center},
+    dmPigeon/.style={circle,draw=red!60,fill=red!10,minimum size=6mm}
+}
+\node[dmBox] (b1) at (0,0) {盒子 1};
+\node[dmBox] (b2) at (2.5,0) {盒子 2};
+\node[dmBox] (b3) at (5,0) {盒子 3};
+\node[dmBox] (b4) at (7.5,0) {盒子 4};
+% 5个物体放入4个盒子
+\node[dmPigeon] at (0,0.4) {};
+\node[dmPigeon] at (0.2,0.7) {};
+\node[dmPigeon] at (2.5,0.4) {};
+\node[dmPigeon] at (5,0.4) {};
+\node[dmPigeon] at (7.5,0.4) {};
+\node[font=\small] at (3.75,-1.2) {$n=4$ 个盒子，$n+1=5$ 个物体，盒子1必定含 $\geq 2$ 个};
+\end{tikzpicture}
+\caption{鸽巢原理示意图——5个物体放入4个盒子}
+\end{figure}
+
+\begin{example}
+在任意 $13$ 个人中，至少有 $2$ 人生日在同一个月。（12个月为12个盒子，13个人为物体）
+\end{example}
+
+\begin{mycode}{关系性质检查与等价类求解}
+\begin{lstlisting}[language=Python]
+class Relation:
+    def __init__(self, n):
+        self.n = n
+        self.matrix = [[0] * n for _ in range(n)]
+
+    def add(self, a, b):
+        self.matrix[a][b] = 1
+
+    def is_reflexive(self):
+        return all(self.matrix[i][i] for i in range(self.n))
+
+    def is_irreflexive(self):
+        return all(not self.matrix[i][i] for i in range(self.n))
+
+    def is_symmetric(self):
+        return all(self.matrix[i][j] == self.matrix[j][i]
+                   for i in range(self.n) for j in range(self.n))
+
+    def is_antisymmetric(self):
+        for i in range(self.n):
+            for j in range(self.n):
+                if i != j and self.matrix[i][j] and self.matrix[j][i]:
+                    return False
+        return True
+
+    def is_transitive(self):
+        for i in range(self.n):
+            for j in range(self.n):
+                for k in range(self.n):
+                    if (self.matrix[i][j] and self.matrix[j][k]
+                        and not self.matrix[i][k]):
+                        return False
+        return True
+
+    def is_equivalence(self):
+        return (self.is_reflexive() and self.is_symmetric()
+                and self.is_transitive())
+
+    def is_partial_order(self):
+        return (self.is_reflexive() and self.is_antisymmetric()
+                and self.is_transitive())
+
+    def transitive_closure(self):
+        W = [row[:] for row in self.matrix]
+        for k in range(self.n):
+            for i in range(self.n):
+                if W[i][k]:
+                    for j in range(self.n):
+                        W[i][j] = W[i][j] or W[k][j]
+        return W
+
+    def equivalence_classes(self):
+        closure = self.transitive_closure()
+        reach = [[closure[i][j] or closure[j][i] for j in range(self.n)]
+                 for i in range(self.n)]
+        visited = [False] * self.n
+        classes = []
+        for i in range(self.n):
+            if not visited[i]:
+                eq_class = [j for j in range(self.n) if reach[i][j]]
+                for j in eq_class:
+                    visited[j] = True
+                classes.append(eq_class)
+        return classes
+
+# 测试：模2同余关系
+R = Relation(4)
+for i in range(4):
+    R.add(i, i)
+R.add(0, 2); R.add(2, 0)
+R.add(1, 3); R.add(3, 1)
+
+print("等价关系:", R.is_equivalence())  # True
+print("等价类:", R.equivalence_classes())  # [[0,2],[1,3]]
+\end{lstlisting}
+\end{mycode}

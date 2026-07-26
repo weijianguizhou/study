@@ -1,0 +1,594 @@
+\chapter{图论基础}
+\intro{图论研究由顶点和连接顶点的边构成的离散结构，起源于1736年欧拉对哥尼斯堡七桥问题的研究，如今已成为计算机科学和网络分析等领域的基础工具。}
+
+\section{图的基本概念}
+
+\subsection{无向图与有向图的定义}
+
+\begin{mydefinition}{}
+一个\textbf{无向图}是一个有序二元组 $G = (V, E)$，其中：
+\begin{itemize}
+    \item $V$ 是非空的\textbf{顶点集}，元素称为顶点
+    \item $E$ 是\textbf{边集}，每条边是 $V$ 中的\textbf{无序对} $\{u, v\}$（$u, v \in V$ 且通常 $u \neq v$）
+\end{itemize}
+\end{mydefinition}
+
+\begin{mydefinition}{}
+一个\textbf{有向图}是一个有序二元组 $D = (V, E)$，其中：
+\begin{itemize}
+    \item $V$ 是非空的\textbf{顶点集}
+    \item $E$ 是\textbf{弧集}，每条弧是 $V$ 中的\textbf{有序对} $(u, v)$，$u$ 称为起点，$v$ 称为终点
+\end{itemize}
+\end{mydefinition}
+
+\textbf{图的阶}：$|V|$，即顶点数，常用 $n$ 表示。\quad \textbf{图的规模}：$|E|$，即边数，常用 $m$ 表示。
+
+\subsection{邻接、关联与度}
+
+\begin{itemize}
+    \item \textbf{邻接}：无向图中若 $\{u, v\} \in E$，称 $u$ 与 $v$ 邻接。有向图中若 $(u, v) \in E$，称 $u$ 邻接到 $v$。
+    \item \textbf{关联}：边 $\{u, v\}$ 与顶点 $u$ 和 $v$ 关联。
+    \item \textbf{度} $\deg(v)$：与 $v$ 关联的边数。有向图中有入度 $\deg^{-}(v)$ 和出度 $\deg^{+}(v)$。
+    \item \textbf{孤立点}：度为 $0$ 的顶点。\textbf{悬挂点}：度为 $1$ 的顶点。
+\end{itemize}
+
+\subsection{握手定理}
+
+\begin{myTheorem}{握手定理}
+对任意无向图 $G = (V, E)$，
+\[
+\sum_{v \in V} \deg(v) = 2|E|
+\]
+\end{myTheorem}
+
+\begin{proof}
+每条边 $\{u, v\}$ 在计算度数时被计数两次（一次给 $u$，一次给 $v$）。因此所有顶点的度数之和等于边数的两倍。
+\end{proof}
+
+\begin{corollary}
+任何无向图中，度数为奇数的顶点个数必为偶数。
+\end{corollary}
+
+对有向图，有：
+\[
+\sum_{v \in V} \deg^{+}(v) = \sum_{v \in V} \deg^{-}(v) = |E|
+\]
+
+\section{图的分类}
+
+\subsection{简单图、完全图与二部图}
+
+\begin{mydefinition}{}
+\begin{itemize}
+    \item \textbf{简单图}：无自环且任意两顶点之间至多一条边的无向图。
+    \item \textbf{完全图} $K_n$：$n$ 个顶点的简单图，任意两不同顶点之间都有一条边。$|E(K_n)| = \binom{n}{2} = \frac{n(n-1)}{2}$。
+    \item \textbf{二部图}：存在顶点划分 $V = X \cup Y$（$X \cap Y = \emptyset$），使得每条边都连接 $X$ 和 $Y$ 中的顶点。
+    \item \textbf{完全二部图} $K_{m,n}$：$|E(K_{m,n})| = m \cdot n$。
+\end{itemize}
+\end{mydefinition}
+
+\begin{center}
+\begin{tikzpicture}[
+    dmGraphNode/.style={circle, draw=blue!70, fill=blue!10, minimum size=8mm, inner sep=0pt}
+]
+% K5
+\begin{scope}[scale=1.2]
+\foreach \i in {1,...,5} {
+    \node[dmGraphNode] (k5\i) at ({72*\i-18}:1.2cm) {};
+}
+\foreach \i in {1,...,5} {
+    \foreach \j in {1,...,5} {
+        \ifnum\i<\j
+            \draw[thick, gray!50] (k5\i) -- (k5\j);
+        \fi
+    }
+}
+\node at (0, -1.8) {$K_5$（5阶完全图，10条边）};
+\end{scope}
+
+% K33
+\begin{scope}[xshift=4.5cm, scale=1.2]
+\foreach \i in {0,1,2} {
+    \node[dmGraphNode, fill=red!10, draw=red!60] (k33x\i) at (0, 1.0-\i*0.9) {};
+}
+\foreach \i in {0,1,2} {
+    \node[dmGraphNode, fill=blue!10, draw=blue!60] (k33y\i) at (1.8, 1.0-\i*0.9) {};
+}
+\foreach \i in {0,1,2} {
+    \foreach \j in {0,1,2} {
+        \draw[thick, gray!50] (k33x\i) -- (k33y\j);
+    }
+}
+\node at (0.9, -1.8) {$K_{3,3}$（完全二部图，9条边）};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+\begin{myTheorem}{二部图的判定}
+$G$ 是二部图 $\iff$ $G$ 中无奇数长度的回路。
+\end{myTheorem}
+
+\subsection{正则图与补图}
+
+\begin{mydefinition}{}
+\begin{itemize}
+    \item \textbf{$k$-正则图}：所有顶点的度都等于 $k$ 的简单图。$K_n$ 是 $(n-1)$-正则图;Petersen 图是 $3$-正则图。
+    \item \textbf{补图} $\overline{G}$：图 $G = (V, E)$ 的补图 $\overline{G} = (V, \overline{E})$，其中
+    \[
+    \overline{E} = \{\{u, v\} \mid u, v \in V, u \neq v, \{u, v\} \notin E\}
+    \]
+\end{itemize}
+\end{mydefinition}
+
+\subsection{子图类型}
+
+\begin{itemize}
+    \item \textbf{子图}：$V_H \subseteq V$ 且 $E_H \subseteq E$。
+    \item \textbf{生成子图}：$V_H = V$ 的子图（覆盖所有顶点）。
+    \item \textbf{导出子图} $G[S]$：由顶点子集 $S \subseteq V$ 导出，包含 $S$ 中的所有顶点以及两端点都在 $S$ 中的所有边。
+\end{itemize}
+
+\section{图的表示}
+
+\subsection{邻接矩阵}
+
+\begin{mydefinition}{}
+设 $G = (V, E)$ 的顶点集 $V = \{v_1, v_2, \dots, v_n\}$，则 $G$ 的\textbf{邻接矩阵} $A = (a_{ij})_{n \times n}$ 定义为：
+\[
+a_{ij} = \begin{cases} 1, & \text{若 } \{v_i, v_j\} \in E \\ 0, & \text{否则} \end{cases}
+\]
+\end{mydefinition}
+
+\textbf{性质}：
+\begin{enumerate}
+    \item 无向图的邻接矩阵是对称矩阵：$A^T = A$
+    \item 第 $i$ 行（或第 $i$ 列）的和 $= \deg(v_i)$
+    \item \textbf{$A^k$ 的意义}：$(A^k)_{ij} = $ 从 $v_i$ 到 $v_j$ 的长度为 $k$ 的通路数
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[
+    dmGraphNode/.style={circle, draw=blue!60, fill=blue!10, minimum size=7mm, inner sep=0pt},
+    dmMatrix/.style={matrix of math nodes, left delimiter={[}, right delimiter={]}, nodes={minimum width=1.2em, minimum height=1.2em}, row sep=0pt, column sep=0pt}
+]
+% graph
+\foreach \i in {1,...,4} {
+    \node[dmGraphNode] (v\i) at ({90*\i-45}:1.0cm) {\i};
+}
+\draw[thick, gray!50] (v1) -- (v2) -- (v3) -- (v4) -- (v1) -- (v3);
+
+% arrow to matrix
+\node[right=2.0cm of v3] (arrow) {$\longrightarrow$};
+
+% matrix
+\node[right=0.5cm of arrow, dmMatrix] (A) {
+0 & 1 & 1 & 1 \\
+1 & 0 & 1 & 0 \\
+1 & 1 & 0 & 1 \\
+1 & 0 & 1 & 0 \\
+};
+\draw[decorate, decoration={brace, mirror, amplitude=5pt}] 
+    (A-1-4.north east) -- (A-4-4.south east)
+    node[midway, right=6pt] {$\deg(v_i)$};
+\end{tikzpicture}
+\end{center}
+
+\subsection{邻接表与关联矩阵}
+
+\textbf{邻接表}为每个顶点维护一个邻接顶点链表。对于稀疏图（$|E| \ll \binom{n}{2}$），邻接表比邻接矩阵更省空间。
+
+\textbf{关联矩阵} $B = (b_{ij})_{n \times m}$：$b_{ij} = 1$ 若 $v_i$ 与 $e_j$ 关联，否则 $b_{ij} = 0$。有向图中 $b_{ij} = 1$（起点）、$b_{ij} = -1$（终点）。
+
+\section{路径与连通性}
+
+\subsection{通路与回路}
+
+\begin{mydefinition}{}
+\begin{itemize}
+    \item \textbf{通路}：顶点和边交替出现的序列，长度为边数 $k$。
+    \item \textbf{迹}：边不重复的通路。
+    \item \textbf{路径（简单通路）}：顶点不重复的通路。
+    \item \textbf{回路（圈）}：起点 = 终点的长度至少为 1 的通路。
+\end{itemize}
+\end{mydefinition}
+
+\subsection{连通性}
+
+\begin{mydefinition}{}
+无向图中，若存在从 $u$ 到 $v$ 的通路，则称 $u$ 与 $v$ \textbf{连通}。连通关系是顶点集上的一个等价关系。
+\end{mydefinition}
+
+\begin{itemize}
+    \item \textbf{连通图}：任意两顶点都连通的图。
+    \item \textbf{连通分量}：极大连通子图。
+    \item 有向图中：\textbf{强连通}（任意两顶点双向可到达）、\textbf{弱连通}（忽略方向后连通）。
+    \item \textbf{割点}：删除该顶点后连通分量数增加的顶点。
+    \item \textbf{桥}：删除该边后连通分量数增加的边。$e$ 是桥 $\iff$ $e$ 不在任何简单回路中。
+\end{itemize}
+
+\subsection{点连通度与边连通度}
+
+\begin{mydefinition}{}
+\begin{itemize}
+    \item \textbf{点连通度} $\kappa(G)$：使 $G$ 不连通或成为平凡图所需删除的最少顶点数。
+    \item \textbf{边连通度} $\lambda(G)$：使 $G$ 不连通所需删除的最少边数。
+    \item \textbf{最小度} $\delta(G)$：$\min_{v \in V} \deg(v)$。
+\end{itemize}
+\end{mydefinition}
+
+\begin{myTheorem}{Whitney 不等式}
+\[
+\kappa(G) \leq \lambda(G) \leq \delta(G)
+\]
+\end{myTheorem}
+
+\section{欧拉图}
+
+\begin{mydefinition}{}
+\begin{itemize}
+    \item \textbf{欧拉通路}：经过图中每条边\textbf{恰好一次}的通路。
+    \item \textbf{欧拉回路}：经过图中每条边\textbf{恰好一次}的回路。
+    \item \textbf{欧拉图}：存在欧拉回路的图。
+\end{itemize}
+\end{mydefinition}
+
+\begin{myTheorem}{欧拉回路存在条件}
+连通无向图 $G$ 存在欧拉回路 $\iff$ $G$ 中所有顶点的度均为\textbf{偶数}。
+\end{myTheorem}
+
+\begin{myTheorem}{欧拉通路存在条件}
+连通无向图 $G$ 存在欧拉通路（但非欧拉回路）$\iff$ $G$ 中\textbf{恰有两个奇数度顶点}（这两个顶点为通路的起点和终点）。
+\end{myTheorem}
+
+\begin{example}
+哥尼斯堡七桥：四个区域的度分别为 3, 3, 3, 5（全为奇数），因此不存在欧拉通路。
+\end{example}
+
+\begin{center}
+\begin{tikzpicture}[
+    dmENode/.style={circle, draw=blue!60, fill=blue!10, minimum size=7mm, inner sep=0pt},
+    dmEEdge/.style={thick, ->, >=Stealth}
+]
+% house-shaped graph for Euler path
+\node[dmENode] (e1) at (0,1.5) {1};
+\node[dmENode] (e2) at (2,2.5) {2};
+\node[dmENode] (e3) at (4,1.5) {3};
+\node[dmENode] (e4) at (2,0)   {4};
+\node[dmENode] (e5) at (4,0)   {5};
+
+\draw[dmEEdge, red!70] (e1) -- (e2);
+\draw[dmEEdge, red!70] (e2) -- (e3);
+\draw[dmEEdge, red!70] (e3) -- (e1);
+\draw[dmEEdge, red!70] (e1) -- (e4);
+\draw[dmEEdge, red!70] (e4) -- (e5);
+\draw[dmEEdge, red!70] (e5) -- (e3);
+
+\foreach \n/\d in {e1/3, e2/2, e3/3, e4/2, e5/2} {
+    \node[font=\tiny, below=1pt of \n] {$\deg=\d$};
+}
+
+\node at (2, -1.0) {\fangsong 欧拉通路示例：度序列 $(3,2,3,2,2)$，恰有两个奇数度顶点 1 和 3};
+\node at (2, -1.5) {\fangsong 欧拉通路：$1\to2\to3\to1\to4\to5\to3$};
+\end{tikzpicture}
+\end{center}
+
+\subsection{Fleury 算法}
+
+\begin{myalgorithm}{Fleury 算法求欧拉回路}
+\begin{enumerate}
+    \item 检查图是否满足欧拉条件（所有度为偶数 + 连通）。
+    \item 从合适起点开始（欧拉通路从奇数度顶点开始）。
+    \item 每步选择一条边，\textbf{除非别无选择，否则不选桥（割边）}。
+    \item 删除已走过的边，继续在剩余子图中走，直到所有边都被走过。
+\end{enumerate}
+\end{myalgorithm}
+
+\section{哈密顿图}
+
+\begin{mydefinition}{}
+\begin{itemize}
+    \item \textbf{哈密顿通路}：经过图中每个顶点\textbf{恰好一次}的通路。
+    \item \textbf{哈密顿回路}：经过图中每个顶点\textbf{恰好一次}的回路。
+    \item \textbf{哈密顿图}：存在哈密顿回路的图。
+\end{itemize}
+\end{mydefinition}
+
+\begin{myTheorem}{Dirac 定理（1952）}
+若 $G$ 是 $n \geq 3$ 个顶点的简单图且 $\delta(G) \geq n/2$，则 $G$ 是哈密顿图。
+\end{myTheorem}
+
+\begin{myTheorem}{Ore 定理（1960）}
+若 $G$ 是 $n \geq 3$ 个顶点的简单图，且对任意不相邻的 $u, v \in V$ 有 $\deg(u) + \deg(v) \geq n$，则 $G$ 是哈密顿图。
+\end{myTheorem}
+
+\begin{center}
+\begin{tikzpicture}[
+    dmHNode/.style={circle, draw=green!50!black, fill=green!10, minimum size=8mm, inner sep=0pt},
+    dmHEdge/.style={thick},
+    dmHCycle/.style={thick, ->, >=Stealth, red!70}
+]
+% K5 with highlighted Hamiltonian cycle
+\foreach \i in {1,...,5} {
+    \node[dmHNode] (h\i) at ({72*\i-18}:1.3cm) {\i};
+}
+% All edges in gray
+\foreach \i in {1,...,5} {
+    \foreach \j in {1,...,5} {
+        \ifnum\i<\j
+            \draw[dmHEdge, gray!30] (h\i) -- (h\j);
+        \fi
+    }
+}
+% Hamiltonian cycle in red
+\draw[dmHCycle] (h1) -- (h2) -- (h3) -- (h4) -- (h5) -- (h1);
+\node at (0, -1.8) {$K_5$ 中的哈密顿回路（红色）};
+\end{tikzpicture}
+\end{center}
+
+\begin{remark}
+判断哈密顿性是一个\textbf{NP-完全}问题。Petersen 图（10 个顶点，3-正则）是经典的极小非哈密顿图反例。
+\end{remark}
+
+\section{平面图}
+
+\subsection{欧拉公式}
+
+\begin{mydefinition}{}
+一个图若能在平面上画出，使得任意两条边只在顶点处相交（没有边交叉），则称为\textbf{平面图}。
+\end{mydefinition}
+
+\begin{myTheorem}{欧拉公式}
+设 $G$ 是连通的平面图，有 $n$ 个顶点、$m$ 条边，且其平面嵌入将平面划分为 $f$ 个面（含外部的无限面），则
+\[
+\boxed{n - m + f = 2}
+\]
+\end{myTheorem}
+
+\begin{corollary}
+\begin{enumerate}
+    \item 对 $n \geq 3$ 的简单连通平面图：$m \leq 3n - 6$
+    \item 对 $n \geq 3$ 且无三角形的简单连通平面图：$m \leq 2n - 4$
+    \item $K_5$ 不满足 $m \leq 3n-6$（$10 \not\leq 9$），故 $K_5$ 非平面图
+    \item $K_{3,3}$ 不满足 $m \leq 2n-4$（$9 \not\leq 8$），故 $K_{3,3}$ 非平面图
+\end{enumerate}
+\end{corollary}
+
+\subsection{Kuratowski 定理}
+
+\begin{myTheorem}{Kuratowski 定理（1930）}
+一个图是平面图 $\iff$ 它不包含与 $K_5$ 或 $K_{3,3}$ \textbf{同胚}的子图（等价地：不以 $K_5$ 或 $K_{3,3}$ 为\textbf{子式}）。
+\end{myTheorem}
+
+\begin{center}
+\begin{tikzpicture}[
+    dmPlanarNode/.style={circle, draw=blue!60, fill=blue!10, minimum size=7mm, inner sep=0pt}
+]
+% Planar embedding of K4
+\begin{scope}[scale=1.0]
+\node[dmPlanarNode] (p1) at (90:1.2cm)   {1};
+\node[dmPlanarNode] (p2) at (210:1.2cm)  {2};
+\node[dmPlanarNode] (p3) at (330:1.2cm)  {3};
+\node[dmPlanarNode] (p4) at (0,0)        {4};
+
+\draw[thick] (p1) -- (p2) -- (p3) -- (p1);  % outer face
+\draw[thick] (p1) -- (p4) -- (p2);
+\draw[thick] (p4) -- (p3);
+
+% Mark faces
+\node at (0, 1.25) {\small $f_1$};
+\node at (-1.0, -0.3) {\small $f_2$};
+\node at (1.0, -0.3) {\small $f_3$};
+\node at (0, -0.2) {\small $f_4$};
+\end{scope}
+
+\node at (0, -2.2) {$K_4$ 的平面嵌入：$n=4,\; m=6,\; f=4$，验证 $4-6+4=2$};
+\end{tikzpicture}
+\end{center}
+
+\section{图的着色}
+
+\subsection{顶点着色与色数}
+
+\begin{mydefinition}{}
+图 $G$ 的一个\textbf{正常 $k$-着色}是一个函数 $c: V \to \{1, 2, \dots, k\}$，使得相邻顶点的颜色不同。\textbf{色数} $\chi(G)$ 是使 $G$ 可正常着色的最小颜色数 $k$。
+\end{mydefinition}
+
+\begin{example}
+$\chi(K_n) = n$（每个顶点颜色必须不同），$\chi(\text{二部图}) = 2$，$\chi(C_{2k}) = 2$，$\chi(C_{2k+1}) = 3$。
+\end{example}
+
+\textbf{基本界}：$\chi(G) \geq \omega(G)$（团数），$\chi(G) \leq \Delta(G) + 1$。
+
+\subsection{四色定理}
+
+\begin{myTheorem}{四色定理}
+任何平面图的色数不超过 4。即任何地图用 4 种颜色即可正常着色。
+\end{myTheorem}
+
+这是第一个主要依靠计算机辅助证明的数学定理（Appel 和 Haken, 1976）。
+
+\begin{center}
+\begin{tikzpicture}[
+    dmColorNode/.style={circle, draw=black, minimum size=9mm, inner sep=0pt},
+]
+% Simple graph for coloring demo
+\node[dmColorNode, fill=red!40]   (c1) at (0,0)    {1};
+\node[dmColorNode, fill=blue!40]  (c2) at (2,0)    {2};
+\node[dmColorNode, fill=green!40] (c3) at (1,1.7)  {3};
+\node[dmColorNode, fill=blue!40]  (c4) at (1,0.6)  {4};
+\draw[thick] (c1) -- (c2) -- (c3) -- (c1);
+\draw[thick] (c1) -- (c4) -- (c2);
+\draw[thick] (c4) -- (c3);
+\node at (3.5, 0.85) {\small 使用 3 种颜色};
+\node at (3.5, 0.3)  {\small $\chi(G)=3$};
+\end{tikzpicture}
+\end{center}
+
+\subsection{贪心着色算法}
+
+\textbf{贪心着色}：按某个顺序遍历所有顶点，给每个顶点分配当前已遍历的邻点中未使用的最小颜色编号。贪心着色使用的颜色数 $\leq \Delta(G) + 1$。
+
+\section{图的编程实现}
+
+\begin{mycode}{图的邻接矩阵与遍历}
+\begin{lstlisting}[language=Python]
+from collections import deque
+
+class Graph:
+    def __init__(self, n):
+        self.n = n
+        self.adj_matrix = [[0] * n for _ in range(n)]
+        self.adj_list = [[] for _ in range(n)]
+
+    def add_edge(self, u, v):
+        self.adj_matrix[u][v] = self.adj_matrix[v][u] = 1
+        self.adj_list[u].append(v)
+        self.adj_list[v].append(u)
+
+    def dfs(self, start):
+        visited = set()
+        def _dfs(u):
+            visited.add(u)
+            for v in self.adj_list[u]:
+                if v not in visited:
+                    _dfs(v)
+        _dfs(start)
+        return visited
+
+    def bfs(self, start):
+        visited = {start}
+        q = deque([start])
+        while q:
+            u = q.popleft()
+            for v in self.adj_list[u]:
+                if v not in visited:
+                    visited.add(v)
+                    q.append(v)
+        return visited
+
+    def connected_components(self):
+        visited = set()
+        comps = []
+        for v in range(self.n):
+            if v not in visited:
+                comp = self.bfs(v)
+                visited.update(comp)
+                comps.append(comp)
+        return comps
+
+# 示例
+g = Graph(5)
+edges = [(0,1),(0,2),(1,2),(1,3),(2,3),(3,4)]
+for u, v in edges:
+    g.add_edge(u, v)
+
+print("邻接矩阵：")
+for row in g.adj_matrix:
+    print(row)
+print(f"连通分量：{g.connected_components()}")
+\end{lstlisting}
+\end{mycode}
+
+\begin{mycode}{Fleury 算法求欧拉回路}
+\begin{lstlisting}[language=Python]
+def fleury_eulerian_path(adj, n):
+    edge_count = [{} for _ in range(n)]
+    for u in range(n):
+        for v in adj[u]:
+            edge_count[u][v] = edge_count[u].get(v, 0) + 1
+
+    # 找起点：检查奇数度顶点
+    odd = [v for v in range(n) if len(adj[v]) % 2 == 1]
+    if len(odd) not in (0, 2):
+        return None
+    start = odd[0] if len(odd) == 2 else 0
+
+    path = []
+    stack = [start]
+    while stack:
+        u = stack[-1]
+        # 找下一个未走的邻居
+        next_vertex = None
+        for v in adj[u]:
+            if edge_count[u].get(v, 0) > 0:
+                next_vertex = v
+                break
+        if next_vertex is not None:
+            edge_count[u][next_vertex] -= 1
+            edge_count[next_vertex][u] -= 1
+            stack.append(next_vertex)
+        else:
+            path.append(stack.pop())
+    return path[::-1]
+
+# 测试
+adj = {0:[1,2], 1:[0,2,3], 2:[0,1,3], 3:[1,2,4], 4:[3]}
+print(fleury_eulerian_path(adj, 5))
+\end{lstlisting}
+\end{mycode}
+
+\begin{mycode}{Kosaraju 算法求强连通分量}
+\begin{lstlisting}[language=Python]
+def kosaraju(adj, n):
+    # 第一遍 DFS 获得完成顺序
+    visited = [False] * n
+    order = []
+    def dfs1(u):
+        visited[u] = True
+        for v in adj[u]:
+            if not visited[v]:
+                dfs1(v)
+        order.append(u)
+
+    for u in range(n):
+        if not visited[u]:
+            dfs1(u)
+
+    # 反转图
+    rev_adj = [[] for _ in range(n)]
+    for u in range(n):
+        for v in adj[u]:
+            rev_adj[v].append(u)
+
+    # 第二遍 DFS
+    visited = [False] * n
+    sccs = []
+    def dfs2(u, comp):
+        visited[u] = True
+        comp.append(u)
+        for v in rev_adj[u]:
+            if not visited[v]:
+                dfs2(v, comp)
+
+    for u in reversed(order):
+        if not visited[u]:
+            comp = []
+            dfs2(u, comp)
+            sccs.append(comp)
+    return sccs
+
+adj = [[1],[2],[0,3],[4],[5],[3]]
+print(f"强连通分量：{kosaraju(adj, 6)}")
+\end{lstlisting}
+\end{mycode}
+
+\section{本章小结}
+
+\begin{myTheorem}{图论基础知识体系}
+\[
+\begin{array}{c|l}
+\hline
+\textbf{主题} & \textbf{核心要点} \\
+\hline
+\text{基本概念} & \text{顶点、边、度、握手定理 } \sum\deg(v)=2|E| \\
+\text{图的分类} & \text{简单图、完全图 }K_n\text{、二部图、正则图、子图} \\
+\text{图的表示} & \text{邻接矩阵（对称、}A^k\text{含义）、邻接表、关联矩阵} \\
+\text{连通性} & \text{连通分量、强/弱连通、割点与桥、}\kappa\leq\lambda\leq\delta \\
+\text{欧拉图} & \text{全部偶数度 }\iff\text{ 欧拉回路;Fleury 算法} \\
+\text{哈密顿图} & \text{Dirac/Ore 充分条件;NP-完全问题} \\
+\text{平面图} & \text{欧拉公式 }n-m+f=2\text{;Kuratowski 定理} \\
+\text{着色} & \text{色数 }\chi(G)\text{、四色定理、贪心着色} \\
+\hline
+\end{array}
+\]
+\end{myTheorem}

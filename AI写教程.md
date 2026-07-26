@@ -76,6 +76,7 @@
 ### 3.3 TikZ 规则
 - **样式名必须加前缀**（如 `fluidNeuron` 而非 `neuron`，`ch09shock` 而非 `shock`）
 - 节点中换行：`align=center` + `\\`，不能在 LR 模式直接用 `\\`
+- **所有 TikZ 语句结尾必须用 ASCII 分号 `;`**（U+003B）。中文输入法常把 `;` 误打为全角分号 `；`（U+FF1B），TikZ 不认。编译后报 `Giving up on this path. Did you forget a semicolon?`
 - 所有 `.tikz` 图片必须在 `main.tex` 中通过 `\input{}` 加载
 - **电路图**（如 RLC 电路）：需 `\usepackage{circuitikz}`，提供 `V`/`R`/`L`/`C` 等组件键
 - **画弹簧/线圈**：`decoration={coil,...}` 需要加载 `decorations.pathmorphing` 库
@@ -87,6 +88,7 @@
   \pgfkeys{/pgf/fpu=false}
   ```
   （`atan2` 虽不直接溢出，但中间量的 `10^(2*\x)` 仍会超限，一并包住）
+- **箭头类型**：只能用 arrows.meta 库支持的箭头名（`Stealth`、`Triangle`、`Latex`、`Circle` 等）。旧式箭头名如 `open triangle 60` 是 PGF 1.x 遗留语法，新版报 `Unknown arrow tip kind`。统一用 `-Stealth` 或 `-Triangle` 替代
 
 ### 3.4 字体规则
 - **楷体 (`\kaishu`) 和仿宋 (`\fangsong`) 无粗体变体**。`\textbf{}`/`\bfseries` 不能与它们同时使用
@@ -143,6 +145,8 @@
 | 17 | `proof` 环境标题触发 `TU/KaiTi(0)/b/n' undefined` | 定义 `{\kaishu\uline{\textbf{#1.}}}` 中 kaishu 内嵌 `\textbf` | 改为 `{\heiti\uline{#1.}}`，黑体自带强调无需 `\textbf` |
 | 18 | `Undefined control sequence \iddots` | `\iddots` 不存在，拼写错误 | 改为 `\ddots`（无论正向/反向对角点均用这个） |
 | 19 | `Package pgfkeys Error: '/tcb/1967）'` | tcolorbox 标题 `极点配置定理（Wonham, 1967）` 中括号被解析为 key | 括号部分裹入 `{}`：`极点配置定理{(Wonham, 1967)}` |
+| 20 | `! Package tikz Error: Giving up on this path. Did you forget a semicolon?` | TikZ 语句末尾用了**中文全角分号 `；`**（U+FF1B）而非 ASCII `;`（U+003B）。中文输入法在代码环境中习惯性打出全角符号 | 将所有 `}；` 替换为 `};`（也适用于 `\draw ... ;`、`\node ... ;` 等）。建议连写 `.tex` 时在 TikZ 代码块中切换英文输入法 |
+| 21 | `! Package pgf Error: Unknown arrow tip kind 'open triangle 60'` | `open triangle 60` 是旧式 PGF 箭头名，arrows.meta 库不识别 | 替换为 arrows.meta 支持的名称：`-Stealth`、`-Triangle`、`-Latex`、`-Circle`。统一用 `Stealth` 替代所有旧式箭头名 |
 
 ---
 
@@ -221,10 +225,29 @@
 - **重命名**：PowerShell `Rename-Item -LiteralPath src dst`
 - **批量替换**：`(Get-Content file -Raw).Replace(old, new)` 或 `-replace` 正则
 - **验证命名**：`Select-String -Pattern "\[\[Chapter" *.md` 确认无残留旧链接
+- **编译后错误速查**：`xelatex ... 2>&1 | Select-String -Pattern "Error|! |Fatal"`（仅显示 Error 行，忽略 Warning 洪水）
+- **批量修复全角分号 + 旧式箭头**（编译报错后一键修复最常见的两类错误）：
+  ```powershell
+  python -c "
+  import os
+  base = r'学科\LaTeX目录'
+  for fname in ['Chapter06.tex','Chapter08.tex','Chapter12.tex']:
+      path = os.path.join(base, fname)
+      with open(path, 'r', encoding='utf-8') as f:
+          c = f.read()
+      c = c.replace('\uff1b', ';')          # 全角分号 → ASCII分号
+      c = c.replace('open triangle 60', 'Stealth')  # 旧式箭头 → arrows.meta
+      with open(path, 'w', encoding='utf-8') as f:
+          f.write(c)
+      print(f'{fname}: done')
+  "
+  ```
 
 ---
 
-## 附录：流体力学教程数据
+## 附录：已有教程数据
+
+### 流体力学
 
 | 指标 | 值 |
 |------|-----|
@@ -235,6 +258,37 @@
 | Python 代码块 | ~20 |
 | .md 总大小 | ~200 KB |
 | 总文件 | 13 .md + 1 main.tex + 12 chapter .tex |
+
+### 离散数学
+
+| 指标 | 值 |
+|------|-----|
+| .tex 章数 | 12 |
+| .md 笔记数 | 13（12 章 + MOC） |
+| PDF 页数 | 150 |
+| TikZ 图数 | ~55 |
+| Python 代码块 | ~30（含 C++ 代码块） |
+| .md 总大小 | ~350 KB |
+| .tex 总大小 | ~246 KB |
+| 总文件 | 13 .md + 1 main.tex + 12 chapter .tex |
+
+### 数据结构
+
+| 指标 | 值 |
+|------|-----|
+| 章数 | 10（含 MOC） |
+| .md 总大小 | ~525 KB |
+| C++ 代码块 | ~50 |
+| Python 代码块 | ~60 |
+| 总文件 | 11 .md（纯 Markdown 教程，无 LaTeX） |
+
+### 深度学习
+
+| 指标 | 值 |
+|------|-----|
+| .tex 章数 | 12 |
+| .md 笔记数 | 13（12 章 + MOC） |
+| PDF 页数 | 172 |
 
 ---
 

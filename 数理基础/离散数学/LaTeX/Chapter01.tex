@@ -1,0 +1,571 @@
+\chapter{命题逻辑}
+\intro{命题逻辑是数理逻辑的基础分支，研究由命题和逻辑联结词构成的复合命题的真值关系与推理规则。本章从命题的基本概念出发，系统介绍联结词、真值表、逻辑等价、范式及推理理论。}
+
+\section{命题与联结词}
+
+\begin{mydefinition}{命题}
+\textbf{命题}是具有唯一确定真值的\textbf{陈述句}。一个命题要么为真（记作 $\T$ 或 $1$），要么为假（记作 $\F$ 或 $0$），二者必居其一。
+\end{mydefinition}
+
+命题的三要素：
+\begin{enumerate}
+\item 必须是\textbf{陈述句}——疑问句、祈使句、感叹句不是命题。
+\item 必须有唯一确定的\textbf{真值}。
+\item 真值非真即假（排中律）。
+\end{enumerate}
+
+\begin{center}
+\begin{tabular}{c|c|c}
+\toprule
+语句 & 是否为命题 & 说明 \\
+\midrule
+$2+2=4$ & 是，真值为 $\T$ & 数学陈述句 \\
+北京是中国的首都 & 是，真值为 $\T$ & 事实陈述 \\
+$1+1=3$ & 是，真值为 $\F$ & 假命题仍是命题 \\
+请你开门 & 否 & 祈使句 \\
+$x>5$ & 否 & 含自由变元，真值不确定 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{简单命题与复合命题}
+
+\textbf{简单命题}（原子命题）不能再分解，用小写字母 $p,q,r,\dots$ 表示。\textbf{复合命题}由简单命题通过逻辑联结词组合而成。
+
+\subsection{逻辑联结词总览}
+
+逻辑联结词是将简单命题组合为复合命题的运算符号。以下列出全部基本联结词及其真值表。
+
+\subsubsection{否定 $\neg$}
+
+$\neg p$（读作"非 $p$"）的真值与 $p$ 相反。
+
+\begin{center}
+\begin{tabular}{c|c}
+\toprule
+$p$ & $\neg p$ \\
+\midrule
+$\T$ & $\F$ \\
+$\F$ & $\T$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{合取 $\land$}
+
+$p \land q$（读作"$p$ 且 $q$"）当且仅当 $p,q$ 同时为真时为真。
+
+\begin{center}
+\begin{tabular}{cc|c}
+\toprule
+$p$ & $q$ & $p \land q$ \\
+\midrule
+$\T$ & $\T$ & $\T$ \\
+$\T$ & $\F$ & $\F$ \\
+$\F$ & $\T$ & $\F$ \\
+$\F$ & $\F$ & $\F$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{析取 $\lor$}
+
+$p \lor q$（读作"$p$ 或 $q$"）当且仅当 $p,q$ 至少有一个为真时为真。注意 $\lor$ 是\textbf{可兼或}。
+
+\begin{center}
+\begin{tabular}{cc|c}
+\toprule
+$p$ & $q$ & $p \lor q$ \\
+\midrule
+$\T$ & $\T$ & $\T$ \\
+$\T$ & $\F$ & $\T$ \\
+$\F$ & $\T$ & $\T$ \\
+$\F$ & $\F$ & $\F$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{异或 $\oplus$、与非 $\uparrow$、或非 $\downarrow$}
+
+异或 $p \oplus q$ 当 $p,q$ 真值不同时为真；与非 $\uparrow$ 即 $\neg(p \land q)$；或非 $\downarrow$ 即 $\neg(p \lor q)$。$\{\uparrow\}$ 和 $\{\downarrow\}$ 各自都是\textbf{功能完备集}——仅用一个联结词即可表达所有逻辑运算。
+
+\begin{center}
+\begin{tabular}{cc|c|c|c}
+\toprule
+$p$ & $q$ & $p \oplus q$ & $p \uparrow q$ & $p \downarrow q$ \\
+\midrule
+$\T$ & $\T$ & $\F$ & $\F$ & $\F$ \\
+$\T$ & $\F$ & $\T$ & $\T$ & $\F$ \\
+$\F$ & $\T$ & $\T$ & $\T$ & $\F$ \\
+$\F$ & $\F$ & $\F$ & $\T$ & $\T$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{蕴涵 $\rightarrow$}
+
+$p \rightarrow q$（"如果 $p$ 则 $q$"）当且仅当 $p$ 真而 $q$ 假时为假。$p$ 称为\textbf{前件}，$q$ 称为\textbf{后件}。
+
+\begin{center}
+\begin{tabular}{cc|c}
+\toprule
+$p$ & $q$ & $p \rightarrow q$ \\
+\midrule
+$\T$ & $\T$ & $\T$ \\
+$\T$ & $\F$ & $\F$ \\
+$\F$ & $\T$ & $\T$ \\
+$\F$ & $\F$ & $\T$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+关键理解：$p$ 为假时 $p \rightarrow q$ 恒为真（\textbf{虚真}）；$p \rightarrow q \equiv \neg p \lor q$；蕴涵不要求因果关系。
+
+相关蕴涵形式：
+\begin{itemize}
+\item \textbf{逆命题}：$q \rightarrow p$
+\item \textbf{否命题}：$\neg p \rightarrow \neg q$
+\item \textbf{逆否命题}：$\neg q \rightarrow \neg p$（与原命题等价）
+\end{itemize}
+
+\subsubsection{等价 $\leftrightarrow$}
+
+$p \leftrightarrow q$（"$p$ 当且仅当 $q$"）当 $p,q$ 真值相同时为真。
+
+\begin{center}
+\begin{tabular}{cc|c}
+\toprule
+$p$ & $q$ & $p \leftrightarrow q$ \\
+\midrule
+$\T$ & $\T$ & $\T$ \\
+$\T$ & $\F$ & $\F$ \\
+$\F$ & $\T$ & $\F$ \\
+$\F$ & $\F$ & $\T$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{联结词优先级}
+
+为减少括号，约定优先级（从高到低）：
+\[\neg \;>\; \land \;>\; \lor \;>\; \rightarrow \;>\; \leftrightarrow\]
+
+\section{命题公式与真值表}
+
+\begin{mydefinition}{合式公式}
+命题逻辑中的\textbf{合式公式}（WFF）递归定义如下：
+\begin{enumerate}
+\item （基底）单个命题变元 $(p,q,r,\dots)$ 和真值常量 $\T,\F$ 是合式公式。
+\item （递归步）若 $A$ 是合式公式，则 $(\neg A)$ 是合式公式。
+\item 若 $A$ 和 $B$ 是合式公式，则 $(A \land B)$、$(A \lor B)$、$(A \rightarrow B)$、$(A \leftrightarrow B)$、$(A \oplus B)$ 是合式公式。
+\item 只有有限次使用上述规则得到的符号串才是合式公式。
+\end{enumerate}
+\end{mydefinition}
+
+\textbf{赋值}是对公式中每个命题变元指定真值的函数。含 $n$ 个命题变元的公式共有 $2^n$ 种不同的赋值。使公式 $A$ 为真的赋值称为 $A$ 的\textbf{成真赋值}，使 $A$ 为假的赋值称为\textbf{成假赋值}。
+
+\begin{mycode}{Python真值表生成器}
+\begin{lstlisting}[language=Python]
+import itertools
+
+OPERATORS = {
+    '!': (lambda a, _: not a, 4, 1),
+    '&': (lambda a, b: a and b, 3, 2),
+    '|': (lambda a, b: a or b, 2, 2),
+    '^': (lambda a, b: a ^ b, 2, 2),
+    '>': (lambda a, b: not a or b, 1, 2),
+    '=': (lambda a, b: a == b, 0, 2),
+}
+
+def infix_to_postfix(expr: str) -> str:
+    output = []
+    stack = []
+    prec = {op: info[1] for op, info in OPERATORS.items()}
+    for ch in expr:
+        if ch.isalpha():
+            output.append(ch)
+        elif ch == '(':
+            stack.append(ch)
+        elif ch == ')':
+            while stack and stack[-1] != '(':
+                output.append(stack.pop())
+            if stack:
+                stack.pop()
+        elif ch in OPERATORS:
+            while (stack and stack[-1] != '(' and
+                   prec.get(stack[-1], -1) >= prec[ch]):
+                output.append(stack.pop())
+            stack.append(ch)
+    while stack:
+        output.append(stack.pop())
+    return ''.join(output)
+
+def eval_postfix(postfix: str, assign: dict) -> bool:
+    stack = []
+    for ch in postfix:
+        if ch.isalpha():
+            stack.append(assign[ch])
+        else:
+            func = OPERATORS[ch][0]
+            arity = OPERATORS[ch][2]
+            if arity == 1:
+                a = stack.pop()
+                stack.append(func(a, None))
+            else:
+                b = stack.pop()
+                a = stack.pop()
+                stack.append(func(a, b))
+    return stack[0]
+
+def truth_table(expr: str) -> dict:
+    variables = sorted(set(ch for ch in expr if ch.isalpha()))
+    postfix = infix_to_postfix(expr)
+    n = len(variables)
+    all_combos = list(itertools.product([False, True], repeat=n))
+    true_masks = []
+    false_masks = []
+    for combo in all_combos:
+        assign = {var: val for var, val in zip(variables, combo)}
+        result = eval_postfix(postfix, assign)
+        mask = sum((1 if val else 0) << (n - 1 - i)
+                   for i, val in enumerate(combo))
+        if result:
+            true_masks.append(mask)
+        else:
+            false_masks.append(mask)
+    total = 1 << n
+    if len(true_masks) == total:
+        category = "永真式"
+    elif len(true_masks) == 0:
+        category = "永假式"
+    else:
+        category = "可满足式"
+    return {
+        'variables': variables, 'true_masks': sorted(true_masks),
+        'false_masks': sorted(false_masks), 'category': category
+    }
+\end{lstlisting}
+\end{mycode}
+
+\section{永真式、永假式、可满足式}
+
+\begin{mydefinition}{三种类型}
+设 $A$ 为命题公式：
+\begin{itemize}
+\item \textbf{永真式}（重言式，Tautology）：所有赋值下 $A$ 均为真，记作 $\models A$。
+\item \textbf{永假式}（矛盾式，Contradiction）：所有赋值下 $A$ 均为假。
+\item \textbf{可满足式}（Satisfiable）：至少有一个赋值使 $A$ 为真。
+\end{itemize}
+永真式一定是可满足式；永假式一定不可满足。
+\end{mydefinition}
+
+\textbf{判断方法}：真值表法——列出所有赋值，逐行判断。等价变换法——将公式化为规范形式。
+
+\begin{example}
+判断 $A: (p \rightarrow q) \leftrightarrow (\neg p \lor q)$ 的类型。
+
+\begin{center}
+\begin{tabular}{cc|c|c|c}
+\toprule
+$p$ & $q$ & $p \rightarrow q$ & $\neg p \lor q$ & $A$ \\
+\midrule
+$\T$ & $\T$ & $\T$ & $\T$ & $\T$ \\
+$\T$ & $\F$ & $\F$ & $\F$ & $\T$ \\
+$\F$ & $\T$ & $\T$ & $\T$ & $\T$ \\
+$\F$ & $\F$ & $\T$ & $\T$ & $\T$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+$A$ 在所有赋值下为真，故 $A$ 是永真式。
+\end{example}
+
+\section{逻辑等价}
+
+\begin{mydefinition}{逻辑等价}
+设 $A,B$ 是两个命题公式，若对于任意赋值，$A$ 与 $B$ 具有相同的真值，则称 $A$ 与 $B$ \textbf{逻辑等价}，记作 $A \equiv B$。注意：$\equiv$ 是元语言符号，$\leftrightarrow$ 是对象语言符号。$A \equiv B$ 当且仅当 $A \leftrightarrow B$ 是永真式。
+\end{mydefinition}
+
+\subsection{重要逻辑等价式}
+
+\begin{myformula}
+\textbf{基本等价律}
+\[
+\begin{aligned}
+\text{双重否定律：}&\quad \neg\neg p \equiv p \\
+\text{幂等律：}&\quad p \lor p \equiv p,\quad p \land p \equiv p \\
+\text{交换律：}&\quad p \lor q \equiv q \lor p,\quad p \land q \equiv q \land p \\
+\text{结合律：}&\quad (p \lor q) \lor r \equiv p \lor (q \lor r),\quad (p \land q) \land r \equiv p \land (q \land r) \\
+\text{分配律：}&\quad p \lor (q \land r) \equiv (p \lor q) \land (p \lor r),\quad p \land (q \lor r) \equiv (p \land q) \lor (p \land r)
+\end{aligned}
+\]
+\end{myformula}
+
+\begin{myformula}
+\textbf{德摩根律与恒等律}
+\[
+\begin{aligned}
+\neg(p \land q) &\equiv \neg p \lor \neg q \\
+\neg(p \lor q) &\equiv \neg p \land \neg q \\
+p \lor \F &\equiv p,\quad p \land \T \equiv p \quad \text{{（同一律）}} \\
+p \lor \T &\equiv \T,\quad p \land \F \equiv \F \quad \text{{（零律）}} \\
+p \lor \neg p &\equiv \T \quad \text{{（排中律）}},\quad p \land \neg p \equiv \F \quad \text{{（矛盾律）}}
+\end{aligned}
+\]
+\end{myformula}
+
+\begin{myformula}
+\textbf{吸收律与蕴涵展开}
+\[
+\begin{aligned}
+p \lor (p \land q) &\equiv p,\quad p \land (p \lor q) \equiv p \\
+p \rightarrow q &\equiv \neg p \lor q \\
+p \leftrightarrow q &\equiv (p \rightarrow q) \land (q \rightarrow p) \equiv (\neg p \lor q) \land (p \lor \neg q) \\
+p \rightarrow q &\equiv \neg q \rightarrow \neg p \quad \text{{（逆否命题）}}
+\end{aligned}
+\]
+\end{myformula}
+
+\subsection{逻辑等价的证明方法}
+
+\textbf{方法一：真值表法}——列出所有可能赋值，比较真值列是否一致。\\
+\textbf{方法二：等价变换法}——利用已知等价式，逐步将一个公式变换为另一个公式。
+
+\begin{example}
+证明输出律：$(p \land q) \rightarrow r \equiv p \rightarrow (q \rightarrow r)$。
+\[
+\begin{aligned}
+(p \land q) \rightarrow r
+&\equiv \neg(p \land q) \lor r &&\text{（蕴涵展开）} \\
+&\equiv (\neg p \lor \neg q) \lor r &&\text{（德摩根律）} \\
+&\equiv \neg p \lor (\neg q \lor r) &&\text{（结合律）} \\
+&\equiv \neg p \lor (q \rightarrow r) &&\text{（蕴涵展开）} \\
+&\equiv p \rightarrow (q \rightarrow r) &&\text{（蕴涵展开）}
+\end{aligned}
+\]
+\end{example}
+
+% --- TikZ: 逻辑等价变换示意 ---
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=1.8cm, auto]
+\tikzset{
+    dmLE/.style={rectangle,draw=blue!60,fill=blue!10,rounded corners,minimum width=3cm,align=center},
+    dmEq/.style={above,font=\small\color{red}}
+}
+\node[dmLE] (A) {$(p \land q) \rightarrow r$};
+\node[dmLE,below=of A] (B) {$\neg p \lor (\neg q \lor r)$};
+\node[dmLE,below=of B] (C) {$p \rightarrow (q \rightarrow r)$};
+\draw[-{Stealth},thick,red] (A) -- (B) node[dmEq,right] {德摩根律+展开};
+\draw[-{Stealth},thick,red] (B) -- (C) node[dmEq,right] {蕴涵展开(逆)};
+\end{tikzpicture}
+\caption{逻辑等价变换示意——利用已知等价式逐步推导}
+\end{figure}
+
+\section{范式}
+
+\subsection{文字、简单合取式与简单析取式}
+
+\textbf{文字}：命题变元 $p$ 或其否定 $\neg p$。\\
+\textbf{简单合取式}：若干文字的合取，如 $p \land \neg q \land r$。\\
+\textbf{简单析取式}：若干文字的析取，如 $p \lor \neg q \lor r$。
+
+\subsection{析取范式 DNF}
+
+\begin{mydefinition}{析取范式}
+一个命题公式称为\textbf{析取范式}（DNF），若它是由一个或多个简单合取式通过析取联结而成的公式：
+\[(L_{11} \land \dots \land L_{1k_1}) \lor (L_{21} \land \dots \land L_{2k_2}) \lor \dots \lor (L_{m1} \land \dots \land L_{mk_m})\]
+\end{mydefinition}
+
+求DNF的步骤：
+\begin{enumerate}
+\item 消去 $\rightarrow$ 和 $\leftrightarrow$：$p \rightarrow q \equiv \neg p \lor q$；$p \leftrightarrow q \equiv (\neg p \lor q) \land (p \lor \neg q)$
+\item 将 $\neg$ 移到命题变元前（德摩根律 + 双重否定律）
+\item 用分配律 $p \land (q \lor r) \equiv (p \land q) \lor (p \land r)$ 将 $\land$ 提入 $\lor$ 中
+\end{enumerate}
+
+\subsection{合取范式 CNF}
+
+\begin{mydefinition}{合取范式}
+一个命题公式称为\textbf{合取范式}（CNF），若它是由一个或多个简单析取式通过合取联结而成的公式：
+\[(L_{11} \lor \dots \lor L_{1k_1}) \land (L_{21} \lor \dots \lor L_{2k_2}) \land \dots \land (L_{m1} \lor \dots \lor L_{mk_m})\]
+\end{mydefinition}
+
+求CNF的步骤与DNF类似，第三步改用分配律 $p \lor (q \land r) \equiv (p \lor q) \land (p \lor r)$。
+
+\subsection{主范式}
+
+若公式含有命题变元 $p_1, p_2, \dots, p_n$：
+\begin{itemize}
+\item \textbf{极小项} $m_i$：每个命题变元或其否定\textbf{恰好出现一次}的简单合取式。编码：变元取 $1$ 对应本身，$0$ 对应否定。例如 $p \land \neg q \land r$ → 编码 $(1,0,1)_2=5$ → $m_5$。
+\item \textbf{极大项} $M_i$：每个命题变元或其否定恰好出现一次的简单析取式。编码：变元取 $0$ 对应本身，$1$ 对应否定。
+\end{itemize}
+
+\textbf{主析取范式}：由不同极小项析取而成 → $\Sigma(i_1, i_2, \dots, i_k)$。\\
+\textbf{主合取范式}：由不同极大项合取而成 → $\prod(j_1, j_2, \dots, j_l)$。
+
+\textbf{关系}：对含 $n$ 个变元的公式，主析取范式中含 $k$ 个极小项，则主合取范式含剩余的 $2^n-k$ 个极大项。
+
+\subsection{求主范式的方法}
+
+\textbf{方法一：真值表法}。列出真值表，成真赋值对应极小项（析取），成假赋值对应极大项（合取）。
+
+\textbf{方法二：等价变换法}。先求一般范式，再对缺少某变元的简单合取式用 $p \lor \neg p \equiv \T$ 扩充。
+
+\begin{example}
+求 $(p \rightarrow q) \land \neg r$ 的主范式。
+
+先求真值表，得成真赋值为 $\{(0,0,0), (0,0,1), (0,1,0), (1,1,0)\}$（其中 $(p,q,r)$ 编码），故：
+\begin{itemize}
+\item 主析取范式：$m_0 \lor m_1 \lor m_2 \lor m_6 = \Sigma(0,1,2,6)$
+\item 主合取范式：$\prod(3,4,5,7)$
+\end{itemize}
+\end{example}
+
+% --- TikZ: 范式关系韦恩图 ---
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\tikzset{
+    dmVenn/.style={circle,draw=blue!60,fill=blue!10,minimum size=3cm,opacity=0.6},
+    dmLabel/.style={font=\footnotesize}
+}
+\draw (-3.5,-2.5) rectangle (6.5,2.5);
+\node[dmLabel] at (-3.2,2.2) {主范式结构};
+\node[dmVenn,right=0.5cm] (DNF) at (0,0.6) {};
+\node[dmLabel] at (0,1.4) {DNF};
+\node[dmVenn,right=0.5cm] (CNF) at (3,-0.6) {};
+\node[dmLabel] at (3,-1.5) {CNF};
+\node[dmLabel] at (1.5,-0.2) {公式};
+\draw[-{Stealth},thick] (0.5,0.3) -- (1.2,-0.1) node[pos=0.5,right,font=\footnotesize] {合取};
+\draw[-{Stealth},thick] (2.5,-0.1) -- (1.8,0.3) node[pos=0.5,left,font=\footnotesize] {析取};
+\end{tikzpicture}
+\caption{范式关系示意——DNF与CNF从不同方向刻画同一公式}
+\end{figure}
+
+\section{推理理论}
+
+\subsection{基本概念}
+
+\begin{mydefinition}{有效推理}
+设 $A_1, A_2, \dots, A_n$ 是前提，$C$ 是结论。若对于任意赋值，当所有前提为真时结论也为真，则称此推理\textbf{有效}，记作：
+\[A_1, A_2, \dots, A_n \models C\]
+等价地，$A_1 \land A_2 \land \dots \land A_n \rightarrow C$ 是永真式。
+\end{mydefinition}
+
+\subsection{基本推理规则}
+
+\begin{center}
+\begin{tabular}{c|c|c}
+\toprule
+规则名称 & 推理形式 & 别名 \\
+\midrule
+假言推理 & $p, p \rightarrow q \models q$ & Modus Ponens (MP) \\
+拒取式 & $\neg q, p \rightarrow q \models \neg p$ & Modus Tollens (MT) \\
+假言三段论 & $p \rightarrow q, q \rightarrow r \models p \rightarrow r$ & HS \\
+析取三段论 & $p \lor q, \neg p \models q$ & DS \\
+附加律 & $p \models p \lor q$ & Addition \\
+化简律 & $p \land q \models p$ & Simplification \\
+合取律 & $p, q \models p \land q$ & Conjunction \\
+消解律 & $p \lor q, \neg p \lor r \models q \lor r$ & Resolution \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{myformula}
+\textbf{关键推理规则公式}
+\[
+\begin{aligned}
+\text{MP:}&\quad p \land (p \rightarrow q) \rightarrow q \quad \text{是永真式} \\
+\text{MT:}&\quad \neg q \land (p \rightarrow q) \rightarrow \neg p \quad \text{是永真式} \\
+\text{HS:}&\quad (p \rightarrow q) \land (q \rightarrow r) \rightarrow (p \rightarrow r) \quad \text{是永真式}
+\end{aligned}
+\]
+\end{myformula}
+
+\subsection{形式证明示例}
+
+\textbf{形式证明}：从前提出发，每一步使用推理规则或逻辑等价式推出中间结论，直到推出所要求的结论。
+
+\begin{example}
+证明 $p \rightarrow q, q \rightarrow r, p \models r$。
+\[
+\begin{aligned}
+1.\quad &p &\quad &\text{（前提）} \\
+2.\quad &p \rightarrow q &\quad &\text{（前提）} \\
+3.\quad &q &\quad &\text{（1, 2, MP）} \\
+4.\quad &q \rightarrow r &\quad &\text{（前提）} \\
+5.\quad &r &\quad &\text{（3, 4, MP）}
+\end{aligned}
+\]
+\end{example}
+
+\begin{example}
+证明拒取式：$\neg q, p \rightarrow q \models \neg p$（用等价变换法）。
+\[
+\begin{aligned}
+1.\quad &\neg q &\quad &\text{（前提）} \\
+2.\quad &p \rightarrow q &\quad &\text{（前提）} \\
+3.\quad &\neg p \lor q &\quad &\text{（2, 蕴涵展开）} \\
+4.\quad &\neg p &\quad &\text{（1, 3, 析取三段论）}
+\end{aligned}
+\]
+\end{example}
+
+\subsection{附加前提证明法与归谬法}
+
+\textbf{CP规则}：要证 $A_1, \dots, A_n \models B \rightarrow C$，等价于证 $A_1, \dots, A_n, B \models C$。
+
+\textbf{归谬法（反证法）}：要证 $A_1, \dots, A_n \models C$，证 $A_1, \dots, A_n, \neg C \models \F$（矛盾）。
+
+% --- TikZ: 推理流程图 ---
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=1.6cm, auto]
+\tikzset{
+    dmStep/.style={rectangle,draw=main,fill=yellow!10,minimum width=2.2cm,minimum height=0.8cm,align=center,rounded corners},
+    dmArrow/.style={-{Stealth},thick,blue!60}
+}
+\node[dmStep] (P1) {前提 $A_1, \dots, A_n$};
+\node[dmStep,below=of P1] (P2) {推理规则\\MP, MT, HS, DS, $\dots$};
+\node[dmStep,below=of P2] (P3) {中间结论};
+\node[dmStep,below=of P3] (P4) {继续推理};
+\node[dmStep,below=of P4] (P5) {目标结论 $C$};
+\node[dmStep,left=of P2,xshift=-2cm] (Alt) {等价变换\\德摩根律, 展开, $\dots$};
+\node[dmStep,right=of P3,xshift=2cm] (CP) {CP规则\\引入附加前提};
+\node[dmStep,right=of P4,xshift=2cm] (Red) {归谬法\\假设$\neg C$};
+\draw[dmArrow] (P1) -- (P2);
+\draw[dmArrow] (P2) -- (P3);
+\draw[dmArrow] (P3) -- (P4);
+\draw[dmArrow] (P4) -- (P5);
+\draw[dmArrow] (P1) to[bend left=30] (Alt);
+\draw[dmArrow] (Alt) to[bend left=30] (P3);
+\draw[dmArrow] (P3) to[bend left=20] (CP);
+\draw[dmArrow] (CP) to[bend left=20] (P5);
+\draw[dmArrow] (P4) to[bend right=20] (Red);
+\draw[dmArrow] (Red) to[bend right=20] (P5);
+\end{tikzpicture}
+\caption{逻辑推理流程图——多种策略配合使用}
+\end{figure}
+
+% --- TikZ: 真值表生成流程图 ---
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=1.4cm, auto]
+\tikzset{
+    dmFlow/.style={rectangle,draw=green!50!black,fill=green!5!white,rounded corners,minimum width=3cm,align=center},
+    dmFlowArrow/.style={-{Stealth},thick}
+}
+\node[dmFlow] (S1) {输入命题公式};
+\node[dmFlow,below=of S1] (S2) {提取命题变元\\$p_1, p_2, \dots, p_n$};
+\node[dmFlow,below=of S2] (S3) {生成 $2^n$ 种赋值组合};
+\node[dmFlow,below=of S3] (S4) {对每种赋值\\计算子公式真值};
+\node[dmFlow,below=of S4] (S5) {填充真值表};
+\node[dmFlow,below=of S5] (S6) {判断公式类型\\永真/永假/可满足};
+\draw[dmFlowArrow] (S1) -- (S2);
+\draw[dmFlowArrow] (S2) -- (S3);
+\draw[dmFlowArrow] (S3) -- (S4);
+\draw[dmFlowArrow] (S4) -- (S5);
+\draw[dmFlowArrow] (S5) -- (S6);
+\end{tikzpicture}
+\caption{真值表生成流程图}
+\end{figure}
