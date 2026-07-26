@@ -1,0 +1,33 @@
+﻿\chapter{变分法}
+\intro{本章介绍变分法的基本原理和瑞利-里兹方法。}
+
+\section{变分问题}
+
+\begin{mydefinition}{泛函极值}
+寻找函数 $u$ 使泛函
+\[
+J[u]=\int_\Omega F(x,u,\grad u)\,dV
+\]
+取极值。
+\end{mydefinition}
+
+\begin{theorem}[欧拉-拉格朗日方程]
+$J[u]$ 的极值必要条件：
+\[
+\frac{\partial F}{\partial u}-\divg\left(\frac{\partial F}{\partial\grad u}\right)=0
+\]
+\end{theorem}
+
+\begin{proof}
+对 $u$ 作变分 $\delta u$，要求 $\delta J=0$，分部积分即得。
+\end{proof}
+
+\section{瑞利-里兹方法}
+
+\begin{mydefinition}{近似解}
+设 $u\approx\displaystyle\sum_{i=1}^{N}c_i\phi_i(x)$，代入极值条件求系数 $c_i$。
+\end{mydefinition}
+
+\begin{remark}
+变分法是有限元方法的理论基础。数值解法的核心思想：将无穷维问题近似为有限维问题。
+\end{remark}

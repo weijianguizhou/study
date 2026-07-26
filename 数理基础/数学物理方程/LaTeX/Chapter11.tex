@@ -1,0 +1,27 @@
+﻿\chapter{施图姆-刘维尔理论}
+\intro{本章建立施图姆-刘维尔理论，为分离变量法提供统一的数学框架。}
+
+\begin{mydefinition}{施图姆-刘维尔问题}
+\[
+\frac{d}{dx}\left[p(x)\frac{dy}{dx}\right]+[\lambda w(x)-q(x)]y=0
+\]
+配合适当的边界条件。
+\end{mydefinition}
+
+\begin{theorem}[特征值性质]
+\begin{enumerate}
+	\item 特征值为实数且可排序：$\lambda_1<\lambda_2<\cdots$。
+	\item 对应不同特征值的特征函数关于权函数 $w(x)$ 正交：
+	\[
+	\int_a^b\phi_m(x)\phi_n(x)w(x)\,dx=0,\quad m\neq n
+	\]
+\end{enumerate}
+\end{theorem}
+
+\begin{theorem}[完备性]
+特征函数系 $\{\phi_n\}$ 构成 $L^2_w[a,b]$ 空间的完备正交基。任意 $f\in L^2_w$ 可展开为广义傅里叶级数。
+\end{theorem}
+
+\begin{remark}
+Sturm-Liouville 理论将分离变量法的结果统一：热传导、波动、拉普拉斯方程的特征函数展开都是 S-L 理论的特例。
+\end{remark}

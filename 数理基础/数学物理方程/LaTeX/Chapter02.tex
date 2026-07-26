@@ -1,0 +1,54 @@
+﻿\chapter{偏微分方程基本概念}
+\intro{本章介绍偏微分方程的分类、定解条件和适定性理论。}
+
+\begin{mydefinition}{偏微分方程}
+含有未知函数 $u(x_1,\ldots,x_n)$ 及其偏导数的方程。最高阶偏导数的阶数称为方程的\textbf{阶}。
+\end{mydefinition}
+
+\begin{mydefinition}{二阶线性偏微分方程}
+\[
+\sum_{i,j=1}^{n}a_{ij}\frac{\partial^2 u}{\partial x_i\partial x_j}+\sum_{i=1}^{n}b_i\frac{\partial u}{\partial x_i}+cu=f
+\]
+\end{mydefinition}
+
+\section{方程的分类}
+
+\begin{mydefinition}{特征值判别}
+对于 $Au_{xx}+2Bu_{xy}+Cu_{yy}+\cdots=0$，判别式 $\Delta=B^2-AC$：
+\begin{itemize}
+	\item $\Delta>0$：双曲型（波动方程）
+	\item $\Delta=0$：抛物型（热传导方程）
+	\item $\Delta<0$：椭圆型（拉普拉斯方程）
+\end{itemize}
+\end{mydefinition}
+
+\section{定解条件}
+
+\begin{mydefinition}{初始条件}
+\begin{itemize}
+	\item 热传导方程（一阶时间导数）：$u(x,0)=\phi(x)$
+	\item 波动方程（二阶时间导数）：$u(x,0)=\phi(x)$，$u_t(x,0)=\psi(x)$
+\end{itemize}
+\end{mydefinition}
+
+\begin{mydefinition}{三类边界条件}
+\begin{enumerate}
+	\item Dirichlet：$u|_{\partial\Omega}=g$
+	\item Neumann：$\displaystyle\frac{\partial u}{\partial n}\bigg|_{\partial\Omega}=g$
+	\item Robin：$\displaystyle\left(\alpha u+\beta\frac{\partial u}{\partial n}\right)\bigg|_{\partial\Omega}=g$
+\end{enumerate}
+\end{mydefinition}
+
+\section{适定性与叠加原理}
+
+\begin{mydefinition}{适定性（Well-posedness）}
+解\textbf{存在}、解\textbf{唯一}、解\textbf{稳定}（连续依赖于初边值条件）。
+\end{mydefinition}
+
+\begin{theorem}[叠加原理]
+若 $u_1,\ldots,u_n$ 是线性齐次方程的解，则 $u=\sum_{i=1}^{n}c_i u_i$ 也是解。
+\end{theorem}
+
+\begin{remark}
+叠加原理是分离变量法和格林函数法的理论基础。
+\end{remark}

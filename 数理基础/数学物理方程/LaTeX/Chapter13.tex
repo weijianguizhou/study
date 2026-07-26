@@ -1,0 +1,42 @@
+﻿\chapter{应用实例}
+\intro{本章展示数学物理方程在不同领域的应用。}
+
+\section{热传导问题}
+
+\begin{theorem}[有界杆的热传导]
+\[
+\begin{cases}
+u_t=ku_{xx},&0<x<L\\
+u(0,t)=u(L,t)=0\\
+u(x,0)=\phi(x)
+\end{cases}
+\]
+解为：
+\[
+u(x,t)=\sum_{n=1}^{\infty}b_n\sin\frac{n\pi x}{L}e^{-n^2\pi^2kt/L^2}
+\]
+\end{theorem}
+
+\section{弦振动}
+
+\begin{theorem}[固定端点的弦振动]
+\[
+u(x,t)=\sum_{n=1}^{\infty}\left(a_n\cos\frac{n\pi at}{L}+b_n\sin\frac{n\pi at}{L}\right)\sin\frac{n\pi x}{L}
+\]
+\end{theorem}
+
+\section{静电场}
+
+\begin{theorem}[球内 Dirichlet 问题]
+\[
+\begin{cases}
+\lapl u=0,&|\vect{x}|<R\\
+u|_{|\vect{x}|=R}=f(\theta,\phi)
+\end{cases}
+\]
+解用球谐函数展开。
+\end{theorem}
+
+\begin{remark}
+同一方程在不同边界条件下描述完全不同的物理现象，这体现了数学物理方程的统一性和普适性。
+\end{remark}
