@@ -1,0 +1,732 @@
+\chapter{两自由度系统振动}
+\intro{本章将单自由度系统的振动理论扩展至两自由度系统。两自由度系统是多自由度系统中最简单的一种，但它已经展现出单自由度系统所不具备的许多新现象：模态耦合、固有振型、节点、坐标变换与解耦、动力吸振等。这些概念构成了模态分析理论的基础。}
+
+\section{两自由度系统的运动方程}
+
+\subsection{运动方程的建立——直接法}
+
+考虑如图的典型两自由度弹簧-质量系统：质量 $m_1$ 通过弹簧 $k_1$ 连接固定墙，通过弹簧 $k_2$ 连接质量 $m_2$，$m_2$ 又通过弹簧 $k_3$ 连接固定墙。阻尼器 $c_1, c_2, c_3$ 分别与弹簧并联。外力 $F_1(t)$ 和 $F_2(t)$ 分别作用在两个质量上。
+
+对每个质量应用 Newton 第二定律。
+
+\textbf{质量 $m_1$}：
+\[
+m_1\ddot{x}_1 = -k_1 x_1 - c_1 \dot{x}_1 + k_2(x_2 - x_1) + c_2(\dot{x}_2 - \dot{x}_1) + F_1(t)
+\]
+
+\textbf{质量 $m_2$}：
+\[
+m_2\ddot{x}_2 = -k_3 x_2 - c_3 \dot{x}_2 - k_2(x_2 - x_1) - c_2(\dot{x}_2 - \dot{x}_1) + F_2(t)
+\]
+
+整理得矩阵形式：
+
+\begin{myformula}
+\[
+\begin{bmatrix} m_1 & 0 \\ 0 & m_2 \end{bmatrix} 
+\begin{Bmatrix} \ddot{x}_1 \\ \ddot{x}_2 \end{Bmatrix} + 
+\begin{bmatrix} c_1 + c_2 & -c_2 \\ -c_2 & c_2 + c_3 \end{bmatrix} 
+\begin{Bmatrix} \dot{x}_1 \\ \dot{x}_2 \end{Bmatrix} + 
+\begin{bmatrix} k_1 + k_2 & -k_2 \\ -k_2 & k_2 + k_3 \end{bmatrix} 
+\begin{Bmatrix} x_1 \\ x_2 \end{Bmatrix} = 
+\begin{Bmatrix} F_1(t) \\ F_2(t) \end{Bmatrix}
+\]
+\end{myformula}
+
+一般形式：
+
+\begin{myformula}
+\[
+\mathbf{M}\ddot{\mathbf{x}} + \mathbf{C}\dot{\mathbf{x}} + \mathbf{K}\mathbf{x} = \mathbf{F}(t)
+\]
+\end{myformula}
+
+其中 $\mathbf{M}$, $\mathbf{C}$, $\mathbf{K}$ 分别为质量矩阵、阻尼矩阵、刚度矩阵，$\mathbf{x} = [x_1, x_2]^{\top}$ 为位移向量，$\mathbf{F}$ 为外力向量。
+
+\subsection{矩阵的性质}
+
+\begin{itemize}
+\item \textbf{质量矩阵 $\mathbf{M}$}：一般为对角阵（集中质量法）或一致质量阵（有限元法），对两自由度单纯质量-弹簧系统为对角阵，正定。
+\item \textbf{刚度矩阵 $\mathbf{K}$}：对称（Maxwell 互等定理），半正定（无约束时可能存在刚体模态）或正定（完全约束时）。非对角元 $<0$ 表示耦合。
+\item \textbf{阻尼矩阵 $\mathbf{C}$}：若为比例阻尼 $C = \alpha M + \beta K$，则可与质量、刚度矩阵同时对角化。
+\end{itemize}
+
+\subsection{两自由度弹簧-质量链的 TikZ 图}
+
+\begin{tikzpicture}[scale=0.85]
+  % 墙
+  \draw (0,0) -- (0,2.5);
+  \fill[gray!30] (-1,0) rectangle (0,2.5);
+  \draw[thick] (0,0) -- (0,2.5);
+  \foreach \y in {0.2,0.6,...,2.3} {
+    \draw[thick] (0,\y) -- (-0.3,\y+0.15);
+  }
+  \node at (-0.5,2.7) {墙};
+  
+  % 弹簧 k1
+  \draw[thick,decorate,decoration={coil,aspect=0.6,amplitude=4,segment length=8}] (0,1.5) -- (2.5,1.5);
+  \node at (1.25,2.0) {$k_1$};
+  % 阻尼器 c1
+  \draw[thick] (0,0.8) -- (1.0,0.8);
+  \draw[thick] (1.0,0.5) rectangle (1.6,1.1);
+  \draw[thick] (1.6,0.8) -- (2.5,0.8);
+  \node at (1.3,0.3) {$c_1$};
+  
+  % 质量 m1
+  \fill[blue!30] (2.5,0.2) rectangle (3.5,2.3);
+  \draw[thick] (2.5,0.2) rectangle (3.5,2.3);
+  \node at (3.0,1.25) {$m_1$};
+  \node at (3.0,-0.3) {$x_1$};
+  
+  % 弹簧 k2
+  \draw[thick,decorate,decoration={coil,aspect=0.6,amplitude=4,segment length=8}] (3.5,1.5) -- (6.5,1.5);
+  \node at (5.0,2.0) {$k_2$};
+  % 阻尼器 c2
+  \draw[thick] (3.5,0.8) -- (4.8,0.8);
+  \draw[thick] (4.8,0.5) rectangle (5.4,1.1);
+  \draw[thick] (5.4,0.8) -- (6.5,0.8);
+  \node at (5.0,0.3) {$c_2$};
+  
+  % 质量 m2
+  \fill[red!30] (6.5,0.2) rectangle (7.5,2.3);
+  \draw[thick] (6.5,0.2) rectangle (7.5,2.3);
+  \node at (7.0,1.25) {$m_2$};
+  \node at (7.0,-0.3) {$x_2$};
+  
+  % 弹簧 k3
+  \draw[thick,decorate,decoration={coil,aspect=0.6,amplitude=4,segment length=8}] (7.5,1.5) -- (10,1.5);
+  \node at (8.75,2.0) {$k_3$};
+  
+  % 墙
+  \draw (10,0) -- (10,2.5);
+  \fill[gray!30] (10,0) rectangle (11,2.5);
+  \draw[thick] (10,0) -- (10,2.5);
+  \foreach \y in {0.2,0.6,...,2.3} {
+    \draw[thick] (10,\y) -- (10.3,\y+0.15);
+  }
+  
+  % 外力箭头
+  \draw[-Stealth,thick] (3.0,2.5) -- (3.0,3.0) node[above] {$F_1(t)$};
+  \draw[-Stealth,thick] (7.0,2.5) -- (7.0,3.0) node[above] {$F_2(t)$};
+\end{tikzpicture}
+
+\subsection{方程的耦合形式}
+
+广义上耦合可分为：
+
+\begin{enumerate}
+\item \textbf{静力耦合（刚度耦合）}：$K$ 的非对角元非零。系统通过弹性元件传递力，一个质量的位移产生对另一个质量的弹性恢复力。
+\item \textbf{动力耦合（质量耦合）}：$M$ 的非对角元非零。较少见，出现在某些特定的广义坐标选择下（如悬挂结构的摇摆-平动耦合）。
+\item \textbf{阻尼耦合}：$C$ 的非对角元非零。非比例阻尼导致振型耦合。
+\end{enumerate}
+
+对于本章讨论的典型弹簧-质量链系统，耦合来自刚度矩阵 $K$。若选择合适的主坐标（模态坐标），上述方程可以解耦。
+
+\section{无阻尼自由振动}
+
+\subsection{特征值问题}
+
+设无阻尼自由振动 $\mathbf{C} = \mathbf{0}$，$\mathbf{F} = \mathbf{0}$，假设解的形式为：
+
+\[
+\mathbf{x}(t) = \mathbf{X} \sin(\omega t + \phi)
+\]
+
+其中 $\mathbf{X} = [X_1, X_2]^{\top}$ 为幅值向量（振型），$\omega$ 为固有频率。
+
+代入 $\mathbf{M}\ddot{\mathbf{x}} + \mathbf{K}\mathbf{x} = \mathbf{0}$：
+
+\[
+-\omega^2 \mathbf{M}\mathbf{X} \sin(\omega t + \phi) + \mathbf{K}\mathbf{X} \sin(\omega t + \phi) = \mathbf{0}
+\]
+
+得广义特征值问题：
+
+\begin{myformula}
+\[
+(\mathbf{K} - \omega^2 \mathbf{M}) \mathbf{X} = \mathbf{0}
+\]
+\end{myformula}
+
+非零解条件（$\mathbf{X} \neq \mathbf{0}$）：
+
+\begin{myformula}
+\[
+\det(\mathbf{K} - \omega^2 \mathbf{M}) = 0
+\]
+\end{myformula}
+
+这就是 \textbf{频率方程}（或特征方程）。对两自由度系统，它是 $\omega^2$ 的二次代数方程：
+
+\[
+\det \begin{bmatrix}
+k_{11} - \omega^2 m_{11} & k_{12} - \omega^2 m_{12} \\
+k_{21} - \omega^2 m_{21} & k_{22} - \omega^2 m_{22}
+\end{bmatrix} = 0
+\]
+
+\subsection{固有频率的求解}
+
+展开行列式：
+
+\[
+(k_{11} - \omega^2 m_{11})(k_{22} - \omega^2 m_{22}) - (k_{12} - \omega^2 m_{12})^2 = 0
+\]
+
+这是 $\omega^2$ 的二次方程：
+
+\[
+(m_{11}m_{22} - m_{12}^2)\omega^4 - (k_{11}m_{22} + k_{22}m_{11} - 2k_{12}m_{12})\omega^2 + (k_{11}k_{22} - k_{12}^2) = 0
+\]
+
+两个正实根 $\omega_1^2$ 和 $\omega_2^2$，取正平方根得固有频率 $\omega_1 < \omega_2$。
+
+\begin{itemize}
+\item $\omega_1$：第一阶（基频），系统的较低固有频率。
+\item $\omega_2$：第二阶，系统的较高固有频率。
+\end{itemize}
+
+两固有频率不同的充要条件一般为系统无刚体自由度（完全约束）。
+
+\subsection{固有振型（模态）}
+
+将 $\omega_i^2$ 代回特征值问题 $(\mathbf{K} - \omega_i^2 \mathbf{M}) \mathbf{X}^{(i)} = \mathbf{0}$，可解得第 $i$ 阶的振幅比：
+
+\begin{myformula}
+\[
+r_i = \frac{X_2^{(i)}}{X_1^{(i)}} = \frac{k_{11} - \omega_i^2 m_{11}}{k_{12} - \omega_i^2 m_{12}}
+\]
+\end{myformula}
+
+固有振型（模态）$\mathbf{X}^{(i)}$ 确定的是相对幅值而非绝对幅值——振型只确定一个比例因子，即若 $\mathbf{X}^{(i)}$ 满足特征方程，则 $c\mathbf{X}^{(i)}$ 也满足（$c$ 为任意常数）。
+
+将振型写为向量形式：
+
+\[
+\mathbf{X}^{(1)} = \begin{Bmatrix} X_1^{(1)} \\ X_2^{(1)} \end{Bmatrix},\quad 
+\mathbf{X}^{(2)} = \begin{Bmatrix} X_1^{(2)} \\ X_2^{(2)} \end{Bmatrix}
+\]
+
+\textbf{第一阶振型} ($\omega_1$)：两个质量同相运动（位移符号相同），$X_1^{(1)}$ 和 $X_2^{(1)}$ 同向。
+
+\textbf{第二阶振型} ($\omega_2$)：两个质量反相运动（位移符号相反），$X_1^{(2)}$ 和 $X_2^{(2)}$ 反向。
+
+\subsection{两阶振型物理图示}
+
+\begin{tikzpicture}[scale=0.9]
+  % 第一阶振型
+  \node at (3.5,3.5) {\textbf{第一阶振型} ($\omega_1$)};
+  \draw[thick] (0,3.0) -- (7,3.0);
+  \draw[fill=blue!40] (1.5,2.7) rectangle (2.5,3.3) node[midway] {$m_1$};
+  \draw[fill=red!40] (4.5,2.7) rectangle (5.5,3.3) node[midway] {$m_2$};
+  \draw[-Stealth,thick,blue] (2.0,3.5) -- (2.0,4.0);
+  \draw[-Stealth,thick,red] (5.0,3.5) -- (5.0,4.0);
+  \node[right] at (5.5,3.8) {同相};
+  
+  % 第二阶振型
+  \node at (3.5,1.5) {\textbf{第二阶振型} ($\omega_2$)};
+  \draw[thick] (0,1.0) -- (7,1.0);
+  \draw[fill=blue!40] (1.5,0.7) rectangle (2.5,1.3) node[midway] {$m_1$};
+  \draw[fill=red!40] (4.5,0.7) rectangle (5.5,1.3) node[midway] {$m_2$};
+  \draw[-Stealth,thick,blue] (2.0,1.5) -- (2.0,2.0);
+  \draw[-Stealth,thick,red] (5.0,1.5) -- (5.0,0.5);
+  \node[right] at (5.5,1.2) {反相};
+  
+  % 节点位置
+  \fill[green!60!black] (3.8,1.0) circle (3pt);
+  \node at (3.8,0.6) {节点};
+\end{tikzpicture}
+
+\subsection{节点与振型的物理意义}
+
+\textbf{节点}：振型中位移为零的点。两自由度系统中：
+\begin{itemize}
+\item 第一阶振型无内部节点（两端可有约束点）
+\item 第二阶振型有一个内部节点——该点的位移恒为零
+\end{itemize}
+
+一般规律：第 $i$ 阶振型有 $i-1$ 个节点。节点的位置由质量比和刚度比决定。
+
+\textbf{振型的实在物理含义}：
+\begin{itemize}
+\item 系统按某一阶固有频率振动时的位形（各自由度之间的位移比例关系）
+\item 若以某阶振型初始激发系统，则系统将纯粹以该频率正弦振动而不会激发其他频率——各自由度保持固定的振幅比例
+\item 一般初始条件下，系统响应为各阶振型的线性组合
+\end{itemize}
+
+\section{模态的正交性}
+
+\subsection{关于质量矩阵的正交性}
+
+这是振动理论中最重要的性质之一。设 $\omega_i$ 和 $\mathbf{X}^{(i)}$ 为第 $i$ 阶特征对，$\omega_j$ 和 $\mathbf{X}^{(j)}$ 为第 $j$ 阶特征对（$i \neq j$）。
+
+由特征方程：
+\[
+\mathbf{K}\mathbf{X}^{(i)} = \omega_i^2 \mathbf{M}\mathbf{X}^{(i)}
+\]
+\[
+\mathbf{K}\mathbf{X}^{(j)} = \omega_j^2 \mathbf{M}\mathbf{X}^{(j)}
+\]
+
+第一式左乘 $(\mathbf{X}^{(j)})^{\top}$，第二式左乘 $(\mathbf{X}^{(i)})^{\top}$：
+
+\[
+(\mathbf{X}^{(j)})^{\top} \mathbf{K}\mathbf{X}^{(i)} = \omega_i^2 (\mathbf{X}^{(j)})^{\top} \mathbf{M}\mathbf{X}^{(i)}
+\]
+\[
+(\mathbf{X}^{(i)})^{\top} \mathbf{K}\mathbf{X}^{(j)} = \omega_j^2 (\mathbf{X}^{(i)})^{\top} \mathbf{M}\mathbf{X}^{(j)}
+\]
+
+利用 $\mathbf{K}$ 的对称性，$(\mathbf{X}^{(j)})^{\top}\mathbf{K}\mathbf{X}^{(i)} = (\mathbf{X}^{(i)})^{\top}\mathbf{K}\mathbf{X}^{(j)}$，两式相减：
+
+\[
+0 = (\omega_i^2 - \omega_j^2) (\mathbf{X}^{(j)})^{\top} \mathbf{M}\mathbf{X}^{(j)}
+\]
+
+由于 $\omega_i \neq \omega_j$，必须有：
+
+\begin{myformula}
+\[
+(\mathbf{X}^{(i)})^{\top} \mathbf{M} \mathbf{X}^{(j)} = 0, \qquad i \neq j
+\]
+\end{myformula}
+
+这是 \textbf{关于质量矩阵的正交性}。类似地从特征方程还可推出：
+
+\begin{myformula}
+\[
+(\mathbf{X}^{(i)})^{\top} \mathbf{K} \mathbf{X}^{(j)} = 0, \qquad i \neq j
+\]
+\end{myformula}
+
+这是 \textbf{关于刚度矩阵的正交性}。
+
+\subsection{模态质量与模态刚度}
+
+当 $i = j$ 时，$(\mathbf{X}^{(i)})^{\top}\mathbf{M}\mathbf{X}^{(i)} \neq 0$（因为 $\mathbf{M}$ 正定，$\mathbf{X}^{(i)} \neq \mathbf{0}$），定义：
+
+\begin{itemize}
+\item \textbf{模态质量}（第 $i$ 阶）：$m_i = (\mathbf{X}^{(i)})^{\top} \mathbf{M} \mathbf{X}^{(i)}$
+\item \textbf{模态刚度}（第 $i$ 阶）：$k_i = (\mathbf{X}^{(i)})^{\top} \mathbf{K} \mathbf{X}^{(i)}$
+\end{itemize}
+
+模态质量与模态刚度的关系：
+
+\begin{myformula}
+\[
+\omega_i^2 = \frac{k_i}{m_i}
+\]
+\end{myformula}
+
+与单自由度系统的公式 $\omega_n = \sqrt{k/m}$ 完全一致——这正是模态分析将多自由度系统转化为若干独立单自由度系统的数学基础。
+
+\subsection{振型的归一化}
+
+由于振型只能确定到比例因子，可任意选取归一化方式：
+
+\begin{enumerate}
+\item \textbf{最大分量归一化}：将 $\mathbf{X}^{(i)}$ 缩放使最大分量 = 1。
+\item \textbf{质量归一化}：缩放使 $m_i = 1$，则 $k_i = \omega_i^2$。这使 $\mathbf{\Phi}^{\top}\mathbf{M}\mathbf{\Phi} = \mathbf{I}$（单位矩阵），推导最简洁。
+\item \textbf{特定自由度归一化}：令某一指定自由度分量为 1（如 $X_1^{(i)} = 1$）。
+\end{enumerate}
+
+在模态叠加法和实验模态分析中，质量归一化最常用。
+
+\section{固有振型的物理意义与坐标变换}
+
+\subsection{主坐标（模态坐标）}
+
+定义 \textbf{模态矩阵}：
+
+\[
+\mathbf{\Phi} = \begin{bmatrix} \mathbf{X}^{(1)} & \mathbf{X}^{(2)} \end{bmatrix} = 
+\begin{bmatrix} X_1^{(1)} & X_1^{(2)} \\ X_2^{(1)} & X_2^{(2)} \end{bmatrix}
+\]
+
+进行坐标变换：
+
+\begin{myformula}
+\[
+\mathbf{x}(t) = \mathbf{\Phi} \mathbf{q}(t)
+\]
+\end{myformula}
+
+其中 $\mathbf{q}(t) = [q_1(t), q_2(t)]^{\top}$ 为 \textbf{主坐标}（模态坐标）。
+
+该变换的物理意义：将物理坐标 $\mathbf{x}$ 中的耦合振动，表示为主坐标 $\mathbf{q}$ 中独立振动的线性组合。$q_i(t)$ 衡量第 $i$ 阶振型参与系统响应的程度。
+
+\subsection{运动方程的解耦}
+
+将 $\mathbf{x} = \mathbf{\Phi}\mathbf{q}$ 代入无阻尼自由振动方程 $\mathbf{M}\ddot{\mathbf{x}} + \mathbf{K}\mathbf{x} = \mathbf{0}$：
+
+\[
+\mathbf{M}\mathbf{\Phi}\ddot{\mathbf{q}} + \mathbf{K}\mathbf{\Phi}\mathbf{q} = \mathbf{0}
+\]
+
+左乘 $\mathbf{\Phi}^{\top}$，利用正交性：
+
+\begin{myformula}
+\[
+\mathbf{\Phi}^{\top}\mathbf{M}\mathbf{\Phi} \ddot{\mathbf{q}} + \mathbf{\Phi}^{\top}\mathbf{K}\mathbf{\Phi} \mathbf{q} = \mathbf{0}
+\]
+\end{myformula}
+
+由于正交性，$\mathbf{\Phi}^{\top}\mathbf{M}\mathbf{\Phi} = \text{diag}(m_1, m_2)$，$\mathbf{\Phi}^{\top}\mathbf{K}\mathbf{\Phi} = \text{diag}(k_1, k_2)$，得到两个独立的单自由度方程：
+
+\[
+m_1 \ddot{q}_1 + k_1 q_1 = 0, \qquad m_2 \ddot{q}_2 + k_2 q_2 = 0
+\]
+
+即：
+
+\[
+\ddot{q}_1 + \omega_1^2 q_1 = 0, \qquad \ddot{q}_2 + \omega_2^2 q_2 = 0
+\]
+
+\textbf{结论}：在主坐标下，两自由度系统分解为两个独立的单自由度振子，各自具有固有频率 $\omega_1$ 和 $\omega_2$。
+
+\subsection{模态坐标系的 TikZ 示意图}
+
+\begin{tikzpicture}[scale=0.85]
+  % 物理坐标侧
+  \node at (2,5.5) {\textbf{物理坐标}};
+  \draw[thick] (0,5.0) -- (4,5.0);
+  \fill[blue!40] (0.8,4.7) rectangle (1.8,5.3) node[midway] {$m_1$};
+  \fill[red!40] (2.2,4.7) rectangle (3.2,5.3) node[midway] {$m_2$};
+  \draw[thick,decorate,decoration={coil,aspect=0.6,amplitude=3,segment length=6}] (1.8,5.0) -- (2.2,5.0);
+  \node at (2.0,4.4) {耦合};
+  
+  % 变换箭头
+  \draw[-Stealth,thick] (2,4.0) -- (2,3.0) node[midway,right] {$\mathbf{x} = \mathbf{\Phi}\mathbf{q}$};
+  
+  % 模态坐标侧
+  \node at (1.2,2.5) {\textbf{模态坐标}};
+  \draw[thick] (-0.5,2.0) -- (2.0,2.0);
+  \fill[blue!40] (0,1.7) rectangle (1.0,2.3) node[midway] {$q_1$};
+  \node at (0.5,1.4) {$\omega_1$};
+  
+  \draw[thick] (2.5,2.0) -- (5.0,2.0);
+  \fill[red!40] (3.0,1.7) rectangle (4.0,2.3) node[midway] {$q_2$};
+  \node at (3.5,1.4) {$\omega_2$};
+  
+  \node at (2,0.8) {解耦——两个独立的单自由度系统};
+\end{tikzpicture}
+
+\section{强迫振动}
+
+\subsection{无阻尼强迫振动——模态叠加法}
+
+外力 $\mathbf{F}(t) = [F_1(t), F_2(t)]^{\top}$ 作用于系统。运动方程：
+
+\[
+\mathbf{M}\ddot{\mathbf{x}} + \mathbf{K}\mathbf{x} = \mathbf{F}(t)
+\]
+
+经模态变换 $\mathbf{x} = \mathbf{\Phi}\mathbf{q}$，左乘 $\mathbf{\Phi}^{\top}$：
+
+\[
+\mathbf{\Phi}^{\top}\mathbf{M}\mathbf{\Phi} \ddot{\mathbf{q}} + \mathbf{\Phi}^{\top}\mathbf{K}\mathbf{\Phi} \mathbf{q} = \mathbf{\Phi}^{\top}\mathbf{F}(t)
+\]
+
+两个解耦方程：
+
+\begin{myformula}
+\[
+m_i \ddot{q}_i + k_i q_i = (\mathbf{X}^{(i)})^{\top} \mathbf{F}(t), \qquad i = 1, 2
+\]
+\end{myformula}
+
+或写为：
+
+\[
+\ddot{q}_i + \omega_i^2 q_i = \frac{1}{m_i} (\mathbf{X}^{(i)})^{\top} \mathbf{F}(t)
+\]
+
+等式右端的 $(\mathbf{X}^{(i)})^{\top}\mathbf{F}(t)$ 称为第 $i$ 阶\textbf{模态力}，衡量外力在第 $i$ 阶振型上的"投影"——即外力对第 $i$ 阶模态的激发程度。
+
+每个解耦方程都是标准的单自由度简谐激励响应问题，其稳态解：
+
+\[
+q_i(t) = \frac{(\mathbf{X}^{(i)})^{\top} \mathbf{F}_0}{k_i - \omega^2 m_i} \sin\omega t
+\]
+
+物理坐标中的响应：$\mathbf{x}(t) = \mathbf{\Phi}\mathbf{q}(t) = \sum_{i=1}^2 q_i(t)\mathbf{X}^{(i)}$。
+
+\subsection{动力吸振器（Dynamic Vibration Absorber, DVA）}
+
+\subsubsection{问题的提出}
+
+当主系统的工作频率接近其固有频率时，会发生共振，振幅极大。增大阻尼可降低共振幅值但会增加高频段的能耗和发热。另一种思路是：在主系统上附加一个精心调谐的辅助质量-弹簧系统（"吸振器"），它从主系统"吸收"能量，使主质量的振动大幅减小。
+
+\subsubsection{运动方程}
+
+在主系统 $(m_1, k_1)$ 上附加吸振器 $(m_2, k_2)$，主质量受简谐力 $F_0\sin\omega t$ 作用。阻尼忽略不计。运动方程：
+
+\[
+\begin{bmatrix} m_1 & 0 \\ 0 & m_2 \end{bmatrix}
+\begin{Bmatrix} \ddot{x}_1 \\ \ddot{x}_2 \end{Bmatrix} + 
+\begin{bmatrix} k_1 + k_2 & -k_2 \\ -k_2 & k_2 \end{bmatrix}
+\begin{Bmatrix} x_1 \\ x_2 \end{Bmatrix} = 
+\begin{Bmatrix} F_0 \\ 0 \end{Bmatrix} \sin\omega t
+\]
+
+\subsubsection{稳态响应}
+
+设稳态解 $\mathbf{x} = \mathbf{X}\sin\omega t$，代入得：
+
+\[
+\begin{bmatrix} k_1 + k_2 - \omega^2 m_1 & -k_2 \\ -k_2 & k_2 - \omega^2 m_2 \end{bmatrix}
+\begin{Bmatrix} X_1 \\ X_2 \end{Bmatrix} = 
+\begin{Bmatrix} F_0 \\ 0 \end{Bmatrix}
+\]
+
+求解：
+
+\begin{myformula}
+\[
+X_1 = \frac{(k_2 - \omega^2 m_2)F_0}{(k_1 + k_2 - \omega^2 m_1)(k_2 - \omega^2 m_2) - k_2^2}
+\]
+\[
+X_2 = \frac{k_2 F_0}{(k_1 + k_2 - \omega^2 m_1)(k_2 - \omega^2 m_2) - k_2^2}
+\]
+\end{myformula}
+
+\subsubsection{调谐条件——零振幅}
+
+若希望主质量在激励频率 $\omega$ 下完全不振动（$X_1 = 0$），则需分子为零：
+
+\[
+k_2 - \omega^2 m_2 = 0 \quad \Rightarrow \quad \omega = \sqrt{\frac{k_2}{m_2}} = \omega_a
+\]
+
+即 \textbf{吸振器的固有频率 $\omega_a$ 必须等于激励频率 $\omega$}。若关心的是某一固定频率（如转子转速），则将吸振器设计为 $\omega_a = \omega$，主质量在该频率下振幅为零。
+
+若希望保护主系统对所有频率（即减小整个频带的响应），则将吸振器调谐为 $\omega_a = \omega_{n1}$（主系统的固有频率）：
+
+\[
+\sqrt{\frac{k_2}{m_2}} = \sqrt{\frac{k_1}{m_1}}
+\]
+
+这样在原主系统共振点处，主质量振幅为零。但需要注意：安装吸振器后系统有两个新的共振频率——它们分别位于原固有频率的上下两侧。
+
+\begin{itemize}
+\item 如果激励频率偏离 $\omega_a$，主质量振幅衰减效果下降。
+\item 吸振器质量比 $\mu = m_2/m_1$ 越大，两个新共振峰间距越宽，但吸振器的有效性频率范围也越宽。
+\item 通常取 $\mu = 0.05 \sim 0.25$。
+\end{itemize}
+
+\subsubsection{动力吸振器的 TikZ 示意图}
+
+\begin{tikzpicture}[scale=0.85]
+  % 主系统（左侧）
+  \node at (2.5,5) {\textbf{主系统}};
+  % 墙
+  \draw[thick] (0,0) -- (0,3.5);
+  \fill[gray!20] (-0.5,0) rectangle (0,3.5);
+  \foreach \y in {0.2,0.6,...,3.2} {\draw[thick] (0,\y) -- (-0.3,\y+0.15);}
+  
+  % 弹簧 k1
+  \draw[thick,decorate,decoration={coil,aspect=0.6,amplitude=4,segment length=8}] (0,2.5) -- (2.5,2.5);
+  \node at (1.25,3.0) {$k_1$};
+  
+  % 主质量 m1
+  \fill[blue!30] (2.5,0.2) rectangle (4.0,2.3);
+  \draw[thick] (2.5,0.2) rectangle (4.0,2.3);
+  \node at (3.25,1.25) {$m_1$};
+  
+  % 弹簧 k2
+  \draw[thick,decorate,decoration={coil,aspect=0.6,amplitude=4,segment length=8}] (4.0,2.5) -- (6.5,2.5);
+  \node at (5.25,3.0) {$k_2$};
+  
+  % 吸振器质量 m2
+  \fill[red!30] (6.5,0.8) rectangle (7.5,2.0);
+  \draw[thick] (6.5,0.8) rectangle (7.5,2.0);
+  \node at (7.0,1.4) {$m_2$};
+  
+  \node at (7.0,0.4) {\textbf{吸振器}};
+  \node[red] at (7.0,0.0) {$\omega_a = \omega$};
+  
+  % 外力
+  \draw[-Stealth,very thick] (3.25,2.5) -- (3.25,3.2) node[above] {$F_0\sin\omega t$};
+\end{tikzpicture}
+
+\subsubsection{频响曲线变化对比}
+
+\begin{tikzpicture}[scale=0.85]
+  \draw[-Stealth] (0,0) -- (10,0) node[below] {$\omega$};
+  \draw[-Stealth] (0,0) -- (0,5) node[left] {$|X_1|/(F_0/k_1)$};
+  
+  % 原系统频响曲线（单自由度）
+  \draw[thick,blue,domain=0.3:9,samples=200] plot (\x,{4/(sqrt((1-\x*\x/4)^2+(0.1*\x)^2))});
+  \node[blue,right] at (9.5,3.8) {原系统};
+  
+  % 安装吸振器后的频响曲线
+  \draw[thick,red,domain=0.3:9,samples=300] 
+    plot (\x,{
+      abs( 4*(\x*\x*0.2-1) / ( (1+\x*\x*0.2*1.2-1.2-\x*\x*1.2-4*\x*\x+\x*\x*\x*\x*0.2) ) )
+    });
+  \node[red,right] at (9.5,2.0) {加吸振器};
+  
+  % 标记原共振点
+  \draw[dashed,gray] (4.0,0) -- (4.0,5) node[above,gray] {$\omega_{n1}$};
+  \node[red] at (4.0,0.5) {$X_1=0$};
+\end{tikzpicture}
+
+\section{Python 代码实现}
+
+\subsection{两自由度系统固有频率和振型计算}
+
+\begin{mycode}{两自由度系统特征值分析}
+\begin{lstlisting}[language=Python]
+import numpy as np
+
+# 系统参数: m1, m2, k1, k2, k3
+m1, m2 = 10.0, 5.0
+k1, k2, k3 = 1000.0, 500.0, 800.0
+
+# 质量矩阵和刚度矩阵
+M = np.array([[m1, 0.0],
+              [0.0, m2]])
+K = np.array([[k1 + k2, -k2],
+              [-k2,     k2 + k3]])
+
+# 求解广义特征值问题 K*phi = omega^2 * M*phi
+eigvals, eigvecs = np.linalg.eig(np.linalg.solve(M, K))
+# 或直接: eigvals, eigvecs = scipy.linalg.eigh(K, M)
+
+omega_sq = np.sort(np.real(eigvals))
+omega_n = np.sqrt(omega_sq)
+
+print(f"固有频率: omega1 = {omega_n[0]:.4f} rad/s, "
+      f"omega2 = {omega_n[1]:.4f} rad/s")
+print(f"频率(Hz): f1 = {omega_n[0]/(2*np.pi):.4f} Hz, "
+      f"f2 = {omega_n[1]/(2*np.pi):.4f} Hz")
+
+# 振型（质量归一化）
+# 对每阶振型进行质量归一化: phi_i * M * phi_i = 1
+phi_mass_norm = np.zeros_like(eigvecs)
+for i in range(2):
+    vec = eigvecs[:, i]
+    norm_factor = np.sqrt(vec.T @ M @ vec)
+    phi_mass_norm[:, i] = vec / norm_factor
+
+# 验证正交性
+print("\n正交性验证:")
+print("Phi^T M Phi =")
+print(phi_mass_norm.T @ M @ phi_mass_norm.round(6))
+print("Phi^T K Phi =")
+print((phi_mass_norm.T @ K @ phi_mass_norm).round(6))
+\end{lstlisting}
+\end{mycode}
+
+\subsection{时域响应数值求解（Newmark-$\beta$ 法推广）}
+
+\begin{mycode}{两自由度系统Newmark-$\beta$法求解}
+\begin{lstlisting}[language=Python]
+def newmark_beta_2dof(M, K, C, F, dt, beta=0.25, gamma=0.5):
+    """
+    Newmark-beta 法求解两自由度系统
+    M, K, C: 2x2 矩阵
+    F: (n, 2) 外力数组，每一行为 [F1_i, F2_i]
+    """
+    n = len(F)
+    ndof = 2
+    x = np.zeros((n, ndof))
+    v = np.zeros((n, ndof))
+    a = np.zeros((n, ndof))
+    
+    # 初始加速度
+    a[0] = np.linalg.solve(M, F[0] - C @ v[0] - K @ x[0])
+    
+    # 有效刚度矩阵
+    K_eff = K + gamma/(beta*dt) * C + 1.0/(beta*dt**2) * M
+    
+    for i in range(n - 1):
+        # 预测步
+        v_pred = v[i] + (1 - gamma) * dt * a[i]
+        x_pred = x[i] + dt * v[i] + (0.5 - beta) * dt**2.0 * a[i]
+        
+        # 有效载荷
+        F_eff = (F[i+1] + 
+                 M @ (1.0/(beta*dt**2) * x[i] + 
+                      1.0/(beta*dt) * v[i] + 
+                      (0.5/beta - 1) * a[i]) +
+                 C @ (gamma/(beta*dt) * x[i] + 
+                      (gamma/beta - 1) * v[i] + 
+                      dt * (0.5*gamma/beta - 1) * a[i]))
+        
+        x[i+1] = np.linalg.solve(K_eff, F_eff)
+        a[i+1] = (1.0/(beta*dt**2) * (x[i+1] - x[i]) - 
+                  1.0/(beta*dt) * v[i] - 
+                  (0.5/beta - 1) * a[i])
+        v[i+1] = v[i] + (1 - gamma) * dt * a[i] + gamma * dt * a[i+1]
+    
+    return x, v, a
+
+# 示例：半正弦脉冲作用在 m1 上
+t = np.arange(0, 5.0, 0.01)
+F = np.zeros((len(t), 2))
+td = 0.5
+mask = (t >= 0) & (t <= td)
+F[mask, 0] = 100.0 * np.sin(np.pi * t[mask] / td)  # F1(t)
+
+C_mat = np.zeros((2, 2))  # 无阻尼（可添加比例阻尼）
+x_nb, v_nb, a_nb = newmark_beta_2dof(M, K, C_mat, F, 0.01)
+\end{lstlisting}
+\end{mycode}
+
+\subsection{模态叠加法求解时域响应}
+
+\begin{mycode}{两自由度系统模态叠加法}
+\begin{lstlisting}[language=Python]
+def modal_superposition_2dof(M, K, F, t, phi, omega_n):
+    """
+    用模态叠加法求解两自由度系统无阻尼响应
+    F: (n, 2) 外力数组
+    phi: 2x2 模态矩阵
+    omega_n: [omega1, omega2]
+    """
+    n = len(t)
+    ndof = 2
+    dt = t[1] - t[0]
+    
+    # 模态质量和模态力
+    m_modal = np.array([phi[:, i].T @ M @ phi[:, i] for i in range(ndof)])
+    
+    # 对每个模态做 Duhamel 积分
+    q = np.zeros((n, ndof))
+    for mode in range(ndof):
+        omega = omega_n[mode]
+        mi = m_modal[mode]
+        f_modal = F @ phi[:, mode]  # 模态激励力 (n,)
+        
+        # Duhamel 积分数值解
+        for i in range(1, n):
+            integ = 0.0
+            for j in range(i + 1):
+                tau = t[i] - t[j]
+                fj = f_modal[j]
+                if j == 0 or j == i:
+                    integ += 0.5 * fj * np.sin(omega * tau) / (mi * omega)
+                else:
+                    integ += fj * np.sin(omega * tau) / (mi * omega)
+            q[i, mode] = integ * dt
+    
+    # 变换回物理坐标
+    x = (phi @ q.T).T  # (n, 2)
+    return x, q
+\end{lstlisting}
+\end{mycode}
+
+\section{小结}
+
+两自由度系统是多自由度振动理论的简化模型，但已包含了全部本质特征：
+\begin{itemize}
+\item 矩阵形式的运动方程（$\mathbf{M}\ddot{\mathbf{x}} + \mathbf{C}\dot{\mathbf{x}} + \mathbf{K}\mathbf{x} = \mathbf{F}$）
+\item 特征值问题给出固有频率和振型
+\item 模态正交性——关于 $\mathbf{M}$ 和 $\mathbf{K}$ 的加权正交
+\item 坐标变换与解耦——物理坐标 $\to$ 模态坐标，耦合方程组分解为独立单自由度方程
+\item 动力吸振器——利用耦合系统中反共振点的工程应用
+\end{itemize}
+
+这些概念在下章将直接推广至 $n$ 自由度系统和连续体系统的模态分析。
