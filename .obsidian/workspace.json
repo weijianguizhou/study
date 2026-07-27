@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "README.md",
+                "file": "计算机类/Linux教程/01-Linux概述与安装.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "README"
+              "title": "01-Linux概述与安装"
             }
           }
         ]
@@ -191,8 +191,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "437ab6934dc5f66d",
+  "active": "9943dce2188f80f3",
   "lastOpenFiles": [
+    "计算机类/Linux教程/00-Linux教程MOC.md",
+    "README.md",
     "力学/振动理论/LaTeX/main.toc",
     "力学/振动理论/LaTeX/main.out",
     "力学/振动理论/LaTeX/main.aux",
@@ -214,18 +216,15 @@
     "力学/振动理论/md/08-连续系统-梁.md",
     "力学/振动理论/LaTeX/Chapter05.tex",
     "力学/振动理论/LaTeX/Chapter03.tex",
-    "力学/振动理论/LaTeX/Chapter08.tex",
     "力学/振动理论/md/04-一般强迫振动.md",
     "力学/振动理论/md/07-连续系统-弦与杆.md",
     "计算机类/Linux教程/01-Linux概述与安装.md",
-    "计算机类/Linux教程/00-Linux教程MOC.md",
     "计算机类/数据结构教程/01-基本概念与算法分析.md",
     "计算机类/数据结构教程/00-数据结构MOC.md",
     "计算机类/数据结构/00-数据结构索引.md",
     "数理基础/数理基础.md",
     "计算机类/Anaconda教程/Anaconda 使用教程.md",
     "计算机类/MATLAB学习/01-MATLAB介绍与环境.md",
-    "README.md",
     "计算机类/VS code 配置指南/R/README.md",
     "计算机类/VS code 配置指南/Python/README.md",
     "计算机类/VS code 配置指南/C++/README.md",

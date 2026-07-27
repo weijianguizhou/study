@@ -1,0 +1,176 @@
+\documentclass[10pt,a4paper]{book}
+\usepackage{ctex} 
+\usepackage{geometry,graphicx,xcolor,color,subcaption}
+\usepackage{amssymb,amsmath,amsthm}
+\usepackage{newpxtext,mathpazo}    
+\usepackage{booktabs}
+\usepackage{newclude,ulem}
+\definecolor{winered}{rgb}{0.5,0,0}
+\definecolor{structurecolor}{RGB}{122,122,142}
+\definecolor{main}{rgb}{0.5,0,0}
+\definecolor{second}{RGB}{115,45,2}
+\definecolor{third}{RGB}{0,80,80}
+\usepackage[colorlinks,linkcolor = winered]{hyperref}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+% ------------------------------------------------------------%
+% 定义定理环境
+\usepackage{amsthm}
+\newtheoremstyle{defstyle}{3pt}{3pt}{\kaishu}{-3pt}{
+	\bfseries\color{main}}{}{0.5em}{\indent 【\thmname{#1} \thmnumber{#2}】 \thmnote{(#3)}}
+\newtheoremstyle{thmstyle}{3pt}{3pt}{\kaishu}{-3pt}{
+	\bfseries\color{second}}{}{0.5em}{\indent【\thmname{#1} \thmnumber{#2}】 \thmnote{(#3)}}
+\newtheoremstyle{prostyle}{3pt}{3pt}{\kaishu}{-3pt}{
+	\bfseries\color{third}}{}{0.5em}{\indent【\thmname{#1} \thmnumber{#2}】 \thmnote{(#3)}}
+
+\theoremstyle{thmstyle}
+\newtheorem{theorem}{定理}[chapter]
+\theoremstyle{defstyle}
+\newtheorem{definition}[theorem]{定义}
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{corollary}[theorem]{推论}
+\theoremstyle{prostyle}
+\newtheorem{proposition}[theorem]{命题}
+\newtheorem{example}[theorem]{例题}
+
+\renewenvironment{proof}[1][证明]{\par{\kaishu \uline{\textbf{#1.}}} \;\fangsong}{\qed\par}
+\newenvironment{solution}{\par\underline{\textbf{解.}} \;\kaishu}{\par}
+\newenvironment{remark}{\par\underline{\textbf{注.}} \;\fangsong}{\par}
+\newcommand{\intro}[1]{\rightline{\parbox[t]{5cm}{\footnotesize \fangsong\quad\quad #1 }}}
+% ------------------------------------------------------------%
+
+\usepackage{enumerate}
+\usepackage{enumitem}
+\setlist[enumerate,1]{label=\color{structurecolor}\arabic*.}
+\setlist[enumerate,2]{label=\color{structurecolor}(\arabic*).}
+\setlist[enumerate,3]{label=\color{structurecolor}\Roman*.}
+\setlist[enumerate,4]{label=\color{structurecolor}\Alph*.}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{angles, quotes, arrows.meta, calc}
+
+% 设置章形式
+\usepackage{titlesec, titletoc}
+\linespread{1.2}
+
+\usepackage{fancyhdr}
+\fancypagestyle{plain}{%
+	\fancyhf{}
+	\renewcommand{\headrulewidth}{0pt}
+	\renewcommand{\footrulewidth}{0pt}
+}
+
+\titlecontents{chapter}[0em]{}{\large \fangsong{第 \thecontentslabel 章\quad}}{}{\hfill\contentspage}
+\titlecontents{section}[2em]{}{\thecontentslabel\quad\textcolor{blue}}{}{\titlerule*{ .} \contentspage}
+
+\titleformat{\chapter}[display]{\Large}
+{\color{structurecolor}\centering\small \color{structurecolor}第 \zhnumber{\arabic{chapter}} \ 章 }{0.5ex}
+{\color{structurecolor}{\titlerule[1pt]}\Large \kaishu \centering \bfseries}
+
+\titleformat{\section}[frame]
+{\normalfont\color{structurecolor}}
+{\footnotesize \enspace \large \textcolor{structurecolor}{\S \,\thesection}\enspace}{6pt}
+{\Large\filcenter \bf \kaishu }
+
+\titlespacing*{\section}{1pc}{*7}{*2.3}[1pc]
+\titleformat{\subsection}[hang]{\bfseries}{
+	\large\bfseries\color{structurecolor}\thesubsection\enspace}{1pt}{%
+	\color{structurecolor}\large\bfseries\filright}
+\titleformat{\subsubsection}[hang]{\bfseries}{
+	\large\bfseries\color{structurecolor}\thesubsubsection\enspace}{1pt}{%
+	\color{structurecolor}\large\bfseries\filright}
+
+% tcolorbox 环境
+\newtcolorbox{myTheorem}[1]{
+    colframe=blue!50!black,
+    colback=blue!5!white,
+    title=#1,
+    fonttitle=\bfseries,
+    boxrule=0.5mm,
+    before skip=10pt,
+    after skip=10pt,
+    segmentation style={blue!50!black, line width=0.5mm},
+}
+\newtcolorbox{myhypothesis}[1]{
+    colframe=green!50!black,
+    colback=green!5!white,
+    title=#1,
+    fonttitle=\bfseries,
+    boxrule=0.5mm,
+    before skip=10pt,
+    after skip=10pt,
+    segmentation style={green!50!black, line width=0.5mm},
+}
+\newtcolorbox{mydefinition}[1]{
+    colframe=red!50!black,
+    colback=red!5!white,
+    title=#1,
+    fonttitle=\bfseries,
+    boxrule=0.5mm,
+    before skip=10pt,
+    after skip=10pt,
+    segmentation style={red!50!black, line width=0.5mm},
+}
+\newtcolorbox{myproperty}[1]{
+    colframe=orange!50!black,
+    colback=orange!5!white,
+    title=#1,
+    fonttitle=\bfseries,
+    boxrule=0.5mm,
+    before skip=10pt,
+    after skip=10pt,
+    segmentation style={orange!50!black, line width=0.5mm},
+}
+
+\tcbuselibrary{skins, breakable, theorems}
+\newtcolorbox{myformula}[1][]{
+    colframe=brown!50!black,
+    colback=brown!5!white,
+    boxrule=0.5mm,
+    before skip=10pt,
+    after skip=10pt,
+    sharp corners,
+    #1
+}
+\definecolor{DarkBlue}{RGB}{0,0,139}
+
+% ================== 自定义数学命令 ==================
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\D}{\mathrm{D}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\iid}{\stackrel{\text{i.i.d.}}{\sim}}
+\newcommand{\indep}{\perp\!\!\!\perp}
+\newcommand{\xrightarrowP}{\xrightarrow{P}}
+\newcommand{\xrightarrowd}{\xrightarrow{d}}
+\newcommand{\abs}[1]{\left|#1\right|}
+
+\begin{document}
+\begin{titlepage}
+	\vspace*{4cm}
+	\begin{center}
+		{\fontsize{36}{44}\sffamily\bfseries 概率论笔记} \\[1.5cm]
+		{\color{DarkBlue}\rule{0.3\textwidth}{0.5pt}} \\[1.5cm]
+		{\fontsize{16}{20}\kaishu 魏舟} \\[0.3cm]
+		{\large \today}
+	\end{center}
+\end{titlepage}
+
+\newpage
+
+\tableofcontents
+
+\setcounter{page}{0}
+\thispagestyle{empty}
+\newpage
+
+\input{Chapter01}
+\input{Chapter02}
+\input{Chapter03}
+\input{Chapter04}
+\input{Chapter05}
+\input{Appendix}
+
+\end{document}

@@ -1,0 +1,135 @@
+\chapter{大数定律与中心极限定理}
+
+\intro{
+	大数定律和中心极限定理是概率论中最重要的两类极限定理，前者揭示了大量随机现象的平均结果的稳定性，后者阐明了大量随机因素综合作用的结果近似服从正态分布。
+}
+
+\section{依概率收敛}
+
+\begin{mydefinition}{依概率收敛}
+	设 $\{X_n\}$ 为随机变量序列，$X$ 为随机变量。若对任意 $\varepsilon > 0$，有
+	\[\lim_{n \to \infty} P\{\abs{X_n - X} < \varepsilon\} = 1,\]
+	则称 $\{X_n\}$ \textbf{依概率收敛}于 $X$，记为 $X_n \xrightarrowP X$。
+\end{mydefinition}
+
+\begin{remark}
+依概率收敛是比通常的数列收敛更弱的一种收敛模式——它允许在小概率的情形下出现较大偏差。它可以被描述为"当 $n$ 充分大时，$X_n$ 与 $X$ 有显著差异的事件发生的概率可以任意小"。
+\end{remark}
+
+\section{大数定律（LLN）}
+
+大数定律从理论上解释了"频率的稳定性"：当试验次数足够多时，随机事件的频率将稳定在其概率附近。
+
+\begin{theorem}[Chebyshev 大数定律]
+设 $\{X_k\}$ 为相互独立的随机变量序列，且具有相同的数学期望 $E(X_k) = \mu$ 和方差 $D(X_k) = \sigma^2 > 0$，则样本均值依概率收敛于 $\mu$：
+\[\frac{1}{n} \sum_{k=1}^{n} X_k \xrightarrowP \mu.\]
+即对任意 $\varepsilon > 0$，
+\[\lim_{n \to \infty} P\!\left\{\abs{\frac{1}{n} \sum_{k=1}^{n} X_k - \mu} < \varepsilon\right\} = 1.\]
+\end{theorem}
+
+\begin{proof}[证明思路]
+由 Chebyshev 不等式，
+\[P\!\left\{\abs{\frac{1}{n}\sum_{k=1}^n X_k - \mu} \geq \varepsilon\right\} \leq \frac{D(\frac{1}{n}\sum X_k)}{\varepsilon^2} = \frac{\sigma^2}{n\varepsilon^2} \to 0 \quad (n \to \infty).\]
+\end{proof}
+
+\begin{theorem}[Bernoulli 大数定律]
+设 $\mu_n$ 是 $n$ 次 Bernoulli 试验中事件 $A$ 发生的次数，$p = P(A)$，则频率依概率收敛于概率：
+\[\frac{\mu_n}{n} \xrightarrowP p.\]
+\end{theorem}
+
+\begin{remark}
+Bernoulli 大数定律是 Chebyshev 大数定律的特例（取 $X_k \sim B(1, p)$）。它将"频率的稳定性"这个经验事实上升为数学定理，为统计中用频率估计概率提供了理论基础。
+\end{remark}
+
+\begin{theorem}[Khinchin 大数定律]
+设 $\{X_k\}$ 为独立同分布随机变量序列，且 $E(X_k) = \mu$ 存在，则
+\[\frac{1}{n} \sum_{k=1}^{n} X_k \xrightarrowP \mu.\]
+\end{theorem}
+
+\begin{remark}
+Khinchin 大数定律的优点在于：只要求期望存在，\textbf{不要求方差存在}。这使得它比 Chebyshev 大数定律有更广泛的适用范围。例如，当随机变量服从期望存在但方差无穷的分布时，Khinchin 大数定律仍然成立。
+\end{remark}
+
+\section{中心极限定理（CLT）}
+
+中心极限定理是大数定律的深化：它不仅说明了样本均值的稳定性，还精确地描述了其误差的分布形态——正态分布。这是正态分布在概率统计中占据核心地位的根本原因。
+
+\begin{theorem}[Lindeberg--L\'evy 中心极限定理（独立同分布情形）]
+设 $X_1, X_2, \ldots, X_n$ 相互独立，服从同一分布，且 $E(X_i) = \mu$，$D(X_i) = \sigma^2 > 0$。则当 $n$ 充分大时，\textbf{和的标准化变量}的分布函数趋于标准正态分布函数：
+\begin{myformula}
+\boxed{\displaystyle \lim_{n \to \infty} P\!\left\{\frac{\sum_{i=1}^{n} X_i - n\mu}{\sqrt{n}\,\sigma} \leq y\right\} = \Phi(y).}
+\end{myformula}
+
+\textbf{等价表述：}
+\[\frac{\overline{X} - \mu}{\sigma / \sqrt{n}} \xrightarrowd N(0, 1),\qquad
+\sum_{i=1}^{n} X_i \stackrel{\text{approx}}{\sim} N(n\mu,\, n\sigma^2).\]
+\end{theorem}
+
+\begin{theorem}[De Moivre--Laplace 中心极限定理（二项分布的正态近似）]
+设 $\mu_n \sim B(n, p)$，则当 $n$ 充分大时，
+\[\lim_{n \to \infty} P\!\left\{\frac{\mu_n - np}{\sqrt{np(1-p)}} \leq x\right\} = \Phi(x).\]
+\end{theorem}
+
+\begin{remark}
+该定理表明：$n$ 充分大时，二项分布 $B(n, p)$ 可用正态分布 $N(np,\, np(1-p))$ 近似。一般经验法则是 $np \geq 5$ 且 $n(1-p) \geq 5$。
+\end{remark}
+
+\section{中心极限定理的应用}
+
+\begin{example}[保险公司亏本概率]
+某人寿保险公司有 $n = 10\,000$ 个同一年龄段的人参加保险。每人每年交保费 $12$ 元。若一年内死亡，家属可领取 $1\,000$ 元。已知死亡率为 $p = 0.006$。求保险公司亏本的概率。
+
+\begin{solution}
+设 $X$ 表示一年内死亡人数，则 $X \sim B(10\,000,\, 0.006)$。
+\begin{gather*}
+E(X) = np = 10\,000 \times 0.006 = 60,\\
+D(X) = np(1-p) = 10\,000 \times 0.006 \times 0.994 = 59.64,\\
+\sqrt{D(X)} = \sqrt{59.64} \approx 7.7227.
+\end{gather*}
+
+保险公司利润：$Y = 10\,000 \times 12 - 1\,000 X = 120\,000 - 1\,000 X$。
+
+亏本条件：$Y < 0 \iff 1\,000 X > 120\,000 \iff X > 120$。
+
+由 De Moivre--Laplace 中心极限定理，$\dfrac{X - 60}{7.7227} \stackrel{\text{approx}}{\sim} N(0, 1)$，
+\begin{align*}
+P\{X > 120\} &= 1 - P\{X \leq 120\} \\
+&\approx 1 - \Phi\!\left(\frac{120 - 60}{7.7227}\right) \\
+&= 1 - \Phi(7.77) \approx 0.
+\end{align*}
+
+故保险公司几乎不可能亏本。
+\end{solution}
+\end{example}
+
+\begin{example}[高尔顿钉板实验]
+在一个钉板上，大量小球自上而下通过层层排布的铁钉后，最终落入底部的各个格子里。每个小球在每层遇到钉子时向左或向右的概率各为 $1/2$。经过 $n$ 层钉子的独立碰撞后，小球最终的位置近似服从正态分布 $N(n/2,\, n/4)$。这是中心极限定理最经典的物理演示。
+\end{example}
+
+\begin{myTheorem}{中心极限定理的重要意义}
+\begin{enumerate}
+	\item \textbf{解释了正态分布的普遍性：} 实际中许多随机现象都可看作大量独立微小随机因素的叠加，因此近似服从正态分布；
+	\item \textbf{提供了近似计算方法：} 当样本量足够大时，可用正态分布近似计算原本复杂的概率（如二项分布、Poisson 分布等）；
+	\item \textbf{是统计推断的基础：} 抽样分布、区间估计、假设检验等统计方法的理论依据都离不开中心极限定理。
+\end{enumerate}
+\end{myTheorem}
+
+\section{大数定律与中心极限定理的比较}
+
+\begin{myTheorem}{两者的区别与联系}
+\begin{center}
+\begin{tabular}{p{4cm}p{5cm}p{5cm}}
+\toprule
+\textbf{方面} & \textbf{大数定律 (LLN)} & \textbf{中心极限定理 (CLT)} \\
+\midrule
+研究对象 & 样本均值 $\overline{X}_n$ & 标准化和 $\dfrac{\sum X_i - n\mu}{\sqrt{n}\sigma}$ \\
+结论类型 & 依概率收敛（定性） & 依分布收敛（定量） \\
+回答的问题 & 样本均值趋向何处？ & 波动服从什么分布？ \\
+数学形式 & $\overline{X}_n \xrightarrowP \mu$ & $\dfrac{\overline{X}_n - \mu}{\sigma/\sqrt{n}} \xrightarrowd N(0,1)$ \\
+收敛速率 & 不提供 & $O(1/\sqrt{n})$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{直观理解：} 大数定律告诉我们"平均值会趋于期望"，中心极限定理进一步告诉我们"趋于期望的过程中，误差大约是正态分布的"。两者的关系类似于"单调有界数列必有极限"与"Taylor 展开"——前者给出存在性，后者给出精确的渐近表达式。
+\end{myTheorem}
