@@ -308,16 +308,12 @@ Jeffcott 转子（也称为 Laval 转子）是转子动力学的基础模型：�
 
 \begin{myformula}
 在固定坐标系 $(x, y)$ 中，假设各向同性轴（等刚度 $k = k_x = k_y$）：
-\[
-\[\begin{aligned}
+\begin{align}
 m\ddot{x} + c\dot{x} + kx &= m\varepsilon\Omega^{2}\cos\Omega t + mg \\
 m\ddot{y} + c\dot{y} + ky &= m\varepsilon\Omega^{2}\sin\Omega t
-\end{aligned}\]
-\]
+\end{align}
 其中 $\Omega$ 为轴转速。$y$ 方向稳态位移幅值为：
-\[
-|Y| = \frac{m\varepsilon\Omega^{2}}{\sqrt{(k - m\Omega^{2})^{2} + (c\Omega)^{2}}}
-\]
+$$|Y| = \frac{m\varepsilon\Omega^{2}}{\sqrt{(k - m\Omega^{2})^{2} + (c\Omega)^{2}}}$$
 \end{myformula}
 
 \subsubsection{临界转速与不平衡响应}
@@ -372,12 +368,10 @@ m\ddot{y} + c\dot{y} + ky &= m\varepsilon\Omega^{2}\sin\Omega t
 
 \begin{myformula}
 1/4 车模型的运动方程：
-\[
-\[\begin{aligned}
+\begin{align}
 m_s\ddot{x}_s + c_s(\dot{x}_s - \dot{x}_u) + k_s(x_s - x_u) &= 0 \\
 m_u\ddot{x}_u + c_s(\dot{x}_u - \dot{x}_s) + k_s(x_u - x_s) + k_t(x_u - y_r) + c_t(\dot{x}_u - \dot{y}_r) &= 0
-\end{aligned}\]
-\]
+\end{align}
 悬挂设计的两个评价准则：（1）车身加速度最小（乘坐舒适性）;（2）轮胎动态载荷最小（行驶安全性）。
 \end{myformula}
 

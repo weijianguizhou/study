@@ -262,10 +262,10 @@ $\zeta < -1$ & 相异正实根 & \textbf{不稳定结点} \\
         \draw[-Stealth] (0,-1.8) -- (0,1.8);
         \draw[green!50!black,thick] plot[domain=-1.5:1.5,samples=50] (\x,{0.7*\x/(1+abs(\x))});
         \draw[green!50!black,thick] plot[domain=-1.5:1.5,samples=50] (\x,{-0.7*\x/(1+abs(\x))});
-        \draw[green!50!black,thick] plot[domain=0.1:1.8,samples=50] (\x,{sqrt(\x*\x-0.04)});
-        \draw[green!50!black,thick] plot[domain=0.1:1.8,samples=50] (\x,{-sqrt(\x*\x-0.04)});
-        \draw[green!50!black,thick] plot[domain=0.1:1.8,samples=50] ({-\x},{sqrt(\x*\x-0.04)});
-        \draw[green!50!black,thick] plot[domain=0.1:1.8,samples=50] ({-\x},{-sqrt(\x*\x-0.04)});
+        \draw[green!50!black,thick] plot[domain=0.2:1.8,samples=50] (\x,{sqrt(\x*\x-0.04)});
+        \draw[green!50!black,thick] plot[domain=0.2:1.8,samples=50] (\x,{-sqrt(\x*\x-0.04)});
+        \draw[green!50!black,thick] plot[domain=0.2:1.8,samples=50] ({-\x},{sqrt(\x*\x-0.04)});
+        \draw[green!50!black,thick] plot[domain=0.2:1.8,samples=50] ({-\x},{-sqrt(\x*\x-0.04)});
         \node at (0,-2.2) {\titleC};
     \end{scope}
 
@@ -419,10 +419,10 @@ T = T_0\left[1 + \frac{1}{4}\sin^{2}\frac{\theta_{\max}}{2} + \frac{9}{64}\sin^{
     \draw[gray,thin] (3.14,-2.5) -- (3.14,2.5);
 
     \foreach \E in {0.3,0.6,0.9,1.2,1.5,1.8,2.1} {
-        \pgfmathsetmacro\vv{sqrt(2*\E + 2*cos(deg(0)))}
-        \draw[blue,thick,smooth,variable=\t,domain=-180:180,samples=100]
+        \pgfmathsetmacro\halfDomain{acos(max(-1,-\E))/57.2958}
+        \draw[blue,thick,smooth,variable=\t,domain=-\halfDomain:\halfDomain,samples=100]
             plot({deg(\t)/57.3},{sqrt(2*\E + 2*cos(deg(\t)))});
-        \draw[blue,thick,smooth,variable=\t,domain=-180:180,samples=100]
+        \draw[blue,thick,smooth,variable=\t,domain=-\halfDomain:\halfDomain,samples=100]
             plot({deg(\t)/57.3},{-sqrt(2*\E + 2*cos(deg(\t)))});
     }
 
@@ -497,21 +497,15 @@ Lindstedt-Poincar\'e 法给出的 Duffing 方程频率-振幅关系为：
 x(t) = a(t)\cos[\omega_0 t + \beta(t)], \quad \dot{x}(t) = -a(t)\omega_0\sin[\omega_0 t + \beta(t)]
 \]
 附加约束 $\dot{a}\cos\psi - a\dot{\beta}\sin\psi = 0$（其中 $\psi = \omega_0 t + \beta$），将原方程化为振幅和相位的慢变方程：
-\[
-\[\begin{aligned}
+\begin{align}
 \dot{a} &= -\frac{\varepsilon}{\omega_0} f(a\cos\psi, -a\omega_0\sin\psi, t)\sin\psi \\
 \dot{\beta} &= -\frac{\varepsilon}{a\omega_0} f(a\cos\psi, -a\omega_0\sin\psi, t)\cos\psi
-\end{aligned}\]
-\]
+\end{align}
 
 \begin{myformula}
 平均法的核心——在一周期内对右端取平均：
-\[
-\dot{\bar{a}} = -\frac{\varepsilon}{2\pi\omega_0}\int_0^{2\pi} f(a\cos\psi, -a\omega_0\sin\psi)\sin\psi\,d\psi
-\]
-\[
-\dot{\bar{\beta}} = -\frac{\varepsilon}{2\pi a \omega_0}\int_0^{2\pi} f(a\cos\psi, -a\omega_0\sin\psi)\cos\psi\,d\psi
-\]
+$$\dot{\bar{a}} = -\frac{\varepsilon}{2\pi\omega_0}\int_0^{2\pi} f(a\cos\psi, -a\omega_0\sin\psi)\sin\psi\,d\psi$$
+$$\dot{\bar{\beta}} = -\frac{\varepsilon}{2\pi a \omega_0}\int_0^{2\pi} f(a\cos\psi, -a\omega_0\sin\psi)\cos\psi\,d\psi$$
 平衡点 $\dot{\bar{a}} = 0$ 给出稳态振幅，稳定性由 Jacobi 矩阵特征值决定。
 \end{myformula}
 
@@ -528,20 +522,14 @@ x(t) = a_0 + \sum_{n=1}^{N} \left[ a_n\cos(n\omega t) + b_n\sin(n\omega t) \righ
 
 \begin{myformula}
 对 Duffing 方程 $\ddot{x} + 2\zeta\dot{x} + \alpha x + \beta x^{3} = F\cos\omega t$，取单谐波近似 $x = A\cos(\omega t - \phi)$，代入得：
-\[
-\[\begin{aligned}
+\begin{align*}
 -\omega^{2}A\cos(\omega t - \phi) - 2\zeta\omega A\sin(\omega t - \phi) + \alpha A\cos(\omega t - \phi) & \\
 + \beta A^{3}\cos^{3}(\omega t - \phi) &= F\cos\omega t
-\end{aligned}\]
-\]
+\end{align*}
 利用 $\cos^{3}\theta = \frac{3}{4}\cos\theta + \frac{1}{4}\cos3\theta$，忽略三次谐波（谐波平衡的截断），令基频分量相等：
-\[
-\left[(\alpha - \omega^{2})A + \frac{3}{4}\beta A^{3}\right]\cos(\omega t - \phi) - 2\zeta\omega A \sin(\omega t - \phi) = F\cos\omega t
-\]
+$$\left[(\alpha - \omega^{2})A + \frac{3}{4}\beta A^{3}\right]\cos(\omega t - \phi) - 2\zeta\omega A \sin(\omega t - \phi) = F\cos\omega t$$
 由此得频率-振幅方程：
-\[
-\left[(\alpha - \omega^{2})A + \frac{3}{4}\beta A^{3}\right]^{2} + (2\zeta\omega A)^{2} = F^{2}
-\]
+$$\left[(\alpha - \omega^{2})A + \frac{3}{4}\beta A^{3}\right]^{2} + (2\zeta\omega A)^{2} = F^{2}$$
 \end{myformula}
 
 \section{混沌振动简介}

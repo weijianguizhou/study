@@ -75,6 +75,19 @@ install-tl-windows.bat --no-gui
 \end{enumerate}
 之后的话按照上面提示走就可以了。
 
+\subsection{选择编译器：pdfLaTeX vs. XeLaTeX vs. LuaLaTeX}
+安装好 \LaTeX{} 发行版后，我们面对的第一个选择就是：用哪个编译器？
+
+\begin{itemize}
+    \item \textbf{pdfLaTeX}（命令：\texttt{pdflatex}）：最经典的编译器，速度最快。但它对 Unicode（中文等非英文字符）的支持是"打补丁"式的，处理中文需要用 \texttt{CJK} 宏包做额外配置。适合纯英文文档。
+    
+    \item \textbf{XeLaTeX}（命令：\texttt{xelatex}）\textbf{—— 推荐中文用户使用！}原生支持 Unicode，可以直接调用 Windows/macOS/Linux 系统中的任何字体（配合 \texttt{fontspec} 宏包），加上 \texttt{ctex} 宏包就能像 Word 一样自由切换中文字体。本书所有文档均使用 XeLaTeX 编译。
+    
+    \item \textbf{LuaLaTeX}（命令：\texttt{lualatex}）：在 XeLaTeX 基础上内嵌了 Lua 脚本语言，排版能力最强，但编译速度较慢，目前尚在过渡阶段。
+\end{itemize}
+
+以本书为例，因为使用了中文和系统字体，必须使用 \texttt{xelatex} 编译。对应到 VSCode 配置中，就是把 \texttt{xelatex} 放在 recipes 列表的第一个位置。
+
 \subsection{配置VSCode}
 安装好 \LaTeX{} 之后，我们还需要一个编辑器来编写 \LaTeX{} 文档。（就像我们写C++或者Python需要一个IDE一样）Visual Studio Code（VSCode） 是一个非常流行的代码编辑器，支持多种编程语言和扩展，非常适合用来编写 \LaTeX{} 文档。
 

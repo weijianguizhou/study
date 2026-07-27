@@ -1,0 +1,5 @@
+/* VS Code 蓝色装饰条 (#007ACC) */
+body {
+    --ribbon-background: #007ACC;
+    --ribbon-background-collapsed: #007ACC;
+}
