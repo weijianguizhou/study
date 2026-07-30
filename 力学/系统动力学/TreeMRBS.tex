@@ -1,0 +1,1153 @@
+\documentclass[10pt,a4paper]{book}
+\usepackage{ctex}
+\usepackage{geometry,graphicx,xcolor,subcaption}
+\usepackage{amssymb,amsmath,amsthm}
+\usepackage{bm}
+\usepackage{booktabs}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable,theorems}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{angles,quotes,arrows.meta,calc}
+\usepackage{fancyhdr}
+\usepackage{titlesec,titletoc}
+\usepackage{enumerate,enumitem}
+\usepackage{hyperref}
+
+\geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
+
+% --- 颜色定义 ---
+\definecolor{main}{rgb}{0.5,0,0}
+\definecolor{second}{RGB}{115,45,2}
+\definecolor{third}{RGB}{0,80,80}
+\definecolor{structurecolor}{RGB}{122,122,142}
+
+% --- 定理环境 ---
+\newtheoremstyle{defstyle}{3pt}{3pt}{\kaishu}{-3pt}{\bfseries\color{main}}{}{0.5em}{\indent 【\thmname{#1} \thmnumber{#2}】 \thmnote{(#3)}}
+\newtheoremstyle{thmstyle}{3pt}{3pt}{\kaishu}{-3pt}{\bfseries\color{second}}{}{0.5em}{\indent【\thmname{#1} \thmnumber{#2}】 \thmnote{(#3)}}
+\newtheoremstyle{prostyle}{3pt}{3pt}{\kaishu}{-3pt}{\bfseries\color{third}}{}{0.5em}{\indent【\thmname{#1} \thmnumber{#2}】 \thmnote{(#3)}}
+
+\theoremstyle{thmstyle}
+\newtheorem{theorem}{定理}[chapter]
+\theoremstyle{defstyle}
+\newtheorem{definition}[theorem]{定义}
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{corollary}[theorem]{推论}
+\theoremstyle{prostyle}
+\newtheorem{proposition}[theorem]{命题}
+
+\renewenvironment{proof}[1][证明]{\par{\kaishu \underline{\textbf{#1.}}} \;\fangsong}{\qed\par}
+
+% --- tcolorbox 环境 ---
+\newtcolorbox{mydefinition}[1]{
+    colframe=red!50!black, colback=red!5!white,
+    title=#1, fonttitle=\bfseries, boxrule=0.5mm,
+    before skip=10pt, after skip=10pt,
+    segmentation style={red!50!black, line width=0.5mm},
+}
+\newtcolorbox{myTheorem}[1]{
+    colframe=blue!50!black, colback=blue!5!white,
+    title=#1, fonttitle=\bfseries, boxrule=0.5mm,
+    before skip=10pt, after skip=10pt,
+    segmentation style={blue!50!black, line width=0.5mm},
+}
+\newtcolorbox{myformula}[1][]{
+    colframe=brown!50!black, colback=brown!5!white,
+    boxrule=0.5mm, before skip=10pt, after skip=10pt,
+    halign=center, valign=center, sharp corners, ams align, #1
+}
+
+% --- 章节格式 ---
+\fancypagestyle{plain}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}\renewcommand{\footrulewidth}{0pt}}
+\titlecontents{chapter}[0em]{}{\large\fangsong{第\thecontentslabel 章\quad}}{}{\hfill\contentspage}
+\titlecontents{section}[2em]{}{\thecontentslabel\quad}{}{\titlerule*{.}\contentspage}
+\titleformat{\chapter}[display]{\Large}
+{\color{structurecolor}\centering\small\color{structurecolor}第\zhnumber{\arabic{chapter}}章}{0.5ex}
+{\color{structurecolor}{\titlerule[1pt]}\Large\kaishu\centering\bfseries}
+\titleformat{\section}[frame]{\normalfont\color{structurecolor}}
+{\footnotesize\enspace\large\textcolor{structurecolor}{\S\,\thesection}\enspace}{6pt}
+{\Large\filcenter\bf\kaishu}
+\titlespacing*{\section}{1pc}{*7}{*2.3}[1pc]
+\titleformat{\subsection}[hang]{\bfseries}{\large\bfseries\color{structurecolor}\thesubsection\enspace}{1pt}{\color{structurecolor}\large\bfseries\filright}
+
+% --- 常用命令 ---
+\newcommand{\pp}{{\!p}}
+\newcommand{\ppb}[1]{{\!p(#1)}}
+
+\newcommand{\tr}{\mathrm{tr}}
+\newcommand{\T}{^{\mathsf{T}}}
+\renewcommand{\vec}[1]{\bm{#1}}
+\newcommand{\mat}[1]{\bm{#1}}
+\newcommand{\tildev}[1]{\tilde{#1}}
+\newcommand{\qbar}{\bar{q}}
+\newcommand{\ddt}{\frac{d}{dt}}
+\newcommand{\ppd}{\partial}
+\newcommand{\R}{\mathbb{R}}
+
+\linespread{1.2}
+
+\begin{document}
+
+\begin{titlepage}
+\begin{tikzpicture}[remember picture, overlay]
+\fill[structurecolor!10] (current page.south west) rectangle (current page.north east);
+\node[anchor=center] at ([yshift=-2cm]current page.center) {
+\begin{minipage}{0.85\paperwidth}
+\centering
+{\fontsize{28}{36}\sffamily\bfseries 基于树形拓扑描述的多刚体系统\\[4pt]动力学方程}\\[1.5cm]
+{\LARGE\kaishu ---运动学递推与拉格朗日方程的完全递推算法---}\\[2cm]
+\end{minipage}
+};
+\end{tikzpicture}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+%==========================================================================
+\chapter{多刚体系统运动学方程递推形式}
+%==========================================================================
+
+本章是全文的基础，系统地建立了多刚体系统的树形拓扑描述方法，并以递推方式给出了相邻体元件之间位置、速度和加速度的传递关系。与Spacecraft Dynamics中Kane方法依赖偏速度（partial velocity）的"前向"构建方式不同，本章采用从根部向叶部的"正向递推"策略：一旦确定了系统拓扑结构和各级铰元件的广义坐标，便可自底向上逐级计算各体元件的绝对运动状态。
+
+\section{多刚体系统树形拓扑描述}
+
+\subsection{动力学模型拓扑图}
+
+\begin{mydefinition}{多刚体系统的图表示}
+任意一个多刚体系统都可以抽象为一张\textbf{图}（graph），其中\textbf{节点}代表刚体元件（rigid body element），\textbf{边}代表连接相邻元件的铰（joint）。若该图中不存在回路（即任意两个节点之间至多只有一条简单路径），则该图是一棵\textbf{树}（tree）；若至少存在一个回路，则称该回路为\textbf{闭环}（closed loop）。
+
+工程中绝大多数多体系统都包含闭环（例如四足机器人的每条腿通过足端与地面形成闭环），处理闭环的策略是：先利用\textbf{切断}（cut）操作将闭环打开，得到一个派生树结构；然后再对切断处施加约束方程，以补偿切断带来的自由度损失。
+\end{mydefinition}
+
+以四足机器人为例，其多刚体系统动力学模型如图\ref{fig:quadruped}所示---躯干为基体（base body），四条腿各自构成一个开链。当足端与地面接触时，每条腿形成一个闭环。切断所有足端—地面约束后，得到图\ref{fig:topology}所示的派生树拓扑。
+
+\medskip
+\noindent 这种"先切断、后约束"的策略在Spacecraft Dynamics的复杂航天器建模中也有对应：当航天器带有弹性附件时，先将附件视为自由体进行模态分析，再在连接点施加位移连续性约束。
+
+\subsection{派生树拓扑描述与元件标号}
+
+\begin{mydefinition}{元件标号规则}
+对派生树中的每个元件赋予唯一的整数标号，遵循两条规则：
+\begin{enumerate}
+    \item 任意体元件的标号大于其内接体（inboard body）的标号，即 $i > p(i)$，其中 $p(i)$ 表示体元件 $i$ 直接连接的内接体标号；
+    \item 非切断铰元件的标号与其外接体（outboard body）的标号相同；切断铰元件另有独立的标号体系，与其所在的闭环编号对应。
+\end{enumerate}
+\end{mydefinition}
+
+上述规则保证了递推计算时信息流的方向性：从低标号元件向高标号元件传递时，总是从"已知"流向"未知"，避免迭代求解。图\ref{fig:labeling}给出了一个含4条腿的四足机器人派生树标号示例。
+
+\begin{table}[H]
+\centering
+\caption{各元件内接体编号及其前序元件集合}
+\label{tab:preorder}
+\begin{tabular}{c|c|c}
+\toprule
+$k$ & $p(k)$ & $\overrightarrow{p}[k]$ \\
+\midrule
+1 & 0 & $\{1\}$ \\
+$\cdots$ & $\cdots$ & $\cdots$ \\
+11 & 1 & $\{1,11\}$ \\
+12 & 11 & $\{1,11,12\}$ \\
+13 & 12 & $\{1,11,12,13\}$ \\
+$\cdots$ & $\cdots$ & $\cdots$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{myTheorem}{前序元件集合的递推性质}
+任意体元件 $k$ 的\textbf{前序元件集合} $\overrightarrow{p}[k]$（即从基体到 $k$ 所经过的所有元件编号的集合）满足如下递推规律：
+\begin{equation}
+\overrightarrow{p}[k] =
+\begin{cases}
+\varnothing, & k = 0,\\[4pt]
+\{\overrightarrow{p}[p(k)],\; k\}, & k \neq 0.
+\end{cases}
+\label{eq:preorder}
+\end{equation}
+\end{myTheorem}
+
+\begin{proof}
+当 $k=0$ 时，基体没有前序元件，集合为空。对于 $k \neq 0$，从基体到达元件 $k$ 的路径必然先经过其内接体 $p(k)$，再通过铰 $J_k$ 进入 $k$。因此 $\overrightarrow{p}[k]$ 由 $\overrightarrow{p}[p(k)]$ 并上 $\{k\}$ 构成。该递推是运动学正向递推（见\S\ref{sec:vel_recursion}）的数学基础。
+\end{proof}
+
+\subsection{系统广义坐标与约束方程}
+
+系统的位形（configuration）由所有铰元件的广义坐标集合 $\{\vec{q}_{J_k}\}$ 共同描述。对于闭环系统，并非所有广义坐标都是独立的：每个闭环引入 $m_c$ 个独立的约束方程，使得独立的广义坐标数目减少 $m_c$。处理方式是在切断铰处写出约束方程 $\vec{c}(\vec{q},t)=\vec{0}$，然后通过拉格朗日乘子法或坐标约化方法（见\S\ref{sec:dae_reduction}）将其纳入动力学方程。
+
+
+\section{相邻体元件运动学量递推关系}
+\label{sec:vel_recursion}
+
+本节是整个运动学递推的核心。目标是：给定体元件 $p(i)$ 的运动状态（位置、速度、加速度），以及铰 $J_i$ 的广义坐标及其时间导数，求出体元件 $i$ 的绝对运动状态。
+
+\subsection{位置级递推关系}
+
+\begin{mydefinition}{位置递推}
+设体元件 $i$ 的连体坐标系（记为 $i$ 系）原点为 $O_i$，其内接体 $p(i)$ 的连体坐标系（记为 $p(i)$ 系）原点为 $O_{p(i)}$。$O_i$ 在全局惯性系（$0$ 系）中的位置列阵可通过内接体位置与相对位置叠加得到：
+\begin{equation}
+\vec{r}_{O_0O_i|0} = \vec{r}_{O_0O_{p(i)}|0}
++ \mat{A}_{0,p(i)}\,\vec{r}_{O_{p(i)}O_i|p(i)},
+\label{eq:pos_recur}
+\end{equation}
+其中 $\mat{A}_{0,p(i)}$ 是 $p(i)$ 系到 $0$ 系的坐标变换矩阵，$\vec{r}_{O_{p(i)}O_i|p(i)}$ 是 $O_i$ 相对于 $O_{p(i)}$ 的位置矢量在 $p(i)$ 系中的投影。
+\end{mydefinition}
+
+\begin{proof}[推导]
+从 $O_0$ 到 $O_i$ 的位置矢量可以走两条路径：(1) 直接从 $O_0$ 到 $O_i$；(2) 先到 $O_{p(i)}$，再从 $O_{p(i)}$ 到 $O_i$。在路径(2)中，$O_0$ 到 $O_{p(i)}$ 的位置在 $0$ 系中为 $\vec{r}_{O_0O_{p(i)}|0}$；从 $O_{p(i)}$ 到 $O_i$ 的相对位置在 $p(i)$ 系中为 $\vec{r}_{O_{p(i)}O_i|p(i)}$，左乘 $\mat{A}_{0,p(i)}$ 将其变换到 $0$ 系后相加，即得(\ref{eq:pos_recur})。
+\end{proof}
+
+进一步，矢量 $\vec{r}_{O_{p(i)}O_i|p(i)}$ 可分解为从 $O_{p(i)}$ 到铰点 $R_i$ 的部分和从 $R_i$ 到 $O_i$ 的部分：
+\begin{equation}
+\vec{r}_{O_{p(i)}O_i|p(i)} = \vec{r}_{O_{p(i)}R_i|p(i)} + \vec{r}_{R_iO_i|p(i)}.
+\label{eq:pos_decompose}
+\end{equation}
+对于刚体元件，$\vec{r}_{O_{p(i)}R_i|p(i)}$ 为定常列阵（铰点在 $p(i)$ 系中的位置固定），其时间导数为零。$\vec{r}_{R_iO_i|p(i)}$ 和方位矩阵 $\mat{A}_{p(i),i}$ 则取决于铰元件的类型和广义坐标 $\vec{q}_{J_i}$。
+
+体元件 $i$ 在全局系中的方位（orientation）通过坐标变换矩阵表示为
+\begin{equation}
+\mat{A}_{0,i} = \mat{A}_{0,p(i)}\,\mat{A}_{p(i),i},
+\label{eq:orient_recur}
+\end{equation}
+含义是：先将向量从 $i$ 系变换到 $p(i)$ 系（乘以 $\mat{A}_{p(i),i}$），再变换到 $0$ 系（乘以 $\mat{A}_{0,p(i)}$）。
+
+\subsection{速度级递推关系}
+
+\begin{mydefinition}{六维速度列阵}
+对任一体元件 $i$，将其在全局系中的绝对速度信息用一个六维列阵（3维平动 + 3维转动）表示：
+\begin{equation}
+\vec{v}_{0,i|i} \triangleq
+\begin{bmatrix}
+\mat{A}_{0,i}\T\,\dot{\vec{r}}_{O_0O_i|0} \\
+\vec{\omega}_{0,i|i}
+\end{bmatrix}\in\R^6.
+\label{eq:six_dim_vel}
+\end{equation}
+这里将平动速度 $\dot{\vec{r}}_{O_0O_i|0}$ 投影到了 $i$ 系的连体基上（左乘 $\mat{A}_{0,i}\T$），角速度 $\vec{\omega}_{0,i|i}$ 同样在 $i$ 系中表达。这一统一表示使得后续公式中的系数矩阵具有简洁的块结构。
+\end{mydefinition}
+
+类似地，定义 $p(i)$ 系相对于 $i$ 系的\textbf{六维相对速度}：
+\begin{equation}
+\vec{v}_{p(i),i|i} \triangleq
+\begin{bmatrix}
+\mat{A}_{p(i),i}\T\,\dot{\vec{r}}_{O_{p(i)}O_i|p(i)} \\
+\vec{\omega}_{p(i),i|i}
+\end{bmatrix}.
+\label{eq:rel_vel}
+\end{equation}
+
+\begin{myTheorem}{速度递推公式}
+相邻体元件的绝对速度满足如下线性递推关系：
+\begin{equation}
+\boxed{\;\vec{v}_{0,i|i} = \mat{C}_{i,p(i)}\,\vec{v}_{0,p(i)|p(i)} + \mat{\Phi}_{J_i}\,\dot{\vec{q}}_{J_i}\;},
+\label{eq:vel_recur}
+\end{equation}
+其中 $\mat{C}_{i,p(i)}\in\R^{6\times 6}$ 称为\textbf{牵连速度系数矩阵}，$\mat{\Phi}_{J_i}$ 是铰 $J_i$ 的\textbf{速度系数矩阵}。
+\end{myTheorem}
+
+\begin{proof}[完整推导]
+  由位置级方程(\ref{eq:pos_recur})对时间求一阶导数，得到平动速度关系：
+  \begin{equation}
+  \dot{\vec{r}}_{O_0O_i|0} = \dot{\vec{r}}_{O_0O_{p(i)}|0}
+  + \mat{A}_{0,p(i)}\,\tildev{\vec{r}}_{O_{p(i)}O_i|p(i)}\T\,\vec{\omega}_{0,p(i)|p(i)}
+  + \mat{A}_{0,p(i)}\,\dot{\vec{r}}_{O_{p(i)}O_i|p(i)}.
+  \label{eq:vel_proof_1}
+  \end{equation}
+  这里用到了\underline{坐标变换矩阵的导数公式}：$\dot{\mat{A}} = \mat{A}\,\widetilde{\vec{\omega}}$，其中 $\widetilde{\vec{\omega}}$ 是角速度 $\vec{\omega}$ 的反对称矩阵，即 $\widetilde{\vec{\omega}}\,\vec{v} = \vec{\omega}\times \vec{v}$。
+
+  类似地，对方位矩阵(\ref{eq:orient_recur})求导，利用角速度的叠加原理：
+  \begin{equation}
+  \mat{A}_{0,i}\,\vec{\omega}_{0,i|i} = \mat{A}_{0,p(i)}\,\vec{\omega}_{0,p(i)|p(i)}
+  + \mat{A}_{0,p(i)}\,\mat{A}_{p(i),i}\,\vec{\omega}_{p(i),i|i}.
+  \label{eq:vel_proof_2}
+  \end{equation}
+
+  接下来是关键一步：将平动速度(\ref{eq:vel_proof_1})两端左乘 $\mat{A}_{0,i}\T = \mat{A}_{p(i),i}\T\mat{A}_{0,p(i)}\T$，将转动方程(\ref{eq:vel_proof_2})两端左乘 $\mat{A}_{0,i}\T$，整理后得到：
+  \begin{equation}
+  \begin{bmatrix}
+  \mat{A}_{0,i}\T\,\dot{\vec{r}}_{O_0O_i|0} \\
+  \vec{\omega}_{0,i|i}
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+  \mat{A}_{p(i),i}\T & \mat{A}_{p(i),i}\T\,\tildev{\vec{r}}_{O_{p(i)}O_i|p(i)}\T \\[4pt]
+  \mat{O}_3 & \mat{A}_{p(i),i}\T
+  \end{bmatrix}
+  \begin{bmatrix}
+  \mat{A}_{0,p(i)}\T\,\dot{\vec{r}}_{O_0O_{p(i)}|0} \\
+  \vec{\omega}_{0,p(i)|p(i)}
+  \end{bmatrix}
+  +
+  \begin{bmatrix}
+  \mat{A}_{p(i),i}\T\,\dot{\vec{r}}_{O_{p(i)}O_i|p(i)} \\
+  \vec{\omega}_{p(i),i|i}
+  \end{bmatrix}.
+  \end{equation}
+
+  将上式写成简洁的矩阵形式，即得
+  \[
+  \vec{v}_{0,i|i} = \mat{C}_{i,p(i)}\,\vec{v}_{0,p(i)|p(i)} + \vec{v}_{p(i),i|i},
+  \]
+  其中牵连速度矩阵为
+  \begin{equation}
+  \mat{C}_{i,p(i)} \triangleq
+  \begin{bmatrix}
+  \mat{A}_{p(i),i}\T & \mat{A}_{p(i),i}\T\,\tildev{\vec{r}}_{O_{p(i)}O_i|p(i)}\T \\[4pt]
+  \mat{O}_3 & \mat{A}_{p(i),i}\T
+  \end{bmatrix}.
+  \label{eq:C_matrix}
+  \end{equation}
+
+  最后，注意到铰 $J_i$ 的相对速度 $\vec{v}_{p(i),i|i}$ 必然与其广义速度 $\dot{\vec{q}}_{J_i}$ 呈线性关系（因为速度是位置对时间的导数，而位置已用 $\vec{q}_{J_i}$ 参数化），故可记为
+  \[
+  \vec{v}_{p(i),i|i} = \mat{\Phi}_{J_i}\,\dot{\vec{q}}_{J_i}.
+  \]
+  代入即得(\ref{eq:vel_recur})。$\mat{\Phi}_{J_i}$ 的具体形式取决于铰的物理类型，将在\S\ref{sec:joint_kin}中逐一给出。
+\end{proof}
+
+\begin{mydefinition}{牵连速度矩阵的物理含义}
+$\mat{C}_{i,p(i)}$ 本质上是一个\textbf{坐标变换}和一个\textbf{速度传递}的复合算子：其右上角块 $\mat{A}_{p(i),i}\T\,\tildev{\vec{r}}\T$ 反映了因 $p(i)$ 系转动而在 $i$ 系原点处引发的附加平动速度（即"牵连速度"），而主对角上的 $\mat{A}_{p(i),i}\T$ 则负责将角速度从 $p(i)$ 系投影到 $i$ 系。
+\end{mydefinition}
+
+\subsection{加速度递推关系}
+
+\begin{mydefinition}{六维加速度列阵}
+仿照速度列阵的定义，将体元件 $i$ 的绝对加速度信息用一个六维列阵表示：
+\begin{equation}
+\vec{a}_{0,i|i} \triangleq
+\begin{bmatrix}
+\mat{A}_{0,i}\T\,\ddot{\vec{r}}_{O_0O_i|0} \\
+\dot{\vec{\omega}}_{0,i|i}
+\end{bmatrix}\in\R^6,
+\label{eq:six_dim_acc}
+\end{equation}
+并定义相对加速度列阵：
+\begin{equation}
+\vec{a}_{p(i),i|i} \triangleq
+\begin{bmatrix}
+\mat{A}_{p(i),i}\T\,\ddot{\vec{r}}_{O_{p(i)}O_i|p(i)} \\
+\dot{\vec{\omega}}_{p(i),i|i}
+\end{bmatrix}.
+\label{eq:rel_acc}
+\end{equation}
+\end{mydefinition}
+
+\begin{myTheorem}{加速度递推公式}
+相邻体元件的绝对加速度满足：
+\begin{equation}
+\boxed{\;\vec{a}_{0,i|i} = \mat{C}_{i,p(i)}\,\vec{a}_{0,p(i)|p(i)} + \mat{\Phi}_{J_i}\,\ddot{\vec{q}}_{J_i} + \vec{\eta}_i\;},
+\label{eq:acc_recur}
+\end{equation}
+其中 $\vec{\eta}_i$ 是与广义加速度无关的\textbf{非齐次项}，包含了科氏加速度和向心加速度等非线性耦合效应。
+\end{myTheorem}
+
+\begin{proof}[完整推导]
+对速度级方程(\ref{eq:vel_proof_1})和(\ref{eq:vel_proof_2})再求一次时间导数。平动部分：
+\begin{align}
+\ddot{\vec{r}}_{O_0O_i|0}
+&= \ddot{\vec{r}}_{O_0O_{p(i)}|0}
++ \mat{A}_{0,p(i)}\,\tildev{\vec{r}}_{O_{p(i)}O_i|p(i)}\T\,\dot{\vec{\omega}}_{0,p(i)|p(i)}
++ \mat{A}_{0,p(i)}\,\ddot{\vec{r}}_{O_{p(i)}O_i|p(i)} \notag\\
+&\quad + \mat{A}_{0,p(i)}\,\tildev{\vec{\omega}}_{0,p(i)|p(i)}\,
+\tildev{\vec{\omega}}_{0,p(i)|p(i)}\,\vec{r}_{O_{p(i)}O_i|p(i)}
++ 2\mat{A}_{0,p(i)}\,\tildev{\vec{\omega}}_{0,p(i)|p(i)}\,
+\dot{\vec{r}}_{O_{p(i)}O_i|p(i)}.
+\label{eq:acc_proof_1}
+\end{align}
+其中第三行为内接体转动引发\textbf{向心加速度}项，第四行为\textbf{科氏加速度}项（$2\,\vec{\omega}\times \vec{v}_{\text{rel}}$）。
+
+转动部分：
+\begin{align}
+\mat{A}_{0,i}\,\dot{\vec{\omega}}_{0,i|i}
+&= \mat{A}_{0,p(i)}\,\dot{\vec{\omega}}_{0,p(i)|p(i)}
++ \mat{A}_{0,p(i)}\,\mat{A}_{p(i),i}\,\dot{\vec{\omega}}_{p(i),i|i} \notag\\
+&\quad + \mat{A}_{0,p(i)}\,\tildev{\vec{\omega}}_{0,p(i)|p(i)}\,
+\mat{A}_{p(i),i}\,\vec{\omega}_{p(i),i|i}.
+\label{eq:acc_proof_2}
+\end{align}
+第三项为参考系转动与相对转动的耦合项（类似于陀螺力矩项）。
+
+对(\ref{eq:acc_proof_1})左乘 $\mat{A}_{0,i}\T$，对(\ref{eq:acc_proof_2})左乘 $\mat{A}_{0,i}\T$，整理后可得
+\begin{equation}
+\vec{a}_{0,i|i} = \mat{C}_{i,p(i)}\,\vec{a}_{0,p(i)|p(i)} + \vec{a}_{p(i),i|i} + \vec{\zeta}_i,
+\label{eq:acc_mid}
+\end{equation}
+其中
+\begin{equation}
+\vec{\zeta}_i =
+\begin{bmatrix}
+\mat{A}_{p(i),i}\T\bigl(
+\tildev{\vec{\omega}}_{0,p(i)|p(i)}\,\tildev{\vec{\omega}}_{0,p(i)|p(i)}\,\vec{r}_{O_{p(i)}O_i|p(i)}
++ 2\tildev{\vec{\omega}}_{0,p(i)|p(i)}\,\dot{\vec{r}}_{O_{p(i)}O_i|p(i)}
+\bigr) \\[6pt]
+\mat{A}_{p(i),i}\T\,\tildev{\vec{\omega}}_{0,p(i)|p(i)}\,\vec{\omega}_{p(i),i|p(i)}
+\end{bmatrix}.
+\label{eq:zeta_i}
+\end{equation}
+
+由于 $\vec{a}_{p(i),i|i}$ 与 $\ddot{\vec{q}}_{J_i}$ 线性相关，记
+\[
+\vec{a}_{p(i),i|i} = \mat{\Phi}_{J_i}\,\ddot{\vec{q}}_{J_i} + \vec{\xi}_{J_i},
+\]
+其中 $\vec{\xi}_{J_i}$ 为铰 $J_i$ 的加速度非齐次项。定义综合非齐次项
+\[
+\vec{\eta}_i = \vec{\xi}_{J_i} + \vec{\zeta}_i,
+\]
+即得加速度递推公式(\ref{eq:acc_recur})。
+\end{proof}
+
+\begin{mydefinition}{非齐次项 $\vec{\eta}_i$ 的物理意义}
+$\vec{\eta}_i$ 汇集了所有与广义加速度 $\ddot{\vec{q}}$ 无关的加速度成分，包括：
+\begin{itemize}
+    \item \textbf{向心加速度}：$\vec{\omega} \times (\vec{\omega} \times \vec{r})$，即 $\tildev{\vec{\omega}}\,\tildev{\vec{\omega}}\,\vec{r}$；
+    \item \textbf{科氏加速度}：$2\,\vec{\omega}\times \vec{v}_{\text{rel}}$；
+    \item \textbf{陀螺耦合项}：$\vec{\omega}_{\text{ref}} \times \vec{\omega}_{\text{rel}}$，在转动方程中出现；
+    \item \textbf{铰元件的相对加速度非齐次项}：由铰参数化引入，例如转动铰的 $\dot{\mat{H}}_{B321}$ 项。
+\end{itemize}
+在Spacecraft Dynamics中，类似地将这些项归入 $\vec{h}$ 和 $\vec{\varepsilon}$ 中处理（见式(\ref{eq:h_eps})）。
+\end{mydefinition}
+
+\subsection{与刚体固连的点的绝对运动}
+
+对于任意与刚体元件 $i$ 固连的点 $P$，其在 $0$ 系中的位置、速度和加速度均可由体元件的运动状态导出：
+\begin{subequations}
+\begin{align}
+\vec{r}_{O_0P|0} &= \vec{r}_{O_0O_i|0} + \mat{A}_{0,i}\,\vec{r}_{O_iP|i}, \label{eq:point_pos}\\
+\dot{\vec{r}}_{O_0P|0} &= \dot{\vec{r}}_{O_0O_i|0}
++ \mat{A}_{0,i}\,\tildev{\vec{r}}_{O_iP|i}\T\,\vec{\omega}_{0,i|i}, \label{eq:point_vel}\\
+\ddot{\vec{r}}_{O_0P|0} &= \ddot{\vec{r}}_{O_0O_i|0}
++ \mat{A}_{0,i}\,\tildev{\vec{r}}_{O_iP|i}\T\,\dot{\vec{\omega}}_{0,i|i}
++ \mat{A}_{0,i}\,\tildev{\vec{\omega}}_{0,i|i}\,\tildev{\vec{\omega}}_{0,i|i}\,\vec{r}_{O_iP|i},
+\label{eq:point_acc}
+\end{align}
+\end{subequations}
+其中 $\vec{r}_{O_iP|i}$ 为定常列阵（点 $P$ 固连于 $i$ 系）。
+
+
+\section{主铰元件相对运动学方程}
+\label{sec:joint_kin}
+
+每个铰元件提供了一种特定的相对运动约束，决定了两个相邻体元件之间哪些相对自由度被允许、哪些被限制。本节给出工程中最常见的六种铰元件的相对运动学方程，均以统一形式输出 $\mat{\Phi}_{J_i}$ 和 $\vec{\xi}_{J_i}$。
+
+\subsection{虚拟铰元件（6自由度）}
+
+\begin{mydefinition}{虚拟铰}
+虚拟铰（virtual joint）不施加任何运动学约束，允许相邻体之间的6个相对自由度（3个平动 + 3个转动），其广义坐标 $\vec{q}_{J_i}$ 恰好完整描述了从 $p(i)$ 系到 $i$ 系的相对位姿。它是串联机器人运动学建模的"万能铰"，也是将闭环系统转化为开链模型的基础操作（如Spacecraft Dynamics中将附件视为自由体）。
+\end{mydefinition}
+
+记广义坐标为
+\[
+\vec{q}_{J_i} = \begin{bmatrix} \vec{l}_{J_i} \\ \vec{\theta}_{J_i} \end{bmatrix}
+= \begin{bmatrix} x_{J_i} & y_{J_i} & z_{J_i} & \theta_{J_i,1} & \theta_{J_i,2} & \theta_{J_i,3} \end{bmatrix}\T\in\R^6.
+\]
+
+位置级关系：$\vec{l}_{J_i}$ 直接给出 $R_i$ 到 $O_i$ 的平移（在 $p(i)$ 系中），$\vec{\theta}_{J_i}$ 以Z-Y-X欧拉角确定相对方位：
+\begin{equation}
+\mat{A}_{p(i),i} = \mat{A}_Z(\theta_{J_i,1})\,\mat{A}_Y(\theta_{J_i,2})\,\mat{A}_X(\theta_{J_i,3}),
+\label{eq:euler_angles}
+\end{equation}
+其中绕坐标轴的基本旋转矩阵为
+\begin{equation}
+\mat{A}_X(\theta) =
+\begin{bmatrix}
+1 & 0 & 0 \\
+0 & \cos\theta & -\sin\theta \\
+0 & \sin\theta & \cos\theta
+\end{bmatrix},\;
+\mat{A}_Y(\theta) =
+\begin{bmatrix}
+\cos\theta & 0 & \sin\theta \\
+0 & 1 & 0 \\
+-\sin\theta & 0 & \cos\theta
+\end{bmatrix},\;
+\mat{A}_Z(\theta) =
+\begin{bmatrix}
+\cos\theta & -\sin\theta & 0 \\
+\sin\theta & \cos\theta & 0 \\
+0 & 0 & 1
+\end{bmatrix}.
+\label{eq:rot_matrices}
+\end{equation}
+
+速度级：平动相对速度就是 $\dot{\vec{l}}_{J_i}$ 在 $i$ 系中的投影（经过方位变换）；转动相对速度 $\vec{\omega}_{p(i),i|i}$ 与 $\dot{\vec{\theta}}_{J_i}$ 之间通过矩阵 $\mat{H}_{B321}$ 建立线性关系：
+\[
+\vec{\omega}_{p(i),i|i} = \mat{H}_{B321}(\vec{\theta}_{J_i})\,\dot{\vec{\theta}}_{J_i},
+\qquad
+\mat{H}_{B321} =
+\begin{bmatrix}
+0 & -\sin\theta_{1} & \cos\theta_{1}\cos\theta_{2} \\
+0 & \cos\theta_{1} & \sin\theta_{1}\cos\theta_{2} \\
+1 & 0 & -\sin\theta_{2}
+\end{bmatrix},
+\]
+其中 $\theta_{1,2,3}$ 分别对应 $\theta_{J_i,1},\,\theta_{J_i,2},\,\theta_{J_i,3}$。
+
+整理得到虚拟铰的速度系数矩阵：
+\begin{equation}
+\mat{\Phi}_{J_i} =
+\begin{bmatrix}
+\mat{A}_{p(i),i}\T & \mat{O}_3 \\
+\mat{O}_3 & \mat{H}_{B321}(\vec{\theta}_{J_i})
+\end{bmatrix}\in\R^{6\times 6}.
+\label{eq:Phi_virtual}
+\end{equation}
+
+\begin{proof}[$\mat{\Phi}_{J_i}$ 的推导]
+六维相对速度定义为
+\[
+\vec{v}_{p(i),i|i} = \begin{bmatrix}
+\mat{A}_{p(i),i}\T\,\dot{\vec{r}}_{O_{p(i)}O_i|p(i)} \\
+\vec{\omega}_{p(i),i|i}
+\end{bmatrix}.
+\]
+由于 $\vec{r}_{O_{p(i)}O_i|p(i)} = \vec{r}_{O_{p(i)}R_i|p(i)} + \vec{r}_{R_iO_i|p(i)}$，且 $\vec{r}_{O_{p(i)}R_i|p(i)}$ 为定常项，$\vec{r}_{R_iO_i|p(i)} = \vec{l}_{J_i}$，因此 $\dot{\vec{r}}_{O_{p(i)}O_i|p(i)} = \dot{\vec{l}}_{J_i}$。代入即得上半块 $\mat{A}_{p(i),i}\T\,\dot{\vec{l}}_{J_i}$；下半块直接由 $\vec{\omega}_{p(i),i|i} = \mat{H}_{B321}\,\dot{\vec{\theta}}$ 给出。两者对 $\dot{\vec{q}}_{J_i}$ 均呈线性，故 $\mat{\Phi}_{J_i}$ 取(\ref{eq:Phi_virtual})形式。
+\end{proof}
+
+加速度级：加速度系数矩阵 $\mat{\Phi}_{J_i}$ 与速度级相同，非齐次项为
+\begin{equation}
+\vec{\xi}_{J_i} =
+\begin{bmatrix}
+\vec{0}_3 \\
+\dot{\mat{H}}_{B321}(\vec{\theta}_{J_i},\dot{\vec{\theta}}_{J_i})\,\dot{\vec{\theta}}_{J_i}
+\end{bmatrix}.
+\label{eq:xi_virtual}
+\end{equation}
+\begin{proof}
+$\dot{\vec{\omega}}_{p(i),i|i} = \mat{H}_{B321}\,\ddot{\vec{\theta}} + \dot{\mat{H}}_{B321}\,\dot{\vec{\theta}}$，第二项不含 $\ddot{\vec{q}}_{J_i}$，故归入 $\vec{\xi}_{J_i}$。平动部分的 $\ddot{\vec{l}}_{J_i}$ 只与广义加速度相关，$\vec{\xi}$ 在该方向上为零。
+\end{proof}
+
+\subsection{转动铰元件（1自由度）}
+
+\begin{mydefinition}{转动铰}
+转动铰（revolute joint）只允许绕一个固定轴的相对转动（1个自由度），在机器人学中对应旋转关节。设转轴方向单位矢量为 $\vec{n}_{J_i}$，其在 $p(i)$ 系和 $i$ 系中具有相同的投影列阵。
+\end{mydefinition}
+
+广义坐标：$\vec{q}_{J_i} = \theta_{J_i}\in\R$（转角）。
+
+位置级：
+\begin{align}
+\vec{r}_{R_iO_i|p(i)} &= \vec{0}_3,\\[4pt]
+\mat{A}_{p(i),i} &= \mat{I}_3\cos\theta_{J_i}
++ \tildev{\vec{n}}_{J_i}\sin\theta_{J_i}
++ \vec{n}_{J_i}\vec{n}_{J_i}\T\,(1-\cos\theta_{J_i}).
+\label{eq:rodrigues}
+\end{align}
+\begin{proof}[Rodrigues公式]
+(\ref{eq:rodrigues})是Rodrigues旋转公式的矩阵形式：任意绕单位轴 $\vec{n}$ 旋转角 $\theta$ 的旋转矩阵可分解为恒等映射（沿轴向的不变分量）、反对称项（正弦项）和并矢项（补偿余弦）。推导基础是将任意矢量 $\vec{v}$ 分解为沿 $\vec{n}$ 的分量和垂直于 $\vec{n}$ 的分量，旋转只改变垂直分量。
+\end{proof}
+
+速度级：根据转动铰的物理约束，相对平动速度为零，相对角速度为沿 $\vec{n}_{J_i}$ 方向的转角速率：
+\[
+\mat{\Phi}_{J_i} = \begin{bmatrix} \mat{0}_3 \\ \vec{n}_{J_i} \end{bmatrix}\in\R^{6\times 1}.
+\]
+加速度级：$\vec{\xi}_{J_i} = \vec{0}_6$，因为角加速度也仅有沿 $\vec{n}_{J_i}$ 的分量，无额外的非线性耦合。
+
+\subsection{棱柱铰元件（1自由度）}
+
+棱柱铰（prismatic joint）只允许沿一个固定方向的相对平动（1个自由度）。广义坐标 $\vec{q}_{J_i} = s_{J_i}\in\R$（位移）。转动自由度被完全锁定（$\mat{A}_{p(i),i} = \mat{I}_3$），速度系数矩阵为 $\mat{\Phi}_{J_i} = [\,\vec{u}_{J_i}\T\; \mat{0}_3\T\,]\T$（$\vec{u}_{J_i}$ 为滑移方向在 $i$ 系中的单位列阵），$\vec{\xi}_{J_i} = \vec{0}_6$。
+
+\subsection{固结铰元件（0自由度）}
+
+固结铰（rigid joint）将两个体元件完全锁定为一个整体，不引入任何新的广义坐标：$\mat{\Phi}_{J_i} = \mat{O}_{6\times 0}$，$\vec{\xi}_{J_i} = \vec{0}_6$。这在实际建模中用于处理固定连接。
+
+\subsection{球铰元件（3自由度）}
+
+球铰（spherical joint）允许3个转动自由度（如同球窝关节），无平动。通常采用欧拉参数或单位四元数避免欧拉角的奇异性。
+
+\subsection{万向节（2自由度）}
+
+万向节（universal joint）允许两个正交方向的转动，常见于传动轴。
+
+
+\section{体元件速度关于系统广义速度的线性表达式}
+
+\begin{myTheorem}{绝对速度的线性结构}
+对于派生树中的任意体元件 $i$，其绝对速度列阵 $\vec{v}_{0,i|i}$ 可以表示为所有前序铰广义速度的线性组合：
+\begin{equation}
+\boxed{\;\vec{v}_{0,i|i} = \sum_{k\in\overrightarrow{p}[i]} \mat{C}_{i,k}\,\mat{\Phi}_{J_k}\,\dot{\vec{q}}_{J_k}\;}.
+\label{eq:vel_linear}
+\end{equation}
+其中 $\mat{C}_{i,k}$ 定义为从体元件 $k$ 到体元件 $i$ 的牵连速度矩阵：
+\begin{equation}
+\mat{C}_{i,k} =
+\begin{bmatrix}
+\mat{A}_{k,i}\T & \mat{A}_{k,i}\T\,\tildev{\vec{r}}_{O_kO_i|k}\T \\[4pt]
+\mat{O}_3 & \mat{A}_{k,i}\T
+\end{bmatrix},\quad k \in \overrightarrow{p}[i].
+\label{eq:C_ik}
+\end{equation}
+\end{myTheorem}
+
+这一公式的物理含义极其清晰：体元件 $i$ 的运动是所有从根部通向它的路径上各铰运动贡献的叠加。每个铰 $J_k$ 的贡献通过 $\mat{C}_{i,k}\mat{\Phi}_{J_k}$ 传递（先由 $\mat{\Phi}_{J_k}$ 产生相对速度，再由 $\mat{C}_{i,k}$ 将其"牵连"为 $i$ 系的绝对速度）。
+
+\begin{proof}[完整推导---数学归纳法]
+\textbf{基础情形}（$k = 0$，即 $i$ 为直接连接基体的元件，$p(i)=0$）：由速度递推公式(\ref{eq:vel_recur})，
+\[
+\vec{v}_{0,i|i} = \mat{C}_{i,0}\,\vec{v}_{0,0|0} + \mat{\Phi}_{J_i}\,\dot{\vec{q}}_{J_i}.
+\]
+假设基体（标号0）静止于惯性系，则 $\vec{v}_{0,0|0} = \vec{0}_6$，而 $\mat{C}_{i,i} = \mat{I}_6$，故
+\[
+\vec{v}_{0,i|i} = \mat{\Phi}_{J_i}\,\dot{\vec{q}}_{J_i}
+= \mat{C}_{i,i}\,\mat{\Phi}_{J_i}\,\dot{\vec{q}}_{J_i}
+= \sum_{k\in\{i\}} \mat{C}_{i,k}\,\mat{\Phi}_{J_k}\,\dot{\vec{q}}_{J_k},
+\]
+成立。
+
+\textbf{归纳假设}：对 $i$ 的内接体 $p(i)$，假设
+\[
+\vec{v}_{0,p(i)|p(i)} = \sum_{k\in\overrightarrow{p}[p(i)]} \mat{C}_{p(i),k}\,\mat{\Phi}_{J_k}\,\dot{\vec{q}}_{J_k}.
+\]
+
+\textbf{归纳步骤}：再次代入速度递推公式(\ref{eq:vel_recur})，
+\begin{align}
+\vec{v}_{0,i|i}
+&= \mat{C}_{i,p(i)}\,\vec{v}_{0,p(i)|p(i)} + \mat{\Phi}_{J_i}\,\dot{\vec{q}}_{J_i} \notag\\
+&= \mat{C}_{i,p(i)}
+\sum_{k\in\overrightarrow{p}[p(i)]} \mat{C}_{p(i),k}\,\mat{\Phi}_{J_k}\,\dot{\vec{q}}_{J_k}
++ \mat{\Phi}_{J_i}\,\dot{\vec{q}}_{J_i}.
+\end{align}
+注意到 $\mat{C}_{i,p(i)}\mat{C}_{p(i),k} = \mat{C}_{i,k}$（这正是牵连速度矩阵的传递性质，可通过直接计算验证），且 $\mat{C}_{i,i} = \mat{I}_6$，故
+\[
+\vec{v}_{0,i|i} = \sum_{k\in\overrightarrow{p}[p(i)]} \mat{C}_{i,k}\,\mat{\Phi}_{J_k}\,\dot{\vec{q}}_{J_k}
++ \mat{C}_{i,i}\,\mat{\Phi}_{J_i}\,\dot{\vec{q}}_{J_i}
+= \sum_{k\in\overrightarrow{p}[i]} \mat{C}_{i,k}\,\mat{\Phi}_{J_k}\,\dot{\vec{q}}_{J_k}.
+\]
+证毕。
+\end{proof}
+
+\begin{myTheorem}{$\mat{C}_{i,k}$ 的递推性质}
+牵连速度系数矩阵满足如下递推关系，可显著减少重复计算：
+\begin{equation}
+\mat{C}_{i,k} =
+\begin{cases}
+\mat{I}_6, & k = i,\\[4pt]
+\mat{C}_{i,p(i)}\,\mat{C}_{p(i),k}, & k \in \overrightarrow{p}[\overrightarrow{p}[i]].
+\end{cases}
+\label{eq:C_recur}
+\end{equation}
+特别地，当 $k = p(i)$ 时，$\mat{C}_{i,p(i)}$ 退化为(\ref{eq:C_matrix})式。
+\end{myTheorem}
+
+
+\section{闭环切断铰元件相对运动学量的计算}
+
+当系统存在闭环时，切断铰处的相对运动学量（位置、速度）需要由当前时刻的系统广义坐标反算得出，而不是像主铰那样直接由独立的广义坐标给出。计算时需综合当前时刻和上一时刻的信息，以防止闭环量发生数值突变。
+
+\subsection{转动铰}
+
+对于切断的转动铰 $L_j$，其内接体为 $r(j)$，外接动体为 $m(j)$，外接基体为 $b(j)$。从 $b(j)$ 系到 $m(j)$ 系的坐标变换矩阵可由Rodrigues公式反解出转角和转轴：
+\[
+\mat{A}_{b(j),m(j)} = \mat{I}_3\cos\theta_{L_i} + \tildev{\vec{n}}_{L_i}\sin\theta_{L_i}
++ \vec{n}_{L_i}\vec{n}_{L_i}\T\,(1-\cos\theta_{L_i}).
+\]
+由迹的关系：
+\begin{align}
+\tr\mat{A}_{b(j),m(j)} &= 1 + 2\cos\theta_{L_i}
+\quad\Longrightarrow\quad \theta_{L_i} = \arccos\frac{\tr\mat{A}_{b(j),m(j)} - 1}{2},
+\end{align}
+再由反对称部分提取转轴的符号信息，唯一确定 $\theta_{L_i}$。
+
+
+\section{闭环切断铰元件约束方程}
+
+对于每个切断铰 $L_j$，必须施加约束方程以保证切断处的几何封闭性。
+
+\begin{mydefinition}{位置级约束方程}
+切断铰 $L_j$ 的位置级约束方程表述为：两个本应重合的"铰接点"（动点 $M_j$ 和基点 $B_j$）之间的位移为零。以转动铰为例：
+\[
+\vec{c}_{L_j}(\vec{q},t) =
+\begin{bmatrix}
+\vec{r}_{O_{r(j)}M_j|r(j)} - \vec{r}_{O_{r(j)}B_j|r(j)} \\[4pt]
+\mat{T}_{L_j}\T\mat{A}_{r(j),b(j)}\T\mat{A}_{r(j),m(j)}\,\vec{n}_{L_j}
+\end{bmatrix}
+= \vec{0}_5.
+\]
+上面前三行为位置一致性：动点和基点在公共参考系 $r(j)$ 系中重合；后两行为方向一致性：转轴方向在两个体元件之间保持一致（排除绕转轴的"自转"差异）。
+\end{mydefinition}
+
+\begin{proof}[速度级约束方程的推导]
+对位置约束方程 $\vec{c}_{L_j}$ 求时间导数。以位置一致性部分为例：
+\begin{align}
+\dot{\vec{c}}_{L_j,U}
+&= \dot{\vec{r}}_{O_{r(j)}M_j|r(j)} - \dot{\vec{r}}_{O_{r(j)}B_j|r(j)} \\
+&= \begin{bmatrix}\mat{A}_{r(j),m(j)} & \mat{A}_{r(j),m(j)}\,\tildev{\vec{r}}_{O_{m(j)}M_j|m(j)}\T\end{bmatrix}
+\vec{v}_{r(j),m(j)|m(j)} \\
+&\quad - \begin{bmatrix}\mat{A}_{r(j),b(j)} & \mat{A}_{r(j),b(j)}\,\tildev{\vec{r}}_{O_{b(j)}B_j|b(j)}\T\end{bmatrix}
+\vec{v}_{r(j),b(j)|b(j)}.
+\end{align}
+这意味着速度级约束方程 $\dot{\vec{c}}_{L_j} = \vec{0}$ 是一个关于系统广义速度 $\dot{\vec{q}}$ 的\textbf{线性齐次}方程，形如
+\[
+\mat{C}_{L_j,\vec{q}}\,\dot{\vec{q}} + \vec{c}_{L_j,t} = \vec{0}.
+\]
+这在数值积分中至关重要：一旦当前状态满足一定精度，速度即沿约束流形的切线方向演化。
+\end{proof}
+
+
+\section{速度级约束方程关于系统广义速度的线性表达式}
+
+利用\S\ref{sec:vel_recursion}中体元件速度的线性表达式，闭环 $L_j$ 的约束速度 $\dot{\vec{c}}_{L_j}$ 可进一步写为系统广义速度的显式线性组合：
+\begin{equation}
+\dot{\vec{c}}_{L_j} = \sum_{k\in\overrightarrow{p}[m(j)],\,k>r(j)} \mat{\Psi}_{m(j)}\mat{C}_{m(j),k}\mat{\Phi}_{J_k}\,\dot{\vec{q}}_{J_k}
+- \sum_{k\in\overrightarrow{p}[b(j)],\,k>r(j)} \mat{\Psi}_{b(j)}\mat{C}_{b(j),k}\mat{\Phi}_{J_k}\,\dot{\vec{q}}_{J_k}.
+\label{eq:constraint_vel_linear}
+\end{equation}
+
+其中关键性质是：动路径和基路径上的元件集合不重叠（$\{k \mid k\in\overrightarrow{p}[m(j)],\,k > r(j)\}\cap\{k \mid k\in\overrightarrow{p}[b(j)],\,k > r(j)\} = \varnothing$），保证了两个求和之间没有冗余，也保证了约束雅可比矩阵 $c_{\vec{q}}$ 的稀疏结构。
+
+
+\section{闭环违约修正}
+
+在实际数值积分中，由于舍入误差和截断误差的累积，即使每步都精确满足速度级约束 $\dot{\vec{c}} = \vec{0}$，位置级约束仍可能逐渐偏离零点。这称为\textbf{约束违约}（constraint violation），需要通过额外的修正机制处理。
+
+\begin{myTheorem}{位置级违约修正---牛顿-拉弗森迭代}
+当违约量超过阈值 $\| \vec{c}(\vec{q}, t) \|_\infty > \varepsilon$ 时，寻找最小二范数修正量 $\Delta\vec{q}$：
+\begin{equation}
+\Delta\vec{q} = -\mat{C}_{\vec{q}}^{+}(\vec{q}, t)\,\vec{c}(\vec{q}, t),
+\label{eq:violation_fix}
+\end{equation}
+其中 $\mat{C}_{\vec{q}}^{+}$ 是约束雅可比矩阵的Moore-Penrose伪逆。修正后更新 $\vec{q} \leftarrow \vec{q} + \Delta\vec{q}$，重复至满足阈值。
+\end{myTheorem}
+
+\begin{proof}
+将 $\vec{c}(\vec{q} + \Delta\vec{q}, t)$ 在 $\vec{q}$ 处一阶Taylor展开：
+\[
+\vec{0} \approx \vec{c}(\vec{q}, t) + \mat{C}_{\vec{q}}(\vec{q}, t)\,\Delta\vec{q}.
+\]
+这是一个关于 $\Delta\vec{q}$ 的欠定线性方程组（约束数少于广义坐标数）。最小二范数解正是伪逆解(\ref{eq:violation_fix})。当违约量足够小时（满足线性近似），一次迭代即可；否则需多次迭代。
+\end{proof}
+
+\begin{myTheorem}{速度级违约修正}
+速度级约束的修正量可直接由
+\begin{equation}
+\Delta\dot{\vec{q}} = -\mat{C}_{\vec{q}}^{+}\,\dot{\vec{c}}(\vec{q},\dot{\vec{q}},t)
+\label{eq:vel_fix}
+\end{equation}
+直接计算，无需迭代。
+\end{myTheorem}
+
+\begin{proof}
+速度约束 $\dot{\vec{c}} = \mat{C}_{\vec{q}}\dot{\vec{q}} + \vec{c}_t$ 本身就是 $\dot{\vec{q}}$ 的线性函数，不存在线性化误差，故一步到位。
+\end{proof}
+
+对比Spacecraft Dynamics中的处理方法：Kane方法将约束直接纳入广义主动力和惯性力中，通过代数缩并而非迭代修正来处理违约。两种策略各有适用场景：迭代修正更适合刚性约束多的系统，代数缩并更适合处理少量约束。
+
+
+%==========================================================================
+\chapter{多刚体系统拉格朗日方程递推形式}
+%==========================================================================
+
+第一章建立了运动学量的递推传播机制，解决了"如何描述运动"的问题。本章进入动力学层面，回答"什么力驱动了运动"。核心思路是将第一章的运动学递推关系代入系统的动能表达式，通过拉格朗日方程得到系统的动力学方程。
+
+Spacecraft Dynamics中采用Kane方法（$F_r + F_r^* = 0$）进行动力学建模，而本章采用等价但递推效率更高的拉格朗日方法。两种方法的等价性体现在：将Kane方法中的偏速度和偏角速度代入广义惯性力表达式，所得结果与通过拉格朗日方程（动能对广义坐标和广义速度求偏导）得到的结果完全一致。
+
+\section{系统运动微分方程---微分代数混合方程}
+
+\begin{myTheorem}{多体系统动力学DAE}
+考虑带有 $\nu$ 个约束方程 $\vec{c}(\vec{q},t)=\vec{0}$ 的多体系统，其动力学方程在拉格朗日乘子方法下是一组微分代数方程（DAE）：
+\begin{equation}
+\begin{bmatrix}
+\mat{M} & \mat{C}_{\vec{q}}\T \\
+\mat{C}_{\vec{q}} & \mat{O}
+\end{bmatrix}
+\begin{bmatrix}
+\ddot{\vec{q}} \\
+\vec{\lambda}
+\end{bmatrix}
+=
+\begin{bmatrix}
+\vec{h}(\vec{q},\dot{\vec{q}},t) \\
+\vec{\varepsilon}(\vec{q},\dot{\vec{q}},t)
+\end{bmatrix},
+\label{eq:dae}
+\end{equation}
+其中
+\begin{align}
+\vec{h}(\vec{q},\dot{\vec{q}},t) &= \vec{f}_{\mathrm{app}} - \dot{\mat{M}}\,\dot{\vec{q}} + \mat{T}_{\vec{q}}\T, \label{eq:h_def} \\
+\vec{\varepsilon}(\vec{q},\dot{\vec{q}},t) &= -\dot{\mat{C}}_{\vec{q}}\,\dot{\vec{q}} - \dot{\vec{c}}_t.
+\label{eq:eps_def}
+\end{align}
+\end{myTheorem}
+
+\begin{proof}[拉格朗日乘子法的推导]
+从达朗贝尔-拉格朗日原理出发，系统动能 $T$ 满足
+\[
+\frac{d}{dt}\frac{\partial T}{\partial\dot{\vec{q}}} - \frac{\partial T}{\partial\vec{q}}
+= \vec{f}_{\mathrm{app}} + \mat{C}_{\vec{q}}\T\vec{\lambda},
+\]
+其中 $\mat{C}_{\vec{q}}\T\vec{\lambda}$ 是约束反力所做的虚功对应的广义约束力。将动能 $T = \frac{1}{2}\dot{\vec{q}}\T\mat{M}\dot{\vec{q}}$ 代入，左边求导得
+\[
+\frac{d}{dt}\bigl(\mat{M}\dot{\vec{q}}\bigr) - \mat{T}_{\vec{q}}\T
+= \mat{M}\ddot{\vec{q}} + \dot{\mat{M}}\dot{\vec{q}} - \mat{T}_{\vec{q}}\T,
+\]
+移项即得第一行。第二行来自加速度级约束方程对 $\ddot{\vec{q}}$ 的线性化。联立两端即得DAE形式(\ref{eq:dae})。在Spacecraft Dynamics中，$F_r^* = -\frac{d}{dt}\frac{\partial K}{\partial\dot{q}_r} + \frac{\partial K}{\partial q_r}$ 恰好对应上式的左端（差一个正负号），验证了两种方法在代数上的一致性。
+\end{proof}
+
+\section{系统广义质量矩阵的递推构造}
+
+\begin{myTheorem}{动能与广义质量矩阵}
+将体元件速度的线性表达式(\ref{eq:vel_linear})代入系统动能
+\[
+T = \frac{1}{2}\sum_{i=1}^{n}\vec{v}_{0,i|i}\T\,\mat{M}_i\,\vec{v}_{0,i|i},
+\]
+得到动能的二次型：
+\begin{equation}
+\boxed{\;T = \frac{1}{2}\sum_{i=1}^{n}
+\sum_{j\in\overrightarrow{p}[i]}\sum_{k\in\overrightarrow{p}[i]}
+\dot{\vec{q}}_{J_j}\T\,\underbrace{
+\mat{\Phi}_{J_j}\T\mat{C}_{i,j}\T\,\mat{M}_i\,\mat{C}_{i,k}\,\mat{\Phi}_{J_k}
+}_{\displaystyle =:\, \mat{M}_{j,k}^{i}}
+\,\dot{\vec{q}}_{J_k}
+= \frac{1}{2}\,\dot{\vec{q}}\T\,\mat{M}\,\dot{\vec{q}}\;}.
+\label{eq:kinetic_quadratic}
+\end{equation}
+其中每个体元件的贡献 $\mat{M}_{j,k}^{i}$ 只在 $j,k\in\overrightarrow{p}[i]$ 时非零，阐明了广义质量矩阵的\textbf{稀疏递推}结构。
+\end{myTheorem}
+
+\begin{proof}
+将(\ref{eq:vel_linear})代入 $T$：
+\begin{align*}
+T &= \frac{1}{2}\sum_{i=1}^{n}
+\biggl(\sum_{j\in\overrightarrow{p}[i]} \mat{C}_{i,j}\mat{\Phi}_{J_j}\dot{\vec{q}}_{J_j}\biggr)\T
+\mat{M}_i
+\biggl(\sum_{k\in\overrightarrow{p}[i]} \mat{C}_{i,k}\mat{\Phi}_{J_k}\dot{\vec{q}}_{J_k}\biggr) \\
+&= \frac{1}{2}\sum_{i=1}^{n}
+\sum_{j\in\overrightarrow{p}[i]}\sum_{k\in\overrightarrow{p}[i]}
+\dot{\vec{q}}_{J_j}\T\bigl(\mat{\Phi}_{J_j}\T\mat{C}_{i,j}\T\mat{M}_i\mat{C}_{i,k}\mat{\Phi}_{J_k}\bigr)\dot{\vec{q}}_{J_k}.
+\end{align*}
+提取括号内部分即为 $\mat{M}_{j,k}^{i}$。遍历所有 $i$ 求和，最终得到总质量矩阵 $\mat{M}$。该质量矩阵满足对称性 $\mat{M} = \mat{M}\T$。
+\end{proof}
+
+\begin{definition}
+每个\textbf{刚体元件} $i$ 的质量矩阵 $\mat{M}_i$（局部）定义为
+\begin{equation}
+\mat{M}_i =
+\begin{bmatrix}
+m_i\mat{I}_3 & m_i\,\tildev{\vec{r}}_{O_iC_i|i}\T \\[4pt]
+m_i\,\tildev{\vec{r}}_{O_iC_i|i} & \mat{J}_{O_i|i}
+\end{bmatrix},
+\label{eq:Mi}
+\end{equation}
+其中 $m_i$ 为质量，$\mat{J}_{O_i|i}$ 为绕连体坐标系原点 $O_i$ 的转动惯量矩阵。$\tildev{\vec{r}}_{O_iC_i|i}$ 的反对称性质保证了刚体的动能等于
+\[
+T_i = \frac{1}{2}m_i\|\dot{\vec{r}}_{O_iC_i|0}\|^2 + \frac{1}{2}\vec{\omega}_{0,i|i}\T\,\mat{J}_{C_i|i}\,\vec{\omega}_{0,i|i},
+\]
+这正是平动动能与转动动能之和。
+\end{definition}
+
+\section{系统广义质量矩阵对时间的一阶导数}
+
+在DAE(\ref{eq:dae})的 $\vec{h}$ 项中，需要 $\dot{\mat{M}}\dot{\vec{q}}$，为此计算 $\mat{M}$ 对时间的导数。
+
+\begin{myTheorem}{$\dot{\mat{M}}$ 的递推计算}
+$\mat{M}_{j,k}^{i}$ 的时间导数可按乘积法则展开，并利用 $\mat{C}_{i,j}$ 和 $\mat{\Phi}_{J_k}$ 的递推性质高效计算：
+\begin{align}
+\dot{\mat{M}}_{j,k}^{i}
+&= \bigl(\dot{\mat{\Phi}}_{J_j}\T\mat{C}_{i,j}\T + \mat{\Phi}_{J_j}\T\dot{\mat{C}}_{i,j}\T\bigr)
+\,\mat{M}_i\,\mat{C}_{i,k}\,\mat{\Phi}_{J_k} \notag\\
+&\quad + \mat{\Phi}_{J_j}\T\mat{C}_{i,j}\T\,\mat{M}_i\,
+\bigl(\dot{\mat{C}}_{i,k}\,\mat{\Phi}_{J_k} + \mat{C}_{i,k}\,\dot{\mat{\Phi}}_{J_k}\bigr).
+\label{eq:Mdot}
+\end{align}
+其中 $\dot{\mat{C}}_{i,k}$ 通过递推链式法则得到：
+\begin{equation}
+\dot{\mat{C}}_{i,k}
+= \dot{\mat{C}}_{i,p(i)}\,\mat{C}_{p(i),k} + \mat{C}_{i,p(i)}\,\dot{\mat{C}}_{p(i),k}.
+\label{eq:Cdot_recur}
+\end{equation}
+\end{myTheorem}
+
+$\dot{\mat{C}}_{i,p(i)}$ 的显式表达可由(\ref{eq:C_matrix})直接对时间求导得到，其中涉及 $\mat{A}_{p(i),i}$ 的导数（利用 $\dot{\mat{A}} = \mat{A}\widetilde{\vec{\omega}}$）和 $\vec{r}_{O_{p(i)}O_i|p(i)}$ 的导数，各量均可由当前状态直接计算。
+
+
+\section{系统动能对广义坐标的偏导数}
+
+拉格朗日方程中还需要 $\partial T/\partial \vec{q}$。对于铰 $J_j$，
+\begin{equation}
+\mat{T}_{\vec{q}_{J_j}}
+= \frac{\partial T}{\partial\vec{q}_{J_j}}
+= \sum_{i:\,j\in\overrightarrow{p}[i]} \vec{v}_{0,i|i}\T\,\mat{M}_i\,\frac{\partial\vec{v}_{0,i|i}}{\partial\vec{q}_{J_j}}.
+\label{eq:Tqj}
+\end{equation}
+
+关键之处在于 $\partial\vec{v}_{0,i|i}/\partial\vec{q}_{J_j}$ 的计算。由速度表达式分解：
+\begin{equation}
+\frac{\partial\vec{v}_{0,i|i}}{\partial\vec{q}_{J_j}}
+= \sum_{k\in\overrightarrow{p}[\ppb{j}]}
+\frac{\partial}{\partial\vec{q}_{J_j}}\bigl(\mat{C}_{i,k}\mat{\Phi}_{J_k}\dot{\vec{q}}_{J_k}\bigr)
++ \frac{\partial}{\partial\vec{q}_{J_j}}\bigl(\mat{C}_{i,j}\mat{\Phi}_{J_j}\dot{\vec{q}}_{J_j}\bigr).
+\label{eq:dvdq}
+\end{equation}
+
+对于各子表达式的具体计算，以转动铰为例：
+\begin{align}
+\frac{\partial}{\partial\vec{q}_{J_i}}\bigl(\vec{r}_{O_{p(i)}O_i|p(i)}\bigr) &= \mat{0}_3, \label{eq:drdq_rot}\\
+\frac{\partial}{\partial\vec{q}_{J_i}}\bigl(\mat{A}_{p(i),i}\T\,\vec{v}\bigr) &= \mat{A}_{p(i),i}\T\,\tildev{\vec{v}}\,\vec{n}_{J_i}. \label{eq:dAq_rot}
+\end{align}
+
+\begin{proof}[(\ref{eq:dAq_rot})的推导]
+由Rodrigues公式，$\mat{A}_{p(i),i} = \mat{I}\cos\theta + \tildev{\vec{n}}\sin\theta + \vec{n}\vec{n}\T(1-\cos\theta)$。两边对 $\theta$ 求导：
+\[
+\frac{\partial\mat{A}_{p(i),i}}{\partial\theta}
+= -\mat{I}\sin\theta + \tildev{\vec{n}}\cos\theta + \vec{n}\vec{n}\T\sin\theta.
+\]
+利用 $\mat{A}_{p(i),i}$ 的正交性处理，可得对 $\mat{A}\T\vec{v}$ 求导时的简洁结果：$\mat{A}\T\tildev{\vec{v}}\mat{A}\vec{n} = \mat{A}\T\tildev{\vec{v}}\vec{n}$，这是因为 $\vec{n}$ 在 $p(i)$ 系和 $i$ 系中投影相同，而 $\mat{A}\vec{n} = \vec{n}$ 对于转轴方向成立。
+\end{proof}
+
+
+\section{加速度约束方程}
+
+对速度约束方程 $\dot{\vec{c}} = \mat{C}_{\vec{q}}\dot{\vec{q}} + \vec{c}_t$ 再求一次时间导数，得到加速度级约束：
+\begin{equation}
+\mat{C}_{\vec{q}}\,\ddot{\vec{q}} + \dot{\mat{C}}_{\vec{q}}\,\dot{\vec{q}} + \dot{\vec{c}}_t = \vec{0}
+\;\Longrightarrow\;
+\vec{\varepsilon} = -\dot{\mat{C}}_{\vec{q}}\dot{\vec{q}} - \dot{\vec{c}}_t.
+\label{eq:acc_constraint}
+\end{equation}
+
+该加速度级约束方程在DAE系统中提供了对 $\ddot{\vec{q}}$ 的补充方程，与动力学方程联立确定广义加速度 $\ddot{\vec{q}}$ 和拉格朗日乘子 $\vec{\lambda}$。
+
+
+\section{与非切断铰元件绑定的弹性阻尼力与控制力}
+
+许多铰元件并非理想的运动学约束，还包含弹性、阻尼和控制元件。对于主铰 $J_k$，可建模为：
+\begin{equation}
+\vec{f}_{J_k}^{+} = -\mat{K}_{P,J_k}(\vec{q}_{J_k} - \qbar{\vec{q}}_{J_k})
+- \mat{K}_{D,J_k}\,\dot{\vec{q}}_{J_k} + \vec{f}_{C,J_k},
+\label{eq:joint_force}
+\end{equation}
+其中 $\mat{K}_{P,J_k}$（刚度阵）、$\mat{K}_{D,J_k}$（阻尼阵）为对角阵，$\qbar{\vec{q}}_{J_k}$ 为弹性/扭簧的自然状态，$\vec{f}_{C,J_k}$ 为主动控制力/力矩。
+
+在Spacecraft Dynamics中，这些力通过广义主动力 $F_r$ 纳入动力学方程；在本章中，它们直接出现在 $\vec{f}_{\mathrm{app}}$ 中。
+
+
+\section{其它系统广义力---等效体元件力的广义力转化}
+
+对于不直接作用于铰上、而是作用于体元件上的力系（如重力、气动力、接触力），处理策略为：
+
+\begin{enumerate}
+    \item 将所有作用于某体元件的外力等效为\textbf{体元件连体系原点的合力}和\textbf{绕原点的合力矩}；
+    \item 利用虚功原理，将该合力和力矩转化为系统的广义力。
+\end{enumerate}
+
+设作用于体元件 $i$ 的合力和力矩在 $i$ 系中的投影为
+\[
+\vec{f}_{B_i} \triangleq \begin{bmatrix} \vec{\sigma}_{B_i|i} \\ \vec{\tau}_{O_i|i} \end{bmatrix}\in\R^6,
+\]
+则该力系对铰 $J_k$（$k\in\overrightarrow{p}[i]$）广义力的贡献为
+\begin{equation}
+\vec{f}_{J_k}^{+} = \mat{\Phi}_{J_k}\T\mat{C}_{i,k}\T\,\vec{f}_{B_i}.
+\label{eq:fJk}
+\end{equation}
+
+\begin{proof}
+由速度线性表达式(\ref{eq:vel_linear})，铰 $J_k$ 的速度系数矩阵 $\mat{\Phi}_{J_k}$ 和牵连速度矩阵 $\mat{C}_{i,k}$ 共同构成了从 $\dot{\vec{q}}_{J_k}$ 到 $\vec{v}_{0,i|i}$ 的映射。根据虚功原理，广义力 $\vec{f}_{J_k}$ 满足
+\[
+\vec{f}_{J_k}\T\,\delta\vec{q}_{J_k} = \vec{f}_{B_i}\T\,\delta\vec{r}_{O_0O_i|0}
+= \vec{f}_{B_i}\T\left(\mat{C}_{i,k}\mat{\Phi}_{J_k}\,\delta\vec{q}_{J_k}\right),
+\]
+两边消去 $\delta\vec{q}_{J_k}$ 即得(\ref{eq:fJk})。
+\end{proof}
+
+
+\section{动力学微分代数的约化}
+\label{sec:dae_reduction}
+
+直接求解全DAE系统(\ref{eq:dae})面临矩阵规模大、条件数差的问题。一个更高效的策略是：利用约束方程将系统状态划分为独立坐标和非独立坐标，通过代数消元将DAE转化为常微分方程（ODE）。
+
+\begin{myTheorem}{坐标划分与DAE降阶}
+将广义坐标划分为独立部分 $\vec{q}_I$ 和非独立部分 $\vec{q}_D$，使得 $\mat{C}_{\vec{q}_D}$ 满秩。非独立加速度可通过独立加速度解析求解：
+\begin{equation}
+\ddot{\vec{q}}_D = -\bigl(\mat{C}_{\vec{q}_D}\T\mat{C}_{\vec{q}_D}\bigr)^{-1}
+\mat{C}_{\vec{q}_D}\T\mat{C}_{\vec{q}_I}\,\ddot{\vec{q}}_I
++ \bigl(\mat{C}_{\vec{q}_D}\T\mat{C}_{\vec{q}_D}\bigr)^{-1}\mat{C}_{\vec{q}_D}\T\vec{\varepsilon}.
+\label{eq:qddotD}
+\end{equation}
+\end{myTheorem}
+
+\begin{proof}
+将加速度级约束方程 $\mat{C}_{\vec{q}}\ddot{\vec{q}} = \vec{\varepsilon}$ 按 $\vec{q}_I$ 和 $\vec{q}_D$ 分块：
+\[
+\mat{C}_{\vec{q}_I}\ddot{\vec{q}}_I + \mat{C}_{\vec{q}_D}\ddot{\vec{q}}_D = \vec{\varepsilon}.
+\]
+对于四足机器人等存在冗余约束的系统，$\mat{C}_{\vec{q}_D}$ 不是方阵。在等式两端左乘 $\mat{C}_{\vec{q}_D}\T$（Gauss-Newton标准化）：
+\[
+\mat{C}_{\vec{q}_D}\T\mat{C}_{\vec{q}_D}\,\ddot{\vec{q}}_D
+= -\mat{C}_{\vec{q}_D}\T\mat{C}_{\vec{q}_I}\,\ddot{\vec{q}}_I + \mat{C}_{\vec{q}_D}\T\vec{\varepsilon}.
+\]
+设 $\mat{C}_{\vec{q}_D}$ 列满秩（正确的独立/非独立坐标划分保证此条件），则 $\mat{C}_{\vec{q}_D}\T\mat{C}_{\vec{q}_D}$ 可逆，解出 $\ddot{\vec{q}}_D$ 即得(\ref{eq:qddotD})。
+\end{proof}
+
+将 $\ddot{\vec{q}}_D$ 代回动力学方程第一行后，得到一个仅包含独立加速度 $\ddot{\vec{q}}_I$ 的常微分方程系统，可直接用龙格-库塔等标准ODE求解器进行数值积分。这一思路与Spacecraft Dynamics中"用模态坐标削减自由度"的策略一脉相承：都是通过消去被约束的自由度来降低方程规模。
+
+
+%==========================================================================
+\chapter{多刚体系统动力学完全递推算法}
+%==========================================================================
+
+综合前两章的运动学和动力学递推关系，一个完整的\textbf{完全递推动力学算法}包含以下步骤：
+
+\begin{mydefinition}{完全递推算法}
+在一个仿真步长 $[t, t+\Delta t]$ 内，顺序执行以下四个阶段：
+\end{mydefinition}
+
+\subsection*{第一阶段：运动学正向递推（Forward Kinematic Recursion）}
+
+从基体（$i=1$）开始，按标号递增顺序遍历所有体元件：
+\begin{enumerate}
+    \item 利用铰 $J_i$ 的当前广义坐标 $\vec{q}_{J_i}$ 计算相对方位 $\mat{A}_{p(i),i}$ 和相对位置 $\vec{r}_{R_iO_i|p(i)}$；
+    \item 合成牵连速度矩阵 $\mat{C}_{i,p(i)}$（式(\ref{eq:C_matrix})）；
+    \item 计算铰的速度系数矩阵 $\mat{\Phi}_{J_i}$ 和加速度非齐次项 $\vec{\xi}_{J_i}$（\S\ref{sec:joint_kin}）；
+    \item 递推得到绝对速度 $\vec{v}_{0,i|i}$（式(\ref{eq:vel_recur})）和中间量（为下一阶段准备）。
+\end{enumerate}
+
+\subsection*{第二阶段：质量矩阵与力项递推（Mass \& Force Recursion）}
+
+按标号递减顺序（反向递推）：
+\begin{enumerate}
+    \item 组装各体元件对系统广义质量矩阵的贡献 $\mat{M}_{j,k}^{i}$（式(\ref{eq:kinetic_quadratic})）；
+    \item 计算 $\dot{\mat{M}}$ 的贡献（式(\ref{eq:Mdot})）；
+    \item 计算广义力 $\vec{f}_{\mathrm{app}}$（包括式(\ref{eq:joint_force})和(\ref{eq:fJk})的贡献）；
+    \item 计算加速度非齐次项 $\vec{\eta}_i$（式(\ref{eq:zeta_i})），最终得到 $\vec{h}$ 和 $\vec{\varepsilon}$（式(\ref{eq:h_def})(\ref{eq:eps_def})）。
+\end{enumerate}
+
+\subsection*{第三阶段：DAE组装与约化}
+
+将上一步得到的 $\mat{M}$、$\vec{h}$、$\mat{C}_{\vec{q}}$、$\vec{\varepsilon}$ 组装为DAE(\ref{eq:dae})，然后按\S\ref{sec:dae_reduction}的方法进行坐标划分和ODE约化。
+
+\subsection*{第四阶段：数值积分与约束修正}
+
+对约化后的ODE系统用数值积分器推进一步（如Runge-Kutta 4(5)），得到下一时刻的 $\vec{q}$ 和 $\dot{\vec{q}}$。随后检查并修正约束违约（式(\ref{eq:violation_fix})和(\ref{eq:vel_fix})），进入下一步长。
+
+\begin{myTheorem}{算法复杂度}
+上述完全递推算法的浮点运算量仅为 $O(n)$（$n$ 为体元件数目），远优于直接组装DAE并求解的 $O(n^3)$ 复杂度，是大规模多体系统实时仿真的关键使能技术。
+\end{myTheorem}
+
+
+%==========================================================================
+\appendix
+\chapter{附录}
+%==========================================================================
+
+\section{运动学方程证明详录}
+
+\subsection{速度递推的完整代数推导}
+
+由绝对位矢关系出发：
+\begin{align}
+\vec{r}_{O_0O_i|0} &= \vec{r}_{O_0O_{p(i)}|0} + \vec{r}_{O_{p(i)}O_i|0} \\
+&= \vec{r}_{O_0O_{p(i)}|0} + \mat{A}_{0,p(i)}\bigl(\vec{r}_{O_{p(i)}R_i|p(i)} + \vec{r}_{R_iO_i|p(i)}\bigr).
+\end{align}
+
+对时间求导时，$\mat{A}_{0,p(i)}$ 的导数产生 $\mat{A}_{0,p(i)}\tildev{\vec{\omega}}_{0,p(i)|p(i)}$ 项；$\vec{r}_{R_iO_i|p(i)}$ 的导数产生广义速度 $\dot{\vec{q}}_{J_i}$ 的贡献。将结果投影到 $i$ 系即得六维速度递推式。
+
+\subsection{牵连速度矩阵的传递恒等式}
+
+验证 $\mat{C}_{i,p(i)}\mat{C}_{p(i),k} = \mat{C}_{i,k}$：
+\begin{align*}
+&\mat{C}_{i,p(i)}\mat{C}_{p(i),k} \\
+&= \begin{bmatrix}
+\mat{A}_{p(i),i}\T & \mat{A}_{p(i),i}\T\tildev{\vec{r}}_{O_{p(i)}O_i|p(i)}\T \\
+\mat{O} & \mat{A}_{p(i),i}\T
+\end{bmatrix}
+\begin{bmatrix}
+\mat{A}_{k,p(i)}\T & \mat{A}_{k,p(i)}\T\tildev{\vec{r}}_{O_kO_{p(i)}|k}\T \\
+\mat{O} & \mat{A}_{k,p(i)}\T
+\end{bmatrix} \\
+&= \begin{bmatrix}
+\mat{A}_{p(i),i}\T\mat{A}_{k,p(i)}\T
+& \mat{A}_{p(i),i}\T\mat{A}_{k,p(i)}\T\tildev{\vec{r}}_{O_kO_{p(i)}|k}\T
++ \mat{A}_{p(i),i}\T\tildev{\vec{r}}_{O_{p(i)}O_i|p(i)}\T\mat{A}_{k,p(i)}\T \\
+\mat{O} & \mat{A}_{p(i),i}\T\mat{A}_{k,p(i)}\T
+\end{bmatrix}.
+\end{align*}
+利用 $\mat{A}_{p(i),i}\T\mat{A}_{k,p(i)}\T = (\mat{A}_{k,p(i)}\mat{A}_{p(i),i})\T = \mat{A}_{k,i}\T$，以及反对称矩阵的转化恒等式
+\[
+\tildev{\vec{r}}_{O_kO_i|k} = \mat{A}_{k,p(i)}\,\tildev{\vec{r}}_{O_{p(i)}O_i|p(i)}\T\mat{A}_{k,p(i)}\T
++ \tildev{\vec{r}}_{O_kO_{p(i)}|k},
+\]
+可得上半块为零。化简后即得 $\mat{C}_{i,k}$。
+
+\section{系统机械能}
+
+\subsection{系统动能}
+
+\begin{equation}
+T = \frac{1}{2}\sum_{i=1}^{n}\vec{v}_{0,i|i}\T\mat{M}_i\vec{v}_{0,i|i}.
+\end{equation}
+
+\subsection{系统重力势能}
+
+\begin{equation}
+V_g = \sum_{i=1}^{n} \bigl(-m_i\,\vec{g}\T\,\vec{r}_{O_0C_i|0}\bigr),
+\end{equation}
+其中 $\vec{r}_{O_0C_i|0} = \vec{r}_{O_0O_i|0} + \mat{A}_{0,i}\,\vec{r}_{O_iC_i|i}$。
+
+\subsection{铰弹性势能}
+
+\begin{equation}
+V_{J_k} = \frac{1}{2}(\vec{q}_{J_k} - \qbar{\vec{q}}_{J_k})\T\mat{K}_{P,J_k}(\vec{q}_{J_k} - \qbar{\vec{q}}_{J_k}).
+\label{eq:VJk}
+\end{equation}
+
+\section{接触模型}
+
+系统通过接触对来建模碰撞和摩擦。
+
+\subsection{球与无限大平面接触}
+
+当球心 $S$ 到接触平面的距离满足 $\vec{n}\T|_{C(j)}\,\vec{r}_{PS|C(j)} < R$ 时发生接触。依次计算：接触点位置坐标、法向侵透量 $\delta$、接触点速度和切向相对速度。
+
+\subsection{法向接触力---弹簧阻尼模型}
+
+\begin{equation}
+F_\sigma = K_P\delta + \mathrm{step5}(\delta,\delta_{\text{Threshold}},K_D)\,\dot{\delta} \geq 0,
+\label{eq:Fsigma}
+\end{equation}
+其中 step5函数保证阻尼项在趋近接触边界时平滑退化为零，避免法向斥力出现不合理的负值。
+
+\subsection{切向摩擦力---正则化库伦摩擦}
+
+\begin{equation}
+\mu(v_\tau) =
+\begin{cases}
+\mathrm{step5}(v_\tau,v_s,\mu_s,-v_s,-\mu_s), & v_\tau \leq v_s,\\
+\mathrm{step5}(v_\tau,v_d,\mu_d,v_s,\mu_s), & v_\tau > v_s.
+\end{cases}
+\label{eq:mu_v}
+\end{equation}
+当相对切向速度较小时（$v_\tau \leq v_s$），摩擦系数在 $-\mu_s$ 到 $\mu_s$ 之间平滑过渡（模拟静摩擦向滑动摩擦的转换），避免数值计算出现高频振荡（即所谓的Stick-Slip不稳定）。
+
+\subsection{step5函数}
+
+step5函数是一个具有连续一阶和二阶导数的平滑阶梯函数，用于连接模型中的离散状态切换：
+\begin{equation}
+y(x) = \mathrm{step5}(x,x_U,y_U,x_L=0,y_L=0) =
+\begin{cases}
+y_L, & x \leq x_L,\\
+y_L + (y_U - y_L)(10 - 15r + 6r^2)r^3, & x \in (x_L,x_U],\\
+y_U, & x > x_U,
+\end{cases}
+\label{eq:step5}
+\end{equation}
+其中 $r = \frac{x - x_L}{x_U - x_L}$。该函数在两端点处函数值、一阶导数和二阶导数均保持连续（$C^2$ 光滑），因此特别适合嵌入ODE求解器中使用，不会引入由于不连续导致的积分刚性。
+
+\begin{proof}[step5函数光滑性验证]
+  对(\ref{eq:step5})求导：
+  \begin{align}
+  \frac{dy}{dx} &=
+  \begin{cases}
+  0, & x\leq x_L,\\
+  30\frac{y_U-y_L}{x_U-x_L}(1-2r+r^2)r^2, & x\in(x_L,x_U],\\
+  0, & x>x_U,
+  \end{cases} \\
+  \frac{d^2y}{dx^2} &=
+  \begin{cases}
+  0, & x\leq x_L,\\
+  60\frac{y_U-y_L}{(x_U-x_L)^2}(1-3r+2r^2)r, & x\in(x_L,x_U],\\
+  0, & x>x_U.
+  \end{cases}
+  \end{align}
+  在 $x=x_L$ 处（$r=0$），$dy/dx = 0$，$d^2y/dx^2 = 0$，与左段连续；在 $x=x_U$ 处（$r=1$），$dy/dx = 30\frac{\Delta y}{\Delta x}(1-2+1)(1)=0$，$d^2y/dx^2 = 60\frac{\Delta y}{\Delta x^2}(1-3+2)(1)=0$，与右段连续。$C^2$ 光滑性得到保证。
+\end{proof}
+
+\end{document}
