@@ -755,6 +755,56 @@ $\kappa(A) = \|A\| \cdot \|A^{-1}\|$ 为条件数。$\square$
 
 ---
 
+# 第十二章 对偶空间与对偶基
+
+## 12.1 对偶空间的定义
+
+**向量空间的对偶**：设 $V$ 是域 $\mathbb{F}$ 上的向量空间。$V$ 的**对偶空间** $V^*$ 定义为全体从 $V$ 到 $\mathbb{F}$ 的线性泛函构成的集合：
+
+$$V^* = \mathcal{L}(V, \mathbb{F}) = \{ \varphi: V \to \mathbb{F} \mid \varphi \text{ 是线性的} \}$$
+
+$V^*$ 本身也是一个向量空间，满足：
+1. $\dim(V^*) = \dim(V)$
+2. $V^*$ 与 $V$ 之间存在非退化的标量积 $\langle\cdot, \cdot\rangle: V^* \times V \to \mathbb{F}$，即 $\langle\varphi, v\rangle = \varphi(v)$
+3. 若 $U = V^*$，则 $U^* \cong V$（二次对偶自然同构）
+
+**非退化性**：标量积是非退化的，即 $\forall v \in V, v \neq 0$，存在至少一个 $\varphi \in V^*$ 使得 $\langle\varphi, v\rangle \neq 0$。这是对偶基存在的关键。
+
+## 12.2 对偶基与互惠条件
+
+设 $V$ 有一组基 $\mathcal{E} = \{\vec{e}_1, \dots, \vec{e}_n\}$，$V^*$ 中对应的**对偶基**为 $D = \{\vec{d}_1, \dots, \vec{d}_n\}$。它们满足**互惠条件**（reciprocity condition）：
+
+$$\vec{d}_i \cdot \vec{e}_j = \delta_{ij} = \begin{cases} 1, & i = j \\ 0, & i \neq j \end{cases}$$
+
+即以 $\mathcal{E}$ 为列组成的矩阵与以 $D$ 为行组成的矩阵互为逆矩阵。
+
+**存在性推导**：定义 $\vec{d}_i$ 为 $\vec{e}_j$ 上的线性泛函 $\vec{d}_i(\sum_k a_k \vec{e}_k) = a_i$（提取第 $i$ 个坐标）。则 $\vec{d}_i(\vec{e}_j) = \delta_{ij}$。由线性泛函的线性独立性可证 $\{d_i\}$ 是 $V^*$ 的基。$\square$
+
+## 12.3 对偶坐标
+
+一个对偶基定义了一个对偶坐标系。若用对偶坐标表示空间向量，则有优雅的内积形式：
+
+$$\vec{u} \cdot \vec{v} = \underline{u}^T \underline{v}$$
+
+其中 $\underline{u}, \underline{v}$ 分别为对应坐标系下的坐标列向量。
+
+**坐标变换的对偶关系**：设两组基之间的变换为 $\underline{v} = X \underline{u}$。在对偶坐标下 $\underline{u} = X^* \underline{v}$。由内积不变性：
+
+$$(X\underline{u})^T (X^* \underline{v}) = \underline{u}^T X^T X^* \underline{v} = \underline{u}^T \underline{v}$$
+
+可得 $X^T X^* = E$，即 $X^* = X^{-T}$——对偶基的变换矩阵是原基变换矩阵的逆转置。
+
+### 算子 $\vec{a}\cdot$ 和 $\vec{a}\times$
+
+- $\vec{a}\cdot$ 是一个算子，将向量 $\vec{b}$ 映射为标量 $\vec{a} \cdot \vec{b}$
+- $\vec{a}\times$ 是一个算子，将向量 $\vec{b}$ 映射为向量 $\vec{a} \times \vec{b}$，在给定基下表现为一个**斜对称矩阵（反对称矩阵）**：
+
+$$\vec{a}\times = \begin{bmatrix} 0 & -a_3 & a_2 \\ a_3 & 0 & -a_1 \\ -a_2 & a_1 & 0 \end{bmatrix}$$
+
+> 斜对称矩阵在空间向量代数和刚体动力学中有重要应用。参见 [[../../刚体动力学算法/空间向量代数/0.数学知识预备|空间向量代数·数学预备]]。
+
+---
+
 # 附：重要定理推导线索速查
 
 | 定理 | 推导手法 |
