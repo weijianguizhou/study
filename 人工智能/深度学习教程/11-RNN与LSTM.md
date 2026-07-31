@@ -792,4 +792,4 @@ train_text_classifier()
 - [[12-Transformer与大模型|Transformer与大模型]] — 自注意力机制
 - [[06-PyTorch入门|PyTorch]] — PyTorch框架
 - [[../../数理基础/概率论|概率论]] — 序列模型的概率视角
-- [[LaTeX/main|LaTeX完整教程]] — 公式排版
+- [[LaTeX/main.tex|LaTeX完整教程]] — 公式排版

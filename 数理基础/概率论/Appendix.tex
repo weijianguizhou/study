@@ -1,0 +1,96 @@
+\chapter*{附录：补充知识}
+\addcontentsline{toc}{chapter}{附录：补充知识}
+\setcounter{chapter}{0}
+\renewcommand{\thechapter}{\Alph{chapter}}
+
+\section{$\Gamma$ 函数（Gamma Function）}
+
+概率论中频繁出现的特殊函数：
+\[\Gamma(\alpha) = \int_{0}^{+\infty} x^{\alpha-1} e^{-x}\,dx,\quad \alpha > 0.\]
+
+\begin{myproperty}{$\Gamma$ 函数的基本性质}
+\begin{enumerate}
+	\item 递推公式：$\Gamma(\alpha + 1) = \alpha \Gamma(\alpha)$；
+	\item 与阶乘的关系：$\Gamma(n + 1) = n!$（$n$ 为正整数）；
+	\item 特殊值：$\Gamma(1/2) = \sqrt{\pi}$。
+\end{enumerate}
+\end{myproperty}
+
+$\Gamma$ 函数在概率论中的应用包括：
+\begin{itemize}
+	\item $\Gamma$ 分布的概率密度中含有 $\Gamma(\alpha)$ 作为归一化常数；
+	\item $\chi^2$ 分布是 $\Gamma$ 分布的特例：$\chi^2(n) = \Gamma(n/2,\, 1/2)$；
+	\item 正态分布的各阶矩计算中常出现 $\Gamma$ 函数。
+\end{itemize}
+
+\section{常用积分公式}
+
+\begin{myformula}
+\[
+\begin{aligned}
+    \int_{-\infty}^{+\infty} e^{-x^2}\,dx &= \sqrt{\pi}, \\
+    \int_{0}^{+\infty} x^{n} e^{-\lambda x}\,dx &= \frac{n!}{\lambda^{\,n+1}} \quad (n \in \mathbb{N},\ \lambda > 0), \\
+    \int_{-\infty}^{+\infty} e^{-ax^2 + bx}\,dx &= \sqrt{\frac{\pi}{a}}\, \exp\!\left(\frac{b^2}{4a}\right),\quad a > 0.
+\end{aligned}
+\]
+\end{myformula}
+
+\section{正态分布的矩}
+
+标准正态分布 $Z \sim N(0,1)$，利用对称性和分部积分可得：
+\begin{myformula}
+\[
+\begin{aligned}
+    E(Z) &= 0, \quad E(Z^2) = 1, \\
+    E(Z^3) &= 0, \quad E(Z^4) = 3, \\
+    E(Z^5) &= 0, \quad E(Z^6) = 15.
+\end{aligned}
+\]
+\end{myformula}
+
+一般公式（$k$ 为正整数）：
+\[E(Z^{2k}) = (2k-1)!! = 1 \cdot 3 \cdot 5 \cdots (2k-1),\qquad
+E(Z^{2k-1}) = 0.\]
+
+\section{重要分布的可加性}
+
+\begin{myproperty}{独立随机变量和的分布}
+\begin{enumerate}
+	\item \textbf{二项分布：} $X \sim B(n_1, p)$，$Y \sim B(n_2, p)$ 独立，则 $X + Y \sim B(n_1 + n_2, p)$；
+	\item \textbf{Poisson 分布：} $X \sim P(\lambda_1)$，$Y \sim P(\lambda_2)$ 独立，则 $X + Y \sim P(\lambda_1 + \lambda_2)$；
+	\item \textbf{正态分布：} $X_i \sim N(\mu_i, \sigma_i^2)$ 独立，则 $\sum a_i X_i \sim N(\sum a_i \mu_i,\, \sum a_i^2 \sigma_i^2)$；
+	\item \textbf{$\chi^2$ 分布：} $X_i \sim N(0, 1)$ 独立，则 $\sum_{i=1}^{n} X_i^2 \sim \chi^2(n)$；
+	\item \textbf{指数分布：} $X_i \sim E(\lambda)$ 独立，则 $\sum_{i=1}^{n} X_i \sim \Gamma(n, \lambda)$。
+\end{enumerate}
+\end{myproperty}
+
+\section{常用分布的期望与方差总表}
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+\textbf{分布} & \textbf{记号} & \textbf{$E(X)$} & \textbf{$D(X)$} \\
+\midrule
+两点分布 & $B(1, p)$          & $p$                    & $p(1-p)$ \\
+二项分布 & $B(n, p)$          & $np$                   & $np(1-p)$ \\
+Poisson 分布 & $P(\lambda)$   & $\lambda$              & $\lambda$ \\
+几何分布 & $G(p)$             & $\dfrac{1}{p}$         & $\dfrac{1-p}{p^2}$ \\
+均匀分布 & $U(a, b)$          & $\dfrac{a+b}{2}$       & $\dfrac{(b-a)^2}{12}$ \\
+指数分布 & $E(\lambda)$       & $\dfrac{1}{\lambda}$   & $\dfrac{1}{\lambda^2}$ \\
+正态分布 & $N(\mu, \sigma^2)$ & $\mu$                  & $\sigma^2$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{独立与不相关的区别}
+
+\begin{myTheorem}{独立与不相关的辨析}
+\begin{enumerate}
+	\item \textbf{独立 $\Rightarrow$ 不相关}（$E(XY) = E(X)E(Y)$ 推出 $\Cov = 0$）；
+	\item \textbf{不相关 $\nRightarrow$ 独立}（不相关仅意味着没有线性关系，仍可能存在非线性关系）；
+	\item \textbf{对于二维正态分布：} 独立 $\iff$ 不相关 $\iff$ $\rho = 0$；
+	\item 相关系数只度量\textbf{线性相关}程度，不能检测非线性依赖（如 $Y = X^2$）。
+\end{enumerate}
+\end{myTheorem}
+
+\end{document}

@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "e2f7d0f01451a5ca",
+        "id": "211a8753f0494a38",
         "type": "tabs",
         "children": [
           {
-            "id": "9943dce2188f80f3",
+            "id": "42feb59399dca55b",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "README.md",
-                "mode": "preview",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "README"
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "关系图谱"
             }
           }
         ]
@@ -41,7 +37,9 @@
               "type": "file-explorer",
               "state": {
                 "sortOrder": "alphabetical",
-                "autoReveal": false
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
               },
               "icon": "lucide-folder-closed",
               "title": "文件列表"
@@ -78,7 +76,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "dfcd6f1a0be67c9c",
@@ -193,42 +192,43 @@
   },
   "active": "437ab6934dc5f66d",
   "lastOpenFiles": [
-    "力学/振动理论/LaTeX/main.toc",
-    "力学/振动理论/LaTeX/main.out",
-    "力学/振动理论/LaTeX/main.aux",
-    "力学/振动理论/LaTeX/main.log",
-    "力学/振动理论/LaTeX/main.pdf",
-    "力学/振动理论/md/06-多自由度与模态分析.md",
-    "力学/振动理论/md/00-振动理论MOC.md",
-    "力学/振动理论/md/12-振动控制与应用.md",
-    "力学/振动理论/LaTeX/Chapter06.tex",
-    "力学/振动理论/md/09-近似方法.md",
-    "力学/振动理论/md/11-随机振动初步.md",
-    "力学/振动理论/md/10-非线性振动初步.md",
-    "力学/振动理论/LaTeX/Chapter09.tex",
-    "力学/振动理论/md/03-简谐强迫振动.md",
-    "力学/振动理论/md/05-两自由度振动.md",
-    "力学/振动理论/LaTeX/Chapter12.tex",
-    "力学/振动理论/md/02-单自由度自由振动.md",
-    "力学/振动理论/md/01-振动引论.md",
-    "力学/振动理论/md/08-连续系统-梁.md",
-    "力学/振动理论/LaTeX/Chapter05.tex",
-    "力学/振动理论/LaTeX/Chapter03.tex",
-    "力学/振动理论/LaTeX/Chapter08.tex",
-    "力学/振动理论/md/04-一般强迫振动.md",
+    "计算机类/Linux教程/06-进程管理.md",
     "力学/振动理论/md/07-连续系统-弦与杆.md",
-    "计算机类/Linux教程/01-Linux概述与安装.md",
-    "计算机类/Linux教程/00-Linux教程MOC.md",
-    "计算机类/数据结构教程/01-基本概念与算法分析.md",
-    "计算机类/数据结构教程/00-数据结构MOC.md",
-    "计算机类/数据结构/00-数据结构索引.md",
-    "数理基础/数理基础.md",
-    "计算机类/Anaconda教程/Anaconda 使用教程.md",
-    "计算机类/MATLAB学习/01-MATLAB介绍与环境.md",
-    "README.md",
+    "计算机类/QT教程/05-事件处理/05-05-自定义事件详解.md",
+    "计算机类/Eigen库使用指南/稠密矩阵和数组操作/06-切片和索引操作.md",
+    "数理基础/数学建模教程/11-数据分析/02-降维方法.md",
+    "计算机类/QT教程/README.md",
     "计算机类/VS code 配置指南/R/README.md",
-    "计算机类/VS code 配置指南/Python/README.md",
-    "计算机类/VS code 配置指南/C++/README.md",
+    "数理基础/数学建模教程/02-统计方法/06-判别分析.md",
+    "电类/数字电路/章节/09-脉冲波形产生与整形.md",
+    "数理基础/优化方法/线性规划.md",
+    "数理基础/数学建模教程/01-优化方法/01-线性规划.md",
+    "摄影/eos600d-im3-zh.pdf",
+    "学术汇报/讲稿.pdf",
+    "学术汇报/魏舟.pdf",
+    "学术汇报/英文学术汇报.pdf",
+    "学术汇报/ALL you need is attention.pdf",
+    "学术汇报/Attention_Visualization.png",
+    "数理基础/数值分析/矩阵分解.md",
+    "数理基础/图论算法/图论经典问题.md",
+    "数理基础/随机过程/MCMC方法.md",
+    "数理基础/数值分析/非线性方程求根.md",
+    "数理基础/图论算法/网络流算法.md",
+    "数理基础/数值分析/线性方程组迭代法.md",
+    "数理基础/图论算法/最短路径算法.md",
+    "数理基础/微分方程建模/种群相互作用模型.md",
+    "数理基础/优化方法/现代优化算法.md",
+    "数理基础/随机过程/随机微分方程.md",
+    "数理基础/统计学分析方法/模糊数学基础.md",
+    "数理基础/机器学习数学基础/贝叶斯分类器.md",
+    "数理基础/数值分析/偏微分方程数值解.md",
+    "数理基础/优化方法/多目标优化.md",
+    "数理基础/统计学分析方法/灰色系统理论.md",
+    "数理基础/微分方程建模",
+    "数理基础/图论算法",
+    "数理基础/机器学习数学基础",
+    "数理基础/时间序列分析",
+    "数理基础/随机过程",
     "数理基础/数学建模教程/获奖论文和赛题/771b4420ea5e576b910f77f91db6229.png",
     "刚体动力学算法/picture/GUI.png",
     "计算机类/Eigen库使用指南/Eigen.png",
@@ -237,7 +237,6 @@
     "计算机类/图片/栈.png",
     "计算机类/图片/索引表查找.png",
     "计算机类/图片/有向图的邻接表.png",
-    "计算机类/图片/有向图的邻接矩阵为非对称矩阵.png",
-    "计算机类/图片/有向图的十字链表表示.png"
+    "计算机类/图片/有向图的邻接矩阵为非对称矩阵.png"
   ]
 }

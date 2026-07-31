@@ -1132,4 +1132,4 @@ print("  适用: 目标数据量大(>10000)")
 - [[08-优化方法|优化方法]] — 训练技巧与正则化
 - [[09-卷积神经网络CNN|卷积神经网络CNN]] — CNN基础原理
 - [[06-PyTorch入门|PyTorch]] — PyTorch框架使用
-- [[LaTeX/main|LaTeX完整教程]] — 论文排版
+- [[LaTeX/main.tex|LaTeX完整教程]] — 论文排版

@@ -1,189 +1,10 @@
 # ARIMA 时间序列预测模型
 
-## 一、时间序列分析基础
+> **理论基础** → 参见 [[../../时间序列分析/ARIMA模型|ARIMA模型]]
 
-### 1.1 时间序列的定义
-
-时间序列是按时间顺序排列的一组观测值 $X_1, X_2, \ldots, X_t, \ldots$。时间序列分析的目标是：
-
-1. **描述**：理解数据的生成机制
-2. **解释**：识别变量之间的关系
-3. **预测**：对未来值进行预测
-
-### 1.2 平稳性
-
-**严平稳**：序列的联合概率分布不随时间平移而改变。
-
-**宽平稳（弱平稳）**：满足以下三个条件：
-- $E(X_t) = \mu$（常数均值）
-- $\text{Var}(X_t) = \sigma^2$（常数方差）
-- $\text{Cov}(X_t, X_{t+k}) = \gamma_k$（自协协只与滞后 $k$ 有关）
-
-### 1.3 自相关函数与偏自相关函数
-
-**自协协方差函数**：
-
-$$\gamma_k = \text{Cov}(X_t, X_{t+k})$$
-
-**自相关函数（ACF）**：
-
-$$\rho_k = \frac{\gamma_k}{\gamma_0} = \frac{\text{Cov}(X_t, X_{t+k})}{\text{Var}(X_t)}$$
-
-**偏自相关函数（PACF）**：在给定 $X_{t-1}, \ldots, X_{t-k+1}$ 的条件下，$X_t$ 与 $X_{t-k}$ 的条件相关性。
-
-$$\phi_{kk} = \text{Corr}(X_t, X_{t-k} \mid X_{t-1}, \ldots, X_{t-k+1})$$
-
-### 1.4 白噪声过程
-
-若 $\{X_t\}$ 满足：
-- $E(X_t) = 0$
-- $\text{Var}(X_t) = \sigma^2$
-- $\text{Cov}(X_t, X_s) = 0, \quad \forall t \neq s$
-
-则称 $\{X_t\}$ 为白噪声过程，记为 $X_t \sim WN(0, \sigma^2)$。
-
----
-
-## 二、ARMA 模型
-
-### 2.1 AR(p) 模型 — 自回归模型
-
-$p$ 阶自回归模型：
-
-$$X_t = c + \phi_1 X_{t-1} + \phi_2 X_{t-2} + \cdots + \phi_p X_{t-p} + \varepsilon_t$$
-
-其中 $\varepsilon_t \sim WN(0, \sigma^2)$，$\phi_1, \ldots, \phi_p$ 为自回归系数。
-
-使用滞后算子 $B$（$BX_t = X_{t-1}$）表示：
-
-$$\Phi(B)X_t = c + \varepsilon_t$$
-
-其中 $\Phi(B) = 1 - \phi_1 B - \phi_2 B^2 - \cdots - \phi_p B^p$。
-
-**平稳条件**：特征方程 $\Phi(z) = 0$ 的所有根在单位圆外（$|z| > 1$）。
-
-### 2.2 MA(q) 模型 — 移动平均模型
-
-$q$ 阶移动平均模型：
-
-$$X_t = \mu + \varepsilon_t + \theta_1 \varepsilon_{t-1} + \theta_2 \varepsilon_{t-2} + \cdots + \theta_q \varepsilon_{t-q}$$
-
-使用滞后算子表示：
-
-$$X_t = \mu + \Theta(B)\varepsilon_t$$
-
-其中 $\Theta(B) = 1 + \theta_1 B + \theta_2 B^2 + \cdots + \theta_q B^q$。
-
-**可逆条件**：特征方程 $\Theta(z) = 0$ 的所有根在单位圆外。
-
-### 2.3 ARMA(p, q) 模型
-
-自回归移动平均模型：
-
-$$X_t = c + \sum_{i=1}^{p}\phi_i X_{t-i} + \varepsilon_t + \sum_{j=1}^{q}\theta_j \varepsilon_{t-j}$$
-
-$$\Phi(B)X_t = c + \Theta(B)\varepsilon_t$$
-
-ARMA模型的ACF和PACF特征：
-
-| 模型 | ACF | PACF |
-|------|-----|------|
-| AR(p) | 拖尾（指数衰减/阻尼正弦） | $p$ 步截尾 |
-| MA(q) | $q$ 步截尾 | 拖尾 |
-| ARMA(p,q) | 拖尾 | 拖尾 |
-
----
-
-## 三、ARIMA 模型
-
-### 3.1 差分运算
-
-**一阶差分**：
-
-$$\nabla X_t = X_t - X_{t-1} = (1 - B)X_t$$
-
-**$d$ 阶差分**：
-
-$$\nabla^d X_t = (1 - B)^d X_t = \sum_{i=0}^{d}(-1)^i \binom{d}{i} X_{t-i}$$
-
-### 3.2 ARIMA(p, d, q) 模型
-
-$$\Phi(B)(1-B)^d X_t = c + \Theta(B)\varepsilon_t$$
-
-其中：
-- $p$：自回归阶数
-- $d$：差分阶数
-- $q$：移动平均阶数
-
-**建模步骤**：
-
-1. **平稳性检验**：ADF检验
-2. **差分处理**：对非平稳序列进行差分
-3. **模型识别**：通过ACF/PACF确定 $p$ 和 $q$
-4. **参数估计**：极大似然估计
-5. **模型检验**：残差白噪声检验
-6. **预测**
-
-### 3.3 ADF 检验（Augmented Dickey-Fuller）
-
-检验假设：
-- $H_0$：序列有单位根（非平稳）
-- $H_1$：序列平稳
-
-回归方程：
-
-$$\Delta X_t = \alpha + \beta t + \gamma X_{t-1} + \sum_{i=1}^{p}\delta_i \Delta X_{t-i} + \varepsilon_t$$
-
-若 $\gamma = 0$，则存在单位根（非平稳）。
-
----
-
-## 四、Box-Jenkins 方法论
-
-### 4.1 模型识别
-
-**确定 $d$**：观察序列图和ADF检验结果，逐步差分直至平稳。
-
-**确定 $p$ 和 $q$**：观察差分后序列的ACF和PACF图：
-
-| ACF表现 | PACF表现 | 模型建议 |
-|---------|----------|----------|
-| 截尾于 $q$ | 拖尾 | MA(q) |
-| 拖尾 | 截尾于 $p$ | AR(p) |
-| 拖尾 | 拖尾 | ARMA(p,q) |
-
-**信息准则**：
-
-$$AIC = -2\ln L + 2k$$
-
-$$BIC = -2\ln L + k\ln n$$
-
-其中 $L$ 为似然函数，$k$ 为参数个数，$n$ 为样本量。选择AIC或BIC最小的模型。
-
-### 4.2 参数估计
-
-**极大似然估计（MLE）**：
-
-$$\hat{\theta}_{MLE} = \arg\max_{\theta} \prod_{t=1}^{n}f(X_t \mid X_{t-1}, \ldots, X_1; \theta)$$
-
-对于高斯ARMA模型：
-
-$$L(\theta) = (2\pi\sigma^2)^{-n/2} \exp\left(-\frac{1}{2\sigma^2}\sum_{t=1}^{n}\varepsilon_t^2(\theta)\right)$$
-
-### 4.3 模型诊断
-
-**残差检验**：检验残差是否为白噪声。
-
-Ljung-Box检验统计量：
-
-$$Q(m) = n(n+2)\sum_{k=1}^{m}\frac{\hat{\rho}_k^2}{n-k} \sim \chi^2(m-p-q)$$
-
-若 $Q(m)$ 不显著，说明残差为白噪声，模型拟合良好。
-
----
+ARIMA模型将自回归(AR)、差分(I)、移动平均(MA)结合，是处理非平稳时间序列的经典预测方法。
 
 ## 五、Python 实现
-
 ```python
 import numpy as np
 import pandas as pd
@@ -359,7 +180,6 @@ class ARIMAModel:
         
         return results_df
 
-
 # ============ 示例：空气质量指数预测 ============
 np.random.seed(42)
 
@@ -422,7 +242,6 @@ plt.show()
 ---
 
 ## 六、实际案例：某市月度用电量预测
-
 ### 6.1 数据准备
 
 ```python
@@ -554,28 +373,7 @@ print(f"MAPE: {mape:.2f}%")
 
 ---
 
-## 七、季节性 SARIMA 模型
-
-### 7.1 SARIMA(p,d,q)(P,D,Q)$_s$ 模型
-
-$$\Phi_P(B^s)\Phi(B)(1-B^s)^D(1-B)^d X_t = \Theta_Q(B^s)\Theta(B)\varepsilon_t$$
-
-其中：
-- $s$：季节周期（月度数据 $s=12$，季度数据 $s=4$）
-- $P, D, Q$：季节性自回归、差分、移动平均阶数
-- $\Phi_P(B^s) = 1 - \Phi_1 B^s - \cdots - \Phi_P B^{Ps}$
-- $\Theta_Q(B^s) = 1 + \Theta_1 B^s + \cdots + \Theta_Q B^{Qs}$
-
-### 7.2 模型选择策略
-
-1. 先确定 $d$ 和 $D$：通过ADF检验和观察时序图
-2. 再确定 $p, q, P, Q$：通过ACF/PACF和信息准则
-3. 使用网格搜索结合AIC/BIC选择最优参数
-
----
-
 ## 八、关键要点总结
-
 1. **平稳性是ARIMA模型的前提**：非平稳序列需先差分
 2. **ACF/PACF是模型定阶的关键工具**：
    - AR模型：PACF截尾
