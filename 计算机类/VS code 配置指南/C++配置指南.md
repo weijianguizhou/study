@@ -735,3 +735,12 @@ find_package(Qt5 REQUIRED COMPONENTS Widgets)
 > **最后更新**: 2026年  
 > **适用平台**: Windows 10/11  
 > **编辑器版本**: VS Code 1.90+
+
+---
+
+## 相关配置
+
+- **其他语言**：[[Python配置指南|Python]] | [[LaTeX配置指南|LaTeX]] | [[R配置指南|R]]
+- **C++ 学习**：[[../C++学习/01-从Hello World开始|C++ 教程]]
+- **CMake 配置**：[[../CMake使用指南/CMake使用指南|CMake 使用指南]]
+- **Eigen 库**：[[../Eigen库使用指南/README|Eigen 库使用指南]]

@@ -1198,4 +1198,4 @@ load_quantized_llama_demo()
 - [[06-PyTorch入门|PyTorch]] — PyTorch框架与模型部署
 - [[../RL-PPO理论|PPO]] — RLHF中使用的PPO算法
 - [[../../数理基础/概率论|概率论]] — 自回归语言模型与概率视角
-- [[LaTeX/main|LaTeX完整教程]] — 论文排版
+- [[LaTeX/main.tex|LaTeX完整教程]] — 论文排版

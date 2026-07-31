@@ -474,3 +474,9 @@ PATH=${RTOOLS43}/usr/bin;${PATH}
 > **适用平台**: Windows 10/11  
 > **编辑器版本**: VS Code 1.90+  
 > **R 版本**: 4.3+
+
+---
+
+## 相关配置
+
+- **其他语言**：[[C++配置指南|C++]] | [[Python配置指南|Python]] | [[LaTeX配置指南|LaTeX]]

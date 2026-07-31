@@ -1442,4 +1442,4 @@ model = DDP(model, device_ids=[local_rank])
 - [[../../数理基础/向量微积分|向量微积分]]
 - [[../机器学习与深度学习/0.绪论|深度学习绪论]]
 - [[../RL-PPO理论|PPO理论]]
-- [[LaTeX/main|LaTeX 完整教程]]
+- [[LaTeX/main.tex|LaTeX 完整教程]]

@@ -1,5 +1,7 @@
 在`Eigen`库里，所有的矩阵和向量都是`Matrix`类的对象。
 # `Matrix`类的参数
+
+> **Eigen 教程**：[[../README|Eigen 概述]] | **后续**：[[02-矩阵和向量运算|矩阵运算]] → [[03-数组类和系数运算|系数操作]] → [[04-块操作|转置]] → [[05-高级初始化|初始化]] → [[06-切片和索引操作|切片索引]] → [[07-归约、访问者与广播|归约广播]]
 `Matrix`类总共接受六个参数。前三个参数分别是`Matrix<typename Scalar, int RowsAtCompileTime, int ColsAtCompileTime>`(一般不能不填)
 1. `Scalar`是标量类型，就是矩阵里面量的数据类型(`int`,`double`,`float`啥的)
 2. `RowsAtCompileTime`和`ColsAtCompileTime`是编译的时候你告诉编译器的矩阵的行数和列数
@@ -177,4 +179,10 @@ std::cout << "a 现在的大小为 " << a.rows() << "x" << a.cols() << std::endl
 a 的尺寸为 2x2
 a 现在的大小为 3x3
 ```
+
+## 相关笔记
+- **数理基础**：[[../../../数理基础/代数/Linear algebra|线性代数（Matrix/Vector 数学理论）]] | [[../../../数理基础/代数/代数基础|代数基础（矩阵运算）]]
+- **Eigen 进阶**：[[../08-分解概述与选择|矩阵分解]] | [[../14-旋转的表达|几何变换]] | [[../16-几何实战|实战应用]]
+- **计算机类**：[[../../CMake使用指南/VS code中Cmake使用指南|CMake 集成 Eigen]]
+
 

@@ -499,3 +499,7 @@ for name, coef in zip(feature_names, lasso_cv.coef_):
 6. Ridge 有**解析解** $(\mathbf{X}^T\mathbf{X} + \lambda\mathbf{I})^{-1}\mathbf{X}^T\mathbf{y}$，LASSO 需**迭代求解**
 7. 标准化数据后再进行正则化，确保惩罚对所有变量公平
 8. 数学建模中，正则化方法有助于从大量候选变量中筛选出关键影响因素
+
+## 跨领域关联
+- **人工智能**：[[../../../../人工智能/机器学习与深度学习/1.机器学习概述|机器学习（L1/L2 正则化核心）]] | [[../../../../人工智能/深度学习教程/00-深度学习索引|深度学习（权重衰减正则化对比）]]
+- **计算机类**：[[../../../../计算机类/python学习/01-Python基础与数据类型|Python sklearn.linear_model.Ridge/Lasso 实现]] | [[../../../../计算机类/MATLAB学习/50-系统工程与总结|MATLAB ridge/lasso]]

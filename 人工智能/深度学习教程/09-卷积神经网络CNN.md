@@ -1269,4 +1269,4 @@ print("最新进展: 基于学习的增强(如DiffAugment)")
 - [[08-优化方法|优化方法]] — 训练CNN的优化器选择
 - [[10-经典CNN架构|经典CNN架构]] — 里程碑式CNN架构详解
 - [[06-PyTorch入门|PyTorch]] — PyTorch深度学习框架
-- [[LaTeX/main|LaTeX完整教程]] — 论文公式排版
+- [[LaTeX/main.tex|LaTeX完整教程]] — 论文公式排版

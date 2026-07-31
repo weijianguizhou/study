@@ -541,3 +541,11 @@ python -m ipykernel install --user --name myenv
 > **适用平台**: Windows 10/11  
 > **编辑器版本**: VS Code 1.90+  
 > **Python 版本**: 3.10+
+
+---
+
+## 相关配置
+
+- **其他语言**：[[C++配置指南|C++]] | [[LaTeX配置指南|LaTeX]] | [[R配置指南|R]]
+- **Python 学习**：[[../python学习/01-Python基础与数据类型|Python 教程]]
+- **TensorFlow**：[[../../人工智能/TensorFlow/TensorFlow入门|TensorFlow 环境配置]]

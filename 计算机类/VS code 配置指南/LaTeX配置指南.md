@@ -702,3 +702,11 @@ tlmgr search --file xxx.sty
 > **适用平台**: Windows 10/11  
 > **编辑器版本**: VS Code 1.90+  
 > **推荐发行版**: TeX Live 2025
+
+---
+
+## 相关配置
+
+- **其他语言**：[[C++配置指南|C++]] | [[Python配置指南|Python]] | [[R配置指南|R]]
+- **LaTeX 学习**：[[../../写作与排版/LaTeX教程/00-LaTeX教程MOC|LaTeX 完整教程]]
+- **LaTeX 入门**：[[../../写作与排版/LaTeX入门指南/Chapter1.tex|LaTeX 入门指南]]
