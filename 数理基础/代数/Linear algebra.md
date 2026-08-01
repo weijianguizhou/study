@@ -805,6 +805,65 @@ $$\vec{a}\times = \begin{bmatrix} 0 & -a_3 & a_2 \\ a_3 & 0 & -a_1 \\ -a_2 & a_1
 
 ---
 
+# 第十三章 向量与矩阵的求导 (Matrix Calculus)
+
+刚体动力学（尤其拉格朗日方程）中大量出现"标量对向量求偏导""矩阵对时间求导"，本章给出统一约定与常用公式。**布局约定**：默认采用**分母布局**（gradient 为列向量），下文逐一标明。
+
+## 13.1 标量对向量的偏导（梯度）
+
+- 线性型：$f(\mathbf{x}) = \mathbf{a}^{\mathsf{T}}\mathbf{x}$，则
+
+$$\frac{\partial f}{\partial \mathbf{x}} = \mathbf{a} \quad (\text{列向量}).$$
+
+- 二次型：$f(\mathbf{x}) = \mathbf{x}^{\mathsf{T}}\mathbf{A}\mathbf{x}$（$\mathbf{A}$ 常数方阵），则
+
+$$\frac{\partial f}{\partial \mathbf{x}} = (\mathbf{A} + \mathbf{A}^{\mathsf{T}})\mathbf{x};$$
+
+特别地，当 $\mathbf{A}$ 对称时 $\dfrac{\partial}{\partial \mathbf{x}}\bigl(\mathbf{x}^{\mathsf{T}}\mathbf{A}\mathbf{x}\bigr) = 2\mathbf{A}\mathbf{x}$。
+
+- 含 $\mathbf{x}$ 与常数 $\mathbf{a}$：$\dfrac{\partial}{\partial \mathbf{x}}\bigl(\mathbf{x}^{\mathsf{T}}\mathbf{a}\bigr) = \dfrac{\partial}{\partial \mathbf{x}}\bigl(\mathbf{a}^{\mathsf{T}}\mathbf{x}\bigr) = \mathbf{a}$。
+
+**例（动能对广义坐标的偏导）**：系统动能 $T = \tfrac{1}{2}\dot{\mathbf{q}}^{\mathsf{T}}\mathbf{M}\dot{\mathbf{q}}$，其中 $\mathbf{M}$ 是 $\mathbf{q}$ 的函数，则
+
+$$\frac{\partial T}{\partial \mathbf{q}} = \frac{1}{2}\dot{\mathbf{q}}^{\mathsf{T}}\frac{\partial \mathbf{M}}{\partial \mathbf{q}}\dot{\mathbf{q}},$$
+
+这一项正是拉格朗日方程 $\dfrac{d}{dt}\dfrac{\partial T}{\partial \dot{\mathbf{q}}} - \dfrac{\partial T}{\partial \mathbf{q}} = \mathbf{f}$ 中 $\partial T/\partial \mathbf{q}$ 的来源。
+
+## 13.2 向量函数对向量的偏导（雅可比矩阵）
+
+设 $\mathbf{y} = \mathbf{f}(\mathbf{x})$，$\mathbf{y} \in \mathbb{R}^m$，$\mathbf{x} \in \mathbb{R}^n$。分母布局下雅可比为 $m \times n$ 矩阵：
+
+$$\frac{\partial \mathbf{f}}{\partial \mathbf{x}} = \begin{bmatrix} \dfrac{\partial f_i}{\partial x_j} \end{bmatrix}_{m \times n}.$$
+
+- 线性映射：$\mathbf{y} = \mathbf{A}\mathbf{x}$ $\Rightarrow$ $\dfrac{\partial \mathbf{y}}{\partial \mathbf{x}} = \mathbf{A}$。
+- 复合（链式法则）：$\mathbf{z} = \mathbf{g}(\mathbf{y}),\ \mathbf{y} = \mathbf{f}(\mathbf{x})$ $\Rightarrow$ $\dfrac{\partial \mathbf{z}}{\partial \mathbf{x}} = \dfrac{\partial \mathbf{g}}{\partial \mathbf{y}}\,\dfrac{\partial \mathbf{f}}{\partial \mathbf{x}}$（普通矩阵乘法）。
+
+**例（约束雅可比）**：闭环约束 $\mathbf{c}(\mathbf{q}, t) \in \mathbb{R}^m$ 对广义坐标的偏导 $\mathbf{C}_{\mathbf{q}} = \partial \mathbf{c}/\partial \mathbf{q}$ 是 $m \times n$ 矩阵，在 DAE 的拉格朗日乘子法中起核心作用（见 [[../微分方程与动力系统|微分方程与动力系统]] 的 DAE 一节）。
+
+## 13.3 矩阵对时间/标量参数的求导
+
+矩阵求导按**逐元素**进行，链式法则与乘积法则依然成立：
+
+$$\frac{d}{dt}\bigl(\mathbf{A}(t)\mathbf{B}(t)\bigr) = \dot{\mathbf{A}}\mathbf{B} + \mathbf{A}\dot{\mathbf{B}}, \qquad \frac{d}{dt}\bigl(\mathbf{A}^{-1}\bigr) = -\mathbf{A}^{-1}\dot{\mathbf{A}}\mathbf{A}^{-1}.$$
+
+### 旋转矩阵的导数（反对称角速度矩阵）
+
+设 $\mathbf{A}(t) \in SO(3)$ 为旋转矩阵，则其时间导数满足
+
+$$\dot{\mathbf{A}} = \mathbf{A}\,\widetilde{\boldsymbol{\omega}},$$
+
+其中 $\boldsymbol{\omega}$ 是刚体角速度，$\widetilde{\boldsymbol{\omega}}$ 是它的反对称矩阵（见 12.3 节 $\vec{a}\times$）。这是刚体运动学递推（位置→速度→加速度）的核心恒等式。
+
+### Rodrigues 公式对转角求导
+
+绕单位轴 $\vec{n}$ 转角 $\theta$ 的旋转矩阵 $\mathbf{A} = \mathbf{I}\cos\theta + \widetilde{\vec{n}}\sin\theta + \vec{n}\vec{n}^{\mathsf{T}}(1-\cos\theta)$，对 $\theta$ 求导得
+
+$$\frac{\partial \mathbf{A}}{\partial \theta} = -\mathbf{I}\sin\theta + \widetilde{\vec{n}}\cos\theta + \vec{n}\vec{n}^{\mathsf{T}}\sin\theta.$$
+
+这类公式在"对 $\mathbf{A}^{\mathsf{T}}\mathbf{v}$ 求 $\theta$ 的偏导"时（如 TreeMRBS 中 $\partial \vec{v}/\partial q_{J_j}$）被反复使用。
+
+---
+
 # 附：重要定理推导线索速查
 
 | 定理 | 推导手法 |
