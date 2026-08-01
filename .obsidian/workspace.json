@@ -4,19 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "e2f7d0f01451a5ca",
+        "id": "5469f0546f161b20",
         "type": "tabs",
         "children": [
           {
-            "id": "9943dce2188f80f3",
+            "id": "0d738424bdf94578",
             "type": "leaf",
             "state": {
-              "type": "pdf",
+              "type": "markdown",
               "state": {
-                "file": "力学/系统动力学/TreeMRBS.pdf"
+                "file": "数理基础/数值分析/矩阵分解.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-file-text",
-              "title": "TreeMRBS"
+              "icon": "lucide-file",
+              "title": "矩阵分解"
             }
           }
         ]
@@ -171,6 +173,16 @@
               "icon": "git-pull-request",
               "title": "Source Control"
             }
+          },
+          {
+            "id": "6771ba1fc0f1498c",
+            "type": "leaf",
+            "state": {
+              "type": "opencode-conversations",
+              "state": {},
+              "icon": "message-circle",
+              "title": "Opencode conversations"
+            }
           }
         ],
         "currentTab": 5
@@ -188,11 +200,18 @@
       "templates:插入模板": false,
       "command-palette:打开命令面板": false,
       "bases:新建数据库": false,
-      "obsidian-git:Open Git source control": false
+      "obsidian-git:Open Git source control": false,
+      "opencode:Opencode terminal": false,
+      "opencode:Opencode conversations": false
     }
   },
-  "active": "9943dce2188f80f3",
+  "active": "437ab6934dc5f66d",
   "lastOpenFiles": [
+    "组会PPT模板.tex",
+    "组会PPT模板.pdf",
+    "数理基础/数值分析/常微分方程数值解.md",
+    "数理基础/数值分析/插值法.md",
+    "力学/系统动力学/TreeMRBS.pdf",
     "README.md",
     "机械/机械制图/SOLIDWORKS工程图教程.md",
     "机械/机械制图/12-计算机辅助绘图.md",
@@ -217,9 +236,6 @@
     "数理基础/统计学分析方法/贝叶斯统计.md",
     "数理基础/统计学分析方法/灰色系统理论.md",
     "数理基础/统计学分析方法/模糊数学基础.md",
-    "数理基础/统计学分析方法/方差分析.md",
-    "数理基础/统计学分析方法/层次分析法AHP.md",
-    "数理基础/统计学分析方法/因子分析.md",
     "数理基础/概率论/Figure/uniform_dist.png",
     "数理基础/概率论/Figure/poisson_dist.png",
     "数理基础/概率论/Figure/exponential_dist.png",
@@ -234,8 +250,6 @@
     "数理基础/概率论/概率论.log",
     "数理基础/概率论/概率论.aux",
     "数理基础/概率论/plot_distributions.py",
-    "数理基础/概率论/Figure",
-    "数理基础/概率论/Chapter05.tex",
     "一些背景/蜘蛛侠.png",
     "一些背景/橘子洲头.png",
     "一些背景/改装车-春日-樱花.png"

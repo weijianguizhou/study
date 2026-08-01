@@ -1,0 +1,466 @@
+/**
+ * Copyright (c) 2014 The xterm.js authors. All rights reserved.
+ * Copyright (c) 2012-2013, Christopher Jeffrey (MIT License)
+ * https://github.com/chjj/term.js
+ * @license MIT
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * Originally forked from (with the author's permission):
+ *   Fabrice Bellard's javascript vt100 for jslinux:
+ *   http://bellard.org/jslinux/
+ *   Copyright (c) 2011 Fabrice Bellard
+ *   The original design remains. The terminal itself
+ *   has been extended to include xterm CSI codes, among
+ *   other features.
+ */
+
+/**
+ *  Default styles for xterm.js
+ */
+
+.xterm {
+    cursor: text;
+    position: relative;
+    user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+}
+
+.xterm.focus,
+.xterm:focus {
+    outline: none;
+}
+
+.xterm .xterm-helpers {
+    position: absolute;
+    top: 0;
+    /**
+     * The z-index of the helpers must be higher than the canvases in order for
+     * IMEs to appear on top.
+     */
+    z-index: 5;
+}
+
+.xterm .xterm-helper-textarea {
+    padding: 0;
+    border: 0;
+    margin: 0;
+    /* Move textarea out of the screen to the far left, so that the cursor is not visible */
+    position: absolute;
+    opacity: 0;
+    left: -9999em;
+    top: 0;
+    width: 0;
+    height: 0;
+    z-index: -5;
+    /** Prevent wrapping so the IME appears against the textarea at the correct position */
+    white-space: nowrap;
+    overflow: hidden;
+    resize: none;
+}
+
+.xterm .composition-view {
+    /* TODO: Composition position got messed up somewhere */
+    background: #000;
+    color: #FFF;
+    display: none;
+    position: absolute;
+    white-space: nowrap;
+    z-index: 1;
+}
+
+.xterm .composition-view.active {
+    display: block;
+}
+
+.xterm .xterm-viewport {
+    /* On OS X this is required in order for the scroll bar to appear fully opaque */
+    background-color: #000;
+    overflow-y: scroll;
+    cursor: default;
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.xterm .xterm-screen {
+    position: relative;
+}
+
+.xterm .xterm-screen canvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.xterm .xterm-scroll-area {
+    visibility: hidden;
+}
+
+.xterm-char-measure-element {
+    display: inline-block;
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: -9999em;
+    line-height: normal;
+}
+
+.xterm.enable-mouse-events {
+    /* When mouse events are enabled (eg. tmux), revert to the standard pointer cursor */
+    cursor: default;
+}
+
+.xterm.xterm-cursor-pointer,
+.xterm .xterm-cursor-pointer {
+    cursor: pointer;
+}
+
+.xterm.column-select.focus {
+    /* Column selection mode */
+    cursor: crosshair;
+}
+
+.xterm .xterm-accessibility:not(.debug),
+.xterm .xterm-message {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 10;
+    color: transparent;
+    pointer-events: none;
+}
+
+.xterm .xterm-accessibility-tree:not(.debug) *::selection {
+  color: transparent;
+}
+
+.xterm .xterm-accessibility-tree {
+  user-select: text;
+  white-space: pre;
+}
+
+.xterm .live-region {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.xterm .xterm-screen .xterm-dim {
+    /* Dim should not apply to background, so the opacity of the foreground color is applied
+     * explicitly in the generated class and reset to 1 here */
+    opacity: 1;
+}
+
+.xterm-underline-1 { text-decoration: underline; }
+.xterm-underline-2 { text-decoration: underline; text-decoration-style: double; }
+.xterm-underline-3 { text-decoration: underline; text-decoration-style: wavy; }
+.xterm-underline-4 { text-decoration: underline; text-decoration-style: dotted; }
+.xterm-underline-5 { text-decoration: underline; text-decoration-style: dashed; }
+
+.xterm-overline {
+    text-decoration: overline;
+}
+
+.xterm-overline.xterm-underline-1 { text-decoration: underline overline; }
+.xterm-overline.xterm-underline-2 { text-decoration: underline overline; text-decoration-style: double; }
+.xterm-overline.xterm-underline-3 { text-decoration: underline overline; text-decoration-style: wavy; }
+.xterm-overline.xterm-underline-4 { text-decoration: underline overline; text-decoration-style: dotted; }
+.xterm-overline.xterm-underline-5 { text-decoration: underline overline; text-decoration-style: dashed; }
+
+.xterm-strikethrough {
+    text-decoration: line-through;
+}
+
+.xterm-screen .xterm-decoration-container .xterm-decoration {
+	z-index: 6;
+	position: absolute;
+}
+
+.xterm-screen .xterm-decoration-container .xterm-decoration.xterm-decoration-top-layer {
+	z-index: 7;
+}
+
+.xterm-decoration-overview-ruler {
+    z-index: 8;
+    position: absolute;
+    top: 0;
+    right: 0;
+    pointer-events: none;
+}
+
+.xterm-decoration-top {
+    z-index: 2;
+    position: relative;
+}
+
+/* --- End of xterm.css --- */
+
+.opencode-terminal-container {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	position: relative;
+	padding: 0;
+	margin: 0;
+}
+
+.workspace-leaf-content[data-type="opencode-terminal"] .view-header,
+.opencode-terminal-container ~ .view-header {
+	display: none;
+}
+
+.workspace-leaf-content[data-type="opencode-terminal"] .view-content {
+	padding: 0;
+	margin: 0;
+	overflow: hidden;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.opencode-terminal {
+	flex: 1;
+	width: 100%;
+	height: 100%;
+	min-height: 0;
+	overflow: hidden;
+	position: relative;
+	padding: 0;
+	margin: 0;
+}
+
+.opencode-terminal .xterm {
+	height: 100%;
+	width: 100%;
+	padding: 0;
+	margin: 0;
+}
+
+.opencode-terminal .xterm .xterm-viewport {
+	overflow-y: auto;
+	overflow-x: hidden;
+	background-color: transparent;
+}
+
+.opencode-terminal .xterm .xterm-screen canvas {
+	display: block;
+}
+
+.mod-right-split .workspace-leaf-content[data-type="opencode-terminal"] {
+	width: 100%;
+}
+
+.mod-right-split .opencode-terminal-container {
+	width: 100%;
+}
+
+.opencode-terminal-error {
+	padding: 20px;
+	color: var(--text-error);
+	font-weight: bold;
+}
+
+.opencode-terminal-info {
+	padding: 0 20px 20px;
+	color: var(--text-muted);
+}
+
+.opencode-conversation-container {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	overflow: hidden;
+}
+
+.opencode-conversation-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 8px 12px;
+	border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.opencode-conversation-header h3 {
+	margin: 0;
+}
+
+.opencode-conversation-main {
+	display: flex;
+	flex: 1;
+	overflow: hidden;
+}
+
+.opencode-session-list {
+	width: 280px;
+	min-width: 200px;
+	border-right: 1px solid var(--background-modifier-border);
+	overflow-y: auto;
+}
+
+.opencode-session-detail {
+	flex: 1;
+	padding: 12px;
+	overflow-y: auto;
+}
+
+.opencode-session-item {
+	padding: 8px 12px;
+	cursor: pointer;
+	border-bottom: 1px solid var(--background-modifier-border);
+	transition: background-color 0.1s;
+}
+
+.opencode-session-item:hover {
+	background-color: var(--background-modifier-hover);
+}
+
+.opencode-session-item.is-active {
+	background-color: var(--background-modifier-active-hover);
+}
+
+.opencode-session-title {
+	font-weight: 500;
+	margin-bottom: 2px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.opencode-session-meta {
+	font-size: 0.8em;
+	color: var(--text-muted);
+	display: flex;
+	gap: 8px;
+}
+
+.opencode-session-dir {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 120px;
+}
+
+.opencode-session-actions {
+	display: flex;
+	gap: 8px;
+	margin-bottom: 12px;
+	flex-wrap: wrap;
+}
+
+.opencode-session-info {
+	background: var(--background-secondary);
+	padding: 10px;
+	border-radius: 6px;
+	margin-bottom: 12px;
+	font-size: 0.85em;
+}
+
+.opencode-session-info div {
+	margin-bottom: 2px;
+}
+
+.opencode-messages {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.opencode-message {
+	border-radius: 6px;
+	padding: 10px;
+	background: var(--background-secondary);
+}
+
+.opencode-message-user {
+	border-left: 3px solid var(--interactive-accent);
+}
+
+.opencode-message-assistant {
+	border-left: 3px solid var(--text-success);
+}
+
+.opencode-message-header {
+	display: flex;
+	justify-content: space-between;
+	font-size: 0.75em;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	margin-bottom: 6px;
+	color: var(--text-muted);
+}
+
+.opencode-message-body {
+	font-size: 0.9em;
+	line-height: 1.5;
+}
+
+.opencode-message-text {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.opencode-message-step {
+	color: var(--text-muted);
+	font-style: italic;
+}
+
+.opencode-message-tool {
+	color: var(--text-accent);
+	font-family: monospace;
+	font-size: 0.85em;
+}
+
+.opencode-loading {
+	padding: 20px;
+	text-align: center;
+	color: var(--text-muted);
+}
+
+.opencode-empty {
+	padding: 20px;
+	text-align: center;
+	color: var(--text-muted);
+}
+
+.opencode-error {
+	padding: 20px;
+	color: var(--text-error);
+}
+
+.opencode-suggest-title {
+	font-weight: 600;
+	color: var(--text-accent);
+}
+
+.opencode-suggest-desc {
+	color: var(--text-muted);
+	font-size: 0.85em;
+	display: block;
+	margin-top: 2px;
+}
