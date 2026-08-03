@@ -1,0 +1,51 @@
+% ============================================================
+%  书信/邮件模板 —— 正式中文书信（推荐信、请假条、申请信）
+%  编译方式: XeLaTeX
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{ctex}
+\usepackage{setspace}
+\onehalfspacing
+
+\begin{document}
+
+\begin{flushright}
+    【写信日期：YYYY年M月D日】
+\end{flushright}
+
+% 称呼
+\noindent\textbf{尊敬的【收信人称呼/职务】}：\par
+
+\vspace{0.6em}
+
+% ============================================================
+%	正文
+% ============================================================
+【正文第一段：自我介绍 + 写信目的。】
+\par
+【正文第二段：详细说明事由、需求或请求。可分点陈述：】
+\begin{enumerate}
+    \item 【要点一：……】
+    \item 【要点二：……】
+    \item 【要点三：……】
+\end{enumerate}
+【正文第三段：礼貌收束，表达感谢或期待。】
+\par
+【如需附件，可加注：随信附上【材料名称】。】
+
+\vspace{1.2em}
+
+% 敬语
+\noindent 此致\\
+\noindent 敬礼！
+
+\vspace{2em}
+\begin{flushright}
+    落款：【姓名】\\
+    单位：【单位/学院】\\
+    联系电话：【电话】
+\end{flushright}
+
+\end{document}

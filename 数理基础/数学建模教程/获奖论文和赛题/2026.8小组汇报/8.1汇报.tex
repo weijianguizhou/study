@@ -1,0 +1,172 @@
+\documentclass[aspectratio=169]{beamer}
+
+\mode<presentation> {
+	\usetheme{Madrid}
+	\setbeamertemplate{navigation symbols}{}
+	\setbeamertemplate{footline}[frame number]
+}
+
+% ---------- 二月兰紫配色 ----------
+\definecolor{orchidpurple}{RGB}{146,39,143}
+\definecolor{orchiddark}{RGB}{115,30,112}
+\definecolor{orchidlight}{RGB}{230,210,230}
+
+\setbeamercolor{structure}{fg=orchidpurple}
+\setbeamercolor{palette primary}{fg=white,bg=orchidpurple}
+\setbeamercolor{palette secondary}{fg=white,bg=orchiddark}
+\setbeamercolor{palette tertiary}{fg=white,bg=orchidpurple}
+\setbeamercolor{palette quaternary}{fg=white,bg=orchiddark}
+\setbeamercolor{titlelike}{fg=white,bg=orchidpurple}
+\setbeamercolor{frametitle}{fg=white,bg=orchidpurple}
+\setbeamercolor{block title}{fg=white,bg=orchidpurple}
+\setbeamercolor{block body}{fg=black,bg=orchidlight!30}
+\setbeamercolor{item}{fg=orchidpurple}
+\setbeamercolor{section in toc}{fg=orchiddark}
+
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage[UTF8,noindent]{ctexcap}
+\usepackage[bookmarks=true]{hyperref}
+\usepackage{amsmath,amssymb,bm}
+
+% ---------- 快捷命令 ----------
+\newcommand{\T}{^{\mathsf{T}}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\mat}[1]{\bm{#1}}
+\newcommand{\tbf}[1]{\textbf{#1}}
+
+% ============================================================
+%	以下为可修改区：标题 / 作者 / 单位 / 日期
+% ============================================================
+
+\title[063组分享]{《波浪能装置输出功率优化设计》赏析}
+\author{魏舟}
+\institute[063组]
+{
+	南京理工大学 \\
+	\medskip
+	\textit{wei\_zhou@njust.edu.cn}
+}
+\date{2026年8月}
+
+% ============================================================
+%	以下为正文示例，请按需替换
+% ============================================================
+
+\begin{document}
+
+% ---------- 标题页 ----------
+\begin{frame}
+	\titlepage
+\end{frame}
+
+% ---------- 目录 ----------
+\section*{目录}
+\begin{frame}
+	\frametitle{汇报提纲}
+	\tableofcontents
+\end{frame}
+
+
+\section{整体赏析}
+\section{标题分析}
+\section{摘要赏析}
+\section{问题重述思考}
+\section{问题分析思考}
+\section{模型假设和符号表思考}
+\section{模型的建立与求解思考}
+\section{模型检验（分析）思考}
+\section{总结}
+%-----------------------------------
+%	一、请替换为你的章节名
+%-----------------------------------
+\section{第一章：章节标题}
+
+\begin{frame}
+	\frametitle{双栏：要点 + 流程图}
+	\begin{columns}[T]
+		\column{0.55\textwidth}
+		\begin{itemize}
+			\item \tbf{要点一}：说明内容
+			\item \tbf{要点二}：说明内容
+			\item \tbf{要点三}：说明内容
+		\end{itemize}
+
+		\column{0.45\textwidth}
+		\vspace{0.3cm}
+		\begin{block}{流程块}
+			\begin{enumerate}
+				\item 第一步
+				\item 第二步
+				\item 第三步
+			\end{enumerate}
+		\end{block}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{公式展示}
+	\begin{itemize}
+		\item 转置符号：$\mat{x}\T$
+		\item 实数集：$\R^n$
+		\item 动力学方程：$\mat{M}(\mat{q})\ddot{\mat{q}} + \mat{C}(\mat{q},\dot{\mat{q}})\dot{\mat{q}} + \mat{g}(\mat{q}) = \bm{\tau}$
+	\end{itemize}
+\end{frame}
+
+%-----------------------------------
+%	二、请替换为你的章节名
+%-----------------------------------
+\section{第二章：章节标题}
+
+\begin{frame}
+	\frametitle{图文混排}
+	\begin{columns}[T]
+		\column{0.5\textwidth}
+		\tbf{技术亮点}
+		\begin{enumerate}
+			\item \textbf{亮点一}：说明
+			\item \textbf{亮点二}：说明
+			\item \textbf{亮点三}：说明
+		\end{enumerate}
+
+		\column{0.5\textwidth}
+		\tbf{主要收获}
+		\begin{itemize}
+			\item 收获一
+			\item 收获二
+			\item 收获三
+		\end{itemize}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{插入图片}
+	\begin{center}
+		\includegraphics[width=0.6\textwidth]{example-image}\\
+		\small 图注：请替换为你的图片
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{插入表格}
+	\begin{table}
+		\centering
+		\begin{tabular}{lcc}
+			\toprule
+			列名 & 数据A & 数据B \\
+			\midrule
+			行1 & 数值 & 数值 \\
+			行2 & 数值 & 数值 \\
+			\bottomrule
+		\end{tabular}
+	\end{table}
+\end{frame}
+
+% ---------- 结束页 ----------
+\begin{frame}
+	\centering
+	\Huge{感谢聆听！}\\[1cm]
+	\Large{敬请各位老师、同学批评指正}
+\end{frame}
+
+\end{document}

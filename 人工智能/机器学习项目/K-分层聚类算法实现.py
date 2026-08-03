@@ -6,7 +6,7 @@ class HierarchicalKMeans:
     def __init__(self, max_layers=5, min_data_points=50):
         self.max_layers = max_layers
         self.min_data_points = min_data_points
-        self.hierarchy = []
+        self.hierarchy: list[tuple[np.ndarray, np.ndarray]] = []
 
     def _sample_layer(self, data, weights):
         """
@@ -51,7 +51,7 @@ class HierarchicalKMeans:
         top_data, top_weights = self.hierarchy[0]
         best_k = k_range[0]
         min_dbi = float('inf')
-        best_centers = None
+        best_centers: np.ndarray | None = None
 
         # 2. 在顶层自动寻找最优 K (论文核心步骤)
         for k in range(k_range[0], k_range[1] + 1):
@@ -72,6 +72,7 @@ class HierarchicalKMeans:
 
         # 3. 自顶向下精炼 (Refinement Phase)
         # 利用性质 2：2*X_{k+1} - X_k <= 1
+        assert best_centers is not None
         curr_centers = best_centers
         for i in range(1, len(self.hierarchy)):
             layer_data, layer_weights = self.hierarchy[i]
@@ -89,7 +90,7 @@ class HierarchicalKMeans:
 if __name__ == "__main__":
     # 生成模拟数据
     from sklearn.datasets import make_blobs
-    X, _ = make_blobs(n_samples=1000, centers=3, cluster_std=0.6, random_state=42)
+    X = make_blobs(n_samples=1000, centers=3, cluster_std=0.6, random_state=42)[0]
     # 确保坐标为正整数（符合论文预处理要求）
     X = (X - X.min()) * 10 
 

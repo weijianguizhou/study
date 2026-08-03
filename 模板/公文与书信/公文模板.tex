@@ -1,0 +1,69 @@
+% ============================================================
+%  公文模板 —— 通知/申请/报告类正式文件
+%  编译方式: XeLaTeX
+%  格式参考: 党政机关公文（标题2号小标宋、正文3号仿宋）
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[margin=2.5cm, top=3cm]{geometry}
+\usepackage{ctex}
+\usepackage{setspace}
+\usepackage{array}
+\usepackage{enumitem}
+\setmainfont{SimSun}
+
+% 标题：小标宋/黑体加粗居中
+\newcommand{\docTitle}[1]{%
+  \begin{center}{\heiti\Large #1}\end{center}\vspace{0.5cm}}
+
+% 主送机关
+\newcommand{\addressee}[1]{\noindent\textbf{#1}：\par}
+
+% 落款右对齐
+\newcommand{\signature}[2]{\vspace{1cm}\begin{flushright}#1 \\ #2\end{flushright}}
+
+\begin{document}
+
+% ============================================================
+%	标题
+% ============================================================
+\docTitle{【关于……的通知】}
+
+% ============================================================
+%	主送机关
+% ============================================================
+\addressee{【各单位、各部门】}
+
+% ============================================================
+%	正文
+% ============================================================
+【正文引言：为了……，经研究决定……。现将有关事项通知如下：】
+
+\section*{一、工作目标}
+【具体目标……】
+
+\section*{二、主要任务}
+\begin{enumerate}[leftmargin=2em]
+    \item 【任务一：具体描述。】
+    \item 【任务二：具体描述。】
+    \item 【任务三：具体描述。】
+\end{enumerate}
+
+\section*{三、时间安排}
+\begin{itemize}[leftmargin=2em]
+    \item 【阶段一】：【时间节点 -- 时间节点】，完成【……】；
+    \item 【阶段二】：【时间节点 -- 时间节点】，完成【……】。
+\end{itemize}
+
+\section*{四、工作要求}
+\begin{enumerate}[leftmargin=2em]
+    \item 高度重视，加强组织领导；
+    \item 压实责任，确保落地见效；
+    \item 及时反馈，做好总结报送。
+\end{enumerate}
+
+【请各单位接到通知后，认真组织实施，并将落实情况于【日期】前报送至【部门】。】
+
+\signature{【发文单位名称】}{【YYYY年M月D日】}
+
+\end{document}

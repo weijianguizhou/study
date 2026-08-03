@@ -1,0 +1,148 @@
+% ============================================================
+%  学术论文/报告模板 —— LaTeX article + 常用宏包
+%  编译方式: XeLaTeX（中文推荐），论文需编译两次生成引用
+%  用法: 替换【】内容，参考文献放入 refs.bib
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+
+% ---------- 页面 ----------
+\usepackage[margin=2.5cm]{geometry}
+
+% ---------- 中文 ----------
+\usepackage{ctex}
+
+% ---------- 数学 ----------
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{bm}                    % 粗体数学符号
+\newcommand{\T}{^{\mathsf{T}}}     % 转置
+\newcommand{\R}{\mathbb{R}}        % 实数集
+\newcommand{\mat}[1]{\bm{#1}}      % 向量/矩阵粗体
+
+% ---------- 图表 ----------
+\usepackage{graphicx}
+\usepackage{booktabs}              % 三线表
+\usepackage{float}                 % [H] 强制位置
+\usepackage{caption}
+
+% ---------- 引用与链接 ----------
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, citecolor=blue, linkcolor=black}
+
+% ---------- 代码 ----------
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{
+  basicstyle=\ttfamily\small,
+  numbers=left,
+  numberstyle=\tiny,
+  frame=single,
+  breaklines=true,
+  language=Python,
+  commentstyle=\color{gray},
+  keywordstyle=\color{blue}
+}
+
+% ============================================================
+%	论文元信息
+% ============================================================
+\title{\textbf{论文题目：研究的核心贡献}}
+\author{作者一$^{1}$，作者二$^{2}$ \\[0.3em]
+\small $^{1}$单位一，$^{2}$单位二}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+% ---------- 摘要 ----------
+\begin{abstract}
+【200-300 字：研究背景一句话 → 本文解决的问题 → 提出的方法 → 关键结果（含数值） → 意义。】
+\par\medskip
+\textbf{关键词：}关键词一；关键词二；关键词三
+\end{abstract}
+
+% ============================================================
+\section{引言 (Introduction)}
+【研究背景与意义：由大到小引出问题。】
+\begin{enumerate}
+    \item 领域重要性及现有进展；
+    \item 现有方法的三点不足（可用引用支撑，如 \cite{ref1}）；
+    \item 本文方法的核心思想与创新点（1-2-3 列出）；
+    \item 主要贡献总结 + 全文组织结构。
+\end{enumerate}
+
+% ============================================================
+\section{相关工作 (Related Work)}
+【分主题梳理文献，重点放在与本文的差异上，避免罗列式堆砌。】
+\subsection{方向一}
+\subsection{方向二}
+
+% ============================================================
+\section{问题描述与数学建模 (Problem Formulation)}
+\begin{equation}
+    \min_{\mat{\theta}} \; \mathcal{L}(\mat{\theta}) = \frac{1}{N}\sum_{i=1}^{N} \ell\big(f(\mat{x}_i; \mat{\theta}), y_i\big) + \lambda \|\mat{\theta}\|_2^2
+    \label{eq:objective}
+\end{equation}
+其中 $\mat{x}_i \in \R^d$ 表示第 $i$ 个样本，$y_i$ 为标签，$f(\cdot;\mat{\theta})$ 为模型，$\ell$ 为损失函数，$\lambda$ 为正则化系数。目标函数 \eqref{eq:objective} 的物理含义是……
+
+% ============================================================
+\section{方法 (Method)}
+\subsection{总体框架}
+【配一张系统框图。】
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.7\textwidth]{framework.png}
+    \caption{方法总体框架图}
+    \label{fig:framework}
+\end{figure}
+
+\subsection{核心模块一}
+【数学推导 + 解释。】
+\subsection{核心模块二}
+
+% ============================================================
+\section{实验 (Experiments)}
+\subsection{实验设置}
+【数据集（规模/划分）、对比方法、评价指标、实现细节（硬件/超参数/训练轮数）。】
+\subsection{对比实验}
+\begin{table}[htbp]
+    \centering
+    \caption{在数据集 X 上的对比结果}
+    \label{tab:comparison}
+    \begin{tabular}{lcccc}
+        \toprule
+        \textbf{方法} & \textbf{准确率} & \textbf{F1} & \textbf{参数(百万)} & \textbf{推理耗时(ms)} \\
+        \midrule
+        Baseline A & 82.1 & 0.80 & 12 & 3.2 \\
+        Baseline B & 85.7 & 0.84 & 25 & 5.1 \\
+        \textbf{Ours} & \textbf{89.3} & \textbf{0.88} & 18 & 4.0 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+【分析表 \ref{tab:comparison}：为什么更优？分点说明。】
+\subsection{消融实验 (Ablation)}
+【验证每个组件的贡献。】
+\subsection{可视化/案例分析}
+
+% ============================================================
+\section{结论 (Conclusion)}
+【总结贡献（与引言呼应）+ 不足 + 未来工作。不得引入新内容。】
+
+% ============================================================
+%	参考文献（二选一）
+%	方案一：natbib + .bib 文件（推荐）
+% ============================================================
+\bibliographystyle{unsrtnat}
+\bibliography{refs}
+
+%	方案二：直接手写（无 .bib 时取消注释下面内容）
+% \begin{thebibliography}{99}
+% \bibitem{ref1} Author1, Author2. Title of the paper. \emph{Conference/Journal}, 2020.
+% \end{thebibliography}
+
+\appendix
+\section*{附录}
+\subsection{补充证明}
+\subsection{补充实验}
+
+\end{document}

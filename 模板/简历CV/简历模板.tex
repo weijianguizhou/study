@@ -1,0 +1,87 @@
+% ============================================================
+%  简历 (CV) 模板 —— LaTeX article 自定义样式
+%  编译方式: XeLaTeX
+%  特点: 单页紧凑、无需额外宏包，适合求职/保研/申博
+%  用法: 替换【】内容，删掉不用的小节
+% ============================================================
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=1.5cm]{geometry}
+\usepackage{ctex}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{fontawesome5}          % 可选：图标（xelatex 需有该包）
+
+% ---------- 颜色 ----------
+\definecolor{cvblue}{RGB}{31,78,121}
+\newcommand{\cvsection}[1]{%
+  \vspace{0.6em}\noindent{\large\bfseries\color{cvblue}\rule{0.8em}{0pt}#1}%
+  \par\vspace{0.3em}\noindent{\color{cvblue}\rule{\textwidth}{0.8pt}}\par\vspace{0.4em}}
+
+% ---------- 条目格式 ----------
+\newcommand{\cvitem}[4]{%
+  \par\noindent
+  \makebox[0.62\textwidth][l]{\textbf{#1} \quad #2}%
+  \hfill\makebox[0.32\textwidth][r]{#3}\par
+  \noindent\small #4 \normalsize\par\vspace{0.3em}}
+
+\setlist[itemize]{leftmargin=1.2em, itemsep=0.1em, topsep=0.2em}
+
+\begin{document}
+
+% ============================================================
+%	头部：姓名 + 联系方式
+% ============================================================
+\begin{center}
+    {\LARGE\bfseries 【姓名】}\\[0.3em]
+    {\small 电话：【138-0000-0000】\quad 邮箱：\href{mailto:xxx@njust.edu.cn}{【xxx@njust.edu.cn】}\quad
+    籍贯：【江苏南京】\quad 出生年月：【2000.01】}
+\end{center}
+
+% ============================================================
+\cvsection{教育背景}
+\cvitem{【南京理工大学】}{【机器人工程 / 机械工程 本科/硕士】}{【2021.09 -- 2025.06】}{%
+  GPA：【3.7 / 4.0】，排名【前 10\%】，主修课程：【高等数学、线性代数、机器人学、控制理论】}
+\cvitem{【高中名称】}{}{【2018.09 -- 2021.06】}{【理科实验班，数学/物理竞赛获奖】}
+
+% ============================================================
+\cvsection{研究/项目经历}
+\cvitem{【项目一：基于深度强化学习的机械臂控制】}{【负责人/核心成员】}{【2024.03 -- 2024.12】}{%
+  \begin{itemize}
+    \item 使用 PPO 算法在 MuJoCo 中训练 6 自由度机械臂完成抓取任务，成功率提升至 92\%；
+    \item 负责状态空间与奖励函数设计，对比 DQN/PPO 收敛性，实验数据见论文/报告。
+  \end{itemize}}
+\cvitem{【项目二：……】}{【角色】}{【时间】}{%
+  \begin{itemize}
+    \item 贡献点一：……
+    \item 贡献点二：……
+  \end{itemize}}
+
+% ============================================================
+\cvsection{竞赛与获奖}
+\begin{itemize}
+    \item 【全国大学生数学建模竞赛 国家二等奖】（2023）
+    \item 【一等奖学金 ×2、国家励志奖学金】（2022--2023）
+\end{itemize}
+
+% ============================================================
+\cvsection{专业技能}
+\begin{itemize}
+    \item \textbf{编程语言}：C++（熟练）、Python（熟练）、MATLAB（熟练）；
+    \item \textbf{框架/工具}：PyTorch、TensorFlow、ROS、Git、LaTeX、SolidWorks；
+    \item \textbf{专业能力}：机械臂运动学/动力学、强化学习、控制系统仿真。
+\end{itemize}
+
+% ============================================================
+\cvsection{英语水平}
+\begin{itemize}
+    \item CET-6：【530】，能流畅阅读英文文献、撰写英文学术论文。
+\end{itemize}
+
+% ============================================================
+\cvsection{自我评价}
+【一两句话：学习能力强、团队协作、责任心，可结合具体事例。】
+【注意：简历通常控制在一页（A4），请根据内容适当增删小节。】
+
+\end{document}

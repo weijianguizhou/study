@@ -1,0 +1,121 @@
+% ============================================================
+%  演讲稿模板 —— 通用学术/组会讲稿（LaTeX article）
+%  编译方式: XeLaTeX 或 pdfLaTeX 均可
+%  用法: 替换「【】」标记的内容，删除示例段落
+% ============================================================
+\documentclass[12pt,a4paper]{article}
+
+% ---------- 页面与中文支持 ----------
+\usepackage[margin=2cm]{geometry}
+\usepackage{ctex}                % 中文支持（XeLaTeX 下推荐）
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+
+\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue}
+
+% ============================================================
+%	标题区 —— 请填写
+% ============================================================
+\title{\textbf{【汇报/演讲标题】}}
+\author{【姓名】 \\ \small 【单位/学院】}
+\date{\today}
+
+\begin{document}
+\maketitle
+\vspace{-1.2cm}
+
+% ============================================================
+%	开场 —— 问候 + 自我介绍 + 点题
+% ============================================================
+\section*{开场（30 秒）}
+【各位老师/同学，大家好！我是……，今天我汇报的题目是……。】
+
+本报告将从以下三个部分展开：第一部分介绍【背景与问题】；第二部分阐述【方法与原理】；第三部分给出【结果与结论】。
+
+% ============================================================
+%	一、背景与问题
+% ============================================================
+\section{背景与问题}
+\subsection{为什么研究这个问题}
+【研究动机：现有方法存在哪些不足？本工作试图解决什么问题？】
+\begin{itemize}
+    \item 问题一：……
+    \item 问题二：……
+\end{itemize}
+
+\subsection{相关工作概述}
+【简要梳理已有研究，突出本文差异化。】
+\begin{itemize}
+    \item 方法 A（作者，年份）：……优点/缺点
+    \item 方法 B（作者，年份）：……优点/缺点
+\end{itemize}
+
+% ============================================================
+%	二、方法与原理（核心部分，讲解最详细）
+% ============================================================
+\section{方法}
+\subsection{总体思路}
+【一两句话概括方法的核心思想。】
+
+\subsection{数学原理}
+【核心公式用 equation 环境，逐个解释每个符号的含义。】
+\begin{equation}
+    y = \mathbf{W}^{\top} \mathbf{x} + b
+    \label{eq:core}
+\end{equation}
+其中 $\mathbf{x} \in \mathbb{R}^n$ 为输入特征，$\mathbf{W}$ 为权重矩阵，$b$ 为偏置。式 \eqref{eq:core} 表示……
+
+\subsection{算法流程}
+\begin{enumerate}[leftmargin=2em]
+    \item 步骤一：……
+    \item 步骤二：……
+    \item 步骤三：……
+\end{enumerate}
+
+\subsection{可视化/图表}
+【若用图说明，将图片放入同目录并取消注释。】
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[width=0.6\textwidth]{figure.png}
+%     \caption{图注：方法示意图/实验结果}
+%     \label{fig:method}
+% \end{figure}
+
+% ============================================================
+%	三、结果与分析
+% ============================================================
+\section{结果与分析}
+\subsection{实验设置}
+【数据集、评价指标、对比方法、超参数。】
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{lccc}
+        \hline
+        \textbf{方法} & \textbf{指标 A} & \textbf{指标 B} & \textbf{指标 C} \\
+        \hline
+        基线方法 & 数值 & 数值 & 数值 \\
+        本文方法 & 数值 & 数值 & 数值 \\
+        \hline
+    \end{tabular}
+    \caption{实验结果对比表}
+\end{table}
+
+\subsection{主要结论}
+\begin{itemize}
+    \item 结论一：……
+    \item 结论二：……
+\end{itemize}
+
+% ============================================================
+%	收尾 —— 总结 + 致谢
+% ============================================================
+\section*{总结与展望}
+【用 2-3 句话总结贡献，再简要说明未来工作方向。】
+
+\vspace{0.5cm}
+\textbf{我的汇报到此结束，感谢各位老师、同学的聆听，恳请批评指正！}
+
+\end{document}
