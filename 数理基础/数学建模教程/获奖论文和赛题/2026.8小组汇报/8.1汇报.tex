@@ -3,13 +3,26 @@
 \mode<presentation> {
 	\usetheme{Madrid}
 	\setbeamertemplate{navigation symbols}{}
-	\setbeamertemplate{footline}[frame number]
 }
+
+% ---------- 页尾 ----------
+\setbeamertemplate{footline}{
+	\begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1.25ex]{footline}
+		\usebeamerfont{footline}\hspace{0.2cm}\insertshortinstitute%
+		\hfill\insertshorttitle\hfill%
+		\insertframenumber/\inserttotalframenumber\hspace{0.2cm}%
+	\end{beamercolorbox}
+}
+\setbeamercolor{footline}{fg=orchiddark,bg=orchidlight!30}
 
 % ---------- 二月兰紫配色 ----------
 \definecolor{orchidpurple}{RGB}{146,39,143}
 \definecolor{orchiddark}{RGB}{115,30,112}
 \definecolor{orchidlight}{RGB}{230,210,230}
+\definecolor{orchidteal}{RGB}{0,128,128}
+\definecolor{orchidteallight}{RGB}{214,235,235}
+\definecolor{orchidgold}{RGB}{198,140,0}
+\definecolor{orchidgoldlight}{RGB}{250,240,216}
 
 \setbeamercolor{structure}{fg=orchidpurple}
 \setbeamercolor{palette primary}{fg=white,bg=orchidpurple}
@@ -22,12 +35,18 @@
 \setbeamercolor{block body}{fg=black,bg=orchidlight!30}
 \setbeamercolor{item}{fg=orchidpurple}
 \setbeamercolor{section in toc}{fg=orchiddark}
+\setbeamercolor{block title alerted}{fg=white,bg=orchidteal}
+\setbeamercolor{block body alerted}{fg=black,bg=orchidteallight}
+\setbeamercolor{block title example}{fg=white,bg=orchidgold}
+\setbeamercolor{block body example}{fg=black,bg=orchidgoldlight}
 
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage[UTF8,noindent]{ctexcap}
 \usepackage[bookmarks=true]{hyperref}
 \usepackage{amsmath,amssymb,bm}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric,arrows,positioning}
 
 % ---------- 快捷命令 ----------
 \newcommand{\T}{^{\mathsf{T}}}
@@ -41,9 +60,9 @@
 
 \title[063组分享]{《波浪能装置输出功率优化设计》赏析}
 \author{魏舟}
-\institute[063组]
+\institute[南京理工大学]
 {
-	南京理工大学 \\
+	063组 \\
 	\medskip
 	\textit{wei\_zhou@njust.edu.cn}
 }
@@ -57,7 +76,23 @@
 
 % ---------- 标题页 ----------
 \begin{frame}
-	\titlepage
+	\begin{center}
+		\begin{beamercolorbox}[rounded=true,shadow=true,sep=8pt,center,wd=\textwidth]{title}
+			\usebeamerfont{title}\inserttitle
+		\end{beamercolorbox}
+	\end{center}
+	\vspace{0.5cm}
+	\begin{columns}[c]
+		\column{0.5\textwidth}
+		\centering
+		\includegraphics[width=0.9\textwidth]{Figure/波浪能装置示意图.png}
+
+		\column{0.5\textwidth}
+		\centering
+		{\usebeamerfont{author}\usebeamercolor[fg]{author}\insertauthor}\\[0.4cm]
+		{\usebeamerfont{institute}\usebeamercolor[fg]{institute}\insertinstitute}\\[0.4cm]
+		{\usebeamerfont{date}\usebeamercolor[fg]{date}\insertdate}
+	\end{columns}
 \end{frame}
 
 % ---------- 目录 ----------
@@ -68,98 +103,380 @@
 \end{frame}
 
 
-\section{整体赏析}
-\section{标题分析}
-\section{摘要赏析}
-\section{问题重述思考}
-\section{问题分析思考}
-\section{模型假设和符号表思考}
-\section{模型的建立与求解思考}
-\section{模型检验（分析）思考}
-\section{总结}
-%-----------------------------------
-%	一、请替换为你的章节名
-%-----------------------------------
-\section{第一章：章节标题}
-
+\section{文章结构}
 \begin{frame}
-	\frametitle{双栏：要点 + 流程图}
-	\begin{columns}[T]
-		\column{0.55\textwidth}
-		\begin{itemize}
-			\item \tbf{要点一}：说明内容
-			\item \tbf{要点二}：说明内容
-			\item \tbf{要点三}：说明内容
-		\end{itemize}
+	\frametitle{文章结构}
+	\begin{center}
+	\begin{tikzpicture}[
+		box/.style={draw=orchidpurple, thick, rounded corners=3pt,
+			minimum width=2.2cm, minimum height=1.2cm, align=center,
+			fill=orchidlight!40},
+		arrow/.style={-stealth, thick, orchidpurple}
+	]
+		\node[box] (a) at (0,0) {问题重述};
+		\node[box] (b) at (4.8,0) {问题分析};
+		\node[box] (c) at (9.6,0) {模型假设};
+		\node[box] (d) at (9.6,-2.4) {模型的建立\\与求解};
+		\node[box] (e) at (4.8,-2.4) {模型检验\\(分析)};
+		\node[box, fill=orchidpurple, text=white] (f) at (0,-2.4) {总结};
 
-		\column{0.45\textwidth}
-		\vspace{0.3cm}
-		\begin{block}{流程块}
-			\begin{enumerate}
-				\item 第一步
-				\item 第二步
-				\item 第三步
-			\end{enumerate}
+		\draw[arrow] (a.east) -- (b.west);
+		\draw[arrow] (b.east) -- (c.west);
+		\draw[arrow] (c.south) -- (d.north);
+		\draw[arrow] (d.west) -- (e.east);
+		\draw[arrow] (e.west) -- (f.east);
+	\end{tikzpicture}
+	\end{center}
+	这篇文章的结构，是一个非常经典的数模论文的结构，涵盖了从问题重述到模型建立与求解，再到模型检验和总结的完整流程。也和我们数学建模课程中学习到的一模一样。
+\end{frame}
+
+\section{标题分析}
+\begin{frame}
+	\frametitle{标题分析：一般AI撰写的标题}
+	\small
+	\begin{columns}[T]
+		\column{0.58\textwidth}
+		\begin{block}{标题 1}
+			《基于随机优化与动态规划的航空舱位分配与动态定价策略研究》
+		\end{block}
+		\begin{block}{标题 2}
+			《基于嵌入式 MCU 的铝制工件表面缺陷检测系统》
+		\end{block}
+		\begin{block}{标题 3}
+			《基于组合赋权-TOPSIS 与 Huff 引力模型的城市商圈消费活力评价与首店选址研究》
+		\end{block}
+
+		\column{0.42\textwidth}
+		\begin{block}{一眼AI的原因}
+			\begin{itemize}
+				\item \textbf{模板化}：一律``基于……的研究''句式，缺背景与动机。
+				\item \textbf{术语堆砌}：动态规划、TOPSIS、Huff 模型等高阶词密集堆叠。
+				\item \textbf{结构刻板}：固定``方法 + 对象''，无年份、赛事等个性信息。
+				\item \textbf{用词空泛}：研究、优化、评价等大词指向性弱。
+			\end{itemize}
 		\end{block}
 	\end{columns}
 \end{frame}
 
 \begin{frame}
-	\frametitle{公式展示}
-	\begin{itemize}
-		\item 转置符号：$\mat{x}\T$
-		\item 实数集：$\R^n$
-		\item 动力学方程：$\mat{M}(\mat{q})\ddot{\mat{q}} + \mat{C}(\mat{q},\dot{\mat{q}})\dot{\mat{q}} + \mat{g}(\mat{q}) = \bm{\tau}$
-	\end{itemize}
-\end{frame}
-
-%-----------------------------------
-%	二、请替换为你的章节名
-%-----------------------------------
-\section{第二章：章节标题}
-
-\begin{frame}
-	\frametitle{图文混排}
+	\frametitle{标题分析：本文的标题}
+	\small
 	\begin{columns}[T]
-		\column{0.5\textwidth}
-		\tbf{技术亮点}
-		\begin{enumerate}
-			\item \textbf{亮点一}：说明
-			\item \textbf{亮点二}：说明
-			\item \textbf{亮点三}：说明
-		\end{enumerate}
+		\column{0.48\textwidth}
+		\begin{block}{本文标题}
+			\centering《波浪能装置输出功率优化设计》
+		\end{block}
+		\begin{alertblock}{结构拆解}
+			\begin{itemize}
+				\item \textbf{波浪能装置} --- 研究对象
+				\item \textbf{输出功率} --- 优化目标
+				\item \textbf{优化设计} --- 工作内容
+			\end{itemize}
+		\end{alertblock}
 
-		\column{0.5\textwidth}
-		\tbf{主要收获}
-		\begin{itemize}
-			\item 收获一
-			\item 收获二
-			\item 收获三
-		\end{itemize}
+		\column{0.52\textwidth}
+		\begin{exampleblock}{好在哪}
+			\begin{itemize}
+				\item \textbf{简洁直接}：一句话点明``对象是什么、我们要做什么、所求什么''。
+				\item \textbf{目标具体}：把``输出功率''写进标题，优化方向一目了然。
+				\item \textbf{不拘泥定式}：不用``基于……''句式，也不堆砌高阶术语。
+				\item \textbf{聚焦清晰}：对象与任务都限定明确，杜绝大而空。
+			\end{itemize}
+		\end{exampleblock}
 	\end{columns}
 \end{frame}
 
+\section{摘要赏析}
 \begin{frame}
-	\frametitle{插入图片}
-	\begin{center}
-		\includegraphics[width=0.6\textwidth]{example-image}\\
-		\small 图注：请替换为你的图片
-	\end{center}
+	\frametitle{摘要赏析（一）：总述}
+	\small
+	\begin{block}{总述}
+		本文在求波浪能最大输出功率设计中，通过受力分析，建立了浮子和振子的垂荡和纵摇运动模型，并通过四阶龙格库塔算法将建立的连续微分方程离散化处理，递推求出了相应时间内浮子和振子的垂荡纵摇运动情况。同时对功率的积分函数值以微小步长为底的梯形面积替代，通过遗传算法搜索参数，求出了最大输出功率和相应的最优阻尼系数，并对模型进行了检验和误差分析。
+	\end{block}
+	\medskip
+	\begin{exampleblock}{怎么写的}
+		这一段其实就是把全文讲了个大概：先说建了什么模型，再交代用了哪两个硬方法，然后给结果，最后补一句检验。顺序顺下来，评委应该能很快知道作者干了什么。我理解得比较粗，可能没说透。
+	\end{exampleblock}
 \end{frame}
 
 \begin{frame}
-	\frametitle{插入表格}
-	\begin{table}
-		\centering
-		\begin{tabular}{lcc}
-			\toprule
-			列名 & 数据A & 数据B \\
-			\midrule
-			行1 & 数值 & 数值 \\
-			行2 & 数值 & 数值 \\
-			\bottomrule
-		\end{tabular}
-	\end{table}
+	\frametitle{摘要赏析（二）：问题一、二}
+	\scriptsize
+	\begin{block}{问题一}
+		首先，基于对坐标系灵活选取，通过牛顿第二定律，建立浮子和振子相互作用的垂荡运动模型。其次，根据模型及初始运动状态确定了垂荡运动的二元二阶力学微分方程。最后，利用改进的龙格库塔算法对处理后的方程进行迭代求解，得到了浮子和振子在前40个周期内时间间隔为0.2s的垂荡位移和速度。结果见表2。
+	\end{block}
+	\begin{block}{问题二}
+		在浮子和振子相互作用的垂荡运动模型基础上，推导出了直线阻尼平均输出功率积分函数，建立了以垂荡运动装置的平均输出功率最大为目标的单目标优化模型。同时为求解该积分值，本文利用微小步长为底的梯形面积近似代替该函数值，且选取100s后的稳定状态作为区间求出平均输出功率，所需数值可由垂荡运动模型确定。最后，利用遗传算法搜索参数，确定在（1）条件下，最大平均输出功率为229.6819w，最优直线阻尼系数为37639；在（2）条件下，最大平均输出功率为230.0163w，最优直线阻尼系数为81478，幂指数为0.3377。
+	\end{block}
+	\medskip
+	\begin{exampleblock}{怎么写的}
+		\textbf{问题一}写得很``教学''：模型怎么建、方程长什么样、用什么算的、算出来啥，一步都不落。\textbf{问题二}顺着模型往优化上走，把功率写出来、定目标、用梯形面积把积分近似掉、再交给遗传算法去搜。我印象最深的是最后那串四位小数，个人觉得看着比较有说服力，当然也可能是我见识少。
+	\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+	\frametitle{摘要赏析（三）：问题三、四}
+	\scriptsize
+	\begin{block}{问题三}
+		首先，基于刚体转动的平行移轴定理和垂直轴定理、组合体重心计算公式，得到浮子和振子的纵摇运动的转动惯量函数。其次，基于牛顿第二定律，建立浮子和振子的纵摇运动模型。再进一步，确定了垂荡和纵摇之间的联系，得到该模型方程为四元二阶微分方程。最后，利用龙格库塔算法迭代求解该微分方程前40个波浪周期内时间间隔为0.2s的垂荡位移与速度、纵摇角位移与角速度。结果见表3。
+	\end{block}
+	\begin{block}{问题四}
+		在浮子和振子的纵摇模型的基础上，同样推导出了旋转阻尼平均输出功率积分函数，在同时考虑垂荡和纵摇基础上，建立了以同时考虑垂荡和纵摇运动的平均输出功率最大为目标的单目标优化模型。为求解该积分函数，对连续功率函数进行与问题二相同的离散化处理，且选取100s后的稳定状态作为区间求出平均输出功率，所需数值可由垂荡、纵摇运动模型得出。最后，采用遗传搜索算法求解，确定最大平均输出功率为316.5807w，最优直线阻尼系数为58944，最优旋转阻尼系数为98227。
+	\end{block}
+	\medskip
+	\begin{exampleblock}{怎么写的}
+		\textbf{问题三、四}像是问题一、二的``加强版''：垂荡变垂荡加纵摇，直线阻尼变直线加旋转阻尼。方法还是龙格库塔和遗传算法，但模型从二维方程变成四元方程，难度确实上来了。我觉得这种复用自己方法的写法挺好的，评委读着也不累，不过也可能是我理解得浅。
+	\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+	\frametitle{摘要赏析（四）：关键词}
+	\begin{center}
+		\vfill
+		\begin{alertblock}{关键词}
+			\centering
+			振荡浮子式波浪能发电装置\quad 垂荡\quad 纵摇\quad 四阶龙格库塔法\quad 遗传搜索算法
+		\end{alertblock}
+		\medskip
+		\begin{exampleblock}{怎么写的}
+		关键词挑了装置、运动形式、算法几个方面，覆盖面挺全。个人感觉这样挑检索起来挺方便，不知道是不是作者的用意，说得不对请大家指正。
+	\end{exampleblock}
+		\vfill
+	\end{center}
+\end{frame}
+\section{问题重述思考}
+\begin{frame}
+	\frametitle{问题重述（一）：背景、结构与原理}
+	\scriptsize
+	\setlength{\parskip}{0pt}
+	\begin{exampleblock}{背景、结构与工作原理}
+		波浪能是新兴海洋清洁可再生能源，是国家能源发展战略的必然要求[1]。装置由浮子、振子、中轴、能量输出系统（PTO）组成。浮子由质量分布均匀的圆柱壳和圆锥壳组成，两壳体间隔层作中轴支撑面，PTO连接中轴底座与振子。波浪施加简谐激励力（矩），浮子带动振子摇荡，二者相对运动驱动阻尼器做功输出能量。
+	\end{exampleblock}
+	\begin{block}{题干条件 $\rightarrow$ 得到的信息}
+		\setlength{\itemsep}{0pt}\setlength{\topsep}{0pt}\setlength{\partopsep}{0pt}
+		\begin{columns}[T]
+			\column{0.5\textwidth}
+			\begin{itemize}
+				\item 海水无粘无旋；线性周期微幅波 $\rightarrow$ 理想流体线性化，用线性波理论
+				\item 四类水动力作用 $\rightarrow$ 牛顿第二定律受力项，列动力学方程
+				\item 浮子质量均匀分布 $\rightarrow$ 质心、转动惯量可解析求
+			\end{itemize}
+			\column{0.5\textwidth}
+			\begin{itemize}
+				\item 振子穿中轴、圆柱体 $\rightarrow$ 约束为垂荡运动
+				\item PTO弹簧+阻尼器，相对运动做功 $\rightarrow$ 目标：平均输出功率
+				\item 忽略部件质量与摩擦 $\rightarrow$ 仅对浮子、振子建模
+			\end{itemize}
+		\end{columns}
+	\end{block}
+	\begin{exampleblock}{赏析}
+		开头交代了为什么要做这件事，还引了文献；中间把装置部件一个个说清楚；原理那句把``波浪推浮子、浮子带动振子、阻尼做功发电''讲明白了。建模要用的信息其实都藏在这几段里，我个人是这样理解的，可能不全面。
+	\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+	\frametitle{问题重述（二）：问题一、问题二}
+	\scriptsize
+	\begin{block}{问题一}
+		已知直线阻尼器的阻尼力同浮子和振子的相对速度成正比；波浪激励力满足 $f\cos\omega t$。建立浮子与振子的垂荡运动模型，并据此分别计算直线阻尼器阻尼系数为常数和随浮子与振子相对速度变化两种情形下，浮子和振子在规定时刻的垂荡位移和速度。
+	\end{block}
+	\begin{block}{问题二}
+		仅考虑垂荡运动，以PTO系统平均输出功率最大为目标，建立直线阻尼器最优阻尼系数的数学模型，并根据所给参数求出以下两种约束条件下装置的最大输出功率及相应的最优阻尼系数：（1）阻尼系数为常量，取值范围为 $[0,100000]$；（2）阻尼系数为变量，与浮子和振子相对速度的绝对值的幂成正比，比例系数取值范围为 $[0,100000]$，幂指数取值范围为 $[0.1,1]$。
+	\end{block}
+	\medskip
+	\begin{exampleblock}{赏析}
+		问题一先让建模型、算位移算速度，算是热身；问题二才求功率最大的阻尼系数，还分常系数和变系数两种情况，参数范围都给好了。我读的时候觉得他们把约束写得清清楚楚，我们照着做就行，这点挺值得学习的。
+	\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+	\frametitle{问题重述（三）：问题三、问题四}
+	\scriptsize
+	\begin{block}{问题三}
+		同时考虑垂荡和纵摇运动，振子既随中轴转动，又沿中轴滑动，直线阻尼器、旋转阻尼器均存在能量输出。给定波浪激励力和激励力矩 $f\cos\omega t,\ L\cos\omega t$，建立浮子与振子的垂荡和纵摇运动模型，按给定参数设定初始条件，计算前40个波浪周期内时间间隔为0.2s的垂荡位移与速度、纵摇角位移与角速度。
+	\end{block}
+	\begin{block}{问题四}
+		同时考虑垂荡和纵摇运动，以PTO系统最大输出功率为目标，建立直线阻尼器、旋转阻尼器最优阻尼系数的数学模型，并求出当二者阻尼系数取值范围均为 $[0,100000]$、波浪频率为 $1.9806\,\mathrm{s}^{-1}$ 时，装置的最大输出功率及相应的最优阻尼系数。
+	\end{block}
+	\medskip
+	\begin{exampleblock}{赏析}
+		问题三难度明显上来了：又垂荡又纵摇，振子一边转一边滑，还冒出个旋转阻尼；计算要求也细到前40个周期、0.2秒一个点。问题四再把两个阻尼系数一起优化、给定频率。说实话我看到这儿有点压力，感觉让我们自己做，未必能想得这么全。
+	\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+	\frametitle{问题重述（四）：总结}
+	\scriptsize
+	\begin{block}{重述的写作结构}
+		\begin{itemize}
+			\item 背景（意义+文献[1]）$\rightarrow$ 结构（部件清单）$\rightarrow$ 原理（能量输出链条）$\rightarrow$ 四个递进问题
+			\item 前三段为后文建模``备料''：质量分布、简谐激励、阻尼做功全部埋在其中
+		\end{itemize}
+	\end{block}
+	\begin{block}{四个问题：两轮递进}
+		\begin{columns}[T]
+			\column{0.5\textwidth}
+			\begin{itemize}
+				\item 第一轮：\textbf{仅垂荡}
+				\item[--] 问题一：建垂荡模型，求运动
+				\item[--] 问题二：垂荡优化（直线阻尼）
+			\end{itemize}
+			\column{0.5\textwidth}
+			\begin{itemize}
+				\item 第二轮：\textbf{垂荡+纵摇}
+				\item[--] 问题三：建双运动模型，求运动
+				\item[--] 问题四：双运动优化（直线+旋转阻尼）
+			\end{itemize}
+		\end{columns}
+	\end{block}
+	\begin{exampleblock}{赏析}
+		四个问题像两轮循环：先垂荡、再垂荡加纵摇，每轮都是先建模算运动、再优化求功率。第二轮的套路和第一轮一样，只是更难。我猜作者是有意这样安排的，让结构层层递进，不过这纯属我自己的揣测。
+	\end{exampleblock}
+\end{frame}
+
+\section{问题分析思考}
+\begin{frame}
+	\frametitle{问题分析（一）：问题一分析}
+	\scriptsize
+	\begin{block}{原文}
+		问题一需要根据波浪激励力建立浮子与振子运动模型。本题难点在于准确反映浮子和振子振动的物理过程。对此，灵活选取坐标系，基于牛顿第二定律，建立浮子和振子相对运动的二阶二元微分方程。继而对微分方程采用改进的四阶龙格库塔算法求解，实现了高精度的要求。
+	\end{block}
+	\medskip
+	\begin{exampleblock}{赏析}
+		作者先说难点在``怎么把物理过程反映准''，再给办法：选坐标系、牛顿定律、龙格库塔。我觉得能做到``点出难点、给出对策''就不错了，我们写的时候经常是难点说不清楚，这点值得学习。
+	\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+	\frametitle{问题分析（二）：问题二分析}
+	\scriptsize
+	\begin{block}{原文}
+		在问题一的基础上，需要利用附件三和附件四的参数值，求出指定情况下能使系统平均输出功率最大的最优阻尼系数。本题通过选定合理的时间区间，推导平均功率函数，继而建立直线阻尼器阻尼系数的优化模型，利用龙格库塔法粗略寻优后采用遗传算法，分别求出阻尼系数为常量、阻尼系数随相对速度变化时两种情况下的最大平均输出功率以及对应的最优阻尼系数。
+	\end{block}
+	\medskip
+	\begin{exampleblock}{赏析}
+		这一问接着上一问，把功率算出来再优化阻尼。作者先选定一段稳定时间算平均功率，再建优化模型，龙格库塔粗找一遍、遗传算法精修。这个``先粗后精''的思路我挺受启发，坦白说让我自己想，未必想得到。
+	\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+	\frametitle{问题分析（三）：问题三分析}
+	\scriptsize
+	\begin{block}{原文}
+		本题需进一步考虑纵摇运动。对此基于牛顿第二定律，建立纵摇运动模型，并利用组合体的重心计算公式、刚体转动的垂直轴定理和平行移轴定理，实现振荡浮子式波浪能发电装置的转动惯量的计算。最后用改进的四阶龙格库塔算法实现问题三的求解。
+	\end{block}
+	\medskip
+	\begin{exampleblock}{赏析}
+		问题三加了纵摇，多出来的活是算转动惯量——重心公式、垂直轴定理、平行移轴定理都用上了。我看到这儿才发现这题还要用理论力学，坦白讲，让我自己做的话可能就卡在这一步了。
+	\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+	\frametitle{问题分析（四）：问题四分析}
+	\scriptsize
+	\begin{block}{原文}
+		在问题三的基础上，针对直线阻尼器和旋转阻尼器的系数均为常量的情况，需要确定指定取值范围内，使平均输出功率最大的最优阻尼系数。对此，建立阻尼系数的优化模型，选取系统稳定响应后的一段时间计算垂荡运动、纵摇运动的平均输出功率，利用龙格库塔法粗略寻优后，采用遗传算法快速求解得到最大输出功率和相应的最优阻尼系数。
+	\end{block}
+	\medskip
+	\begin{exampleblock}{赏析}
+		问题四就是把问题三的模型拿来优化，跟问题二套路差不多：定目标、取稳定段算平均功率、龙格库塔加遗传算法收尾。作者还特意强调``稳定响应后的一段时间''，这个细节我以前不太注意，值得记下来。
+	\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+	\frametitle{问题分析（五）：总结}
+	\scriptsize
+	\begin{block}{四问分析的共同套路}
+		\begin{itemize}
+			\item 每题都是``承上（在上一问基础上）+ 建模 + 求解工具''三步展开
+			\item 建模/优化交替：问题一、三\textbf{建运动模型求运动}，问题二、四\textbf{建优化模型求功率}
+		\end{itemize}
+	\end{block}
+	\begin{block}{方法工具箱}
+		\begin{columns}[T]
+			\column{0.5\textwidth}
+			\begin{itemize}
+				\item 建模：牛顿第二定律、灵活选坐标系
+				\item 惯量：重心公式、垂直轴/平行移轴定理
+			\end{itemize}
+			\column{0.5\textwidth}
+			\begin{itemize}
+				\item 求解运动：改进四阶龙格库塔
+				\item 求解最优：龙格库塔粗寻优 + 遗传算法
+			\end{itemize}
+		\end{columns}
+	\end{block}
+	\begin{exampleblock}{赏析}
+		四问读下来，感觉作者心里有张地图，每一问都知道往哪走，方法就那一套但用得很到位。我自己理解得比较浅，如果让我概括，大概是``方法不在多，在于用熟''，说得不对的地方请老师和同学们指正。
+	\end{exampleblock}
+\end{frame}
+
+\section{模型假设和符号表思考}
+\begin{frame}
+	\frametitle{模型假设和符号表（一）：模型假设}
+	\scriptsize
+	\begin{block}{模型假设 $\rightarrow$ 作用}
+		\begin{itemize}
+			\item 波浪为线性周期微幅波，忽略波面升高 $\rightarrow$ 波浪力线性化，可用线性波理论
+			\item 海水为理想流体，无粘、无旋、不可压缩 $\rightarrow$ 可用势流理论描述
+			\item 忽略纵摇运动对垂荡运动的影响 $\rightarrow$ 问题一、二可先只考虑垂荡（解耦）
+			\item 忽略中轴、底座、隔层及PTO的质量和各种摩擦 $\rightarrow$ 只对浮子、振子两刚体建模
+		\end{itemize}
+	\end{block}
+	\medskip
+	\begin{exampleblock}{赏析}
+		假设一共四条：前两条是``物理前提''（线性微幅波、理想流体），后两条是``简化取舍''（忽略耦合、忽略次要质量与摩擦）。我觉得写假设最要紧的是每一条都能在模型里``对得上号''——省掉了哪一项、为什么能省，作者这一点处理得挺清楚，值得我们学习。
+	\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+	\frametitle{模型假设和符号表（二）：符号表赏析}
+	\scriptsize
+	\begin{exampleblock}{符号表的格式}
+		这篇文章里符号表格式很规整：共\textbf{三栏}，第一栏\textbf{符号}、第二栏\textbf{意义}、第三栏\textbf{单位}，表头和正文全部\textbf{居中}排列。符号用斜体字母，含义用文字说明，单位用正体，三栏齐备、一目了然，读者不用回正文翻找含义。
+	\end{exampleblock}
+	\begin{center}
+		\includegraphics[width=0.65\textwidth]{Figure/符号表.png}\\
+		\small 图：本文符号表
+	\end{center}
+\end{frame}
+
+
+\section{模型的建立与求解思考}
+\begin{frame}
+	\frametitle{模型的建立与求解（一）：问题一}
+\end{frame}
+\begin{frame}
+	\frametitle{模型的建立与求解（二）：问题二}
+\end{frame}
+\begin{frame}
+	\frametitle{模型的建立与求解（三）：问题三}
+\end{frame}
+
+\begin{frame}
+	\frametitle{模型的建立与求解（四）：问题四}
+\end{frame}
+
+\section{模型检验（分析）思考}
+\begin{frame}
+	\frametitle{模型检验（分析）（一）}
+\end{frame}
+\begin{frame}
+	\frametitle{模型检验（分析）（二）}
+\end{frame}
+\begin{frame}
+	\frametitle{模型检验（分析）（三）}
+\end{frame}
+
+\section{总结}
+\begin{frame}
+	\frametitle{总结（一）}
+\end{frame}
+\begin{frame}
+	\frametitle{总结（二）}
+\end{frame}
+\begin{frame}
+	\frametitle{总结（三）}
 \end{frame}
 
 % ---------- 结束页 ----------
