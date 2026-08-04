@@ -1,0 +1,8 @@
+\beamer@sectionintoc {1}{建模思路总览}{3}{0}{1}
+\beamer@sectionintoc {2}{第一步：审题}{5}{0}{2}
+\beamer@sectionintoc {3}{第二步：物理建模}{7}{0}{3}
+\beamer@sectionintoc {4}{第三步：数值求解}{9}{0}{4}
+\beamer@sectionintoc {5}{第四步：目标与寻优}{11}{0}{5}
+\beamer@sectionintoc {6}{第五步：模型检验}{14}{0}{6}
+\beamer@sectionintoc {7}{第六步：多自由度推广}{16}{0}{7}
+\beamer@sectionintoc {8}{心得与收获}{18}{0}{8}
