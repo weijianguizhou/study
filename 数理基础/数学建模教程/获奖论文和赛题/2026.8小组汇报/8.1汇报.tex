@@ -444,41 +444,475 @@
 
 \section{模型的建立与求解思考}
 \begin{frame}
-	\frametitle{模型的建立与求解（一）：问题一}
-\end{frame}
-\begin{frame}
-	\frametitle{模型的建立与求解（二）：问题二}
-\end{frame}
-\begin{frame}
-	\frametitle{模型的建立与求解（三）：问题三}
+	\frametitle{问题一·建模（1/6）：坐标系与受力分析}
+	\scriptsize
+	\begin{block}{坐标系的选取}
+		\begin{itemize}
+			\item 装置在海面做\textbf{六自由度}运动，本题只考虑竖直方向的\textbf{垂荡}（沿 $Z$ 轴）与绕 $Y$ 轴的\textbf{纵摇}
+			\item \textbf{大地坐标系} $OXYZ$：原点取静止时浮子的重心，浮子运动时坐标系固定不动
+			\item \textbf{固体坐标系} $oxyz$：原点取与静止时振子中心重合的浮子上一点，随浮子运动而移动
+			\item 振子相对浮子的位移 $x_r(t)=x_2(t)-x_1(t)$
+		\end{itemize}
+	\end{block}
+	\begin{block}{受力分析（仅垂荡）}
+		\begin{itemize}
+			\item \textbf{浮子}受：波浪激励力 $f\cos\omega t$、附加惯性力（附加质量 $m_a$）、兴波阻尼力、静水恢复力 $-\rho g A x_1$、PTO 系统作用力
+			\item \textbf{振子}受：PTO 系统作用力（弹簧力与阻尼力）
+		\end{itemize}
+	\end{block}
+	\begin{exampleblock}{我的想法}
+		建模之前先想清楚坐标系和受力，这步看着笨，其实最关键。我以前总是一上来就写方程，写一半才发现漏了力、或者方向搞反，返工很浪费时间。这次跟着论文一步步来，才明白``先受力分析、再列方程''这个顺序到底省多少事。
+	\end{exampleblock}
 \end{frame}
 
 \begin{frame}
-	\frametitle{模型的建立与求解（四）：问题四}
+	\frametitle{问题一·建模（2/6）：垂荡运动方程}
+	\scriptsize
+	\begin{block}{PTO 系统作用力}
+		\begin{itemize}
+			\item 直线弹簧力：$f_k=-K\big(x_1(t)-x_2(t)\big)$，与相对位移成正比，$K$ 为弹簧刚度
+			\item 直线阻尼力：$f_d=-C\big(\dot x_1(t)-\dot x_2(t)\big)$，与相对速度成正比，$C$ 为阻尼系数
+		\end{itemize}
+	\end{block}
+	\begin{block}{牛顿第二定律列方程}
+		浮子：$(m_1+m_a)\ddot x_1(t) = f\cos\omega t + f_d + f_k - \rho g A x_1$\\
+		振子：$m_2\ddot x_2(t) = -f_d - f_k$\\
+		代入 $f_k,f_d$ 整理后得到关于 $x_1,x_2$ 的\textbf{二元二阶常微分方程组}
+	\end{block}
+	\begin{exampleblock}{我的想法}
+		PTO 的弹簧力和阻尼力写清楚后，两个方程其实是``一条链''：浮子被波浪推着走，振子被浮子带着走。我列方程时犯过错：忘了振子上的力是浮子的反力，方向写反导致结果全不对。后来想明白``作用力与反作用力''，一下子就通了。
+	\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+	\frametitle{问题一·建模（3/6）：四阶龙格库塔求解}
+	\scriptsize
+	\begin{columns}[T]
+		\column{0.55\textwidth}
+		\begin{block}{为什么自己改进}
+			\begin{itemize}
+				\item 要求前 40 周期、0.2s 间隔的位移和速度，MATLAB 自带 ode45 不便精确控制采样
+				\item 直接对\textbf{四阶龙格库塔}（截断误差 $O(h^5)$）改进，精度与采样同时满足
+			\end{itemize}
+		\end{block}
+		\begin{block}{二阶转一阶}
+			令 $u_1=x_1,\ u_2=\dot x_1,\ v_1=x_2,\ v_2=\dot x_2$，把二元二阶方程组改写为\textbf{一阶四元方程组}
+		\end{block}
+		\begin{block}{递推公式}
+			$y_{n+1}=y_n+\frac{h}{6}(k_1+2k_2+2k_3+k_4)$\\
+			$k_1=f(t_n,y_n)$，$k_2=f(t_n+\frac{h}{2},y_n+\frac{h}{2}k_1)$\\
+			$k_3=f(t_n+\frac{h}{2},y_n+\frac{h}{2}k_2)$，$k_4=f(t_n+h,y_n+hk_3)$
+		\end{block}
+		\column{0.45\textwidth}
+		\begin{block}{参数与初值}
+			\begin{itemize}
+				\item 步长 $h=10^{-4}$，递推长度 40 个波浪周期
+				\item 初值（静水平衡）：$x_1(0)=x_2(0)=0$，$\dot x_1(0)=\dot x_2(0)=0$
+				\item 按 0.2s 间隔采样，保存结果
+			\end{itemize}
+		\end{block}
+		\begin{center}
+			\includegraphics[height=0.14\textheight]{Figure/fig_rk4.png}\\
+			\scriptsize 四阶龙格库塔：一个步长内取多个斜率加权（示意）
+		\end{center}
+		\begin{exampleblock}{我的想法}
+			二阶转一阶是标准动作，但我以前只停留在``会用''，没想过步长为什么要取这么小。自己跑一次才发现：步长一大，40 个周期算到后面就抖得没法看，$h=10^{-4}$ 才稳得下来。
+		\end{exampleblock}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{问题一·结果（1/3）：大地坐标系下的运动（题 1.(1)）}
+	\scriptsize
+	\begin{columns}[c]
+		\column{0.55\textwidth}
+		\begin{center}
+			\includegraphics[width=\textwidth]{Figure/fig_sim_01.png}
+		\end{center}
+		\column{0.45\textwidth}
+		\begin{exampleblock}{我的想法}
+			第一眼看到浮子和振子的位移、速度曲线，我有点意外——两条线几乎贴在一起。这说明绝对运动里看不出振子相对浮子在干什么，也提醒我：看图不能只看表面，得想清楚``什么量才是我们真正关心的''。
+		\end{exampleblock}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{问题一·结果（2/3）：相对位移下的运动（题 1.(1)）}
+	\scriptsize
+	\begin{columns}[c]
+		\column{0.55\textwidth}
+		\begin{center}
+			\includegraphics[width=\textwidth]{Figure/fig_sim_02.png}
+		\end{center}
+		\column{0.45\textwidth}
+		\begin{exampleblock}{我的想法}
+			把坐标换成振子相对浮子的位移和速度，相对运动立刻清楚了。相对速度大，阻尼器做功就大，PTO 才有能量输出。``换个参考系看数据''这个小技巧，我这次是实打实学会了。
+		\end{exampleblock}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{问题一·结果（3/3）：变阻尼下的运动（题 1.(2)）}
+	\scriptsize
+	\begin{columns}[c]
+		\column{0.55\textwidth}
+		\begin{center}
+			\includegraphics[width=\textwidth]{Figure/fig_sim_03.png}
+		\end{center}
+		\column{0.45\textwidth}
+		\begin{exampleblock}{我的想法}
+			变阻尼（$C=10000\,|v_r|^{0.5}$）和常数阻尼比，相对运动的形态明显不同。我这才体会到：阻尼模型不是随便选的，它直接决定运动结果。题目特意把两种情况分开让我们算，大概就是这个用意。
+		\end{exampleblock}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{问题二·建模（1/6）：平均功率函数}
+	\scriptsize
+	\begin{block}{瞬时功率}
+		平动功率 $P=F\cdot v$，PTO 直线阻尼器消耗的瞬时功率为
+		\begin{center}
+			$P(t)=C\big(\dot x_1(t)-\dot x_2(t)\big)^2$
+		\end{center}
+	\end{block}
+	\begin{block}{平均功率}
+		取系统振动\textbf{稳态响应后}的一段时间 $[t_1,t_2]$ 求平均：
+		\begin{center}
+			$P_{avg}=\dfrac{1}{t_2-t_1}\int_{t_1}^{t_2} C\,(\dot x_1-\dot x_2)^2\,dt$
+		\end{center}
+		$C\in[0,100000]$；题 1.(1) 中 $C$ 为常量，题 1.(2) 中 $C=\alpha\,|v_r|^{\beta}$
+	\end{block}
+	\begin{exampleblock}{我的想法}
+		平均功率的定义看着简单，但有个细节我一开始没注意：为什么只取稳态段求平均？因为前面有一段瞬态，功率不稳定，取平均会把结果带偏。我自己画出功率曲线才真正理解这个取舍。
+	\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+	\frametitle{问题二·建模（2/6）：优化模型建立}
+	\scriptsize
+	\begin{block}{目标函数}
+		$\max\limits_{C}\ P_{avg}(C)$，其中 $P_{avg}=\dfrac{1}{t_2-t_1}\displaystyle\int_{t_1}^{t_2} C\big(\dot x_1-\dot x_2\big)^2\,dt$
+	\end{block}
+	\begin{block}{约束条件}
+		\begin{itemize}
+			\item \textbf{运动方程约束}：垂荡运动模型（问题一的方程组）
+			\item \textbf{情况 (1)}：$C$ 为常量，$C\in[0,100000]$
+			\item \textbf{情况 (2)}：$C=\alpha\,|v_r|^{\beta}$，$\alpha\in[0,100000]$，$\beta\in[0.1,1]$
+			\item 波浪激励 $f\cos\omega t$，初值取静水平衡
+		\end{itemize}
+	\end{block}
+	\begin{exampleblock}{我的想法}
+		把工程问题写成``目标 + 决策量 + 约束''的优化模型，是数模里最常用的套路。这里两种情况的范围都列全了，照着就能算。我学到的经验：约束写得越具体，求解越省事，也越能说服评委。
+	\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+	\frametitle{问题二·建模（3/6）：数值求解——梯形法}
+	\scriptsize
+	\begin{columns}[T]
+		\column{0.5\textwidth}
+		\begin{block}{功率积分离散化}
+			\begin{itemize}
+				\item 用\textbf{梯形法}求积分：步长足够小时，把连续函数用梯形面积之和近似
+				\item 时间步长取 $10^{-4}$，满足精度要求
+				\item 因前期位移不稳定，截取稳态段 $[100,180]$s 求平均功率
+			\end{itemize}
+		\end{block}
+		\begin{block}{先粗后精的寻优}
+			\begin{itemize}
+				\item \textbf{粗略寻优}：增大阻尼系数遍历步长，得到功率随阻尼系数的分布
+				\item \textbf{遗传算法精求}：避免局部最优、并行搜索、按概率选最优，迭代 200 次
+			\end{itemize}
+		\end{block}
+		\column{0.5\textwidth}
+		\begin{center}
+			\includegraphics[height=0.3\textheight]{Figure/fig_sim_04.png}
+		\end{center}
+		\begin{exampleblock}{我的想法}
+			梯形法是我这次重点学的对象：积分不会算没关系，用一堆小梯形去近似，步长越小越接近真值。更妙的是``先粗扫、再遗传算法精找''的组合，直接暴力遍历太慢，遗传算法又能跳出局部最优。这个思路我记下了，以后做优化题都能用。
+		\end{exampleblock}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{问题二·结果（1/2）：题 2.(1) 常数阻尼}
+	\scriptsize
+	\begin{columns}[c]
+		\column{0.55\textwidth}
+		\begin{center}
+			\includegraphics[width=\textwidth]{Figure/fig_sim_05.png}
+		\end{center}
+		\column{0.45\textwidth}
+		\begin{exampleblock}{我的想法}
+			扫完阻尼系数画出功率曲线，看到单峰的那一刻我是服气的：阻尼太小耗能不足，太大又把运动锁死，中间必然有个最好的值。我复现出 $C\approx37186$、$P\approx229.77$W，和论文的 37639、229.68W 基本一致，说明模型没建错，心里踏实了不少。
+		\end{exampleblock}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{问题二·结果（2/2）：题 2.(2) 阻尼与幂指数（三维）}
+	\scriptsize
+	\begin{columns}[c]
+		\column{0.55\textwidth}
+		\begin{center}
+			\includegraphics[width=\textwidth]{Figure/fig_sim_06.png}
+		\end{center}
+		\column{0.45\textwidth}
+		\begin{exampleblock}{我的想法}
+			问题 2.(2) 要同时定 $\alpha$ 和 $\beta$，是一张三维面。把面画出来我才意识到：两个参数是``一起''影响功率的，不能拆开各自求最优。我复现的峰位和论文有点出入，但``存在最优区域''这个整体结论是一致的。
+		\end{exampleblock}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{问题三·建模（1/4）：转动惯量计算}
+	\scriptsize
+	\begin{block}{先定转轴、再求重心}
+		\begin{itemize}
+			\item 纵摇时物体绕 $y$ 轴近似\textbf{穿过重心}，因此先确定浮子重心位置
+			\item 浮子外壳看作\textbf{圆面 + 圆柱侧面 + 圆锥侧面}的组合体，重心用组合体重心公式 $\bar z=\dfrac{\sum m_i z_i}{\sum m_i}$
+		\end{itemize}
+	\end{block}
+	\begin{block}{平行移轴与垂直轴定理}
+		\begin{itemize}
+			\item \textbf{平行移轴定理}：$I=I_C+md^2$（$d$ 为平行轴到质心轴距离）
+			\item \textbf{垂直轴定理}：薄片对垂直轴惯量 $=$ 平面内两正交轴惯量之和
+			\item 得浮子 $I_1=58289.43\,\mathrm{kg\cdot m^2}$；振子惯量随相对位移变化 $I_2=202.75+243.3\,(0.8+x_r(t))^2$
+		\end{itemize}
+	\end{block}
+	\begin{exampleblock}{我的想法}
+		问题三多了纵摇，第一步居然是算转动惯量。平行移轴、垂直轴定理我上课学过但从没用过，这次才发现它们是``组合体''求惯量的标准工具。坦白讲这一页我是对着课本啃下来的。
+		\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+	\frametitle{问题三·建模（2/4）：纵摇运动方程}
+	\scriptsize
+	\begin{block}{受力分析与 PTO 力矩}
+		\begin{itemize}
+			\item \textbf{浮子}受：波浪激励力矩 $L\cos\omega t$、附加惯性力矩、兴波阻尼力矩、静水恢复力矩 $M_s=-L_s\theta_1$、PTO 作用力矩；\textbf{振子}只受 PTO 作用力矩
+			\item 旋转弹簧力矩：$M_k=-K_t\big(\theta_1(t)-\theta_2(t)\big)$
+			\item 扭转阻尼力矩：$M_d=-C_t\big(\dot\theta_1(t)-\dot\theta_2(t)\big)$
+		\end{itemize}
+	\end{block}
+	\begin{block}{牛顿第二定律（转动）}
+		浮子：$(I_1+I_a)\ddot\theta_1 = L\cos\omega t + M_k + M_d - L_s\theta_1$\\
+		振子：$I_2\ddot\theta_2 = -M_k - M_d$\\
+		与问题一垂荡方程\textbf{联立} $\Rightarrow$ \textbf{四元二阶微分方程组}
+	\end{block}
+	\begin{exampleblock}{我的想法}
+		纵摇和垂荡其实是同一个套路换个自由度，方程结构几乎一样。联立后从二元变四元，量变多但不算难。我体会到：多自由度问题往往是``单自由度的复制加耦合''，会一个就会一串。
+	\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+	\frametitle{问题三·建模（3/4）：求解}
+	\scriptsize
+	\begin{block}{转一阶多元方程组}
+		\begin{itemize}
+			\item 把垂荡 + 纵摇的四元二阶方程组改写为\textbf{一阶八元方程组}
+			\item 初值（静水平衡）：各（角）位移、速度、角速度均为 0
+		\end{itemize}
+	\end{block}
+	\begin{block}{龙格库塔递推}
+		\begin{itemize}
+			\item 与问题一同法，用\textbf{四阶龙格库塔}递推（步长 $10^{-4}$）
+			\item 递推前 40 个波浪周期，按 0.2s 间隔采样
+			\item 输出浮子、振子的\textbf{位移、速度、角位移、角速度}四组量
+		\end{itemize}
+	\end{block}
+	\begin{exampleblock}{我的想法}
+		求解流程和问题一一模一样，只是状态量从 4 个变成 8 个。这套``转一阶 + 龙格库塔''的方法从问题一用到问题四，一路没换过。我最大的收获是：方法不怕少，用熟一套就够应对很多题。
+	\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+	\frametitle{问题三·结果：前 40 周期垂荡与纵摇运动}
+	\scriptsize
+	\begin{columns}[c]
+		\column{0.55\textwidth}
+		\begin{center}
+			\includegraphics[width=\textwidth]{Figure/fig_sim_07.png}
+		\end{center}
+		\column{0.45\textwidth}
+		\begin{exampleblock}{我的想法}
+			四张子图把垂荡和纵摇都画出来了。最让我意外的是纵摇角只有 0.018 rad 左右，特别小。这正好解释了后面问题四里``旋转阻尼几乎不影响功率''——纵摇本身动得就少，旋转阻尼自然使不上劲。作者前后呼应的逻辑，我这次是看懂了。
+		\end{exampleblock}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{问题四·建模（1/3）：功率函数推导}
+	\scriptsize
+	\begin{block}{瞬时功率}
+		转动功率 $P=M\cdot\omega$；PTO 总瞬时功率 = 直线阻尼功率 + 旋转阻尼功率
+		\begin{center}
+			$P(t)=C\big(\dot x_1-\dot x_2\big)^2 + C_t\big(\dot\theta_1-\dot\theta_2\big)^2$
+		\end{center}
+	\end{block}
+	\begin{block}{平均功率}
+		取稳态响应后的一段时间 $[t_1,t_2]$ 求平均：
+		\begin{center}
+			$P_{avg}=\dfrac{1}{t_2-t_1}\displaystyle\int_{t_1}^{t_2}\Big[C\big(\dot x_1-\dot x_2\big)^2 + C_t\big(\dot\theta_1-\dot\theta_2\big)^2\Big]dt$
+		\end{center}
+	\end{block}
+	\begin{exampleblock}{我的想法}
+		问题四的功率就是问题二加了一项旋转项，公式完全继承。这种``前问为后问做铺垫''的写法，让读者不用重复理解新概念。我要学的就是这种递进式的组织方式。
+	\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+	\frametitle{问题四·建模（2/3）：优化模型建立}
+	\scriptsize
+	\begin{block}{目标函数}
+		\begin{center}
+			$\max\limits_{C,\,C_t}\ P_{avg}(C,C_t)$
+		\end{center}
+	\end{block}
+	\begin{block}{约束条件}
+		\begin{itemize}
+			\item \textbf{运动方程约束}：垂荡 + 纵摇联立的四元二阶方程组
+			\item 直线阻尼系数 $C\in[0,100000]$，旋转阻尼系数 $C_t\in[0,100000]$
+			\item 波浪频率 $\omega=1.9806\,\mathrm{s^{-1}}$；初值取静水平衡
+		\end{itemize}
+	\end{block}
+	\begin{exampleblock}{我的想法}
+		目标、决策量、约束三件套又来一遍，只是决策量从问题二的一个变成两个（$C$ 和 $C_t$），求解框架完全相同。看懂问题二，问题四的模型基本就懂了一半。我意识到：赛题的四问通常一步步升级，前一问的成果后一问直接复用。
+	\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+	\frametitle{问题四·结果：双阻尼系数下的功率分布（三维）}
+	\scriptsize
+	\begin{columns}[c]
+		\column{0.55\textwidth}
+		\begin{center}
+			\includegraphics[width=\textwidth]{Figure/fig_sim_08.png}
+		\end{center}
+		\column{0.45\textwidth}
+		\begin{exampleblock}{我的想法}
+			双阻尼的功率分布面最有意思的是：沿旋转阻尼方向几乎一马平川，沿直线阻尼方向才有峰值。这说明参数分``敏感''和``不敏感''，优化时抓大放小就行。我复现的最优功率 316.50W 和论文的 316.58W 也很接近。
+		\end{exampleblock}
+	\end{columns}
 \end{frame}
 
 \section{模型检验（分析）思考}
 \begin{frame}
-	\frametitle{模型检验（分析）（一）}
+	\frametitle{模型检验（一）：检验原理与垂荡检验}
+	\scriptsize
+	\begin{columns}[T]
+		\column{0.55\textwidth}
+		\begin{block}{检验原理}
+			\begin{itemize}
+				\item 装置属\textbf{简谐激励下线性系统的受迫振动}，稳定后振动周期应与波浪激励周期接近
+				\item 比较实际响应周期与理论激励周期的方差 $\delta$，$\delta$ 小则模型正确
+			\end{itemize}
+		\end{block}
+		\begin{block}{垂荡模型检验结果}
+			\begin{itemize}
+				\item 题 1.(1)：$\delta=0.0017<0.1\%$
+				\item 题 1.(2)：$\delta=0.0034<0.4\%$
+			\end{itemize}
+		\end{block}
+		\column{0.45\textwidth}
+		\begin{center}
+			\includegraphics[height=0.24\textheight]{Figure/fig_forced.png}\\
+			\scriptsize 受迫振动稳态周期约等于激励周期（示意）
+		\end{center}
+		\begin{exampleblock}{我的想法}
+			我以前以为检验就必须有实验数据，看了这篇才明白：没有实验也能验——用物理常识。受迫振动稳定后周期必须等于激励周期，这是硬道理，拿它一对就知道模型对不对。``用常识当标尺''这个思路很受用。
+		\end{exampleblock}
+	\end{columns}
 \end{frame}
+
 \begin{frame}
-	\frametitle{模型检验（分析）（二）}
+	\frametitle{模型检验（二）：纵摇检验与可靠性检验}
+	\scriptsize
+	\begin{columns}[T]
+		\column{0.55\textwidth}
+		\begin{block}{纵摇模型检验结果}
+			题 3：$\delta=0.00036<0.04\%$，方差极小，认为模型正确
+		\end{block}
+		\begin{block}{结果可靠性检验}
+			\begin{itemize}
+				\item 问题三要算浮子转动惯量，可能引入误差
+				\item 对问题三参数加 $\pm 1\%$ 扰动，比较扰动前后输出偏差
+				\item 偏差 $<0.10\%$，结果对参数不敏感，求解可靠
+			\end{itemize}
+		\end{block}
+		\column{0.45\textwidth}
+		\begin{center}
+			\includegraphics[height=0.24\textheight]{Figure/fig_sim_09.png}\\
+			\scriptsize 对转动惯量加 $\pm1\%$ 扰动后的运动偏差
+		\end{center}
+		\begin{exampleblock}{我的想法}
+			我亲手把转动惯量加了 $\pm1\%$ 再重算，偏差确实很小。之前总觉得``检验''是走流程，这次自己动手才懂：模型对参数不敏感，结果才值得相信。这个``扰动检验''我以后写论文也要用。
+		\end{exampleblock}
+	\end{columns}
 \end{frame}
+
 \begin{frame}
-	\frametitle{模型检验（分析）（三）}
+	\frametitle{模型检验（三）：小结}
+	\scriptsize
+	\begin{block}{检验做对了什么}
+		\begin{itemize}
+			\item 检验标准可验证：用物理常识（周期吻合），不是自说自话
+			\item 既验\textbf{模型方程}的正确性（周期方差），又验\textbf{求解结果}的可靠性（参数扰动）
+			\item 全部给出量化阈值（0.1\%、0.4\%、0.04\%、0.10\%），说服力强
+		\end{itemize}
+	\end{block}
+	\begin{exampleblock}{我的想法}
+		检验部分篇幅不长，但``验什么、怎么验、阈值多少''都交代清楚。让我自己写，可能就一句``误差很小''。从这篇里我学到：检验要和物理常识挂钩，数字要给具体阈值，才站得住脚。
+	\end{exampleblock}
 \end{frame}
 
 \section{总结}
 \begin{frame}
-	\frametitle{总结（一）}
-\end{frame}
-\begin{frame}
-	\frametitle{总结（二）}
-\end{frame}
-\begin{frame}
-	\frametitle{总结（三）}
+	\frametitle{总结（一）：模型优点}
+	\scriptsize
+	\begin{block}{优点}
+		\begin{enumerate}
+			\item \textbf{建模有依据}：基于牛顿第二定律做受力分析，数值解较符合实际
+			\item \textbf{计算降难度}：对目标函数做离散化处理（梯形面积近似）
+			\item \textbf{算法精度高}：改进四阶龙格库塔 + 遗传算法，实现高精度求解
+		\end{enumerate}
+	\end{block}
+	\begin{exampleblock}{我的收获}
+		读完整篇，我最想学的是这三点：建模有受力分析支撑、计算有离散化兜底、求解有先进算法加持。我不一定都能做到，但至少知道了``好论文的建模长什么样''，照着学总不会错。
+	\end{exampleblock}
 \end{frame}
 
+\begin{frame}
+	\frametitle{总结（二）：模型缺点}
+	\scriptsize
+	\begin{block}{缺点}
+		\begin{enumerate}
+			\item \textbf{重心计算有简化}：计算浮子重心时忽略浮子厚度等，可能产生偏差
+			\item \textbf{忽略耦合效应}：忽略纵摇与垂荡的耦合，对静水恢复力做了简化；实际运动中两自由度会相互影响
+		\end{enumerate}
+	\end{block}
+	\begin{exampleblock}{我的思考}
+		作者肯承认自己忽略耦合、简化重心，反而显得可信。我以前以为写缺点会减分，现在觉得：能把缺点说清楚，说明对自己的模型有清醒的认识，这本身就是加分项。这点对我的启发很大。
+	\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+	\frametitle{总结（三）：模型推广与改进}
+	\scriptsize
+	\begin{block}{推广}
+		\begin{itemize}
+			\item 方法可用于其他受波浪激励物体的运动分析，可用遗传算法设计最优阻尼系数，对实际生产有借鉴意义
+		\end{itemize}
+	\end{block}
+	\begin{block}{改进方向}
+		\begin{itemize}
+			\item 实际运动中不同自由度会互相耦合，后续可建立\textbf{纵摇-垂荡耦合运动模型}
+		\end{itemize}
+	\end{block}
+	\begin{exampleblock}{我的想法}
+		收尾处说以后要建纵摇-垂荡耦合模型，既是诚实的自我批评，也指明了下一步。我学到的写法是：总结别只复述做完了什么，要落到``以后还能怎么做''。这样的总结才有信息量。
+	\end{exampleblock}
+\end{frame}
 % ---------- 结束页 ----------
 \begin{frame}
 	\centering

@@ -5,5 +5,5 @@
 \beamer@sectionintoc {6}{问题分析思考}{14}{0}{5}
 \beamer@sectionintoc {7}{模型假设和符号表思考}{19}{0}{6}
 \beamer@sectionintoc {8}{模型的建立与求解思考}{21}{0}{7}
-\beamer@sectionintoc {9}{模型检验（分析）思考}{25}{0}{8}
-\beamer@sectionintoc {10}{总结}{28}{0}{9}
+\beamer@sectionintoc {9}{模型检验（分析）思考}{39}{0}{8}
+\beamer@sectionintoc {10}{总结}{42}{0}{9}
