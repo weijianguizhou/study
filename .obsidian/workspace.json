@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "c40ade1626330e2e",
+        "id": "829359a687c331fd",
         "type": "tabs",
         "children": [
           {
-            "id": "feb9d8ffe1278d52",
+            "id": "35fca6207bb32ddb",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "教材/Mathematical methods for physicists (Babusci, Danilo)/读书笔记.md",
+                "file": "教材/Spacecraft_Dynamics/翻译/中文.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "读书笔记"
+              "title": "中文"
             }
           }
         ]
@@ -80,8 +80,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "dfcd6f1a0be67c9c",
@@ -200,28 +199,34 @@
       "pdf-plus:PDF++: Toggle auto-paste": false
     }
   },
-  "active": "437ab6934dc5f66d",
+  "active": "35fca6207bb32ddb",
   "lastOpenFiles": [
-    "Pasted image 20260806235948.png",
+    "教材/Spacecraft_Dynamics/翻译/中文.md",
+    "教材/Spacecraft_Dynamics/word版翻译/英文.docx",
+    "教材/Spacecraft_Dynamics/word版翻译/中文.docx",
+    "教材/Spacecraft_Dynamics/word版翻译",
+    "教材/Spacecraft_Dynamics/2f6a13c0-c43c-4859-a2b1-12b25fbcd090_docx/~$中文.docx",
+    "教材/Spacecraft_Dynamics/2f6a13c0-c43c-4859-a2b1-12b25fbcd090_docx/中文.docx",
+    "教材/Spacecraft_Dynamics/2f6a13c0-c43c-4859-a2b1-12b25fbcd090_docx/英文.docx",
+    "教材/Spacecraft_Dynamics/2f6a13c0-c43c-4859-a2b1-12b25fbcd090_docx/~$70e66e-5ec3-4c_Simplified Chinese.docx",
+    "教材/Spacecraft_Dynamics/翻译/英文.md",
+    "教材/Spacecraft_Dynamics/2f6a13c0-c43c-4859-a2b1-12b25fbcd090_docx/9070e66e-5ec3-4c_Simplified Chinese.docx",
+    "教材/Spacecraft_Dynamics/2f6a13c0-c43c-4859-a2b1-12b25fbcd090_docx/9070e66e-5ec3-4c.docx",
+    "教材/Spacecraft_Dynamics/2f6a13c0-c43c-4859-a2b1-12b25fbcd090_docx",
+    "教材/Spacecraft_Dynamics/读书笔记.md",
+    "教材/Spacecraft_Dynamics/翻译/images/d6170846d5791308022bacc6399c81efb474fd73f03435f161b77fed583b0c5e_38.jpg",
+    "教材/Spacecraft_Dynamics/翻译/images/c73131250000c4cc6bf17f541b471dfd56251e4b5e82447912e3b6a9773044cf_43.jpg",
+    "教材/Spacecraft_Dynamics/翻译/images/d1bd5f5570e0ed6118c30548955d58d158ad9a341d8530c283fd96c069476d67_62.jpg",
+    "教材/Spacecraft_Dynamics/翻译/images/e99f48ed5a9b885545f7b30f24aed0de998dd86caf8e6a466923916ce4e89bea_55.jpg",
+    "教材/Spacecraft_Dynamics/翻译/images/e7aec52fcbcdbd1f53241863f7a5827b39dfd254eec4a1d9d58a5333b1dfb32e_43.jpg",
+    "教材/Spacecraft_Dynamics/翻译/images/e0e0d32c1a62794dff25d5bfa22bb196625e1ce0aaccee3cb4ca5fc9f4cb3524_56.jpg",
+    "教材/Spacecraft_Dynamics/翻译/images/df736b55dd57ce3006b3a056c2ff1d230f1f982db967d94e575c088235ec4338_77.jpg",
+    "教材/Spacecraft_Dynamics/翻译/images/de2122c52789fce140dc02cec3cc658acf255f3594c9337791a1f7350d2176a2_57.jpg",
+    "教材/Spacecraft_Dynamics/翻译/images/d9ec7fe5753d2fdc0615d27a99371d9b2fcd8b99abe0773638faf7c978e07099_60.jpg",
+    "教材/Spacecraft_Dynamics/翻译/images/d431361df0504478394bcf0f816f029cd1170d2d3569c0cf86eb1090ff66188a_60.jpg",
     "教材/Mathematical methods for physicists (Babusci, Danilo)/读书笔记.md",
-    "数理基础/数学建模教程/获奖论文和赛题/2026.8小组汇报/063汇报.pdf",
-    "8.1汇报讲稿.pdf",
-    "教材/Mathematical methods for physicists (Babusci, Danilo)/Mathematical methods for physicists (Babusci, Danilo).pdf",
     "数理基础/数学建模教程/获奖论文和赛题/2026.8小组汇报/8.1汇报讲稿.md",
-    "数理基础/数学建模教程/获奖论文和赛题/2026.8小组汇报/8.1汇报.synctex(busy)",
-    "数理基础/数学建模教程/获奖论文和赛题/2026.8小组汇报/8.1汇报.toc",
-    "数理基础/数学建模教程/获奖论文和赛题/2026.8小组汇报/8.1汇报.synctex.gz",
     "教材/Mathematical methods for physicists (Babusci, Danilo)/第一章 矩阵，指数算子和物理应用.md",
-    "教材/代数基础/Matrix Analysis and Applied Linear Algebra (Carl D. Meyer)/Matrix Analysis and Applied Linear Algebra (Carl D. Meyer).pdf",
-    "教材/代数基础/Matrix Analysis and Applied Linear Algebra (Carl D. Meyer)",
-    "教材/代数基础/新建文件夹",
-    "教材/代数基础/Linear Algebra (M. Thamban Nair, Arindama Singh)/Linear Algebra (M. Thamban Nair, Arindama Singh).pdf",
-    "模板/PPT演示/NJUST南理工-Beamer模板/image/stack.jpg",
-    "模板/PPT演示/NJUST南理工-Beamer模板/image/release.jpg",
-    "模板/PPT演示/NJUST南理工-Beamer模板/image/njust-beamer.jpg",
-    "模板/PPT演示/NJUST南理工-Beamer模板/image/equation.jpg",
-    "模板/PPT演示/NJUST南理工-Beamer模板/image/block.jpg",
-    "模板/PPT演示/NJUST南理工-Beamer模板/logo/NJUST.png",
     "模板/PPT演示/NJUST南理工-Beamer模板/README.md",
     "模板/演讲稿/演讲稿模板.md",
     "模板/README.md",
@@ -240,12 +245,6 @@
     "人工智能/机器学习教程/08-半监督学习.md",
     "人工智能/机器学习教程/07-降维.md",
     "人工智能/机器学习教程/06-聚类.md",
-    "人工智能/机器学习教程/04-集成学习.md",
-    "人工智能/机器学习教程/05-支持向量机.md",
-    "人工智能/机器学习教程/02-最近邻与朴素贝叶斯.md",
-    "人工智能/机器学习教程/03-决策树.md",
-    "数理基础/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/重心位置的确定.png",
-    "数理基础/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/纵摇运动受力分析示意图.png",
-    "数理基础/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/符号表.png"
+    "人工智能/机器学习教程/04-集成学习.md"
   ]
 }
