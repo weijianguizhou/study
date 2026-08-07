@@ -161,7 +161,7 @@
 		\draw[arrow] (e.west) -- (f.east);
 	\end{tikzpicture}
 	\end{center}
-	这篇论文的骨架，就是我们课程里学的标准数模流程：从问题重述、建模求解，到检验、总结，一步没落。
+	这篇论文的骨架，就是我们课程里学的标准数模流程：从问题重述、建模求解，到检验、总结，一步没落。（有一个小问题，有些论文里面会在论文的开头画一个很好看的流程图，展示一下整体的建模思路，这篇文章没有，到底要不要来一个？）
 \end{frame}
 
 \section{标题分析}
@@ -182,11 +182,12 @@
 			\begin{itemize}
 				\item \textbf{模板化}：全是``基于……的研究''，一个模子刻的，看不出作者想解决啥。
 				\item \textbf{术语堆砌}：动态规划、TOPSIS、Huff 模型，高级词一个接一个。
-				\item \textbf{结构刻板}：永远是``方法 + 对象''，年份、赛事、背景一概没有。
+				\item \textbf{结构刻板}：永远是``方法 + 对象''。
 				\item \textbf{用词空泛}：研究、优化、评价，大词多但指向弱，换个题也成立。
 			\end{itemize}
 		\end{block}
 	\end{columns}
+
 \end{frame}
 
 \begin{frame}
@@ -215,6 +216,9 @@
 			\end{itemize}
 		\end{exampleblock}
 	\end{columns}
+	\begin{center}
+		这就是大道至简的感觉吗！
+	\end{center}
 \end{frame}
 
 \section{摘要赏析}
@@ -266,7 +270,7 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{教程：你写摘要的时候记住这四条}
+	\frametitle{总结}
 	\scriptsize
 	\begin{columns}[T]
 		\column{0.5\textwidth}
@@ -288,7 +292,7 @@
 			\end{itemize}
 		\end{alertblock}
 	\end{columns}
-	\remark{跟你们说}{摘要就是评委第一次看你的论文，别让人家翻半天找不到你干了啥、算出了啥。这篇摘要的写法，照着套就行。}
+
 \end{frame}
 
 \section{问题重述思考}
@@ -327,12 +331,7 @@
 			\item \textbf{第3句（原理）}：``波浪施加简谐激励力（矩），浮子带动振子摇荡，二者相对运动驱动阻尼器做功输出能量。''——交代\textbf{这东西怎么工作}，用''原因→过程→结果''一条链串起来
 		\end{itemize}
 	\end{block}
-	\begin{block}{下次你写论文，第一段可以直接套这个模板}
-		\begin{center}
-			\texttt{[研究对象]}是\texttt{[一句话意义]}。\texttt{[装置]}由\texttt{[部件A、B、C]}组成。\texttt{[激励]}施加\texttt{[作用]}，带动\texttt{[过程]}，从而\texttt{[输出/结果]}。
-		\end{center}
-	\end{block}
-	\remark{一点想法}{论文开头最怕两种极端：要么一句话没有直接进问题（读者不知道你在干嘛），要么扯了一页背景还没说到研究对象上。这篇的处理刚好——三句话，每句一个功能，不贪多。}
+
 \end{frame}
 
 \begin{frame}
@@ -345,7 +344,7 @@
 		仅考虑垂荡运动，以PTO系统平均输出功率最大为目标，建立直线阻尼器最优阻尼系数的数学模型，并根据所给参数求出以下两种约束条件下装置的最大输出功率及相应的最优阻尼系数：（1）阻尼系数为常量，取值范围为 $[0,100000]$；（2）阻尼系数为变量，与浮子和振子相对速度的绝对值的幂成正比，比例系数取值范围为 $[0,100000]$，幂指数取值范围为 $[0.1,1]$。
 	\end{block}
 	\medskip
-	\remark{赏析}{问题一先让建模型、算位移算速度，算是热身；问题二才求功率最大的阻尼系数，还分常系数和变系数两种情况，参数范围都给好了。我读的时候觉得他们把约束写得清清楚楚，我们照着做就行，这点做得挺清楚。}
+	\remark{赏析}{问题一先让建模型、算位移算速度，算是热身；问题二才求功率最大的阻尼系数，还分常系数和变系数两种情况，参数范围都给好了。我读的时候觉得他们把约束写得清清楚楚，我们照着做就行，就像在解振动理论的期末考试试题一样，这点做得挺清楚。}
 \end{frame}
 
 \begin{frame}
@@ -358,7 +357,7 @@
 		同时考虑垂荡和纵摇运动，以PTO系统最大输出功率为目标，建立直线阻尼器、旋转阻尼器最优阻尼系数的数学模型，并求出当二者阻尼系数取值范围均为 $[0,100000]$、波浪频率为 $1.9806\,\mathrm{s}^{-1}$ 时，装置的最大输出功率及相应的最优阻尼系数。
 	\end{block}
 	\medskip
-	\remarkg{赏析}{问题三难度明显上来了：又垂荡又纵摇，振子一边转一边滑，还冒出个旋转阻尼；计算要求也细到前40个周期、0.2秒一个点。问题四再把两个阻尼系数一起优化、给定频率。说实话我看到这儿有点压力，感觉让我们自己做，未必能想得这么全。}
+	\remarkg{赏析}{问题三难度明显上来了：又垂荡又纵摇，振子一边转一边滑，还冒出个旋转阻尼；计算要求也细到前40个周期、0.2秒一个点。问题四再把两个阻尼系数一起优化、给定频率。说实话我看到这儿有点压力，感觉让我们自己做，会有点困难。}
 \end{frame}
 
 \begin{frame}
@@ -396,7 +395,7 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{教程：问题重述别抄题目}
+	\frametitle{总结：问题重述别抄题目}
 	\scriptsize
 	\begin{columns}[T]
 		\column{0.5\textwidth}
@@ -418,7 +417,7 @@
 			\end{itemize}
 		\end{alertblock}
 	\end{columns}
-	\remark{跟你们说}{问题重述是你建模的"订单"——写清楚要什么、约束是什么，后面建模才不会偏。我原来就是直接抄题目，后来发现出题的写法和建模需要的写法不是一回事。}
+
 \end{frame}
 
 \section{问题分析思考}
@@ -493,7 +492,7 @@
 		\node[tlab] at (-0.2,-3.2) {建优化模型：问题二、四};
 	\end{tikzpicture}
 	\end{center}
-	\remarkg{赏析}{方法就那几样，来回用，这大概是这篇最厉害的地方。理解得浅，说错的地方请大家指正。}
+	\remarkg{赏析}{方法就那几样，来回用，但是细节的地方又有区别，这大概是这篇最厉害的地方。理解得浅，说错的地方请大家指正。}
 \end{frame}
 
 \begin{frame}
@@ -547,29 +546,7 @@
 	\end{center}
 \end{frame}
 
-\begin{frame}
-	\frametitle{教程：写假设别凑条数}
-	\scriptsize
-	\begin{columns}[T]
-		\column{0.5\textwidth}
-		\begin{exampleblock}{要这样做}
-			\begin{itemize}
-				\item 每条假设要能在后面的模型里"对得上号"——省了哪个项、为什么能省
-				\item 分两类：物理前提（线性波、理想流体）+ 简化取舍（忽略耦合、忽略质量摩擦）
-				\item 写到后面能引用："基于假设X，方程中忽略XX项"
-			\end{itemize}
-		\end{exampleblock}
-		\column{0.5\textwidth}
-		\begin{alertblock}{不要这样做}
-			\begin{itemize}
-				\item 凑四条看起来整齐，但跟后面建模毫无关系
-				\item 写的全部是"题目已给的已知条件"（波浪是简谐的）而不是你主动做的取舍
-				\item "假设数据真实可靠"——这不是假设，是废话
-			\end{itemize}
-		\end{alertblock}
-	\end{columns}
-	\remark{跟你们说}{假设不是"题目让你写几条我就编几条"，是你建模时"为了简化放弃了什么"。这篇四条假设，后面方程都有一一对应，这才是好假设。}
-\end{frame}
+
 
 
 \section{模型的建立与求解思考}
@@ -624,7 +601,6 @@
 			\scriptsize 大地坐标系与固体坐标系（示意）
 		\end{center}
 	\end{columns}
-	\remarkg{我的想法}{以前我总是一上来就写方程，写一半才发现漏力、方向反，返工很费时间。跟着论文一步步来，才明白``先受力分析再列方程''最省事。}
 \end{frame}
 
 \begin{frame}
@@ -679,52 +655,10 @@
 				\item 按 0.2s 间隔采样，保存结果
 			\end{itemize}
 		\end{block}
-		\begin{center}
-			\includegraphics[height=0.14\textheight]{Figure/fig_rk4.png}\\
-			\scriptsize 四阶龙格库塔：一个步长内取多个斜率加权（示意）
-		\end{center}
-		\remark{我的想法}{二阶转一阶是标准动作，但我以前只停留在``会用''，没想过步长为什么要取这么小。自己跑一次才发现：步长一大，40 个周期算到后面就抖得没法看，$h=10^{-4}$ 才稳得下来。}
+
 	\end{columns}
 \end{frame}
 
-\begin{frame}
-	\frametitle{问题一·结果（1/3）：大地坐标系下的运动（题 1.(1)）}
-	\scriptsize
-	\begin{columns}[c]
-		\column{0.5\textwidth}
-		\begin{center}
-			\includegraphics[width=\textwidth]{Figure/fig_sim_01.png}
-		\end{center}
-		\column{0.5\textwidth}
-		\remarkg{我的想法}{也提醒我别只盯着表面看。}
-	\end{columns}
-\end{frame}
-
-\begin{frame}
-	\frametitle{问题一·结果（2/3）：相对位移下的运动（题 1.(1)）}
-	\scriptsize
-	\begin{columns}[c]
-		\column{0.5\textwidth}
-		\begin{center}
-			\includegraphics[width=\textwidth]{Figure/fig_sim_02.png}
-		\end{center}
-		\column{0.5\textwidth}
-		\remarkp{我的想法}{这个改参考系的小操作，我这次才算真会用了。}
-	\end{columns}
-\end{frame}
-
-\begin{frame}
-	\frametitle{问题一·结果（3/3）：变阻尼下的运动（题 1.(2)）}
-	\scriptsize
-	\begin{columns}[c]
-		\column{0.5\textwidth}
-		\begin{center}
-			\includegraphics[width=\textwidth]{Figure/fig_sim_03.png}
-		\end{center}
-		\column{0.5\textwidth}
-		\remark{我的想法}{变阻尼（$C=10000\,|v_r|^{0.5}$）和常数阻尼比，相对运动的形态明显不同。我这才体会到：阻尼模型不是随便选的，它直接决定运动结果。题目特意把两种情况分开让我们算，大概就是这个用意。}
-	\end{columns}
-\end{frame}
 
 \begin{frame}
 	\frametitle{问题二·建模（1/6）：平均功率函数}
@@ -788,31 +722,6 @@
 	\end{columns}
 \end{frame}
 
-\begin{frame}
-	\frametitle{问题二·结果（1/2）：题 2.(1) 常数阻尼}
-	\scriptsize
-	\begin{columns}[c]
-		\column{0.5\textwidth}
-		\begin{center}
-			\includegraphics[width=\textwidth]{Figure/fig_sim_05.png}
-		\end{center}
-		\column{0.5\textwidth}
-		\remarkg{我的想法}{看到单峰我是服气的：阻尼太小耗能不足、太大锁死运动，中间必有最优。我复现 $C\approx37186$、$P\approx229.77$W，和论文基本一致。}
-	\end{columns}
-\end{frame}
-
-\begin{frame}
-	\frametitle{问题二·结果（2/2）：题 2.(2) 阻尼与幂指数（三维）}
-	\scriptsize
-	\begin{columns}[c]
-		\column{0.5\textwidth}
-		\begin{center}
-			\includegraphics[width=\textwidth]{Figure/fig_sim_06.png}
-		\end{center}
-		\column{0.5\textwidth}
-		\remarkp{我的想法}{两个参数是``一起''影响功率的，不能拆开各自求最优。我复现的峰位和论文略有出入，但``存在最优区域''的结论一致。}
-	\end{columns}
-\end{frame}
 
 \begin{frame}
 	\frametitle{问题三·建模（1/4）：转动惯量计算}
@@ -840,7 +749,6 @@
 			\scriptsize 平行移轴与垂直轴定理（示意）
 		\end{center}
 	\end{columns}
-	\remark{我的想法}{问题三多了纵摇，第一步居然是算转动惯量。平行移轴、垂直轴定理我上课学过但从没用过，这次才发现它们是``组合体''求惯量的标准工具。坦白讲这一页我是对着课本啃下来的。}
 \end{frame}
 
 \begin{frame}
@@ -866,7 +774,7 @@
 			\scriptsize 纵摇受力分析（示意）
 		\end{center}
 	\end{columns}
-	\remarkg{我的想法}{多自由度的题其实就是单自由度复制几份再串起来，会一个就差不多会一串了。}
+	\remarkg{我的想法}{多自由度的题如果解耦了，其实就是单自由度复制几份再串起来，会一个就差不多会一串了。}
 \end{frame}
 
 \begin{frame}
@@ -916,7 +824,6 @@
 			$P_{avg}=\dfrac{1}{t_2-t_1}\displaystyle\int_{t_1}^{t_2}\Big[C\big(\dot x_1-\dot x_2\big)^2 + C_t\big(\dot\theta_1-\dot\theta_2\big)^2\Big]dt$
 		\end{center}
 	\end{block}
-	\remarkg{我的想法}{这种前问给后问铺路的写法，我想学。}
 \end{frame}
 
 \begin{frame}
@@ -1092,22 +999,6 @@
 	\remark{我的收获}{这五点是我读完整篇最想带走的。建模题不怕方法多，怕的是思路乱——六步走稳，比背一堆模型管用。}
 \end{frame}
 
-\begin{frame}
-	\frametitle{下次写论文，你直接抄这个清单}
-	\scriptsize
-	\begin{block}{各部分的"写作公式"}
-		\begin{itemize}
-			\item \textbf{标题}：对象 + 任务，不用"基于……的研究"
-			\item \textbf{摘要}：总述 $\rightarrow$ 每问（模型+结果数字）$\rightarrow$ 关键词三类
-			\item \textbf{重述}：背景（意义）$\rightarrow$ 结构（部件）$\rightarrow$ 原理（链条）$\rightarrow$ 每问（含参数范围）
-			\item \textbf{分析}：每问 = 承上基础 + 难点 + 对策 + 方法名，统一亮工具箱
-			\item \textbf{假设}：每条 = 简化了啥 $\rightarrow$ 省了哪一项 $\rightarrow$ 方程里对得上
-			\item \textbf{建模}：坐标/受力 $\rightarrow$ 方程 $\rightarrow$ 数值方法（步长/参数）$\rightarrow$ 结果（图+表+具体数）
-			\item \textbf{检验}：验什么、怎么验、阈值多少——三个数字不能少
-		\end{itemize}
-	\end{block}
-	\remark{跟你们说}{这就是读完这篇我总结的"模板清单"，下次建模论文照着这个骨架填内容，基本不会跑偏。当然具体怎么填还是要自己动脑，清单只是帮你记住格式。}
-\end{frame}
 
 % ---------- 结束页 ----------
 \begin{frame}
