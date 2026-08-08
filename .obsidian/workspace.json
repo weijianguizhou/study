@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "180ba29156f156f5",
+        "id": "4daeda775a6a0133",
         "type": "tabs",
         "children": [
           {
-            "id": "364e3234c6bd4abf",
+            "id": "c582d9e3101d43ad",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "教材/Spacecraft_Dynamics/翻译/中文.md",
+                "file": "教材/Rigid body dynamics algorithms (Roy Featherstone)/翻译/中文.md",
                 "mode": "source",
                 "source": false
               },
@@ -80,8 +80,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "dfcd6f1a0be67c9c",
@@ -210,10 +209,25 @@
       "opencode:Opencode conversations": false
     }
   },
-  "active": "364e3234c6bd4abf",
+  "active": "c582d9e3101d43ad",
   "lastOpenFiles": [
-    "教材/Spacecraft_Dynamics/翻译/英文.md",
+    "教材/Rigid body dynamics algorithms (Roy Featherstone)/翻译/images/mfac8b9954995e5f12e54a73774ac334f.jpg",
+    "教材/Rigid body dynamics algorithms (Roy Featherstone)/翻译/images/mf768ccef20ce62aefb009a3e60b60026.jpg",
+    "教材/Rigid body dynamics algorithms (Roy Featherstone)/翻译/images/mf68a42b76591d6a966355d8e66d29873.jpg",
+    "教材/Rigid body dynamics algorithms (Roy Featherstone)/翻译/images/mf616934d5e98fea4089518a6f7e657f8.jpg",
+    "教材/Rigid body dynamics algorithms (Roy Featherstone)/翻译/images/mf06d9db8aaa5f4abe37403029a8d7169.jpg",
+    "教材/Rigid body dynamics algorithms (Roy Featherstone)/翻译/images/mda8f903713cddcfceb2b3ac374748e41.jpg",
+    "教材/Rigid body dynamics algorithms (Roy Featherstone)/翻译/images/mbb5a0c0aa3b92a7ce82d5b9d13da8171.jpg",
+    "教材/Rigid body dynamics algorithms (Roy Featherstone)/翻译/images/mb3ed4a8ea4cfcde1d2e6c845d4c5fbf2.jpg",
+    "教材/Rigid body dynamics algorithms (Roy Featherstone)/翻译/images/ma76d1e3e8033607026d0b4eaceac5b45.jpg",
+    "教材/Rigid body dynamics algorithms (Roy Featherstone)/翻译/images/ma727f6cbf673e2904808d8545282a487.jpg",
+    "教材/Rigid body dynamics algorithms (Roy Featherstone)/翻译/images/ma1208580e2873635940f1889d407d03a.jpg",
+    "教材/Rigid body dynamics algorithms (Roy Featherstone)/翻译/944e8218-7c32-40_Simplified Chinese_local.md",
+    "教材/Rigid body dynamics algorithms (Roy Featherstone)/翻译/中文.md",
+    "教材/Rigid body dynamics algorithms (Roy Featherstone)/翻译/英文.md",
+    "images",
     "教材/Spacecraft_Dynamics/翻译/中文.md",
+    "教材/Spacecraft_Dynamics/翻译/英文.md",
     "力学/系统动力学/TreeMRBS.pdf",
     "教材/Spacecraft_Dynamics/Spacecraft_Dynamics.pdf",
     "教材/Spacecraft_Dynamics/Spacecraft_Dynamics_1-174.pdf",
@@ -226,7 +240,6 @@
     "教材/代数基础/Linear Algebra Done Right (Sheldon Axler)/Linear Algebra Done Right (Sheldon Axler).pdf",
     "教材/代数基础/Linear Algebra Done Right (Sheldon Axler)",
     "教材/代数基础/Linear Algebra (M. Thamban Nair, Arindama Singh)/Linear Algebra (M. Thamban Nair, Arindama Singh).pdf",
-    "教材/代数基础/Linear Algebra (M. Thamban Nair, Arindama Singh)",
     "力学/振动理论/md/03-简谐强迫振动.md",
     "力学/振动理论/md/01-振动引论.md",
     "力学/振动理论/md/00-振动理论MOC.md",
@@ -243,20 +256,6 @@
     "机械/机械制图/10-零件图技术要求.md",
     "机械/机械制图/09-零件图.md",
     "机械/机械制图/08-标准件与常用件.md",
-    "机械/机械制图/07-机件表达方法.md",
-    "机械/机械制图/06-轴测图.md",
-    "机械/机械制图/05-组合体.md",
-    "机械/机械制图/04-基本体与截交线.md",
-    "机械/机械制图/03-投影基础.md",
-    "数理基础/概率论/Figure/uniform_dist.png",
-    "数理基础/概率论/Figure/poisson_dist.png",
-    "数理基础/概率论/Figure/exponential_dist.png",
-    "数理基础/概率论/Figure/normal_sigma.png",
-    "数理基础/概率论/Figure/normal_mu.png",
-    "数理基础/概率论/Figure/bivariate_normal.png",
-    "数理基础/概率论/Figure/binomial_dist.png",
-    "一些背景/蜘蛛侠.png",
-    "一些背景/橘子洲头.png",
-    "一些背景/改装车-春日-樱花.png"
+    "机械/机械制图/07-机件表达方法.md"
   ]
 }
