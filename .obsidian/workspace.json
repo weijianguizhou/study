@@ -4,17 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "d969bf1df5f414a1",
+        "id": "180ba29156f156f5",
         "type": "tabs",
         "children": [
           {
-            "id": "6b80efea3b59643b",
+            "id": "364e3234c6bd4abf",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "关系图谱"
+              "type": "markdown",
+              "state": {
+                "file": "教材/Spacecraft_Dynamics/翻译/中文.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "中文"
             }
           }
         ]
@@ -190,6 +194,9 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "pdf-plus:PDF++: Toggle auto-copy": false,
+      "pdf-plus:PDF++: Toggle auto-focus": false,
+      "pdf-plus:PDF++: Toggle auto-paste": false,
       "markdown-importer:打开 Markdown 格式转换器": false,
       "switcher:打开快速切换": false,
       "graph:查看关系图谱": false,
@@ -203,10 +210,16 @@
       "opencode:Opencode conversations": false
     }
   },
-  "active": "6b80efea3b59643b",
+  "active": "364e3234c6bd4abf",
   "lastOpenFiles": [
-    "教材/Mathematical methods for physicists (Babusci, Danilo)/读书笔记.md",
+    "教材/Spacecraft_Dynamics/翻译/英文.md",
+    "教材/Spacecraft_Dynamics/翻译/中文.md",
+    "力学/系统动力学/TreeMRBS.pdf",
+    "教材/Spacecraft_Dynamics/Spacecraft_Dynamics.pdf",
+    "教材/Spacecraft_Dynamics/Spacecraft_Dynamics_1-174.pdf",
+    "教材/Spacecraft_Dynamics/读书笔记.md",
     "教材/Mathematical methods for physicists (Babusci, Danilo)/Mathematical methods for physicists (Babusci, Danilo).pdf",
+    "教材/Mathematical methods for physicists (Babusci, Danilo)/读书笔记.md",
     "计算机类/QT教程/02-信号与槽机制/README.md",
     "教材/代数基础/Matrix Analysis and Applied Linear Algebra (Carl D. Meyer)/Matrix Analysis and Applied Linear Algebra (Carl D. Meyer).pdf",
     "教材/代数基础/Matrix Analysis and Applied Linear Algebra (Carl D. Meyer)",
@@ -214,9 +227,6 @@
     "教材/代数基础/Linear Algebra Done Right (Sheldon Axler)",
     "教材/代数基础/Linear Algebra (M. Thamban Nair, Arindama Singh)/Linear Algebra (M. Thamban Nair, Arindama Singh).pdf",
     "教材/代数基础/Linear Algebra (M. Thamban Nair, Arindama Singh)",
-    "教材/代数基础/Advanced Modern Algebra (Joseph J. Rotman)/Advanced Modern Algebra (Joseph J. Rotman).pdf",
-    "教材/代数基础/Advanced Modern Algebra (Joseph J. Rotman)",
-    "教材/代数基础",
     "力学/振动理论/md/03-简谐强迫振动.md",
     "力学/振动理论/md/01-振动引论.md",
     "力学/振动理论/md/00-振动理论MOC.md",
@@ -238,8 +248,6 @@
     "机械/机械制图/05-组合体.md",
     "机械/机械制图/04-基本体与截交线.md",
     "机械/机械制图/03-投影基础.md",
-    "机械/机械制图/02-几何作图.md",
-    "机械/机械制图/01-制图基础与国家标准.md",
     "数理基础/概率论/Figure/uniform_dist.png",
     "数理基础/概率论/Figure/poisson_dist.png",
     "数理基础/概率论/Figure/exponential_dist.png",
