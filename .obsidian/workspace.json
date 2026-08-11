@@ -4,21 +4,23 @@
     "type": "split",
     "children": [
       {
-        "id": "829359a687c331fd",
+        "id": "dad22983ad7649ce",
         "type": "tabs",
         "children": [
           {
-            "id": "35fca6207bb32ddb",
+            "id": "fcd23e5c9ff5e34a",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "pdf",
               "state": {
-                "file": "教材/Spacecraft_Dynamics/翻译/中文.md",
-                "mode": "source",
-                "source": false
+                "file": "教材/Spacecraft_Dynamics/Spacecraft_Dynamics.pdf",
+                "page": 1,
+                "left": -7,
+                "top": 416,
+                "zoom": 2.16
               },
-              "icon": "lucide-file",
-              "title": "中文"
+              "icon": "lucide-file-text",
+              "title": "Spacecraft_Dynamics"
             }
           }
         ]
@@ -199,7 +201,7 @@
       "pdf-plus:PDF++: Toggle auto-paste": false
     }
   },
-  "active": "35fca6207bb32ddb",
+  "active": "fcd23e5c9ff5e34a",
   "lastOpenFiles": [
     "教材/Spacecraft_Dynamics/翻译/中文.md",
     "教材/Spacecraft_Dynamics/word版翻译/英文.docx",
