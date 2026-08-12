@@ -5,7 +5,7 @@
 若存在一条称为转轴的直线$L$，其相对于刚体或参考系$A$的取向在整个运动过程中保持不变，和刚体或参考系$B$的取向在整个运动过程中保持不变，则刚体或参考系$B$相对于刚体或参考系$A$的运动称为$B$在$A$中的简单转动。
 \end{mydefinition}
 
-设$\boldsymbol{a}$为$A$中的一个向量.$\boldsymbol{b}$为$B$中的一个向量，且在转动之前与$\boldsymbol{a}$重合，则满足如下关系：
+设$\boldsymbol{a}$为$A$中的一个向量.$\boldsymbol{b}$为$B$中的一个向量，且在转动之前与$\boldsymbol{a}$重合，则满足如下关系（即Rodrigues公式。）：
 \begin{equation}\label{eq:simple_rotation_formula}
 \boldsymbol{b} = \boldsymbol{a}\cos\theta - (\boldsymbol{a}\times\boldsymbol{\lambda})\sin\theta + \boldsymbol{\lambda}(\boldsymbol{\lambda}\cdot\boldsymbol{a})(1-\cos\theta)
 \end{equation}
@@ -77,9 +77,12 @@ $$\boldsymbol{\beta_{2}}=-\sin\theta\boldsymbol{\alpha_{1}}+\cos\theta\boldsymbo
 \end{equation}
 \begin{mydefinition}{方向余弦}
 设 $\boldsymbol{e}_{1|A}, \boldsymbol{e}_{2|A}, \boldsymbol{e}_{3|A}$ 为 $A$ 中的三个互相垂直的单位向量，$\boldsymbol{e}_{1|B}, \boldsymbol{e}_{2|B}, \boldsymbol{e}_{3|B}$ 为 $B$ 中的三个互相垂直的单位向量，则 $\boldsymbol{e}_{i|A}$ 在 $B$ 中沿 $\boldsymbol{e}_{j|B}$ 的方向余弦定义为：
-$$
-a_{ij}\triangleq\mathbf{e}_{i|A}\cdot\mathbf{e}_{j|B}\quad(i,j=1,2,3)
-$$
+\begin{equation}
+    a_{ij}\triangleq\mathbf{e}_{i|A}\cdot\mathbf{e}_{j|B}\quad(i,j=1,2,3)
+    \label{eq:方向余弦的定义}
+\end{equation}
+
+
 \end{mydefinition}
 于是方向余弦矩阵：
 \begin{equation}
@@ -276,13 +279,16 @@ f_{\boldsymbol{A}}(1) = -1 + \mathrm{tr}(\boldsymbol{A}) - \mathrm{tr}(\boldsymb
 \end{equation}
 也就是说，在本次旋转变换中转轴$\mathbf{\lambda}$并没有发生变化，即转轴朝向不变。
 
-若已知转角$\theta$和转轴$\mathbf{\lambda}$，那我们怎么得出方向余弦矩阵呢？Kane的书里给出了一种计算方法。
+若已知转角$\theta$和转轴$\mathbf{\lambda}$，那我们怎么得出方向余弦矩阵呢？Kane的书里给出了一种计算方法
 \begin{equation}
     \label{eq:方向余弦矩阵计算式}
     \begin{aligned}&a_{11}=\cos\theta+\lambda_1^2(1-\cos\theta)\\&a_{12}=-\lambda_3\sin\theta+\lambda_1\lambda_2(1-\cos\theta)\\&a_{13}=\lambda_2\sin\theta+\lambda_3\lambda_1(1-\cos\theta)\\&a_{21}=\lambda_3\sin\theta+\lambda_1\lambda_2(1-\cos\theta)\\&a_{22}=\cos\theta+\lambda_2^2(1-\cos\theta)\\&a_{23}=-\lambda_1\sin\theta+\lambda_2\lambda_3(1-\cos\theta)\\&a_{31}=-\lambda_2\sin\theta+\lambda_3\lambda_1(1-\cos\theta)\\&a_{32}=\lambda_1\sin\theta+\lambda_2\lambda_3(1-\cos\theta)\\&a_{33}=\cos\theta+\lambda_3^2(1-\cos\theta)
 \end{aligned}
 \end{equation}
-为了方便记忆，引入一个符号$\epsilon_{ijk}$
+为了方便记忆，引入两个符号$\delta_{ij},\epsilon_{ijk}$
+\begin{equation}
+    \delta_{ij}\triangleq1-\frac{1}{4}(i-j)^2[5-(i-j)^2]\quad(i,j=1,2,3)
+\end{equation}
 \begin{equation}
     \epsilon_{ijk}\triangleq\frac{1}{2}(i-j)(j-k)(k-i)\quad(i,j,k=1,2,3)
 \end{equation}
@@ -331,9 +337,510 @@ $$\boldsymbol{e_A} = \boldsymbol{e_B}\cos\theta - (\boldsymbol{e_B}\times\boldsy
     $$A=\frac{1}{169}\begin{bmatrix}16&9&168\\87&144&-16\\-144&88&9\end{bmatrix}$$
     又$\mathbf{I}_B=A^\mathrm{T}\mathbf{I}_A A$,所以$A\mathbf{I}_B A^\mathrm{T}=\mathbf{I}_A $
     由此计算出$\mathbf{I}_A$ $$\begin{aligned}
-        &I_{A}=\frac{mL^{2}}{12\times169\times169}\begin{bmatrix}16&9&168\\87&144&-16\\-144&88&9\end{bmatrix}\begin{bmatrix}153&0&0\\0&25&0\\0&0&160\end{bmatrix}\begin{bmatrix}16&87&-144\\9&144&88\\168&-16&9\end{bmatrix}\\&=\frac{mL^{2}}{12\times169\times169}\begin{bmatrix}4,557,033&-184,704&-90,792\\-184,704&1,717,417&-1,623,024\\-90,792&-1,623,034&3,379,168\end{bmatrix}&\mathrm{(72)}
+        &I_{A}=\frac{mL^{2}}{12\times169\times169}\begin{bmatrix}16&9&168\\87&144&-16\\-144&88&9\end{bmatrix}\begin{bmatrix}153&0&0\\0&25&0\\0&0&160\end{bmatrix}\begin{bmatrix}16&87&-144\\9&144&88\\168&-16&9\end{bmatrix}\\&=\frac{mL^{2}}{12\times169\times169}\begin{bmatrix}4,557,033&-184,704&-90,792\\-184,704&1,717,417&-1,623,024\\-90,792&-1,623,034&3,379,168\end{bmatrix}
     \end{aligned}$$
 
 \end{solution}
+我发现，有了转轴单位向量还有转角，我们就可以计算出方向余弦矩阵，进而计算出惯性矩阵在不同坐标系下的投影。
 
+    我又发现，方向余弦矩阵的计算在有了转轴向量和转角的情况下是非常机械的，于是使用Python进行一个编程。
+
+    由此，我们不经反思，既然知道$\boldsymbol{\lambda}$还有$\theta$就可以计算出方向余弦矩阵，那我们可不可以抛弃或者说简化矩阵这个形式呢？下面看看欧拉参数。
+\newpage
 \section{欧拉参数}
+欧拉参数（Euler Parameters），也叫欧拉四元数，也可以简称四元数，下面我们来看看，怎么用欧拉参数来描述转动。
+
+上面我们知道，单纯描述转动过程是与外形无关的。描述一个转动过程只需要两个量：转轴和转角。于是我们可以用一个单位向量$\boldsymbol{\lambda}$来表示转轴，用一个实数$\theta$来表示转角。于是我们可以定义欧拉参数：
+\begin{mydefinition}{欧拉参数}
+    设$\boldsymbol{\lambda}$为转轴单位向量，$\theta$为转角，则欧拉参数定义为：
+    \begin{equation}
+        \begin{aligned}
+            &\boldsymbol{\epsilon} \triangleq \boldsymbol{\lambda}\sin \frac{\theta}{2}\\
+            &\epsilon_i \triangleq \boldsymbol{\epsilon} \cdot \boldsymbol{a}_i=\boldsymbol{\epsilon} \cdot \boldsymbol{b}_i\quad(i=1,2,3)\\
+            &\epsilon_4 \triangleq \cos \frac{\theta}{2}
+        \end{aligned}
+    \end{equation}
+
+\end{mydefinition}
+
+
+
+上面我们讨论了方向余弦矩阵中的9个元素满足六个约束关系，也就是独立的坐标其实只有三个，而欧拉参数中有四个元素，从物理的角度，描述同一个转动过程，欧拉参数一定满足一个约束关系，这个关系是什么？从数学的角度十分直观：
+\begin{equation}\label{eq:欧拉参数归一化}
+    \boldsymbol{\epsilon}^2+\epsilon_4^2=\epsilon_1^2+\epsilon_2^2+\epsilon_3^2+\epsilon_4^2=1
+\end{equation}
+
+我们知道，欧拉参数和方向余弦都是描述转动的工具，那么在描述同一个转动时，两者之间一定存在关系，Kane在书中给出：
+\begin{equation}
+    \begin{aligned}
+        a_{11} &= \epsilon_1^2 - \epsilon_2^2 - \epsilon_3^2 + \epsilon_4^2 = 1 - 2\epsilon_2^2 - 2\epsilon_3^2,\\
+        a_{12} &= 2(\epsilon_1 \epsilon_2 - \epsilon_3 \epsilon_4),\\
+        a_{13} &= 2(\epsilon_3 \epsilon_1 + \epsilon_2 \epsilon_4),\\
+        a_{21} &= 2(\epsilon_1 \epsilon_2 + \epsilon_3 \epsilon_4),\\
+        a_{22} &= \epsilon_2^2 - \epsilon_3^2 - \epsilon_1^2 + \epsilon_4^2 = 1 - 2\epsilon_3^2 - 2\epsilon_1^2,\\
+        a_{23} &= 2(\epsilon_2 \epsilon_3 - \epsilon_1 \epsilon_4),\\
+        a_{31} &= 2(\epsilon_3 \epsilon_1 - \epsilon_2 \epsilon_4),\\
+        a_{32} &= 2(\epsilon_2 \epsilon_3 + \epsilon_1 \epsilon_4),\\
+        a_{33} &= \epsilon_3^2 - \epsilon_1^2 - \epsilon_2^2 + \epsilon_4^2 = 1 - 2\epsilon_1^2 - 2\epsilon_2^2.
+    \end{aligned}
+    \label{eq:欧拉参数转方向余弦}
+\end{equation}
+欧拉参数也可以由方向余弦给出：
+\begin{equation}
+    \begin{aligned}
+        \epsilon_{1} &= \frac{a_{32}-a_{23}}{4\epsilon_4},\\
+        \epsilon_{2} &= \frac{a_{13}-a_{31}}{4\epsilon_4},\\
+        \epsilon_{3} &= \frac{a_{21}-a_{12}}{4\epsilon_4},\\
+        \epsilon_4 &= \frac{1}{2}\left(1+a_{11}+a_{22}+a_{33}\right)^{1/2}.
+    \end{aligned}
+    \label{eq:方向余弦转欧拉参数}
+\end{equation}
+
+对于转轴有：
+\begin{equation}
+    \boldsymbol{\lambda}=\frac{\epsilon_1\mathbf{a}_1+\epsilon_2\mathbf{a}_2+\epsilon_3\mathbf{a}_3}{(\epsilon_1^2+\epsilon_2^2+\epsilon_3^2)^{1/2}}
+    \label{eq:欧拉参数得转轴}
+\end{equation}
+
+对于转角有：
+\begin{equation}
+    \theta=2\arccos\epsilon_4 \quad \theta \in [0,\pi]
+    \label{eq:欧拉参数得转角}
+\end{equation}
+简单转动的公式也迎来了欧拉参数的形式：
+\begin{equation}
+    \mathbf{b}=\mathbf{a}+2[\epsilon_4 \boldsymbol{\epsilon}\times\mathbf{a}+\boldsymbol{\epsilon}\times(\boldsymbol{\epsilon}\times\mathbf{a})]
+    \label{eq:转动公式的欧拉参数形式}
+\end{equation}
+那么，式~\eqref{eq:欧拉参数转方向余弦}，式~\eqref{eq:方向余弦转欧拉参数},式~\eqref{eq:欧拉参数得转轴}，式~\eqref{eq:欧拉参数得转角}和式~\eqref{eq:转动公式的欧拉参数形式}是怎么得到的呢？下面给出Kane书中的证明。
+
+\begin{proof}
+\textbf{（一）式~\eqref{eq:欧拉参数转方向余弦} 的推导。}  利用 $\boldsymbol{\lambda}$ 为单位向量，故 $1=\lambda_1^2+\lambda_2^2+\lambda_3^2$，结合式 (1.2.22) 的 $\epsilon_4^2+\epsilon_1^2+\epsilon_2^2+\epsilon_3^2=1$，有
+$$
+\epsilon_i^2=\frac{1-\cos\theta}{2}\,\lambda_i^{2},\quad 1-2\epsilon_j^2-2\epsilon_k^2=\lambda_i^2(1-\cos\theta)+\cos\theta \quad (i,j,k\text{ 互不相同})
+$$
+代入式 (1.2.23)--(1.2.25) 即可得 $a_{11},a_{22},a_{33}$ 的表达。再利用 $\sin\theta=2\sin(\theta/2)\cos(\theta/2)$ 以及 $\epsilon_i=\lambda_i\sin(\theta/2)$，$\epsilon_4=\cos(\theta/2)$，可把 6 个非对角元全部表示为 $\epsilon_1,\epsilon_2,\epsilon_3,\epsilon_4$ 的二次齐次式，整理即得式~\eqref{eq:欧拉参数转方向余弦}。
+
+\textbf{（二）式~\eqref{eq:方向余弦转欧拉参数} 的推导。}  把式~\eqref{eq:欧拉参数转方向余弦} 中三个对角元相加：
+$$
+a_{11}+a_{22}+a_{33}=3-4(\epsilon_1^2+\epsilon_2^2+\epsilon_3^2)=3-4(1-\epsilon_4^2)=4\epsilon_4^2-1
+$$
+故 $\epsilon_4^2=\dfrac{1+a_{11}+a_{22}+a_{33}}{4}$。由于 $\epsilon_4=\cos(\theta/2)$，$\theta\in[0,\pi]$，$\cos(\theta/2)\geq 0$，故取正根
+$$
+\epsilon_4=\frac{1}{2}(1+a_{11}+a_{22}+a_{33})^{1/2}
+$$
+将 $a_{ij}-a_{ji}$（反对角差）展开，结合 $\epsilon_4$ 的非零性可得
+$$
+\epsilon_1=\frac{a_{32}-a_{23}}{4\epsilon_4},\quad \epsilon_2=\frac{a_{13}-a_{31}}{4\epsilon_4},\quad \epsilon_3=\frac{a_{21}-a_{12}}{4\epsilon_4}
+$$
+即式~\eqref{eq:方向余弦转欧拉参数}。
+
+\textbf{（三）式~\eqref{eq:欧拉参数得转轴} 的推导。}  由式 (32) 知
+$$
+\boldsymbol{\lambda}\sin\frac{\theta}{2}=\boldsymbol{\epsilon}
+$$
+而由欧拉参数的归一化 $\epsilon_4^2+\epsilon_1^2+\epsilon_2^2+\epsilon_3^2=1$ 与 $\epsilon_4=\cos(\theta/2)$ 可得
+$$
+\sin\frac{\theta}{2}=(\epsilon_1^2+\epsilon_2^2+\epsilon_3^2)^{1/2}
+$$
+故
+$$
+\boldsymbol{\lambda}=\frac{\boldsymbol{\epsilon}}{(\epsilon_1^2+\epsilon_2^2+\epsilon_3^2)^{1/2}}=\frac{\epsilon_1\mathbf{a}_1+\epsilon_2\mathbf{a}_2+\epsilon_3\mathbf{a}_3}{(\epsilon_1^2+\epsilon_2^2+\epsilon_3^2)^{1/2}}
+$$
+即式~\eqref{eq:欧拉参数得转轴}。
+
+\textbf{（四）式~\eqref{eq:欧拉参数得转角} 的推导。}  直接由 $\epsilon_4=\cos(\theta/2)$ 取逆：
+$$
+\theta=2\arccos\epsilon_4,\quad \theta\in[0,\pi]
+$$
+此即式~\eqref{eq:欧拉参数得转角}。注意 $\theta$ 的取值范围限制在 $[0,\pi]$ 是因为 $\cos$ 在 $[0,\pi]$ 上单调且与 $[0,2\pi]$ 的转角一一对应（$\theta$ 与 $-\theta$ 等价，反向旋转可由 $\boldsymbol{\lambda}$ 翻转吸收）。
+
+\textbf{（五）式~\eqref{eq:转动公式的欧拉参数形式} 的推导。}  由式 (1.1.1)：
+$$
+\mathbf{b}=\mathbf{a}+\boldsymbol{\lambda}\times\mathbf{a}\sin\theta+\boldsymbol{\lambda}\times(\boldsymbol{\lambda}\times\mathbf{a})(1-\cos\theta)
+$$
+利用 $\sin\theta=2\sin(\theta/2)\cos(\theta/2)=2\epsilon\sin(\theta/2)\cdot\epsilon_4$（其中 $\epsilon\sin(\theta/2)=|\boldsymbol{\lambda}|\sin(\theta/2)=1\cdot\sin(\theta/2)$），以及 $1-\cos\theta=2\sin^2(\theta/2)=2\epsilon^2$ 代入得
+$$
+\begin{aligned}
+\mathbf{b}&=\mathbf{a}+2\epsilon_4\,\boldsymbol{\epsilon}\times\mathbf{a}+2\boldsymbol{\epsilon}\times(\boldsymbol{\epsilon}\times\mathbf{a})\\
+&=\mathbf{a}+2\bigl[\epsilon_4\,\boldsymbol{\epsilon}\times\mathbf{a}+\boldsymbol{\epsilon}\times(\boldsymbol{\epsilon}\times\mathbf{a})\bigr]
+\end{aligned}
+$$
+这正是式~\eqref{eq:转动公式的欧拉参数形式}，证毕。
+\end{proof}
+\begin{example}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{Figure/例题2.2.png}
+        \caption{例题2.2}
+        \label{fig:欧拉参数例题}
+    \end{figure}
+
+图 1.3.1 中的三角形 $ABC$ 可通过如下两步进入位置 $A'B'C'$：先将 $A$ 平移到 $A'$（保持三角形朝向不变），再以固定在 $A'$ 的 $A$ 点为支点作一个简单旋转。设 $\mathbf{a}_i$ 和 $\mathbf{b}_i$ ($i=1,2,3$) 沿如图所示方向取单位向量，使得旋转前 $\mathbf{a}_i=\mathbf{b}_i\,(i=1,2,3)$。求转轴单位向量 $\boldsymbol{\lambda}$ 和相应的转角 $\theta$。
+\end{example}
+
+\begin{solution}
+按式~\eqref{eq:方向余弦转欧拉参数} 求 $\epsilon_i$ 时，需要先求 $C_{ij}=\mathbf{a}_i\cdot\mathbf{b}_j$。由图 1.3.1 中的几何关系可知
+$$
+C_{11}=\mathbf{a}_1\cdot\mathbf{b}_1=0,\quad
+C_{22}=\mathbf{a}_2\cdot\mathbf{b}_2=0,\quad
+C_{33}=\mathbf{a}_3\cdot\mathbf{b}_3=0,
+$$
+$$
+C_{12}=\mathbf{a}_1\cdot\mathbf{b}_2=1,\quad C_{21}=-1;\quad
+C_{13}=-1,\quad C_{31}=0;\quad
+C_{23}=0,\quad C_{32}=1.
+$$
+代入式~\eqref{eq:方向余弦转欧拉参数}：
+$$
+\epsilon_4=\frac{1}{2}\bigl(1+0+0+0\bigr)^{1/2}=\frac{1}{2}
+$$
+$$
+\epsilon_1=\frac{\mathbf{a}_3\cdot\mathbf{b}_2-\mathbf{a}_2\cdot\mathbf{b}_3}{4\cdot\tfrac{1}{2}}=\frac{1-0}{2}=\frac{1}{2}
+$$
+$$
+\epsilon_2=\frac{\mathbf{a}_1\cdot\mathbf{b}_3-\mathbf{a}_3\cdot\mathbf{b}_1}{4\cdot\tfrac{1}{2}}=\frac{-1-0}{2}=-\frac{1}{2}
+$$
+$$
+\epsilon_3=\frac{\mathbf{a}_2\cdot\mathbf{b}_1-\mathbf{a}_1\cdot\mathbf{b}_2}{4\cdot\tfrac{1}{2}}=\frac{-1-0}{2}=-\frac{1}{2}
+$$
+再由式~\eqref{eq:欧拉参数得转轴}，$\sin(\theta/2)=(\epsilon_1^2+\epsilon_2^2+\epsilon_3^2)^{1/2}=(3/4)^{1/2}$，故
+$$
+\boldsymbol{\lambda}=\frac{\boldsymbol{\epsilon}}{(\epsilon_1^2+\epsilon_2^2+\epsilon_3^2)^{1/2}}=\frac{\tfrac{1}{2}\mathbf{a}_1-\tfrac{1}{2}\mathbf{a}_2-\tfrac{1}{2}\mathbf{a}_3}{(3/4)^{1/2}}=\frac{\mathbf{a}_1-\mathbf{a}_2-\mathbf{a}_3}{\sqrt{3}}
+$$
+由式~\eqref{eq:欧拉参数得转角}：
+$$
+\theta=2\cos^{-1}\epsilon_4=2\cos^{-1}\tfrac{1}{2}=\frac{2\pi}{3}\ \mathrm{rad}
+$$
+\end{solution}
+
+\section{罗德里格斯参数}
+罗德里格斯参数（Rodrigues Parameters），也叫罗德里格斯向量，但是使用的比较少。虽然目的是少用一个参数，但是引入了奇异点，且物理意义不明，所以在实际应用中，很少使用。引入定义，不多赘述。
+\begin{mydefinition}{罗德里格斯参数}
+    设$\boldsymbol{\lambda}$为转轴单位向量，$\theta$为转角，则罗德里格斯参数定义为：
+    \begin{equation}
+        \begin{aligned}
+            &\boldsymbol{\rho} \triangleq \boldsymbol{\lambda}\tan \frac{\theta}{2}\\
+            &\rho_i \triangleq \boldsymbol{\rho} \cdot \boldsymbol{a}_i=\boldsymbol{\rho} \cdot \boldsymbol{b}_i\quad(i=1,2,3)
+        \end{aligned}
+    \end{equation}
+\end{mydefinition}
+
+\section{间接定向法}
+间接定向法（Indirect Direction Method），也叫间接定向，是Kane在1972年提出的，是描述转动过程的另一种工具。
+
+若 $\mathbf{a}_1,\mathbf{a}_2,\mathbf{a}_3$ 与 $\mathbf{b}_1,\mathbf{b}_2,\mathbf{b}_3$ 分别为固定在参考系 $A$ 与 $B$ 中的两组成右手正交单位向量，且每个单位向量在两参考系中的方向均已知，则根据式~\eqref{eq:方向余弦的定义}，相对姿态可由方向余弦 $a_{ij}\,(i,j=1,2,3)$ 描述，这些方向余弦可直接由内积 $\mathbf{a}_i\cdot\mathbf{b}_j\,(i,j=1,2,3)$ 得到。然而即便这些内积无法如此直接地计算，也仍有可能求出 $a_{ij}\,(i,j=1,2,3)$。例如，当两个不共线的向量 $\mathbf{p}$ 与 $\mathbf{q}$ 在 $A$ 与 $B$ 中的方向均已知，从而可以直接求出内积 $\mathbf{a}_i\cdot\mathbf{p},\,\mathbf{a}_i\cdot\mathbf{q},\,\mathbf{b}_i\cdot\mathbf{p},\,\mathbf{b}_i\cdot\mathbf{q}\,(i=1,2,3)$ 时，就属于这种情况。此时可以按下述步骤求 $a_{ij}$：先令
+\begin{equation}
+    \mathbf{r}\triangleq\mathbf{p}\times\mathbf{q}
+\end{equation}
+
+及
+\begin{equation}
+    \boldsymbol{\sigma}\triangleq\frac{\mathbf{p}\times\mathbf{q}\,\mathbf{r}+\mathbf{q}\times\mathbf{r}\,\mathbf{p}+\mathbf{r}\times\mathbf{p}\,\mathbf{q}}{\mathbf{r}^{2}}
+    \label{eq:定义式}
+\end{equation}
+然后将式~\eqref{eq:定义式}中每个并矢的前项用 $\mathbf{a}_i$ 表达，后项用 $\mathbf{b}_i$ 表达 $(i=1,2,3)$，最后按
+$$
+a_{ij}=\mathbf{a}_i\cdot\boldsymbol{\sigma}\cdot\mathbf{b}_j\quad(i,j=1,2,3)
+$$
+所示进行运算即可。
+
+\begin{proof}
+    下面证明由式~\eqref{eq:定义式}定义的并矢 $\boldsymbol{\sigma}$ 是单位并矢，即对任意向量 $\mathbf{v}$ 都有
+$$
+\mathbf{v}=\mathbf{v}\cdot\boldsymbol{\sigma}
+$$
+而上式一旦成立，$a_{ij}$ 的定义式便直接给出所需结论。
+
+若 $\mathbf{p}$ 与 $\mathbf{q}$ 不共线，且 $\mathbf{r}$ 由式 (1) 定义，则任意向量 $\mathbf{v}$ 可表为
+$$
+\mathbf{v}=\alpha\mathbf{p}+\beta\mathbf{q}+\gamma\mathbf{r}
+$$
+其中 $\alpha,\beta,\gamma$ 为相应的标量。由式 (5)，
+$$
+\begin{aligned}
+\mathbf{v}\cdot(\mathbf{q}\times\mathbf{r})
+&=\alpha\mathbf{p}\cdot(\mathbf{q}\times\mathbf{r})+\beta\mathbf{q}\cdot(\mathbf{q}\times\mathbf{r})+\gamma\mathbf{r}\cdot(\mathbf{q}\times\mathbf{r}) \\
+&=\alpha(\mathbf{p}\times\mathbf{q})\cdot\mathbf{r}+0+0=\alpha\mathbf{r}^{2}
+\end{aligned}
+$$
+故
+$$
+\alpha=\mathbf{v}\cdot\frac{\mathbf{q}\times\mathbf{r}}{\mathbf{r}^{2}}
+$$
+类似地，将式 (5) 分别左点乘 $\mathbf{r}\times\mathbf{p}$ 与 $\mathbf{p}\times\mathbf{q}$，可得
+$$
+\beta=\mathbf{v}\cdot\frac{\mathbf{r}\times\mathbf{p}}{\mathbf{r}^{2}}
+$$
+以及
+$$
+\gamma=\mathbf{v}\cdot\frac{\mathbf{p}\times\mathbf{q}}{\mathbf{r}^{2}}
+$$
+将式 (7)--(9) 代入式 (5)，即得
+$$
+\begin{aligned}
+\mathbf{v}
+&=\frac{\mathbf{v}\cdot(\mathbf{q}\times\mathbf{r})\,\mathbf{p}+\mathbf{v}\cdot(\mathbf{r}\times\mathbf{p})\,\mathbf{q}+\mathbf{v}\cdot(\mathbf{p}\times\mathbf{q})\,\mathbf{r}}{\mathbf{r}^{2}} \\
+&=\mathbf{v}\cdot\frac{(\mathbf{q}\times\mathbf{r})\,\mathbf{p}+(\mathbf{r}\times\mathbf{p})\,\mathbf{q}+(\mathbf{p}\times\mathbf{q})\,\mathbf{r}}{\mathbf{r}^{2}}=\mathbf{v}\cdot\boldsymbol{\sigma}
+\end{aligned}
+$$
+
+\end{proof}
+
+关于并矢运算的相关概念请见后续内容。
+
+下面看一道例题.
+\begin{example}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{Figure/例题2.3.png}
+        \caption{例题2.3}
+        \label{fig:间接定向法例题}
+    \end{figure}
+
+    两个航天器 $A$、$B$ 同时对两颗恒星 $P$、$Q$ 进行观测，以生成用于确定 $A$ 与 $B$ 之间相对姿态所需的数据。观测内容为测量图~\eqref{fig:间接定向法例题}中所示的角度 $\phi$ 和 $\psi$，其中 $O$ 表示 $A$ 中或 $B$ 中固定的点，$R$ 是 $P$ 或 $Q$，$\mathbf{c}_1,\mathbf{c}_2,\mathbf{c}_3$ 是 $A$ 中或 $B$ 中固定的右手正交单位向量。表~\ref{tab:1.5.1} 给出了这些角度的数值，要求确定方向余弦矩阵 $C$。
+\end{example}
+
+\begin{solution}
+若定义 $\mathbf{R}$ 为由 $O$ 指向 $R$ 的单位向量（参见图~\eqref{fig:间接定向法例题}），则
+$$
+\mathbf{R}=\cos\psi\cos\phi\,\mathbf{c}_1+\cos\psi\sin\phi\,\mathbf{c}_2+\sin\psi\,\mathbf{c}_3
+$$
+因此令 $\mathbf{p}$、$\mathbf{q}$ 分别为由 $O$ 指向 $P$ 和指向 $Q$ 的单位向量，结合表~\ref{tab:1.5.1}，可分别用 $\mathbf{a}_1,\mathbf{a}_2,\mathbf{a}_3$ 和 $\mathbf{b}_1,\mathbf{b}_2,\mathbf{b}_3$ 表达这两个向量（结果列于表~\ref{tab:1.5.2} 的第 1、2 行）；由此可计算 $\mathbf{r}$（见式~\eqref{eq:定义式}）、$\mathbf{q}\times\mathbf{r}$ 和 $\mathbf{r}\times\mathbf{p}$。
+
+\begin{table}[htbp]
+\centering
+\caption{$\phi$ 和 $\psi$ 的角度（单位：度）}
+\label{tab:1.5.1}
+\begin{tabular}{|c|cc|cc|}
+\hline
+ & \multicolumn{2}{c|}{$P$} & \multicolumn{2}{c|}{$Q$} \\
+\cline{2-5}
+ & $\phi$ & $\psi$ & $\phi$ & $\psi$ \\
+\hline
+$\mathbf{c}_i = \mathbf{a}_i$ & 90 & 45 & 30  & 0  \\
+$\mathbf{c}_i = \mathbf{b}_i$ & 135 & 0  & 90  & 60 \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{出现在间接定向法中的向量}
+\label{tab:1.5.2}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+\multirow{2}{*}{行} & \multirow{2}{*}{向量} & \multicolumn{3}{c|}{在 $A$ 中} & & \multicolumn{3}{c|}{在 $B$ 中} \\
+\cline{3-5}\cline{7-9}
+ & & $\mathbf{a}_1$ & $\mathbf{a}_2$ & $\mathbf{a}_3$ & & $\mathbf{b}_1$ & $\mathbf{b}_2$ & $\mathbf{b}_3$ \\
+\hline
+1 & $\mathbf{p}$ & $0$ & $\frac{\sqrt{2}}{2}$ & $\frac{\sqrt{2}}{2}$ & & $-\frac{\sqrt{2}}{2}$ & $\frac{\sqrt{2}}{2}$ & $0$ \\
+2 & $\mathbf{q}$ & $\frac{\sqrt{3}}{2}$ & $\frac{1}{2}$ & $0$ & & $0$ & $\frac{1}{2}$ & $\frac{\sqrt{3}}{2}$ \\
+3 & $\mathbf{r}=\mathbf{p}\times\mathbf{q}$ & $-\frac{\sqrt{6}}{4}$ & $\frac{\sqrt{6}}{4}$ & $-\frac{\sqrt{6}}{4}$ & & $\frac{\sqrt{2}}{4}$ & $\frac{\sqrt{2}}{4}$ & $-\frac{\sqrt{2}}{4}$ \\
+4 & $\mathbf{q}\times\mathbf{r}$ & $\frac{\sqrt{3}}{2}$ & $\frac{1}{4}$ & $-\frac{1}{4}$ & & $0$ & $\frac{1}{2}$ & $\frac{\sqrt{3}}{2}$ \\
+5 & $\mathbf{r}\times\mathbf{p}$ & $-\frac{\sqrt{6}}{8}$ & $\frac{3\sqrt{2}}{8}$ & $\frac{\sqrt{2}}{2}$ & & $-\frac{\sqrt{2}}{2}$ & $\frac{\sqrt{2}}{2}$ & $0$ \\
+\hline
+\end{tabular}
+\end{table}
+
+由表~\ref{tab:1.5.2} 第 3 行可得
+$$
+\mathbf{r}^{2}=\frac{2}{16}+\frac{6}{16}+\frac{6}{16}=\frac{7}{8}
+$$
+将各项代入式~\eqref{eq:定义式}，即得
+$$
+\begin{aligned}
+\boldsymbol{\sigma}
+=&\;\frac{1}{7/8}\Big[
+\bigl(-\tfrac{\sqrt{2}}{4}\mathbf{a}_1+\tfrac{\sqrt{6}}{4}\mathbf{a}_2-\tfrac{\sqrt{6}}{4}\mathbf{a}_3\bigr)\bigl(\tfrac{\sqrt{6}}{4}\mathbf{b}_1+\tfrac{\sqrt{6}}{4}\mathbf{b}_2-\tfrac{\sqrt{2}}{4}\mathbf{b}_3\bigr)\\
+&+\bigl(-\tfrac{\sqrt{6}}{8}\mathbf{a}_1+\tfrac{3\sqrt{2}}{8}\mathbf{a}_2+\tfrac{\sqrt{2}}{2}\mathbf{a}_3\bigr)\bigl(-\tfrac{\sqrt{2}}{2}\mathbf{b}_1+\tfrac{\sqrt{2}}{2}\mathbf{b}_2+0\mathbf{b}_3\bigr)\\
+&+\bigl(\tfrac{\sqrt{3}}{2}\mathbf{a}_1+\tfrac{1}{4}\mathbf{a}_2-\tfrac{1}{4}\mathbf{a}_3\bigr)\bigl(0\mathbf{b}_1+\tfrac{1}{2}\mathbf{b}_2+\tfrac{\sqrt{3}}{2}\mathbf{b}_3\bigr)\Big]
+\end{aligned}
+$$
+由式 (3) $C_{ij}=\mathbf{a}_i\cdot\boldsymbol{\sigma}\cdot\mathbf{b}_j$ 可逐元计算：
+$$
+\begin{aligned}
+C_{11}=\mathbf{a}_1\cdot\boldsymbol{\sigma}\cdot\mathbf{b}_1
+&=\bigl(-\tfrac{\sqrt{2}}{4}\cdot\tfrac{\sqrt{6}}{4}+\tfrac{\sqrt{6}}{8}\cdot\tfrac{\sqrt{2}}{2}\bigr)\Big/\tfrac{7}{8}=0
+\\[4pt]
+C_{12}=\mathbf{a}_1\cdot\boldsymbol{\sigma}\cdot\mathbf{b}_2
+&=\bigl(-\tfrac{\sqrt{2}}{4}\cdot\tfrac{\sqrt{6}}{4}-\tfrac{\sqrt{6}}{8}\cdot\tfrac{\sqrt{2}}{2}+\tfrac{\sqrt{3}}{2}\cdot\tfrac{1}{2}\bigr)\Big/\tfrac{7}{8}=0
+\\[4pt]
+C_{13}=\mathbf{a}_1\cdot\boldsymbol{\sigma}\cdot\mathbf{b}_3
+&=\bigl(\tfrac{\sqrt{2}}{4}\cdot\tfrac{\sqrt{2}}{4}+\tfrac{\sqrt{3}}{2}\cdot\tfrac{\sqrt{3}}{2}\bigr)\Big/\tfrac{7}{8}=1
+\end{aligned}
+$$
+类似地计算其余元，最终得方向余弦矩阵
+$$
+C=\begin{bmatrix}0 & 0 & 1\\ 0 & 1 & 0\\ -1 & 0 & 0\end{bmatrix}
+$$
+这表明 $A$ 系是 $B$ 系绕 $\mathbf{b}_2$ 轴旋转 $90°$（右手定则）所得到的。
+\end{solution}
+\section{连续转动}
+
+当刚体 $B$ 在参考系 $A$ 中进行两次连续简单转动时，每一次转动以及与之等价的单次转动都可以用方向余弦、欧拉参数和罗德里格斯参数描述；无论采用哪种描述方式，与各次转动相关的量都可以与刻画单次等效转动的量联系起来。在讨论这些关系时，引入一个虚拟刚体 $\overline{B}$ 会有所帮助：它在 $B$ 进行第一次转动时与 $B$ 同步运动，而在 $B$ 进行第二次转动时保持与 $A$ 固结。在分析上，第一次转动可视为 $\overline{B}$ 相对于 $A$ 的转动，第二次转动则视为 $B$ 相对于 $\overline{B}$ 的转动。
+
+若 $\mathbf{a}_i\,(i=1,2,3)$、$\mathbf{b}_i\,(i=1,2,3)$、$\overline{\mathbf{b}}_i\,(i=1,2,3)$ 分别为固定在 $A$、$B$、$\overline{B}$ 中的三组成右手正交单位向量，且在 $B$ 在 $A$ 中作第一次转动之前有 $\mathbf{a}_i=\mathbf{b}_i=\overline{\mathbf{b}}_i\,(i=1,2,3)$；若 $C_{A\bar B}$、$C_{\bar B B}$、$C_{AB}$ 分别为刻画第一次、第二次和单次等效转动的方向余弦矩阵，使得
+
+\begin{equation}\label{eq:连续转动:C_Abar_B}
+\begin{bmatrix}\overline{\mathbf{b}}_1 & \overline{\mathbf{b}}_2 & \overline{\mathbf{b}}_3\end{bmatrix}
+=\begin{bmatrix}\mathbf{a}_1 & \mathbf{a}_2 & \mathbf{a}_3\end{bmatrix}\,C_{A\bar B}
+\end{equation}
+\begin{equation}\label{eq:连续转动:C_Bar_B_B}
+\begin{bmatrix}\mathbf{b}_1 & \mathbf{b}_2 & \mathbf{b}_3\end{bmatrix}
+=\begin{bmatrix}\overline{\mathbf{b}}_1 & \overline{\mathbf{b}}_2 & \overline{\mathbf{b}}_3\end{bmatrix}\,C_{\bar B B}
+\end{equation}
+\begin{equation}\label{eq:连续转动:C_AB}
+\begin{bmatrix}\mathbf{b}_1 & \mathbf{b}_2 & \mathbf{b}_3\end{bmatrix}
+=\begin{bmatrix}\mathbf{a}_1 & \mathbf{a}_2 & \mathbf{a}_3\end{bmatrix}\,C_{AB}
+\end{equation}
+
+则 $C_{AB}$（用 $C_{A\bar B}$ 和 $C_{\bar B B}$ 表达）由下式给出
+
+\begin{equation}\label{eq:连续转动:方向余弦乘积}
+C_{AB}=C_{A\bar B}\,C_{\bar B B}
+\end{equation}
+
+类似地，对罗德里格斯向量有
+
+\begin{equation}\label{eq:连续转动:罗德里格斯乘积}
+\boldsymbol{\rho}_{AB}=\frac{\boldsymbol{\rho}_{A\bar B}+\boldsymbol{\rho}_{\bar B B}+\boldsymbol{\rho}_{\bar B B}\times\boldsymbol{\rho}_{A\bar B}}{1-\boldsymbol{\rho}_{A\bar B}\cdot\,\boldsymbol{\rho}_{\bar B B}}
+\end{equation}
+
+要给出欧拉参数下的相应关系，首先定义三组欧拉参数：设 $\mathbf{b}_i$、$\overline{\mathbf{b}}_i\,(i=1,2,3)$ 在第二次转动后取所示方向；并设 $\theta_1$、$\theta_2$、$\theta$ 分别为第一次、第二次和等效转动的弧度
+
+\begin{equation}\label{eq:连续转动:epsilon_Abar_B_i}
+\epsilon_{A\bar B,i}\triangleq\,\boldsymbol{\epsilon}_{A\bar B}\cdot\mathbf{a}_i=\boldsymbol{\epsilon}_{A\bar B}\cdot\overline{\mathbf{b}}_i\quad(i=1,2,3)
+\end{equation}
+\begin{equation}\label{eq:连续转动:epsilon_Bar_B_B_i}
+\epsilon_{\bar B B,i}\triangleq\,\boldsymbol{\epsilon}_{\bar B B}\cdot\overline{\mathbf{b}}_i=\boldsymbol{\epsilon}_{\bar B B}\cdot\mathbf{b}_i\quad(i=1,2,3)
+\end{equation}
+\begin{equation}\label{eq:连续转动:epsilon_AB_i}
+\epsilon_{AB,i}\triangleq\,\boldsymbol{\epsilon}_{AB}\cdot\mathbf{a}_i=\boldsymbol{\epsilon}_{AB}\cdot\mathbf{b}_i\quad(i=1,2,3)
+\end{equation}
+$$
+\epsilon_{A\bar B,4}\triangleq\cos\frac{\theta_1}{2},\qquad
+\epsilon_{\bar B B,4}\triangleq\cos\frac{\theta_2}{2},\qquad
+\epsilon_{AB,4}\triangleq\cos\frac{\theta}{2}
+$$
+
+于是可得
+\begin{equation}\label{eq:连续转动:欧拉参数关系}
+\begin{bmatrix}
+\epsilon_{AB,1}\\[2pt] \epsilon_{AB,2}\\[2pt] \epsilon_{AB,3}\\[2pt] \epsilon_{AB,4}
+\end{bmatrix}
+=
+\begin{bmatrix}
+\epsilon_{A\bar B,4} & -\epsilon_{A\bar B,3} & \epsilon_{A\bar B,2} & \epsilon_{A\bar B,1}\\
+\epsilon_{A\bar B,3} & \epsilon_{A\bar B,4} & -\epsilon_{A\bar B,1} & \epsilon_{A\bar B,2}\\
+-\epsilon_{A\bar B,2} & \epsilon_{A\bar B,1} & \epsilon_{A\bar B,4} & \epsilon_{A\bar B,3}\\
+-\epsilon_{A\bar B,1} & -\epsilon_{A\bar B,2} & -\epsilon_{A\bar B,3} & \epsilon_{A\bar B,4}
+\end{bmatrix}
+\begin{bmatrix}
+\epsilon_{\bar B B,1}\\[2pt] \epsilon_{\bar B B,2}\\[2pt] \epsilon_{\bar B B,3}\\[2pt] \epsilon_{\bar B B,4}
+\end{bmatrix}
+\end{equation}
+
+此外，
+\begin{equation}\label{eq:连续转动:epsilon_AB合成}
+\boldsymbol{\epsilon}_{AB}=\boldsymbol{\epsilon}_{A\bar B}\,\epsilon_{\bar B B,4}+\boldsymbol{\epsilon}_{\bar B B}\,\epsilon_{A\bar B,4}+\boldsymbol{\epsilon}_{\bar B B}\times\boldsymbol{\epsilon}_{A\bar B}
+\end{equation}
+\begin{equation}\label{eq:连续转动:epsilon_AB4合成}
+\epsilon_{AB,4}=\epsilon_{A\bar B,4}\,\epsilon_{\bar B B,4}-\boldsymbol{\epsilon}_{A\bar B}\cdot\boldsymbol{\epsilon}_{\bar B B}
+\end{equation}
+
+式 \eqref{eq:连续转动:方向余弦乘积}、\eqref{eq:连续转动:罗德里格斯乘积}、\eqref{eq:连续转动:欧拉参数关系}、\eqref{eq:连续转动:epsilon_AB合成} 都反映了 $B$ 在 $A$ 中的最终姿态取决于连续转动的执行顺序这一事实。例如在式 \eqref{eq:连续转动:方向余弦乘积} 中，$C_{A\bar B}$ 和 $C_{\bar B B}$ 不能交换而不改变结果；而在式 \eqref{eq:连续转动:epsilon_AB合成} 中，叉乘的出现也表明顺序不可忽略。
+
+反复使用式 \eqref{eq:连续转动:方向余弦乘积}--\eqref{eq:连续转动:epsilon_AB4合成} 可以构造出与任意多次连续转动等效的、单次转动的刻画量公式。例如对三次连续转动：
+$$
+C_{AB}=C_{A\bar B}\,C_{\bar B C}\,C_{CB}
+$$
+其中 $C_{A\bar B}$、$C_{\bar B C}$、$C_{CB}$ 分别为与第一、第二、第三次转动相对应的方向余弦矩阵。
+
+\begin{proof}
+    将式 \eqref{eq:连续转动:C_Abar_B} 代入式 \eqref{eq:连续转动:C_Bar_B_B} 得
+$$
+\begin{bmatrix}\mathbf{b}_1 & \mathbf{b}_2 & \mathbf{b}_3\end{bmatrix}
+=\begin{bmatrix}\mathbf{a}_1 & \mathbf{a}_2 & \mathbf{a}_3\end{bmatrix}\,C_{A\bar B}\,C_{\bar B B}
+$$
+将此式与式 \eqref{eq:连续转动:C_AB} 比较即知式 \eqref{eq:连续转动:方向余弦乘积} 成立。
+
+为导出式 \eqref{eq:连续转动:罗德里格斯乘积}，设 $\mathbf{a}$、$\overline{\mathbf{b}}$、$\mathbf{b}$ 分别为 $A$、$\overline{B}$、$B$ 中固结的向量，并这样选取使得在 $B$ 在 $A$ 中作第一次转动之前有 $\mathbf{a}=\overline{\mathbf{b}}=\mathbf{b}$。则按式 (1.4.5) 存在罗德里格斯向量 $\boldsymbol{\rho}_{A\bar B}$、$\boldsymbol{\rho}_{\bar B B}$、$\boldsymbol{\rho}_{AB}$ 满足
+\begin{equation}\label{eq:连续转动:罗德里格斯Abar_B}
+\mathbf{a}-\overline{\mathbf{b}}=(\mathbf{a}+\overline{\mathbf{b}})\times\boldsymbol{\rho}_{A\bar B}
+\end{equation}
+\begin{equation}\label{eq:连续转动:罗德里格斯Bar_B_B}
+\overline{\mathbf{b}}-\mathbf{b}=(\overline{\mathbf{b}}+\mathbf{b})\times\boldsymbol{\rho}_{\bar B B}
+\end{equation}
+\begin{equation}\label{eq:连续转动:罗德里格斯AB}
+\mathbf{a}-\mathbf{b}=(\mathbf{a}+\mathbf{b})\times\boldsymbol{\rho}_{AB}
+\end{equation}
+
+将式 \eqref{eq:连续转动:罗德里格斯Abar_B} 与 \eqref{eq:连续转动:罗德里格斯Bar_B_B} 分别与 $\boldsymbol{\rho}_{\bar B B}$ 和 $\boldsymbol{\rho}_{A\bar B}$ 作叉乘，再将所得结果相减；并利用
+\begin{equation}\label{eq:连续转动:标量积性质}
+\boldsymbol{\rho}_{A\bar B}\cdot\mathbf{a}=\boldsymbol{\rho}_{A\bar B}\cdot\overline{\mathbf{b}},\qquad
+\boldsymbol{\rho}_{\bar B B}\cdot\overline{\mathbf{b}}=\boldsymbol{\rho}_{\bar B B}\cdot\mathbf{b}
+\end{equation}
+来消去 $\overline{\mathbf{b}}$ 在标量积中出现的位置。这样得到
+\begin{equation}
+\begin{aligned}
+\overline{\mathbf{b}}\times(\boldsymbol{\rho}_{\bar B B}+\boldsymbol{\rho}_{A\bar B})
+=&\;\mathbf{a}\times\boldsymbol{\rho}_{A\bar B}+\mathbf{b}\times\boldsymbol{\rho}_{A\bar B}+(\mathbf{a}-\mathbf{b})\times\boldsymbol{\rho}_{A\bar B}\cdot\boldsymbol{\rho}_{\bar B B}\\
+&+(\mathbf{a}+\mathbf{b})\times(\boldsymbol{\rho}_{\bar B B}\times\boldsymbol{\rho}_{A\bar B})
+\end{aligned}
+\end{equation}
+然后把式 \eqref{eq:连续转动:罗德里格斯Abar_B} 与 \eqref{eq:连续转动:罗德里格斯Bar_B_B} 相加，利用式 \eqref{eq:连续转动:标量积性质} 消去 $\overline{\mathbf{b}}$，解出 $\mathbf{a}-\mathbf{b}$，即得
+\begin{equation}\label{eq:连续转动:推导结果}
+\mathbf{a}-\mathbf{b}=(\mathbf{a}+\mathbf{b})\times\frac{\boldsymbol{\rho}_{A\bar B}+\boldsymbol{\rho}_{\bar B B}+\boldsymbol{\rho}_{\bar B B}\times\boldsymbol{\rho}_{A\bar B}}{1-\boldsymbol{\rho}_{A\bar B}\cdot\boldsymbol{\rho}_{\bar B B}}
+\end{equation}
+将式 \eqref{eq:连续转动:推导结果} 与 \eqref{eq:连续转动:罗德里格斯AB} 合在一起，式 \eqref{eq:连续转动:罗德里格斯乘积} 即成立；因为对任意选取的向量 $\mathbf{a}$，式 \eqref{eq:连续转动:推导结果} 与 \eqref{eq:连续转动:罗德里格斯AB} 同时成立当且仅当式 \eqref{eq:连续转动:罗德里格斯乘积} 成立。
+
+对于式 \eqref{eq:连续转动:epsilon_AB合成} 和 \eqref{eq:连续转动:epsilon_AB4合成}，注意到由式 (1.3.1)、(1.3.3)、(1.4.1) 可得
+\begin{equation}\label{eq:连续转动:rho_Abar_B}
+\boldsymbol{\rho}_{A\bar B}=\frac{\boldsymbol{\epsilon}_{A\bar B}}{\epsilon_{A\bar B,4}}
+\end{equation}
+\begin{equation}\label{eq:连续转动:rho_Bar_B_B}
+\boldsymbol{\rho}_{\bar B B}=\frac{\boldsymbol{\epsilon}_{\bar B B}}{\epsilon_{\bar B B,4}}
+\end{equation}
+以及
+\begin{equation}\label{eq:连续转动:rho_AB}
+\boldsymbol{\rho}_{AB}=\frac{\boldsymbol{\epsilon}_{AB}}{\epsilon_{AB,4}}
+\end{equation}
+于是
+\begin{equation}\label{eq:连续转动:epsilon_AB推导}
+\boldsymbol{\epsilon}_{AB}=\,\epsilon_{AB,4}\,\boldsymbol{\rho}_{AB}=\,\epsilon_{AB,4}\frac{\boldsymbol{\rho}_{A\bar B}+\boldsymbol{\rho}_{\bar B B}+\boldsymbol{\rho}_{\bar B B}\times\boldsymbol{\rho}_{A\bar B}}{1-\boldsymbol{\rho}_{A\bar B}\cdot\boldsymbol{\rho}_{\bar B B}}
+\end{equation}
+$$
+=\frac{\epsilon_{AB,4}\,\epsilon_{\bar B B,4}\,\boldsymbol{\epsilon}_{A\bar B}+\epsilon_{AB,4}\,\epsilon_{A\bar B,4}\,\boldsymbol{\epsilon}_{\bar B B}+\epsilon_{AB,4}\,\epsilon_{\bar B B,4}\,\boldsymbol{\epsilon}_{\bar B B}\times\boldsymbol{\epsilon}_{A\bar B}}{\epsilon_{A\bar B,4}\,\epsilon_{\bar B B,4}-\boldsymbol{\epsilon}_{A\bar B}\cdot\boldsymbol{\epsilon}_{\bar B B}}
+$$
+将此式两边点乘其自身并利用式~\eqref{eq:欧拉参数归一化}，可得
+\begin{equation}\label{eq:连续转动:epsilon模平方}
+(\boldsymbol{\epsilon}_{AB})^{2}=(\epsilon_{AB,4})^{2}\frac{1-(\epsilon_{\bar B B,4}\,\epsilon_{A\bar B,4}-\boldsymbol{\epsilon}_{A\bar B}\cdot\boldsymbol{\epsilon}_{\bar B B})^{2}}{(\epsilon_{A\bar B,4}\,\epsilon_{\bar B B,4}-\boldsymbol{\epsilon}_{A\bar B}\cdot\boldsymbol{\epsilon}_{\bar B B})^{2}}
+\end{equation}
+而
+\begin{equation}\label{eq:连续转动:epsilon模平方约束}
+(\boldsymbol{\epsilon}_{AB})^{2}=1-(\epsilon_{AB,4})^{2}
+\end{equation}
+故
+\begin{equation}\label{eq:连续转动:epsilon平方等式}
+(\epsilon_{AB,4})^{2}=(\epsilon_{A\bar B,4}\,\epsilon_{\bar B B,4}-\boldsymbol{\epsilon}_{A\bar B}\cdot\boldsymbol{\epsilon}_{\bar B B})^{2}
+\end{equation}
+从而
+$$
+\epsilon_{AB,4}=\pm(\epsilon_{A\bar B,4}\,\epsilon_{\bar B B,4}-\boldsymbol{\epsilon}_{A\bar B}\cdot\boldsymbol{\epsilon}_{\bar B B})
+$$
+取正号即得式 \eqref{eq:连续转动:epsilon_AB4合成}。将式 \eqref{eq:连续转动:epsilon平方等式} 代回式 \eqref{eq:连续转动:epsilon_AB推导} 即得式 \eqref{eq:连续转动:epsilon_AB合成}。
+
+最后，为证明式 \eqref{eq:连续转动:欧拉参数关系} 成立，只需验证这一矩阵方程所蕴含的四个标量方程可由式 \eqref{eq:连续转动:epsilon_AB合成} 和 \eqref{eq:连续转动:epsilon_AB4合成} 推出。为此，可利用式 \eqref{eq:连续转动:epsilon_Abar_B_i} 与 \eqref{eq:连续转动:epsilon_Bar_B_B_i} 将式 \eqref{eq:连续转动:epsilon_AB合成} 右端沿 $\mathbf{b}_1$、$\mathbf{b}_2$、$\mathbf{b}_3$ 方向分解，然后用式 \eqref{eq:连续转动:epsilon_AB_i} 计算 $\boldsymbol{\epsilon}_{A\bar B}\cdot\mathbf{b}_i$，并用式 (1.3.6)--(1.3.14) 构造 $\mathbf{b}_i\cdot\mathbf{b}_j$，可得例如
+$$
+\overline{\mathbf{b}}_2\cdot\mathbf{b}_3=2(\epsilon_{\bar B B,2}\,\epsilon_{\bar B B,3}-\epsilon_{\bar B B,1}\,\epsilon_{\bar B B,4})
+$$
+以这种方式可逐一得到与式 \eqref{eq:连续转动:欧拉参数关系} 对应的前三个标量方程，第四个可由式 \eqref{eq:连续转动:epsilon_AB4合成} 通过令
+$$
+\boldsymbol{\epsilon}_{A\bar B}\cdot\boldsymbol{\epsilon}_{\bar B B}=\epsilon_{A\bar B,1}\,\epsilon_{\bar B B,1}+\epsilon_{A\bar B,2}\,\epsilon_{\bar B B,2}+\epsilon_{A\bar B,3}\,\epsilon_{\bar B B,3}
+$$
+代入而得到。
+
+\end{proof}
+
+总结一下三种描述连续转动的方式，方向余弦矩阵最为简洁，欧拉参数次之，罗德里格斯向量最不直观。怪不得罗德里格斯参量被称为“罗德里格斯参量”，简直繁琐得一雷霆。
