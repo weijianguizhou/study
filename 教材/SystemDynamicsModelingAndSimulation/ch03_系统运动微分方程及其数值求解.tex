@@ -1,0 +1,411 @@
+\section{系统动力学微分代数方程}
+
+拉格朗日方程：
+\begin{equation}\label{eq:3.lagrange}
+\frac{d}{dt}\left(\frac{\partial T}{\partial \dot{\boldsymbol{q}}}\right)^{\mathrm{T}} - \left(\frac{\partial T}{\partial \boldsymbol{q}}\right)^{\mathrm{T}} + c_q^{\mathrm{T}} \boldsymbol{\lambda} = \boldsymbol{Q}
+\end{equation}
+
+系统动能可表示为
+\begin{equation}\label{eq:3.kinetic}
+T = \frac{1}{2} \dot{\boldsymbol{q}}^{\mathrm{T}} \boldsymbol{M}(\boldsymbol{q}) \dot{\boldsymbol{q}}
+\end{equation}
+
+式中 $\boldsymbol{M} = \boldsymbol{M}^{\mathrm{T}}$ 为对称矩阵，由此可得
+\begin{align}
+\frac{\partial T}{\partial \dot{\boldsymbol{q}}} &= \dot{\boldsymbol{q}}^{\mathrm{T}} \boldsymbol{M} \\
+\frac{d}{dt}\left(\frac{\partial T}{\partial \dot{\boldsymbol{q}}}\right) &= \ddot{\boldsymbol{q}}^{\mathrm{T}} \boldsymbol{M} + \dot{\boldsymbol{q}}^{\mathrm{T}} \dot{\boldsymbol{M}}
+\end{align}
+
+将上式代入拉格朗日方程~\eqref{eq:3.lagrange} 可得系统运动微分方程
+\begin{equation}
+\boldsymbol{M} \ddot{\boldsymbol{q}} + \dot{\boldsymbol{M}} \dot{\boldsymbol{q}} - \left(\frac{\partial T}{\partial \boldsymbol{q}}\right)^{\mathrm{T}} + c_q^{\mathrm{T}} \boldsymbol{\lambda} = \boldsymbol{Q}
+\end{equation}
+
+系统运动微分方程可表示为如下形式
+\begin{myformula}
+\begin{equation}\label{eq:3.dae_motion}
+\boldsymbol{M} \ddot{\boldsymbol{q}} + c_q^{\mathrm{T}} \boldsymbol{\lambda} = \boldsymbol{h} \tag{I}
+\end{equation}
+\end{myformula}
+
+式中
+\begin{equation}\label{eq:3.h_def}
+\boldsymbol{h} = \boldsymbol{Q} - \dot{\boldsymbol{M}} \dot{\boldsymbol{q}} + \left(\frac{\partial T}{\partial \boldsymbol{q}}\right)^{\mathrm{T}}
+\end{equation}
+
+式~\eqref{eq:3.dae_motion} 中各矩阵与系统广义坐标 $\boldsymbol{q}$ 和广义速度 $\dot{\boldsymbol{q}}$ 的关系满足
+\begin{equation*}
+\boldsymbol{M}(\boldsymbol{q}(t)), \qquad c_q(\boldsymbol{q}(t),\, t), \qquad \boldsymbol{h}(\boldsymbol{q}(t),\, \dot{\boldsymbol{q}}(t),\, t).
+\end{equation*}
+
+对于一个完整系统，系统动力学方程由系统运动微分方程~\eqref{eq:3.dae_motion} 和几何约束代数方程~\eqref{eq:3.dae_constraint} 构成，即
+\begin{equation}\label{eq:3.dae_system}
+\begin{cases}
+\boldsymbol{M} \ddot{\boldsymbol{q}} + c_q^{\mathrm{T}} \boldsymbol{\lambda} = \boldsymbol{h}, & \text{(I)} \\[6pt]
+\boldsymbol{c}(\boldsymbol{q},\, t) = \boldsymbol{0}, & \text{(II)}
+\end{cases}
+\end{equation}
+
+这组微分代数方程（Differential-Algebraic Equations, DAE）的定解条件由初始时刻（$t = t_0$）的系统广义坐标和广义速度确定，即
+\begin{equation}
+\begin{cases}
+\boldsymbol{q}(t)\big|_{t=t_0} = \boldsymbol{q}_0 \\[4pt]
+\dot{\boldsymbol{q}}(t)\big|_{t=t_0} = \dot{\boldsymbol{q}}_0
+\end{cases}
+\end{equation}
+
+$\boldsymbol{q}_0$ 和 $\dot{\boldsymbol{q}}_0$ 同时满足位置级约束方程和速度级约束方程，即
+\begin{equation}\label{eq:3.init_pos}
+\boldsymbol{c}(\boldsymbol{q}_0,\, t_0) = \boldsymbol{0} \tag{III}
+\end{equation}
+\begin{equation}\label{eq:3.init_vel}
+c_q(\boldsymbol{q}_0,\, t_0)\, \dot{\boldsymbol{q}}_0 + c_t(\boldsymbol{q}_0,\, t_0) = \boldsymbol{0} \tag{IV}
+\end{equation}
+
+
+\section{系统动力学方程数值求解}
+
+\subsection{常微分方程数值求解的计算精度与稳定性}
+
+一阶线性齐次常系数常微分方程的初值问题可表示为
+\begin{equation}
+\begin{cases}
+\dot{y} = -ay, & a > 0 \\[4pt]
+y(t)\big|_{t=0} = y_0, & y_0 > 0
+\end{cases}
+\end{equation}
+
+该微分方程初值问题存在解析解
+\begin{equation}
+y(t) = y_0\, e^{-at}
+\end{equation}
+
+% 图：解析解 $y(t) = y_0 e^{-at}$ 的指数衰减曲线
+
+\subsection{常微分方程数值求解的计算精度与稳定性}
+
+一阶线性齐次常系数常微分方程的初值问题：
+\begin{equation}
+\begin{cases}
+\dot{y} = -ay, & a > 0 \\[4pt]
+y(t)\big|_{t=0} = y_0, & y_0 > 0
+\end{cases}
+\end{equation}
+
+在进行数值求解时需将时间 $t$ 离散，离散后的时间 $t$ 和状态变量 $y$ 可记为 $t_k = k\Delta t$，$\hat{y}_k = \hat{y}(t_k)$，$(k = 0, 1, 2, \cdots)$。状态变量 $y$ 的泰勒展开式为
+\begin{equation}
+\hat{y}_{k+1} = \hat{y}_k + \frac{d\hat{y}_k}{dt}\, \Delta t + \frac{1}{2!}\, \frac{d^2\hat{y}_k}{dt^2}\, \Delta t^2 + \frac{1}{3!}\, \frac{d^3\hat{y}_k}{dt^3}\, \Delta t^3 + o(\Delta t^3)
+\end{equation}
+
+状态变量 $y$ 的一阶泰勒展开式（一阶精度）为
+\begin{equation}\label{eq:3.general_one_step}
+\hat{y}_{k+1} = \hat{y}_k + \left[\alpha\, \frac{d\hat{y}_k}{dt} + (1 - \alpha)\, \frac{d\hat{y}_{k+1}}{dt}\right] \Delta t + o(\Delta t), \quad \alpha \in [0,\, 1]
+\end{equation}
+
+如果令 $\alpha = 1$（向前欧拉，显式积分），则有
+\begin{equation}
+\hat{y}_{k+1} = \hat{y}_k + \frac{d\hat{y}_k}{dt}\, \Delta t = \hat{y}_k - a\hat{y}_k\, \Delta t = (1 - a\Delta t)\, \hat{y}_k
+\end{equation}
+
+\begin{myformula}
+\begin{equation}\label{eq:3.forward_euler}
+\hat{y}_{k+1} = \hat{y}_k - a\hat{y}_k\, \Delta t \quad \Rightarrow \quad \hat{y}_{k+1} = (1 - a\Delta t)\, \hat{y}_k
+\end{equation}
+\end{myformula}
+
+数值计算表现为条件稳定。
+
+% 图：向前欧拉显式积分的条件稳定性示意图
+
+如果令 $\alpha = 0$（向后欧拉，隐式积分），则有
+\begin{equation}
+\hat{y}_{k+1} = \hat{y}_k + \frac{d\hat{y}_{k+1}}{dt}\, \Delta t = \hat{y}_k - a\hat{y}_{k+1}\, \Delta t
+\end{equation}
+
+对于该线性微分方程，上式又可整理为
+\begin{equation}
+\hat{y}_{k+1} = \frac{\hat{y}_k}{1 + a\Delta t}
+\end{equation}
+
+\begin{myformula}
+\begin{equation}\label{eq:3.backward_euler}
+\hat{y}_{k+1} = \hat{y}_k - a\hat{y}_{k+1}\, \Delta t \quad \Rightarrow \quad \hat{y}_{k+1} = \frac{\hat{y}_k}{1 + a\Delta t}
+\end{equation}
+\end{myformula}
+
+数值计算表现为绝对稳定。
+
+% 图：向后欧拉隐式积分的绝对稳定性示意图
+
+
+\subsection{将高阶常微分方程转化为一阶常微分方程组}
+
+重力作用下单摆的运动微分方程可表示为
+\begin{equation}
+ml^2 \ddot{\theta} = -mgl \sin\theta
+\end{equation}
+
+这是一个二阶非线性常微分方程，系统初始条件可表示为
+\begin{equation}
+\begin{cases}
+\theta(t)\big|_{t=t_0} = \theta_0 \\[4pt]
+\dot{\theta}(t)\big|_{t=t_0} = \dot{\theta}_0
+\end{cases}
+\end{equation}
+
+为便于对该二阶非线性常微分方程的初值问题进行数值求解，可以将其转化为一阶常微分方程组的初值问题。重力作用下单摆的运动微分方程
+\begin{equation*}
+ml^2 \ddot{\theta} = -mgl \sin\theta
+\end{equation*}
+可转化为
+\begin{equation}
+\begin{bmatrix} \dot{y}_1 \\[4pt] \dot{y}_2 \end{bmatrix} = \begin{bmatrix} y_2 \\[4pt] -g \sin y_1 / l \end{bmatrix}, \qquad
+\begin{cases} y_1 \triangleq \theta \\ y_2 \triangleq \dot{\theta} \end{cases}
+\end{equation}
+
+给定系统初始状态（包括初始位置和初始速度）
+\begin{equation*}
+\begin{cases}
+y_1(t)\big|_{t=0} = y_1(0) \\[4pt]
+y_2(t)\big|_{t=0} = y_2(0)
+\end{cases}
+\end{equation*}
+
+存在众多成熟的微分方程数值求解方法来进行数值计算。
+
+
+\subsection{一阶常微分方程组初值问题的一般形式}
+
+一阶常微分方程组的初值问题的一般形式可记为
+\begin{equation}\label{eq:3.ivp_general}
+\begin{cases}
+\boldsymbol{y}' = \boldsymbol{f}(t,\, \boldsymbol{y}), & t \in [a,\, b] \\[4pt]
+\boldsymbol{y}(a) = \boldsymbol{y}_0
+\end{cases}
+\end{equation}
+
+式中
+\begin{equation}
+\boldsymbol{y}(t) = \begin{bmatrix} y_1(t) \\ y_2(t) \\ \vdots \\ y_m(t) \end{bmatrix} \in \mathbb{R}^m, \qquad
+\boldsymbol{f} = \begin{bmatrix} f_1 \\ f_2 \\ \vdots \\ f_m \end{bmatrix} \in \mathbb{R}^m, \qquad
+\boldsymbol{y}_0 = \boldsymbol{y}(t)\big|_{t=a} \in \mathbb{R}^m
+\end{equation}
+
+分别为待求的状态变量列阵（解向量）、已知的状态变化率函数（向量函数）和已知的状态变量列阵初值（初始向量）。
+
+
+\subsection{一阶常微分方程组初值问题数值解法（一）}
+
+线性多步法（Linear multistep method）：
+\begin{equation}\label{eq:3.linear_multistep}
+\boldsymbol{y}_n = \sum_{i=1}^{k} \alpha_i\, \boldsymbol{y}_{n-i} + h \sum_{i=0}^{k} \beta_i\, \boldsymbol{f}(t_{n-i},\, \boldsymbol{y}_{n-i})
+\end{equation}
+
+当 $\beta_0 = 0$ 时为显式公式，当 $\beta_0 \neq 0$ 时为隐式公式。当 $k = 1$ 时退化为单步法。
+
+
+\subsection{一阶常微分方程组初值问题数值解法（二）}
+
+预估校正法（Predictor-Corrector method）：
+\begin{equation}\label{eq:3.predictor}
+\bar{\boldsymbol{y}}_n = \sum_{i=1}^{k} \bar{\alpha}_i\, \boldsymbol{y}_{n-i} + h \sum_{i=1}^{k} \bar{\beta}_i\, \boldsymbol{f}(t_{n-i},\, \boldsymbol{y}_{n-i}) \tag{I}
+\end{equation}
+\begin{equation}\label{eq:3.corrector}
+\boldsymbol{y}_n = \sum_{i=1}^{k} \alpha_i\, \boldsymbol{y}_{n-i} + h \sum_{i=1}^{k} \beta_i\, \boldsymbol{f}(t_{n-i},\, \boldsymbol{y}_{n-i}) + h\, \beta_0\, \boldsymbol{f}(t_n,\, \bar{\boldsymbol{y}}_n) \tag{II}
+\end{equation}
+
+式~\eqref{eq:3.predictor} 为显式预估公式，式~\eqref{eq:3.corrector} 为隐式校正公式。
+
+
+\subsection{一阶常微分方程组初值问题数值解法（三）}
+
+龙格--库塔法（Runge-Kutta method）：
+\begin{equation}\label{eq:3.rk_main}
+\boldsymbol{y}_n = \boldsymbol{y}_{n-1} + h \sum_{i=1}^{s} b_i\, \boldsymbol{k}_i \tag{I}
+\end{equation}
+\begin{equation}\label{eq:3.rk_ki}
+\boldsymbol{k}_i = \boldsymbol{f}\!\left(t_{n-1} + c_i h,\ \boldsymbol{y}_{n-1} + h \sum_{j=1}^{s} a_{i,j}\, \boldsymbol{k}_j\right) \tag{II}
+\end{equation}
+
+如果当 $j \geq i$ 时 $a_{i,j} = 0$，式~\eqref{eq:3.rk_main} 和~\eqref{eq:3.rk_ki} 就是显式 RK 方法。如果当 $j > i$ 时 $a_{i,j} = 0$，而对角元素 $a_{i,i}$ 不全为 $0$，式~\eqref{eq:3.rk_main} 和~\eqref{eq:3.rk_ki} 就称为隐式 RK 方法；若此时 $a_{i,i}$ 均相等，则称为对角隐式 RK 方法。
+
+经典四阶定步长龙格--库塔法（Classical four-order fixed-step Runge-Kutta method）：
+\begin{equation}\label{eq:3.classical_rk}
+\boldsymbol{y}_n = \boldsymbol{y}_{n-1} + \frac{h}{6}\left(\boldsymbol{k}_1 + 2\boldsymbol{k}_2 + 2\boldsymbol{k}_3 + \boldsymbol{k}_4\right)
+\end{equation}
+\begin{align}
+\boldsymbol{k}_1 &= \boldsymbol{f}(t_{n-1},\, \boldsymbol{y}_{n-1}) \\
+\boldsymbol{k}_2 &= \boldsymbol{f}\!\left(t_{n-1} + \frac{h}{2},\ \boldsymbol{y}_{n-1} + \frac{h}{2}\, \boldsymbol{k}_1\right) \\
+\boldsymbol{k}_3 &= \boldsymbol{f}\!\left(t_{n-1} + \frac{h}{2},\ \boldsymbol{y}_{n-1} + \frac{h}{2}\, \boldsymbol{k}_2\right) \\
+\boldsymbol{k}_4 &= \boldsymbol{f}(t_{n-1} + h,\, \boldsymbol{y}_{n-1} + h\, \boldsymbol{k}_3)
+\end{align}
+
+
+\subsection{微分代数方程初值问题数值求解}
+
+已知多体系统动力学微分代数方程组
+\begin{equation}
+\begin{cases}
+\boldsymbol{M} \ddot{\boldsymbol{q}} + c_q^{\mathrm{T}} \boldsymbol{\lambda} = \boldsymbol{h} \\[4pt]
+\boldsymbol{c}(\boldsymbol{q},\, t) = \boldsymbol{0}
+\end{cases}
+\end{equation}
+
+及其初始条件（定解条件）
+\begin{equation}
+\begin{cases}
+\boldsymbol{q}(t)\big|_{t=t_0} = \boldsymbol{q}_0 \\[4pt]
+\dot{\boldsymbol{q}}(t)\big|_{t=t_0} = \dot{\boldsymbol{q}}_0
+\end{cases}
+\end{equation}
+
+如何对其动力学响应进行数值求解。
+
+
+\subsection{位置级、速度级与加速度级系统约束方程}
+
+位置级约束方程
+\begin{equation}\label{eq:3.pos_constraint}
+\boldsymbol{0} = \boldsymbol{c}(\boldsymbol{q},\, t)
+\end{equation}
+
+对时间求一阶导数可得速度级约束方程
+\begin{equation}\label{eq:3.vel_constraint}
+\boldsymbol{0} = c_q\, \dot{\boldsymbol{q}} + c_t
+\end{equation}
+
+速度级约束方程对时间求一阶导数可得加速度级约束方程，即
+\begin{equation}\label{eq:3.acc_constraint}
+\boldsymbol{0} = c_q\, \ddot{\boldsymbol{q}} + \dot{c}_q\, \dot{\boldsymbol{q}} + \dot{c}_t =:\, c_q\, \ddot{\boldsymbol{q}} - \boldsymbol{\varepsilon}
+\end{equation}
+
+式中
+\begin{equation}\label{eq:3.epsilon_def}
+\boldsymbol{\varepsilon}(\boldsymbol{q},\, \dot{\boldsymbol{q}},\, t) \triangleq -\dot{c}_q\, \dot{\boldsymbol{q}} - \dot{c}_t
+\end{equation}
+
+
+\subsection{系统动力学方程}
+
+多体系统运动微分方程：
+\begin{equation*}
+\boldsymbol{M} \ddot{\boldsymbol{q}} + c_q^{\mathrm{T}} \boldsymbol{\lambda} = \boldsymbol{h}
+\end{equation*}
+
+多体系统约束方程：
+\begin{align}
+\boldsymbol{0} &= \boldsymbol{c} \\
+\boldsymbol{0} &= c_q\, \dot{\boldsymbol{q}} + c_t \\
+\boldsymbol{0} &= c_q\, \ddot{\boldsymbol{q}} - \boldsymbol{\varepsilon}
+\end{align}
+
+式中
+\begin{equation}
+\begin{aligned}
+&\boldsymbol{q}(t) \in \mathbb{R}^n, \quad \dot{\boldsymbol{q}}(t) \in \mathbb{R}^n, \quad \boldsymbol{M}(\boldsymbol{q},\, t) \in \mathbb{R}^{n \times n}, \quad \boldsymbol{h}(\boldsymbol{q},\, \dot{\boldsymbol{q}},\, t) \in \mathbb{R}^n, \\
+&\boldsymbol{c}(\boldsymbol{q},\, t) \in \mathbb{R}^m, \quad c_q(\boldsymbol{q},\, t) \in \mathbb{R}^{m \times n}, \quad c_t(\boldsymbol{q},\, t) \in \mathbb{R}^m, \quad \boldsymbol{\varepsilon}(\boldsymbol{q},\, \dot{\boldsymbol{q}},\, t) \in \mathbb{R}^m, \\
+&\ddot{\boldsymbol{q}}(t) \in \mathbb{R}^n, \quad \boldsymbol{\lambda} \in \mathbb{R}^m.
+\end{aligned}
+\end{equation}
+
+
+\subsection{二阶常微分方程组形式的系统动力学方程}
+
+联立系统运动微分方程
+\begin{equation*}
+\boldsymbol{M} \ddot{\boldsymbol{q}} + c_q^{\mathrm{T}} \boldsymbol{\lambda} = \boldsymbol{h}(\boldsymbol{q},\, \dot{\boldsymbol{q}},\, t)
+\end{equation*}
+
+与加速度级约束方程
+\begin{equation*}
+\boldsymbol{0} = c_q\, \ddot{\boldsymbol{q}} - \boldsymbol{\varepsilon}
+\end{equation*}
+
+可得
+\begin{equation}\label{eq:3.combined_dae}
+\begin{bmatrix} \boldsymbol{M} & c_q^{\mathrm{T}} \\[4pt] c_q & \boldsymbol{O} \end{bmatrix} \begin{bmatrix} \ddot{\boldsymbol{q}} \\[4pt] \boldsymbol{\lambda} \end{bmatrix} = \begin{bmatrix} \boldsymbol{h} \\[4pt] \boldsymbol{\varepsilon} \end{bmatrix}
+\end{equation}
+
+求解上述关于 $\ddot{\boldsymbol{q}}$ 和 $\boldsymbol{\lambda}$ 的线性代数方程组可得
+\begin{equation}\label{eq:3.f_acc}
+\ddot{\boldsymbol{q}} = \boldsymbol{f}_{\mathrm{acc}}(\boldsymbol{q},\, \dot{\boldsymbol{q}},\, t)
+\end{equation}
+
+
+\subsection{一阶常微分方程组形式的系统动力学方程}
+
+多体系统动力学二阶常微分方程组
+\begin{equation*}
+\ddot{\boldsymbol{q}} = \boldsymbol{f}_{\mathrm{acc}}(\boldsymbol{q},\, \dot{\boldsymbol{q}},\, t)
+\end{equation*}
+
+可转化为如下一阶微分方程组的形式
+\begin{equation}\label{eq:3.first_order}
+\begin{bmatrix} \dot{\boldsymbol{y}}_1 \\[4pt] \dot{\boldsymbol{y}}_2 \end{bmatrix} = \begin{bmatrix} \boldsymbol{y}_2 \\[4pt] \boldsymbol{f}_{\mathrm{acc}}(\boldsymbol{y}_1,\, \boldsymbol{y}_2,\, t) \end{bmatrix}, \qquad
+\begin{cases} \boldsymbol{y}_1 \triangleq \boldsymbol{q} \\ \boldsymbol{y}_2 \triangleq \dot{\boldsymbol{q}} \end{cases}
+\end{equation}
+
+上述一阶常微分方程组的初值问题可借助于成熟的微分方程数值计算方法进行求解。计算机浮点数舍入误差以及微分方程数值求解中的截断误差会随着时间的推进逐步累积；由于该一阶常微分方程组未显含位置级和速度级的约束方程，位置级和速度级约束方程的违约量会逐步超过容许值。
+
+
+\subsection{违约与修正}
+
+将微分方程数值解法求得的 $t_k$ 时刻的系统广义坐标记为 $\boldsymbol{q}_k$。若 $t_k$ 时刻位置级约束方程的违约量 $\boldsymbol{c}(\boldsymbol{q}_k,\, t_k)$ 超过了容许值时，则需要进行违约修正。
+
+违约修正的思路为：在 $t_k$ 时刻，寻求一个最小的广义坐标增量 $\Delta\boldsymbol{q}_k$，使得修正后的广义坐标满足位置级约束方程，即
+\begin{equation}
+\boldsymbol{0} = \boldsymbol{c}(\boldsymbol{q}_k + \Delta\boldsymbol{q}_k,\, t_k)
+\end{equation}
+
+此处的"最小"可用二范数或无穷范数来度量。上述关于 $\Delta\boldsymbol{q}_k$ 的非线性代数方程组可通过牛顿--拉夫森迭代方法进行求解。
+
+由于速度级约束方程表现为广义速度的线性代数方程，因此，当速度级违约量超过容许值时，无需迭代过程即可单步完成广义速度修正。
+
+
+\section*{习题}
+
+\subsection*{习题说明}
+
+针对后文描述的在惯性坐标系 $OXY$ 平面内运动的动力学系统及选定的广义坐标 $\boldsymbol{q}$，列写如下矩阵形式的系统运动微分方程
+\begin{equation*}
+\begin{bmatrix} \boldsymbol{M} & c_q^{\mathrm{T}} \\[4pt] c_q & \boldsymbol{O} \end{bmatrix} \begin{bmatrix} \ddot{\boldsymbol{q}} \\[4pt] \boldsymbol{\lambda} \end{bmatrix} = \begin{bmatrix} \boldsymbol{h} \\[4pt] \boldsymbol{\varepsilon} \end{bmatrix}
+\end{equation*}
+
+并给出系统运动微分方程中 $\boldsymbol{M}(\boldsymbol{q})$、$c_q(\boldsymbol{q})$、$\boldsymbol{h}(\boldsymbol{q},\, \dot{\boldsymbol{q}},\, t)$、$\boldsymbol{\varepsilon}(\boldsymbol{q},\, \dot{\boldsymbol{q}},\, t)$ 的具体表达式。重力加速度在惯性坐标系 $OXY$ 平面内的坐标（投影）列阵记为 $\boldsymbol{g} = [g_x,\, g_y]^{\mathrm{T}}$。
+
+自行设定各动力学参数、广义坐标与广义速度初值、微分方程数值解法，编程获得系统广义坐标、系统广义速度、系统机械能、违约量 $2$ 范数（模）的时间响应历程。
+
+\subsection*{双质点四连杆}
+
+在惯性坐标系 $OXY$ 平面内，双质点四连杆机构由两个质点 $m_1$、$m_2$ 和四根刚性连杆组成。质点 $m_1$ 位于坐标 $(x_1, y_1)$，质点 $m_2$ 位于坐标 $(x_2, y_2)$。连杆 $l_1$ 连接原点 $O$ 与质点 $m_1$，连杆 $l_2$ 连接质点 $m_1$ 与质点 $m_2$，连杆 $l_3$ 连接质点 $m_2$ 与固定点，连杆 $l_4$ 为机架（固定长度 $4l$）。广义坐标为
+\begin{equation*}
+\boldsymbol{q} = [x_1,\, y_1,\, x_2,\, y_2]^{\mathrm{T}} \tag{II}
+\end{equation*}
+
+\subsection*{质点单摆}
+
+在惯性坐标系 $OXY$ 平面内，质点 $m$ 通过长度为 $l$ 的刚性连杆悬挂于原点 $O$，质点坐标为 $(x, y)$。
+
+\textbf{形式 (I)}：以连杆与铅垂方向的夹角 $\theta$ 为广义坐标
+\begin{equation*}
+\boldsymbol{q} = [\theta] \tag{I}
+\end{equation*}
+
+\textbf{形式 (II)}：以质点的直角坐标为广义坐标
+\begin{equation*}
+\boldsymbol{q} = [x,\, y]^{\mathrm{T}} \tag{II}
+\end{equation*}
+
+\subsection*{质点双摆}
+
+在惯性坐标系 $OXY$ 平面内，双摆由两个质点 $m_1$、$m_2$ 和两根刚性连杆 $l_1$、$l_2$ 组成。连杆 $l_1$ 连接原点 $O$ 与质点 $m_1$（坐标 $(x_1, y_1)$），连杆 $l_2$ 连接质点 $m_1$ 与质点 $m_2$（坐标 $(x_2, y_2)$）。$\theta_1$、$\theta_2$ 分别为两连杆与铅垂方向的夹角。
+
+\textbf{形式 (I)}：以角度为广义坐标
+\begin{equation*}
+\boldsymbol{q} = [\theta_1,\, \theta_2]^{\mathrm{T}} \tag{I}
+\end{equation*}
+
+\textbf{形式 (II)}：以直角坐标为广义坐标
+\begin{equation*}
+\boldsymbol{q} = [x_1,\, y_1,\, x_2,\, y_2]^{\mathrm{T}} \tag{II}
+\end{equation*}

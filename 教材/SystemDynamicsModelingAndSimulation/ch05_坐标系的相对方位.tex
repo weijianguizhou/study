@@ -1,0 +1,390 @@
+\section{不同坐标系矢量基之间的关系与方向余弦矩阵}
+
+% 图：坐标系 $i$ 和坐标系 $j$ 的相对方位
+
+两坐标系坐标轴上的单位矢量之间的关系：
+\begin{equation}
+\begin{cases}
+(\vec{e}_1)_i = (a_{11})_{ij}\, (\vec{e}_1)_j + (a_{12})_{ij}\, (\vec{e}_2)_j + (a_{13})_{ij}\, (\vec{e}_3)_j \\
+(\vec{e}_2)_i = (a_{21})_{ij}\, (\vec{e}_1)_j + (a_{22})_{ij}\, (\vec{e}_2)_j + (a_{23})_{ij}\, (\vec{e}_3)_j \\
+(\vec{e}_3)_i = (a_{31})_{ij}\, (\vec{e}_1)_j + (a_{32})_{ij}\, (\vec{e}_2)_j + (a_{33})_{ij}\, (\vec{e}_3)_j
+\end{cases}
+\end{equation}
+
+矩阵形式：
+\begin{equation}
+\begin{bmatrix} (\vec{e}_1)_i \\ (\vec{e}_2)_i \\ (\vec{e}_3)_i \end{bmatrix} = \begin{bmatrix} a_{11} & a_{12} & a_{13} \\ a_{21} & a_{22} & a_{23} \\ a_{31} & a_{32} & a_{33} \end{bmatrix}_{\!ij} \begin{bmatrix} (\vec{e}_1)_j \\ (\vec{e}_2)_j \\ (\vec{e}_3)_j \end{bmatrix}
+\end{equation}
+
+简记形式：
+\begin{equation}\label{eq:5.basis_transform}
+\boldsymbol{e}_i = A_{ij}\, \boldsymbol{e}_j
+\end{equation}
+
+系数矩阵：
+\begin{equation}\label{eq:5.dcm_def}
+A_{ij} = \boldsymbol{e}_i \cdot \boldsymbol{e}_j^{\mathrm{T}}
+\end{equation}
+
+矩阵元素（方向余弦）：
+\begin{equation}
+(a_{mn})_{ij} = (\vec{e}_m)_i \cdot (\vec{e}_n)_j = \cos\langle (\vec{e}_m)_i,\, (\vec{e}_n)_j \rangle
+\end{equation}
+
+$A_{ij}$ 称为方向余弦矩阵。
+
+
+\subsection{方向余弦矩阵的性质}
+
+\begin{enumerate}
+\item 两个方向相同的坐标系之间的方向余弦矩阵为单位矩阵。
+\end{enumerate}
+
+\begin{proof}
+当坐标系 $i$ 和坐标系 $j$ 方向相同时，有 $\boldsymbol{e}_j = \boldsymbol{e}_i$，则两者之间的方向余弦矩阵满足
+\begin{equation*}
+A_{ij} = \boldsymbol{e}_i \cdot \boldsymbol{e}_j^{\mathrm{T}} = \boldsymbol{e}_i \cdot \boldsymbol{e}_i^{\mathrm{T}} = \boldsymbol{I}_3
+\end{equation*}
+\end{proof}
+
+\begin{enumerate}\setcounter{enumi}{1}
+\item 方向余弦矩阵中的 $9$ 个数满足 $6$ 个独立的约束方程。
+\end{enumerate}
+
+\begin{proof}
+用坐标系 $j$ 的矢量基表示的坐标系 $i$ 的矢量基
+\begin{equation*}
+\begin{bmatrix} (\vec{e}_1)_i \\ (\vec{e}_2)_i \\ (\vec{e}_3)_i \end{bmatrix} = \begin{bmatrix} a_{11} & a_{12} & a_{13} \\ a_{21} & a_{22} & a_{23} \\ a_{31} & a_{32} & a_{33} \end{bmatrix}_{\!ij} \begin{bmatrix} (\vec{e}_1)_j \\ (\vec{e}_2)_j \\ (\vec{e}_3)_j \end{bmatrix}
+\end{equation*}
+
+满足
+
+(I) $i$ 系坐标轴上的单位矢量模为 $1$：
+\begin{equation*}
+\begin{cases}
+|(\vec{e}_1)_i| = \sqrt{a_{11}^2 + a_{12}^2 + a_{13}^2} = 1 \\
+|(\vec{e}_2)_i| = \sqrt{a_{21}^2 + a_{22}^2 + a_{23}^2} = 1 \\
+|(\vec{e}_3)_i| = \sqrt{a_{31}^2 + a_{32}^2 + a_{33}^2} = 1
+\end{cases}
+\end{equation*}
+
+(II) $i$ 系坐标轴上的单位矢量两两正交：
+\begin{equation*}
+\begin{cases}
+(\vec{e}_1)_i \cdot (\vec{e}_2)_i = a_{11}\, a_{21} + a_{12}\, a_{22} + a_{13}\, a_{23} = 0 \\
+(\vec{e}_2)_i \cdot (\vec{e}_3)_i = a_{21}\, a_{31} + a_{22}\, a_{32} + a_{23}\, a_{33} = 0 \\
+(\vec{e}_3)_i \cdot (\vec{e}_1)_i = a_{31}\, a_{11} + a_{32}\, a_{12} + a_{33}\, a_{13} = 0
+\end{cases}
+\end{equation*}
+\end{proof}
+
+\begin{enumerate}\setcounter{enumi}{2}
+\item 方向余弦矩阵等于其代数余子式矩阵，即方向余弦矩阵中的每个数都等于其对应的代数余子式。
+\end{enumerate}
+
+\begin{proof}
+由
+\begin{equation*}
+\begin{bmatrix} (\vec{e}_1)_i \\ (\vec{e}_2)_i \\ (\vec{e}_3)_i \end{bmatrix} = \begin{bmatrix} a_{11} & a_{12} & a_{13} \\ a_{21} & a_{22} & a_{23} \\ a_{31} & a_{32} & a_{33} \end{bmatrix}_{\!ij} \begin{bmatrix} (\vec{e}_1)_j \\ (\vec{e}_2)_j \\ (\vec{e}_3)_j \end{bmatrix}
+\end{equation*}
+
+$(\vec{e}_1)_i = (\vec{e}_2)_i \times (\vec{e}_3)_i$，即
+\begin{equation*}
+(\vec{e}_1)_i = \begin{vmatrix} (\vec{e}_1)_j & (\vec{e}_2)_j & (\vec{e}_3)_j \\ a_{21} & a_{22} & a_{23} \\ a_{31} & a_{32} & a_{33} \end{vmatrix} = \begin{vmatrix} a_{22} & a_{23} \\ a_{32} & a_{33} \end{vmatrix} (\vec{e}_1)_j - \begin{vmatrix} a_{21} & a_{23} \\ a_{31} & a_{33} \end{vmatrix} (\vec{e}_2)_j + \begin{vmatrix} a_{21} & a_{22} \\ a_{31} & a_{32} \end{vmatrix} (\vec{e}_3)_j
+\end{equation*}
+
+与
+\begin{equation*}
+(\vec{e}_1)_i = a_{11}\, (\vec{e}_1)_j + a_{12}\, (\vec{e}_2)_j + a_{13}\, (\vec{e}_3)_j
+\end{equation*}
+
+比较可得
+\begin{equation*}
+a_{11} = \begin{vmatrix} a_{22} & a_{23} \\ a_{32} & a_{33} \end{vmatrix}, \quad a_{12} = -\begin{vmatrix} a_{21} & a_{23} \\ a_{31} & a_{33} \end{vmatrix}, \quad a_{13} = \begin{vmatrix} a_{21} & a_{22} \\ a_{31} & a_{32} \end{vmatrix}
+\end{equation*}
+
+同理可证其余元素。
+\end{proof}
+
+\begin{enumerate}\setcounter{enumi}{3}
+\item 方向余弦矩阵行列式的值为正 $1$。
+\end{enumerate}
+
+\begin{proof}
+\begin{equation*}
+\det(A_{ij}) = \begin{vmatrix} a_{11} & a_{12} & a_{13} \\ a_{21} & a_{22} & a_{23} \\ a_{31} & a_{32} & a_{33} \end{vmatrix}_{\!ij} = a_{11} \begin{vmatrix} a_{22} & a_{23} \\ a_{32} & a_{33} \end{vmatrix} - a_{12} \begin{vmatrix} a_{21} & a_{23} \\ a_{31} & a_{33} \end{vmatrix} + a_{13} \begin{vmatrix} a_{21} & a_{22} \\ a_{31} & a_{32} \end{vmatrix} = a_{11}^2 + a_{12}^2 + a_{13}^2 = 1
+\end{equation*}
+\end{proof}
+
+\begin{enumerate}\setcounter{enumi}{4}
+\item 方向余弦矩阵为正交矩阵，逆矩阵等于其转置。
+\end{enumerate}
+
+\begin{proof}
+\begin{equation*}
+\boldsymbol{I}_3 = \boldsymbol{e}_i \cdot \boldsymbol{e}_i^{\mathrm{T}} = (A_{ij}\, \boldsymbol{e}_j) \cdot (A_{ij}\, \boldsymbol{e}_j)^{\mathrm{T}} = A_{ij}\, \boldsymbol{e}_j \cdot \boldsymbol{e}_j^{\mathrm{T}} A_{ij}^{\mathrm{T}} = A_{ij}\, \boldsymbol{I}_3\, A_{ij}^{\mathrm{T}} = A_{ij}\, A_{ij}^{\mathrm{T}}
+\end{equation*}
+
+由此可得
+\begin{equation}\label{eq:5.orthogonal}
+A_{ij}^{-1} = A_{ij}^{\mathrm{T}}
+\end{equation}
+\end{proof}
+
+\begin{enumerate}\setcounter{enumi}{5}
+\item 同一矢量 $\vec{r}$ 在 $i$ 系中的投影列阵 $\boldsymbol{r}_i$ 和它在 $j$ 系中的投影列阵 $\boldsymbol{r}_j$ 之间满足坐标变换式
+\begin{equation}\label{eq:5.coord_transform}
+\boldsymbol{r}_i = A_{ij}\, \boldsymbol{r}_j
+\end{equation}
+\end{enumerate}
+
+\begin{proof}
+\begin{equation*}
+\vec{r} = \boldsymbol{e}_i^{\mathrm{T}} \boldsymbol{r}_i = \boldsymbol{e}_j^{\mathrm{T}} \boldsymbol{r}_j = (A_{ij}\, \boldsymbol{e}_j)^{\mathrm{T}} \boldsymbol{r}_i = \boldsymbol{e}_j^{\mathrm{T}} A_{ij}^{\mathrm{T}} \boldsymbol{r}_i
+\end{equation*}
+
+由此可得 $\boldsymbol{r}_j = A_{ij}^{\mathrm{T}} \boldsymbol{r}_i$，即
+\begin{equation*}
+\boldsymbol{r}_i = A_{ij}\, \boldsymbol{r}_j
+\end{equation*}
+\end{proof}
+
+\begin{enumerate}\setcounter{enumi}{6}
+\item 同一矢量 $\vec{r}$ 在 $i$ 系中的投影列阵 $\boldsymbol{r}_i$ 对应的叉乘矩阵 $\tilde{\boldsymbol{r}}_i$ 和它在 $j$ 系中的投影列阵 $\boldsymbol{r}_j$ 对应的叉乘矩阵 $\tilde{\boldsymbol{r}}_j$ 之间满足如下坐标变换式
+\begin{equation}\label{eq:5.skew_transform}
+\tilde{\boldsymbol{r}}_i = A_{ij}\, \tilde{\boldsymbol{r}}_j\, A_{ij}^{\mathrm{T}}
+\end{equation}
+\end{enumerate}
+
+由此可得
+\begin{equation}
+A_{ij}^{\mathrm{T}} \tilde{\boldsymbol{r}}_i = \tilde{\boldsymbol{r}}_j\, A_{ij}^{\mathrm{T}}
+\end{equation}
+和
+\begin{equation}
+\tilde{\boldsymbol{r}}_i\, A_{ij} = A_{ij}\, \tilde{\boldsymbol{r}}_j
+\end{equation}
+
+\begin{enumerate}\setcounter{enumi}{7}
+\item 任意两个坐标系 $i$ 和 $j$ 之间的方向余弦矩阵 $A_{ij}$ 都有一个实特征值 $1$，即存在一个实数形式的特征向量 $\boldsymbol{r}$，该特征向量满足 $\boldsymbol{r} = A_{ij}\, \boldsymbol{r}$。该性质表明两坐标间的任意相对转动都可以通过一次定轴（简单）转动来完成。
+\end{enumerate}
+
+% 图：坐标系 $i$ 和 $j$ 的相对转动与特征向量 $\vec{r}$
+
+\begin{proof}
+在不引起歧义的前提下将方向余弦矩阵 $A_{ij}$ 简记为 $A$。其特征多项式为
+\begin{align}
+f_A(\lambda) &= \det(A - \lambda \boldsymbol{I}_3) = \begin{vmatrix} a_{11} - \lambda & a_{12} & a_{13} \\ a_{21} & a_{22} - \lambda & a_{23} \\ a_{31} & a_{32} & a_{33} - \lambda \end{vmatrix} \nonumber \\
+&= -\lambda^3 + \operatorname{tr}(A)\, \lambda^2 - \sum_{k=1}^{3} M_{kk}\, \lambda + \det(A) \nonumber \\
+&= -\lambda^3 + \operatorname{tr}(A)\, \lambda^2 - \operatorname{tr}(A)\, \lambda + 1
+\end{align}
+
+将 $\lambda = 1$ 代入上式可得
+\begin{equation*}
+f_A(1) = -1 + \operatorname{tr}(A) - \operatorname{tr}(A) + 1 = 0
+\end{equation*}
+
+故 $\lambda = 1$ 为 $A_{ij}$ 的特征值。
+\end{proof}
+
+% 图：坐标系 $i$ 和 $j$ 的相对方位与转轴 $\vec{n}$ 和转角 $\theta$ 的关系
+
+
+\section{刚体的定点简单转动}
+
+\subsection{刚体的定点简单转动}
+
+% 图：刚体的定点简单转动
+
+两坐标系的相对方位与转轴单位矢量 $\vec{n}$ 和转角 $\theta$ 的关系？
+
+\subsection{任意三维矢量的定点简单转动}
+
+% 图：任意三维矢量的定点简单转动。矢量 $\vec{u}$ 绕转轴 $\vec{n}$ 转动角度 $\theta$ 后得到矢量 $\vec{v}$。
+
+任意三维矢量的定点简单转动：
+\begin{myformula}
+\begin{equation}\label{eq:5.vector_rotation}
+\vec{v} = \cos\theta\, \vec{u} + \sin\theta\, \vec{n} \times \vec{u} + (1 - \cos\theta)\, \vec{n}\, \vec{n} \cdot \vec{u}
+\end{equation}
+\end{myformula}
+
+
+\section{定点简单转动与方向余弦矩阵的关系}
+
+\subsection{任意三维矢量定点简单转动的坐标表示}
+
+% 图：任意三维矢量定点简单转动的坐标表示
+
+任意三维矢量的定点简单转动：
+\begin{equation*}
+\vec{v} = \cos\theta\, \vec{u} + \sin\theta\, \vec{n} \times \vec{u} + (1 - \cos\theta)\, \vec{n}\, \vec{n} \cdot \vec{u}
+\end{equation*}
+
+上述等式两端分别向 $j$ 系和 $i$ 系投影可得
+\begin{equation}
+\boldsymbol{e}_j^{\mathrm{T}} \boldsymbol{v}_j = \boldsymbol{e}_i^{\mathrm{T}} \boldsymbol{u}_i \cos\theta + \boldsymbol{e}_i^{\mathrm{T}} \tilde{\boldsymbol{n}}_i\, \boldsymbol{u}_i \sin\theta + \boldsymbol{e}_i^{\mathrm{T}} \boldsymbol{n}_i \boldsymbol{n}_i^{\mathrm{T}} \boldsymbol{u}_i (1 - \cos\theta) = \boldsymbol{e}_i^{\mathrm{T}} \left[\boldsymbol{I}_3 \cos\theta + \tilde{\boldsymbol{n}}_i \sin\theta + \boldsymbol{n}_i \boldsymbol{n}_i^{\mathrm{T}} (1 - \cos\theta)\right] \boldsymbol{u}_i
+\end{equation}
+
+注意到
+\begin{equation}
+\boldsymbol{e}_j^{\mathrm{T}} = (A_{ji}\, \boldsymbol{e}_i)^{\mathrm{T}} = \boldsymbol{e}_i^{\mathrm{T}} A_{ji}^{\mathrm{T}} = \boldsymbol{e}_i^{\mathrm{T}} A_{ij}, \qquad \boldsymbol{v}_j = \boldsymbol{u}_i, \qquad \boldsymbol{n}_j = \boldsymbol{n}_i =: \boldsymbol{n}
+\end{equation}
+
+将其代入三维矢量定点简单转动表达式可得
+\begin{equation}
+\boldsymbol{e}_i^{\mathrm{T}} A_{ij}\, \boldsymbol{u}_i = \boldsymbol{e}_i^{\mathrm{T}} \left[\boldsymbol{I}_3 \cos\theta + \tilde{\boldsymbol{n}} \sin\theta + \boldsymbol{n}\, \boldsymbol{n}^{\mathrm{T}} (1 - \cos\theta)\right] \boldsymbol{u}_i
+\end{equation}
+
+移项后整理可得
+\begin{equation}
+\boldsymbol{e}_i^{\mathrm{T}} \left\{A_{ij} - \left[\boldsymbol{I}_3 \cos\theta + \tilde{\boldsymbol{n}} \sin\theta + \boldsymbol{n}\, \boldsymbol{n}^{\mathrm{T}} (1 - \cos\theta)\right]\right\} \boldsymbol{u}_i = \vec{0}
+\end{equation}
+
+由 $\boldsymbol{e}_i^{\mathrm{T}} \left\{A_{ij} - \left[\boldsymbol{I}_3 \cos\theta + \tilde{\boldsymbol{n}} \sin\theta + \boldsymbol{n}\, \boldsymbol{n}^{\mathrm{T}} (1 - \cos\theta)\right]\right\} \boldsymbol{u}_i = \vec{0}$ 可得
+\begin{equation}
+\left\{A_{ij} - \left[\boldsymbol{I}_3 \cos\theta + \tilde{\boldsymbol{n}} \sin\theta + \boldsymbol{n}\, \boldsymbol{n}^{\mathrm{T}} (1 - \cos\theta)\right]\right\} \boldsymbol{u}_i = \boldsymbol{0}
+\end{equation}
+
+进一步，由 $\boldsymbol{u}_i$ 的任意性可得
+\begin{equation}
+A_{ij} - \left[\boldsymbol{I}_3 \cos\theta + \tilde{\boldsymbol{n}} \sin\theta + \boldsymbol{n}\, \boldsymbol{n}^{\mathrm{T}} (1 - \cos\theta)\right] = \boldsymbol{O}_{3 \times 3}
+\end{equation}
+
+由此可得方向余弦矩阵与转轴转角的关系式，即
+\begin{myformula}
+\begin{equation}\label{eq:5.rodrigues}
+A_{ij} = \boldsymbol{I}_3 \cos\theta + \tilde{\boldsymbol{n}} \sin\theta + \boldsymbol{n}\, \boldsymbol{n}^{\mathrm{T}} (1 - \cos\theta) = \boldsymbol{I}_3 + \tilde{\boldsymbol{n}} \sin\theta + \tilde{\boldsymbol{n}}\, \tilde{\boldsymbol{n}} (1 - \cos\theta)
+\end{equation}
+\end{myformula}
+
+该表达式又称为罗德里格斯旋转公式（Rodrigues' rotation formula）。
+
+
+\subsection{罗德里格斯旋转公式的特殊形式}
+
+罗德里格斯旋转公式：
+\begin{equation*}
+A_{ij} = \boldsymbol{I}_3 \cos\theta + \tilde{\boldsymbol{n}} \sin\theta + \boldsymbol{n}\, \boldsymbol{n}^{\mathrm{T}} (1 - \cos\theta)
+\end{equation*}
+
+当 $\boldsymbol{n} = [n_1,\, n_2,\, n_3]^{\mathrm{T}} = [1,\, 0,\, 0]^{\mathrm{T}}$ 时，
+\begin{equation}\label{eq:5.Ax}
+A_{ij} = \begin{bmatrix} 1 & 0 & 0 \\ 0 & \cos\theta & -\sin\theta \\ 0 & \sin\theta & \cos\theta \end{bmatrix} =:\, A_x(\theta)
+\end{equation}
+
+当 $\boldsymbol{n} = [n_1,\, n_2,\, n_3]^{\mathrm{T}} = [0,\, 1,\, 0]^{\mathrm{T}}$ 时，
+\begin{equation}\label{eq:5.Ay}
+A_{ij} = \begin{bmatrix} \cos\theta & 0 & \sin\theta \\ 0 & 1 & 0 \\ -\sin\theta & 0 & \cos\theta \end{bmatrix} =:\, A_y(\theta)
+\end{equation}
+
+当 $\boldsymbol{n} = [n_1,\, n_2,\, n_3]^{\mathrm{T}} = [0,\, 0,\, 1]^{\mathrm{T}}$ 时，
+\begin{equation}\label{eq:5.Az}
+A_{ij} = \begin{bmatrix} \cos\theta & -\sin\theta & 0 \\ \sin\theta & \cos\theta & 0 \\ 0 & 0 & 1 \end{bmatrix} =:\, A_z(\theta)
+\end{equation}
+
+% 图：罗德里格斯旋转公式的三种特殊形式
+
+罗德里格斯旋转公式：
+\begin{equation*}
+A_{ij} = \boldsymbol{I}_3 \cos\theta + \tilde{\boldsymbol{n}} \sin\theta + \boldsymbol{n}\, \boldsymbol{n}^{\mathrm{T}} (1 - \cos\theta)
+\end{equation*}
+
+(I) 绕 $x$ 轴转动（$\boldsymbol{n} = [1,\, 0,\, 0]^{\mathrm{T}}$）：
+\begin{equation*}
+A_x(\theta) = \begin{bmatrix} 1 & 0 & 0 \\ 0 & \cos\theta & -\sin\theta \\ 0 & \sin\theta & \cos\theta \end{bmatrix}
+\end{equation*}
+
+(II) 绕 $y$ 轴转动（$\boldsymbol{n} = [0,\, 1,\, 0]^{\mathrm{T}}$）：
+\begin{equation*}
+A_y(\theta) = \begin{bmatrix} \cos\theta & 0 & \sin\theta \\ 0 & 1 & 0 \\ -\sin\theta & 0 & \cos\theta \end{bmatrix}
+\end{equation*}
+
+(III) 绕 $z$ 轴转动（$\boldsymbol{n} = [0,\, 0,\, 1]^{\mathrm{T}}$）：
+\begin{equation*}
+A_z(\theta) = \begin{bmatrix} \cos\theta & -\sin\theta & 0 \\ \sin\theta & \cos\theta & 0 \\ 0 & 0 & 1 \end{bmatrix}
+\end{equation*}
+
+
+\subsection{由方向余弦矩阵反求转轴和转角}
+
+罗德里格斯旋转公式：
+\begin{equation}\label{eq:5.rodrigues_full}
+A_{ij} = \boldsymbol{I}_3 \cos\theta + \tilde{\boldsymbol{n}} \sin\theta + \boldsymbol{n}\, \boldsymbol{n}^{\mathrm{T}} (1 - \cos\theta)
+\end{equation}
+
+展开为
+\begin{equation}
+A_{ij} = \begin{bmatrix}
+\cos\theta + n_1 n_1 (1 - \cos\theta) & -n_3 \sin\theta + n_1 n_2 (1 - \cos\theta) & n_2 \sin\theta + n_1 n_3 (1 - \cos\theta) \\
+n_3 \sin\theta + n_2 n_1 (1 - \cos\theta) & \cos\theta + n_2 n_2 (1 - \cos\theta) & -n_1 \sin\theta + n_2 n_3 (1 - \cos\theta) \\
+-n_2 \sin\theta + n_3 n_1 (1 - \cos\theta) & n_1 \sin\theta + n_3 n_2 (1 - \cos\theta) & \cos\theta + n_3 n_3 (1 - \cos\theta)
+\end{bmatrix} =: \begin{bmatrix} a_{11} & a_{12} & a_{13} \\ a_{21} & a_{22} & a_{23} \\ a_{31} & a_{32} & a_{33} \end{bmatrix}
+\end{equation}
+
+由上式可知：
+\begin{equation}\label{eq:5.trace}
+\operatorname{tr} A = a_{11} + a_{22} + a_{33} = 3 \cos\theta + (n_1^2 + n_2^2 + n_3^2)(1 - \cos\theta) = 2 \cos\theta + 1
+\end{equation}
+
+\begin{equation}\label{eq:5.offdiag}
+\begin{cases}
+a_{32} - a_{23} = 2 n_1 \sin\theta \\
+a_{13} - a_{31} = 2 n_2 \sin\theta \\
+a_{21} - a_{12} = 2 n_3 \sin\theta
+\end{cases}
+\end{equation}
+
+由方向余弦矩阵反求转轴和转角：
+\begin{equation*}
+A_{ij} = \boldsymbol{I}_3 \cos\theta + \tilde{\boldsymbol{n}} \sin\theta + \boldsymbol{n}\, \boldsymbol{n}^{\mathrm{T}} (1 - \cos\theta)
+\end{equation*}
+
+\begin{equation}\label{eq:5.extract}
+\begin{cases}
+\cos\theta = (\operatorname{tr} A - 1) / 2 \\
+n_1 \sin\theta = (a_{32} - a_{23}) / 2 \\
+n_2 \sin\theta = (a_{13} - a_{31}) / 2 \\
+n_3 \sin\theta = (a_{21} - a_{12}) / 2
+\end{cases}
+\end{equation}
+
+若约定 $\theta \in [0,\, \pi]$，则：
+
+\textbf{(1)} 当 $\left|(\operatorname{tr} A - 1)/2 - 1\right| < \varepsilon$ 时
+\begin{equation*}
+\begin{cases}
+\cos\theta \approx 1 \\
+\sin\theta \approx 0
+\end{cases}
+\Rightarrow
+\begin{cases}
+\theta \approx 0 \\
+A \approx \boldsymbol{I}_3
+\end{cases}
+\end{equation*}
+转轴 $\boldsymbol{n}$ 可为任意单位矢量列阵。
+
+\textbf{(2)} 当 $\left|(\operatorname{tr} A - 1)/2 + 1\right| < \varepsilon$ 时
+\begin{equation*}
+\begin{cases}
+\cos\theta \approx -1 \\
+\sin\theta \approx 0
+\end{cases}
+\Rightarrow
+\begin{cases}
+\theta \approx \pi \\
+(A + \boldsymbol{I}) / 2 \approx \boldsymbol{n}\, \boldsymbol{n}^{\mathrm{T}}
+\end{cases}
+\end{equation*}
+依此确定 $\boldsymbol{n}$ 的按模最大分量后即可求出完整的 $\boldsymbol{n}$。
+
+\textbf{(3)} 当 $\left|(\operatorname{tr} A - 1)/2 - 1\right| > \varepsilon$ 且 $\left|(\operatorname{tr} A - 1)/2 + 1\right| > \varepsilon$ 时
+\begin{equation}
+\begin{cases}
+\theta = \arccos\!\left((\operatorname{tr} A - 1) / 2\right) \\
+n_1 = (a_{32} - a_{23}) / (2 \sin\theta) \\
+n_2 = (a_{13} - a_{31}) / (2 \sin\theta) \\
+n_3 = (a_{21} - a_{12}) / (2 \sin\theta)
+\end{cases}
+\end{equation}

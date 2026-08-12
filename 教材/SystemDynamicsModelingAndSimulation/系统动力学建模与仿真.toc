@@ -1,0 +1,189 @@
+\contentsline {chapter}{\numberline {1}绪论}{3}{chapter.1}%
+\contentsline {chapter}{\numberline {2}有限维广义变分原理}{5}{chapter.2}%
+\contentsline {section}{\numberline {2.1}独立变分原理}{5}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}基础概念}{5}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}独立变分原理}{6}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2}独立变分原理在多元函数自由极值问题中的应用}{7}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}多元函数}{7}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}多元函数的自由极值}{8}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}多元函数的泰勒展开式}{8}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}多元函数的驻点}{9}{subsection.2.2.4}%
+\contentsline {subsection}{\numberline {2.2.5}多元函数的驻点为极值点的充要条件}{9}{subsection.2.2.5}%
+\contentsline {section}{\numberline {2.3}非独立变分原理}{10}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}不含冗余约束的有限维非独立变分}{10}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}含冗余约束的有限维非独立变分原理}{13}{subsection.2.3.2}%
+\contentsline {section}{\numberline {2.4}非独立变分原理在多元函数条件极值问题的应用}{14}{section.2.4}%
+\contentsline {chapter}{\numberline {3}多体系统拉格朗日方程}{17}{chapter.3}%
+\contentsline {section}{\numberline {3.1}多体系统广义坐标与广义速度}{17}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}系统广义坐标}{17}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}系统广义速度}{17}{subsection.3.1.2}%
+\contentsline {section}{\numberline {3.2}系统状态变量约束方程}{18}{section.3.2}%
+\contentsline {section}{\numberline {3.3}完整系统的虚位移}{18}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}广义虚位移}{18}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}广义虚位移约束方程}{19}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}质点的虚位移}{19}{subsection.3.3.3}%
+\contentsline {section}{\numberline {3.4}虚功原理与完整系统拉格朗日方程}{20}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}质点的运动微分方程}{20}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}质点与质点系的虚功方程}{20}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}系统虚功方程的化简}{21}{subsection.3.4.3}%
+\contentsline {subsection}{\numberline {3.4.4}系统非惯性力的虚功}{22}{subsection.3.4.4}%
+\contentsline {subsection}{\numberline {3.4.5}拉格朗日方程}{22}{subsection.3.4.5}%
+\contentsline {section}{\numberline {3.5}有势力及其广义力}{23}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}有势力}{23}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}势能与有势的关系}{23}{subsection.3.5.2}%
+\contentsline {section}{\numberline {3.6}第二类拉格朗日方程}{24}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}第二类拉格朗日方程}{24}{subsection.3.6.1}%
+\contentsline {section}{\numberline {3.7}保守系统机械能守恒}{25}{section.3.7}%
+\contentsline {subsection}{\numberline {3.7.1}系统广义能量}{25}{subsection.3.7.1}%
+\contentsline {subsection}{\numberline {3.7.2}系统动能关于系统广义速度的二次型形式}{25}{subsection.3.7.2}%
+\contentsline {subsection}{\numberline {3.7.3}保守系统机械能守恒}{26}{subsection.3.7.3}%
+\contentsline {chapter}{\numberline {4}系统运动微分方程及其数值求解}{27}{chapter.4}%
+\contentsline {section}{\numberline {4.1}系统动力学微分代数方程}{27}{section.4.1}%
+\contentsline {section}{\numberline {4.2}系统动力学方程数值求解}{28}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}常微分方程数值求解的计算精度与稳定性}{28}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}常微分方程数值求解的计算精度与稳定性}{28}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}将高阶常微分方程转化为一阶常微分方程组}{29}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.2.4}一阶常微分方程组初值问题的一般形式}{30}{subsection.4.2.4}%
+\contentsline {subsection}{\numberline {4.2.5}一阶常微分方程组初值问题数值解法（一）}{30}{subsection.4.2.5}%
+\contentsline {subsection}{\numberline {4.2.6}一阶常微分方程组初值问题数值解法（二）}{31}{subsection.4.2.6}%
+\contentsline {subsection}{\numberline {4.2.7}一阶常微分方程组初值问题数值解法（三）}{31}{subsection.4.2.7}%
+\contentsline {subsection}{\numberline {4.2.8}微分代数方程初值问题数值求解}{31}{subsection.4.2.8}%
+\contentsline {subsection}{\numberline {4.2.9}位置级、速度级与加速度级系统约束方程}{32}{subsection.4.2.9}%
+\contentsline {subsection}{\numberline {4.2.10}系统动力学方程}{32}{subsection.4.2.10}%
+\contentsline {subsection}{\numberline {4.2.11}二阶常微分方程组形式的系统动力学方程}{33}{subsection.4.2.11}%
+\contentsline {subsection}{\numberline {4.2.12}一阶常微分方程组形式的系统动力学方程}{33}{subsection.4.2.12}%
+\contentsline {subsection}{\numberline {4.2.13}违约与修正}{33}{subsection.4.2.13}%
+\contentsline {chapter}{\numberline {5}笛卡尔张量}{37}{chapter.5}%
+\contentsline {section}{\numberline {5.1}坐标系、坐标轴上的单位矢量与矢量基}{37}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}右手笛卡尔直角坐标系及其坐标轴上的单位矢量}{37}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}右手笛卡尔直角坐标系矢量基及其运算法则}{38}{subsection.5.1.2}%
+\contentsline {section}{\numberline {5.2}矢量及矢量运算的坐标表示}{39}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}矢量的坐标表示}{39}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}两矢量点积运算的坐标表示}{40}{subsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.2.3}两矢量叉积运算的坐标表示}{40}{subsection.5.2.3}%
+\contentsline {subsection}{\numberline {5.2.4}三矢量混合积运算的坐标表示}{41}{subsection.5.2.4}%
+\contentsline {subsection}{\numberline {5.2.5}三矢量叉积运算的坐标表示}{41}{subsection.5.2.5}%
+\contentsline {chapter}{\numberline {6}坐标系的相对方位}{43}{chapter.6}%
+\contentsline {section}{\numberline {6.1}不同坐标系矢量基之间的关系与方向余弦矩阵}{43}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}方向余弦矩阵的性质}{43}{subsection.6.1.1}%
+\contentsline {section}{\numberline {6.2}刚体的定点简单转动}{47}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}刚体的定点简单转动}{47}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}任意三维矢量的定点简单转动}{47}{subsection.6.2.2}%
+\contentsline {section}{\numberline {6.3}定点简单转动与方向余弦矩阵的关系}{47}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}任意三维矢量定点简单转动的坐标表示}{47}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}罗德里格斯旋转公式的特殊形式}{48}{subsection.6.3.2}%
+\contentsline {subsection}{\numberline {6.3.3}由方向余弦矩阵反求转轴和转角}{49}{subsection.6.3.3}%
+\contentsline {chapter}{\numberline {7}相对转动角速度}{51}{chapter.7}%
+\contentsline {section}{\numberline {7.1}固结在动系上的点的相对速度}{51}{section.7.1}%
+\contentsline {section}{\numberline {7.2}两右手笛卡尔直角坐标系的相对方位}{51}{section.7.2}%
+\contentsline {section}{\numberline {7.3}方向余弦矩阵的时间变化率（由$I_3 = A_{ij}A_{ij}^{\mathrm {T}}$出发）}{52}{section.7.3}%
+\contentsline {section}{\numberline {7.4}方向余弦矩阵的时间变化率（由$I_3 = A_{ij}^{\mathrm {T}}A_{ij}$出发）}{52}{section.7.4}%
+\contentsline {section}{\numberline {7.5}方向余弦矩阵的时间变化率——两种推导的统一}{52}{section.7.5}%
+\contentsline {section}{\numberline {7.6}方向余弦矩阵的时间变化率$\dot {A}_{ij}$}{53}{section.7.6}%
+\contentsline {section}{\numberline {7.7}科里奥利公式}{53}{section.7.7}%
+\contentsline {section}{\numberline {7.8}角速度叠加定理}{54}{section.7.8}%
+\contentsline {chapter}{\numberline {8}坐标系的姿态广义坐标}{55}{chapter.8}%
+\contentsline {section}{\numberline {8.1}转轴和转角}{55}{section.8.1}%
+\contentsline {subsection}{\numberline {8.1.1}用转轴和转角表示的空间运动刚体角速度}{55}{subsection.8.1.1}%
+\contentsline {section}{\numberline {8.2}欧拉参数}{55}{section.8.2}%
+\contentsline {subsection}{\numberline {8.2.1}由角速度列阵反求欧拉参数对时间的一阶导数}{57}{subsection.8.2.1}%
+\contentsline {section}{\numberline {8.3}欧拉角}{58}{section.8.3}%
+\contentsline {subsection}{\numberline {8.3.1}体内ZXZ转动（经典欧拉角）}{58}{subsection.8.3.1}%
+\contentsline {subsection}{\numberline {8.3.2}体内ZYX转动（卡尔丹角，Yaw-Pitch-Roll）}{61}{subsection.8.3.2}%
+\contentsline {section}{\numberline {8.4}坐标系姿态广义坐标的其他形式}{63}{section.8.4}%
+\contentsline {section}{\numberline {8.5}相继转动}{63}{section.8.5}%
+\contentsline {chapter}{\numberline {9}空间运动刚体的动能与势能}{65}{chapter.9}%
+\contentsline {section}{\numberline {9.1}空间运动刚体元件的动能}{65}{section.9.1}%
+\contentsline {subsection}{\numberline {9.1.1}空间运动刚体元件动能的微元求和形式}{65}{subsection.9.1.1}%
+\contentsline {section}{\numberline {9.2}空间运动刚体元件的重力势能}{69}{section.9.2}%
+\contentsline {section}{\numberline {9.3}空间运动刚体元件的转动惯量张量}{69}{section.9.3}%
+\contentsline {chapter}{\numberline {10}体元件广义坐标与系统总体动力学方程}{73}{chapter.10}%
+\contentsline {section}{\numberline {10.1}多刚体系统体元件广义坐标}{73}{section.10.1}%
+\contentsline {section}{\numberline {10.2}系统约束方程}{73}{section.10.2}%
+\contentsline {subsection}{\numberline {10.2.1}铰元件约束方程}{74}{subsection.10.2.1}%
+\contentsline {subsection}{\numberline {10.2.2}铰元件约束方程雅可比矩阵}{74}{subsection.10.2.2}%
+\contentsline {section}{\numberline {10.3}系统动能及其对广义坐标的偏导数}{75}{section.10.3}%
+\contentsline {subsection}{\numberline {10.3.1}刚体的动能}{75}{subsection.10.3.1}%
+\contentsline {subsection}{\numberline {10.3.2}刚体的速度列阵}{75}{subsection.10.3.2}%
+\contentsline {subsection}{\numberline {10.3.3}系统的动能}{75}{subsection.10.3.3}%
+\contentsline {subsection}{\numberline {10.3.4}系统动能对广义坐标的偏导数}{76}{subsection.10.3.4}%
+\contentsline {subsection}{\numberline {10.3.5}刚体连体坐标系速度对刚体广义坐标的偏导数}{76}{subsection.10.3.5}%
+\contentsline {section}{\numberline {10.4}重力势能及其对广义坐标的偏导数}{76}{section.10.4}%
+\contentsline {chapter}{\numberline {11}多刚体系统运动学方程递推形式}{77}{chapter.11}%
+\contentsline {section}{\numberline {11.1}多刚体系统树形拓扑描述}{77}{section.11.1}%
+\contentsline {subsection}{\numberline {11.1.1}动力学模型拓扑图}{77}{subsection.11.1.1}%
+\contentsline {subsection}{\numberline {11.1.2}派生树拓扑描述与元件标号}{77}{subsection.11.1.2}%
+\contentsline {subsection}{\numberline {11.1.3}系统广义坐标与约束方程}{78}{subsection.11.1.3}%
+\contentsline {section}{\numberline {11.2}相邻体元件运动学量递推关系}{79}{section.11.2}%
+\contentsline {subsection}{\numberline {11.2.1}相邻体元件位置级运动学量递推关系}{79}{subsection.11.2.1}%
+\contentsline {subsection}{\numberline {11.2.2}相邻体元件速度级运动学量递推关系}{79}{subsection.11.2.2}%
+\contentsline {subsection}{\numberline {11.2.3}相邻体元件加速度运动学量递推关系}{80}{subsection.11.2.3}%
+\contentsline {section}{\numberline {11.3}主铰元件相对运动学方程}{80}{section.11.3}%
+\contentsline {subsection}{\numberline {11.3.1}虚拟铰元件}{80}{subsection.11.3.1}%
+\contentsline {subsection}{\numberline {11.3.2}转动铰元件}{81}{subsection.11.3.2}%
+\contentsline {subsection}{\numberline {11.3.3}棱柱铰元件}{82}{subsection.11.3.3}%
+\contentsline {subsection}{\numberline {11.3.4}固结铰元件}{83}{subsection.11.3.4}%
+\contentsline {subsection}{\numberline {11.3.5}球铰元件}{83}{subsection.11.3.5}%
+\contentsline {subsection}{\numberline {11.3.6}万向节}{84}{subsection.11.3.6}%
+\contentsline {subsection}{\numberline {11.3.7}圆柱铰}{84}{subsection.11.3.7}%
+\contentsline {subsection}{\numberline {11.3.8}螺旋铰}{84}{subsection.11.3.8}%
+\contentsline {section}{\numberline {11.4}体元件速度关于系统广义速度的线性表达式}{85}{section.11.4}%
+\contentsline {section}{\numberline {11.5}闭环切断铰元件相对运动学量的计算}{85}{section.11.5}%
+\contentsline {subsection}{\numberline {11.5.1}转动铰元件}{86}{subsection.11.5.1}%
+\contentsline {subsection}{\numberline {11.5.2}棱柱铰元件}{87}{subsection.11.5.2}%
+\contentsline {subsection}{\numberline {11.5.3}固结铰元件}{87}{subsection.11.5.3}%
+\contentsline {subsection}{\numberline {11.5.4}球铰元件}{87}{subsection.11.5.4}%
+\contentsline {subsection}{\numberline {11.5.5}万向节}{87}{subsection.11.5.5}%
+\contentsline {section}{\numberline {11.6}闭环切断铰元件约束方程}{87}{section.11.6}%
+\contentsline {subsection}{\numberline {11.6.1}转动铰元件}{87}{subsection.11.6.1}%
+\contentsline {subsection}{\numberline {11.6.2}棱柱铰元件}{89}{subsection.11.6.2}%
+\contentsline {subsection}{\numberline {11.6.3}固结铰元件}{89}{subsection.11.6.3}%
+\contentsline {subsection}{\numberline {11.6.4}球铰元件}{89}{subsection.11.6.4}%
+\contentsline {subsection}{\numberline {11.6.5}万向节}{89}{subsection.11.6.5}%
+\contentsline {section}{\numberline {11.7}速度级约束方程关于系统广义速度的线性表达式}{90}{section.11.7}%
+\contentsline {section}{\numberline {11.8}闭环违约修正}{90}{section.11.8}%
+\contentsline {subsection}{\numberline {11.8.1}位置级违约修正}{90}{subsection.11.8.1}%
+\contentsline {subsection}{\numberline {11.8.2}速度级违约修正}{91}{subsection.11.8.2}%
+\contentsline {chapter}{\numberline {12}多刚体系统拉格朗日方程递推形式}{93}{chapter.12}%
+\contentsline {section}{\numberline {12.1}系统运动微分方程}{93}{section.12.1}%
+\contentsline {section}{\numberline {12.2}系统广义质量矩阵}{93}{section.12.2}%
+\contentsline {section}{\numberline {12.3}系统广义质量矩阵对时间的一阶导数}{94}{section.12.3}%
+\contentsline {section}{\numberline {12.4}系统动能对广义坐标的偏导数}{95}{section.12.4}%
+\contentsline {section}{\numberline {12.5}铰元件相对运动学量对自身广义坐标的偏导数}{96}{section.12.5}%
+\contentsline {subsection}{\numberline {12.5.1}虚拟铰元件}{96}{subsection.12.5.1}%
+\contentsline {subsection}{\numberline {12.5.2}转动铰元件}{97}{subsection.12.5.2}%
+\contentsline {subsection}{\numberline {12.5.3}棱柱铰元件}{97}{subsection.12.5.3}%
+\contentsline {subsection}{\numberline {12.5.4}固结铰元件}{97}{subsection.12.5.4}%
+\contentsline {subsection}{\numberline {12.5.5}球铰元件}{97}{subsection.12.5.5}%
+\contentsline {subsection}{\numberline {12.5.6}万向节}{97}{subsection.12.5.6}%
+\contentsline {section}{\numberline {12.6}加速度约束方程}{97}{section.12.6}%
+\contentsline {subsection}{\numberline {12.6.1}转动铰元件}{98}{subsection.12.6.1}%
+\contentsline {subsection}{\numberline {12.6.2}棱柱铰元件}{98}{subsection.12.6.2}%
+\contentsline {subsection}{\numberline {12.6.3}固结铰元件}{98}{subsection.12.6.3}%
+\contentsline {subsection}{\numberline {12.6.4}球铰元件}{98}{subsection.12.6.4}%
+\contentsline {subsection}{\numberline {12.6.5}万向节}{98}{subsection.12.6.5}%
+\contentsline {section}{\numberline {12.7}与非切断铰元件绑定的弹性阻尼力与控制力}{98}{section.12.7}%
+\contentsline {section}{\numberline {12.8}其它系统广义力}{99}{section.12.8}%
+\contentsline {section}{\numberline {12.9}动力学微分代数的约化}{99}{section.12.9}%
+\contentsline {subsection}{\numberline {12.9.1}树形拓扑图}{101}{subsection.12.9.1}%
+\contentsline {subsection}{\numberline {12.9.2}运动学方程}{101}{subsection.12.9.2}%
+\contentsline {subsubsection}{相邻体元件速度级运动学量递推关系的证明}{101}{subsection.12.9.2}%
+\contentsline {subsubsection}{相邻体元件加速度运动学量递推关系的证明}{102}{equation.12.46}%
+\contentsline {subsubsection}{体元件速度关于系统广义速度的线性表达式的证明}{104}{equation.12.54}%
+\contentsline {subsubsection}{与刚体固连的点的绝对运动}{105}{equation.12.58}%
+\contentsline {subsection}{\numberline {12.9.3}速度级约束方程的校核}{105}{subsection.12.9.3}%
+\contentsline {subsection}{\numberline {12.9.4}系统机械能}{105}{subsection.12.9.4}%
+\contentsline {subsubsection}{系统动能}{105}{subsection.12.9.4}%
+\contentsline {subsubsection}{系统重力势能}{106}{equation.12.66}%
+\contentsline {subsubsection}{主铰元件弹性势能}{106}{equation.12.69}%
+\contentsline {subsubsection}{闭环切断铰元件弹性势能}{106}{equation.12.70}%
+\contentsline {subsection}{\numberline {12.9.5}接触模型}{106}{subsection.12.9.5}%
+\contentsline {subsubsection}{球与无限大平面}{107}{subsection.12.9.5}%
+\contentsline {subsubsection}{法向弹性阻尼接触力}{107}{Item.32}%
+\contentsline {subsubsection}{切向摩擦接触力}{108}{equation.12.73}%
+\contentsline {subsubsection}{step5 函数}{108}{equation.12.74}%
+\contentsline {subsection}{\numberline {12.9.6}$n$ 元二次型函数的一阶偏导数}{109}{subsection.12.9.6}%
+\contentsline {subsection}{\numberline {12.9.7}$n$ 元二次型函数的二阶偏导数}{110}{subsection.12.9.7}%
+\contentsline {subsection}{\numberline {12.9.8}$n \times n$ 元二次型函数的一阶偏导数}{110}{subsection.12.9.8}%
+\contentsline {subsection}{\numberline {12.9.9}$n \times n$ 元复合二次型函数的一阶偏导数}{111}{subsection.12.9.9}%
+\contentsfinish 

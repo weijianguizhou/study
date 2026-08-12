@@ -1,0 +1,176 @@
+\section{多刚体系统体元件广义坐标}
+
+多刚体系统体元件广义坐标 $\boldsymbol{q}$ 由系统中所有体元件连体坐标系相对于全局惯性坐标系的广义坐标构成，可记为
+\begin{equation}\label{eq:9.1}
+  \boldsymbol{q} = \begin{bmatrix} \boldsymbol{q}_{B_1}^{\mathrm{T}} & \boldsymbol{q}_{B_2}^{\mathrm{T}} & \cdots & \boldsymbol{q}_{B_n}^{\mathrm{T}} \end{bmatrix}^{\mathrm{T}},
+\end{equation}
+式中 $n$ 表示系统包含的体元件个数；$\boldsymbol{q}_{B_i}\;(i=1,2,\cdots,n)$ 表示体元件 $i$ 连体坐标系相对于全局惯性坐标系的广义坐标，可表示为
+\begin{equation}\label{eq:9.2}
+  \boldsymbol{q}_{B_i} = \begin{bmatrix} \boldsymbol{r}_{O_0 O_i \mid 0}^{\mathrm{T}} & \boldsymbol{\theta}_{0,i}^{\mathrm{T}} \end{bmatrix}^{\mathrm{T}},
+\end{equation}
+式中 $\boldsymbol{r}_{O_0 O_i \mid 0}$ 表示从全局惯性坐标系（$0$ 系）原点 $O_0$ 到刚体元件 $i$ 连体坐标系（$i$ 系）原点 $O_i$ 的位置矢量在 $0$ 系中的投影列阵；$\boldsymbol{\theta}_{0,i}$ 表示 $i$ 相对于 $0$ 系的相对转动广义坐标，可取为欧拉四元数或三轴角形式。
+
+\section{系统约束方程}
+
+多刚体系统体元件广义坐标往往并不独立，需满足相应的约束方程，包括铰元件约束方程
+\begin{equation}\label{eq:9.3}
+  \boldsymbol{c}_J = \begin{bmatrix} \boldsymbol{c}_{J_1}^{\mathrm{T}} & \boldsymbol{c}_{J_2}^{\mathrm{T}} & \cdots & \boldsymbol{c}_{J_m}^{\mathrm{T}} \end{bmatrix}^{\mathrm{T}},
+\end{equation}
+以及体元件自身广义坐标不独立所对应的约束方程
+\begin{equation}\label{eq:9.4}
+  \boldsymbol{c}_B = \begin{bmatrix} \boldsymbol{c}_{B_1}^{\mathrm{T}} & \boldsymbol{c}_{B_2}^{\mathrm{T}} & \cdots & \boldsymbol{c}_{B_n}^{\mathrm{T}} \end{bmatrix}^{\mathrm{T}},
+\end{equation}
+式中 $m$ 表示系统包含的铰元件个数；$\boldsymbol{c}_{J_i}\;(i=1,2,\cdots,m)$ 表示铰元件 $i$ 引起的约束方程；$\boldsymbol{c}_{B_i}\;(i=1,2,\cdots,n)$ 表示体元件 $i$ 自身广义坐标不独立所对应的约束方程。当体元件自身广义坐标独立时，$\boldsymbol{c}_B$ 为空集。系统约束方程可记为
+\begin{equation}\label{eq:9.5}
+  \boldsymbol{c} = \begin{bmatrix} \boldsymbol{c}_J^{\mathrm{T}} & \boldsymbol{c}_B^{\mathrm{T}} \end{bmatrix}^{\mathrm{T}}.
+\end{equation}
+
+\subsection{铰元件约束方程}
+
+设铰元件 $J_j$ 为转动铰元件，并关联了体元件 $B_{b(j)}$ 上的点 $B_j$ 以及体元件 $B_{m(j)}$ 上的点 $M_j$，其位置级约束方程可表示为
+\begin{equation}\label{eq:9.6}
+  \boldsymbol{0} = \boldsymbol{c}_{J_j} = \begin{bmatrix}
+    \boldsymbol{r}_{O_0 M_j \mid 0} - \boldsymbol{r}_{O_0 B_j \mid 0} \\[4pt]
+    \boldsymbol{T}_{J_j}^{\mathrm{T}} \boldsymbol{A}_{0,b(j)}^{\mathrm{T}} \boldsymbol{A}_{0,m(j)} \boldsymbol{n}_{J_j}
+  \end{bmatrix},
+\end{equation}
+式中
+\begin{align}
+  \boldsymbol{r}_{O_0 M_j \mid 0} &= \boldsymbol{r}_{O_0 O_{m(j)} \mid 0} + \boldsymbol{A}_{0,m(j)} \boldsymbol{r}_{O_{m(j)} M_j \mid m(j)}, \\
+  \boldsymbol{r}_{O_0 B_j \mid 0} &= \boldsymbol{r}_{O_0 O_{b(j)} \mid 0} + \boldsymbol{A}_{0,b(j)} \boldsymbol{r}_{O_{b(j)} B_j \mid b(j)},
+\end{align}
+三维列阵 $\boldsymbol{n}_{J_j}$ 为在 $b(j)$ 系和 $m(j)$ 系中表示的铰元件转轴方向的单位矢量。$\boldsymbol{T}_{J_j} = \begin{bmatrix} \boldsymbol{\tau}_{J_j,1} & \boldsymbol{\tau}_{J_j,2} \end{bmatrix}$，$\boldsymbol{\tau}_{J_j,1}$ 和 $\boldsymbol{\tau}_{J_j,2}$ 为建模时预先定义好的一对模为 $1$ 的定常三维列阵；$\boldsymbol{\tau}_{J_j,1}$、$\boldsymbol{\tau}_{J_j,2}$ 与 $\boldsymbol{n}_{J_j}$ 两两正交。
+
+\subsection{铰元件约束方程雅可比矩阵}
+
+对于转动铰元件 $J_j$，其约束方程对体元件 $B_{b(j)}$ 的广义坐标 $\boldsymbol{q}_{B_{b(j)}}$ 的偏导数满足
+\begin{equation}\label{eq:9.9}
+  \frac{\partial \boldsymbol{c}_{J_j}}{\partial \boldsymbol{q}_{B_{b(j)}}}
+  = \frac{\partial}{\partial \boldsymbol{q}_{B_{b(j)}}}
+  \begin{bmatrix}
+    \boldsymbol{r}_{O_0 M_j \mid 0} - \boldsymbol{r}_{O_0 B_j \mid 0} \\[4pt]
+    \boldsymbol{T}_{J_j}^{\mathrm{T}} \boldsymbol{A}_{0,b(j)}^{\mathrm{T}} \boldsymbol{A}_{0,m(j)} \boldsymbol{n}_{J_j}
+  \end{bmatrix}
+  = \frac{\partial}{\partial \boldsymbol{q}_{B_{b(j)}}}
+  \begin{bmatrix}
+    -\boldsymbol{r}_{O_0 O_{b(j)} \mid 0} - \boldsymbol{A}_{0,b(j)} \boldsymbol{r}_{O_{b(j)} B_j \mid b(j)} \\[4pt]
+    \boldsymbol{T}_{J_j}^{\mathrm{T}} \boldsymbol{A}_{0,b(j)}^{\mathrm{T}} \boldsymbol{A}_{0,m(j)} \boldsymbol{n}_{J_j}
+  \end{bmatrix}
+\end{equation}
+\begin{equation}\label{eq:9.10}
+  = -\begin{bmatrix}
+    \boldsymbol{I}_3 & \boldsymbol{A}_{0,b(j)} \tilde{\boldsymbol{r}}_{O_{b(j)} B_j \mid b(j)}^{\mathrm{T}} \boldsymbol{H}^*(\boldsymbol{\theta}_{0,b(j)}) \\[4pt]
+    \boldsymbol{O}_{2\times 3} & \boldsymbol{T}_{J_j}^{\mathrm{T}} \left[ \boldsymbol{A}_{0,b(j)}^{\mathrm{T}} \boldsymbol{A}_{0,m(j)} \boldsymbol{n}_{J_j} \right]^{\mathrm{T} \times} \boldsymbol{H}^*(\boldsymbol{\theta}_{0,b(j)})
+  \end{bmatrix}.
+\end{equation}
+
+对于转动铰元件 $J_j$，其约束方程对体元件 $B_{m(j)}$ 的广义坐标 $\boldsymbol{q}_{B_{m(j)}}$ 的偏导数满足
+\begin{equation}\label{eq:9.11}
+  \frac{\partial \boldsymbol{c}_{J_j}}{\partial \boldsymbol{q}_{B_{m(j)}}}
+  = \frac{\partial}{\partial \boldsymbol{q}_{B_{m(j)}}}
+  \begin{bmatrix}
+    \boldsymbol{r}_{O_0 M_j \mid 0} - \boldsymbol{r}_{O_0 B_j \mid 0} \\[4pt]
+    \boldsymbol{T}_{J_j}^{\mathrm{T}} \boldsymbol{A}_{0,b(j)}^{\mathrm{T}} \boldsymbol{A}_{0,m(j)} \boldsymbol{n}_{J_j}
+  \end{bmatrix}
+  = \frac{\partial}{\partial \boldsymbol{q}_{B_{m(j)}}}
+  \begin{bmatrix}
+    \boldsymbol{r}_{O_0 O_{m(j)} \mid 0} + \boldsymbol{A}_{0,m(j)} \boldsymbol{r}_{O_{m(j)} M_j \mid m(j)} \\[4pt]
+    \boldsymbol{T}_{J_j}^{\mathrm{T}} \boldsymbol{A}_{0,b(j)}^{\mathrm{T}} \boldsymbol{A}_{0,m(j)} \boldsymbol{n}_{J_j}
+  \end{bmatrix}
+\end{equation}
+\begin{equation}\label{eq:9.12}
+  = \begin{bmatrix}
+    \boldsymbol{I}_3 & \boldsymbol{A}_{0,m(j)} \tilde{\boldsymbol{r}}_{O_{m(j)} M_j \mid m(j)}^{\mathrm{T}} \boldsymbol{H}^*(\boldsymbol{\theta}_{0,m(j)}) \\[4pt]
+    \boldsymbol{O}_{2\times 3} & \boldsymbol{T}_{J_j}^{\mathrm{T}} \boldsymbol{A}_{0,b(j)}^{\mathrm{T}} \boldsymbol{A}_{0,m(j)} \tilde{\boldsymbol{n}}_{J_j}^{\mathrm{T}} \boldsymbol{H}^*(\boldsymbol{\theta}_{0,m(j)})
+  \end{bmatrix}.
+\end{equation}
+
+\section{系统动能及其对广义坐标的偏导数}
+
+\subsection{刚体的动能}
+
+多刚体系统的动能可由系统中所有体元件的动能求和得到，即
+\begin{equation}\label{eq:9.13}
+  T = \sum_{i=1}^{n} T_{B_i},
+\end{equation}
+式中体元件 $i$ 的动能 $T_{B_i}$ 又可表示为
+\begin{equation}\label{eq:9.14}
+  T_{B_i} = \frac{1}{2} \boldsymbol{v}_i^{\mathrm{T}} \boldsymbol{M}_{O_i} \boldsymbol{v}_i,
+\end{equation}
+式中
+\begin{equation}\label{eq:9.15}
+  \boldsymbol{v}_i = \begin{bmatrix} \boldsymbol{A}_{0,i}^{\mathrm{T}} \dot{\boldsymbol{r}}_{O_0 O_i \mid 0} \\ \boldsymbol{\omega}_{0,i \mid i} \end{bmatrix}, \qquad
+  \boldsymbol{M}_{O_i} = \begin{bmatrix} m_{B_i} \boldsymbol{I}_3 & m_{B_i} \tilde{\boldsymbol{r}}_{O_i C_i \mid i}^{\mathrm{T}} \\ m_{B_i} \tilde{\boldsymbol{r}}_{O_i C_i \mid i} & \boldsymbol{J}_{O_i \mid i} \end{bmatrix},
+\end{equation}
+$\boldsymbol{A}_{0,i}$ 表示从 $i$ 系到 $0$ 系的坐标变换矩阵；$m_{B_i}$ 表示刚体元件的质量；$\boldsymbol{r}_{O_i C_i \mid i}$ 表示从 $i$ 系原点 $O_i$ 到刚体 $i$ 质心 $C_i$ 的位置矢量在 $i$ 系中的坐标列阵；$\boldsymbol{J}_{O_i \mid i}$ 表示刚体 $i$ 相对于 $O_i$ 的转动惯量张量在 $i$ 系中的投影矩阵。
+
+\subsection{刚体的速度列阵}
+
+刚体连体坐标系的六维速度列阵可表示为
+\begin{equation}\label{eq:9.16}
+  \boldsymbol{v}_i = \begin{bmatrix} \boldsymbol{A}_{0,i}^{\mathrm{T}} \dot{\boldsymbol{r}}_{O_0 O_i \mid 0} \\ \boldsymbol{\omega}_{0,i \mid i} \end{bmatrix}
+  = \begin{bmatrix} \boldsymbol{A}_{0,i}^{\mathrm{T}} \dot{\boldsymbol{r}}_{O_0 O_i \mid 0} \\ \boldsymbol{H}^*(\boldsymbol{\theta}_{0,i}) \dot{\boldsymbol{\theta}}_{0,i} \end{bmatrix}
+  = \begin{bmatrix} \boldsymbol{A}_{0,i}^{\mathrm{T}} & \boldsymbol{O} \\ \boldsymbol{O} & \boldsymbol{H}^*(\boldsymbol{\theta}_{0,i}) \end{bmatrix}
+  \begin{bmatrix} \dot{\boldsymbol{r}}_{O_0 O_i \mid 0} \\ \dot{\boldsymbol{\theta}}_{0,i} \end{bmatrix}
+  =: \boldsymbol{\Phi}_{B_i} \dot{\boldsymbol{q}}_{B_i},
+\end{equation}
+式中 $\boldsymbol{A}_{0,i}$、$\boldsymbol{H}^*$ 和 $\boldsymbol{\Phi}_{B_i}$ 均为体元件 $i$ 广义坐标 $\boldsymbol{q}_{B_i}$ 的表达式。
+
+\subsection{系统的动能}
+
+由此，多刚体系统的动能可表示为
+\begin{equation}\label{eq:9.17}
+  T = \sum_{i=1}^{n} T_{B_i} = \sum_{i=1}^{n} \frac{1}{2} \boldsymbol{v}_i^{\mathrm{T}} \boldsymbol{M}_{O_i} \boldsymbol{v}_i
+  = \frac{1}{2} \sum_{i=1}^{n} \dot{\boldsymbol{q}}_{B_i}^{\mathrm{T}} \boldsymbol{\Phi}_{B_i}^{\mathrm{T}} \boldsymbol{M}_{O_i} \boldsymbol{\Phi}_{B_i} \dot{\boldsymbol{q}}_{B_i}
+  =: \frac{1}{2} \dot{\boldsymbol{q}}^{\mathrm{T}} \boldsymbol{M} \dot{\boldsymbol{q}},
+\end{equation}
+式中系统广义质量矩阵 $\boldsymbol{M}$ 为分块对角矩阵，可表示为
+\begin{equation}\label{eq:9.18}
+  \boldsymbol{M} = \mathrm{diag}\left( \boldsymbol{\Phi}_{B_1}^{\mathrm{T}} \boldsymbol{M}_{O_1} \boldsymbol{\Phi}_{B_1},\; \boldsymbol{\Phi}_{B_2}^{\mathrm{T}} \boldsymbol{M}_{O_2} \boldsymbol{\Phi}_{B_2},\; \cdots,\; \boldsymbol{\Phi}_{B_n}^{\mathrm{T}} \boldsymbol{M}_{O_n} \boldsymbol{\Phi}_{B_n} \right).
+\end{equation}
+
+\subsection{系统动能对广义坐标的偏导数}
+
+多刚体系统的动能对刚体元件 $i$ 广义坐标的偏导数满足
+\begin{equation}\label{eq:9.19}
+  \frac{\partial T}{\partial \boldsymbol{q}_{B_i}}
+  = \frac{\partial}{\partial \boldsymbol{q}_{B_i}} \sum_{i=1}^{n} T_{B_i}
+  = \frac{\partial T_{B_i}}{\partial \boldsymbol{q}_{B_i}}
+  = \frac{\partial}{\partial \boldsymbol{q}_{B_i}} \left\{ \frac{1}{2} \boldsymbol{v}_i^{\mathrm{T}} \boldsymbol{M}_{O_i} \boldsymbol{v}_i \right\}
+  = \boldsymbol{v}_i^{\mathrm{T}} \boldsymbol{M}_{O_i} \frac{\partial \boldsymbol{v}_i}{\partial \boldsymbol{q}_{B_i}}.
+\end{equation}
+
+\subsection{刚体连体坐标系速度对刚体广义坐标的偏导数}
+
+刚体连体坐标系速度对刚体广义坐标的偏导数满足
+\begin{equation}\label{eq:9.20}
+  \frac{\partial \boldsymbol{v}_i}{\partial \boldsymbol{q}_{B_i}}
+  = \frac{\partial}{\partial \boldsymbol{q}_{B_i}}
+  \begin{bmatrix} \boldsymbol{A}_{0,i}^{\mathrm{T}} \dot{\boldsymbol{r}}_{O_0 O_i \mid 0} \\ \boldsymbol{\omega}_{0,i \mid i} \end{bmatrix}
+  = \begin{bmatrix}
+    \dfrac{\partial}{\partial \boldsymbol{r}_{O_0 O_i \mid 0}} \begin{bmatrix} \boldsymbol{A}_{0,i}^{\mathrm{T}} \dot{\boldsymbol{r}}_{O_0 O_i \mid 0} \\ \boldsymbol{\omega}_{0,i \mid i} \end{bmatrix} & \dfrac{\partial}{\partial \boldsymbol{\theta}_{0,i}} \begin{bmatrix} \boldsymbol{A}_{0,i}^{\mathrm{T}} \dot{\boldsymbol{r}}_{O_0 O_i \mid 0} \\ \boldsymbol{\omega}_{0,i \mid i} \end{bmatrix}
+  \end{bmatrix}
+  = \begin{bmatrix}
+    \boldsymbol{O}_{3\times 3} & \left[ \boldsymbol{A}_{0,i}^{\mathrm{T}} \dot{\boldsymbol{r}}_{O_0 O_i \mid 0} \right]^{\times} \boldsymbol{H}^*(\boldsymbol{\theta}_{0,i}) \\[4pt]
+    \boldsymbol{O}_{3\times 3} & \dfrac{\partial \boldsymbol{\omega}_{0,i \mid i}}{\partial \boldsymbol{\theta}_{0,i}}
+  \end{bmatrix}.
+\end{equation}
+
+\section{重力势能及其对广义坐标的偏导数}
+
+刚体元件 $i$ 的重力势能可表示为
+\begin{equation}\label{eq:9.21}
+  V_{\mathrm{gravity},B_i} = -m_{B_i} \boldsymbol{g}^{\mathrm{T}} \left( \boldsymbol{r}_{O_0 O_i \mid i} + \boldsymbol{A}_{0,i} \boldsymbol{r}_{O_i C_i \mid i} \right).
+\end{equation}
+
+系统的重力势能可由各体元件重力势能累加得到，即
+\begin{equation}\label{eq:9.22}
+  V_{\mathrm{gravity}} = \sum_{i} V_{\mathrm{gravity},B_i}.
+\end{equation}
+
+系统重力势能对刚体 $i$ 广义坐标 $\boldsymbol{q}_{B_i}$ 的偏导数满足
+\begin{equation}\label{eq:9.23}
+  \frac{\partial V_{\mathrm{gravity}}}{\partial \boldsymbol{q}_{B_i}}
+  = \frac{\partial V_{\mathrm{gravity},B_i}}{\partial \boldsymbol{q}_{B_i}}
+  = -m_{B_i} \boldsymbol{g}^{\mathrm{T}} \begin{bmatrix} \boldsymbol{I}_3 & \boldsymbol{A}_{0,i} \tilde{\boldsymbol{r}}_{O_i C_i \mid i}^{\mathrm{T}} \boldsymbol{H}^* \end{bmatrix}.
+\end{equation}

@@ -1,0 +1,285 @@
+\section{空间运动刚体元件的动能}
+
+\subsection{空间运动刚体元件动能的微元求和形式}
+
+空间运动刚体元件的动能可用微元求和的形式表示为
+\begin{equation}
+T = \sum_{k=1}^{N} \frac{1}{2}m_k\,\dot{\boldsymbol{r}}_{Ok}^{\mathrm{T}}\dot{\boldsymbol{r}}_{Ok}
+\label{eq:8.1}
+\end{equation}
+式中：
+\begin{itemize}
+\item $k$ —— 刚体上微元的标号；
+\item $N$ —— 微元的总数；
+\item $m_k$ —— 微元$k$的质量；
+\item $\boldsymbol{r}_{Ok}$ —— 微元$k$在全局惯性坐标系$Oxyz$中的坐标列阵；
+\item $\dot{\boldsymbol{r}}_{Ok}$ —— $\boldsymbol{r}_{Ok}$对时间的一阶导数，即在$Oxyz$中的绝对速度列阵。
+\end{itemize}
+
+为便于将刚体元件的动能表示为系统广义坐标$\boldsymbol{q}$和广义速度$\dot{\boldsymbol{q}}$的形式，为刚体元件引入一个连体坐标系$R\xi\eta\zeta$，此时$\boldsymbol{r}_{Ok}$可表示为
+\begin{equation}
+\boldsymbol{r}_{Ok} = \boldsymbol{r}_{OR} + A_{OR}\boldsymbol{l}_{Rk}
+\label{eq:8.2}
+\end{equation}
+式中：
+\begin{itemize}
+\item $\boldsymbol{r}_{OR}$ —— $R\xi\eta\zeta$连体系原点在全局惯性坐标系中的坐标列阵；
+\item $A_{OR}$ —— 从$R\xi\eta\zeta$连体系到全局惯性坐标系的坐标变换矩阵；
+\item $\boldsymbol{l}_{Rk}$ —— 微元$k$在$R\xi\eta\zeta$连体系中的坐标列阵。
+\end{itemize}
+
+式~(\ref{eq:8.2})对时间的一阶导数可表示为
+\begin{equation}
+\dot{\boldsymbol{r}}_{Ok} = \dot{\boldsymbol{r}}_{OR} + A_{OR}\tilde{\boldsymbol{\omega}}_{OR|R}\,\boldsymbol{l}_{Rk}
+\label{eq:8.3}
+\end{equation}
+式中$\boldsymbol{\omega}_{OR|R}$表示连体坐标系$R\xi\eta\zeta$相对于全局惯性坐标$Oxyz$的绝对角速度在$R\xi\eta\zeta$系中的投影列阵。
+
+将速度列阵进一步改写为
+\begin{align}
+\dot{\boldsymbol{r}}_{Ok} &= A_{OR}A_{OR}^{\mathrm{T}}\dot{\boldsymbol{r}}_{OR} + A_{OR}\tilde{\boldsymbol{l}}_{Rk}^{\mathrm{T}}\boldsymbol{\omega}_{OR|R} \nonumber\\
+&= \begin{bmatrix}
+A_{OR} & A_{OR}\tilde{\boldsymbol{l}}_{Rk}^{\mathrm{T}}
+\end{bmatrix}
+\begin{bmatrix}
+A_{OR}^{\mathrm{T}}\dot{\boldsymbol{r}}_{OR} \\[2pt] \boldsymbol{\omega}_{OR|R}
+\end{bmatrix}
+=: C_{Rk}\boldsymbol{v}_R
+\label{eq:8.4}
+\end{align}
+
+\subsection*{用连体坐标系运动学量表示的刚体元件的动能}
+
+将式~(\ref{eq:8.4})代入式~(\ref{eq:8.1})，可得空间运动刚体元件的动能
+\begin{align}
+T &= \sum_{k=1}^{N} \frac{1}{2}m_k\,\dot{\boldsymbol{r}}_{Ok}^{\mathrm{T}}\dot{\boldsymbol{r}}_{Ok} \nonumber\\
+&= \sum_{k=1}^{N} \frac{1}{2}m_k\,(C_{Rk}\boldsymbol{v}_R)^{\mathrm{T}}(C_{Rk}\boldsymbol{v}_R) \nonumber\\
+&= \sum_{k=1}^{N} \frac{1}{2}m_k\,\boldsymbol{v}_R^{\mathrm{T}}C_{Rk}^{\mathrm{T}}C_{Rk}\boldsymbol{v}_R \nonumber\\
+&= \frac{1}{2}\boldsymbol{v}_R^{\mathrm{T}}\left(\sum_{k=1}^{N} m_k\,C_{Rk}^{\mathrm{T}}C_{Rk}\right)\boldsymbol{v}_R \nonumber\\
+&=: \frac{1}{2}\boldsymbol{v}_R^{\mathrm{T}}M_R\boldsymbol{v}_R
+\label{eq:8.5}
+\end{align}
+式中$M_R$称为刚体元件的质量矩阵。
+
+\subsection*{空间运动刚体元件的质量矩阵}
+
+\begin{align}
+M_R &= \sum_{k=1}^{N} m_k\,C_{Rk}^{\mathrm{T}}C_{Rk} \nonumber\\
+&= \sum_{k=1}^{N} m_k
+\begin{bmatrix}
+A_{OR} & A_{OR}\tilde{\boldsymbol{l}}_{Rk}^{\mathrm{T}}
+\end{bmatrix}^{\mathrm{T}}
+\begin{bmatrix}
+A_{OR} & A_{OR}\tilde{\boldsymbol{l}}_{Rk}^{\mathrm{T}}
+\end{bmatrix} \nonumber\\
+&= \sum_{k=1}^{N} m_k
+\begin{bmatrix}
+A_{OR}^{\mathrm{T}} \\[2pt] \tilde{\boldsymbol{l}}_{Rk}A_{OR}^{\mathrm{T}}
+\end{bmatrix}
+\begin{bmatrix}
+A_{OR} & A_{OR}\tilde{\boldsymbol{l}}_{Rk}^{\mathrm{T}}
+\end{bmatrix} \nonumber\\
+&= \sum_{k=1}^{N} m_k
+\begin{bmatrix}
+I_3          & \tilde{\boldsymbol{l}}_{Rk}^{\mathrm{T}} \\[4pt]
+\tilde{\boldsymbol{l}}_{Rk} & \tilde{\boldsymbol{l}}_{Rk}\tilde{\boldsymbol{l}}_{Rk}^{\mathrm{T}}
+\end{bmatrix}
+\label{eq:8.6}
+\end{align}
+
+由此可知，此处定义的空间运动刚体元件的质量矩阵$M_R$为定常（时不变）矩阵。
+
+\subsection*{空间运动刚体元件时不变质量矩阵}
+
+\begin{align}
+M_R &= \sum_{k=1}^{N} m_k
+\begin{bmatrix}
+I_3          & \tilde{\boldsymbol{l}}_{Rk}^{\mathrm{T}} \\[4pt]
+\tilde{\boldsymbol{l}}_{Rk} & \tilde{\boldsymbol{l}}_{Rk}\tilde{\boldsymbol{l}}_{Rk}^{\mathrm{T}}
+\end{bmatrix} \nonumber\\
+&= \begin{bmatrix}
+I_3\displaystyle\sum_{k=1}^{N}m_k & \displaystyle\sum_{k=1}^{N}m_k\tilde{\boldsymbol{l}}_{Rk}^{\mathrm{T}} \\[14pt]
+\displaystyle\sum_{k=1}^{N}m_k\tilde{\boldsymbol{l}}_{Rk} & \displaystyle\sum_{k=1}^{N}m_k\tilde{\boldsymbol{l}}_{Rk}\tilde{\boldsymbol{l}}_{Rk}^{\mathrm{T}}
+\end{bmatrix} \nonumber\\
+&=
+\begin{bmatrix}
+I_3\displaystyle\sum_{k=1}^{N}m_k & \left[\displaystyle\sum_{k=1}^{N}m_k\boldsymbol{l}_{Rk}\right]^{\mathrm{T}}_{\times} \\[14pt]
+\left[\displaystyle\sum_{k=1}^{N}m_k\boldsymbol{l}_{Rk}\right]_{\times} & \displaystyle\sum_{k=1}^{N}m_k\tilde{\boldsymbol{l}}_{Rk}\tilde{\boldsymbol{l}}_{Rk}^{\mathrm{T}}
+\end{bmatrix} \nonumber\\
+&=:
+\begin{bmatrix}
+m I_3              & m\tilde{\boldsymbol{l}}_{RC}^{\mathrm{T}} \\[4pt]
+m\tilde{\boldsymbol{l}}_{RC} & \boldsymbol{J}_{R|R}
+\end{bmatrix}
+\label{eq:8.7}
+\end{align}
+式中：
+\begin{itemize}
+\item $m$ —— 刚体元件的质量；
+\item $\boldsymbol{l}_{RC}$ —— 刚体元件质心在连体坐标系$R\xi\eta\zeta$中的坐标列阵；
+\item $\boldsymbol{J}_{R|R}$ —— 刚体元件在$R\xi\eta\zeta$系中的转动惯量矩阵。
+\end{itemize}
+
+\subsection*{矩阵$\boldsymbol{J}_{R|R}$的分量表达式}
+
+刚体元件质量矩阵中的$\boldsymbol{J}_{R|R}$的分量表达式为
+\begin{align}
+\boldsymbol{J}_{R|R} &= \sum_{k=1}^{N} m_k\,\tilde{\boldsymbol{l}}_{Rk}\tilde{\boldsymbol{l}}_{Rk}^{\mathrm{T}}
+ = \sum_{k=1}^{N} m_k\left(l_{Rk}^2 I_3 - \boldsymbol{l}_{Rk}\boldsymbol{l}_{Rk}^{\mathrm{T}}\right) \nonumber\\
+&= \begin{bmatrix}
+\displaystyle\sum_{k=1}^{N} m_k(\eta_{Rk}^2 + \zeta_{Rk}^2)  & -\displaystyle\sum_{k=1}^{N} m_k\,\xi_{Rk}\eta_{Rk} & -\displaystyle\sum_{k=1}^{N} m_k\,\xi_{Rk}\zeta_{Rk} \\[12pt]
+-\displaystyle\sum_{k=1}^{N} m_k\,\eta_{Rk}\xi_{Rk} & \displaystyle\sum_{k=1}^{N} m_k(\xi_{Rk}^2 + \zeta_{Rk}^2)  & -\displaystyle\sum_{k=1}^{N} m_k\,\eta_{Rk}\zeta_{Rk} \\[12pt]
+-\displaystyle\sum_{k=1}^{N} m_k\,\zeta_{Rk}\xi_{Rk} & -\displaystyle\sum_{k=1}^{N} m_k\,\zeta_{Rk}\eta_{Rk} & \displaystyle\sum_{k=1}^{N} m_k(\xi_{Rk}^2 + \eta_{Rk}^2)
+\end{bmatrix}
+\label{eq:8.8}
+\end{align}
+
+刚体元件惯性积矩阵：
+\begin{equation}
+\boldsymbol{I}_{R|R} =
+\begin{bmatrix}
+\displaystyle\sum_{k=1}^{N} m_k(\eta_{Rk}^2 + \zeta_{Rk}^2)  & \displaystyle\sum_{k=1}^{N} m_k\,\xi_{Rk}\eta_{Rk} & \displaystyle\sum_{k=1}^{N} m_k\,\xi_{Rk}\zeta_{Rk} \\[12pt]
+\displaystyle\sum_{k=1}^{N} m_k\,\eta_{Rk}\xi_{Rk} & \displaystyle\sum_{k=1}^{N} m_k(\xi_{Rk}^2 + \zeta_{Rk}^2)  & \displaystyle\sum_{k=1}^{N} m_k\,\eta_{Rk}\zeta_{Rk} \\[12pt]
+\displaystyle\sum_{k=1}^{N} m_k\,\zeta_{Rk}\xi_{Rk} & \displaystyle\sum_{k=1}^{N} m_k\,\zeta_{Rk}\eta_{Rk} & \displaystyle\sum_{k=1}^{N} m_k(\xi_{Rk}^2 + \eta_{Rk}^2)
+\end{bmatrix}
+\label{eq:8.9}
+\end{equation}
+
+\section{空间运动刚体元件的重力势能}
+
+空间运动刚体元件的重力势能可用微元求和的形式表示为
+\begin{align}
+V_{\mathrm{gravity}} &= -\sum_{k=1}^{N} m_k\,\boldsymbol{g}^{\mathrm{T}}\boldsymbol{r}_{Ok} \nonumber\\
+&= -\boldsymbol{g}^{\mathrm{T}}\sum_{k=1}^{N} m_k\boldsymbol{r}_{Ok} \nonumber\\
+&= -\boldsymbol{g}^{\mathrm{T}}\sum_{k=1}^{N} m_k\left(\boldsymbol{r}_{OR} + A_{OR}\boldsymbol{l}_{Rk}\right) \nonumber\\
+&= -\boldsymbol{g}^{\mathrm{T}}\left(m\boldsymbol{r}_{OR} + mA_{OR}\boldsymbol{l}_{RC}\right) \nonumber\\
+&= -m\boldsymbol{g}^{\mathrm{T}}\left(\boldsymbol{r}_{OR} + A_{OR}\boldsymbol{l}_{RC}\right)
+\label{eq:8.10}
+\end{align}
+
+\section{空间运动刚体元件的转动惯量张量}
+
+绕连体坐标系$R\xi\eta\zeta$原点$R$作定点转动的刚体元件的动能可表示为
+\begin{align}
+T &= \sum_{k=1}^{N} \frac{1}{2}m_k(\vec{\omega}_{OR} \times \vec{r}_{Rk})\cdot(\vec{\omega}_{OR} \times \vec{r}_{Rk}) \nonumber\\
+&= \sum_{k=1}^{N} \frac{1}{2}m_k[\vec{r}_{Rk} \times (\vec{\omega}_{OR} \times \vec{r}_{Rk})]\cdot\vec{\omega}_{OR} \nonumber\\
+&= \sum_{k=1}^{N} \frac{1}{2}m_k[(\vec{r}_{Rk}\cdot\vec{r}_{Rk})\vec{\omega}_{OR} - (\vec{r}_{Rk}\cdot\vec{\omega}_{OR})\vec{r}_{Rk}]\cdot\vec{\omega}_{OR} \nonumber\\
+&= \sum_{k=1}^{N} \frac{1}{2}m_k[\vec{\omega}_{OR}(\vec{r}_{Rk}\cdot\vec{r}_{Rk}) - (\vec{\omega}_{OR}\cdot\vec{r}_{Rk})\vec{r}_{Rk}]\cdot\vec{\omega}_{OR} \nonumber\\
+&= \sum_{k=1}^{N} \frac{1}{2}m_k[\vec{\omega}_{OR}\cdot\vec{\vec{I}}(\vec{r}_{Rk}\cdot\vec{r}_{Rk}) - \vec{\omega}_{OR}\cdot\vec{r}_{Rk}\vec{r}_{Rk}]\cdot\vec{\omega}_{OR} \nonumber\\
+&= \vec{\omega}_{OR}\cdot\frac{1}{2}\sum_{k=1}^{N} m_k[\vec{\vec{I}}(\vec{r}_{Rk}\cdot\vec{r}_{Rk}) - \vec{r}_{Rk}\vec{r}_{Rk}]\cdot\vec{\omega}_{OR} \nonumber\\
+&=: \frac{1}{2}\vec{\omega}_{OR}\cdot\vec{\vec{J}}_R\cdot\vec{\omega}_{OR}
+\label{eq:8.11}
+\end{align}
+式中$\vec{\vec{J}}_R$称为刚体元件相对于点$R$的转动惯量张量。
+
+\subsection*{空间运动刚体元件的转动惯量张量的坐标表示}
+
+刚体元件相对于点$R$的转动惯量张量的坐标表示为
+\begin{align}
+\vec{\vec{J}}_R &= \sum_{k=1}^{N} m_k[\vec{\vec{I}}(\vec{r}_{Rk}\cdot\vec{r}_{Rk}) - \vec{r}_{Rk}\vec{r}_{Rk}] \nonumber\\
+&= \vec{e}_O^{\mathrm{T}}\sum_{k=1}^{N} m_k[I_3(\boldsymbol{r}_{Rk}^{\mathrm{T}}\boldsymbol{r}_{Rk}) - \boldsymbol{r}_{Rk}\boldsymbol{r}_{Rk}^{\mathrm{T}}]\vec{e}_O
+   =: \vec{e}_O^{\mathrm{T}}\boldsymbol{J}_{R|O}\,\vec{e}_O \nonumber\\
+&= \vec{e}_R^{\mathrm{T}}\sum_{k=1}^{N} m_k[I_3(\boldsymbol{l}_{Rk}^{\mathrm{T}}\boldsymbol{l}_{Rk}) - \boldsymbol{l}_{Rk}\boldsymbol{l}_{Rk}^{\mathrm{T}}]\vec{e}_R
+   =: \vec{e}_R^{\mathrm{T}}\boldsymbol{J}_{R|R}\,\vec{e}_R
+\label{eq:8.12}
+\end{align}
+式中$\boldsymbol{J}_{R|O}$与$\boldsymbol{J}_{R|R}$均为实对称矩阵，且满足
+\begin{equation}
+\boldsymbol{J}_{R|O} = A_{OR}\boldsymbol{J}_{R|R}A_{OR}^{\mathrm{T}}, \qquad
+\boldsymbol{J}_{R|R} = \sum_{k=1}^{N} m_k[I_3(\boldsymbol{l}_{Rk}^{\mathrm{T}}\boldsymbol{l}_{Rk}) - \boldsymbol{l}_{Rk}\boldsymbol{l}_{Rk}^{\mathrm{T}}]
+= \sum_{k=1}^{N} m_k\,\tilde{\boldsymbol{l}}_{Rk}\tilde{\boldsymbol{l}}_{Rk}^{\mathrm{T}}
+\label{eq:8.13}
+\end{equation}
+
+\subsection*{空间运动刚体元件的转动惯量张量的平行移轴定理}
+
+刚体元件相对于点$R$的转动惯量张量可借助质心点$C$作如下变换：
+\begin{align}
+\vec{\vec{J}}_R &= \sum_{k=1}^{N} m_k[\vec{\vec{I}}(\vec{r}_{Rk}\cdot\vec{r}_{Rk}) - \vec{r}_{Rk}\vec{r}_{Rk}] \nonumber\\
+&= \sum_{k=1}^{N} m_k\vec{\vec{I}}[(\vec{r}_{RC} + \vec{r}_{Ck})\cdot(\vec{r}_{RC} + \vec{r}_{Ck})]
+   - \sum_{k=1}^{N} m_k[(\vec{r}_{RC} + \vec{r}_{Ck})(\vec{r}_{RC} + \vec{r}_{Ck})] \nonumber\\
+&= m\vec{\vec{I}}(\vec{r}_{RC}\cdot\vec{r}_{RC}) + \sum_{k=1}^{N} m_k\vec{\vec{I}}(\vec{r}_{Ck}\cdot\vec{r}_{Ck})
+   - m(\vec{r}_{RC}\vec{r}_{RC}) - \sum_{k=1}^{N} m_k(\vec{r}_{Ck}\vec{r}_{Ck}) \nonumber\\
+&= m[\vec{\vec{I}}(\vec{r}_{RC}\cdot\vec{r}_{RC}) - (\vec{r}_{RC}\vec{r}_{RC})] + \vec{\vec{J}}_C
+\label{eq:8.14}
+\end{align}
+上式即为空间运动刚体元件的转动惯量张量平行移轴定理。
+
+\subsection*{空间运动刚体元件的惯性主轴系}
+
+刚体元件相对于任意点$R$的转动惯量张量在选定的坐标系（如$R\xi\eta\zeta$系）中的投影矩阵为
+\begin{align}
+\boldsymbol{J}_{R|R} &= \sum_{k=1}^{N} m_k\,\tilde{\boldsymbol{l}}_{Rk}\tilde{\boldsymbol{l}}_{Rk}^{\mathrm{T}}
+ = \sum_{k=1}^{N} m_k\left(l_{Rk}^2 I_3 - \boldsymbol{l}_{Rk}\boldsymbol{l}_{Rk}^{\mathrm{T}}\right) \nonumber\\
+&= \begin{bmatrix}
+\displaystyle\sum_{k=1}^{N} m_k(\eta_{Rk}^2 + \zeta_{Rk}^2)  & -\displaystyle\sum_{k=1}^{N} m_k\,\xi_{Rk}\eta_{Rk} & -\displaystyle\sum_{k=1}^{N} m_k\,\xi_{Rk}\zeta_{Rk} \\[12pt]
+-\displaystyle\sum_{k=1}^{N} m_k\,\eta_{Rk}\xi_{Rk} & \displaystyle\sum_{k=1}^{N} m_k(\xi_{Rk}^2 + \zeta_{Rk}^2)  & -\displaystyle\sum_{k=1}^{N} m_k\,\eta_{Rk}\zeta_{Rk} \\[12pt]
+-\displaystyle\sum_{k=1}^{N} m_k\,\zeta_{Rk}\xi_{Rk} & -\displaystyle\sum_{k=1}^{N} m_k\,\zeta_{Rk}\eta_{Rk} & \displaystyle\sum_{k=1}^{N} m_k(\xi_{Rk}^2 + \eta_{Rk}^2)
+\end{bmatrix} \nonumber\\
+&=:
+\begin{bmatrix}
+J_{\xi\xi} & J_{\xi\eta} & J_{\xi\zeta} \\[2pt]
+J_{\eta\xi} & J_{\eta\eta} & J_{\eta\zeta} \\[2pt]
+J_{\zeta\xi} & J_{\zeta\eta} & J_{\zeta\zeta}
+\end{bmatrix}_{R|R}
+\label{eq:8.15}
+\end{align}
+
+一般情况下$\boldsymbol{J}_{R|R}$为非对角矩阵。我们总是可以找到这样一个坐标系$R'$，使得$\vec{\vec{J}}_R$在该系中的投影矩阵$\boldsymbol{J}_{R|R'}$为对角矩阵。
+
+对于$3\times 3$的实对称矩阵$\boldsymbol{J}_{R|R}$，由矩阵特征值相关理论可知，一定存在三个线性独立且模为1的$3\times 1$的实数列阵$\boldsymbol{\varphi}_i$，使得
+\begin{equation}
+\boldsymbol{J}_{R|R}\,\boldsymbol{\varphi}_i = \lambda_i\boldsymbol{\varphi}_i
+\label{eq:8.16}
+\end{equation}
+式中实数$\lambda_i$称为矩阵$\boldsymbol{J}_{R|R}$的特征值，特征向量$\boldsymbol{\varphi}_i$满足两两正交：
+\begin{equation}
+\boldsymbol{\varphi}_i^{\mathrm{T}}\boldsymbol{\varphi}_j = \delta_{ij}, \quad
+\boldsymbol{\varphi}_3 = \boldsymbol{\varphi}_1 \times \boldsymbol{\varphi}_2
+\end{equation}
+
+由式~(\ref{eq:8.16})可得
+\begin{equation}
+\boldsymbol{J}_{R|R}
+\begin{bmatrix}
+\boldsymbol{\varphi}_1 & \boldsymbol{\varphi}_2 & \boldsymbol{\varphi}_3
+\end{bmatrix}
+=
+\begin{bmatrix}
+\boldsymbol{\varphi}_1 & \boldsymbol{\varphi}_2 & \boldsymbol{\varphi}_3
+\end{bmatrix}
+\begin{bmatrix}
+\lambda_1 & 0      & 0      \\
+0      & \lambda_2 & 0      \\
+0      & 0      & \lambda_3
+\end{bmatrix}
+\label{eq:8.17}
+\end{equation}
+
+上式可简记为
+\begin{equation}
+\boldsymbol{J}_{R|R}\Phi = \Phi\,\mathrm{diag}(\boldsymbol{\lambda})
+\end{equation}
+式中
+\begin{equation}
+\Phi = \begin{bmatrix}
+\boldsymbol{\varphi}_1 & \boldsymbol{\varphi}_2 & \boldsymbol{\varphi}_3
+\end{bmatrix}, \quad
+\Phi^{-1} = \Phi^{\mathrm{T}}, \quad
+\boldsymbol{\lambda} = \begin{bmatrix}
+\lambda_1 \\ \lambda_2 \\ \lambda_3
+\end{bmatrix}
+\end{equation}
+
+由$\boldsymbol{J}_{R|R}\Phi = \Phi\,\mathrm{diag}(\boldsymbol{\lambda})$和$\Phi^{-1} = \Phi^{\mathrm{T}}$可得
+\begin{equation}
+\mathrm{diag}(\boldsymbol{\lambda}) = \Phi^{\mathrm{T}}\boldsymbol{J}_{R|R}\Phi
+\label{eq:8.18}
+\end{equation}
+
+上式可改写为
+\begin{equation}
+\boldsymbol{J}_{R|R'} = A_{RR'}^{\mathrm{T}}\boldsymbol{J}_{R|R}A_{RR'}
+\label{eq:8.19}
+\end{equation}
+式中$\boldsymbol{J}_{R|R'}$为对角矩阵，$A_{RR'}$为从$R'$系到$R$系的坐标变换矩阵，$R'$系称为转动惯量张量$\vec{\vec{J}}_R$的惯性主轴系。

@@ -1,0 +1,186 @@
+\section{固结在动系上的点的相对速度}
+
+设坐标系$i$（$O\vec{e}_i$）为参考系，坐标系$j$（$O\vec{e}_j$）为动系，点$P$固结在动系$j$上。点$P$在$j$系中的坐标列阵$\boldsymbol{r}_j$为常值，其在$i$系中的坐标列阵为
+\begin{equation}
+\boldsymbol{r}_i = A_{ij}\boldsymbol{r}_j
+\end{equation}
+对时间求导，因$\boldsymbol{r}_j$为常值，$\dot{\boldsymbol{r}}_j = \boldsymbol{0}$，故
+\begin{equation}
+\dot{\boldsymbol{r}}_i = \dot{A}_{ij}\boldsymbol{r}_j + A_{ij}\dot{\boldsymbol{r}}_j = \dot{A}_{ij}\boldsymbol{r}_j
+\end{equation}
+
+\section{两右手笛卡尔直角坐标系的相对方位}
+
+设坐标系$i$和坐标系$j$均为右手笛卡尔直角坐标系，二者的相对方位由方向余弦矩阵$A_{ij}$描述：
+\begin{equation}
+\vec{e}_i = A_{ij}\vec{e}_j
+\end{equation}
+方向余弦矩阵$A_{ij}$为正交矩阵，满足
+\begin{equation}
+A_{ij}^{-1} = A_{ij}^{\mathrm{T}}
+\end{equation}
+由此可得
+\begin{equation}
+I_3 = A_{ij}A_{ij}^{\mathrm{T}}, \quad I_3 = A_{ij}^{\mathrm{T}}A_{ij}
+\label{eq:6.1}
+\end{equation}
+
+\section{方向余弦矩阵的时间变化率（由$I_3 = A_{ij}A_{ij}^{\mathrm{T}}$出发）}
+
+对$I_3 = A_{ij}A_{ij}^{\mathrm{T}}$两端同时求导：
+\begin{equation}
+O_3 = \frac{\mathrm{d}}{\mathrm{d}t}\left(A_{ij}A_{ij}^{\mathrm{T}}\right) = \dot{A}_{ij}A_{ij}^{\mathrm{T}} + A_{ij}\dot{A}_{ij}^{\mathrm{T}}
+= \left(\dot{A}_{ij}A_{ij}^{\mathrm{T}}\right) + \left(\dot{A}_{ij}A_{ij}^{\mathrm{T}}\right)^{\mathrm{T}}
+\end{equation}
+令
+\begin{equation}
+\dot{A}_{ij}A_{ij}^{\mathrm{T}} =: \tilde{\boldsymbol{b}}
+\end{equation}
+则
+\begin{equation}
+\dot{A}_{ij} = \tilde{\boldsymbol{b}}A_{ij}
+\end{equation}
+其中$\tilde{\boldsymbol{b}}$为反对称矩阵。
+
+\section{方向余弦矩阵的时间变化率（由$I_3 = A_{ij}^{\mathrm{T}}A_{ij}$出发）}
+
+对$I_3 = A_{ij}^{\mathrm{T}}A_{ij}$两端同时求导：
+\begin{equation}
+O_3 = \frac{\mathrm{d}}{\mathrm{d}t}\left(A_{ij}^{\mathrm{T}}A_{ij}\right) = \dot{A}_{ij}^{\mathrm{T}}A_{ij} + A_{ij}^{\mathrm{T}}\dot{A}_{ij}
+= \left(A_{ij}^{\mathrm{T}}\dot{A}_{ij}\right)^{\mathrm{T}} + \left(A_{ij}^{\mathrm{T}}\dot{A}_{ij}\right)
+\end{equation}
+令
+\begin{equation}
+A_{ij}^{\mathrm{T}}\dot{A}_{ij} =: \tilde{\boldsymbol{d}}
+\end{equation}
+则
+\begin{equation}
+\dot{A}_{ij} = A_{ij}\tilde{\boldsymbol{d}}
+\end{equation}
+
+\section{方向余弦矩阵的时间变化率——两种推导的统一}
+
+综合6.3节和6.4节的结果，方向余弦矩阵的时间变化率满足
+\begin{equation}
+\begin{cases}
+\dot{A}_{ij}A_{ij}^{\mathrm{T}} = \tilde{\boldsymbol{b}}, \\[4pt]
+A_{ij}^{\mathrm{T}}\dot{A}_{ij} = \tilde{\boldsymbol{d}},
+\end{cases}
+\quad\Rightarrow\quad
+\begin{cases}
+\dot{A}_{ij} = \tilde{\boldsymbol{b}}A_{ij}, \\[4pt]
+\dot{A}_{ij} = A_{ij}\tilde{\boldsymbol{d}},
+\end{cases}
+\quad\Rightarrow\quad
+\tilde{\boldsymbol{b}}A_{ij} = A_{ij}\tilde{\boldsymbol{d}}
+\end{equation}
+
+结合方向余弦矩阵的坐标变换性质可知：$\boldsymbol{b}$和$\boldsymbol{d}$应为某一个与坐标系$i$和坐标系$j$相对方位有关的矢量在$i$系和$j$系中的投影列阵。该矢量可记为
+\begin{equation}
+\vec{\omega}_{ij} = \vec{e}_i^{\mathrm{T}}\boldsymbol{b} = \vec{e}_j^{\mathrm{T}}\boldsymbol{d}
+\end{equation}
+为便于记忆，作如下变量替换：
+\begin{equation}
+\boldsymbol{b} =: \boldsymbol{\omega}_{ij|i}, \quad \boldsymbol{d} =: \boldsymbol{\omega}_{ij|j}
+\end{equation}
+
+\section{方向余弦矩阵的时间变化率$\dot{A}_{ij}$}
+
+方向余弦矩阵的时间变化率满足
+\begin{equation}
+\begin{cases}
+\dot{A}_{ij}A_{ij}^{\mathrm{T}} = \tilde{\boldsymbol{\omega}}_{ij|i}, \\[4pt]
+A_{ij}^{\mathrm{T}}\dot{A}_{ij} = \tilde{\boldsymbol{\omega}}_{ij|j},
+\end{cases}
+\quad\Rightarrow\quad
+\begin{cases}
+\dot{A}_{ij} = \tilde{\boldsymbol{\omega}}_{ij|i}A_{ij}, \\[4pt]
+\dot{A}_{ij} = A_{ij}\tilde{\boldsymbol{\omega}}_{ij|j},
+\end{cases}
+\quad\Rightarrow\quad
+\begin{cases}
+\tilde{\boldsymbol{\omega}}_{ij|i}A_{ij} = A_{ij}\tilde{\boldsymbol{\omega}}_{ij|j}, \\[4pt]
+\vec{\omega}_{ij} = \vec{e}_i^{\mathrm{T}}\tilde{\boldsymbol{\omega}}_{ij|i} = \vec{e}_j^{\mathrm{T}}\tilde{\boldsymbol{\omega}}_{ij|j}
+\end{cases}
+\label{eq:6.2}
+\end{equation}
+
+固结在动系上的点$P$（在$j$系中坐标为常值）的相对速度列阵可写为：
+\begin{equation}
+\dot{\boldsymbol{r}}_i = \dot{A}_{ij}\boldsymbol{r}_j
+= \tilde{\boldsymbol{\omega}}_{ij|i}A_{ij}\boldsymbol{r}_j
+= A_{ij}\tilde{\boldsymbol{\omega}}_{ij|j}\boldsymbol{r}_j
+\end{equation}
+
+固结在动系上的点的相对速度矢量：
+\begin{equation}
+\vec{v} \triangleq \vec{e}_i^{\mathrm{T}}\dot{\boldsymbol{r}}_i = \vec{\omega}_{ij} \times \vec{r}
+\label{eq:6.3}
+\end{equation}
+
+满足$\vec{v} \perp \vec{\omega}_{ij}$，$\vec{v} \perp \vec{r}$，且
+\begin{equation}
+|\vec{v}| = |\vec{\omega}_{ij}|\,|\vec{r}|\,\sin\langle\vec{\omega}_{ij},\vec{r}\rangle = |\vec{\omega}_{ij}|\,d
+\end{equation}
+当$\vec{r} = \alpha\vec{\omega}_{ij}$时，$\vec{v} = \vec{0}$。
+
+由此可知$j$系相对于$i$系作瞬时定轴转动，相对转动角速度为$\vec{\omega}_{ij}$。
+
+\section{科里奥利公式}
+
+考虑任意矢量$\vec{r}$，其坐标列阵为
+\begin{equation}
+\vec{r} = \vec{e}_i^{\mathrm{T}}\boldsymbol{r}_i = \vec{e}_j^{\mathrm{T}}\boldsymbol{r}_j, \quad \boldsymbol{r}_i = A_{ij}\boldsymbol{r}_j
+\end{equation}
+
+矢量$\vec{r}$坐标列阵的时间变化率：
+\begin{equation}
+\dot{\boldsymbol{r}}_i = A_{ij}\dot{\boldsymbol{r}}_j + \dot{A}_{ij}\boldsymbol{r}_j
+= A_{ij}\dot{\boldsymbol{r}}_j + A_{ij}\tilde{\boldsymbol{\omega}}_{ij|j}\boldsymbol{r}_j
+\end{equation}
+
+即
+\begin{equation}
+\vec{e}_i^{\mathrm{T}}\dot{\boldsymbol{r}}_i = \vec{e}_i^{\mathrm{T}}A_{ij}\dot{\boldsymbol{r}}_j + \vec{e}_i^{\mathrm{T}}A_{ij}\tilde{\boldsymbol{\omega}}_{ij|j}\boldsymbol{r}_j
+\end{equation}
+
+由此得到科里奥利公式：
+\begin{myformula}
+\begin{equation}
+\left.\frac{\mathrm{d}\vec{r}}{\mathrm{d}t}\right|_{i}
+= \left.\frac{\mathrm{d}\vec{r}}{\mathrm{d}t}\right|_{j}
++ \vec{\omega}_{ij} \times \vec{r}
+\label{eq:6.4}
+\end{equation}
+\end{myformula}
+
+\section{角速度叠加定理}
+
+考虑三个坐标系$\vec{e}_i$、$\vec{e}_j$、$\vec{e}_k$的相对方位：
+\begin{equation}
+\vec{e}_i = A_{ij}\vec{e}_j = A_{ij}A_{jk}\vec{e}_k, \quad A_{ik} = \vec{e}_i\cdot\vec{e}_k^{\mathrm{T}} = A_{ij}A_{jk}
+\end{equation}
+
+求导得
+\begin{equation}
+\dot{A}_{ik} = \dot{A}_{ij}A_{jk} + A_{ij}\dot{A}_{jk}
+\end{equation}
+
+代入方向余弦矩阵导数表达式：
+\begin{equation}
+A_{ik}\tilde{\boldsymbol{\omega}}_{ik|k} = A_{ij}\tilde{\boldsymbol{\omega}}_{ij|j}A_{jk} + A_{ij}A_{jk}\tilde{\boldsymbol{\omega}}_{jk|k}
+\end{equation}
+
+在$i$系中投影：
+\begin{equation}
+\tilde{\boldsymbol{\omega}}_{ik|i} = \tilde{\boldsymbol{\omega}}_{ij|i} + \tilde{\boldsymbol{\omega}}_{jk|i}, \quad
+\boldsymbol{\omega}_{ik|i} = \boldsymbol{\omega}_{ij|i} + \boldsymbol{\omega}_{jk|i}
+\end{equation}
+
+\begin{myformula}
+角速度叠加定理：
+\begin{equation}
+\vec{\omega}_{ik} = \vec{\omega}_{ij} + \vec{\omega}_{jk}
+\label{eq:6.5}
+\end{equation}
+\end{myformula}

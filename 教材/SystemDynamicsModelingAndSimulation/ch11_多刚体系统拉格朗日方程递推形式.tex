@@ -1,0 +1,1018 @@
+\section{系统运动微分方程}
+
+系统动力学微分代数方程可表示为
+\begin{equation}\label{eq:11.1}
+\begin{bmatrix}
+\boldsymbol{M} & \boldsymbol{c}_{q}^{\mathrm{T}} \\[4pt]
+\boldsymbol{c}_{q} & \boldsymbol{O}
+\end{bmatrix}
+\begin{bmatrix}
+\ddot{\boldsymbol{q}} \\[4pt]
+\boldsymbol{\lambda}
+\end{bmatrix}
+=
+\begin{bmatrix}
+\boldsymbol{h}(\boldsymbol{q}, \dot{\boldsymbol{q}}, t) \\[4pt]
+\boldsymbol{\varepsilon}(\boldsymbol{q}, \dot{\boldsymbol{q}}, t)
+\end{bmatrix},
+\end{equation}
+
+\begin{equation}\label{eq:11.2}
+\begin{cases}
+\boldsymbol{0} = \boldsymbol{c}, \\[4pt]
+\boldsymbol{0} = \boldsymbol{c}_{q} \dot{\boldsymbol{q}} + \boldsymbol{c}_{t},
+\end{cases}
+\end{equation}
+
+式中
+\begin{equation}\label{eq:11.3}
+\begin{cases}
+\boldsymbol{h}(\boldsymbol{q}, \dot{\boldsymbol{q}}, t) = \boldsymbol{f}^{\,\mathrm{app}} - \dot{\boldsymbol{M}} \dot{\boldsymbol{q}} + \boldsymbol{T}_{q}^{\mathrm{T}}, \\[8pt]
+\boldsymbol{\varepsilon}(\boldsymbol{q}, \dot{\boldsymbol{q}}, t) = -\dot{\boldsymbol{c}}_{q} \dot{\boldsymbol{q}} - \dot{\boldsymbol{c}}_{t},
+\end{cases}
+\end{equation}
+$\boldsymbol{f}^{\,\mathrm{app}}$ 为系统广义力，包括重力、弹性阻尼力、摩擦力与控制力等。
+
+\section{系统广义质量矩阵}
+
+接下来推导系统动能 $T$ 关于系统广义速度 $\dot{\boldsymbol{q}}$ 的二次型表达式。将式~\eqref{eq:10.37}
+\begin{equation*}
+\boldsymbol{v}_{0,i|i} = \sum_{k \in \vec{\boldsymbol{p}}[i]} \boldsymbol{C}_{i,k} \boldsymbol{\Phi}_{J_k} \dot{\boldsymbol{q}}_{J_k}
+\end{equation*}
+代入式~\eqref{eq:11.64}
+\begin{equation*}
+T = \frac{1}{2} \sum_{i=1}^{n} \boldsymbol{v}_{0,i|i}^{\mathrm{T}} \boldsymbol{M}_i \boldsymbol{v}_{0,i|i}
+\end{equation*}
+整理可得
+\begin{equation}\label{eq:11.4}
+\begin{aligned}
+T &= \frac{1}{2} \sum_{i=1}^{n} \sum_{j \in \vec{\boldsymbol{p}}[i]} \dot{\boldsymbol{q}}_{J_j}^{\mathrm{T}} \boldsymbol{\Phi}_{J_j}^{\mathrm{T}} \boldsymbol{C}_{i,j}^{\mathrm{T}} \boldsymbol{M}_i \sum_{k \in \vec{\boldsymbol{p}}[i]} \boldsymbol{C}_{i,k} \boldsymbol{\Phi}_{J_k} \dot{\boldsymbol{q}}_{J_k} \\
+  &= \frac{1}{2} \sum_{i=1}^{n} \sum_{j \in \vec{\boldsymbol{p}}[i]} \sum_{k \in \vec{\boldsymbol{p}}[i]} \dot{\boldsymbol{q}}_{J_j}^{\mathrm{T}} \boldsymbol{\Phi}_{J_j}^{\mathrm{T}} \boldsymbol{C}_{i,j}^{\mathrm{T}} \boldsymbol{M}_i \boldsymbol{C}_{i,k} \boldsymbol{\Phi}_{J_k} \dot{\boldsymbol{q}}_{J_k} \\
+  &=: \frac{1}{2} \sum_{i=1}^{n} \sum_{j \in \vec{\boldsymbol{p}}[i]} \sum_{k \in \vec{\boldsymbol{p}}[i]} \dot{\boldsymbol{q}}_{J_j}^{\mathrm{T}} \boldsymbol{M}_{j,k}^{i} \dot{\boldsymbol{q}}_{J_k} \\
+  &=: \frac{1}{2} \dot{\boldsymbol{q}}^{\mathrm{T}} \boldsymbol{M} \dot{\boldsymbol{q}},
+\end{aligned}
+\end{equation}
+式中 $\boldsymbol{M}$ 为系统广义质量矩阵，满足
+\begin{equation}\label{eq:11.5}
+\boldsymbol{M} = \boldsymbol{M}^{\mathrm{T}}.
+\end{equation}
+
+\section{系统广义质量矩阵对时间的一阶导数}
+
+系统广义质量矩阵中 $\boldsymbol{M}_{j,k}^{i}$ 的时间导数满足
+\begin{equation}\label{eq:11.6}
+\begin{aligned}
+\dot{\boldsymbol{M}}_{j,k}^{i} &= \frac{d}{dt} \left( \boldsymbol{\Phi}_{J_j}^{\mathrm{T}} \boldsymbol{C}_{i,j}^{\mathrm{T}} \boldsymbol{M}_i \boldsymbol{C}_{i,k} \boldsymbol{\Phi}_{J_k} \right) \\
+&= \left( \dot{\boldsymbol{\Phi}}_{J_j}^{\mathrm{T}} \boldsymbol{C}_{i,j}^{\mathrm{T}} + \boldsymbol{\Phi}_{J_j}^{\mathrm{T}} \dot{\boldsymbol{C}}_{i,j}^{\mathrm{T}} \right) \boldsymbol{M}_i \boldsymbol{C}_{i,k} \boldsymbol{\Phi}_{J_k}
+   + \boldsymbol{\Phi}_{J_j}^{\mathrm{T}} \boldsymbol{C}_{i,j}^{\mathrm{T}} \boldsymbol{M}_i \left( \dot{\boldsymbol{C}}_{i,k} \boldsymbol{\Phi}_{J_k} + \boldsymbol{C}_{i,k} \dot{\boldsymbol{\Phi}}_{J_k} \right),
+\end{aligned}
+\end{equation}
+式中 $\dot{\boldsymbol{C}}_{i,k}$ 可通过递推方式获得，即
+\begin{equation}\label{eq:11.7}
+\dot{\boldsymbol{C}}_{i,k} = \frac{d}{dt} \left( \boldsymbol{C}_{i,p(i)} \boldsymbol{C}_{p(i),k} \right) = \dot{\boldsymbol{C}}_{i,p(i)} \boldsymbol{C}_{p(i),k} + \boldsymbol{C}_{i,p(i)} \dot{\boldsymbol{C}}_{p(i),k},
+\end{equation}
+
+\begin{equation}\label{eq:11.8}
+\begin{aligned}
+\dot{\boldsymbol{C}}_{i,p(i)} &= \frac{d}{dt}
+\begin{bmatrix}
+\boldsymbol{A}_{p(i),i}^{\mathrm{T}} & \boldsymbol{A}_{p(i),i}^{\mathrm{T}} \tilde{\boldsymbol{r}}_{O_{p(i)}O_i|p(i)}^{\mathrm{T}} \\[4pt]
+\boldsymbol{O}_3 & \boldsymbol{A}_{p(i),i}^{\mathrm{T}}
+\end{bmatrix} \\[8pt]
+&=
+\begin{bmatrix}
+\left( \boldsymbol{A}_{p(i),i} \tilde{\boldsymbol{\omega}}_{p(i),i|i} \right)^{\mathrm{T}} &
+\boldsymbol{A}_{p(i),i}^{\mathrm{T}} \tilde{\dot{\boldsymbol{r}}}_{O_{p(i)}O_i|p(i)}^{\mathrm{T}} + \left( \boldsymbol{A}_{p(i),i} \tilde{\boldsymbol{\omega}}_{p(i),i|i} \right)^{\mathrm{T}} \tilde{\boldsymbol{r}}_{O_{p(i)}O_i|p(i)}^{\mathrm{T}} \\[6pt]
+\boldsymbol{O}_3 & \left( \boldsymbol{A}_{p(i),i} \tilde{\boldsymbol{\omega}}_{p(i),i|i} \right)^{\mathrm{T}}
+\end{bmatrix} \\[8pt]
+&=
+\begin{bmatrix}
+\left( \boldsymbol{A}_{p(i),i} \tilde{\boldsymbol{\omega}}_{p(i),i|i} \right)^{\mathrm{T}} &
+\boldsymbol{A}_{p(i),i}^{\mathrm{T}} \tilde{\dot{\boldsymbol{r}}}_{R_iO_i|p(i)}^{\mathrm{T}} + \left( \boldsymbol{A}_{p(i),i} \tilde{\boldsymbol{\omega}}_{p(i),i|i} \right)^{\mathrm{T}} \tilde{\boldsymbol{r}}_{O_{p(i)}O_i|p(i)}^{\mathrm{T}} \\[6pt]
+\boldsymbol{O}_3 & \left( \boldsymbol{A}_{p(i),i} \tilde{\boldsymbol{\omega}}_{p(i),i|i} \right)^{\mathrm{T}}
+\end{bmatrix}.
+\end{aligned}
+\end{equation}
+
+\section{系统动能对广义坐标的偏导数}
+
+系统动能对广义坐标的偏导数可记为
+\begin{equation}\label{eq:11.9}
+\boldsymbol{T}_{q} = \begin{bmatrix}
+\boldsymbol{T}_{q_{J_1}} & \boldsymbol{T}_{q_{J_2}} & \ldots & \boldsymbol{T}_{q_{J_n}}
+\end{bmatrix},
+\end{equation}
+其中各分量满足
+\begin{equation}\label{eq:11.10}
+\boldsymbol{T}_{q_{J_j}} = \frac{\partial}{\partial q_{J_j}} \left( \frac{1}{2} \sum_{i=1}^{n} \boldsymbol{v}_{0,i|i}^{\mathrm{T}} \boldsymbol{M}_i \boldsymbol{v}_{0,i|i} \right) = \sum_{i=1}^{n} \boldsymbol{v}_{0,i|i}^{\mathrm{T}} \boldsymbol{M}_i \frac{\partial \boldsymbol{v}_{0,i|i}}{\partial q_{J_j}}.
+\end{equation}
+
+对于 $j \in \vec{\boldsymbol{p}}[i]$，有
+\begin{equation}\label{eq:11.11}
+\begin{aligned}
+\frac{\partial \boldsymbol{v}_{0,i|i}}{\partial q_{J_j}}
+&= \frac{\partial}{\partial q_{J_j}} \left( \sum_{k \in \vec{\boldsymbol{p}}[i]} \boldsymbol{C}_{i,k} \boldsymbol{\Phi}_{J_k} \dot{\boldsymbol{q}}_{J_k} \right) \\
+&= \sum_{k \in \vec{\boldsymbol{p}}[i]} \frac{\partial}{\partial q_{J_j}} \left( \boldsymbol{C}_{i,k} \boldsymbol{\Phi}_{J_k} \dot{\boldsymbol{q}}_{J_k} \right) \\
+&= \sum_{k \in \vec{\boldsymbol{p}}[p(j)]} \frac{\partial}{\partial q_{J_j}} \left( \boldsymbol{C}_{i,k} \boldsymbol{\Phi}_{J_k} \dot{\boldsymbol{q}}_{J_k} \right) + \frac{\partial}{\partial q_{J_j}} \left( \boldsymbol{C}_{i,j} \boldsymbol{\Phi}_{J_j} \dot{\boldsymbol{q}}_{J_j} \right) \\
+&= \sum_{k \in \vec{\boldsymbol{p}}[p(j)]} \frac{\partial}{\partial q_{J_j}} \left( \boldsymbol{C}_{i,j} \boldsymbol{C}_{j,p(j)} \boldsymbol{C}_{p(j),k} \boldsymbol{\Phi}_{J_k} \dot{\boldsymbol{q}}_{J_k} \right) + \boldsymbol{C}_{i,j} \frac{\partial}{\partial q_{J_j}} \left( \boldsymbol{\Phi}_{J_j} \dot{\boldsymbol{q}}_{J_j} \right) \\
+&= \sum_{k \in \vec{\boldsymbol{p}}[p(j)]} \boldsymbol{C}_{i,j} \frac{\partial}{\partial q_{J_j}} \left( \boldsymbol{C}_{j,p(j)} \boldsymbol{C}_{p(j),k} \boldsymbol{\Phi}_{J_k} \dot{\boldsymbol{q}}_{J_k} \right) + \boldsymbol{C}_{i,j} \frac{\partial}{\partial q_{J_j}} \left( \boldsymbol{\Phi}_{J_j} \dot{\boldsymbol{q}}_{J_j} \right) \\
+&=: \sum_{k \in \vec{\boldsymbol{p}}[p(j)]} \boldsymbol{C}_{i,j} \frac{\partial}{\partial q_{J_j}} \left( \boldsymbol{C}_{j,p(j)} \boldsymbol{v}_{p(j),k} \right) + \boldsymbol{C}_{i,j} \frac{\partial}{\partial q_{J_j}} \left( \boldsymbol{\Phi}_{J_j} \dot{\boldsymbol{q}}_{J_j} \right),
+\end{aligned}
+\end{equation}
+式中各系数矩阵与铰元件广义坐标的关系如图~\ref{fig:11.1} 所示。
+
+\begin{figure}[htbp]
+\centering
+% Figure 11.1: Relationship between body-fixed coordinate system velocities and joint generalized coordinates
+\caption{连体坐标系的速度与铰元件广义坐标的关系}
+\label{fig:11.1}
+\end{figure}
+
+对于 $k \in \vec{\boldsymbol{p}}[p(j)]$，
+\begin{equation}\label{eq:11.12}
+\boldsymbol{C}_{j,p(j)} \boldsymbol{v}_{p(j),k} =
+\begin{bmatrix}
+\boldsymbol{A}_{p(j),j}^{\mathrm{T}} & \boldsymbol{A}_{p(j),j}^{\mathrm{T}} \tilde{\boldsymbol{r}}_{O_{p(j)}O_j|p(j)}^{\mathrm{T}} \\[4pt]
+\boldsymbol{O}_3 & \boldsymbol{A}_{p(j),j}^{\mathrm{T}}
+\end{bmatrix}
+\begin{bmatrix}
+\boldsymbol{v}_U \\[4pt]
+\boldsymbol{v}_D
+\end{bmatrix}
+=
+\begin{bmatrix}
+\boldsymbol{A}_{p(j),j}^{\mathrm{T}} \boldsymbol{v}_U + \boldsymbol{A}_{p(j),j}^{\mathrm{T}} \tilde{\boldsymbol{v}}_D \boldsymbol{r}_{O_{p(j)}O_j|p(j)} \\[4pt]
+\boldsymbol{A}_{p(j),j}^{\mathrm{T}} \boldsymbol{v}_D
+\end{bmatrix},
+\end{equation}
+
+\begin{equation}\label{eq:11.13}
+\begin{aligned}
+\frac{\partial}{\partial q_{J_j}} \left( \boldsymbol{C}_{j,p(j)} \boldsymbol{v}_{p(j),k} \right)
+&= \frac{\partial}{\partial q_{J_j}} \left(
+\begin{bmatrix}
+\boldsymbol{A}_{p(j),j}^{\mathrm{T}} \boldsymbol{v}_U + \boldsymbol{A}_{p(j),j}^{\mathrm{T}} \tilde{\boldsymbol{v}}_D \boldsymbol{r}_{O_{p(j)}O_j|p(j)} \\[4pt]
+\boldsymbol{A}_{p(j),j}^{\mathrm{T}} \boldsymbol{v}_D
+\end{bmatrix}
+\right) \\
+&=:
+\begin{bmatrix}
+\displaystyle \frac{\partial}{\partial q_{J_j}} \left( \boldsymbol{A}_{p(j),j}^{\mathrm{T}} \boldsymbol{v}_U \right) + \frac{\partial}{\partial q_{J_j}} \left( \boldsymbol{A}_{p(j),j}^{\mathrm{T}} \boldsymbol{v}_I \right) + \boldsymbol{A}_{p(j),j}^{\mathrm{T}} \tilde{\boldsymbol{v}}_D \frac{\partial}{\partial q_{J_j}} \left( \boldsymbol{r}_{O_{p(j)}O_j|p(j)} \right) \\[12pt]
+\displaystyle \frac{\partial}{\partial q_{J_j}} \left( \boldsymbol{A}_{p(j),j}^{\mathrm{T}} \boldsymbol{v}_D \right)
+\end{bmatrix},
+\end{aligned}
+\end{equation}
+式中 $\boldsymbol{v}_I = \tilde{\boldsymbol{v}}_D \boldsymbol{r}_{O_{p(j)}O_j|p(j)}$，视为与 $q_{J_j}$ 无关的三维列阵。式中各子雅可比矩阵的表达式见~\ref{sec:11.5} 小节。
+
+\section{铰元件相对运动学量对自身广义坐标的偏导数}
+\label{sec:11.5}
+
+\subsection{虚拟铰元件}
+
+对于虚拟铰元件 $i$：
+\begin{equation}\label{eq:11.14}
+\frac{\partial}{\partial \boldsymbol{q}_{J_i}} \left( \boldsymbol{r}_{O_{p(i)}O_i|p(i)} \right) = \begin{bmatrix}
+\boldsymbol{I}_3 & \boldsymbol{O}_3
+\end{bmatrix},
+\end{equation}
+
+\begin{equation}\label{eq:11.15}
+\frac{\partial}{\partial \boldsymbol{q}_{J_i}} \left( \boldsymbol{A}_{p(i),i}^{\mathrm{T}} \boldsymbol{v} \right) = \begin{bmatrix}
+\boldsymbol{O}_3 & \boldsymbol{A}_{p(i),i}^{\mathrm{T}} \tilde{\boldsymbol{v}} \boldsymbol{A}_{p(i),i} \boldsymbol{H}_{\mathrm{B321}}(\boldsymbol{\theta}_{J_i})
+\end{bmatrix},
+\end{equation}
+
+\begin{equation}\label{eq:11.16}
+\begin{aligned}
+\frac{\partial}{\partial \boldsymbol{q}_{J_i}} \left( \boldsymbol{\Phi}_{J_i} \dot{\boldsymbol{q}}_{J_i} \right)
+&=
+\begin{bmatrix}
+\displaystyle \frac{\partial}{\partial \boldsymbol{l}_{J_i}} \begin{bmatrix}
+\boldsymbol{A}_{p(i),i}^{\mathrm{T}} \dot{\boldsymbol{l}}_{J_i} \\
+\boldsymbol{H}_{\mathrm{B321}}(\boldsymbol{\theta}_{J_i}) \dot{\boldsymbol{\theta}}_{J_i}
+\end{bmatrix} &
+\displaystyle \frac{\partial}{\partial \boldsymbol{\theta}_{J_i}} \begin{bmatrix}
+\boldsymbol{A}_{p(i),i}^{\mathrm{T}} \dot{\boldsymbol{l}}_{J_i} \\
+\boldsymbol{H}_{\mathrm{B321}}(\boldsymbol{\theta}_{J_i}) \dot{\boldsymbol{\theta}}_{J_i}
+\end{bmatrix}
+\end{bmatrix} \\
+&= \begin{bmatrix}
+\boldsymbol{O}_{6 \times 3} &
+\begin{bmatrix}
+\boldsymbol{A}_{p(i),i}^{\mathrm{T}} \tilde{\dot{\boldsymbol{l}}}_{J_i} \boldsymbol{A}_{p(i),i} \boldsymbol{H}_{\mathrm{B321}}(\boldsymbol{\theta}_{J_i}) & \displaystyle \frac{\partial}{\partial \boldsymbol{\theta}_{J_i}} \left( \boldsymbol{H}_{\mathrm{B321}} \dot{\boldsymbol{\theta}}_{J_j} \right)
+\end{bmatrix}
+\end{bmatrix},
+\end{aligned}
+\end{equation}
+
+\begin{equation}\label{eq:11.17}
+\frac{\partial}{\partial \boldsymbol{\theta}} \left( \boldsymbol{H}_{\mathrm{B321}} \dot{\boldsymbol{\theta}} \right) =
+\begin{bmatrix}
+0 & -c_2 \dot{\theta}_1 & 0 \\[3pt]
+0 & -s_2 s_3 \dot{\theta}_1 & c_2 c_3 \dot{\theta}_1 - s_3 \dot{\theta}_2 \\[3pt]
+0 & -s_2 c_3 \dot{\theta}_1 & -c_2 s_3 \dot{\theta}_1 - c_3 \dot{\theta}_2
+\end{bmatrix},
+\end{equation}
+式中 $c_2 = \cos(\theta_2)$, $s_2 = \sin(\theta_2)$, $c_3 = \cos(\theta_3)$, $s_3 = \sin(\theta_3)$。
+
+\subsection{转动铰元件}
+
+对于转动铰元件 $i$：
+\begin{equation}\label{eq:11.18}
+\frac{\partial}{\partial \boldsymbol{q}_{J_i}} \left( \boldsymbol{r}_{O_{p(i)}O_i|p(i)} \right) = \boldsymbol{0}_3,
+\end{equation}
+
+\begin{equation}\label{eq:11.19}
+\frac{\partial}{\partial \boldsymbol{q}_{J_i}} \left( \boldsymbol{A}_{p(i),i}^{\mathrm{T}} \boldsymbol{v} \right) = \boldsymbol{A}_{p(i),i}^{\mathrm{T}} \tilde{\boldsymbol{v}} \boldsymbol{A}_{p(i),i} \boldsymbol{n}_{J_i} = \boldsymbol{A}_{p(i),i}^{\mathrm{T}} \tilde{\boldsymbol{v}} \boldsymbol{n}_{J_i},
+\end{equation}
+
+\begin{equation}\label{eq:11.20}
+\frac{\partial}{\partial \boldsymbol{q}_{J_i}} \left( \boldsymbol{\Phi}_{J_i} \dot{\boldsymbol{q}}_{J_i} \right) = \boldsymbol{0}_6.
+\end{equation}
+
+\subsection{棱柱铰元件}
+
+（推导过程类似转动铰，此处从略。）
+
+\subsection{固结铰元件}
+
+（推导过程类似转动铰，此处从略。）
+
+\subsection{球铰元件}
+
+（推导过程类似转动铰，此处从略。）
+
+\subsection{万向节}
+
+（推导过程类似转动铰，此处从略。）
+
+\section{加速度约束方程}
+
+闭环 $L_j$ 切断铰加速度级约束方程可表示为
+\begin{equation}\label{eq:11.21}
+\begin{aligned}
+\boldsymbol{0} = \ddot{\boldsymbol{c}}_{L_j} &= \frac{d}{dt} \dot{\boldsymbol{c}}_{L_j}
+= \frac{d}{dt} \left( \boldsymbol{c}_{L_j,q} \dot{\boldsymbol{q}} + \boldsymbol{c}_{L_j,t} \right) \\
+&=: \boldsymbol{c}_{L_j,q} \ddot{\boldsymbol{q}} + \dot{\boldsymbol{c}}_{L_j,q} \dot{\boldsymbol{q}} + \dot{\boldsymbol{c}}_{L_j,t}.
+\end{aligned}
+\end{equation}
+
+对于转动铰
+\begin{equation}\label{eq:11.22}
+\boldsymbol{c}_{L_j,t} = \boldsymbol{0},
+\end{equation}
+
+\begin{equation}\label{eq:11.23}
+\dot{\boldsymbol{c}}_{L_j,t} = \boldsymbol{0}.
+\end{equation}
+
+当 $k \in \vec{\boldsymbol{p}}[m(j)]$ 且 $k > r(j)$ 时，
+\begin{equation}\label{eq:11.24}
+\frac{d}{dt} \boldsymbol{c}_{L_j,q_{J_k}} = \frac{d}{dt} \left( \boldsymbol{\Psi}_{m(j)} \boldsymbol{C}_{m(j),k} \boldsymbol{\Phi}_{J_k} \right)
+= \dot{\boldsymbol{\Psi}}_{m(j)} \boldsymbol{C}_{m(j),k} \boldsymbol{\Phi}_{J_k} + \boldsymbol{\Psi}_{m(j)} \dot{\boldsymbol{C}}_{m(j),k} \boldsymbol{\Phi}_{J_k} + \boldsymbol{\Psi}_{m(j)} \boldsymbol{C}_{m(j),k} \dot{\boldsymbol{\Phi}}_{J_k};
+\end{equation}
+
+当 $k \in \vec{\boldsymbol{p}}[b(j)]$ 且 $k > r(j)$ 时，
+\begin{equation}\label{eq:11.25}
+\frac{d}{dt} \boldsymbol{c}_{L_j,q_{J_k}} = \frac{d}{dt} \left( -\boldsymbol{\Psi}_{b(j)} \boldsymbol{C}_{b(j),k} \boldsymbol{\Phi}_{J_k} \right)
+= -\dot{\boldsymbol{\Psi}}_{b(j)} \boldsymbol{C}_{b(j),k} \boldsymbol{\Phi}_{J_k} - \boldsymbol{\Psi}_{b(j)} \dot{\boldsymbol{C}}_{b(j),k} \boldsymbol{\Phi}_{J_k} - \boldsymbol{\Psi}_{b(j)} \boldsymbol{C}_{b(j),k} \dot{\boldsymbol{\Phi}}_{J_k}.
+\end{equation}
+
+\subsection{转动铰元件}
+
+（具体表达式推导类似前文，此处从略。）
+
+\subsection{棱柱铰元件}
+
+（具体表达式推导类似前文，此处从略。）
+
+\subsection{固结铰元件}
+
+（具体表达式推导类似前文，此处从略。）
+
+\subsection{球铰元件}
+
+（具体表达式推导类似前文，此处从略。）
+
+\subsection{万向节}
+
+（具体表达式推导类似前文，此处从略。）
+
+\section{与非切断铰元件绑定的弹性阻尼力与控制力}
+
+与非切断铰元件，如铰元件 $J_k$，绑定的线弹性阻尼力与控制力对应的广义力可表示为
+\begin{equation}\label{eq:11.26}
+\boldsymbol{f}^{J_k+} = -\boldsymbol{K}_{P,J_k} (\boldsymbol{q}_{J_k} - \bar{\boldsymbol{q}}_{J_k}) - \boldsymbol{K}_{D,J_k} \dot{\boldsymbol{q}}_{J_k} + \boldsymbol{f}^{C,J_k},
+\end{equation}
+式中 $\boldsymbol{K}_{P,J_k}$ 与 $\boldsymbol{K}_{D,J_k}$ 分别为由铰元件 $J_k$ 刚度系数与阻尼系数形成的对角矩阵，$\bar{\boldsymbol{q}}_{J_k}$ 为弹性/扭簧发挥作用的起始位置，$\boldsymbol{f}^{C,J_k}$ 为铰元件控制力/力矩。
+
+\section{其它系统广义力}
+
+除了~\ref{sec:11.7} 小节讨论的与非切断铰元件绑定的弹性阻尼力与控制力，系统受到的其它弹性阻尼力、摩擦力、控制力与重力作如下统一处理：
+\begin{enumerate}
+\item 将这些力等效到相应的体元件，若为刚体则等效到刚体元件连体坐标系；
+\item 将等效到体元件上的力转为系统广义力。
+\end{enumerate}
+
+将等效在刚体元件 $i$ 连体坐标系上的力在其连体坐标系中的投影记为
+\begin{equation}\label{eq:11.27}
+\boldsymbol{f}^{B_i} \triangleq \begin{bmatrix}
+\boldsymbol{\sigma}_{B_i|i} \\[4pt]
+\boldsymbol{\tau}_{O_i|i}
+\end{bmatrix},
+\end{equation}
+
+考虑到式~\eqref{eq:10.37}，即
+\begin{equation}\label{eq:11.28}
+\boldsymbol{v}_{0,i|i} = \sum_{k \in \vec{\boldsymbol{p}}[i]} \boldsymbol{C}_{i,k} \boldsymbol{\Phi}_{J_k} \dot{\boldsymbol{q}}_{J_k},
+\end{equation}
+可知：当 $k \in \vec{\boldsymbol{p}}[i]$ 时，$\boldsymbol{f}^{B_i}$ 对应的广义力可表示为
+\begin{equation}\label{eq:11.29}
+\boldsymbol{f}^{J_k+} = \boldsymbol{\Phi}_{J_k}^{\mathrm{T}} \boldsymbol{C}_{i,k}^{\mathrm{T}} \boldsymbol{f}^{B_i}.
+\end{equation}
+
+\section{动力学微分代数的约化}
+
+下面考虑如何将动力学微分代数方程~\eqref{eq:11.1}，即
+\begin{equation*}
+\begin{bmatrix}
+\boldsymbol{M} & \boldsymbol{c}_{q}^{\mathrm{T}} \\[4pt]
+\boldsymbol{c}_{q} & \boldsymbol{O}
+\end{bmatrix}
+\begin{bmatrix}
+\ddot{\boldsymbol{q}} \\[4pt]
+\boldsymbol{\lambda}
+\end{bmatrix}
+=
+\begin{bmatrix}
+\boldsymbol{h}(\boldsymbol{q}, \dot{\boldsymbol{q}}, t) \\[4pt]
+\boldsymbol{\varepsilon}(\boldsymbol{q}, \dot{\boldsymbol{q}}, t)
+\end{bmatrix},
+\end{equation*}
+约化为一组二阶常微分方程。
+
+针对四足机器人动力学系统，由于系统的位形可由 $\{ q_{J_1}, q_{J_2}, \ldots, q_{J_{13}} \}$ 完全确定，并且 $\{ q_{J_1}, q_{J_2}, \ldots, q_{J_{13}} \}$ 相互独立，因此可将 $\{ q_{J_1}, q_{J_2}, \ldots, q_{J_{13}} \}$ 称为系统独立广义坐标。系统约束方程 $\boldsymbol{0} = \boldsymbol{c}(\boldsymbol{q}) \in \mathbb{R}^{20}$ 的作用可以理解为用来确定系统非独立广义坐标 $\{ q_{J_{14}}, q_{J_{15}}, \ldots, q_{J_{21}} \}$ 与系统独立广义坐标 $\{ q_{J_1}, q_{J_2}, \ldots, q_{J_{13}} \}$ 的关系；系统广义速度和广义加速度亦是如此。若记
+\begin{equation}\label{eq:11.30}
+\begin{bmatrix}
+q_{J_1} \\ q_{J_2} \\ \vdots \\ q_{J_{13}}
+\end{bmatrix}
+=: \boldsymbol{q}_I \in \mathbb{R}^{18},
+\qquad
+\begin{bmatrix}
+q_{J_{14}} \\ q_{J_{15}} \\ \vdots \\ q_{J_{21}}
+\end{bmatrix}
+=: \boldsymbol{q}_D \in \mathbb{R}^{8},
+\end{equation}
+则有
+\begin{equation}\label{eq:11.31}
+\boldsymbol{q} = \begin{bmatrix}
+\boldsymbol{q}_I \\[4pt]
+\boldsymbol{q}_D
+\end{bmatrix},
+\quad
+\dot{\boldsymbol{q}} = \begin{bmatrix}
+\dot{\boldsymbol{q}}_I \\[4pt]
+\dot{\boldsymbol{q}}_D
+\end{bmatrix},
+\quad
+\ddot{\boldsymbol{q}} = \begin{bmatrix}
+\ddot{\boldsymbol{q}}_I \\[4pt]
+\ddot{\boldsymbol{q}}_D
+\end{bmatrix},
+\end{equation}
+当然，这并不是一般的情形；对于更一般的情形，此处暂不讨论。
+
+应用系统广义坐标的划分，可将系统加速度级约束方程重新整理为
+\begin{equation}\label{eq:11.32}
+\begin{aligned}
+\boldsymbol{\varepsilon}(\boldsymbol{q}, \dot{\boldsymbol{q}}, t) &= \boldsymbol{c}_{q} \ddot{\boldsymbol{q}}
+=: \begin{bmatrix}
+\boldsymbol{c}_{\boldsymbol{q}_I} & \boldsymbol{c}_{\boldsymbol{q}_D}
+\end{bmatrix}
+\begin{bmatrix}
+\ddot{\boldsymbol{q}}_I \\[4pt]
+\ddot{\boldsymbol{q}}_D
+\end{bmatrix} \\
+&= \boldsymbol{c}_{\boldsymbol{q}_I} \ddot{\boldsymbol{q}}_I + \boldsymbol{c}_{\boldsymbol{q}_D} \ddot{\boldsymbol{q}}_D.
+\end{aligned}
+\end{equation}
+
+考虑到四足机器人系统中存在冗余约束，$\boldsymbol{c}_{\boldsymbol{q}_D} \in \mathbb{R}^{20 \times 8}$ 不是方阵，上式左右两端同时左乘 $\boldsymbol{c}_{\boldsymbol{q}_D}^{\mathrm{T}}$，整理可得
+\begin{equation}\label{eq:11.33}
+\boldsymbol{c}_{\boldsymbol{q}_D}^{\mathrm{T}} \boldsymbol{c}_{\boldsymbol{q}_D} \ddot{\boldsymbol{q}}_D = -\boldsymbol{c}_{\boldsymbol{q}_D}^{\mathrm{T}} \boldsymbol{c}_{\boldsymbol{q}_I} \ddot{\boldsymbol{q}}_I + \boldsymbol{c}_{\boldsymbol{q}_D}^{\mathrm{T}} \boldsymbol{\varepsilon}.
+\end{equation}
+
+由上式可得
+\begin{equation}\label{eq:11.34}
+\ddot{\boldsymbol{q}}_D = - \left( \boldsymbol{c}_{\boldsymbol{q}_D}^{\mathrm{T}} \boldsymbol{c}_{\boldsymbol{q}_D} \right)^{-1} \boldsymbol{c}_{\boldsymbol{q}_D}^{\mathrm{T}} \boldsymbol{c}_{\boldsymbol{q}_I} \ddot{\boldsymbol{q}}_I + \left( \boldsymbol{c}_{\boldsymbol{q}_D}^{\mathrm{T}} \boldsymbol{c}_{\boldsymbol{q}_D} \right)^{-1} \boldsymbol{c}_{\boldsymbol{q}_D}^{\mathrm{T}} \boldsymbol{\varepsilon}.
+\end{equation}
+
+则有
+\begin{equation}\label{eq:11.35}
+\begin{aligned}
+\ddot{\boldsymbol{q}} &= \begin{bmatrix}
+\ddot{\boldsymbol{q}}_I \\[4pt]
+\ddot{\boldsymbol{q}}_D
+\end{bmatrix}
+= \begin{bmatrix}
+\boldsymbol{I}_{18} \\[4pt]
+- \left( \boldsymbol{c}_{\boldsymbol{q}_D}^{\mathrm{T}} \boldsymbol{c}_{\boldsymbol{q}_D} \right)^{-1} \boldsymbol{c}_{\boldsymbol{q}_D}^{\mathrm{T}} \boldsymbol{c}_{\boldsymbol{q}_I}
+\end{bmatrix} \ddot{\boldsymbol{q}}_I
++ \begin{bmatrix}
+\boldsymbol{0}_{18} \\[4pt]
+\left( \boldsymbol{c}_{\boldsymbol{q}_D}^{\mathrm{T}} \boldsymbol{c}_{\boldsymbol{q}_D} \right)^{-1} \boldsymbol{c}_{\boldsymbol{q}_D}^{\mathrm{T}} \boldsymbol{\varepsilon}
+\end{bmatrix} \\
+&=: \boldsymbol{\Phi} \ddot{\boldsymbol{q}}_I + \boldsymbol{\xi}.
+\end{aligned}
+\end{equation}
+
+将式~\eqref{eq:11.35} 代入动力学拉格朗日方程可得
+\begin{equation}\label{eq:11.36}
+\begin{aligned}
+\boldsymbol{h}(\boldsymbol{q}, \dot{\boldsymbol{q}}, t) &= \boldsymbol{M} \ddot{\boldsymbol{q}} + \boldsymbol{c}_{q}^{\mathrm{T}} \boldsymbol{\lambda} \\
+&= \boldsymbol{M} (\boldsymbol{\Phi} \ddot{\boldsymbol{q}}_I + \boldsymbol{\xi}) + \boldsymbol{c}_{q}^{\mathrm{T}} \boldsymbol{\lambda} \\
+&= \boldsymbol{M} \boldsymbol{\Phi} \ddot{\boldsymbol{q}}_I + \boldsymbol{M} \boldsymbol{\xi} + \boldsymbol{c}_{q}^{\mathrm{T}} \boldsymbol{\lambda}.
+\end{aligned}
+\end{equation}
+
+上式左乘 $\boldsymbol{\Phi}^{\mathrm{T}}$ 可得
+\begin{equation}\label{eq:11.37}
+\boldsymbol{\Phi}^{\mathrm{T}} \boldsymbol{h} = \boldsymbol{\Phi}^{\mathrm{T}} \boldsymbol{M} \boldsymbol{\Phi} \ddot{\boldsymbol{q}}_I + \boldsymbol{\Phi}^{\mathrm{T}} \boldsymbol{M} \boldsymbol{\xi} + \boldsymbol{\Phi}^{\mathrm{T}} \boldsymbol{c}_{q}^{\mathrm{T}} \boldsymbol{\lambda}.
+\end{equation}
+
+考虑到
+\begin{equation}\label{eq:11.38}
+\boldsymbol{\Phi}^{\mathrm{T}} \boldsymbol{c}_{q}^{\mathrm{T}} \boldsymbol{\lambda} = \boldsymbol{0},
+\end{equation}
+式~\eqref{eq:11.37} 可化简为如下二阶常微分方程组
+\begin{equation}\label{eq:11.39}
+\boxed{\boldsymbol{\Phi}^{\mathrm{T}} \boldsymbol{M} \boldsymbol{\Phi} \ddot{\boldsymbol{q}}_I = \boldsymbol{\Phi}^{\mathrm{T}} \left( \boldsymbol{h} - \boldsymbol{M} \boldsymbol{\xi} \right)}.
+\end{equation}
+
+% ======================================================================
+% 附录：树形拓扑与接触动力学
+% ======================================================================
+
+\section*{附录：树形拓扑与接触动力学}
+
+\subsection{树形拓扑图}
+
+\begin{figure}[htbp]
+\centering
+% Figure 11.2: Non-cut joints and their associated body elements
+\caption{非切断铰及其关联的体元件}
+\label{fig:11.2}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+% Figure 11.3: Cut joints and their associated body elements
+\caption{切断铰及其关联的体元件}
+\label{fig:11.3}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+% Figure 11.4: Body elements associated with the ground
+\caption{与大地关联的体元件}
+\label{fig:11.4}
+\end{figure}
+
+\subsection{运动学方程}
+
+\subsubsection{相邻体元件速度级运动学量递推关系的证明}
+
+由速度叠加定理或对位置级运动学方程~\eqref{eq:10.3} 求时间导数可得速度级运动学方程，即
+\begin{equation}\label{eq:11.40}
+\begin{cases}
+\dot{\boldsymbol{r}}_{O_0O_i|0} = \dot{\boldsymbol{r}}_{O_0O_{p(i)}|0} + \boldsymbol{A}_{0,p(i)} \tilde{\boldsymbol{r}}_{O_{p(i)}O_i|p(i)}^{\mathrm{T}} \boldsymbol{\omega}_{0,p(i)|p(i)} + \boldsymbol{A}_{0,p(i)} \dot{\boldsymbol{r}}_{O_{p(i)}O_i|p(i)}, \\[8pt]
+\boldsymbol{A}_{0,i} \boldsymbol{\omega}_{0,i|i} = \boldsymbol{A}_{0,p(i)} \boldsymbol{\omega}_{0,p(i)|p(i)} + \boldsymbol{A}_{0,p(i)} \boldsymbol{A}_{p(i),i} \boldsymbol{\omega}_{p(i),i|i}.
+\end{cases}
+\end{equation}
+
+以上两式两端分别左乘 $\boldsymbol{A}_{0,i} = \boldsymbol{A}_{0,p(i)} \boldsymbol{A}_{p(i),i}$ 的转置，整理可得
+\begin{equation}\label{eq:11.41}
+\begin{cases}
+\begin{aligned}
+\boldsymbol{A}_{0,i}^{\mathrm{T}} \dot{\boldsymbol{r}}_{O_0O_i|0} &= \boldsymbol{A}_{p(i),i}^{\mathrm{T}} \boldsymbol{A}_{0,p(i)}^{\mathrm{T}} \dot{\boldsymbol{r}}_{O_0O_{p(i)}|0}
+   + \boldsymbol{A}_{p(i),i}^{\mathrm{T}} \tilde{\boldsymbol{r}}_{O_{p(i)}O_i|p(i)}^{\mathrm{T}} \boldsymbol{\omega}_{0,p(i)|p(i)} \\
+   &\quad + \boldsymbol{A}_{p(i),i}^{\mathrm{T}} \dot{\boldsymbol{r}}_{O_{p(i)}O_i|p(i)},
+\end{aligned} \\[12pt]
+\boldsymbol{\omega}_{0,i|i} = \boldsymbol{A}_{p(i),i}^{\mathrm{T}} \boldsymbol{\omega}_{0,p(i)|p(i)} + \boldsymbol{\omega}_{p(i),i|i}.
+\end{cases}
+\end{equation}
+
+两速度级运动学方程可进一步记为如下矩阵形式
+\begin{equation}\label{eq:11.42}
+\begin{bmatrix}
+\boldsymbol{A}_{0,i}^{\mathrm{T}} \dot{\boldsymbol{r}}_{O_0O_i|0} \\[4pt]
+\boldsymbol{\omega}_{0,i|i}
+\end{bmatrix}
+=
+\begin{bmatrix}
+\boldsymbol{A}_{p(i),i}^{\mathrm{T}} & \boldsymbol{A}_{p(i),i}^{\mathrm{T}} \tilde{\boldsymbol{r}}_{O_{p(i)}O_i|p(i)}^{\mathrm{T}} \\[4pt]
+\boldsymbol{O}_3 & \boldsymbol{A}_{p(i),i}^{\mathrm{T}}
+\end{bmatrix}
+\begin{bmatrix}
+\boldsymbol{A}_{0,p(i)}^{\mathrm{T}} \dot{\boldsymbol{r}}_{O_0O_{p(i)}|0} \\[4pt]
+\boldsymbol{\omega}_{0,p(i)|p(i)}
+\end{bmatrix}
++
+\begin{bmatrix}
+\boldsymbol{A}_{p(i),i}^{\mathrm{T}} \dot{\boldsymbol{r}}_{O_{p(i)}O_i|p(i)} \\[4pt]
+\boldsymbol{\omega}_{p(i),i|i}
+\end{bmatrix},
+\end{equation}
+并可进一步简记为
+\begin{equation}\label{eq:11.43}
+\boldsymbol{v}_{0,i|i} = \boldsymbol{C}_{i,p(i)} \boldsymbol{v}_{0,p(i)|p(i)} + \boldsymbol{v}_{p(i),i|i}.
+\end{equation}
+
+邻接体相对速度
+\begin{equation}\label{eq:11.44}
+\boldsymbol{v}_{p(i),i|i} = \begin{bmatrix}
+\boldsymbol{A}_{p(i),i}^{\mathrm{T}} \dot{\boldsymbol{r}}_{O_{p(i)}O_i|p(i)} \\[4pt]
+\boldsymbol{\omega}_{p(i),i|i}
+\end{bmatrix}
+= \begin{bmatrix}
+\boldsymbol{A}_{p(i),i}^{\mathrm{T}} \dot{\boldsymbol{r}}_{R_iO_i|p(i)} \\[4pt]
+\boldsymbol{\omega}_{p(i),i|i}
+\end{bmatrix}
+\end{equation}
+一定与 $\dot{\boldsymbol{q}}_{J_i}$ 线性相关，该线性关系可表示为
+\begin{equation}\label{eq:11.45}
+\boldsymbol{v}_{p(i),i|i} = \boldsymbol{\Phi}_{J_i} \dot{\boldsymbol{q}}_{J_i},
+\end{equation}
+式中 $\boldsymbol{\Phi}_{J_i}$ 为与 $\boldsymbol{q}_{J_i}$ 相关的表达式。将上式代入式~\eqref{eq:11.43} 可得
+\begin{equation}\label{eq:11.46}
+\boldsymbol{v}_{0,i|i} = \boldsymbol{C}_{i,p(i)} \boldsymbol{v}_{0,p(i)|p(i)} + \boldsymbol{\Phi}_{J_i} \dot{\boldsymbol{q}}_{J_i}.
+\end{equation}
+
+\subsubsection{相邻体元件加速度运动学量递推关系的证明}
+
+速度级运动学方程~\eqref{eq:11.40} 对时间求一阶导数可得加速度运动学方程，即
+\begin{equation}\label{eq:11.47}
+\begin{cases}
+\begin{aligned}
+\ddot{\boldsymbol{r}}_{O_0O_i|0} &= \ddot{\boldsymbol{r}}_{O_0O_{p(i)}|0}
+   + \boldsymbol{A}_{0,p(i)} \tilde{\boldsymbol{r}}_{O_{p(i)}O_i|p(i)}^{\mathrm{T}} \dot{\boldsymbol{\omega}}_{0,p(i)|p(i)}
+   + \boldsymbol{A}_{0,p(i)} \ddot{\boldsymbol{r}}_{O_{p(i)}O_i|p(i)} \\
+   &\quad + \boldsymbol{A}_{0,p(i)} \tilde{\boldsymbol{\omega}}_{0,p(i)|p(i)} \tilde{\boldsymbol{\omega}}_{0,p(i)|p(i)} \boldsymbol{r}_{O_{p(i)}O_i|p(i)} \\
+   &\quad + 2 \boldsymbol{A}_{0,p(i)} \tilde{\boldsymbol{\omega}}_{0,p(i)|p(i)} \dot{\boldsymbol{r}}_{O_{p(i)}O_i|p(i)},
+\end{aligned} \\[12pt]
+\begin{aligned}
+\boldsymbol{A}_{0,i} \dot{\boldsymbol{\omega}}_{0,i|i} &= \boldsymbol{A}_{0,p(i)} \dot{\boldsymbol{\omega}}_{0,p(i)|p(i)}
+   + \boldsymbol{A}_{0,p(i)} \boldsymbol{A}_{p(i),i} \dot{\boldsymbol{\omega}}_{p(i),i|i} \\
+   &\quad + \boldsymbol{A}_{0,p(i)} \tilde{\boldsymbol{\omega}}_{0,p(i)|p(i)} \boldsymbol{A}_{p(i),i} \boldsymbol{\omega}_{p(i),i|i}.
+\end{aligned}
+\end{cases}
+\end{equation}
+
+以上两式两端分别左乘 $\boldsymbol{A}_{0,i} = \boldsymbol{A}_{0,p(i)} \boldsymbol{A}_{p(i),i}$ 的转置，整理可得
+\begin{equation}\label{eq:11.48}
+\begin{cases}
+\begin{aligned}
+\boldsymbol{A}_{0,i}^{\mathrm{T}} \ddot{\boldsymbol{r}}_{O_0O_i|0}
+&= \boldsymbol{A}_{p(i),i}^{\mathrm{T}} \boldsymbol{A}_{0,p(i)}^{\mathrm{T}} \ddot{\boldsymbol{r}}_{O_0O_{p(i)}|0}
+   + \boldsymbol{A}_{p(i),i}^{\mathrm{T}} \tilde{\boldsymbol{r}}_{O_{p(i)}O_i|p(i)}^{\mathrm{T}} \dot{\boldsymbol{\omega}}_{0,p(i)|p(i)} \\[3pt]
+&\quad + \boldsymbol{A}_{p(i),i}^{\mathrm{T}} \ddot{\boldsymbol{r}}_{O_{p(i)}O_i|p(i)} \\[3pt]
+&\quad + \boldsymbol{A}_{p(i),i}^{\mathrm{T}} \tilde{\boldsymbol{\omega}}_{0,p(i)|p(i)} \tilde{\boldsymbol{\omega}}_{0,p(i)|p(i)} \boldsymbol{r}_{O_{p(i)}O_i|p(i)} \\[3pt]
+&\quad + 2 \boldsymbol{A}_{p(i),i}^{\mathrm{T}} \tilde{\boldsymbol{\omega}}_{0,p(i)|p(i)} \dot{\boldsymbol{r}}_{O_{p(i)}O_i|p(i)},
+\end{aligned} \\[16pt]
+\dot{\boldsymbol{\omega}}_{0,i|i} = \boldsymbol{A}_{p(i),i}^{\mathrm{T}} \dot{\boldsymbol{\omega}}_{0,p(i)|p(i)} + \dot{\boldsymbol{\omega}}_{p(i),i|i}
+   + \boldsymbol{A}_{p(i),i}^{\mathrm{T}} \tilde{\boldsymbol{\omega}}_{0,p(i)|p(i)} \boldsymbol{\omega}_{p(i),i|p(i)}.
+\end{cases}
+\end{equation}
+
+两加速度运动学方程可进一步记为如下矩阵形式
+\begin{equation}\label{eq:11.49}
+\begin{bmatrix}
+\boldsymbol{A}_{0,i}^{\mathrm{T}} \ddot{\boldsymbol{r}}_{O_0O_i|0} \\[4pt]
+\dot{\boldsymbol{\omega}}_{0,i|i}
+\end{bmatrix}
+=
+\begin{bmatrix}
+\boldsymbol{A}_{p(i),i}^{\mathrm{T}} & \boldsymbol{A}_{p(i),i}^{\mathrm{T}} \tilde{\boldsymbol{r}}_{O_{p(i)}O_i|p(i)}^{\mathrm{T}} \\[4pt]
+\boldsymbol{O}_3 & \boldsymbol{A}_{p(i),i}^{\mathrm{T}}
+\end{bmatrix}
+\begin{bmatrix}
+\boldsymbol{A}_{0,p(i)}^{\mathrm{T}} \ddot{\boldsymbol{r}}_{O_0O_{p(i)}|0} \\[4pt]
+\dot{\boldsymbol{\omega}}_{0,p(i)|p(i)}
+\end{bmatrix}
++
+\begin{bmatrix}
+\boldsymbol{A}_{p(i),i}^{\mathrm{T}} \ddot{\boldsymbol{r}}_{O_{p(i)}O_i|p(i)} \\[4pt]
+\dot{\boldsymbol{\omega}}_{p(i),i|i}
+\end{bmatrix}
++ \begin{bmatrix}
+\boldsymbol{A}_{p(i),i}^{\mathrm{T}} \bigl( \tilde{\boldsymbol{\omega}}_{0,p(i)|p(i)} \tilde{\boldsymbol{\omega}}_{0,p(i)|p(i)} \boldsymbol{r}_{O_{p(i)}O_i|p(i)} + 2 \tilde{\boldsymbol{\omega}}_{0,p(i)|p(i)} \dot{\boldsymbol{r}}_{O_{p(i)}O_i|p(i)} \bigr) \\[6pt]
+\boldsymbol{A}_{p(i),i}^{\mathrm{T}} \tilde{\boldsymbol{\omega}}_{0,p(i)|p(i)} \boldsymbol{\omega}_{p(i),i|p(i)}
+\end{bmatrix},
+\end{equation}
+并可进一步简记为
+\begin{equation}\label{eq:11.50}
+\boldsymbol{a}_{0,i|i} = \boldsymbol{C}_{i,p(i)} \boldsymbol{a}_{0,p(i)|p(i)} + \boldsymbol{a}_{p(i),i|i}
++ \begin{bmatrix}
+\boldsymbol{A}_{p(i),i}^{\mathrm{T}} \bigl( \tilde{\boldsymbol{\omega}}_{0,p(i)|p(i)} \tilde{\boldsymbol{\omega}}_{0,p(i)|p(i)} \boldsymbol{r}_{O_{p(i)}O_i|p(i)} + 2 \tilde{\boldsymbol{\omega}}_{0,p(i)|p(i)} \dot{\boldsymbol{r}}_{O_{p(i)}O_i|p(i)} \bigr) \\[6pt]
+\boldsymbol{A}_{p(i),i}^{\mathrm{T}} \tilde{\boldsymbol{\omega}}_{0,p(i)|p(i)} \boldsymbol{\omega}_{p(i),i|p(i)}
+\end{bmatrix}.
+\end{equation}
+
+邻接体相对加速度
+\begin{equation}\label{eq:11.51}
+\boldsymbol{a}_{p(i),i|i} = \begin{bmatrix}
+\boldsymbol{A}_{p(i),i}^{\mathrm{T}} \ddot{\boldsymbol{r}}_{O_{p(i)}O_i|p(i)} \\[4pt]
+\dot{\boldsymbol{\omega}}_{p(i),i|i}
+\end{bmatrix}
+= \begin{bmatrix}
+\boldsymbol{A}_{p(i),i}^{\mathrm{T}} \ddot{\boldsymbol{r}}_{R_iO_i|p(i)} \\[4pt]
+\dot{\boldsymbol{\omega}}_{p(i),i|i}
+\end{bmatrix}
+\end{equation}
+一定与 $\ddot{\boldsymbol{q}}_{J_i}$ 线性相关，该线性关系可表示为
+\begin{equation}\label{eq:11.52}
+\boldsymbol{a}_{p(i),i|i} = \boldsymbol{\Phi}_{J_i} \ddot{\boldsymbol{q}}_{J_i} + \boldsymbol{\xi}_{J_i},
+\end{equation}
+式中加速度系数矩阵 $\boldsymbol{\Phi}_{J_i}$ 与式~\eqref{eq:11.45} 中的速度系数矩阵 $\boldsymbol{\Phi}_{J_i}$ 相同。将上式代入式~\eqref{eq:11.50} 整理可得
+\begin{equation}\label{eq:11.53}
+\boldsymbol{a}_{0,i|i} = \boldsymbol{C}_{i,p(i)} \boldsymbol{a}_{0,p(i)|p(i)} + \boldsymbol{\Phi}_{J_i} \ddot{\boldsymbol{q}}_{J_i} + \boldsymbol{\eta}_i,
+\end{equation}
+式中
+\begin{equation}\label{eq:11.54}
+\boldsymbol{\eta}_i = \boldsymbol{\xi}_{J_i} + \begin{bmatrix}
+\boldsymbol{A}_{p(i),i}^{\mathrm{T}} \bigl( \tilde{\boldsymbol{\omega}}_{0,p(i)|p(i)} \tilde{\boldsymbol{\omega}}_{0,p(i)|p(i)} \boldsymbol{r}_{O_{p(i)}O_i|p(i)} + 2 \tilde{\boldsymbol{\omega}}_{0,p(i)|p(i)} \dot{\boldsymbol{r}}_{O_{p(i)}O_i|p(i)} \bigr) \\[6pt]
+\boldsymbol{A}_{p(i),i}^{\mathrm{T}} \tilde{\boldsymbol{\omega}}_{0,p(i)|p(i)} \boldsymbol{\omega}_{p(i),i|p(i)}
+\end{bmatrix}.
+\end{equation}
+
+\subsubsection{体元件速度关于系统广义速度的线性表达式的证明}
+
+首先证明绝对速度列阵 $\boldsymbol{v}_{0,i|i}$ 表达式~\eqref{eq:10.37} 对于体元件 $\{ j \mid p(j) = 0 \}$ 是成立的，证明过程如下：
+\begin{equation}\label{eq:11.55}
+\begin{aligned}
+\boldsymbol{v}_{0,j|j} &= \sum_{k \in \vec{\boldsymbol{p}}[j]} \boldsymbol{C}_{j,k} \boldsymbol{\Phi}_{J_k} \dot{\boldsymbol{q}}_{J_k} \\
+&= \sum_{k \in \{j\}} \boldsymbol{C}_{j,k} \boldsymbol{\Phi}_{J_k} \dot{\boldsymbol{q}}_{J_k} \\
+&= \boldsymbol{C}_{j,j} \boldsymbol{\Phi}_{J_j} \dot{\boldsymbol{q}}_{J_j} \\
+&= \boldsymbol{\Phi}_{J_j} \dot{\boldsymbol{q}}_{J_j},
+\end{aligned}
+\end{equation}
+由式~\eqref{eq:10.9} 可知上式是成立的。
+
+假设体元件 $p(i)$ 绝对速度列阵 $\boldsymbol{v}_{0,p(i)|p(i)}$ 满足表达式~\eqref{eq:10.37}，即有
+\begin{equation}\label{eq:11.56}
+\boldsymbol{v}_{0,p(i)|p(i)} = \sum_{k \in \vec{\boldsymbol{p}}[p(i)]} \boldsymbol{C}_{p(i),k} \boldsymbol{\Phi}_{J_k} \dot{\boldsymbol{q}}_{J_k},
+\end{equation}
+将其代入体元件 $i$ 运动学方程~\eqref{eq:10.9}，整理可得
+\begin{equation}\label{eq:11.57}
+\begin{aligned}
+\boldsymbol{v}_{0,i|i} &= \boldsymbol{C}_{i,p(i)} \boldsymbol{v}_{0,p(i)|p(i)} + \boldsymbol{\Phi}_{J_i} \dot{\boldsymbol{q}}_{J_i} \\
+&= \sum_{k \in \vec{\boldsymbol{p}}[p(i)]} \boldsymbol{C}_{i,p(i)} \boldsymbol{C}_{p(i),k} \boldsymbol{\Phi}_{J_k} \dot{\boldsymbol{q}}_{J_k} + \boldsymbol{\Phi}_{J_i} \dot{\boldsymbol{q}}_{J_i} \\
+&= \sum_{k \in \vec{\boldsymbol{p}}[p(i)]} \boldsymbol{C}_{i,k} \boldsymbol{\Phi}_{J_k} \dot{\boldsymbol{q}}_{J_k} + \boldsymbol{C}_{i,i} \boldsymbol{\Phi}_{J_i} \dot{\boldsymbol{q}}_{J_i} \\
+&= \sum_{k \in \{ \vec{\boldsymbol{p}}[p(i)], i \}} \boldsymbol{C}_{i,k} \boldsymbol{\Phi}_{J_k} \dot{\boldsymbol{q}}_{J_k} \\
+&= \sum_{k \in \vec{\boldsymbol{p}}[i]} \boldsymbol{C}_{i,k} \boldsymbol{\Phi}_{J_k} \dot{\boldsymbol{q}}_{J_k}.
+\end{aligned}
+\end{equation}
+证毕。上述证明过程用到了如下表达式
+\begin{equation}\label{eq:11.58}
+\begin{aligned}
+\boldsymbol{C}_{i,p(i)} \boldsymbol{C}_{p(i),k} &=
+\begin{bmatrix}
+\boldsymbol{A}_{p(i),i}^{\mathrm{T}} & \boldsymbol{A}_{p(i),i}^{\mathrm{T}} \tilde{\boldsymbol{r}}_{O_{p(i)}O_i|p(i)}^{\mathrm{T}} \\[4pt]
+\boldsymbol{O}_3 & \boldsymbol{A}_{p(i),i}^{\mathrm{T}}
+\end{bmatrix}
+\begin{bmatrix}
+\boldsymbol{A}_{k,p(i)}^{\mathrm{T}} & \boldsymbol{A}_{k,p(i)}^{\mathrm{T}} \tilde{\boldsymbol{r}}_{O_kO_{p(i)}|k}^{\mathrm{T}} \\[4pt]
+\boldsymbol{O}_3 & \boldsymbol{A}_{k,p(i)}^{\mathrm{T}}
+\end{bmatrix} \\[10pt]
+&= \begin{bmatrix}
+\boldsymbol{A}_{p(i),i}^{\mathrm{T}} \boldsymbol{A}_{k,p(i)}^{\mathrm{T}} & \boldsymbol{A}_{p(i),i}^{\mathrm{T}} \boldsymbol{A}_{k,p(i)}^{\mathrm{T}} \tilde{\boldsymbol{r}}_{O_kO_{p(i)}|k}^{\mathrm{T}} + \boldsymbol{A}_{p(i),i}^{\mathrm{T}} \tilde{\boldsymbol{r}}_{O_{p(i)}O_i|p(i)}^{\mathrm{T}} \boldsymbol{A}_{k,p(i)}^{\mathrm{T}} \\[4pt]
+\boldsymbol{O}_3 & \boldsymbol{A}_{p(i),i}^{\mathrm{T}} \boldsymbol{A}_{k,p(i)}^{\mathrm{T}}
+\end{bmatrix} \\[10pt]
+&= \begin{bmatrix}
+\boldsymbol{A}_{k,i}^{\mathrm{T}} & \boldsymbol{A}_{k,i}^{\mathrm{T}} \tilde{\boldsymbol{r}}_{O_kO_i|k}^{\mathrm{T}} \\[4pt]
+\boldsymbol{O}_3 & \boldsymbol{A}_{k,i}^{\mathrm{T}}
+\end{bmatrix}
+= \boldsymbol{C}_{i,k}.
+\end{aligned}
+\end{equation}
+
+\subsubsection{与刚体固连的点的绝对运动}
+
+（推导过程类似前文，此处从略。）
+
+\subsection{速度级约束方程的校核}
+
+闭环 $L_j$ 的动点 $M_j$ 在 $0$ 系中的位置列阵可借助于它在 $r$ 系中的位置列阵表示为
+\begin{equation}\label{eq:11.59}
+\boldsymbol{r}_{O_0M_j|0} = \boldsymbol{r}_{O_0O_r|0} + \boldsymbol{A}_{0,r} \boldsymbol{r}_{O_rM_j|r},
+\end{equation}
+由此可得
+\begin{equation}\label{eq:11.60}
+\dot{\boldsymbol{r}}_{O_0M_j|0} = \dot{\boldsymbol{r}}_{O_0O_r|0} + \boldsymbol{A}_{0,r} \tilde{\boldsymbol{\omega}}_{0,r|r} \boldsymbol{r}_{O_rM_j|r} + \boldsymbol{A}_{0,r} \dot{\boldsymbol{r}}_{O_rM_j|r}.
+\end{equation}
+
+上式左乘 $\boldsymbol{A}_{0,r}^{\mathrm{T}}$ 可得
+\begin{equation}\label{eq:11.61}
+\boldsymbol{A}_{0,r}^{\mathrm{T}} \dot{\boldsymbol{r}}_{O_0M_j|0} = \boldsymbol{A}_{0,r}^{\mathrm{T}} \dot{\boldsymbol{r}}_{O_0O_r|0} + \tilde{\boldsymbol{\omega}}_{0,r|r} \boldsymbol{r}_{O_rM_j|r} + \dot{\boldsymbol{r}}_{O_rM_j|r},
+\end{equation}
+由此可得闭环 $L_j$ 动点 $M_j$ 相对于 $r$ 系的速度列阵
+\begin{equation}\label{eq:11.62}
+\dot{\boldsymbol{r}}_{O_rM_j|r} = \boldsymbol{A}_{0,r}^{\mathrm{T}} \dot{\boldsymbol{r}}_{O_0M_j|0} - \boldsymbol{A}_{0,r}^{\mathrm{T}} \dot{\boldsymbol{r}}_{O_0O_r|0} - \tilde{\boldsymbol{\omega}}_{0,r|r} \boldsymbol{r}_{O_rM_j|r}.
+\end{equation}
+
+同理可得闭环 $L_j$ 基点 $B_j$ 相对于 $r$ 系的速度列阵
+\begin{equation}\label{eq:11.63}
+\dot{\boldsymbol{r}}_{O_rB_j|r} = \boldsymbol{A}_{0,r}^{\mathrm{T}} \dot{\boldsymbol{r}}_{O_0B_j|0} - \boldsymbol{A}_{0,r}^{\mathrm{T}} \dot{\boldsymbol{r}}_{O_0O_r|0} - \tilde{\boldsymbol{\omega}}_{0,r|r} \boldsymbol{r}_{O_rB_j|r}.
+\end{equation}
+
+可将式~\eqref{eq:11.62} 和~\eqref{eq:11.63} 直接代入式~\eqref{eq:10.55} 来验证式~\eqref{eq:10.59}。
+
+\subsection{系统机械能}
+
+\subsubsection{系统动能}
+
+多刚体系统的动能可由各体元件的动能累加得到，即
+\begin{equation}\label{eq:11.64}
+T = \sum_{i=1}^{n} T_i = \frac{1}{2} \sum_{i=1}^{n} \boldsymbol{v}_{0,i|i}^{\mathrm{T}} \boldsymbol{M}_i \boldsymbol{v}_{0,i|i},
+\end{equation}
+式中体元件 $i$ 的质量矩阵 $\boldsymbol{M}_i$ 可表示为
+\begin{equation}\label{eq:11.65}
+\boldsymbol{M}_i = \begin{bmatrix}
+m_i \boldsymbol{I}_3 & m_i \tilde{\boldsymbol{r}}_{O_iC_i|i}^{\mathrm{T}} \\[4pt]
+m_i \tilde{\boldsymbol{r}}_{O_iC_i|i} & \boldsymbol{J}_{O_i|i}
+\end{bmatrix},
+\end{equation}
+式中 $m_i$ 表示刚体元件的质量，$\boldsymbol{J}_{O_i|i}$ 表示刚体元件 $i$ 相对于 $O_i$ 点的转动惯量张量在 $i$ 系中的投影矩阵，满足
+\begin{equation}\label{eq:11.66}
+\begin{aligned}
+\boldsymbol{J}_{O_i|i} &= \boldsymbol{J}_{C_i|i} + m_i \left[ \left( \boldsymbol{r}_{O_iC_i|i}^{\mathrm{T}} \boldsymbol{r}_{O_iC_i|i} \right) \boldsymbol{I}_3 - \boldsymbol{r}_{O_iC_i|i} \boldsymbol{r}_{O_iC_i|i}^{\mathrm{T}} \right] \\
+&= \boldsymbol{J}_{C_i|i} + m_i \tilde{\boldsymbol{r}}_{O_iC_i|i} \tilde{\boldsymbol{r}}_{O_iC_i|i}^{\mathrm{T}}.
+\end{aligned}
+\end{equation}
+
+\subsubsection{系统重力势能}
+
+对所有体元件重力势能求和可得系统重力势能，即
+\begin{equation}\label{eq:11.67}
+V_g = \sum_{i=1}^{n} V_{g,i},
+\end{equation}
+其中刚体元件 $i$ 的重力势能 $V_{g,i}$ 可表示为
+\begin{equation}\label{eq:11.68}
+V_{g,i} = -m_i \boldsymbol{g}^{\mathrm{T}} \boldsymbol{r}_{O_0C_i|0},
+\end{equation}
+式中 $\boldsymbol{g}$ 表示系统重力加速度矢量在全局惯性坐标系中的投影列阵；刚体元件 $i$ 质心点 $C_i$ 在全局惯性系中的位置矢量可表示为
+\begin{equation}\label{eq:11.69}
+\boldsymbol{r}_{O_0C_i|0} = \boldsymbol{r}_{O_0O_i|0} + \boldsymbol{A}_{0,i} \boldsymbol{r}_{O_iC_i|i},
+\end{equation}
+式中 $\boldsymbol{r}_{O_iC_i|i}$ 为定常坐标列阵。
+
+\subsubsection{主铰元件弹性势能}
+
+主铰元件 $J_k$ 弹性势能可表示为
+\begin{equation}\label{eq:11.70}
+V_{J_k} = \frac{1}{2} (\boldsymbol{q}_{J_k} - \bar{\boldsymbol{q}}_{J_k})^{\mathrm{T}} \boldsymbol{K}_{P,J_k} (\boldsymbol{q}_{J_k} - \bar{\boldsymbol{q}}_{J_k}),
+\end{equation}
+式中 $\boldsymbol{K}_{P,J_k}$ 与 $\boldsymbol{K}_{D,J_k}$ 分别为由铰元件 $J_k$ 刚度系数与阻尼系数形成的对角矩阵，$\bar{\boldsymbol{q}}_{J_k}$ 为弹性/扭簧发挥作用的起始位置。
+
+\subsubsection{闭环切断铰元件弹性势能}
+
+闭环切断铰元件 $L_k$ 弹性势能可表示为
+\begin{equation}\label{eq:11.71}
+V_{L_k} = \frac{1}{2} (\boldsymbol{q}_{L_k} - \bar{\boldsymbol{q}}_{L_k})^{\mathrm{T}} \boldsymbol{K}_{P,L_k} (\boldsymbol{q}_{L_k} - \bar{\boldsymbol{q}}_{L_k}),
+\end{equation}
+式中 $\boldsymbol{K}_{P,L_k}$ 与 $\boldsymbol{K}_{D,L_k}$ 分别为由铰元件 $L_k$ 刚度系数与阻尼系数形成的对角矩阵，$\bar{\boldsymbol{q}}_{L_k}$ 为弹性/扭簧发挥作用的起始位置。
+
+\subsection{接触模型}
+
+以接触对的形式定义多体系统动力学中的接触模型；在接触面法线方向，接触对中一方可侵入另一方。任意一对接触，如接触对 $j$，均关联两个体元件：接触算法中被侵入的体元件称为接触元件（Contact Body），元件序号记为 $C(j)$；另一体元件称为目标元件（Target Body），元件序号记为 $T(j)$。
+
+\subsubsection{球与无限大平面}
+
+图~\ref{fig:11.5} 所示为刚性球面与无限大平面接触示意图，接触对编号记为 $j$。
+
+\begin{figure}[htbp]
+\centering
+% Figure 11.5: Sphere in contact with an infinite plane
+\caption{球体与无限大平面接触示意图}
+\label{fig:11.5}
+\end{figure}
+
+图中 $O_0 X_0 Y_0 Z_0$ 为全局惯性坐标系，$O_{C(j)} X_{C(j)} Y_{C(j)} Z_{C(j)}$ 为接触体元件连体坐标系，$O_{T(j)} X_{T(j)} Y_{T(j)} Z_{T(j)}$ 为目标体元件连体坐标系。
+
+球心点记为 $S$（Sphere），半径记为 $R$（Radius），球心在 $O_{T(j)} X_{T(j)} Y_{T(j)} Z_{T(j)}$ 系中的位置坐标列阵记为 $\boldsymbol{r}_{O_{T(j)}S|T(j)}$。
+
+无限大接触平面外法线方向单位矢量 $\vec{\boldsymbol{n}}$ 在 $O_{C(j)} X_{C(j)} Y_{C(j)} Z_{C(j)}$ 系中的投影列阵记为 $\boldsymbol{n}|_{C(j)}$，始端位于平面内，记为点 $P$（Plane），点 $P$ 在 $O_{C(j)} X_{C(j)} Y_{C(j)} Z_{C(j)}$ 系中的位置坐标列阵记为 $\boldsymbol{r}_{O_{C(j)}P|C(j)}$。
+
+当球心点 $S$ 到平面的距离小于半径时，即当
+\begin{equation}\label{eq:11.72}
+\boldsymbol{n}^{\mathrm{T}}|_{C(j)} \boldsymbol{r}_{PS|C(j)} < R
+\end{equation}
+时，球与平面发生了接触。当发生接触时，依次计算如下运动学量，并由接触力模型计算相应的接触力，并等效到体元件 $C(j)$ 和 $T(j)$ 上：
+\begin{enumerate}
+\item 接触点 $I$ 的位置坐标以及法向侵透量 $\delta$（注：$\delta \geq 0$）；
+\item 体元件 $C(j)$ 上接触点 $I$ 的速度以及体元件 $T(j)$ 上接触点 $I$ 的速度；
+\item 法向侵透量的时间变化率 $\dot{\delta}$ 以及相对切向速度及相对速度的模 $v_{\tau}$。
+\end{enumerate}
+
+\subsubsection{法向弹性阻尼接触力}
+
+法向接触模型采用经典的弹簧阻尼模型来描述。该模型考虑了接触变形所引起的弹性恢复力以及由相对运动引起的阻尼耗散力，法线方向的排斥力可表示为
+\begin{equation}\label{eq:11.73}
+F_{\sigma} = K_P \delta + \mathrm{step5}(\delta, \delta_{\text{Threshold}}, K_D) \, \dot{\delta} \geq 0,
+\end{equation}
+式中，$K_P$ 和 $K_D$ 分别为法线方向的刚度系数和阻尼系数。阻尼项系数不直接采用 $K_D$ 是为防止计算出的法向斥力 $F_N$ 出现负数的情形。
+
+\subsubsection{切向摩擦接触力}
+
+计算切向摩擦力时采用如下正则化的摩擦系数，即
+\begin{equation}\label{eq:11.74}
+\mu(v_{\tau}) = \begin{cases}
+\mathrm{step5}(v_{\tau}, v_s, \mu_s, -v_s, -\mu_s), & v_{\tau} \leq v_s, \\[4pt]
+\mathrm{step5}(v_{\tau}, v_d, \mu_d, v_s, \mu_s), & v_{\tau} > v_s.
+\end{cases}
+\end{equation}
+这样做是为了在不直接计算静摩擦力的前提下避免数值计算出现高频震荡现象。
+
+\subsubsection{step5 函数}
+
+$\mathrm{step5}$ 函数可表示为
+\begin{equation}\label{eq:11.75}
+y(x) = \mathrm{step5}(x, x_U, y_U, x_L = 0, y_L = 0)
+\end{equation}
+
+\begin{equation}\label{eq:11.76}
+= \begin{cases}
+y_L, & x \leq x_L, \\[6pt]
+y_L + (y_U - y_L) (10 - 15r + 6r^2) r^3, & x \in (x_L, x_U], \\[6pt]
+y_U, & x > x_U,
+\end{cases}
+\end{equation}
+式中
+\begin{equation}\label{eq:11.77}
+r = \frac{x - x_L}{x_U - x_L}.
+\end{equation}
+
+$\mathrm{step5}$ 函数对自变量的一阶导数满足
+\begin{equation}\label{eq:11.78}
+\frac{dy(x)}{dx} = \begin{cases}
+0, & x \leq x_L, \\[6pt]
+30 \, \dfrac{y_U - y_L}{x_U - x_L} \, (1 - 2r + r^2) r^2, & x \in (x_L, x_U], \\[6pt]
+0, & x > x_U.
+\end{cases}
+\end{equation}
+
+$\mathrm{step5}$ 函数对自变量的二阶导数满足
+\begin{equation}\label{eq:11.79}
+\frac{d^2 y(x)}{dx^2} = \begin{cases}
+0, & x \leq x_L, \\[6pt]
+60 \, \dfrac{y_U - y_L}{(x_U - x_L)^2} \, (1 - 3r + 2r^2) r, & x \in (x_L, x_U], \\[6pt]
+0, & x > x_U.
+\end{cases}
+\end{equation}
+
+% ======================================================================
+% 附录：多元函数偏导数与雅可比矩阵
+% ======================================================================
+
+\section*{附录：多元函数偏导数与雅可比矩阵}
+
+\subsection{$n$ 元二次型函数的一阶偏导数}
+
+设 $\boldsymbol{x} \in \mathbb{R}^n$，$\boldsymbol{A} \in \mathbb{R}^{n \times n}$，$\boldsymbol{b} \in \mathbb{R}^n$。关于变量 $\boldsymbol{x}$ 的二次型函数 $y$ 可记为
+\begin{equation*}
+y = \boldsymbol{x}^{\mathrm{T}} \boldsymbol{A} \boldsymbol{x} + \boldsymbol{b}^{\mathrm{T}} \boldsymbol{x} = \sum_{i,j=1}^{n} x_i a_{i,j} x_j + \sum_{i=1}^{n} b_i x_i.
+\end{equation*}
+
+$n$ 元函数 $y$ 对变量 $x_k$ 的一阶偏导数为
+\begin{equation*}
+\begin{aligned}
+\frac{\partial y}{\partial x_k}
+&= \frac{\partial}{\partial x_k} \sum_{i,j=1}^{n} x_i a_{i,j} x_j + \frac{\partial}{\partial x_k} \sum_{i=1}^{n} b_i x_i \\
+&= \sum_{j=1}^{n} a_{k,j} x_j + \sum_{i=1}^{n} x_i a_{i,k} + b_k \\
+&= \boldsymbol{A}(k,:) \boldsymbol{x} + \boldsymbol{x}^{\mathrm{T}} \boldsymbol{A}(:,k) + b_k \\
+&= \boldsymbol{x}^{\mathrm{T}} \boldsymbol{A}(k,:)^{\mathrm{T}} + \boldsymbol{x}^{\mathrm{T}} \boldsymbol{A}(:,k) + b_k.
+\end{aligned}
+\end{equation*}
+
+二次型函数 $y = \boldsymbol{x}^{\mathrm{T}} \boldsymbol{A} \boldsymbol{x} + \boldsymbol{b}^{\mathrm{T}} \boldsymbol{x}$ 对变量 $x_k$ 的一阶偏导数
+\begin{equation*}
+\frac{\partial y}{\partial x_k} = \boldsymbol{x}^{\mathrm{T}} \boldsymbol{A}(k,:)^{\mathrm{T}} + \boldsymbol{x}^{\mathrm{T}} \boldsymbol{A}(:,k) + b_k.
+\end{equation*}
+
+则
+\begin{equation*}
+\begin{aligned}
+\frac{\partial y}{\partial \boldsymbol{x}} \triangleq \begin{bmatrix}
+\displaystyle \frac{\partial y}{\partial x_1} & \displaystyle \frac{\partial y}{\partial x_2} & \cdots & \displaystyle \frac{\partial y}{\partial x_n}
+\end{bmatrix}
+&= \boldsymbol{x}^{\mathrm{T}} \begin{bmatrix}
+\boldsymbol{A}(1,:)^{\mathrm{T}} & \boldsymbol{A}(2,:)^{\mathrm{T}} & \cdots & \boldsymbol{A}(n,:)^{\mathrm{T}}
+\end{bmatrix} \\
+&\quad + \boldsymbol{x}^{\mathrm{T}} \begin{bmatrix}
+\boldsymbol{A}(:,1) & \boldsymbol{A}(:,2) & \cdots & \boldsymbol{A}(:,n)
+\end{bmatrix} \\
+&\quad + \begin{bmatrix}
+b_1 & b_2 & \cdots & b_n
+\end{bmatrix} \\
+&= \boldsymbol{x}^{\mathrm{T}} \boldsymbol{A}^{\mathrm{T}} + \boldsymbol{x}^{\mathrm{T}} \boldsymbol{A} + \boldsymbol{b}^{\mathrm{T}}.
+\end{aligned}
+\end{equation*}
+
+二次型函数 $y = \boldsymbol{x}^{\mathrm{T}} \boldsymbol{A} \boldsymbol{x} + \boldsymbol{b}^{\mathrm{T}} \boldsymbol{x}$ 对变量 $\boldsymbol{x}$ 的一阶偏导数矩阵
+\begin{equation*}
+\boxed{\frac{\partial y}{\partial \boldsymbol{x}} \triangleq \begin{bmatrix}
+\displaystyle \frac{\partial y}{\partial x_1} & \displaystyle \frac{\partial y}{\partial x_2} & \cdots & \displaystyle \frac{\partial y}{\partial x_n}
+\end{bmatrix} = \boldsymbol{x}^{\mathrm{T}} \boldsymbol{A}^{\mathrm{T}} + \boldsymbol{x}^{\mathrm{T}} \boldsymbol{A} + \boldsymbol{b}^{\mathrm{T}}}.
+\end{equation*}
+
+当 $\boldsymbol{A} = \boldsymbol{A}^{\mathrm{T}}$ 时，一阶偏导数矩阵可简化为
+\begin{equation*}
+\frac{\partial y}{\partial \boldsymbol{x}} \triangleq \begin{bmatrix}
+\displaystyle \frac{\partial y}{\partial x_1} & \displaystyle \frac{\partial y}{\partial x_2} & \cdots & \displaystyle \frac{\partial y}{\partial x_n}
+\end{bmatrix} = 2 \boldsymbol{x}^{\mathrm{T}} \boldsymbol{A}^{\mathrm{T}} + \boldsymbol{b}^{\mathrm{T}}.
+\end{equation*}
+
+那么，寻求一阶偏导数为零的条件可简记为
+\begin{equation*}
+\boldsymbol{0} = 2 \boldsymbol{A} \boldsymbol{x} + \boldsymbol{b}.
+\end{equation*}
+
+\subsection{$n$ 元二次型函数的二阶偏导数}
+
+$n$ 元函数 $y = \boldsymbol{x}^{\mathrm{T}} \boldsymbol{A} \boldsymbol{x} + \boldsymbol{b}^{\mathrm{T}} \boldsymbol{x}$ 对变量 $x_k$ 的一阶偏导数为
+\begin{equation*}
+\frac{\partial y}{\partial x_k} = \sum_{j=1}^{n} a_{k,j} x_j + \sum_{i=1}^{n} x_i a_{i,k} + b_k.
+\end{equation*}
+
+那么
+\begin{equation*}
+\frac{\partial^2 y}{\partial x_k \partial x_l} = a_{k,l} + a_{l,k}.
+\end{equation*}
+
+由此可得，其二阶偏导矩阵 $\boldsymbol{H}$ 满足
+\begin{equation*}
+\boldsymbol{H} = \boldsymbol{A} + \boldsymbol{A}^{\mathrm{T}}.
+\end{equation*}
+
+当 $\boldsymbol{A} = \boldsymbol{A}^{\mathrm{T}}$ 时，
+\begin{equation*}
+\boldsymbol{H} = 2 \boldsymbol{A}.
+\end{equation*}
+
+\subsection{$n \times n$ 元二次型函数的一阶偏导数}
+
+设 $\boldsymbol{X} \in \mathbb{R}^{n \times n}$，$\boldsymbol{A} \in \mathbb{R}^{n \times n}$。关于变量 $\boldsymbol{X}$ 的一类二次型函数 $y$ 可记为
+\begin{equation*}
+y = \operatorname{tr} \left( \boldsymbol{X} \boldsymbol{A} \boldsymbol{X}^{\mathrm{T}} \right) = \sum_{i,j,k=1}^{n} x_{k,i} x_{k,j} a_{i,j}.
+\end{equation*}
+
+$n \times n$ 元函数 $y$ 对变量 $x_{l,m}$ 的一阶偏导数为
+\begin{equation*}
+\begin{aligned}
+\frac{\partial y}{\partial x_{l,m}}
+&= \frac{\partial}{\partial x_{l,m}} \sum_{i,j,k=1}^{n} x_{k,i} x_{k,j} a_{i,j} \\
+&= \sum_{j=1}^{n} a_{m,j} x_{l,j} + \sum_{i=1}^{n} x_{l,i} a_{i,m}.
+\end{aligned}
+\end{equation*}
+
+$n \times n$ 元函数 $y = \operatorname{tr} \left( \boldsymbol{X} \boldsymbol{A} \boldsymbol{X}^{\mathrm{T}} \right)$ 对变量 $x_{l,m}$ 的一阶偏导数为
+\begin{equation*}
+\frac{\partial y}{\partial x_{l,m}} = \sum_{j=1}^{n} a_{m,j} x_{l,j} + \sum_{i=1}^{n} x_{l,i} a_{i,m}.
+\end{equation*}
+
+则
+\begin{equation*}
+\frac{\partial y}{\partial \boldsymbol{X}} \triangleq \begin{bmatrix}
+\displaystyle \frac{\partial y}{\partial x_{1,1}} & \displaystyle \frac{\partial y}{\partial x_{1,2}} & \cdots & \displaystyle \frac{\partial y}{\partial x_{1,n}} \\[8pt]
+\displaystyle \frac{\partial y}{\partial x_{2,1}} & \displaystyle \frac{\partial y}{\partial x_{2,2}} & \cdots & \displaystyle \frac{\partial y}{\partial x_{2,n}} \\[4pt]
+\vdots & \vdots & \ddots & \vdots \\[4pt]
+\displaystyle \frac{\partial y}{\partial x_{n,1}} & \displaystyle \frac{\partial y}{\partial x_{n,2}} & \cdots & \displaystyle \frac{\partial y}{\partial x_{n,n}}
+\end{bmatrix} = \boldsymbol{X} \boldsymbol{A}^{\mathrm{T}} + \boldsymbol{X} \boldsymbol{A}.
+\end{equation*}
+
+当 $\boldsymbol{A} = \boldsymbol{A}^{\mathrm{T}}$ 时，
+\begin{equation*}
+\frac{\partial y}{\partial \boldsymbol{X}} = 2 \boldsymbol{X} \boldsymbol{A}.
+\end{equation*}
+
+\subsection{$n \times n$ 元复合二次型函数的一阶偏导数}
+
+设 $\boldsymbol{X} \in \mathbb{R}^{n \times n}$，$\boldsymbol{A} \in \mathbb{R}^{n \times n}$，$\boldsymbol{B} \in \mathbb{R}^{n \times n}$。关于变量 $\boldsymbol{X}$ 的一类复合二次型函数 $y$ 可记为
+\begin{equation*}
+y = \operatorname{tr} \left( (\boldsymbol{I} + \boldsymbol{X} \boldsymbol{B}) \boldsymbol{A} (\boldsymbol{I} + \boldsymbol{X} \boldsymbol{B})^{\mathrm{T}} \right) =: \operatorname{tr} \left( \boldsymbol{Z} \boldsymbol{A} \boldsymbol{Z}^{\mathrm{T}} \right) = \sum_{i,j,k=1}^{n} z_{k,i} z_{k,j} a_{i,j}.
+\end{equation*}
+
+$n \times n$ 元函数 $y$ 对变量 $x_{s,t}$ 的一阶偏导数为
+\begin{equation*}
+\begin{aligned}
+\frac{\partial y}{\partial x_{s,t}}
+&= \sum_{l,m=1}^{n} \left[ \frac{\partial}{\partial z_{l,m}} \left( \sum_{i,j,k=1}^{n} z_{k,i} z_{k,j} a_{i,j} \right) \frac{\partial z_{l,m}}{\partial x_{s,t}} \right] \\
+&= \sum_{l,m=1}^{n} \left[ \left( \sum_{j=1}^{n} a_{m,j} z_{l,j} + \sum_{i=1}^{n} z_{l,i} a_{i,m} \right) \frac{\partial z_{l,m}}{\partial x_{s,t}} \right] \\
+&= \sum_{m=1}^{n} \left[ \left( \sum_{j=1}^{n} a_{m,j} z_{s,j} + \sum_{i=1}^{n} z_{s,i} a_{i,m} \right) b_{t,m} \right].
+\end{aligned}
+\end{equation*}
+
+由此可得
+\begin{equation*}
+\boxed{\frac{\partial y}{\partial \boldsymbol{X}} = \boldsymbol{Z} \left( \boldsymbol{A}^{\mathrm{T}} + \boldsymbol{A} \right) \boldsymbol{B}^{\mathrm{T}}}.
+\end{equation*}
