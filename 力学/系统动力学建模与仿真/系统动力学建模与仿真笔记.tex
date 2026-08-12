@@ -36,7 +36,7 @@
 \newtheorem{proposition}[theorem]{命题}
 \newtheorem{example}[theorem]{例题}
 
-\renewenvironment{proof}[1][证明]{\par{\heiti \textbf{#1.}} \;\songti}{\qed\par}
+\renewenvironment{proof}[1][Derivations]{\par{\heiti \textbf{#1：}} \;\songti}{\qed\par}
 \newenvironment{solution}{\par\underline{\textbf{解.}} \;\kaishu}{\par}
 \newenvironment{remark}{\par\underline{\textbf{注.}} \;\fangsong}{\par}
 \newcommand{\intro}[1]{\rightline{\parbox[t]{5cm}{\footnotesize \fangsong\quad\quad #1 }}}
@@ -151,6 +151,21 @@
 	% 第二章 有限维广义变分原理
 	\chapter{有限维广义变分原理}
 	\input{ch02_有限维广义变分原理}
+
+	% 附录：页码用罗马数字
+	\pagenumbering{Roman}
+	\appendix
+	% 附录用大写罗马数字标号，去掉"第几章"字样
+	\titleformat{\chapter}[block]{\centering\Large\bfseries\kaishu}{\Roman{chapter}}{1em}{}
+	\titlespacing*{\chapter}{0pt}{*4}{*4}
+	\setcounter{chapter}{0}
+	\renewcommand{\thechapter}{\Roman{chapter}}
+	\chapter{转动惯量与惯性积}
+	\input{附录_惯性积}
+	% 恢复正文章节格式
+	\titleformat{\chapter}[display]{\LARGE}
+	{\color{structurecolor}\centering\small \color{structurecolor}第 \zhnumber{\arabic{chapter}} \ 章 }{0.5ex}
+	{\color{structurecolor}{\titlerule[1pt]}\huge \kaishu \centering \bfseries}
 
 
 }

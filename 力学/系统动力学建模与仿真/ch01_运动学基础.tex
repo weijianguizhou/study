@@ -301,5 +301,39 @@ $$\boldsymbol{e_A} = \boldsymbol{e_B}\cos\theta - (\boldsymbol{e_B}\times\boldsy
 然后再加上$\boldsymbol{\lambda}_i \triangleq \boldsymbol{\lambda}\cdot\boldsymbol{e}_{i|B}=\boldsymbol{\lambda}\cdot\boldsymbol{e}_{i|A}$
 代入即可得到式~\eqref{eq:方向余弦矩阵计算式}
 \end{proof}
+为了使我们对方向余弦有更好的理解，Kane的书里给出了一个例题。
+\begin{example}
+    在图~\ref{fig:方向余弦矩阵例题}中，B表示一个均匀矩形块，它是安装在航天器A中的扫描平台的一部分。初始时，B的各条边与固定在A中的单位矢量$\boldsymbol{\alpha_1}, \boldsymbol{\alpha_2}, \boldsymbol{\alpha_3}$平行，随后平台绕B的一条对角线做简单的90度旋转，如示意图所示。设$\mathbf{I}$为刚体B关于其质心B*的惯性并矢.且定义$\mathbf{I}_{ij|A}$为$$\mathbf{I}_{ij|A} \triangleq \boldsymbol{\alpha_i} \cdot \mathbf{I} \cdot \boldsymbol{\alpha_j} \quad(i,j=1,2,3)$$问旋转之后的$\mathbf{I}_{ij|A}\quad(i,j=1,2,3)$为多少？
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.8\textwidth]{Figure/例题2.1.png}
+        \caption{例题2.1}
+        \label{fig:方向余弦矩阵例题}
+    \end{figure}
+\end{example}
+\begin{solution}
+    设$\boldsymbol{b_1}, \boldsymbol{b_2}, \boldsymbol{b_3}$为固定在B中的单位向量，旋转前与$\boldsymbol{\alpha_1}, \boldsymbol{\alpha_2}, \boldsymbol{\alpha_3}$相等.
+
+    定义$\mathbf{I}_{ij|B}\triangleq\boldsymbol{b_i} \cdot \mathbf{I} \cdot \boldsymbol{b_j} \quad(i,j=1,2,3)$
+    那么$\boldsymbol{b_1}$、$\boldsymbol{b_2}$和$\boldsymbol{b_3}$平行于刚体B对B*点的惯性主轴，因此
+    $$\mathbf{I}_{12|B}=\mathbf{I}_{21|B}=\mathbf{I}_{23|B}=\mathbf{I}_{32|B}=\mathbf{I}_{31|B}=\mathbf{I}_{13|B}=0$$
+    非主对角线元素均为0，下面计算主对角线元素：
+    $$\mathbf{I}_{11|B}=\frac{m}{12}(12^{2}+3^{2})L^{2}=\frac{153}{12}mL^{2}$$
+    $$\mathbf{I}_{22|B}=\frac{m}{12}(3^2+4^2)L^2=\frac{25}{12}mL^2$$
+    $$\mathbf{I}_{33|B}=\frac{m}{12}(4^2+12^2)L^2=\frac{160}{12}mL^2$$
+
+    于是完整的惯性矩阵：$$\mathbf{I}_B=\frac{mL^2}{12}\begin{bmatrix}153&0&0\\0&25&0\\0&0&160\end{bmatrix}$$
+
+    转轴对应的单位矢量$\boldsymbol{\lambda}$为$$\mathbf{\lambda}=\frac{4\boldsymbol{\alpha_1}+12\boldsymbol{\alpha_2}+3\boldsymbol{\alpha_3}}{(4^{2}+12^{2}+3^{2})^{1/2}}=\frac{4}{13}\boldsymbol{\alpha_1}+\frac{12}{13}\boldsymbol{\alpha_2}+\frac{3}{13}\boldsymbol{\alpha_3}$$
+
+    由此得到$\boldsymbol{\lambda_1}=\frac{4}{13}$、$\boldsymbol{\lambda_2}=\frac{12}{13}$、$\boldsymbol{\lambda_3}=\frac{3}{13}$
+    由式~\eqref{eq:方向余弦矩阵计算式}可得方向余弦矩阵：
+    $$A=\frac{1}{169}\begin{bmatrix}16&9&168\\87&144&-16\\-144&88&9\end{bmatrix}$$
+    又$\mathbf{I}_B=A^\mathrm{T}\mathbf{I}_A A$,所以$A\mathbf{I}_B A^\mathrm{T}=\mathbf{I}_A $
+    由此计算出$\mathbf{I}_A$ $$\begin{aligned}
+        &I_{A}=\frac{mL^{2}}{12\times169\times169}\begin{bmatrix}16&9&168\\87&144&-16\\-144&88&9\end{bmatrix}\begin{bmatrix}153&0&0\\0&25&0\\0&0&160\end{bmatrix}\begin{bmatrix}16&87&-144\\9&144&88\\168&-16&9\end{bmatrix}\\&=\frac{mL^{2}}{12\times169\times169}\begin{bmatrix}4,557,033&-184,704&-90,792\\-184,704&1,717,417&-1,623,024\\-90,792&-1,623,034&3,379,168\end{bmatrix}&\mathrm{(72)}
+    \end{aligned}$$
+
+\end{solution}
 
 \section{欧拉参数}

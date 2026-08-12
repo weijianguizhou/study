@@ -3,7 +3,7 @@
 \contentsline {section}{\numberline {2.1}简单转动}{5}{section.2.1}%
 \contentsline {section}{\numberline {2.2}方向余弦}{7}{section.2.2}%
 \contentsline {subsubsection}{方向余弦矩阵的基本性质}{7}{equation.2.6}%
-\contentsline {section}{\numberline {2.3}欧拉参数}{13}{section.2.3}%
+\contentsline {section}{\numberline {2.3}欧拉参数}{14}{section.2.3}%
 \contentsline {chapter}{\numberline {3}有限维广义变分原理}{15}{chapter.3}%
 \contentsline {section}{\numberline {3.1}独立变分原理}{15}{section.3.1}%
 \contentsline {subsection}{\numberline {3.1.1}基础概念}{15}{subsection.3.1.1}%
@@ -18,4 +18,10 @@
 \contentsline {subsection}{\numberline {3.3.1}不含冗余约束的有限维非独立变分}{20}{subsection.3.3.1}%
 \contentsline {subsection}{\numberline {3.3.2}含冗余约束的有限维非独立变分原理}{23}{subsection.3.3.2}%
 \contentsline {section}{\numberline {3.4}非独立变分原理在多元函数条件极值问题的应用}{24}{section.3.4}%
+\contentsline {chapter}{\numberline {I}转动惯量与惯性积}{III}{appendix.A}%
+\contentsline {section}{\numberline {I.1}转动惯量与惯性积的计算公式}{III}{section.A.1}%
+\contentsline {subsubsection}{（二）标量转动惯量的计算}{III}{equation.A.1}%
+\contentsline {subsubsection}{（三）惯性积的计算}{IV}{equation.A.3}%
+\contentsline {subsubsection}{（四）$\mathbf {I}_{ij|B}$ 的对称性}{IV}{equation.A.7}%
+\contentsline {subsubsection}{（五）代入矩形块的具体尺寸}{IV}{equation.A.8}%
 \contentsfinish 
