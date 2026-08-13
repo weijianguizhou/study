@@ -295,6 +295,7 @@ f_{\boldsymbol{A}}(1) = -1 + \mathrm{tr}(\boldsymbol{A}) - \mathrm{tr}(\boldsymb
 这样式~\eqref{eq:方向余弦矩阵计算式}可以写成：
 \begin{equation}
     a_{ij}=\delta_{ij}\cos\theta-\epsilon_{ijk}\lambda_{k}\sin\theta+\lambda_{i}\lambda_{j}(1-\cos\theta)\quad(i,j=1,2,3)
+    \label{eq:方向余弦矩阵计算式紧凑}
 \end{equation}
 
 那么这个神奇的式子是怎么得到的呢？
@@ -480,16 +481,16 @@ $$
 \end{example}
 
 \begin{solution}
-按式~\eqref{eq:方向余弦转欧拉参数} 求 $\epsilon_i$ 时，需要先求 $C_{ij}=\mathbf{a}_i\cdot\mathbf{b}_j$。由图 1.3.1 中的几何关系可知
+按式~\eqref{eq:方向余弦转欧拉参数} 求 $\epsilon_i$ 时，需要先求 $a_{ij}=\mathbf{a}_i\cdot\mathbf{b}_j$。由图 1.3.1 中的几何关系可知
 $$
-C_{11}=\mathbf{a}_1\cdot\mathbf{b}_1=0,\quad
-C_{22}=\mathbf{a}_2\cdot\mathbf{b}_2=0,\quad
-C_{33}=\mathbf{a}_3\cdot\mathbf{b}_3=0,
+a_{11}=\mathbf{a}_1\cdot\mathbf{b}_1=0,\quad
+a_{22}=\mathbf{a}_2\cdot\mathbf{b}_2=0,\quad
+a_{33}=\mathbf{a}_3\cdot\mathbf{b}_3=0,
 $$
 $$
-C_{12}=\mathbf{a}_1\cdot\mathbf{b}_2=1,\quad C_{21}=-1;\quad
-C_{13}=-1,\quad C_{31}=0;\quad
-C_{23}=0,\quad C_{32}=1.
+a_{12}=\mathbf{a}_1\cdot\mathbf{b}_2=1,\quad a_{21}=-1;\quad
+a_{13}=-1,\quad a_{31}=0;\quad
+a_{23}=0,\quad a_{32}=1.
 $$
 代入式~\eqref{eq:方向余弦转欧拉参数}：
 $$
@@ -598,7 +599,7 @@ $$
         \label{fig:间接定向法例题}
     \end{figure}
 
-    两个航天器 $A$、$B$ 同时对两颗恒星 $P$、$Q$ 进行观测，以生成用于确定 $A$ 与 $B$ 之间相对姿态所需的数据。观测内容为测量图~\eqref{fig:间接定向法例题}中所示的角度 $\phi$ 和 $\psi$，其中 $O$ 表示 $A$ 中或 $B$ 中固定的点，$R$ 是 $P$ 或 $Q$，$\mathbf{c}_1,\mathbf{c}_2,\mathbf{c}_3$ 是 $A$ 中或 $B$ 中固定的右手正交单位向量。表~\ref{tab:1.5.1} 给出了这些角度的数值，要求确定方向余弦矩阵 $C$。
+    两个航天器 $A$、$B$ 同时对两颗恒星 $P$、$Q$ 进行观测，以生成用于确定 $A$ 与 $B$ 之间相对姿态所需的数据。观测内容为测量图~\eqref{fig:间接定向法例题}中所示的角度 $\phi$ 和 $\psi$，其中 $O$ 表示 $A$ 中或 $B$ 中固定的点，$R$ 是 $P$ 或 $Q$，$\mathbf{c}_1,\mathbf{c}_2,\mathbf{c}_3$ 是 $A$ 中或 $B$ 中固定的右手正交单位向量。表~\ref{tab:1.5.1} 给出了这些角度的数值，要求确定方向余弦矩阵 $A$。
 \end{example}
 
 \begin{solution}
@@ -657,22 +658,22 @@ $$
 &+\bigl(\tfrac{\sqrt{3}}{2}\mathbf{a}_1+\tfrac{1}{4}\mathbf{a}_2-\tfrac{1}{4}\mathbf{a}_3\bigr)\bigl(0\mathbf{b}_1+\tfrac{1}{2}\mathbf{b}_2+\tfrac{\sqrt{3}}{2}\mathbf{b}_3\bigr)\Big]
 \end{aligned}
 $$
-由式 (3) $C_{ij}=\mathbf{a}_i\cdot\boldsymbol{\sigma}\cdot\mathbf{b}_j$ 可逐元计算：
+由式 (3) $a_{ij}=\mathbf{a}_i\cdot\boldsymbol{\sigma}\cdot\mathbf{b}_j$ 可逐元计算：
 $$
 \begin{aligned}
-C_{11}=\mathbf{a}_1\cdot\boldsymbol{\sigma}\cdot\mathbf{b}_1
+a_{11}=\mathbf{a}_1\cdot\boldsymbol{\sigma}\cdot\mathbf{b}_1
 &=\bigl(-\tfrac{\sqrt{2}}{4}\cdot\tfrac{\sqrt{6}}{4}+\tfrac{\sqrt{6}}{8}\cdot\tfrac{\sqrt{2}}{2}\bigr)\Big/\tfrac{7}{8}=0
 \\[4pt]
-C_{12}=\mathbf{a}_1\cdot\boldsymbol{\sigma}\cdot\mathbf{b}_2
+a_{12}=\mathbf{a}_1\cdot\boldsymbol{\sigma}\cdot\mathbf{b}_2
 &=\bigl(-\tfrac{\sqrt{2}}{4}\cdot\tfrac{\sqrt{6}}{4}-\tfrac{\sqrt{6}}{8}\cdot\tfrac{\sqrt{2}}{2}+\tfrac{\sqrt{3}}{2}\cdot\tfrac{1}{2}\bigr)\Big/\tfrac{7}{8}=0
 \\[4pt]
-C_{13}=\mathbf{a}_1\cdot\boldsymbol{\sigma}\cdot\mathbf{b}_3
+a_{13}=\mathbf{a}_1\cdot\boldsymbol{\sigma}\cdot\mathbf{b}_3
 &=\bigl(\tfrac{\sqrt{2}}{4}\cdot\tfrac{\sqrt{2}}{4}+\tfrac{\sqrt{3}}{2}\cdot\tfrac{\sqrt{3}}{2}\bigr)\Big/\tfrac{7}{8}=1
 \end{aligned}
 $$
 类似地计算其余元，最终得方向余弦矩阵
 $$
-C=\begin{bmatrix}0 & 0 & 1\\ 0 & 1 & 0\\ -1 & 0 & 0\end{bmatrix}
+A=\begin{bmatrix}0 & 0 & 1\\ 0 & 1 & 0\\ -1 & 0 & 0\end{bmatrix}
 $$
 这表明 $A$ 系是 $B$ 系绕 $\mathbf{b}_2$ 轴旋转 $90°$（右手定则）所得到的。
 \end{solution}
@@ -849,52 +850,59 @@ $$
 
 当刚体 $B$ 在参考系 $A$ 中作任意转动时，可以用三个角度 $\theta_1$、$\theta_2$、$\theta_3$ 来刻画其方向，这三个角度称为\textbf{方向角}。方向角可以通过依次进行三次简单转动得到，且这三次转动所绕的轴既可以取自固定在参考系中的单位向量，也可以取自固定在刚体内部的单位向量。
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figure/陀螺转子.png}
+        \caption{陀螺转子}
+        \label{fig:陀螺转子}
+\end{figure}
+
 实现这一目标的第一种方法是依次对 $B$ 进行一次角度为 $\theta_1$ 的 $\mathbf{a}_1$ 旋转，一次角度为 $\theta_2$ 的 $\mathbf{a}_2$ 旋转，以及一次角度为 $\theta_3$ 的 $\mathbf{a}_3$ 旋转；在此过程中，$B$ 最终相对于 $A$ 的方向余弦矩阵为
 
 \begin{equation}\label{eq:方向角:a1a2a3}
-C = \left[
+A = \left[
 \begin{array}{ccc}
-c_1 c_2 c_3 - s_1 s_3 & -c_1 c_2 s_3 - s_1 c_3 & c_1 s_2 \\
-s_1 c_2 c_3 + c_1 s_3 & -s_1 c_2 s_3 + c_1 c_3 & s_1 s_2 \\
--s_2 c_3 & s_2 s_3 & c_2
+c_2 c_3 & s_1 s_2 c_3 - s_3 c_1 & c_1 s_2 c_3 + s_1 s_3 \\
+c_2 s_3 & s_1 s_2 s_3 + c_1 c_3 & c_1 s_2 s_3 - s_1 c_3 \\
+-s_2 & s_1 c_2 & c_1 c_2
 \end{array}
 \right]
 \end{equation}
 
 其中 $c_i \triangleq \cos\theta_i$，$s_i \triangleq \sin\theta_i$（$i=1,2,3$）。
 
-若 $|C_{31}| \ne 1$，则通过取
+若 $|a_{31}| \ne 1$，则通过取
 $$
-\theta_2 = \sin^{-1}(-C_{31}),\quad -\frac{\pi}{2} < \theta_2 < \frac{\pi}{2}
+\theta_2 = \sin^{-1}(-a_{31}),\quad -\frac{\pi}{2} < \theta_2 < \frac{\pi}{2}
 $$
 可得到合适的 $\theta_1$、$\theta_2$、$\theta_3$ 值。接下来，在计算出 $c_2$ 后，定义 $\alpha$ 为
 $$
-\alpha \triangleq \sin^{-1}\frac{C_{32}}{c_2} \quad -\frac{\pi}{2} \le \alpha \le \frac{\pi}{2}
+\alpha \triangleq \sin^{-1}\frac{a_{32}}{c_2} \quad -\frac{\pi}{2} \le \alpha \le \frac{\pi}{2}
 $$
 并令
 $$
-\theta_1 = \begin{cases} \alpha & \text{如果 } C_{33} \ge 0 \\ \pi - \alpha & \text{如果 } C_{33} < 0 \end{cases}
+\theta_1 = \begin{cases} \alpha & \text{如果 } a_{33} \ge 0 \\ \pi - \alpha & \text{如果 } a_{33} < 0 \end{cases}
 $$
 同样地，定义 $\beta$ 为
 $$
-\beta \triangleq \sin^{-1}\frac{C_{21}}{c_2} \quad -\frac{\pi}{2} \le \beta \le \frac{\pi}{2}
+\beta \triangleq \sin^{-1}\frac{a_{21}}{c_2} \quad -\frac{\pi}{2} \le \beta \le \frac{\pi}{2}
 $$
 并取
 $$
-\theta_3 = \begin{cases} \beta & \text{如果 } C_{11} \ge 0 \\ \pi - \beta & \text{如果 } C_{11} < 0 \end{cases}
+\theta_3 = \begin{cases} \beta & \text{如果 } a_{11} \ge 0 \\ \pi - \beta & \text{如果 } a_{11} < 0 \end{cases}
 $$
 
-若 $|C_{31}| = 1$，则取
+若 $|a_{31}| = 1$，则取
 $$
-\theta_2 = \begin{cases} -\dfrac{\pi}{2} & \text{如果 } C_{31} = 1 \\[4pt] \dfrac{\pi}{2} & \text{如果 } C_{31} = -1 \end{cases}
+\theta_2 = \begin{cases} -\dfrac{\pi}{2} & \text{如果 } a_{31} = 1 \\[4pt] \dfrac{\pi}{2} & \text{如果 } a_{31} = -1 \end{cases}
 $$
 并定义 $\alpha$ 为
 $$
-\alpha \triangleq \sin^{-1}(-C_{23}) \quad -\frac{\pi}{2} \le \alpha \le \frac{\pi}{2}
+\alpha \triangleq \sin^{-1}(-a_{23}) \quad -\frac{\pi}{2} \le \alpha \le \frac{\pi}{2}
 $$
 并取
 $$
-\theta_1 = \begin{cases} \alpha & \text{如果 } C_{22} \ge 0 \\ \pi - \alpha & \text{如果 } C_{22} < 0 \end{cases}
+\theta_1 = \begin{cases} \alpha & \text{如果 } a_{22} \ge 0 \\ \pi - \alpha & \text{如果 } a_{22} < 0 \end{cases}
 $$
 和
 $$
@@ -902,10 +910,10 @@ $$
 $$
 换句话说，这种情况下只需两次旋转即可。
 
-实现相同目标的第二种方法是依次对 $B$ 进行一次角度为 $\theta_1$ 的 $\mathbf{b}_1$ 旋转，一次角度为 $\theta_2$ 的 $\mathbf{b}_2$ 旋转，以及一次角度为 $\theta_3$ 的 $\mathbf{b}_3$ 旋转。在上一次旋转之后，将 $\mathbf{a}_1$、$\mathbf{a}_2$、$\mathbf{a}_3$ 映射到 $\mathbf{b}_1$、$\mathbf{b}_2$、$\mathbf{b}_3$ 的矩阵 $C$ 如式~\eqref{eq:方向角:b1b2b3} 所示，则为
+实现相同目标的第二种方法是依次对 $B$ 进行一次角度为 $\theta_1$ 的 $\mathbf{b}_1$ 旋转，一次角度为 $\theta_2$ 的 $\mathbf{b}_2$ 旋转，以及一次角度为 $\theta_3$ 的 $\mathbf{b}_3$ 旋转。在上一次旋转之后，将 $\mathbf{a}_1$、$\mathbf{a}_2$、$\mathbf{a}_3$ 映射到 $\mathbf{b}_1$、$\mathbf{b}_2$、$\mathbf{b}_3$ 的矩阵 $A$ 如式~\eqref{eq:方向角:b1b2b3} 所示，则为
 
 \begin{equation}\label{eq:方向角:b1b2b3}
-C = \left[
+A = \left[
 \begin{array}{ccc}
 c_2 c_3 & -c_2 s_3 & s_2 \\
 s_1 s_2 c_3 + s_3 c_1 & -s_1 s_2 s_3 + c_3 c_1 & -s_1 c_2 \\
@@ -914,33 +922,33 @@ s_1 s_2 c_3 + s_3 c_1 & -s_1 s_2 s_3 + c_3 c_1 & -s_1 c_2 \\
 \right]
 \end{equation}
 
-若 $|C_{13}| \ne 1$，则通过取
+若 $|a_{13}| \ne 1$，则通过取
 $$
-\theta_2 = \sin^{-1} C_{13},\quad -\frac{\pi}{2} < \theta_2 < \frac{\pi}{2}
+\theta_2 = \sin^{-1} a_{13},\quad -\frac{\pi}{2} < \theta_2 < \frac{\pi}{2}
 $$
 可得到合适的 $\theta_1$、$\theta_2$、$\theta_3$ 值。此时定义
 $$
-\alpha \triangleq \sin^{-1}\frac{-C_{23}}{c_2} \quad -\frac{\pi}{2} \le \alpha \le \frac{\pi}{2}
+\alpha \triangleq \sin^{-1}\frac{-a_{23}}{c_2} \quad -\frac{\pi}{2} \le \alpha \le \frac{\pi}{2}
 $$
 $$
-\theta_1 = \begin{cases} \alpha & \text{如果 } C_{33} \ge 0 \\ \pi - \alpha & \text{如果 } C_{33} < 0 \end{cases}
+\theta_1 = \begin{cases} \alpha & \text{如果 } a_{33} \ge 0 \\ \pi - \alpha & \text{如果 } a_{33} < 0 \end{cases}
 $$
 $$
-\beta \triangleq \sin^{-1}\frac{-C_{12}}{c_2} \quad -\frac{\pi}{2} \le \beta \le \frac{\pi}{2}
+\beta \triangleq \sin^{-1}\frac{-a_{12}}{c_2} \quad -\frac{\pi}{2} \le \beta \le \frac{\pi}{2}
 $$
 $$
-\theta_3 = \begin{cases} \beta & \text{如果 } C_{11} \ge 0 \\ \pi - \beta & \text{如果 } C_{11} < 0 \end{cases}
+\theta_3 = \begin{cases} \beta & \text{如果 } a_{11} \ge 0 \\ \pi - \beta & \text{如果 } a_{11} < 0 \end{cases}
 $$
 
-而如果 $|C_{13}| = 1$，则可以设
+而如果 $|a_{13}| = 1$，则可以设
 $$
-\theta_2 = \begin{cases} \dfrac{\pi}{2} & \text{如果 } C_{13} = 1 \\[4pt] -\dfrac{\pi}{2} & \text{如果 } C_{13} = -1 \end{cases}
-$$
-$$
-\alpha \triangleq \sin^{-1} C_{32} \quad -\frac{\pi}{2} \le \alpha \le \frac{\pi}{2}
+\theta_2 = \begin{cases} \dfrac{\pi}{2} & \text{如果 } a_{13} = 1 \\[4pt] -\dfrac{\pi}{2} & \text{如果 } a_{13} = -1 \end{cases}
 $$
 $$
-\theta_1 = \begin{cases} \alpha & \text{如果 } C_{22} \ge 0 \\ \pi - \alpha & \text{如果 } C_{22} < 0 \end{cases}
+\alpha \triangleq \sin^{-1} a_{32} \quad -\frac{\pi}{2} \le \alpha \le \frac{\pi}{2}
+$$
+$$
+\theta_1 = \begin{cases} \alpha & \text{如果 } a_{22} \ge 0 \\ \pi - \alpha & \text{如果 } a_{22} < 0 \end{cases}
 $$
 $$
 \theta_3 = 0
@@ -949,42 +957,42 @@ $$
 
 此外，也可以通过进行三次连续旋转来将 $B$ 转换为相对于 $A$ 的任意方向，且这三次旋转仅涉及两个不同的单位向量，这些向量可以固定在参考系或刚体内部。具体而言，若刚体 $B$ 先依次经历一次 $\mathbf{a}_1$ 旋转角度为 $\theta_1$，再经历一次 $\mathbf{a}_2$ 旋转角度为 $\theta_2$，然后再次经历一次 $\mathbf{a}_1$ 旋转，但这次旋转角度为 $\theta_3$，则有
 
-$$
-C = \left[
+\begin{equation}\label{eq:方向角:a1a2a1}
+A = \left[
 \begin{array}{ccc}
 c_2 & s_1 s_2 & c_1 s_2 \\
 s_2 s_3 & c_1 c_3 - s_1 c_2 s_3 & -s_1 c_3 - c_1 c_2 s_3 \\
 -s_2 c_3 & s_1 c_3 + c_1 c_2 s_3 & c_1 c_2 c_3 - s_1 s_3
 \end{array}
 \right]
+\end{equation}
+
+如果 $|a_{11}| \ne 1$，则可取
+$$
+\theta_2 = \cos^{-1} a_{11},\quad 0 < \theta_2 < \pi
+$$
+$$
+\alpha \triangleq \sin^{-1}\frac{a_{12}}{s_2} \quad -\frac{\pi}{2} \le \alpha \le \frac{\pi}{2}
+$$
+$$
+\theta_1 = \begin{cases} \alpha & \text{如果 } a_{13} \ge 0 \\ \pi - \alpha & \text{如果 } a_{13} < 0 \end{cases}
+$$
+$$
+\beta \triangleq \sin^{-1}\frac{a_{21}}{s_2} \quad -\frac{\pi}{2} \le \beta \le \frac{\pi}{2}
+$$
+$$
+\theta_3 = \begin{cases} \beta & \text{如果 } a_{31} < 0 \\ \pi - \beta & \text{如果 } a_{31} \ge 0 \end{cases}
 $$
 
-如果 $|C_{11}| \ne 1$，则可取
+当 $|a_{11}| = 1$ 时，可以令
 $$
-\theta_2 = \cos^{-1} C_{11},\quad 0 < \theta_2 < \pi
-$$
-$$
-\alpha \triangleq \sin^{-1}\frac{C_{12}}{s_2} \quad -\frac{\pi}{2} \le \alpha \le \frac{\pi}{2}
+\theta_2 = \begin{cases} 0 & \text{如果 } a_{11} = 1 \\ \pi & \text{如果 } a_{11} = -1 \end{cases}
 $$
 $$
-\theta_1 = \begin{cases} \alpha & \text{如果 } C_{13} \ge 0 \\ \pi - \alpha & \text{如果 } C_{13} < 0 \end{cases}
+\alpha \triangleq \sin^{-1}(-a_{23}) \quad -\frac{\pi}{2} \le \alpha \le \frac{\pi}{2}
 $$
 $$
-\beta \triangleq \sin^{-1}\frac{C_{21}}{s_2} \quad -\frac{\pi}{2} \le \beta \le \frac{\pi}{2}
-$$
-$$
-\theta_3 = \begin{cases} \beta & \text{如果 } C_{31} < 0 \\ \pi - \beta & \text{如果 } C_{31} \ge 0 \end{cases}
-$$
-
-当 $|C_{11}| = 1$ 时，可以令
-$$
-\theta_2 = \begin{cases} 0 & \text{如果 } C_{11} = 1 \\ \pi & \text{如果 } C_{11} = -1 \end{cases}
-$$
-$$
-\alpha \triangleq \sin^{-1}(-C_{23}) \quad -\frac{\pi}{2} \le \alpha \le \frac{\pi}{2}
-$$
-$$
-\theta_1 = \begin{cases} \alpha & \text{如果 } C_{22} \ge 0 \\ \pi - \alpha & \text{如果 } C_{22} < 0 \end{cases}
+\theta_1 = \begin{cases} \alpha & \text{如果 } a_{22} \ge 0 \\ \pi - \alpha & \text{如果 } a_{22} < 0 \end{cases}
 $$
 $$
 \theta_3 = 0
@@ -992,43 +1000,115 @@ $$
 
 最后，如果连续的旋转依次为：先以 $\mathbf{b}_1$ 旋转角度 $\theta_1$，再以 $\mathbf{b}_2$ 旋转角度 $\theta_2$，然后再次以 $\mathbf{b}_1$ 旋转，但这次旋转角度为 $\theta_3$，则
 
-$$
-C = \left[
+\begin{equation}\label{eq:方向角:b1b2b1}
+A = \left[
 \begin{array}{ccc}
 c_2 & s_2 s_3 & s_2 c_3 \\
 s_1 s_2 & -s_1 c_2 s_3 + c_3 c_1 & -s_1 c_2 c_3 - s_3 c_1 \\
 -c_1 s_2 & c_1 c_2 s_3 + c_3 s_1 & c_1 c_2 c_3 - s_3 s_1
 \end{array}
 \right]
+\end{equation}
+
+如果 $|a_{11}| \ne 1$，则可以通过以下方式求出 $\theta_1$、$\theta_2$ 和 $\theta_3$
+$$
+\theta_2 = \cos^{-1} a_{11} \quad 0 < \theta_2 < \pi
+$$
+$$
+\alpha \triangleq \sin^{-1} \frac{a_{21}}{s_2} \quad -\frac{\pi}{2} \le \alpha \le \frac{\pi}{2}
+$$
+$$
+\theta_1 = \begin{cases} \alpha & \text{如果 } a_{31} < 0 \\ \pi - \alpha & \text{如果 } a_{31} \ge 0 \end{cases}
+$$
+$$
+\beta \triangleq \sin^{-1}\frac{a_{12}}{s_2} \quad -\frac{\pi}{2} \le \beta \le \frac{\pi}{2}
+$$
+$$
+\theta_3 = \begin{cases} \beta & \text{如果 } a_{13} \ge 0 \\ \pi - \beta & \text{如果 }a_{13} < 0 \end{cases}
 $$
 
-如果 $|C_{11}| \ne 1$，则可以通过以下方式求出 $\theta_1$、$\theta_2$ 和 $\theta_3$
+而当 $|a_{11}| = 1$ 时，可使用
 $$
-\theta_2 = \cos^{-1} C_{11} \quad 0 < \theta_2 < \pi
-$$
-$$
-\alpha \triangleq \sin^{-1} \frac{C_{21}}{s_2} \quad -\frac{\pi}{2} \le \alpha \le \frac{\pi}{2}
+\theta_2 = \begin{cases} 0 & \text{如果 } a_{11} = 1 \\ \pi & \text{如果 } a_{11} = -1 \end{cases}
 $$
 $$
-\theta_1 = \begin{cases} \alpha & \text{如果 } C_{31} < 0 \\ \pi - \alpha & \text{如果 } C_{31} \ge 0 \end{cases}
+\alpha \triangleq \sin^{-1} a_{32} \quad -\frac{\pi}{2} \le \alpha \le \frac{\pi}{2}
 $$
 $$
-\beta \triangleq \sin^{-1}\frac{C_{12}}{s_2} \quad -\frac{\pi}{2} \le \beta \le \frac{\pi}{2}
-$$
-$$
-\theta_3 = \begin{cases} \beta & \text{如果 } C_{13} \ge 0 \\ \pi - \beta & \text{如果 } C_{13} < 0 \end{cases}
-$$
-
-而当 $|C_{11}| = 1$ 时，可使用
-$$
-\theta_2 = \begin{cases} 0 & \text{如果 } C_{11} = 1 \\ \pi & \text{如果 } C_{11} = -1 \end{cases}
-$$
-$$
-\alpha \triangleq \sin^{-1} C_{32} \quad -\frac{\pi}{2} \le \alpha \le \frac{\pi}{2}
-$$
-$$
-\theta_1 = \begin{cases} \alpha & \text{如果 } C_{13} \ge 0 \\ \pi - \alpha & \text{如果 } C_{13} < 0 \end{cases}
+\theta_1 = \begin{cases} \alpha & \text{如果 } a_{13} \ge 0 \\ \pi - \alpha & \text{如果 } a_{13} < 0 \end{cases}
 $$
 $$
 \theta_3 = 0
 $$
+
+
+式~\eqref{eq:方向角:a1a2a3} 与式~\eqref{eq:方向角:b1b2b3} 中的矩阵彼此紧密相关：将其中一个矩阵中的 $\theta_i$ 替换为 $-\theta_i$（$i=1,2,3$）并转置，即可得到另一个；式~\eqref{eq:方向角:a1a2a1} 与式~\eqref{eq:方向角:b1b2b1} 中的矩阵也具有类似关系。这一事实具有如下物理意义（可借助方向余弦矩阵的正交性 $\boldsymbol{A}^{-1}=\boldsymbol{A}^{\mathrm{T}}$ 加以验证）：若刚体 $B$ 先后经历转角分别为 $\theta_1$、$\theta_2$、$\theta_3$ 的 $\mathbf{a}_1$、$\mathbf{a}_2$、$\mathbf{a}_3$ 旋转，那么接下来再使 $B$ 先后经历转角分别为 $\theta_1$、$\theta_2$、$\theta_3$ 的 $-\mathbf{b}_1$、$-\mathbf{b}_2$、$-\mathbf{b}_3$ 旋转，即可使 $B$ 恢复到它在 $A$ 中的初始方向。
+
+类似地，仅使用四个单位向量，即可使 $B$ 依次经历以 $\theta_1\mathbf{a}_1,\theta_2\mathbf{a}_2,\theta_3\mathbf{a}_1,-\theta_1\mathbf{b}_1,-\theta_2\mathbf{b}_2,-\theta_3\mathbf{b}_1$ 表征的连续旋转，而不使 $B$ 在 $A$ 中的方向产生任何净变化。此外，涉及固定在 $A$ 中的单位向量的那些旋转，无论发生在涉及固定在 $B$ 中的单位向量的那些旋转之前还是之后，结果都一样；也就是说，由 $\theta_1\mathbf{b}_1,\theta_2\mathbf{b}_2,\theta_3\mathbf{b}_3,-\theta_1\mathbf{a}_1,-\theta_2\mathbf{a}_2,-\theta_3\mathbf{a}_3$ 以及由 $\theta_1\mathbf{b}_1,\theta_2\mathbf{b}_2,\theta_3\mathbf{b}_1,-\theta_1\mathbf{a}_1,-\theta_2\mathbf{a}_2,-\theta_3\mathbf{a}_1$ 表示的连续旋转序列，对 $B$ 在 $A$ 中的方向同样不产生净效果。
+
+为了指明所用的是哪一组三个角度，可以称第一种方法（式~\eqref{eq:方向角:a1a2a3} 及其反解公式）对应的为\textbf{空间三角度}（space-three angles），第二种方法（式~\eqref{eq:方向角:b1b2b3} 及其反解公式）对应的为\textbf{体三角度}（body-three angles），第三种方法（式~\eqref{eq:方向角:a1a2a1} 及其反解公式）对应的为\textbf{空间二角度}（space-two angles），第四种方法（式~\eqref{eq:方向角:b1b2b1} 及其反解公式）对应的为\textbf{体二角度}（body-two angles）；即使所用的角度与单位向量采用了上述各式以外的符号表示，这一术语仍然有意义。
+
+此外，一旦以这种方式确定了三个角度，总可以直接利用这些方程找到式~\eqref{eq:方向角:a1a2a3}、\eqref{eq:方向角:b1b2b3}、\eqref{eq:方向角:a1a2a1} 或 \eqref{eq:方向角:b1b2b1} 的适当替代。例如，设 $\mathbf{x},\mathbf{y},\mathbf{z}$ 与 $\boldsymbol{\xi},\boldsymbol{\eta},\boldsymbol{\zeta}$ 分别为固定在参考系 $A$ 与刚体 $B$ 中的两组成右手正交单位向量，且初始时 $\mathbf{x}=\boldsymbol{\xi}$、$\mathbf{y}=\boldsymbol{\eta}$、$\mathbf{z}=\boldsymbol{\zeta}$；设 $B$ 依次经历角度为 $\gamma$ 的 $\mathbf{z}$ 旋转、角度为 $\beta$ 的 $\mathbf{y}$ 旋转和角度为 $\alpha$ 的 $\mathbf{x}$ 旋转；要求确定矩阵 $L$ 的各元素 $L_{ij}$（$i,j=1,2,3$），使得在最后一次旋转之后满足
+$$
+[\boldsymbol{\xi}\ \ \boldsymbol{\eta}\ \ \boldsymbol{\zeta}]=[\mathbf{x}\ \ \mathbf{y}\ \ \mathbf{z}]L
+$$
+于是，把 $\alpha$、$\beta$、$\gamma$ 认作空间三角度，可引入 $\mathbf{a}_i$、$\mathbf{b}_i$ 与 $\theta_i$（$i=1,2,3$）如下：
+$$
+\mathbf{a}_1\triangleq\mathbf{z},\qquad \mathbf{a}_2\triangleq\mathbf{y},\qquad \mathbf{a}_3\triangleq-\mathbf{x}
+$$
+$$
+\mathbf{b}_1\triangleq\boldsymbol{\zeta},\qquad \mathbf{b}_2\triangleq\boldsymbol{\eta},\qquad \mathbf{b}_3\triangleq-\boldsymbol{\xi}
+$$
+$$
+\theta_1\triangleq\gamma,\qquad \theta_2\triangleq\beta,\qquad \theta_3\triangleq-\alpha
+$$
+此时给定的旋转序列由 $\theta_1\mathbf{a}_1,\theta_2\mathbf{a}_2,\theta_3\mathbf{a}_3$ 表示；然后参照式~\eqref{eq:方向角:a1a2a3}，即可用 $\alpha$、$\beta$、$\gamma$ 表示与 $L_{ij}$ 相关的内积。例如，
+$$
+L_{21}=\mathbf{y}\cdot\boldsymbol{\xi}=\mathbf{a}_2\cdot(-\mathbf{b}_3)=-a_{23}=-c_1s_2s_3+c_3s_1=\cos\gamma\sin\beta\sin\alpha+\cos\alpha\sin\gamma
+$$
+
+在航天器动力学文献中会遇到各种各样的方向余弦矩阵，附录 I 中列出了其中 24 种。
+
+\subsubsection{推导}
+
+为验证式~\eqref{eq:方向角:a1a2a3} 的正确性，可运用式~\eqref{eq:连续转动:方向余弦乘积}，并借助式~\eqref{eq:方向余弦矩阵计算式紧凑} 与式~\eqref{eq:方向余弦矩阵计算式} 构造 $C_{A\bar B}$、$C_{\bar B\bar B}$ 与 $C_{\bar B B}$。具体而言，对 $\mathbf{a}_1$ 旋转，令
+$$
+C_{A\bar B}=\begin{bmatrix}1&0&0\\0&c_1&-s_1\\0&s_1&c_1\end{bmatrix}
+$$
+其次，为构造刻画 $\mathbf{a}_2$ 旋转的矩阵 $C_{\bar B\bar B}$，令 $\boldsymbol{\lambda}_A$ 与 $\boldsymbol{\lambda}_{\bar B}$ 分别表示以 $\mathbf{a}_2\cdot\mathbf{a}_i$ 与 $\mathbf{a}_2\cdot\mathbf{b}_i$（$i=1,2,3$）为元素的行矩阵，则
+$$
+\boldsymbol{\lambda}_A=[0\ \ 1\ \ 0]
+$$
+$$
+\boldsymbol{\lambda}_{\bar B}=\boldsymbol{\lambda}_A\,C_{A\bar B}=[0\ \ c_1\ \ -s_1]
+$$
+于是由式~\eqref{eq:方向余弦矩阵计算式}，令 $\lambda_1=0$、$\lambda_2=c_1$、$\lambda_3=-s_1$、$\theta=\theta_2$，得
+$$
+C_{\bar B\bar B}=\begin{bmatrix}c_2&s_1s_2&c_1s_2\\-s_1s_2&1+s_1^2(c_2-1)&s_1c_1(c_2-1)\\-c_1s_2&s_1c_1(c_2-1)&1+c_1^2(c_2-1)\end{bmatrix}
+$$
+与头两次旋转等价的单次旋转所对应的矩阵 $C_{A\bar B}$ 为
+$$
+C_{A\bar B}=C_{A\bar B}\,C_{\bar B\bar B}=\begin{bmatrix}c_2&s_1s_2&c_1s_2\\0&c_1&-s_1\\-s_2&s_1c_2&c_1c_2\end{bmatrix}
+$$
+为把 $\mathbf{a}_3$ 分解为构造矩阵 $C_{\bar B B}$ 所需的分量，可借助式~\eqref{eq:方向余弦的定义} 得到
+$$
+[0\ \ 0\ \ 1]\,C_{A\bar B}=[-s_2\ \ s_1c_2\ \ c_1c_2]
+$$
+之后由式~\eqref{eq:方向余弦矩阵计算式} 得
+$$
+C_{\bar B B}=\begin{bmatrix}s_2^2+c_2^2c_3&-c_2[c_1s_3+s_1s_2(1-c_3)]&c_2[s_1s_3-c_1s_2(1-c_3)]\\c_2[c_1s_3+s_1s_2(1-c_3)]&c_3(1-s_1^2c_2^2)+s_1^2c_2^2&s_2s_3+s_1c_1c_2^2(1-c_3)\\-c_2[s_1s_3+c_1s_2(1-c_3)]&-s_2s_3+s_1c_1c_2^2(1-c_3)&1-(s_2^2+s_1^2c_2^2)(1-c_3)\end{bmatrix}
+$$
+将上面得到的 $C_{A\bar B}$、$C_{\bar B\bar B}$ 与 $C_{\bar B B}$ 三个矩阵代入式~\eqref{eq:连续转动:方向余弦乘积}，即可直接得到式~\eqref{eq:方向角:a1a2a3}。
+
+式~\eqref{eq:方向角:b1b2b3} 可由式~\eqref{eq:连续转动:方向余弦乘积} 配以下面三个矩阵得到：
+$$
+C_{A\bar B}=\begin{bmatrix}1&0&0\\0&c_1&-s_1\\0&s_1&c_1\end{bmatrix}
+$$
+$$
+C_{\bar B\bar B}=\begin{bmatrix}c_2&0&s_2\\0&1&0\\-s_2&0&c_2\end{bmatrix}
+$$
+$$
+C_{\bar B B}=\begin{bmatrix}c_3&-s_3&0\\s_3&c_3&0\\0&0&1\end{bmatrix}
+$$
+
+第一种方法的反解公式与第二种方法的反解公式分别是式~\eqref{eq:方向角:a1a2a3} 与式~\eqref{eq:方向角:b1b2b3} 的直接推论；而第三、第四种方法（式~\eqref{eq:方向角:a1a2a1} 与式~\eqref{eq:方向角:b1b2b1} 及其反解公式）可由与前两种方法推导类似的方法得到。

@@ -18,10 +18,26 @@
 	\input{数学基础}
 	\chapter{运动学基础}
 	\input{运动学基础}
-	% 第二章 有限维广义变分原理
+% 第二章 有限维广义变分原理
 	\chapter{有限维广义变分原理}
 	\input{有限维广义变分原理}
 
+	\appendix
+	% —— 附录专用样式（区别于正文）——
+	\titleformat{\chapter}[display]{\LARGE}
+	{\color{structurecolor}\centering\small \color{structurecolor}附录\ \thechapter}{0.5ex}
+	{\color{structurecolor}{\titlerule[1pt]}\huge \kaishu \centering \bfseries}
+	\titlecontents{chapter}[0em]{}{\large \fangsong{附录\ \thecontentslabel}}{}{\hfill\contentspage}
+	\titleformat{\section}[block]{\normalfont\Large\bfseries\kaishu\color{second}}
+	{\color{main}附录\ \thesection\quad}{0pt}{}
+	\titleformat{\subsection}[hang]{\bfseries}
+	{\color{third}\thesubsection\enspace}{1pt}{\color{structurecolor}}
+	\titleformat{\subsubsection}[hang]{\normalsize\bfseries}
+	{\color{third}\thesubsubsection\enspace}{1pt}{\color{structurecolor}}
+
+	\chapter{代数基础定理与性质的证明}
+	\label{appendix:证明}
+	\input{附录}
 
 }
 
@@ -29,6 +45,8 @@
 	\input{cover}
 
 	\newpage
+
+	\setcounter{tocdepth}{3}
 
 	\tableofcontents
 
