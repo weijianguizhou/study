@@ -1,0 +1,29 @@
+\contentsline {chapter}{\numberline {1}绪论}{3}{chapter.1}%
+\contentsline {chapter}{\numberline {2}数学基础}{5}{chapter.2}%
+\contentsline {section}{\numberline {2.1}多元函数微积分}{5}{section.2.1}%
+\contentsline {section}{\numberline {2.2}矩阵分析基础}{5}{section.2.2}%
+\contentsline {section}{\numberline {2.3}并矢}{5}{section.2.3}%
+\contentsline {chapter}{\numberline {3}运动学基础}{7}{chapter.3}%
+\contentsline {section}{\numberline {3.1}简单转动}{7}{section.3.1}%
+\contentsline {section}{\numberline {3.2}方向余弦}{9}{section.3.2}%
+\contentsline {subsubsection}{方向余弦矩阵的基本性质}{9}{equation.3.7}%
+\contentsline {section}{\numberline {3.3}欧拉参数}{17}{section.3.3}%
+\contentsline {section}{\numberline {3.4}罗德里格斯参数}{20}{section.3.4}%
+\contentsline {section}{\numberline {3.5}间接定向法}{21}{section.3.5}%
+\contentsline {section}{\numberline {3.6}连续转动}{24}{section.3.6}%
+\contentsline {section}{\numberline {3.7}方向角}{28}{section.3.7}%
+\contentsline {chapter}{\numberline {4}有限维广义变分原理}{33}{chapter.4}%
+\contentsline {section}{\numberline {4.1}独立变分原理}{33}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}基础概念}{33}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}独立变分原理}{34}{subsection.4.1.2}%
+\contentsline {section}{\numberline {4.2}独立变分原理在多元函数自由极值问题中的应用}{35}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}多元函数}{35}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}多元函数的自由极值}{36}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}多元函数的泰勒展开式}{36}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.2.4}多元函数的驻点}{37}{subsection.4.2.4}%
+\contentsline {subsection}{\numberline {4.2.5}多元函数的驻点为极值点的充要条件}{37}{subsection.4.2.5}%
+\contentsline {section}{\numberline {4.3}非独立变分原理}{38}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}不含冗余约束的有限维非独立变分}{38}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}含冗余约束的有限维非独立变分原理}{41}{subsection.4.3.2}%
+\contentsline {section}{\numberline {4.4}非独立变分原理在多元函数条件极值问题的应用}{42}{section.4.4}%
+\contentsfinish 

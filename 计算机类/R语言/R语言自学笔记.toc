@@ -1,0 +1,67 @@
+\contentsline {chapter}{\numberline {1}R语言简介}{5}{chapter.1}%
+\contentsline {section}{\numberline {1.1}安装网址}{5}{section.1.1}%
+\contentsline {section}{\numberline {1.2}界面操作示例}{7}{section.1.2}%
+\contentsline {section}{\numberline {1.3}一个简单的示例(不是Hello World)}{7}{section.1.3}%
+\contentsline {chapter}{\numberline {2}R语言预备知识}{9}{chapter.2}%
+\contentsline {section}{\numberline {2.1}基本命令}{9}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}获取工作目录}{9}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}设置工作目录}{9}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}注释}{9}{subsection.2.1.3}%
+\contentsline {subsection}{\numberline {2.1.4}变量名的命名}{10}{subsection.2.1.4}%
+\contentsline {subsection}{\numberline {2.1.5}赋值}{10}{subsection.2.1.5}%
+\contentsline {subsection}{\numberline {2.1.6}变量的显示}{10}{subsection.2.1.6}%
+\contentsline {subsection}{\numberline {2.1.7}查看与清除变量}{10}{subsection.2.1.7}%
+\contentsline {subsection}{\numberline {2.1.8}函数帮助文档查询}{11}{subsection.2.1.8}%
+\contentsline {subsection}{\numberline {2.1.9}软件的退出与保存}{11}{subsection.2.1.9}%
+\contentsline {subsection}{\numberline {2.1.10}保存数据}{11}{subsection.2.1.10}%
+\contentsline {section}{\numberline {2.2}R语言语法}{12}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}函数}{12}{subsection.2.2.1}%
+\contentsline {subsubsection}{输出函数}{12}{section*.3}%
+\contentsline {subsubsection}{安装R包}{12}{section*.4}%
+\contentsline {subsubsection}{文件的读取}{12}{section*.5}%
+\contentsline {paragraph}{常用读取函数对比表}{14}{table.caption.7}%
+\contentsline {paragraph}{注意事项：}{14}{section*.8}%
+\contentsline {subsubsection}{文件的输出}{14}{section*.9}%
+\contentsline {paragraph}{输出函数对比总结}{15}{table.caption.11}%
+\contentsline {paragraph}{温馨提示：}{15}{section*.12}%
+\contentsline {subsection}{\numberline {2.2.2}向量 (Vector)}{15}{subsection.2.2.2}%
+\contentsline {paragraph}{常用向量函数汇总表}{17}{table.caption.14}%
+\contentsline {paragraph}{注意事项：}{17}{section*.15}%
+\contentsline {subsection}{\numberline {2.2.3}NA 与 NULL 值}{18}{subsection.2.2.3}%
+\contentsline {paragraph}{NA 与 NULL 核心差异表}{18}{table.caption.17}%
+\contentsline {paragraph}{进阶提示：}{18}{section*.18}%
+\contentsline {subsection}{\numberline {2.2.4}矩阵 (Matrix)}{18}{subsection.2.2.4}%
+\contentsline {paragraph}{矩阵核心属性函数表}{20}{table.caption.20}%
+\contentsline {paragraph}{进阶提示：}{20}{section*.21}%
+\contentsline {subsection}{\numberline {2.2.5}列表 (List)}{20}{subsection.2.2.5}%
+\contentsline {paragraph}{列表核心操作汇总表}{21}{table.caption.23}%
+\contentsline {paragraph}{进阶提示：}{21}{section*.24}%
+\contentsline {subsection}{\numberline {2.2.6}数据框 (Data Frame)}{22}{subsection.2.2.6}%
+\contentsline {paragraph}{数据框处理常用函数表}{23}{table.caption.26}%
+\contentsline {paragraph}{进阶提示：}{23}{section*.27}%
+\contentsline {subsection}{\numberline {2.2.7}因子 (Factor)}{23}{subsection.2.2.7}%
+\contentsline {paragraph}{因子相关常用函数表}{24}{table.caption.29}%
+\contentsline {paragraph}{进阶提示：数值型因子的“陷阱”}{24}{section*.30}%
+\contentsline {subsection}{\numberline {2.2.8}常用数学与统计函数}{24}{subsection.2.2.8}%
+\contentsline {paragraph}{常用分布函数名对照表}{25}{table.caption.32}%
+\contentsline {paragraph}{进阶提示：}{25}{section*.33}%
+\contentsline {section}{\numberline {2.3}控制流与自定义函数}{25}{section.2.3}%
+\contentsline {paragraph}{控制流常用关键字与技巧表}{26}{table.caption.35}%
+\contentsline {paragraph}{进阶提示：避免“显式循环”}{26}{section*.36}%
+\contentsline {chapter}{\numberline {3}数据分析}{29}{chapter.3}%
+\contentsline {section}{\numberline {3.1}数据清洗与转换 (dplyr \& tidyr)}{29}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}dplyr 的核心动作 (Verbs)}{29}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}tidyr 的数据重塑}{29}{subsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.1.3}常用清洗函数对比总结}{29}{subsection.3.1.3}%
+\contentsline {section}{\numberline {3.2}数据可视化 (ggplot2)}{29}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}ggplot2 的基础语法结构}{30}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}常见图表类型 (Geoms)}{30}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}图形美化：颜色、标签与主题}{30}{subsection.3.2.3}%
+\contentsline {subsection}{\numberline {3.2.4}分面 (Faceting)}{31}{subsection.3.2.4}%
+\contentsline {subsection}{\numberline {3.2.5}常用外观调整函数对照表}{31}{subsection.3.2.5}%
+\contentsline {paragraph}{注意事项：}{31}{section*.39}%
+\contentsline {section}{\numberline {3.3}统计检验基础}{31}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}均值比较 (T-Test \& ANOVA)}{32}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}相关性与回归分析}{32}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}常用统计函数速查表}{32}{subsection.3.3.3}%
+\contentsline {paragraph}{注意事项：关于 P 值}{32}{section*.41}%
