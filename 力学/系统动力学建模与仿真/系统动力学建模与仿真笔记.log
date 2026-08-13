@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2026.2.15)  13 AUG 2026 21:07
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2026.2.15)  13 AUG 2026 21:19
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -1140,6 +1140,9 @@ Underfull \vbox (badness 1014) has occurred while \output is active []
 [14]
 
 [15]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
 
 [16]
 
@@ -1150,56 +1153,56 @@ Underfull \vbox (badness 1014) has occurred while \output is active []
 [19]
 
 [20]
-Overfull \hbox (71.62346pt too wide) detected at line 587
+Overfull \hbox (71.62346pt too wide) detected at line 595
 []
  []
 
 
-Overfull \hbox (55.44066pt too wide) detected at line 595
+Overfull \hbox (55.44066pt too wide) detected at line 603
 []
  []
 
 
-Overfull \hbox (30.15015pt too wide) detected at line 603
+Overfull \hbox (30.15015pt too wide) detected at line 611
 []
  []
 
 
 
 [21]
-Overfull \hbox (37.2647pt too wide) detected at line 631
+Overfull \hbox (37.2647pt too wide) detected at line 639
 [][][][] \OT1/cmr/m/n/12 = []([])([][])[]\OML/cmm/m/it/12 ;  [] \OT1/cmr/m/n/12 = ([][])[]\OML/cmm/m/it/12 ;  [] \OT1/cmr/m/n/12 = \OML/cmm/m/it/12 k []\OT1/cmr/m/n/12 ([][])[][]\OML/cmm/m/it/12 ;
  []
 
 
-Overfull \hbox (73.65303pt too wide) detected at line 637
+Overfull \hbox (73.65303pt too wide) detected at line 645
 []
  []
 
 
-Overfull \hbox (26.62355pt too wide) detected at line 646
+Overfull \hbox (26.62355pt too wide) detected at line 654
 []
- []
-
-
-Overfull \hbox (1.6215pt too wide) detected at line 662
-[][][][] \OT1/cmr/m/n/12 = []\OML/cmm/m/it/12 ;  [] \OT1/cmr/m/n/12 = [][]\OML/cmm/m/it/12 ;  [] \OT1/cmr/m/n/12 = []\OML/cmm/m/it/12 ;  [] \OT1/cmr/m/n/12 = [][][][]\OML/cmm/m/it/12 ;
- []
-
-
-Overfull \hbox (27.16228pt too wide) in paragraph at lines 662--664
-\TU/SimSun(0)/m/n/12 以 及 $[] \OT1/cmr/m/n/12 = []([] + [][])$\TU/SimSun(0)/m/n/12 、| $[] \OT1/cmr/m/n/12 = [][][][][] + [][][]$\TU/SimSun(0)/m/n/12 、| $[] \OT1/cmr/m/n/12 =
  []
 
 
 
 [22]
-Overfull \hbox (123.96329pt too wide) detected at line 678
+Overfull \hbox (1.6215pt too wide) detected at line 670
+[][][][] \OT1/cmr/m/n/12 = []\OML/cmm/m/it/12 ;  [] \OT1/cmr/m/n/12 = [][]\OML/cmm/m/it/12 ;  [] \OT1/cmr/m/n/12 = []\OML/cmm/m/it/12 ;  [] \OT1/cmr/m/n/12 = [][][][]\OML/cmm/m/it/12 ;
+ []
+
+
+Overfull \hbox (27.16228pt too wide) in paragraph at lines 670--672
+\TU/SimSun(0)/m/n/12 以 及 $[] \OT1/cmr/m/n/12 = []([] + [][])$\TU/SimSun(0)/m/n/12 、| $[] \OT1/cmr/m/n/12 = [][][][][] + [][][]$\TU/SimSun(0)/m/n/12 、| $[] \OT1/cmr/m/n/12 =
+ []
+
+
+Overfull \hbox (123.96329pt too wide) detected at line 686
 []
  []
 
 
-Overfull \hbox (135.762pt too wide) detected at line 690
+Overfull \hbox (135.762pt too wide) detected at line 698
 []
  []
 
@@ -1208,38 +1211,35 @@ Overfull \hbox (135.762pt too wide) detected at line 690
 [23]
 
 [24]
-Overfull \hbox (15.2614pt too wide) detected at line 790
+
+[25]
+Overfull \hbox (15.2614pt too wide) detected at line 798
 []
  []
 
 
-Overfull \hbox (70.73088pt too wide) detected at line 796
+Overfull \hbox (70.73088pt too wide) detected at line 804
 [] [][][] \OT1/cmr/m/n/12 = [][];  [] [][][] = [][]([][][])[];  [] [][][] = ([][][])[][][]\OML/cmm/m/it/12 :
  []
 
 
-
-[25]
-Overfull \hbox (51.1322pt too wide) detected at line 814
+Overfull \hbox (51.1322pt too wide) detected at line 822
 \OML/cmm/m/it/12 ^^L \OT1/cmr/m/n/12 = 1 + [][][][][]\OML/cmm/m/it/12 ;  [] \OT1/cmr/m/n/12 = [][][]\OML/cmm/m/it/12 ;  [] \OT1/cmr/m/n/12 = ([][])[][]\OML/cmm/m/it/12 ;  [] \OT1/cmr/m/n/12 = ([] \OMS/cmsy/m/n/12 ^^@ [][][]\OT1/cmr/m/n/12 )[]\OML/cmm/m/it/12 ;  [] \OT1/cmr/m/n/12 = ([] \OMS/cmsy/m/n/12 ^^@ [][][]\OT1/cmr/m/n/12 )[][]\OML/cmm/m/it/12 ;
  []
 
 
 
 [26]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
 
 [27]
-Overfull \hbox (103.71422pt too wide) detected at line 897
+Overfull \hbox (103.71422pt too wide) detected at line 905
 []
  []
 
 
 
 [28]
-Overfull \hbox (6.23233pt too wide) in paragraph at lines 920--921
+Overfull \hbox (6.23233pt too wide) in paragraph at lines 928--929
 []\OT1/cmr/m/n/12 ([[] []]) = \OML/cmm/m/it/12 m$ \TU/SimSun(0)/m/n/12 时 有 唯 一 解；|  两 者 相 等 但 小 于 $\OML/cmm/m/it/12 m$ \TU/SimSun(0)/m/n/12 时 有 无 穷 多 解；| $[]\OT1/cmr/m/n/12 ([]) \OML/cmm/m/it/12 < []\OT1/cmr/m/n/12 ([[] []])$
  []
 
@@ -1252,21 +1252,21 @@ Overfull \hbox (6.23233pt too wide) in paragraph at lines 920--921
 [31]
 
 [32]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
 
 [33]
-Overfull \hbox (50.70325pt too wide) detected at line 1114
+
+[34]
+Overfull \hbox (50.70325pt too wide) detected at line 1122
 []\OT1/cmr/m/n/12 [\OML/cmm/m/it/12 i \OMS/cmsy/m/n/12 ! \OML/cmm/m/it/12 j [] \OT1/cmr/m/n/12 1 []] = (\OML/cmm/m/it/12 P\OT1/cmr/m/n/12 )[]\OML/cmm/m/it/12 ;  []\OT1/cmr/m/n/12 [\OML/cmm/m/it/12 i \OMS/cmsy/m/n/12 ! \OML/cmm/m/it/12 j [] \OT1/cmr/m/n/12 2 []] = (\OML/cmm/m/it/12 P[]\OT1/cmr/m/n/12 )[]\OML/cmm/m/it/12 ;  []\OT1/cmr/m/n/12 [\OML/cmm/m/it/12 i \OMS/cmsy/m/n/12 ! \OML/cmm/m/it/12 j [] k []\OT1/cmr/m/n/12 ] = (\OML/cmm/m/it/12 P[]\OT1/cmr/m/n/12 )[]\OML/cmm/m/it/12 :
  []
 
 
 
-[34]
-Underfull \vbox (badness 3428) has occurred while \output is active []
-
-
-
 [35]
-Overfull \hbox (37.27353pt too wide) detected at line 1162
+Overfull \hbox (37.27353pt too wide) detected at line 1170
 []
  []
 
@@ -1274,21 +1274,18 @@ Overfull \hbox (37.27353pt too wide) detected at line 1162
 
 [36]
 
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1213.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\delta' on input line 1213.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1213.
-
-
-
 [37]
-Underfull \vbox (badness 7704) has occurred while \output is active []
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1221.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\delta' on input line 1221.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1221.
 
 
 
@@ -1322,7 +1319,7 @@ Package fontspec Info:
 
 
 LaTeX Font Warning: Font shape `TU/SimHei(0)/b/n' undefined
-(Font)              using `TU/SimHei(0)/m/n' instead on input line 1261.
+(Font)              using `TU/SimHei(0)/m/n' instead on input line 1269.
 
 
 Package fontspec Info: 
@@ -1372,7 +1369,7 @@ File: Figure/1.1简单转动.png Graphic file (type bmp)
 [44]
 
 Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 100.
+(hyperref)                than one, level fixed on input line 105.
 
 
 
@@ -1401,7 +1398,7 @@ File: Figure/例题2.1.png Graphic file (type bmp)
 [53]
 
 LaTeX Font Warning: Font shape `TU/SimSun(1)/b/n' undefined
-(Font)              using `TU/SimSun(1)/m/n' instead on input line 420.
+(Font)              using `TU/SimSun(1)/m/n' instead on input line 430.
 
 
 
@@ -1441,13 +1438,16 @@ File: Figure/陀螺转子.png Graphic file (type bmp)
 [66]
 
 [67]
-Overfull \hbox (34.43181pt too wide) in paragraph at lines 1059--1060
+
+[68]
+Overfull \hbox (34.43181pt too wide) in paragraph at lines 1097--1098
 []\TU/SimSun(1)/m/n/12 类 似 地，|  仅 使 用 四 个 单 位 向 量，|  即 可 使 $\OML/cmm/m/it/12 B$ \TU/SimSun(1)/m/n/12 依 次 经 历 以 $\OML/cmm/m/it/12 ^^R[][][]; ^^R[][][]; ^^R[][][]; \OMS/cmsy/m/n/12 ^^@\OML/cmm/m/it/12 ^^R[][][]; \OMS/cmsy/m/n/12 ^^@\OML/cmm/m/it/12 ^^R[][][]; \OMS/cmsy/m/n/12 ^^@\OML/cmm/m/it/12 ^^R[][][]$
  []
 
 
+Underfull \vbox (badness 6691) has occurred while \output is active []
 
-[68]
+
 
 [69]
 
@@ -1518,14 +1518,14 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `系统动力学建模与仿真笔记.out' has not changed.
-(rerunfilecheck)             Checksum: 7A5F8775186789AC91DF0D2167632AC4;8933.
+(rerunfilecheck)             Checksum: 75D60E1A4A4C938FD22DA51197143524;8933.
  ) 
 Here is how much of TeX's memory you used:
- 36123 strings out of 473832
- 796985 string characters out of 5735453
- 1614006 words of memory out of 5000000
- 58526 multiletter control sequences out of 15000+600000
- 572151 words of font info for 150 fonts, out of 8000000 for 9000
+ 36134 strings out of 473832
+ 797253 string characters out of 5735453
+ 1614249 words of memory out of 5000000
+ 58535 multiletter control sequences out of 15000+600000
+ 572167 words of font info for 152 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  107i,18n,118p,1128b,816s stack positions out of 10000i,1000n,20000p,200000b,200000s
 

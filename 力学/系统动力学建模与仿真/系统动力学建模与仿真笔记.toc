@@ -10,28 +10,28 @@
 \contentsline {subsection}{\numberline {2.2.1}矩阵分析基础}{8}{subsection.2.2.1}%
 \contentsline {subsubsection}{矩阵的定义与基本运算}{8}{section*.3}%
 \contentsline {subsubsection}{对称矩阵与反对称矩阵}{9}{equation.2.23}%
-\contentsline {subsubsection}{行列式与逆矩阵}{10}{equation.2.26}%
-\contentsline {subsubsection}{矩阵的秩}{12}{equation.2.32}%
-\contentsline {subsubsection}{正交矩阵}{13}{equation.2.35}%
-\contentsline {subsubsection}{特征值与特征向量}{14}{equation.2.38}%
+\contentsline {subsubsection}{行列式与逆矩阵}{10}{equation.2.27}%
+\contentsline {subsubsection}{矩阵的秩}{12}{equation.2.33}%
+\contentsline {subsubsection}{正交矩阵}{13}{equation.2.36}%
+\contentsline {subsubsection}{特征值与特征向量}{14}{equation.2.39}%
 \contentsline {subsection}{\numberline {2.2.2}矩阵的 Jordan 标准形}{15}{subsection.2.2.2}%
-\contentsline {subsubsection}{二次型与正定矩阵}{17}{equation.2.47}%
-\contentsline {subsubsection}{向量与矩阵的范数}{18}{equation.2.49}%
-\contentsline {subsubsection}{矩阵的导数与梯度}{20}{equation.2.54}%
-\contentsline {subsubsection}{逆矩阵的精确关系与伪逆}{24}{equation.2.62}%
+\contentsline {subsubsection}{二次型与正定矩阵}{17}{equation.2.48}%
+\contentsline {subsubsection}{向量与矩阵的范数}{19}{equation.2.50}%
+\contentsline {subsubsection}{矩阵的导数与梯度}{20}{equation.2.55}%
+\contentsline {subsubsection}{逆矩阵的精确关系与伪逆}{25}{equation.2.63}%
 \contentsline {subsubsection}{矩阵分解}{27}{Item.38}%
-\contentsline {subsubsection}{分块矩阵与 Schur 补}{28}{equation.2.68}%
-\contentsline {subsubsection}{线性方程组的解}{29}{equation.2.68}%
-\contentsline {subsubsection}{复矩阵}{30}{equation.2.72}%
-\contentsline {subsubsection}{幂等矩阵、幂零矩阵与幺幂矩阵}{32}{equation.2.73}%
-\contentsline {subsubsection}{单元素矩阵}{32}{equation.2.73}%
-\contentsline {subsubsection}{DFT 矩阵}{33}{equation.2.73}%
-\contentsline {subsubsection}{Toeplitz 矩阵}{34}{equation.2.74}%
-\contentsline {subsubsection}{转移矩阵}{34}{equation.2.74}%
-\contentsline {subsubsection}{单位向量、置换与平移算子}{34}{equation.2.74}%
-\contentsline {subsubsection}{Vandermonde 矩阵}{35}{equation.2.74}%
-\contentsline {subsubsection}{Kronecker 积与 vec 算子}{36}{equation.2.75}%
-\contentsline {subsubsection}{矩阵函数}{37}{equation.2.77}%
+\contentsline {subsubsection}{分块矩阵与 Schur 补}{28}{equation.2.69}%
+\contentsline {subsubsection}{线性方程组的解}{29}{equation.2.69}%
+\contentsline {subsubsection}{复矩阵}{31}{equation.2.73}%
+\contentsline {subsubsection}{幂等矩阵、幂零矩阵与幺幂矩阵}{32}{equation.2.74}%
+\contentsline {subsubsection}{单元素矩阵}{33}{equation.2.74}%
+\contentsline {subsubsection}{DFT 矩阵}{34}{equation.2.74}%
+\contentsline {subsubsection}{Toeplitz 矩阵}{34}{equation.2.75}%
+\contentsline {subsubsection}{转移矩阵}{35}{equation.2.75}%
+\contentsline {subsubsection}{单位向量、置换与平移算子}{35}{equation.2.75}%
+\contentsline {subsubsection}{Vandermonde 矩阵}{36}{equation.2.75}%
+\contentsline {subsubsection}{Kronecker 积与 vec 算子}{36}{equation.2.76}%
+\contentsline {subsubsection}{矩阵函数}{37}{equation.2.78}%
 \contentsline {section}{\numberline {2.3}广义函数与 Dirac $\delta $ 函数}{38}{section.2.3}%
 \contentsline {section}{\numberline {2.4}并矢}{38}{section.2.4}%
 \contentsline {subsection}{\numberline {2.4.1}并矢的定义}{39}{subsection.2.4.1}%
@@ -43,13 +43,13 @@
 \contentsline {chapter}{\numberline {3}运动学基础}{43}{chapter.3}%
 \contentsline {section}{\numberline {3.1}简单转动}{43}{section.3.1}%
 \contentsline {section}{\numberline {3.2}方向余弦}{45}{section.3.2}%
-\contentsline {subsubsection}{方向余弦矩阵的基本性质}{45}{equation.3.7}%
+\contentsline {subsubsection}{方向余弦矩阵的基本性质}{45}{equation.3.8}%
 \contentsline {section}{\numberline {3.3}欧拉参数}{53}{section.3.3}%
-\contentsline {section}{\numberline {3.4}罗德里格斯参数}{56}{section.3.4}%
+\contentsline {section}{\numberline {3.4}罗德里格斯参数}{57}{section.3.4}%
 \contentsline {section}{\numberline {3.5}间接定向法}{57}{section.3.5}%
 \contentsline {section}{\numberline {3.6}连续转动}{60}{section.3.6}%
 \contentsline {section}{\numberline {3.7}方向角}{64}{section.3.7}%
-\contentsline {section}{\numberline {3.8}小角度旋转}{71}{section.3.8}%
+\contentsline {section}{\numberline {3.8}小角度旋转}{72}{section.3.8}%
 \contentsline {chapter}{\numberline {4}有限维广义变分原理}{73}{chapter.4}%
 \contentsline {section}{\numberline {4.1}独立变分原理}{73}{section.4.1}%
 \contentsline {subsection}{\numberline {4.1.1}基础概念}{73}{subsection.4.1.1}%

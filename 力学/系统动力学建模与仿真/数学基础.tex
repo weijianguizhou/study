@@ -179,7 +179,15 @@ $n$ 阶方阵 $\boldsymbol{A}$ 的迹定义为矩阵主对角元素之和：
 \begin{equation}\label{eq:矩阵:叉乘矩阵性质}
 \boldsymbol{a}\times\boldsymbol{b} = \boldsymbol{a}^{\times}\,\boldsymbol{b}, \qquad (\boldsymbol{a}\times\boldsymbol{b})^{\times} = \boldsymbol{b}\boldsymbol{a}^{\mathrm{T}} - \boldsymbol{a}\boldsymbol{b}^{\mathrm{T}},
 \end{equation}
-式中 $\boldsymbol{a}\times\boldsymbol{b}$ 表示向量叉乘。叉乘矩阵在刚体动力学中具有重要作用，例如角速度向量与姿态变化率的关系即借助叉乘矩阵表示。
+式中 $\boldsymbol{a}\times\boldsymbol{b}$ 表示向量叉乘。叉乘矩阵在刚体动力学中具有重要作用，例如角速度向量与姿态变化率的关系即借助叉乘矩阵表示。为表述方便，常把 $\mathbf{q}\times$ 看做一个矩阵，这个矩阵记为 $\tilde{\mathbf{q}}$，其元素为
+\begin{equation}
+\tilde{\mathbf{q}}=\begin{bmatrix}
+0 & -q_3 & q_2 \\
+q_3 & 0 & -q_1 \\
+-q_2 & q_1 & 0
+\end{bmatrix},
+\end{equation}
+即 $\tilde{\mathbf{q}}$ 与式~\eqref{eq:矩阵:叉乘矩阵} 中的 $\boldsymbol{a}^{\times}$ 表示同一个对象，两种记法在不同文献中通用。
 
 反对称矩阵还具有如下性质：对 $n$ 阶反对称矩阵 $\boldsymbol{A}$，
 \begin{equation*}

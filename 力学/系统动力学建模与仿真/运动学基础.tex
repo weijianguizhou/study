@@ -10,6 +10,11 @@
 \boldsymbol{b} = \boldsymbol{a}\cos\theta - (\boldsymbol{a}\times\boldsymbol{\lambda})\sin\theta + \boldsymbol{\lambda}(\boldsymbol{\lambda}\cdot\boldsymbol{a})(1-\cos\theta)
 \end{equation}
 
+利用叉乘矩阵（定义见数学基础中式~\eqref{eq:矩阵:叉乘矩阵}），由 $\tilde{\boldsymbol{\lambda}}\boldsymbol{a}=\boldsymbol{\lambda}\times\boldsymbol{a}$ 可将上式改写为
+\begin{equation}\label{eq:simple_rotation_formula矩阵}
+\boldsymbol{b} = \left[\cos\theta\,\boldsymbol{I} + \sin\theta\,\tilde{\boldsymbol{\lambda}} + (1-\cos\theta)\,\boldsymbol{\lambda}\boldsymbol{\lambda}^{\mathrm{T}}\right]\boldsymbol{a}.
+\end{equation}
+
 如果一个矩阵定义为：
 \begin{equation}
     \label{eq:旋转矩阵的代数运算表示}
@@ -414,6 +419,11 @@ $$\boldsymbol{e_A} = \boldsymbol{e_B}\cos\theta - (\boldsymbol{e_B}\times\boldsy
     \mathbf{b}=\mathbf{a}+2[\epsilon_4 \boldsymbol{\epsilon}\times\mathbf{a}+\boldsymbol{\epsilon}\times(\boldsymbol{\epsilon}\times\mathbf{a})]
     \label{eq:转动公式的欧拉参数形式}
 \end{equation}
+利用叉乘矩阵，$\boldsymbol{\epsilon}\times\mathbf{a}=\tilde{\boldsymbol{\epsilon}}\,\mathbf{a}$、$\boldsymbol{\epsilon}\times(\boldsymbol{\epsilon}\times\mathbf{a})=\tilde{\boldsymbol{\epsilon}}^{\,2}\mathbf{a}$，故上式可写成
+\begin{equation}
+    \mathbf{b}=\left[\boldsymbol{I}+2\epsilon_4\,\tilde{\boldsymbol{\epsilon}}+2\tilde{\boldsymbol{\epsilon}}^{\,2}\right]\mathbf{a}.
+    \label{eq:转动公式的欧拉参数形式矩阵}
+\end{equation}
 那么，式~\eqref{eq:欧拉参数转方向余弦}，式~\eqref{eq:方向余弦转欧拉参数},式~\eqref{eq:欧拉参数得转轴}，式~\eqref{eq:欧拉参数得转角}和式~\eqref{eq:转动公式的欧拉参数形式}是怎么得到的呢？下面给出Kane书中的证明。
 
 \begin{proof}
@@ -535,11 +545,16 @@ $$
 \begin{equation}
     \mathbf{r}\triangleq\mathbf{p}\times\mathbf{q}
 \end{equation}
+即 $\mathbf{r}=\tilde{\mathbf{p}}\,\mathbf{q}$。
 
 及
 \begin{equation}
     \boldsymbol{\sigma}\triangleq\frac{\mathbf{p}\times\mathbf{q}\,\mathbf{r}+\mathbf{q}\times\mathbf{r}\,\mathbf{p}+\mathbf{r}\times\mathbf{p}\,\mathbf{q}}{\mathbf{r}^{2}}
     \label{eq:定义式}
+\end{equation}
+利用叉乘矩阵，上式可写成
+\begin{equation}
+    \boldsymbol{\sigma}=\frac{(\tilde{\mathbf{p}}\,\mathbf{q})\,\mathbf{r}^{\mathrm{T}}+(\tilde{\mathbf{q}}\,\mathbf{r})\,\mathbf{p}^{\mathrm{T}}+(\tilde{\mathbf{r}}\,\mathbf{p})\,\mathbf{q}^{\mathrm{T}}}{\mathbf{r}^{2}}.
 \end{equation}
 然后将式~\eqref{eq:定义式}中每个并矢的前项用 $\mathbf{a}_i$ 表达，后项用 $\mathbf{b}_i$ 表达 $(i=1,2,3)$，最后按
 $$
@@ -709,6 +724,11 @@ C_{AB}=C_{A\bar B}\,C_{\bar B B}
 \begin{equation}\label{eq:连续转动:罗德里格斯乘积}
 \boldsymbol{\rho}_{AB}=\frac{\boldsymbol{\rho}_{A\bar B}+\boldsymbol{\rho}_{\bar B B}+\boldsymbol{\rho}_{\bar B B}\times\boldsymbol{\rho}_{A\bar B}}{1-\boldsymbol{\rho}_{A\bar B}\cdot\,\boldsymbol{\rho}_{\bar B B}}
 \end{equation}
+利用叉乘矩阵 $\boldsymbol{\rho}_{\bar B B}\times\boldsymbol{\rho}_{A\bar B}=\tilde{\boldsymbol{\rho}}_{\bar B B}\,\boldsymbol{\rho}_{A\bar B}$，上式可写成
+\begin{equation}
+\boldsymbol{\rho}_{AB}=\frac{\boldsymbol{\rho}_{A\bar B}+\boldsymbol{\rho}_{\bar B B}+\tilde{\boldsymbol{\rho}}_{\bar B B}\,\boldsymbol{\rho}_{A\bar B}}{1-\boldsymbol{\rho}_{A\bar B}^{\mathrm{T}}\boldsymbol{\rho}_{\bar B B}}.
+\label{eq:连续转动:罗德里格斯乘积矩阵}
+\end{equation}
 
 要给出欧拉参数下的相应关系，首先定义三组欧拉参数：设 $\mathbf{b}_i$、$\overline{\mathbf{b}}_i\,(i=1,2,3)$ 在第二次转动后取所示方向；并设 $\theta_1$、$\theta_2$、$\theta$ 分别为第一次、第二次和等效转动的弧度
 
@@ -748,6 +768,11 @@ $$
 \begin{equation}\label{eq:连续转动:epsilon_AB合成}
 \boldsymbol{\epsilon}_{AB}=\boldsymbol{\epsilon}_{A\bar B}\,\epsilon_{\bar B B,4}+\boldsymbol{\epsilon}_{\bar B B}\,\epsilon_{A\bar B,4}+\boldsymbol{\epsilon}_{\bar B B}\times\boldsymbol{\epsilon}_{A\bar B}
 \end{equation}
+利用叉乘矩阵 $\boldsymbol{\epsilon}_{\bar B B}\times\boldsymbol{\epsilon}_{A\bar B}=\tilde{\boldsymbol{\epsilon}}_{\bar B B}\,\boldsymbol{\epsilon}_{A\bar B}$，上式可写成
+\begin{equation}
+\boldsymbol{\epsilon}_{AB}=\epsilon_{\bar B B,4}\,\boldsymbol{\epsilon}_{A\bar B}+\epsilon_{A\bar B,4}\,\boldsymbol{\epsilon}_{\bar B B}+\tilde{\boldsymbol{\epsilon}}_{\bar B B}\,\boldsymbol{\epsilon}_{A\bar B}.
+\label{eq:连续转动:epsilon_AB合成矩阵}
+\end{equation}
 \begin{equation}\label{eq:连续转动:epsilon_AB4合成}
 \epsilon_{AB,4}=\epsilon_{A\bar B,4}\,\epsilon_{\bar B B,4}-\boldsymbol{\epsilon}_{A\bar B}\cdot\boldsymbol{\epsilon}_{\bar B B}
 \end{equation}
@@ -772,11 +797,23 @@ $$
 \begin{equation}\label{eq:连续转动:罗德里格斯Abar_B}
 \mathbf{a}-\overline{\mathbf{b}}=(\mathbf{a}+\overline{\mathbf{b}})\times\boldsymbol{\rho}_{A\bar B}
 \end{equation}
+\begin{equation}
+\mathbf{a}-\overline{\mathbf{b}}=\tilde{\boldsymbol{\rho}}_{A\bar B}(\mathbf{a}+\overline{\mathbf{b}}).
+\label{eq:连续转动:罗德里格斯Abar_B矩阵}
+\end{equation}
 \begin{equation}\label{eq:连续转动:罗德里格斯Bar_B_B}
 \overline{\mathbf{b}}-\mathbf{b}=(\overline{\mathbf{b}}+\mathbf{b})\times\boldsymbol{\rho}_{\bar B B}
 \end{equation}
+\begin{equation}
+\overline{\mathbf{b}}-\mathbf{b}=\tilde{\boldsymbol{\rho}}_{\bar B B}(\overline{\mathbf{b}}+\mathbf{b}).
+\label{eq:连续转动:罗德里格斯Bar_B_B矩阵}
+\end{equation}
 \begin{equation}\label{eq:连续转动:罗德里格斯AB}
 \mathbf{a}-\mathbf{b}=(\mathbf{a}+\mathbf{b})\times\boldsymbol{\rho}_{AB}
+\end{equation}
+\begin{equation}
+\mathbf{a}-\mathbf{b}=\tilde{\boldsymbol{\rho}}_{AB}(\mathbf{a}+\mathbf{b}).
+\label{eq:连续转动:罗德里格斯AB矩阵}
 \end{equation}
 
 将式 \eqref{eq:连续转动:罗德里格斯Abar_B} 与 \eqref{eq:连续转动:罗德里格斯Bar_B_B} 分别与 $\boldsymbol{\rho}_{\bar B B}$ 和 $\boldsymbol{\rho}_{A\bar B}$ 作叉乘，再将所得结果相减；并利用
@@ -796,6 +833,7 @@ $$
 \begin{equation}\label{eq:连续转动:推导结果}
 \mathbf{a}-\mathbf{b}=(\mathbf{a}+\mathbf{b})\times\frac{\boldsymbol{\rho}_{A\bar B}+\boldsymbol{\rho}_{\bar B B}+\boldsymbol{\rho}_{\bar B B}\times\boldsymbol{\rho}_{A\bar B}}{1-\boldsymbol{\rho}_{A\bar B}\cdot\boldsymbol{\rho}_{\bar B B}}
 \end{equation}
+即 $\mathbf{a}-\mathbf{b}=\widetilde{\boldsymbol{\rho}}_{AB}(\mathbf{a}+\mathbf{b})$，其中 $\boldsymbol{\rho}_{AB}$ 由式~\eqref{eq:连续转动:罗德里格斯乘积矩阵} 给出。
 将式 \eqref{eq:连续转动:推导结果} 与 \eqref{eq:连续转动:罗德里格斯AB} 合在一起，式 \eqref{eq:连续转动:罗德里格斯乘积} 即成立；因为对任意选取的向量 $\mathbf{a}$，式 \eqref{eq:连续转动:推导结果} 与 \eqref{eq:连续转动:罗德里格斯AB} 同时成立当且仅当式 \eqref{eq:连续转动:罗德里格斯乘积} 成立。
 
 对于式 \eqref{eq:连续转动:epsilon_AB合成} 和 \eqref{eq:连续转动:epsilon_AB4合成}，注意到由式 (1.3.1)、(1.3.3)、(1.4.1) 可得
@@ -1158,6 +1196,10 @@ $$
 \begin{equation}
     \mathbf{b}=\mathbf{a}-\mathbf{a}\times\mathbf{\lambda}\theta
 \end{equation}
+利用叉乘矩阵，$\mathbf{a}\times\boldsymbol{\lambda}=-\tilde{\boldsymbol{\lambda}}\,\mathbf{a}$，故上式可写成
+\begin{equation}
+    \mathbf{b}=(\boldsymbol{I}+\tilde{\boldsymbol{\lambda}}\theta)\,\mathbf{a}.
+\end{equation}
 还有式~\eqref{eq:旋转矩阵的代数运算表示}可以转化为：
 \begin{equation}
     \boldsymbol{A} \triangleq \boldsymbol{U} - (\boldsymbol{U}\times\boldsymbol{\lambda})\theta
@@ -1173,3 +1215,4 @@ $$
 \begin{equation}
     \boldsymbol{\rho} = \frac{1}{2}\boldsymbol{\lambda}\theta
 \end{equation}
+关于叉乘矩阵 $\tilde{\mathbf{q}}$ 的定义见数学基础（式~\eqref{eq:矩阵:叉乘矩阵}）。
