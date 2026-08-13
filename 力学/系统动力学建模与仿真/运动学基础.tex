@@ -12,6 +12,7 @@
 
 如果一个矩阵定义为：
 \begin{equation}
+    \label{eq:旋转矩阵的代数运算表示}
     \boldsymbol{A} \triangleq \boldsymbol{U}\cos\theta - (\boldsymbol{U}\times\boldsymbol{\lambda})\sin\theta + \boldsymbol{\lambda}(\boldsymbol{\lambda}\cdot\boldsymbol{U})(1-\cos\theta)
 \end{equation}
 
@@ -848,7 +849,7 @@ $$
 总结一下三种描述连续转动的方式，方向余弦矩阵最为简洁，欧拉参数次之，罗德里格斯向量最不直观。怪不得罗德里格斯参量被称为“罗德里格斯参量”，简直繁琐得一雷霆。
 \section{方向角}
 
-当刚体 $B$ 在参考系 $A$ 中作任意转动时，可以用三个角度 $\theta_1$、$\theta_2$、$\theta_3$ 来刻画其方向，这三个角度称为\textbf{方向角}。方向角可以通过依次进行三次简单转动得到，且这三次转动所绕的轴既可以取自固定在参考系中的单位向量，也可以取自固定在刚体内部的单位向量。
+当刚体 $B$ 在参考系 $A$（也就是世界坐标系） 中作任意转动时，可以用三个角度 $\theta_1$、$\theta_2$、$\theta_3$ 来刻画其方向，这三个角度称为\textbf{方向角}。方向角可以通过依次进行三次简单转动得到，且这三次转动所绕的轴既可以取自固定在世界坐标系中的单位向量，也可以取自固定在刚体内部的单位向量。
 
 \begin{figure}[h]
     \centering
@@ -856,6 +857,10 @@ $$
         \caption{陀螺转子}
         \label{fig:陀螺转子}
 \end{figure}
+
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 
 实现这一目标的第一种方法是依次对 $B$ 进行一次角度为 $\theta_1$ 的 $\mathbf{a}_1$ 旋转，一次角度为 $\theta_2$ 的 $\mathbf{a}_2$ 旋转，以及一次角度为 $\theta_3$ 的 $\mathbf{a}_3$ 旋转；在此过程中，$B$ 最终相对于 $A$ 的方向余弦矩阵为
 
@@ -909,6 +914,9 @@ $$
 \theta_3 = 0
 $$
 换句话说，这种情况下只需两次旋转即可。
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 
 实现相同目标的第二种方法是依次对 $B$ 进行一次角度为 $\theta_1$ 的 $\mathbf{b}_1$ 旋转，一次角度为 $\theta_2$ 的 $\mathbf{b}_2$ 旋转，以及一次角度为 $\theta_3$ 的 $\mathbf{b}_3$ 旋转。在上一次旋转之后，将 $\mathbf{a}_1$、$\mathbf{a}_2$、$\mathbf{a}_3$ 映射到 $\mathbf{b}_1$、$\mathbf{b}_2$、$\mathbf{b}_3$ 的矩阵 $A$ 如式~\eqref{eq:方向角:b1b2b3} 所示，则为
 
@@ -954,7 +962,9 @@ $$
 \theta_3 = 0
 $$
 因此，再次仅需两次旋转即可。这两种方法将刚体 $B$ 转换为相对于参考系 $A$ 的期望方向的差异在于：第一种方法使用参考系中固定的单位向量，而第二种方法则使用刚体内部固定的单位向量。两种方法的共同点是，均使用了三个不同的单位向量。
-
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 此外，也可以通过进行三次连续旋转来将 $B$ 转换为相对于 $A$ 的任意方向，且这三次旋转仅涉及两个不同的单位向量，这些向量可以固定在参考系或刚体内部。具体而言，若刚体 $B$ 先依次经历一次 $\mathbf{a}_1$ 旋转角度为 $\theta_1$，再经历一次 $\mathbf{a}_2$ 旋转角度为 $\theta_2$，然后再次经历一次 $\mathbf{a}_1$ 旋转，但这次旋转角度为 $\theta_3$，则有
 
 \begin{equation}\label{eq:方向角:a1a2a1}
@@ -1043,10 +1053,36 @@ $$
 
 
 式~\eqref{eq:方向角:a1a2a3} 与式~\eqref{eq:方向角:b1b2b3} 中的矩阵彼此紧密相关：将其中一个矩阵中的 $\theta_i$ 替换为 $-\theta_i$（$i=1,2,3$）并转置，即可得到另一个；式~\eqref{eq:方向角:a1a2a1} 与式~\eqref{eq:方向角:b1b2b1} 中的矩阵也具有类似关系。这一事实具有如下物理意义（可借助方向余弦矩阵的正交性 $\boldsymbol{A}^{-1}=\boldsymbol{A}^{\mathrm{T}}$ 加以验证）：若刚体 $B$ 先后经历转角分别为 $\theta_1$、$\theta_2$、$\theta_3$ 的 $\mathbf{a}_1$、$\mathbf{a}_2$、$\mathbf{a}_3$ 旋转，那么接下来再使 $B$ 先后经历转角分别为 $\theta_1$、$\theta_2$、$\theta_3$ 的 $-\mathbf{b}_1$、$-\mathbf{b}_2$、$-\mathbf{b}_3$ 旋转，即可使 $B$ 恢复到它在 $A$ 中的初始方向。
-
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 类似地，仅使用四个单位向量，即可使 $B$ 依次经历以 $\theta_1\mathbf{a}_1,\theta_2\mathbf{a}_2,\theta_3\mathbf{a}_1,-\theta_1\mathbf{b}_1,-\theta_2\mathbf{b}_2,-\theta_3\mathbf{b}_1$ 表征的连续旋转，而不使 $B$ 在 $A$ 中的方向产生任何净变化。此外，涉及固定在 $A$ 中的单位向量的那些旋转，无论发生在涉及固定在 $B$ 中的单位向量的那些旋转之前还是之后，结果都一样；也就是说，由 $\theta_1\mathbf{b}_1,\theta_2\mathbf{b}_2,\theta_3\mathbf{b}_3,-\theta_1\mathbf{a}_1,-\theta_2\mathbf{a}_2,-\theta_3\mathbf{a}_3$ 以及由 $\theta_1\mathbf{b}_1,\theta_2\mathbf{b}_2,\theta_3\mathbf{b}_1,-\theta_1\mathbf{a}_1,-\theta_2\mathbf{a}_2,-\theta_3\mathbf{a}_1$ 表示的连续旋转序列，对 $B$ 在 $A$ 中的方向同样不产生净效果。
 
 为了指明所用的是哪一组三个角度，可以称第一种方法（式~\eqref{eq:方向角:a1a2a3} 及其反解公式）对应的为\textbf{空间三角度}（space-three angles），第二种方法（式~\eqref{eq:方向角:b1b2b3} 及其反解公式）对应的为\textbf{体三角度}（body-three angles），第三种方法（式~\eqref{eq:方向角:a1a2a1} 及其反解公式）对应的为\textbf{空间二角度}（space-two angles），第四种方法（式~\eqref{eq:方向角:b1b2b1} 及其反解公式）对应的为\textbf{体二角度}（body-two angles）；即使所用的角度与单位向量采用了上述各式以外的符号表示，这一术语仍然有意义。
+
+现代工程中，这些方向角已有更常用的名称。航空航天与机器人学中最常用的\textbf{横滚—俯仰—偏航角}（roll--pitch--yaw angles，又称 Tait--Bryan 角或 Cardan 角）依次绕刚体内部的 $z$、$y$、$x$ 轴转动偏航角 $\psi$、俯仰角 $\theta$、横滚角 $\phi$，属于\textbf{体三角度}；当取 $\mathbf{b}_1=\mathbf{x}$、$\mathbf{b}_2=\mathbf{y}$、$\mathbf{b}_3=\mathbf{z}$ 且 $(\theta_1,\theta_2,\theta_3)=(\phi,\theta,\psi)$ 时，式~\eqref{eq:方向角:b1b2b3} 恰给出其旋转矩阵
+$$
+R(\phi,\theta,\psi)=R_x(\phi)\,R_y(\theta)\,R_z(\psi)
+=\left[
+\begin{array}{ccc}
+c_\theta c_\psi & -c_\theta s_\psi & s_\theta\\
+s_\phi s_\theta c_\psi+c_\phi s_\psi & -s_\phi s_\theta s_\psi+c_\phi c_\psi & -s_\phi c_\theta\\
+-c_\phi s_\theta c_\psi+s_\phi s_\psi & c_\phi s_\theta s_\psi+s_\phi c_\psi & c_\phi c_\theta
+\end{array}
+\right].
+$$
+\textbf{经典欧拉角}（classical Euler angles，进动—章动—自转）则采用 $z$--$x$--$z$ 转序，依次绕体 $z$ 轴转动进动角 $\psi$、绕体 $x$ 轴转动章动角 $\theta$、再绕体 $z$ 轴转动自转角 $\phi$，属于\textbf{体二角度}，其旋转矩阵为
+$$
+R(\phi,\theta,\psi)=R_z(\phi)\,R_x(\theta)\,R_z(\psi)
+=\left[
+\begin{array}{ccc}
+c_\phi c_\psi-s_\phi c_\theta s_\psi & -c_\phi s_\psi-s_\phi c_\theta c_\psi & s_\phi s_\theta\\
+s_\phi c_\psi+c_\phi c_\theta s_\psi & -s_\phi s_\psi+c_\phi c_\theta c_\psi & -c_\phi s_\theta\\
+s_\theta s_\psi & s_\theta c_\psi & c_\theta
+\end{array}
+\right].
+$$
+其中 $c_\alpha\triangleq\cos\alpha$、$s_\alpha\triangleq\sin\alpha$；$R_x(\alpha),R_y(\alpha),R_z(\alpha)$ 分别表示绕刚体内部 $x$、$y$、$z$ 轴转动角 $\alpha$ 的基元旋转矩阵。至于\textbf{空间三角度}与\textbf{空间二角度}，则对应\textbf{外旋欧拉角}（extrinsic Euler angles），即转轴固定于参考系 $A$ 中的转序。
 
 此外，一旦以这种方式确定了三个角度，总可以直接利用这些方程找到式~\eqref{eq:方向角:a1a2a3}、\eqref{eq:方向角:b1b2b3}、\eqref{eq:方向角:a1a2a1} 或 \eqref{eq:方向角:b1b2b1} 的适当替代。例如，设 $\mathbf{x},\mathbf{y},\mathbf{z}$ 与 $\boldsymbol{\xi},\boldsymbol{\eta},\boldsymbol{\zeta}$ 分别为固定在参考系 $A$ 与刚体 $B$ 中的两组成右手正交单位向量，且初始时 $\mathbf{x}=\boldsymbol{\xi}$、$\mathbf{y}=\boldsymbol{\eta}$、$\mathbf{z}=\boldsymbol{\zeta}$；设 $B$ 依次经历角度为 $\gamma$ 的 $\mathbf{z}$ 旋转、角度为 $\beta$ 的 $\mathbf{y}$ 旋转和角度为 $\alpha$ 的 $\mathbf{x}$ 旋转；要求确定矩阵 $L$ 的各元素 $L_{ij}$（$i,j=1,2,3$），使得在最后一次旋转之后满足
 $$
@@ -1066,12 +1102,12 @@ $$
 $$
 L_{21}=\mathbf{y}\cdot\boldsymbol{\xi}=\mathbf{a}_2\cdot(-\mathbf{b}_3)=-a_{23}=-c_1s_2s_3+c_3s_1=\cos\gamma\sin\beta\sin\alpha+\cos\alpha\sin\gamma
 $$
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 
-在航天器动力学文献中会遇到各种各样的方向余弦矩阵，附录 I 中列出了其中 24 种。
-
-\subsubsection{推导}
-
-为验证式~\eqref{eq:方向角:a1a2a3} 的正确性，可运用式~\eqref{eq:连续转动:方向余弦乘积}，并借助式~\eqref{eq:方向余弦矩阵计算式紧凑} 与式~\eqref{eq:方向余弦矩阵计算式} 构造 $C_{A\bar B}$、$C_{\bar B\bar B}$ 与 $C_{\bar B B}$。具体而言，对 $\mathbf{a}_1$ 旋转，令
+\begin{proof}
+    为验证式~\eqref{eq:方向角:a1a2a3} 的正确性，可运用式~\eqref{eq:连续转动:方向余弦乘积}，并借助式~\eqref{eq:方向余弦矩阵计算式紧凑} 与式~\eqref{eq:方向余弦矩阵计算式} 构造 $C_{A\bar B}$、$C_{\bar B\bar B}$ 与 $C_{\bar B B}$。具体而言，对 $\mathbf{a}_1$ 旋转，令
 $$
 C_{A\bar B}=\begin{bmatrix}1&0&0\\0&c_1&-s_1\\0&s_1&c_1\end{bmatrix}
 $$
@@ -1112,3 +1148,28 @@ C_{\bar B B}=\begin{bmatrix}c_3&-s_3&0\\s_3&c_3&0\\0&0&1\end{bmatrix}
 $$
 
 第一种方法的反解公式与第二种方法的反解公式分别是式~\eqref{eq:方向角:a1a2a3} 与式~\eqref{eq:方向角:b1b2b3} 的直接推论；而第三、第四种方法（式~\eqref{eq:方向角:a1a2a1} 与式~\eqref{eq:方向角:b1b2b1} 及其反解公式）可由与前两种方法推导类似的方法得到。
+
+\end{proof}
+
+\section{小角度旋转}
+其实就是近似问题。当一个简单旋转足够小，以至于转角$\theta$的二次幂和高次幂均可忽略时，可以将$\sin\theta$和$\tan \theta$近似处理为$\theta$。将$\cos\theta$处理为1.
+
+于是式~\eqref{eq:simple_rotation_formula}可以转化为：
+\begin{equation}
+    \mathbf{b}=\mathbf{a}-\mathbf{a}\times\mathbf{\lambda}\theta
+\end{equation}
+还有式~\eqref{eq:旋转矩阵的代数运算表示}可以转化为：
+\begin{equation}
+    \boldsymbol{A} \triangleq \boldsymbol{U} - (\boldsymbol{U}\times\boldsymbol{\lambda})\theta
+\end{equation}
+同样的，欧拉参数和罗德里格斯参数也可以进行相应的转化：
+\begin{equation}
+        \begin{aligned}
+            &\boldsymbol{\epsilon}=\frac{1}{2} \boldsymbol{\lambda}\theta \\
+            &\epsilon_4 = 1
+        \end{aligned}
+\end{equation}
+
+\begin{equation}
+    \boldsymbol{\rho} = \frac{1}{2}\boldsymbol{\lambda}\theta
+\end{equation}
