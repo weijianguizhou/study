@@ -46,31 +46,32 @@
 \contentsline {subsubsection}{方向余弦矩阵的基本性质}{45}{equation.3.8}%
 \contentsline {section}{\numberline {3.3}欧拉参数}{53}{section.3.3}%
 \contentsline {section}{\numberline {3.4}罗德里格斯参数}{57}{section.3.4}%
-\contentsline {section}{\numberline {3.5}间接定向法}{57}{section.3.5}%
-\contentsline {section}{\numberline {3.6}连续转动}{60}{section.3.6}%
-\contentsline {section}{\numberline {3.7}方向角}{64}{section.3.7}%
+\contentsline {section}{\numberline {3.5}间接定向法}{58}{section.3.5}%
+\contentsline {section}{\numberline {3.6}连续转动}{61}{section.3.6}%
+\contentsline {section}{\numberline {3.7}方向角}{65}{section.3.7}%
 \contentsline {section}{\numberline {3.8}小角度旋转}{72}{section.3.8}%
-\contentsline {chapter}{\numberline {4}有限维广义变分原理}{73}{chapter.4}%
-\contentsline {section}{\numberline {4.1}独立变分原理}{73}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}基础概念}{73}{subsection.4.1.1}%
-\contentsline {subsection}{\numberline {4.1.2}独立变分原理}{74}{subsection.4.1.2}%
-\contentsline {section}{\numberline {4.2}非独立变分原理}{75}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}不含冗余约束的有限维非独立变分}{75}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}含冗余约束的有限维非独立变分原理}{78}{subsection.4.2.2}%
-\contentsline {section}{\numberline {4.3}非独立变分原理在多元函数条件极值问题的应用}{80}{section.4.3}%
+\contentsline {section}{\numberline {3.9}螺旋运动}{73}{section.3.9}%
+\contentsline {chapter}{\numberline {4}有限维广义变分原理}{77}{chapter.4}%
+\contentsline {section}{\numberline {4.1}独立变分原理}{77}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}基础概念}{77}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}独立变分原理}{78}{subsection.4.1.2}%
+\contentsline {section}{\numberline {4.2}非独立变分原理}{79}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}不含冗余约束的有限维非独立变分}{79}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}含冗余约束的有限维非独立变分原理}{82}{subsection.4.2.2}%
+\contentsline {section}{\numberline {4.3}非独立变分原理在多元函数条件极值问题的应用}{84}{section.4.3}%
 \ttl@change@i {\@ne }{chapter}{0em}{}{\large \fangsong {附录\ \thecontentslabel }}{}{\hfill \contentspage }\relax 
 \ttl@change@v {chapter}{}{}{}\relax 
-\contentsline {chapter}{\numberline {A}代数基础定理与性质的证明}{83}{appendix.A}%
-\contentsline {section}{\numberline {A.1}谱分解定理的证明}{83}{section.A.1}%
-\contentsline {section}{\numberline {A.2}Jordan 标准形定理的证明}{83}{section.A.2}%
-\contentsline {section}{\numberline {A.3}Woodbury 恒等式的证明}{84}{section.A.3}%
-\contentsline {section}{\numberline {A.4}奇异值分解的证明}{85}{section.A.4}%
-\contentsline {section}{\numberline {A.5}LU 分解与 Cholesky 分解的证明}{85}{section.A.5}%
-\contentsline {section}{\numberline {A.6}特征值性质的证明}{86}{section.A.6}%
-\contentsline {section}{\numberline {A.7}正定矩阵性质的证明}{86}{section.A.7}%
-\contentsline {section}{\numberline {A.8}范数不等式}{87}{section.A.8}%
-\contentsline {section}{\numberline {A.9}伪逆性质与导数的证明}{88}{section.A.9}%
-\contentsline {section}{\numberline {A.10}Vandermonde 行列式的证明}{88}{section.A.10}%
-\contentsline {section}{\numberline {A.11}Kronecker 积性质的证明}{89}{section.A.11}%
-\contentsline {section}{\numberline {A.12}指数矩阵函数性质的证明}{89}{section.A.12}%
+\contentsline {chapter}{\numberline {A}代数基础定理与性质的证明}{87}{appendix.A}%
+\contentsline {section}{\numberline {A.1}谱分解定理的证明}{87}{section.A.1}%
+\contentsline {section}{\numberline {A.2}Jordan 标准形定理的证明}{87}{section.A.2}%
+\contentsline {section}{\numberline {A.3}Woodbury 恒等式的证明}{88}{section.A.3}%
+\contentsline {section}{\numberline {A.4}奇异值分解的证明}{89}{section.A.4}%
+\contentsline {section}{\numberline {A.5}LU 分解与 Cholesky 分解的证明}{89}{section.A.5}%
+\contentsline {section}{\numberline {A.6}特征值性质的证明}{90}{section.A.6}%
+\contentsline {section}{\numberline {A.7}正定矩阵性质的证明}{90}{section.A.7}%
+\contentsline {section}{\numberline {A.8}范数不等式}{91}{section.A.8}%
+\contentsline {section}{\numberline {A.9}伪逆性质与导数的证明}{92}{section.A.9}%
+\contentsline {section}{\numberline {A.10}Vandermonde 行列式的证明}{92}{section.A.10}%
+\contentsline {section}{\numberline {A.11}Kronecker 积性质的证明}{93}{section.A.11}%
+\contentsline {section}{\numberline {A.12}指数矩阵函数性质的证明}{93}{section.A.12}%
 \contentsfinish 

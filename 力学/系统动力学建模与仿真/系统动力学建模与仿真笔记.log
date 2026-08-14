@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2026.2.15)  13 AUG 2026 21:19
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2026.2.15)  14 AUG 2026 19:56
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -1018,10 +1018,6 @@ Package fontspec Info:
 
 ])
 
-[2
-
-]
-
 Package fontspec Info: 
 (fontspec)             Could not resolve font "KaiTi/BI" (it probably doesn't
 (fontspec)             exist).
@@ -1049,8 +1045,10 @@ Package fontspec Info:
 
 
 
+[2]
+
 LaTeX Font Warning: Font shape `TU/KaiTi(0)/b/n' undefined
-(Font)              using `TU/KaiTi(0)/m/n' instead on input line 51.
+(Font)              using `TU/KaiTi(0)/m/n' instead on input line 60.
 
 (./系统动力学建模与仿真笔记.toc
 
@@ -1081,10 +1079,12 @@ Package fontspec Info:
 
 
 
-[3]
+[3
+
+]
 
 LaTeX Font Info:    Font shape `TU/SimSun(0)/m/sl' in size <12> not available
-(Font)              Font shape `TU/SimSun(0)/m/it' tried instead on input line 59.
+(Font)              Font shape `TU/SimSun(0)/m/it' tried instead on input line 60.
 [4])
 \tf@toc=\write5
 \openout5 = `系统动力学建模与仿真笔记.toc'.
@@ -1412,11 +1412,11 @@ File: Figure/例题2.2.png Graphic file (type bmp)
 [56]
 
 [57]
+
+[58]
 File: Figure/例题2.3.png Graphic file (type bmp)
 <Figure/例题2.3.png>
 
-
-[58]
 
 [59]
 
@@ -1427,11 +1427,11 @@ File: Figure/例题2.3.png Graphic file (type bmp)
 [62]
 
 [63]
+
+[64]
 File: Figure/陀螺转子.png Graphic file (type bmp)
 <Figure/陀螺转子.png>
 
-
-[64]
 
 [65]
 
@@ -1440,12 +1440,9 @@ File: Figure/陀螺转子.png Graphic file (type bmp)
 [67]
 
 [68]
-Overfull \hbox (34.43181pt too wide) in paragraph at lines 1097--1098
+Overfull \hbox (34.43181pt too wide) in paragraph at lines 1122--1123
 []\TU/SimSun(1)/m/n/12 类 似 地，|  仅 使 用 四 个 单 位 向 量，|  即 可 使 $\OML/cmm/m/it/12 B$ \TU/SimSun(1)/m/n/12 依 次 经 历 以 $\OML/cmm/m/it/12 ^^R[][][]; ^^R[][][]; ^^R[][][]; \OMS/cmsy/m/n/12 ^^@\OML/cmm/m/it/12 ^^R[][][]; \OMS/cmsy/m/n/12 ^^@\OML/cmm/m/it/12 ^^R[][][]; \OMS/cmsy/m/n/12 ^^@\OML/cmm/m/it/12 ^^R[][][]$
  []
-
-
-Underfull \vbox (badness 6691) has occurred while \output is active []
 
 
 
@@ -1453,21 +1450,28 @@ Underfull \vbox (badness 6691) has occurred while \output is active []
 
 [70]
 
-[71])
+[71]
 
 [72]
-Chapter 4.
-(./有限维广义变分原理.tex
+File: Figure/螺旋运动.png Graphic file (type bmp)
+<Figure/螺旋运动.png>
 
-[73
 
-]
+LaTeX Warning: `h' float specifier changed to `ht'.
 
-[74]
+
+
+[73]
+
+[74])
 
 [75]
 
-[76]
+[76
+
+]
+Chapter 4.
+(./有限维广义变分原理.tex
 
 [77]
 
@@ -1475,27 +1479,35 @@ Chapter 4.
 
 [79]
 
-[80])
+[80]
 
 [81]
 
 [82]
-附录 A.
-(./附录.tex
 
-[83
+[83]
 
-]
-
-[84]
+[84])
 
 [85]
 
 [86]
+附录 A.
+(./附录.tex
 
-[87]
+[87
+
+]
 
 [88]
+
+[89]
+
+[90]
+
+[91]
+
+[92]
 Overfull \hbox (2.5341pt too wide) detected at line 245
 []\OT1/cmr/m/n/12 ([] \OMS/cmsy/m/n/12 
  []\OT1/cmr/m/n/12 ) = [] \OML/cmm/m/it/12 ^^U[]^^V[] \OT1/cmr/m/n/12 = [][] [][] = []([])[] []([])[]\OML/cmm/m/it/12 :
@@ -1503,9 +1515,9 @@ Overfull \hbox (2.5341pt too wide) detected at line 245
 
 
 
-[89])
+[93])
 
-[90] (./系统动力学建模与仿真笔记.aux)
+[94] (./系统动力学建模与仿真笔记.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2022/08/05>
@@ -1518,15 +1530,15 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `系统动力学建模与仿真笔记.out' has not changed.
-(rerunfilecheck)             Checksum: 75D60E1A4A4C938FD22DA51197143524;8933.
+(rerunfilecheck)             Checksum: 90355B84F742E591111F3081E586545D;9020.
  ) 
 Here is how much of TeX's memory you used:
- 36134 strings out of 473832
- 797253 string characters out of 5735453
- 1614249 words of memory out of 5000000
- 58535 multiletter control sequences out of 15000+600000
+ 36191 strings out of 473832
+ 799679 string characters out of 5735453
+ 1613738 words of memory out of 5000000
+ 58591 multiletter control sequences out of 15000+600000
  572167 words of font info for 152 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 107i,18n,118p,1128b,816s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 107i,18n,114p,1128b,816s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on 系统动力学建模与仿真笔记.pdf (95 pages).
+Output written on 系统动力学建模与仿真笔记.pdf (99 pages).

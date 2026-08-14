@@ -537,7 +537,32 @@ $$
         \end{aligned}
     \end{equation}
 \end{mydefinition}
+在旋转前，有 $\mathbf{a}_i = \mathbf{b}_i$（$i = 1, 2, 3$）。（当讨论涉及两个以上物体或参考系时，将使用如 ${}^A\boldsymbol{\rho}^B$ 和 ${}^A\boldsymbol{\rho}_i^B$ 等符号。）
 
+罗德里格斯参数与欧拉参数密切相关（见第1.3节）：
+$$\rho_i = \frac{\epsilon_i}{\epsilon_4} \quad (i = 1, 2, 3)$$
+
+罗德里格斯参数相较于欧拉参数的优势在于其数量更少；但这一优势有时会被抵消，因为罗德里格斯参数可能取到无穷大，而任何欧拉参数的绝对值均不能超过1。
+
+用罗德里格斯参数表示时，方向余弦矩阵 $C$（见第1.2节）的形式为
+$$
+A = \frac{1}{1 + \rho_1^2 + \rho_2^2 + \rho_3^2}
+\begin{bmatrix}
+1 + \rho_1^2 - \rho_2^2 - \rho_3^2 & 2(\rho_1 \rho_2 - \rho_3) & 2(\rho_3 \rho_1 + \rho_2) \\
+2(\rho_1 \rho_2 + \rho_3) & 1 + \rho_2^2 - \rho_3^2 - \rho_1^2 & 2(\rho_2 \rho_3 - \rho_1) \\
+2(\rho_3 \rho_1 - \rho_2) & 2(\rho_2 \rho_3 + \rho_1) & 1 + \rho_3^2 - \rho_1^2 - \rho_2^2
+\end{bmatrix}
+$$
+罗德里格斯向量可用于建立第3.1节中定义的向量 $\mathbf{a}$ 和 $\mathbf{b}$ 的差与和之间的简单关系：
+\begin{equation}
+    \label{eq:罗德里格斯向量表示的和差关系}
+    \mathbf{a} - \mathbf{b} = (\mathbf{a} + \mathbf{b}) \times \boldsymbol{\rho}
+\end{equation}
+
+该关系在多种推导中非常有用，例如用于证明以下表达式是罗德里格斯向量的表示形式，该向量可用来实现A与B之间相对方向的指定变化：
+$$\boldsymbol{\rho} = \frac{(\boldsymbol{\alpha}_1 - \boldsymbol{\beta}_1) \times (\boldsymbol{\alpha}_2 - \boldsymbol{\beta}_2)}{(\boldsymbol{\alpha}_1 + \boldsymbol{\beta}_1) \cdot (\boldsymbol{\alpha}_2 - \boldsymbol{\beta}_2)}$$
+其中，$\boldsymbol{\alpha}_i$ 和 $\boldsymbol{\beta}_i$（$i = 1, 2$）分别固定于A和B中，在相对方向发生变化前满足 $\boldsymbol{\alpha}_i = \boldsymbol{\beta}_i$（$i = 1, 2$）。对于此类旋转的罗德里格斯参数可表示为
+$$\rho_1 = \frac{C_{32} - C_{23}}{1 + C_{11} + C_{22} + C_{33}}$$
 \section{间接定向法}
 间接定向法（Indirect Direction Method），也叫间接定向，是Kane在1972年提出的，是描述转动过程的另一种工具。
 
@@ -1216,3 +1241,85 @@ $$
     \boldsymbol{\rho} = \frac{1}{2}\boldsymbol{\lambda}\theta
 \end{equation}
 关于叉乘矩阵 $\tilde{\mathbf{q}}$ 的定义见数学基础（式~\eqref{eq:矩阵:叉乘矩阵}）。
+
+\section{螺旋运动}
+之前的内容都是关于怎么描述物体的旋转的。我们知道，在刚刚接触力学时，我们先学习点的运动，就是位移（displacement）。
+
+\begin{mydefinition}{位移}
+    如果点 $P_1$ 和 $P_2$ 在参考系 $A$ 中固定，而点 $P$ 从 $P_1$ 移动到 $P_2$，则称 $P$ 在 $A$ 中发生了位移，且 $P_2$ 相对于 $P_1$ 的位矢称为 $P$ 在 $A$ 中的位移矢量。
+
+    当刚体 $B$ 的各点在参考系 $A$ 中发生位移时，我们称之为 $B$ 在 $A$ 中的位移；若 $B$ 在 $A$ 中的所有点的位移矢量都相等，则称此位移为 $B$ 在 $A$ 中的平移（translation）。
+\end{mydefinition}
+刚体 $B$ 在参考系 $A$ 中的任意位移，都可以通过依次对 $B$ 进行平移来实现：选择 $B$ 上任意一点 $P$，将其从初始位置移动至终止位置，再进行一次简单旋转，在此过程中 $P$ 在 $A$ 中保持不动。简单旋转的旋转矩阵、欧拉参数和罗德里格斯向量都与基点的选择无关，但基点的位移矢量则取决于该选择。当基点的位移矢量与旋转变换的罗德里格斯矢量平行时，也就是和转轴矢量平行时，该位移便可通过螺旋运动实现。
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figure/螺旋运动.png}
+        \caption{螺旋运动}
+        \label{fig:螺旋运动}
+\end{figure}
+
+刚体 $B$ 在参考系 $A$ 中的任意位移，都可以通过螺旋运动来实现。换句话说，总能找到一个基点，其位移矢量与 $B$ 在 $A$ 中位移所对应的简单旋转的罗德里格斯矢量平行。事实上，存在无限多个这样的基点，它们都位于一条与罗德里格斯矢量平行的直线上，这条直线称为螺杆轴；而所有位于螺杆轴上的 $B$ 点的位移矢量都相等，因此可以用一个向量（即螺杆平移矢量）来表示。此外，螺杆平移矢量的模长不小于任何不在螺杆轴上的基点的位移矢量的模长。若 $\boldsymbol{\delta}$ 是任意基点 $P$ 的位移矢量，$\boldsymbol{\rho}$ 是在 $A$ 中对 $B$ 进行位移所对应的旋转变换的罗德里格斯矢量，且 $P^*$ 是位于螺杆轴上的 $B$ 点（见图~\ref{fig:螺旋运动}），则在 $B$ 在 $A$ 中发生位移前，$P^*$ 相对于 $P$ 的位置矢量 $\boldsymbol{a}^*$ 满足以下方程：
+
+\begin{equation}
+    \label{eq:螺旋运动:a_star公式}
+    \boldsymbol{a}^* = \frac{\boldsymbol{\rho} \times \boldsymbol{\delta} + (\boldsymbol{\rho} \times \boldsymbol{\delta}) \times \boldsymbol{\rho}}{2\boldsymbol{\rho}^2} + \mu \boldsymbol{\rho}
+\end{equation}
+
+
+
+其中 $\mu$ 取决于 $P^*$ 的选择；而螺杆平移矢量 $\boldsymbol{\delta}^*$ 由以下公式给出：
+$$
+\boldsymbol{\delta}^* = \frac{\boldsymbol{\rho} \cdot \boldsymbol{\delta}}{\boldsymbol{\rho}^2} \boldsymbol{\rho}
+$$
+\begin{proof}
+    若 $P^*$ 和 $P$ 均为任意选取的点，且 $\boldsymbol{a}^*$ 是在 $B$ 在 $A$ 中发生位移前，$P^*$ 相对于 $P$ 的位置矢量，$\boldsymbol{b}^*$ 是在此位移之后 $P^*$ 相对于 $P$ 的位置矢量，则 $P^*$ 的位移矢量 $\boldsymbol{\delta}^*$ 可表示为（见图~\ref{fig:螺旋运动}）
+\begin{equation}
+    \boldsymbol{\delta}^* = \boldsymbol{\delta} + \boldsymbol{b}^* - \boldsymbol{a}^*
+    \label{eq:螺旋运动:delta_star定义}
+\end{equation}
+其中 $\boldsymbol{\delta}$ 是点 $P$ 的位移矢量；且由式~\eqref{eq:罗德里格斯向量表示的和差关系}
+\begin{equation}
+    \boldsymbol{b}^* - \boldsymbol{a}^* = \boldsymbol{\rho} \times (\boldsymbol{a}^* + \boldsymbol{b}^*)
+    \label{eq:螺旋运动:差值关系}
+\end{equation}
+代入得
+\begin{equation}
+    \boldsymbol{\delta}^* = \boldsymbol{\delta} + \boldsymbol{\rho} \times (\boldsymbol{a}^* + \boldsymbol{b}^*)
+    \label{eq:螺旋运动:delta_star代入}
+\end{equation}
+因此，若要选择 $P^*$ 使得 $\boldsymbol{\delta}^*$ 与 $\boldsymbol{\rho}$ 平行（此时 $\boldsymbol{\rho} \times \boldsymbol{\delta}^*$ 等于零），则 $\boldsymbol{a}^*$ 必须满足方程：
+\begin{equation}
+    \boldsymbol{\rho} \times \boldsymbol{\delta} + \boldsymbol{\rho} \times [\boldsymbol{\rho} \times (\boldsymbol{a}^* + \boldsymbol{b}^*)] = 0
+    \label{eq:螺旋运动:平行条件}
+\end{equation}
+或等价地，
+\begin{equation}
+    \boldsymbol{\rho} \times \boldsymbol{\delta} + \boldsymbol{\rho} \cdot (\boldsymbol{a}^* + \boldsymbol{b}^*) \boldsymbol{\rho} - \boldsymbol{\rho}^2 (\boldsymbol{a}^* + \boldsymbol{b}^*) = 0
+    \label{eq:螺旋运动:三重积展开}
+\end{equation}
+故
+\begin{equation}
+    \boldsymbol{a}^* + \boldsymbol{b}^* = \frac{\boldsymbol{\rho} \times \boldsymbol{\delta}}{\boldsymbol{\rho}^2} + \frac{\boldsymbol{\rho} \cdot (\boldsymbol{a}^* + \boldsymbol{b}^*)}{\boldsymbol{\rho}^2} \boldsymbol{\rho}
+    \label{eq:螺旋运动:和矢表达式}
+\end{equation}
+然后又有：
+\begin{equation}
+    \boldsymbol{\delta}^* = \boldsymbol{\delta} + \boldsymbol{\rho} \times \frac{\boldsymbol{\rho} \times \boldsymbol{\delta}}{\boldsymbol{\rho}^2} = \frac{\boldsymbol{\rho} \cdot \boldsymbol{\delta}}{\boldsymbol{\rho}^2} \boldsymbol{\rho}
+    \label{eq:螺旋运动:delta_star公式}
+\end{equation}
+和
+\begin{equation}
+    \boldsymbol{b}^* - \boldsymbol{a}^* = \boldsymbol{\rho} \times \frac{\boldsymbol{\rho} \times \boldsymbol{\delta}}{\boldsymbol{\rho}^2}
+    \label{eq:螺旋运动:差值结果}
+\end{equation}
+联立式~\eqref{eq:螺旋运动:和矢表达式}和式~\eqref{eq:螺旋运动:差值结果},可得
+\begin{equation}
+    \boldsymbol{a}^* = \frac{\boldsymbol{\rho} \times \boldsymbol{\delta} + (\boldsymbol{\rho} \times \boldsymbol{\delta}) \times \boldsymbol{\rho}}{2\boldsymbol{\rho}^2} + \frac{\boldsymbol{\rho} \cdot \boldsymbol{a}^*}{\boldsymbol{\rho}^2 }\boldsymbol{\rho}
+\end{equation}可得式~\eqref{eq:螺旋运动:a_star公式}
+
+然后由式~\eqref{eq:螺旋运动:delta_star公式}，两边取模，可得
+\begin{equation}
+    \left|\boldsymbol{\delta}^*\right| = \left|\frac{\boldsymbol{\rho} \cdot \boldsymbol{\delta}}{\boldsymbol{\rho}^2} \boldsymbol{\rho}\right|=\frac{\left|\boldsymbol{\rho} \cdot \boldsymbol{\delta}\right|}{\left|\boldsymbol{\rho}\right|}\leqslant \left|\boldsymbol{\delta}\right|
+\end{equation}
+于是螺杆平移矢量的模长不小于任何不在螺杆轴上的基点的位移矢量的模长。
+\end{proof}
