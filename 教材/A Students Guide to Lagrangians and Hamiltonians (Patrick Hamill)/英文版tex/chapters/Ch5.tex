@@ -1,0 +1,1114 @@
+\textbackslash{}chapter\{Canonical Transformations; Poisson Brackets\}
+\textbackslash{}label\{ch:5\}
+
+coordinates. One usually finds that coordinates that simplify V make T more
+complicated, and vice versa. Nevertheless, the idea of transforming to a different set of coordinates has merit. For example, a problem could be simplified
+if we transformed to a new set of coordinates in which some or all of the
+coordinates are ignorable. If a coordinate is ignorable, we have a partial integration (a ``first integral'') of the equation of motion because if qi is ignorable,
+pi = \textbackslash{}partial L/\textbackslash{}partial $\textbackslash{}dot q$i is constant. Unfortunately, there is no known general method for
+transforming to a set of variables in which the coordinates are ignorable in the
+Lagrangian. Finding such a set of coordinates is a matter of intuition and luck
+rather than a mathematical procedure.
+On the other hand, in Hamiltonian mechanics the situation is much brighter.
+Hamiltonian mechanics treats qi and pi as if both were coordinates. (In fact,
+we shall see that there are transformations that convert positions into momenta
+and momenta into positions.) Thus the Hamiltonian H = H(q, p, t) does not
+depend on derivatives. Furthermore, the equations of motion are first order with
+all of the time derivatives isolated on one side of the equation. But most importantly, Jacobi2 developed a technique for carrying out a transformation from
+qi, pi to a new set of coordinates (say Qi, Pi) for which Hamilton's equations
+still hold and for which the integration of the equations of motion is trivial.
+Consequently, the problem of obtaining the integrated equations of motion is
+reduced to the problem of finding a ``generating function'' that will yield the
+desired transformation.
+It should be mentioned that the procedure is complicated and you may find
+some of the concepts confusing, but this should not obscure the fact that we
+now have a technique for not only obtaining the equations of motion, but for
+actually integrating them and determining the general solution of a dynamical
+problem.3
+\section*{5.2  Canonical transformations}
+
+We have seen that the transformation equations that take us from Cartesian
+coordinates to generalized coordinates are of the form
+$\textbackslash{}xi$ = $\textbackslash{}xi$(q1,q2, . . . , qn; t),
+i = 1, . . . , n.
+3 A word on terminology. The solution of a first-order differential equation that contains as
+many arbitrary constants as there are independent variables is called a ``complete integral.'' If
+the solution depends on an arbitrary function, it is called the ``general integral.'' In mechanics,
+one is usually interested in obtaining the complete integral.
+
+5.2
+Canonical transformations
+Since such a transformation transforms the coordinates of a point from one set
+of coordinates to another it is called a ``point transformation.'' (See Section 3.8.)
+Point transformations can be considered to take place in configuration space.
+In other words, a point transformation takes us from one set of configuration
+space coordinates ($\textbackslash{}xi$) to a new set of configuration space coordinates (qi).
+A point transformation yields a new set of configuration space axes.
+We have also studied the Legendre transformation that allowed us to transform from the Lagrangian (a function of q, $\textbackslash{}dot q$, t ) to the Hamiltonian (a function
+of q, p, t).
+We now consider a particularly important type of coordinate transformations
+called canonical transformations. These are phase space transformations that
+take us from the set of coordinates (pi, qi) to a new set (Pi, Qi) in such a way
+as to preserve the form of Hamilton's equations. Recall that the coordinates
+(pi, qi) describe a system with Hamiltonian H(pi, qi, t) and are such that
+$\textbackslash{}dot q$i = \textbackslash{}partial H
+\textbackslash{}partial pi
+,
+(5.1)
+and
+$\textbackslash{}dot p$i = -\textbackslash{}partial H
+\textbackslash{}partial qi
+.
+(5.2)
+The ``new'' coordinates Pi and Qi can also be used to describe the Hamiltonian
+of the system. The Hamiltonian in terms of the Ps and Qs will, in general,
+have a different functional form than the Hamiltonian in terms of the ps and
+qs. Therefore, we denote it by K(Pi, Qi, t). A canonical transformation is one
+that takes us from the pi, qi to a set of coordinates Pi and Qi such that
+$\textbackslash{}dot Q\_i = \textbackslash{}partial K
+\textbackslash{}partial Pi
+,
+(5.3)
+and
+$\textbackslash{}dot P\_i = -\textbackslash{}partial K
+\textbackslash{}partial Qi
+.
+(5.4)
+Observe that Hamilton's equations in terms of pi, qi (Equations (5.1) and
+(5.2)) and Hamilton's equations in terms of Pi, Qi (Equations (5.3) and (5.4))
+have exactly the same form.
+The technique for generating a canonical transformation is based on the
+method used to derive Hamilton's equations. Recall that they were obtained
+
+from a variational principle, specifically from the modified Hamilton's
+principle (Equation (4.20)), which is
+\textbackslash{}delta
+t2
+t1
+
+pi $\textbackslash{}dot q$i -H(qi, pi, t)
+
+dt = 0.
+(5.5)
+Hamilton's equations would certainly be obeyed if, in terms of the new coordinates, we had
+\textbackslash{}delta
+t2
+t1
+
+Pi $\textbackslash{}dot Q\_i -K(Qi, Pi, t)
+
+dt = 0.
+(5.6)
+However, this is unnecessarily restrictive. For example, if F is an arbitrary
+function of the coordinates and time, adding a term of the form dF
+dt to the
+integrand of this last expression changes nothing. This is easily appreciated as
+follows: consider the expression
+\textbackslash{}delta
+t2
+t1
+
+Pi $\textbackslash{}dot Q\_i -K(Qi, Pi, t) + dF
+dt
+
+dt.
+(5.7)
+Since
+\textbackslash{}delta
+t2
+t1
+dF
+dt dt = \textbackslash{}delta  (F(t2) -F(t1)) ,
+and since the variation at the endpoints is required to vanish, we see that we
+have just added a term equal to zero to our modified Hamilton's principle.
+Therefore, nothing is changed, and Hamilton's principle still holds, but the new
+form (Equation (5.7)) allows us to generate a new Hamiltonian K(Qi, Pi, t)
+as well as a set of transformation equations to the new coordinates Pi and Qi.
+We know that the variation expressed by Equation (5.5) is true. The variation
+expressed by Equation (5.7) will certainly be true if the two integrands are
+equal, that is, if
+p $\textbackslash{}dot q$ -H = P $\textbackslash{}dot Q\_ -K + dF
+dt .
+(5.8)
+(We have suppressed the summations and the subindices for simplicity.)
+To see how Equation (5.8) leads to the transformation equations from p, q
+to P, Q, it is convenient to assume that F depends on a particular combination
+of the new and old coordinates. Thus, let us assume, for the present, that
+F = F1(q, Q, t).
+(5.9)
+
+5.2
+Canonical transformations
+(This really means F = F1(qi, Qi, t), i = 1, . . . , n.) Note that the functional
+form of F is still arbitrary. All we have done is assume that F is some function
+of the new coordinates Qi and the old coordinates qi and time.
+Then Equation (5.8) can be written as
+p $\textbackslash{}dot q$ -H = P $\textbackslash{}dot Q\_ -K + \textbackslash{}partial F1
+\textbackslash{}partial q $\textbackslash{}dot q$ + \textbackslash{}partial F1
+\textbackslash{}partial Q
+$\textbackslash{}dot Q\_ + \textbackslash{}partial F1
+\textbackslash{}partial t .
+Rearranging,
+
+p -\textbackslash{}partial F1
+\textbackslash{}partial q
+
+$\textbackslash{}dot q$ -
+
+P + \textbackslash{}partial F1
+\textbackslash{}partial Q
+
+$\textbackslash{}dot Q\_ = H -K + \textbackslash{}partial F1
+\textbackslash{}partial t .
+This equation will be satisfied if
+p = \textbackslash{}partial F1
+\textbackslash{}partial q ,
+(5.10)
+P = -\textbackslash{}partial F1
+\textbackslash{}partial Q ,
+(5.11)
+and
+K = H + \textbackslash{}partial F1
+\textbackslash{}partial t .
+(5.12)
+At this stage it may appear we have merely stated the obvious, but actually
+we have solved the problem we set out to solve: we now have an equation for
+the new Hamiltonian (Equation (5.12)). Furthermore, since F1 is a function of
+q and Q, then \textbackslash{}partial F1
+\textbackslash{}partial q will also be a function of q and Q. So Equation (5.10) gives
+us an expression of the form
+p = p(q, Q, t).
+This can be inverted to give
+Q = Q(p, q, t).
+Equation (5.11) yields
+P = P(q, Q, t),
+but since we know Q = Q(p, q, t) we can obtain
+P = P(p, q, t).
+The procedure we have used guarantees that Equations (5.1) and (5.2) are
+obeyed, so the transformation is canonical.
+Since this procedure is somewhat abstract, let us carry out such a transformation for a specific choice of the generating function F1(q, Q, t). For simplicity
+
+we shall consider a system described by just two coordinates, namely p and q.
+Assume that
+F1(q, Q, t) = qQ.
+By Equation (5.12) we see that the new Hamiltonian K is equal to the old
+Hamiltonian H. By Equation (5.11) we see that the new coordinate P is
+P = -\textbackslash{}partial F1
+\textbackslash{}partial Q = -q.
+Finally, Equation (5.10) gives
+p = \textbackslash{}partial F1
+\textbackslash{}partial q = Q.
+Hence we see that this particular canonical transformation leads to the new set
+of coordinates
+P = -q,
+Q = p.
+In other words, the transformation changes the momentum into the coordinate and the coordinate into the momentum! This is a very good example of
+the fact that the Hamiltonian formulation blurs the distinction between
+momenta and coordinates, and that is why I referred to both of them simply as
+``coordinates.''
+The analysis we carried out assumed the generating function F was a function of the qi and Qi and we called it F1. As you might expect, useful generating functions are mixed expression involving both the old variables and
+the new variables. There are four types of generating function to consider, and
+these are:
+F = F1(qi, Qi, t),
+(5.13)
+F = F2(qi, Pi, t),
+F = F3(pi, Qi, t),
+F = F4(pi, Pi, t).
+For the three last types of generating function, the relations analogous to Equations (5.10), (5.11) and (5.12) are:
+
+5.2
+Canonical transformations
+pi = \textbackslash{}partial F2
+\textbackslash{}partial qi
+,
+(5.14)
+Qi = \textbackslash{}partial F2
+\textbackslash{}partial Pi
+,
+K = H + \textbackslash{}partial F2
+\textbackslash{}partial t ,
+and
+qi = -\textbackslash{}partial F3
+\textbackslash{}partial pi
+,
+(5.15)
+Pi = -\textbackslash{}partial F3
+\textbackslash{}partial Qi
+,
+K = H + \textbackslash{}partial F3
+\textbackslash{}partial t ,
+and
+qi = -\textbackslash{}partial F4
+\textbackslash{}partial pi
+,
+(5.16)
+Qi = \textbackslash{}partial F4
+\textbackslash{}partial Pi
+,
+K = H + \textbackslash{}partial F4
+\textbackslash{}partial t .
+An interesting example of the second type of generating function is
+F2 =
+
+qiPi.
+(5.17)
+In this case, as you can easily show, the new coordinates are related to the
+old by
+Qi = qi,
+(5.18)
+Pi = pi.
+Thus, this is the identity transformation.
+\begin{exercise}
+Exercise 5.1 Prove that F2 =
+i qiPi generates the identity transformation.
+\end{exercise}
+
+\begin{exercise}
+Exercise 5.2 Obtain the transformation Equations (5.14). Hint: Subtract
+PQ from F2 before plugging into Equation (5.8).
+\end{exercise}
+
+\begin{exercise}
+Exercise 5.3 Let F = F4(pi, Pi, t). Determine the new Hamiltonian and
+the canonical transformation equations.
+
+\end{exercise}
+
+\begin{example}
+Example 5.1 Use a Canonical transformation to solve the harmonic oscillator problem.
+Solution 5.1 The Hamiltonian for a harmonic oscillator is
+H = 1
+2mp2 + k
+2q2.
+Using the fact that the angular frequency for a harmonic oscillator is \textbackslash{}omega  =
+\textbackslash{}sqrtk/m we can write the Hamiltonian in the more convenient form
+H = 1
+2m
+
+p2 + m2\textbackslash{}omega 2q2
+.
+(5.19)
+We can solve this problem by making a canonical transformation to a new
+Hamiltonian K(P, Q) in which the coordinate Q is cyclic. The appropriate
+generating function is
+F = F1(q, Q) = m\textbackslash{}omega
+2 q2 cot Q.
+(I have not yet shown how to obtain the appropriate generating function, so
+you will have to take this on faith.) Using Equations (5.10), (5.11) and (5.12)
+we obtain
+p = m\textbackslash{}omega q cot Q,
+P =
+m\textbackslash{}omega q2
+2 sin2 Q
+,
+K(P, Q) = H(p, q).
+A little bit of algebra yields
+q2 =
+m\textbackslash{}omega P sin2 Q,
+and
+p2 = 2m\textbackslash{}omega P cos2 Q.
+These last two equations give p and q in terms of P and Q. The equation
+K = H means that the new Hamiltonian and the old Hamiltonian have exactly
+the same form with p and q expressed in terms of P and Q as given by the
+transformation equations above. Therefore,
+K(P, Q) = 2m\textbackslash{}omega P cos2 Q
+2m
++
+m2\textbackslash{}omega 2
+m\textbackslash{}omega P sin2 Q
+
+2m
+= \textbackslash{}omega P(cos2 Q + sin2 Q) = \textbackslash{}omega P.
+
+5.3
+Poisson brackets
+Thus we have obtained a Hamiltonian that is cyclic in Q, as we intended. But if
+the Hamiltonian is cyclic in Q then P is constant. In this case the Hamiltonian
+is the total energy E, so we can write
+P = E
+\textbackslash{}omega  .
+Hamilton's equation for Q is
+$\textbackslash{}dot Q\_ = \textbackslash{}partial K
+\textbackslash{}partial P = \textbackslash{}omega .
+This can be integrated immediately to yield
+Q = \textbackslash{}omega t + \textbackslash{}beta ,
+where \textbackslash{}beta  is a constant of integration. Transforming back to our original coordinates
+q =
+
+2P
+m\textbackslash{}omega  sin Q,
+so
+q =
+
+2E
+m\textbackslash{}omega 2 sin(\textbackslash{}omega t + \textbackslash{}beta ),
+and the problem is solved.
+This application for solving a simple problem has been likened to using a
+sledgehammer to crack a peanut.4 However, it emphasizes that in mechanics
+the Hamiltonian is a theoretical rather than a practical tool. (Of course, this is
+not true when you are doing Quantum Mechanics where the use of the Hamiltonian is the only reasonable way to solve many problems.)
+\end{example}
+
+\begin{exercise}
+Exercise 5.4 Show
+that,
+for
+the
+harmonic
+oscillator,
+p =
+\textbackslash{}sqrt
+2mE
+cos(\textbackslash{}omega t + \textbackslash{}beta ).
+\end{exercise}
+
+\section*{5.3  Poisson brackets}
+
+We now introduce the Poisson brackets. The notation used may be a bit
+confusing at first, but you will probably quickly appreciate how useful the
+Poisson brackets are in the development of Hamiltonian dynamics. They also
+4 Herbert Goldstein, Classical Mechanics, Addison-Wesley Pub. Co., Reading MA, USA, 1950,
+page 247.
+
+pave the way for transforming classical dynamics into quantum mechanics.
+On a practical level, the Poisson brackets give us an easy way to determine
+whether or not a transformation from one set of variables to another is
+canonical.
+Let p and q be canonical variables, and let u and v be functions of p and q.
+The Poisson bracket of u and v is defined as
+[u, v]p,q \textbackslash{}equiv \textbackslash{}partial u
+\textbackslash{}partial q
+\textbackslash{}partial v
+\textbackslash{}partial p -\textbackslash{}partial u
+\textbackslash{}partial p
+\textbackslash{}partial v
+\textbackslash{}partial q .
+(5.20)
+Generalizing to a system of n degrees of freedom we have
+[u, v] =
+n
+
+i=1
+\textbackslash{}partial u
+\textbackslash{}partial qi
+\textbackslash{}partial v
+\textbackslash{}partial pi
+-\textbackslash{}partial u
+\textbackslash{}partial pi
+\textbackslash{}partial v
+\textbackslash{}partial qi
+
+.
+Using the Einstein summation convention this is written
+[u, v] = \textbackslash{}partial u
+\textbackslash{}partial qi
+\textbackslash{}partial v
+\textbackslash{}partial pi
+-\textbackslash{}partial u
+\textbackslash{}partial pi
+\textbackslash{}partial v
+\textbackslash{}partial qi
+.
+(5.21)
+From the definition of the Poisson bracket it is obvious that
+[qi, qj] = [pi, pj] = 0,
+(5.22)
+and that
+[qi, pj] = -[pi, qj] = \textbackslash{}delta ij.
+(5.23)
+It is interesting to note that relationships involving Poisson brackets can
+be transformed into quantum mechanical relationships by replacing the
+Poisson bracket with the quantum mechanical commutator using the simple
+prescription
+[u, v] \textbackslash{}to 1
+iℏ(ˆuˆv -ˆv ˆu),
+(5.24)
+where u, v are classical functions and ˆu, ˆv are the corresponding quantum
+mechanical operators.
+A Poisson bracket is invariant under a change in canonical variables.
+That is,
+[u, v]p,q = [u, v]P,Q.
+In other words, Poisson brackets are canonical invariants. This relationship
+gives us an easy way to determine whether or not a set of variables is canonical.
+
+5.4
+The equations of motion in terms of Poisson brackets
+Rules for manipulating Poisson brackets
+There are a few simple rules involving Poisson brackets that can (mostly) be
+proved immediately by writing out the definition of the Poisson brackets. These
+rules essentially define the arithmetic of Poisson brackets. They are:
+[u, u] = 0
+(5.25)
+[u, v] = -[v, u]
+(5.26)
+[au + bv, w] = a[u, w] + b[v, w]
+(5.27)
+[uv, w] = [u, w]v + u[v, w].
+(5.28)
+A useful relationship which is somewhat harder to prove is called Jacobi's
+identity. It is:
+[u, [v, w]] + [v, [w, u]] + [w, [u, v]] = 0.
+(5.29)
+\begin{exercise}
+Exercise 5.5 Prove Equations (5.22) and (5.23).
+\end{exercise}
+
+\begin{exercise}
+Exercise 5.6 Prove that Poisson brackets are invariant under canonical
+transformations.
+\end{exercise}
+
+\begin{exercise}
+Exercise 5.7 Prove Equations (5.25) and (5.26).
+\end{exercise}
+
+\section*{5.4  The equations of motion in terms of Poisson brackets}
+
+We have expressed the equations of motion for a mechanical system in a variety
+of ways, including Newton's second law, the Lagrange equations, and Hamilton's equations. The equations of motion can also be expressed in terms of the
+Poisson brackets, as we now demonstrate.
+Recall that Hamilton's equations are a set of 2n first-order equations for
+$\textbackslash{}dot q$i and $\textbackslash{}dot p$i, that is, for the first derivative of the variables. (This differs from
+the Lagrange equations or Newton's laws which are a set of n second-order
+equations for $\textbackslash{}ddot q$i.)
+If u is a function of qi, pi, t, we can write
+du
+dt = \textbackslash{}partial u
+\textbackslash{}partial qi
+$\textbackslash{}dot q$i + \textbackslash{}partial u
+\textbackslash{}partial pi
+$\textbackslash{}dot p$i + \textbackslash{}partial u
+\textbackslash{}partial t .
+
+But $\textbackslash{}dot q$i and $\textbackslash{}dot p$i can be expressed using Hamilton's equations so we obtain
+du
+dt = \textbackslash{}partial u
+\textbackslash{}partial qi
+\textbackslash{}partial H
+\textbackslash{}partial pi
+-\textbackslash{}partial u
+\textbackslash{}partial pi
+\textbackslash{}partial H
+\textbackslash{}partial qi
++ \textbackslash{}partial u
+\textbackslash{}partial t ,
+= [u, H] + \textbackslash{}partial u
+\textbackslash{}partial t .
+(5.30)
+If u = constant, du
+dt = 0 and [u, H] = -\textbackslash{}partial u
+\textbackslash{}partial t . Therefore, if u does not depend
+explicitly on t, then [u, H] = 0.5
+Now suppose that u = q. We have
+$\textbackslash{}dot q$ = [q, H].
+(5.31)
+Similarly,
+$\textbackslash{}dot p$ = [p, H].
+(5.32)
+Thus we have written Hamilton's equations of motion in terms of Poisson
+brackets. Furthermore, if we let u = H we have
+dH
+dt = [H, H] + \textbackslash{}partial H
+\textbackslash{}partial t ,
+or
+dH
+dt = \textbackslash{}partial H
+\textbackslash{}partial t ,
+(5.33)
+as we have already seen (Equation (4.19)).
+In terms of symplectic notation where the column matrix \textbackslash{}eta  has components
+q1, . . . , pn, we can combine Equations (5.31) and (5.32) into one, thus
+$\textbackslash{}dot\textbackslash{}$eta  = [\textbackslash{}eta , H],
+(5.34)
+which is a prescription for generating the values of q1, . . . , pn at some later
+time if their values at time t are known, because
+\textbackslash{}eta (t + dt) = \textbackslash{}eta (t) + $\textbackslash{}dot\textbackslash{}$eta dt.
+5.4.1 Infinitesimal canonical transformations
+In an infinitesimal canonical transformation the new coordinates differ
+only infinitesimally from the old coordinates. Therefore, the transformation
+equations from pi, qi to Pi, Qi will have the form
+5 In quantum mechanical terminology we would say that ˆu commutes with ˆH. See
+Equation (5.24). You probably recall from your quantum mechanics course that conserved
+quantities commute with the Hamiltonian.
+
+5.4
+The equations of motion in terms of Poisson brackets
+Qi = qi + \textbackslash{}delta qi,
+Pi = pi + \textbackslash{}delta pi.
+(A word on the notation. Here \textbackslash{}delta qi and \textbackslash{}delta pi are infinitesimal changes in the qi
+and pi and are not virtual displacements.)
+For the identity transformation we wrote
+pi = \textbackslash{}partial F2
+\textbackslash{}partial qi
+,
+Qi = \textbackslash{}partial F2
+\textbackslash{}partial Pi
+,
+with F2 =
+qiPi. (See Equations (5.14).) Therefore, the infinitesimal canonical transformation which differs infinitesimally from the identity transformation has a ``generating function'' given by
+F2(q, P, t) =
+qiPi + ϵG(q, P, t),
+where ϵ is an infinitesimal quantity and G is an arbitrary function. Then, by
+the rules for F2 transformations (Equations (5.14)) we see that
+pj = \textbackslash{}partial F2
+\textbackslash{}partial qj
+= Pj + ϵ \textbackslash{}partial G
+\textbackslash{}partial qj
+,
+Qj = \textbackslash{}partial F2
+\textbackslash{}partial Pj
+= qj + ϵ \textbackslash{}partial G
+\textbackslash{}partial Pj
+.
+Now,
+\textbackslash{}delta qj = Qj -qj = ϵ \textbackslash{}partial G
+\textbackslash{}partial Pj
+,
+and to first order in ϵ we can write
+\textbackslash{}delta qj = ϵ \textbackslash{}partial G
+\textbackslash{}partial pj
+.
+(5.35)
+Similarly, \textbackslash{}delta pj = Pj -pj so
+\textbackslash{}delta pj = -ϵ \textbackslash{}partial G
+\textbackslash{}partial qj
+.
+(5.36)
+In symplectic notation Equations (5.35) and (5.36) are expressed as
+\textbackslash{}delta \textbackslash{}eta  = ϵ [\textbackslash{}eta , G] .
+(5.37)
+
+Since F2 is guaranteed to generate a canonical transformation, we appreciate
+that (5.37) is indeed an infinitesimal canonical transformation.
+In general
+\textbackslash{}zeta  = \textbackslash{}eta  + \textbackslash{}delta \textbackslash{}eta ,
+(5.38)
+is a transformation from q1, . . . , pn to a nearby point in phase space
+q1 + \textbackslash{}delta q1, . . . , pn + \textbackslash{}delta pn. But if the quantity G is taken to be the Hamiltonian H, the transformation is a displacement in time from q1(t), . . . , pn(t) to
+q1(t + dt), . . . , pn(t + dt). (This canonical transformation in time is sometimes called a ``contact'' transformation.) Thus, the Hamiltonian is the generator of the motion of the system in time; it generates the canonical variables at
+a later time.
+We now consider the change in a function u = u(q, p) under a canonical
+transformation. Note that there are two ways to interpret a canonical transformation. On the one hand, it changes the description of a system from an
+old set of canonical variables q, p to a new set of canonical variables Q, P.
+Under such a transformation a function u may have a different form but it
+will still have the same value. Thus, if q1(t), . . . , pn(t) are denoted by A and
+Q1(t), . . . , Pn(t) are denoted by A′, the transformed function u(A′) has the
+same value as the original function u(A):
+u(A′) = u(A).
+(The value of the total angular momentum of a rotating body is the same
+regardless of the set of coordinates used to evaluate it.) Of course, u(A′) will
+in general have a different mathematical form than u(A). (In Cartesian coordinates the angular momentum of a mass point moving in a circle is m(x $\textbackslash{}dot y$ -y $\textbackslash{}dot x$)
+and in polar coordinates it is mr2 $\textbackslash{}dot\textbackslash{}$theta .)
+On the other hand, if we consider an infinitesimal contact transformation
+that generates a translation in time, the interpretation is quite different. Now
+the transformation takes us from A, representing the values q1(t), . . . , pn(t),
+to B, representing q1(t + dt), . . . , pn(t + dt), in the same phase space (with
+the same set of phase space axes) but at a later time. Since we are in the same
+phase space and using the same set of coordinates, the form of u is conserved
+but its value changes. Let us represent such a change in the function u by
+\textbackslash{}partial u = u(B) -u(A).
+
+5.4
+The equations of motion in terms of Poisson brackets
+But since u = u(q, p) we write
+\textbackslash{}partial u = \textbackslash{}partial u
+\textbackslash{}partial qi
+\textbackslash{}delta qi + \textbackslash{}partial u
+\textbackslash{}partial pi
+\textbackslash{}delta pi
+= \textbackslash{}partial u
+\textbackslash{}partial qi
+ϵ \textbackslash{}partial G
+\textbackslash{}partial pi + \textbackslash{}partial u
+\textbackslash{}partial pi
+
+-ϵ \textbackslash{}partial G
+\textbackslash{}partial qi
+
+= ϵ
+
+\textbackslash{}partial u
+\textbackslash{}partial qi
+\textbackslash{}partial G
+\textbackslash{}partial pi
+-\textbackslash{}partial u
+\textbackslash{}partial pi
+\textbackslash{}partial G
+\textbackslash{}partial qi
+
+,
+or
+\textbackslash{}partial u = ϵ[u, G].
+(5.39)
+Now let us consider a change in the Hamiltonian under a contact transformation. The Hamiltonian differs from an ordinary function u in the following way.
+Under a canonical transformation u(A) \textbackslash{}to u(A′) the value of u is constant, but
+for the Hamiltonian, a canonical transformation from A to A′ can result in a
+function with a different value. In fact, the transformed Hamiltonian will generally be a completely different function. This is because the Hamiltonian is
+not a function having a specific value, but rather a function which defines the
+canonical equations of motion. Therefore, we must write
+H(A) \textbackslash{}to K(A′).
+As we know,
+K = H + \textbackslash{}partial F
+\textbackslash{}partial t .
+But for an infinitesimal canonical transformation, we want K to differ from H
+by only an infinitesimal amount, so F is approximately equal to the identity
+transformation. As before, we write
+F2 =
+
+qiPi + ϵG(q, P, t).
+Then,
+K(A′) = H(A) + \textbackslash{}partial
+\textbackslash{}partial t
+
+qiPi + ϵG(q, P, t)
+
+= H(A) + ϵ \textbackslash{}partial G
+\textbackslash{}partial t ,
+and
+\textbackslash{}partial H = H(B) -K(A′) = H(B) -H(A) -ϵ \textbackslash{}partial G
+\textbackslash{}partial t .
+But
+H(B) -H(A) = ϵ[H, G],
+
+so
+\textbackslash{}partial H = ϵ[H, G] -ϵ \textbackslash{}partial G
+\textbackslash{}partial t .
+Now by Equation (5.30),
+dG
+dt = [G, H] + \textbackslash{}partial G
+\textbackslash{}partial t .
+Therefore
+ϵ \textbackslash{}partial G
+\textbackslash{}partial t = ϵ dG
+dt -ϵ[G, H],
+and
+\textbackslash{}partial H = ϵ[H, G] -ϵ \textbackslash{}partial G
+\textbackslash{}partial t + ϵ[G, H] = -ϵ \textbackslash{}partial G
+\textbackslash{}partial t .
+(5.40)
+If G is a constant of the motion, dG
+dt = 0 and \textbackslash{}partial H = 0. That is, if the generating function is a constant of the motion, the Hamiltonian is invariant. This
+is closely related to the relationship between symmetries and constants of the
+motion. Recall that under a translation involving an ignorable coordinate, the
+Hamiltonian is invariant and the conjugate generalized momentum is constant.
+But if the Hamiltonian is invariant, then G, the generator of the infinitesimal canonical transformation, must be a constant of the motion (because then
+dG
+dt = 0). That is, the symmetry (the cyclic nature of one of the coordinates)
+implies a constant of the motion (G).
+5.4.2 Canonical invariants
+So far we have considered two quantities that are canonical invariants, that is,
+quantities that do not change when the variables undergo a canonical transformation from the p, q to the P, Q. The first set of such canonical invariants is,
+of course, Hamilton's equations. The second is the Poisson bracket. Any equation expressed in terms of Poisson brackets will be invariant under a canonical
+transformation of variables. One can actually develop a system of mechanics
+based on Poisson brackets in which all equations are the same for any set of
+canonical variables.
+A third quantity that can be shown to be a canonical invariant is the volume
+element in phase space. In other words, if the volume element in terms of the
+variables qi, pi is
+d\textbackslash{}eta  = dq1dq2 \textbackslash{}cdot  \textbackslash{}cdot  \textbackslash{}cdot  dqn dp1dp2 \textbackslash{}cdot  \textbackslash{}cdot  \textbackslash{}cdot  dpn,
+
+5.4
+The equations of motion in terms of Poisson brackets
+and the volume element in terms of the canonical variables Qi, Pi is
+d\textbackslash{}zeta  = dQ1dQ2 \textbackslash{}cdot  \textbackslash{}cdot  \textbackslash{}cdot  dQn dP1dP2 \textbackslash{}cdot  \textbackslash{}cdot  \textbackslash{}cdot  dPn,
+then
+d\textbackslash{}eta  = d\textbackslash{}zeta .
+(5.41)
+Let us consider the proof of this assertion. The proof is based on the fact that
+the transformation of the infinitesimal volume element expressed in one set of
+variables (x1, x2, . . . , xn) to another set (q1, q2, . . . , qm) is given by
+dx1dx2 \textbackslash{}cdot  \textbackslash{}cdot  \textbackslash{}cdot  dxn = Ddq1dq2 \textbackslash{}cdot  \textbackslash{}cdot  \textbackslash{}cdot  dqm,
+where D is the Jacobian determinant defined by
+D = \textbackslash{}partial (q1, . . . , qm)
+\textbackslash{}partial (x1, . . . , xn) =
+
+\textbackslash{}partial q1
+\textbackslash{}partial x1
+\textbackslash{}partial q1
+\textbackslash{}partial x2
+. . .
+\textbackslash{}partial q1
+\textbackslash{}partial xn
+...
+\textbackslash{}partial qm
+\textbackslash{}partial x1
+\textbackslash{}partial qm
+\textbackslash{}partial x2
+\textbackslash{}cdot  \textbackslash{}cdot  \textbackslash{}cdot
+\textbackslash{}partial qm
+\textbackslash{}partial xn
+
+.
+The volume of some region of phase space expressed in terms of the two sets
+of canonical variables (q1, . . . , pn) and (Q1, . . . , Pn) is
+
+. . .
+
+dQ1dQ2 \textbackslash{}cdot  \textbackslash{}cdot  \textbackslash{}cdot  dPn =
+
+. . .
+
+Ddq1dq2 \textbackslash{}cdot  \textbackslash{}cdot  \textbackslash{}cdot  dpn.
+The volume is invariant if and only if D = 1. Thus the proof of the invariance
+of the volume under a canonical transformation is reduced to proving that the
+Jacobian determinant is equal to unity.
+Note that
+D = \textbackslash{}partial (Q1, . . . , Pn)
+\textbackslash{}partial (q1, . . . , pn) =
+
+\textbackslash{}partial Q1
+\textbackslash{}partial q1
+\textbackslash{}partial Q1
+\textbackslash{}partial q2
+\textbackslash{}cdot  \textbackslash{}cdot  \textbackslash{}cdot
+\textbackslash{}partial Q1
+\textbackslash{}partial pn
+...
+\textbackslash{}partial Pn
+\textbackslash{}partial q1
+\textbackslash{}partial Pn
+\textbackslash{}partial q2
+\textbackslash{}cdot  \textbackslash{}cdot  \textbackslash{}cdot
+\textbackslash{}partial Pn
+\textbackslash{}partial pn
+
+.
+Now the Jacobian can be treated somewhat like a fraction and the value of D
+is not changed if we divide top and bottom by \textbackslash{}partial (q1, . . . , qn, P1, . . . , Pn), thus
+D = \textbackslash{}partial (Q1, . . . , Pn)
+\textbackslash{}partial (q1, . . . , pn) =
+\textbackslash{}partial (Q1,...,Pn)
+\textbackslash{}partial (q1,..., qn,P1,...,Pn)
+\textbackslash{}partial (q1,...,pn)
+\textbackslash{}partial (q1,..., qn,P1,...,Pn)
+.
+Another property of Jacobians (which follows from the properties of
+determinants) is that if the same quantities appear in the numerator and
+
+denominator, they can be dropped, yielding a Jacobian of lower order.6
+Therefore we can write
+D = \textbackslash{}partial (Q1, . . . , Qn)/\textbackslash{}partial (q1, . . . , qn)
+\textbackslash{}partial (p1, . . . , pn)/\textbackslash{}partial (P1, . . . , Pn) = \textbar{}n\textbar{}
+\textbar{}d\textbar{},
+where we dropped the Ps in the numerator and the qs in the denominator.
+(The quantity \textbar{}n\textbar{} represents the determinant of the numerator and \textbar{}d\textbar{} represents the determinant of the denominator.) The ikth element of the determinant
+in the numerator is
+nik = \textbackslash{}partial Qi
+\textbackslash{}partial qk
+,
+and the kith element of the denominator is
+dki = \textbackslash{}partial pk
+\textbackslash{}partial Pi
+.
+If the generating function of the canonical transformation has the form
+F = F2(qi, Pi, t), then by Equations (5.14)
+pi = \textbackslash{}partial F
+\textbackslash{}partial qi
+,
+Qi = \textbackslash{}partial F
+\textbackslash{}partial Pi
+,
+and consequently the ikth element of the numerator is
+nik =
+\textbackslash{}partial
+\textbackslash{}partial qk
+\textbackslash{}partial F
+\textbackslash{}partial Pi
+=
+\textbackslash{}partial 2F
+\textbackslash{}partial qk\textbackslash{}partial Pi
+,
+and the kith element of the denominator is
+dki =
+\textbackslash{}partial
+\textbackslash{}partial Pi
+\textbackslash{}partial F
+\textbackslash{}partial qk
+=
+\textbackslash{}partial 2F
+\textbackslash{}partial qk\textbackslash{}partial Pi
+,
+so the two determinants differ only in the fact that the rows and columns are
+interchanged. This does not affect the value of a determinant, so we conclude
+that D = 1 and the assertion is proved.
+\begin{exercise}
+Exercise 5.8 Show that for the transformation from Cartesian to polar
+coordinates that D = r.
+6 See, for example, Section 6.4.4 of Mathematical Methods for Physics and Engineering by
+K. F. Riley, M. P. Hobson and S. J. Bence, 2nd Edn, Cambridge University Press, 2002.
+
+5.4
+The equations of motion in terms of Poisson brackets
+\end{exercise}
+
+\begin{exercise}
+Exercise 5.9 Consider a canonical transformation from (q, p) to (Q, P).
+(Here n = 1.) (a) Show that
+\textbackslash{}partial (Q, P)
+\textbackslash{}partial (q, p) = \textbackslash{}partial (Q, P)/\textbackslash{}partial (q, P)
+\textbackslash{}partial (q, p)/\textbackslash{}partial (q, P) .
+(b) Show that
+\textbackslash{}partial (Q, P)
+\textbackslash{}partial (q, P) = \textbackslash{}partial Q
+\textbackslash{}partial q .
+5.4.3 Liouville's theorem
+Recall the analogy between the phase fluid and real fluids and consider that
+some fluids are incompressible. (Water is a reasonably good example of an
+incompressible fluid.) From fluid dynamics it is known that if a fluid is incompressible, then the velocity field v = v(x, y, z) has zero divergence: \textbackslash{}nabla\textbackslash{}cdot  v = 0.
+The phase fluid behaves like a 2n-dimensional incompressible fluid. The
+``velocity'' components for this fluid are $\textbackslash{}dot q$i and $\textbackslash{}dot p$i. Therefore, the condition
+for incompressibility is
+n
+
+i=1
+\textbackslash{}partial $\textbackslash{}dot q$i
+\textbackslash{}partial qi
++ \textbackslash{}partial $\textbackslash{}dot p$i
+\textbackslash{}partial pi
+
+= 0.
+(5.42)
+Applying the divergence theorem to the velocity of an incompressible fluid we
+find that the flux of the fluid across any closed surface is zero. Similarly, the
+flux of the phase fluid over any closed surface in phase space is zero. This fact,
+which was discovered by Liouville, is called ``Liouville's theorem.'' Since the
+development of a system in time can be treated as a canonical transformation,
+this is just another way of stating that the volume of a region of the phase fluid
+is constant in time, and we have just proved that this is a property of canonical
+transformations.
+Liouville's theorem is particularly useful in statistical mechanics. For example, in considering a gas the system will probably contain about 1026 molecules.
+It is clearly out of the question to follow the motion of each individual particle. In statistical mechanics this type of problem is dealt with by imagining
+an ensemble of such systems and evaluating ensemble averages of the parameters of interest. For example, the ensemble could consist of a large number of
+identical systems of gas molecules differing only in their initial conditions. In
+phase space, each member of the ensemble is represented by a single point and
+
+the whole ensemble is represented by a large number of points. Liouville's theorem states that the density of these points remains constant in time. Note that
+if the phase fluid is incompressible, it has a constant density. By the constant
+density of the phase fluid we mean that the number of points in a given volume
+does not change. Each point represents a system. As time goes on, the points
+in a volume move along their phase paths and the surface enclosing them will
+be distorted, but it will have the same volume as before. Now the volume of a
+region of phase space is given by
+\textbackslash{}tau  =
+
+dq1 \textbackslash{}cdot  \textbackslash{}cdot  \textbackslash{}cdot  dqndp1 \textbackslash{}cdot  \textbackslash{}cdot  \textbackslash{}cdot  dpn.
+Liouville's theorem gives us an additional constant of the motion, namely
+\textbackslash{}tau  = constant.
+Another point of view is to consider an infinitesimal region of phase space
+containing a number of systems. The density is just the number of systems
+divided by the volume. At a later time, these systems will have moved to a different region of phase space. The region enclosing the points will have changed
+shape, but will have the same volume as before because the volume element
+in phase space is a canonical invariant. But if the number of systems is constant and the volume is constant, then the density is constant and the theorem
+is proved.
+It is interesting to note that if the density is denoted by \textbackslash{}rho  then in general,
+d\textbackslash{}rho
+dt = [\textbackslash{}rho , H] + \textbackslash{}partial \textbackslash{}rho
+\textbackslash{}partial t .
+But since d\textbackslash{}rho
+dt = 0 we have
+\textbackslash{}partial \textbackslash{}rho
+\textbackslash{}partial t = -[\textbackslash{}rho , H].
+\end{exercise}
+
+\begin{exercise}
+Exercise 5.10 Show that if \textbackslash{}nabla\textbackslash{}cdot  v = 0 then there is no net flow of material across the boundary of a given volume. (Hint: Use the divergence
+theorem.)
+\end{exercise}
+
+\begin{exercise}
+Exercise 5.11 Show that Equation (5.42) is true in general.
+5.4.4 Angular momentum
+Another application of infinitesimal canonical transformations involves the
+angular momentum of a system. If a system is symmetric with respect to a
+
+5.5
+Angular momentum in Poisson brackets
+rotation, then the rotation angle (say \textbackslash{}theta ) is cyclic and the conjugate generalized
+momentum (the angular momentum L) will be constant.7 Conversely, if the
+generating function is taken to be the angular momentum, the transformation
+is a rigid rotation of the system. This can be shown as follows. Let
+G = Lz =
+
+(ri \textbackslash{}times  pi)z =
+
+(xipyi -yipxi).
+(We selected the z component of angular momentum for simplicity; this does
+not imply any lack of generality.) If we carry out an infinitesimal rotation d\textbackslash{}theta
+about the z axis, it is easy to show that
+\textbackslash{}delta $\textbackslash{}xi$ = -yid\textbackslash{}theta
+\textbackslash{}delta yi = xid\textbackslash{}theta
+\textbackslash{}delta zi = 0,
+and
+\textbackslash{}delta pxi = -pyid\textbackslash{}theta
+\textbackslash{}delta pyi = pxid\textbackslash{}theta
+\textbackslash{}delta pzi = 0.
+Now we have seen that \textbackslash{}delta qj = ϵ \textbackslash{}partial G
+\textbackslash{}partial pj (Equation (5.35)) and that \textbackslash{}delta pj = -ϵ \textbackslash{}partial G
+\textbackslash{}partial qj
+(Equation (5.36)), so if we use d\textbackslash{}theta  for the infinitesimal parameter ϵ,
+\textbackslash{}delta $\textbackslash{}xi$ = ϵ \textbackslash{}partial G
+\textbackslash{}partial pxi
+= ϵ
+\textbackslash{}partial
+\textbackslash{}partial pxi
+
+xjpyj -yjpxj
+
+= ϵ(-yi) = -yid\textbackslash{}theta ,
+as expected. The other relations follow similarly.
+\end{exercise}
+
+\section*{5.5  Angular momentum in Poisson brackets}
+
+We have seen that the infinitesimal canonical transformation generates a change
+in a function u given by
+\textbackslash{}partial u = ϵ[u, G].
+In the ``active'' interpretation we think of the ICT as a transformation that generates the (new) value of the function due to some change in the system parameters. In particular, if G is the Hamiltonian, then we let ϵ = dt and \textbackslash{}partial u is the
+change in the function u as the parameter time goes from t to t + dt. If G is
+some other function, then \textbackslash{}partial u represents a different sort of change in u.
+7 Do not confuse the vector angular momentum L with the Lagrangian.
+
+If u is a particular component of a vector F, say Fi, then the change in Fi
+due to an infinitesimal canonical transformation is
+\textbackslash{}partial Fi = ϵ[Fi, G].
+If G is a component of the angular momentum (G = ˆn \textbackslash{}cdot  L) and ϵ is taken to be
+d\textbackslash{}theta , then the ICT gives the change in Fi due to a rotation of the system through
+the angle d\textbackslash{}theta  about ˆn:
+\textbackslash{}partial Fi = d\textbackslash{}theta [Fi, ˆn \textbackslash{}cdot  L].
+Note that this ICT gives the change in the component Fi along some direction fixed in space, that is, along a fixed axis. For example, Fi might be F \textbackslash{}cdot  \textbackslash{}hat\{k\}
+where the Cartesian unit vectors î, \textbackslash{}hat\{j\}, \textbackslash{}hat\{k\} are assumed to be fixed in space and not
+affected by the rotation. Clearly, the components of some vectors are affected
+by the rotation and others are not. Axes fixed in the body rotate with it; axes
+fixed in space do not. An external vector, such as the gravitational force, is
+obviously not affected by a rotation of the body. On the other hand, a component of the angular momentum of the system would, in general, be affected by
+such a rotation. A ``system vector'' is a vector whose components depend on
+the orientation of the body and which is affected by a rotation of the system.
+The change in a system vector due to an infinitesimal rotation d\textbackslash{}theta  about some
+axis ˆn is, according to vector analysis,
+dF = ˆnd\textbackslash{}theta \textbackslash{}times F,
+whereas the Poisson bracket formulation yields
+\textbackslash{}partial F = d\textbackslash{}theta [F, ˆn \textbackslash{}cdot  L].
+The two formulations must be equivalent, so
+[F, ˆn\textbackslash{}cdot L] = ˆn \textbackslash{}times  F.
+(5.43)
+This equation is particularly interesting and useful because all reference to the
+rotation has been deleted and is valid for all system vectors. It gives the relationship between the Poisson bracket of the system vector with a component of
+the angular momentum [F, ˆn\textbackslash{}cdot L] and the cross product of the unit vector in the
+direction of the angular momentum component and the system vector ˆn\textbackslash{}times F.
+Sometimes this last relationship is more easily used in terms of components in
+which case it reads
+
+5.5
+Angular momentum in Poisson brackets
+[Fi, Lj] = ϵijkFk,
+(5.44)
+where ϵijk is the Levi--Civita density.8
+Another useful relationship involves the Poisson bracket of the dot product
+of two system vectors (say F and V) and a component of L. Using (5.43):
+[F \textbackslash{}cdot  V, ˆn \textbackslash{}cdot  L] = F \textbackslash{}cdot  [V, ˆn \textbackslash{}cdot  L] + V \textbackslash{}cdot  [F, ˆn \textbackslash{}cdot  L]
+(5.45)
+= F \textbackslash{}cdot  (ˆn \textbackslash{}times  V) + V \textbackslash{}cdot  (ˆn \textbackslash{}times  F)
+= (F \textbackslash{}times  ˆn) \textbackslash{}cdot  V + V \textbackslash{}cdot  (ˆn \textbackslash{}times  F) = 0,
+where we exchanged the dot and cross on the first term. Now if F and V are
+both taken to be L, Equation (5.44) gives the following relation between the
+components of the angular momentum
+[Li, Lj] = ϵijkLk,
+(5.46)
+and Equation (5.45) gives
+[L2, ˆn \textbackslash{}cdot  L] = 0.
+(5.47)
+It can easily be shown that the Poisson bracket of any two constants of the
+motion is also a constant of the motion. (This is called Poisson's theorem.)
+Therefore, if Lx and Ly are constants of the motion, then by (5.46), so too is
+Lz. Recall that according to Equation (5.22) the Poisson bracket of any two
+canonical momentum components is zero. But [Li, Lj] = ϵijkLk, so Li and
+Lj cannot be canonical variables. More generally, no two components of L
+can simultaneously be canonical variables. One the other hand, the relation
+[L2, ˆn \textbackslash{}cdot  L] = 0 shows that the magnitude of L (or L2) and a component of L
+can simultaneously be canonical variables.9
+Furthermore if p is the linear momentum of the system and if pz is constant,
+then so too are px and py. This is easily proved because by Equation (5.44)
+[pz, Lx] = py,
+and, according to Poisson's theorem, if pz and Lx are constants, then py is also
+a constant. Similarly,
+[pz, Ly] = -px,
+8 The Levi-Civita density ϵijk is defined to be zero if any two indices are equal; it is +1 if ijk
+are even permutations of 123, and it is -1 if ijk are odd permutations of 123.
+9 This statement carries over into quantum mechanics where we find that no two components of
+L can simultaneously have eigenvalues, but, for example, Lz and L2 can be quantized
+together.
+
+and so px is also constant. Thus, both L and p are conserved if Lx, Ly and pz
+are constant.
+All of these relationships are probably familiar to you from your study of
+quantum mechanics.
+\section*{5.6  Problems}
+
+5.1 (a) Prove that the transformation
+Q = p/ tan q,
+P = log(sin q/p),
+is canonical. (b) Find the generating function F1(q, Q) for this transformation.
+5.2 Assume H(q1, q2, p1, p2) = q1p1 -q2p2 -aq2
+1 + bq2
+2, where a and b
+are constants. Show that the time derivative of q1q2 is zero. (Use Poisson
+brackets.)
+5.3 Under what condition is the following transformation not canonical?
+Q = q + ip,
+P = Q∗.
+\section*{5.4  Consider the generating function}
+
+F2(q, P) = (q + P)2.
+Obtain the transformation equations.
+\section*{5.5  The Hamiltonian for a falling body is}
+
+H = p2
+2m + mgz,
+where g is the acceleration of gravity. Determine the generating function
+F4(p, P) if K = P.
+5.6 Does F1(q, Q) = q2 + Q4 generate a canonical transformation?
+5.7 Suppose f and g are constants of the motion. Prove that their Poisson
+bracket is also an integral of the motion.
+5.8 Prove Jacobi's identity (Equation (5.29)). Show that the commutator
+[A, B] = AB -BA also satisfies a relation similar to the Jacobi identity. That is, show that [A, BC] = [A, B]C + B[A, C].
+5.9 Consider a generating function of the form F3(pi, Qi, t). (a) Derive
+expressions for qi, Pi and K, as given by Equations (5.15). (b) Determine
+q, P, and K, if F3 = pQ.
+
+5.6
+Problems
+5.10 Assume q and p are canonical. Show that if Q and P are canonical, then
+the following conditions hold
+\textbackslash{}partial Q
+\textbackslash{}partial q = \textbackslash{}partial p
+\textbackslash{}partial P , \textbackslash{}partial Q
+\textbackslash{}partial p = -\textbackslash{}partial q
+\textbackslash{}partial P , \textbackslash{}partial P
+\textbackslash{}partial q = -\textbackslash{}partial p
+\textbackslash{}partial Q, \textbackslash{}partial P
+\textbackslash{}partial p = \textbackslash{}partial q
+\textbackslash{}partial Q.
+Prove directly and by using Poisson brackets.
+
+Hamilton--Jacobi theory
+In the previous chapter it was mentioned that there is no general technique for
+solving the n coupled second-order Lagrange equations of motion, but that
+Jacobi had derived a general method for solving the 2n coupled canonical
+equations of motion, allowing one to determine all the position and momentum
+variables in terms of their initial values and the time.
+There are two slightly different ways to solve Hamilton's canonical equations. One is more general, whereas the other is a bit simpler, but is only valid
+for systems in which energy is conserved. We will go through the procedure
+for the more general method, then solve the harmonic oscillator problem by
+using the second method.
+Both methods involve solving a partial differential equation for the quantity
+S that is called ``Hamilton's principal function.'' The problem of solving the
+entire system of equations of motion is reduced to solving a single partial differential equation for the function S. This partial differential equation is called
+the ``Hamilton--Jacobi equation.'' Reducing the dynamical problem to solving
+just one equation is quite satisfying from a theoretical point of view, but it is
+not of much help from a practical point of view because the partial differential equation for S is often very difficult to solve. Problems that can be solved
+by obtaining the solution for S can usually be solved more easily by other
+means.
+Nevertheless, the solution of the Hamilton--Jacobi equation is important for
+a variety of reasons. For one thing, the analysis allows one to draw an ``opticalmechanical analogy'' between optical rays and mechanical phase space paths.
+That is, we can treat waves from a mechanical point of view. This led, of
+course, to ``wave mechanics'' and quantum theory.

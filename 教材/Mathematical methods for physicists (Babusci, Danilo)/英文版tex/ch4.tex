@@ -1,0 +1,757 @@
+% ch4.tex — Laguerre Polynomials, Integral Operators and Applications
+% Hand-typeset精修版，所有公式规范 LaTeX 化，图片嵌入。
+
+\chapter{Laguerre Polynomials, Integral Operators and Applications}
+
+\section{Introduction}
+
+In this chapter, we will go deeper into the discussion on special polynomials
+and on the relevant applications to physical and mathematical problems.
+We will deal with the Laguerre family and use the relevant two-variable forms.
+As already discussed for the case of Hermite polynomials, the introduction of
+an extra variable in the Theory of classical Polynomials is particularly useful.
+Even though they can be reduced to the standard form by means of a simple
+transformation, a further variable is the key tool to develop a formulation
+based on an operational formalism.
+
+This chapter will consist essentially of two parts. In the first, we will
+continue our discussion on ``popular'' orthogonal sets by introducing the
+Laguerre polynomials (LP). In the second, we will discuss the Theory of
+Special Polynomials by using a more general point of view involving the
+Appell and Sheffer classification. We will however adopt a ``non orthodox''
+formulation.
+
+\section{Laguerre Polynomials: Definitions and Basic Properties}
+
+We go back to the definition of the negative derivative operator (NDO),
+which satisfies
+\begin{equation}
+\hat D_x^{-n}\,1 = \frac{x^n}{n!}.
+\label{eq:4.1.1}
+\end{equation}
+
+The two-variable Laguerre polynomial is defined as
+\begin{equation}
+L_n(x,y) = \bigl(y - \hat D_x^{-1}\bigr)^n 1.
+\label{eq:4.1.2}
+\end{equation}
+
+The use of the ordinary binomial expansion yields
+\begin{equation}
+L_n(x,y) = \sum_{r=0}^{n} \binom{n}{r} (-1)^r y^{\,n-r} \hat D_x^{-r}\,1
+= \sum_{r=0}^{n} \frac{(-1)^r y^{\,n-r} x^r}{(n-r)!\,r!}.
+\label{eq:4.1.3}
+\end{equation}
+For $y=1$ this reduces to the ordinary Laguerre polynomial $L_n(x)$.
+
+\begin{exercise}
+Prove the scaling identity
+\begin{equation}
+L_n(x,y) = y^n L_n\!\left(\frac{x}{y}\right).
+\label{eq:4.1.4}
+\end{equation}
+\end{exercise}
+
+\begin{figure}[h]
+\centering
+% 注：原书 Fig.4.1 为两组曲线图（y=1 与 y=-1/2），此处用文字占位
+% 如有需要可补绘并替换为本地的 fig4_1a.pdf / fig4_1b.pdf
+\setlength{\fboxsep}{6pt}\framebox[\textwidth]{\rule{0pt}{1.2cm}
+  \textbf{Fig.\,4.1 (placeholder):} First 5 Laguerre polynomials vs $x$
+  for (a) $y=1$ and (b) $y=-\tfrac12$.}
+\caption{First 5 Laguerre polynomials vs $x$ for (a) $y=1$ and (b) $y=-\tfrac12$.}
+\label{fig:4.1}
+\end{figure}
+
+\paragraph{Remark 1.} The NDO is an integral operator:
+$\hat D_x^{-1} f(x) = \int_a^x f(x')\,dx'$.
+If we do not specify the lower integration limit it means that $a=0$.
+In Chapter~9 we will provide further comments on the NDO formalism.
+
+\subsection*{Quasi-monomiality}
+
+Following the definitions of ``quasi-monomiality'' introduced in Chapter~3,
+the LP are quasi-monomials. The relevant multiplicative and derivative
+operators are
+\begin{equation}
+\hat M = y - \hat D_x^{-1},
+\qquad
+\hat P = \hat{\mathcal L}\!\hat D_x = -\partial_x \hat D_x^{-1}.
+\label{eq:4.1.7}
+\end{equation}
+
+The LP are therefore defined in terms of the multiplicative operator as
+\begin{equation}
+L_n(x,y) = \hat M^n 1.
+\label{eq:4.1.8}
+\end{equation}
+
+We can also push the formalism and use the following definition
+\begin{equation}
+\hat{\mathcal L}\!\hat D_x
+= -\partial_x \hat D_x^{-1},
+\label{eq:4.1.9}
+\end{equation}
+where $\hat{\mathcal L}\!\hat D_x$ is sometimes called the \emph{Laguerre derivative}.
+Its validity can be checked by noting that
+\begin{equation}
+\hat{\mathcal L}\!\hat D_x\,L_n(x,y)
+= -\partial_x \hat D_x^{-1}(y-\hat D_x^{-1})^n 1
+= n(y-\hat D_x^{-1})^{n-1}1
+= n\,L_{n-1}(x,y).
+\label{eq:4.1.10}
+\end{equation}
+
+From the definition of $\hat M$ and $\hat P$ we can infer the differential
+equation satisfied by $L_n(x,y)$. Noting that $\hat D_x^{-1}\partial_x = \hat 1$, we find
+\begin{equation}
+\hat M\hat P\,L_n(x,y) = n\,L_n(x,y)
+\label{eq:4.1.11}
+\end{equation}
+and then
+\begin{equation}
+y\,x\,L_n''(x,y) + (y-x)\,L_n'(x,y) = -n\,L_n(x,y).
+\label{eq:4.1.12}
+\end{equation}
+
+The Laguerre derivative has the following remarkable property
+\begin{equation}
+\bigl(\hat{\mathcal L}\!\hat D_x\bigr)^n
+= (-1)^n \partial_x^n x^n \partial_x^n,
+\label{eq:4.1.13}
+\end{equation}
+which can be proved by induction.
+
+\begin{exercise}
+Use the previous properties to prove the inversion identity
+\begin{equation}
+\frac{x^n}{n!}
+= \sum_{s=0}^{n} \binom{n}{s} (-1)^s y^s L_{n-s}(x,y).
+\label{eq:4.1.14}
+\end{equation}
+\emph{Hint:} note that $\frac{x^n}{n!} = (y - (y-\hat D_x^{-1}))^n 1$.
+\end{exercise}
+
+According to eq.~\eqref{eq:4.1.13}, the repeated application of the
+Laguerre derivative on the monomial $q_n(x) = (-1)^n \frac{x^n}{n!}$ yields
+\begin{equation}
+\bigl(\hat{\mathcal L}\!\hat D_x\bigr)^m q_n(x)
+= \frac{n!}{(n-m)!}\,q_{n-m}(x), \qquad n>m.
+\label{eq:4.1.15}
+\end{equation}
+
+\begin{exercise}
+Check that the function
+\begin{equation}
+C_0(x) = \sum_{l=0}^{\infty} \frac{q_l(x)}{l!}
+\label{eq:4.1.16}
+\end{equation}
+is an eigenfunction of the Laguerre derivative.
+\end{exercise}
+
+The function \eqref{eq:4.1.16} is called the \emph{0-th order Tricomi--Bessel
+function}; its behaviour is shown in Fig.~\ref{fig:4.2}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.7\linewidth,keepaspectratio]{fig4_2.png}
+\caption{0-th order Tricomi--Bessel function $C_0(x)$.}
+\label{fig:4.2}
+\end{figure}
+
+Before going further, the following correspondence should be kept in mind:
+\begin{equation}
+\partial_x \;\longleftrightarrow\; \hat{\mathcal L}\!\hat D_x,
+\qquad
+x^n \;\longleftrightarrow\; q_n(x),
+\qquad
+e^x \;\longleftrightarrow\; C_0(x).
+\label{eq:4.1.17}
+\end{equation}
+
+The two-variable LP satisfy the partial differential equation
+\begin{equation}
+\begin{cases}
+\partial_y L_n(x,y) = -\partial_x \hat D_x^{-1} L_n(x,y),\\[2pt]
+L_n(x,0) = q_n(x),
+\end{cases}
+\label{eq:4.1.18}
+\end{equation}
+which can be easily stated using identity \eqref{eq:4.1.10}. This is the
+analogue of the heat equation satisfied by Hermite polynomials.
+
+From eq.~\eqref{eq:4.1.18} we can also define the LP through the
+operational rule
+\begin{equation}
+L_n(x,y) = e^{-y\,\partial_x \hat D_x^{-1}}
+\!\left[(-1)^n\frac{x^n}{n!}\right].
+\label{eq:4.1.20}
+\end{equation}
+
+\section{Laguerre Polynomials Generating Function}
+
+According to the definition of generating function, we write
+\begin{equation}
+G_L(x,y,t) = \sum_{n=0}^{\infty} \frac{t^n}{n!}
+\bigl(y-\hat D_x^{-1}\bigr)^n 1
+= e^{y t}\,e^{-t \hat D_x^{-1}} 1.
+\label{eq:4.2.1}
+\end{equation}
+
+Since $y$ and $\hat D_x^{-1}$ commute, the exponential containing the
+inverse derivative operator can be summed:
+\begin{equation}
+e^{-t \hat D_x^{-1}} 1
+= \sum_{n=0}^{\infty} \frac{t^n}{n!}\,(-1)^n \hat D_x^{-n} 1
+= \sum_{n=0}^{\infty} \frac{1}{n!}\,q_n(xt)
+= C_0(xt).
+\label{eq:4.2.2}
+\end{equation}
+Thus
+\begin{equation}
+G_L(x,y,t) = e^{yt}\,C_0(xt).
+\label{eq:4.2.3}
+\end{equation}
+
+A further generating function can be derived using the multiplicative
+operator:
+\begin{equation}
+S_L(x,y,t) = \sum_{n=0}^{\infty} t^n L_n(x,y)
+= \frac{1}{1-yt}\,\exp\!\left(-\frac{xt}{1-yt}\right),
+\qquad |yt|<1.
+\label{eq:4.2.4}
+\end{equation}
+
+To prove this identity, from the operator definition we get
+\begin{align}
+S_L(x,y,t)
+&= \sum_{n=0}^{\infty} (\hat M t)^n 1
+ = \frac{1}{1-\hat M t}\,1
+ = \frac{1}{1-yt}\,\frac{1}{1+\dfrac{\hat D_x^{-1}t}{1-yt}} \notag\\
+&= \frac{1}{1-yt}\,
+\sum_{r=0}^{\infty} \left(-\frac{\hat D_x^{-1}t}{1-yt}\right)^{\!r} 1
+ = \frac{1}{1-yt}\,\exp\!\left(-\frac{xt}{1-yt}\right).
+\label{eq:4.2.5}
+\end{align}
+
+The use of the above generating function and of eq.~\eqref{eq:4.1.20}
+allows the derivation of the identity
+\begin{equation}
+e^{-y\,\partial_x \hat D_x^{-1}} e^{-xt}
+= \frac{1}{1-yt}\,\exp\!\left(-\frac{xt}{1-yt}\right),
+\label{eq:4.2.6}
+\end{equation}
+which is the analogue of the Glaisher identity (see eq.~\eqref{eq:2.2.18})
+when exponential operators containing Laguerre derivatives are involved.
+
+On the other side, the generating function $S_L$ in eq.~\eqref{eq:4.2.5}
+allows us to establish the following integral representation for the two-variable
+LP:
+\begin{equation}
+L_n(x,y) = \frac{e^{x/y}}{n!}\int_0^{\infty} e^{-s}\left(\frac{ys}{}\right)^{\!n}
+C_0\!\left(\frac{xs}{y}\right) ds,
+\label{eq:4.2.7}
+\end{equation}
+whose validity can be checked by using the generating function
+\eqref{eq:4.2.4}.
+
+\section{Orthogonality Properties of Laguerre Polynomials}
+
+The Laguerre polynomials are specified, according to eq.~\eqref{eq:4.1.20},
+by an operational definition analogous to that of the Hermite polynomials.
+The following identity is a by-product of the same definition:
+\begin{equation}
+L_n(x,y+z) = e^{-z\,\partial_x \hat D_x^{-1}} L_n(x,y).
+\label{eq:4.3.1}
+\end{equation}
+
+We can now prove that the LP provide an orthogonal set. We start from the
+solution of the equation
+\begin{equation}
+\begin{cases}
+\partial_y F(x,y) = -\partial_x \hat D_x^{-1} F(x,y),\\[2pt]
+F(x,0) = g(x),
+\end{cases}
+\label{eq:4.3.2}
+\end{equation}
+which plays the same role as the heat equation in the case of Hermite
+polynomials. Its solution can be written in the integral form
+\begin{equation}
+F(x,y) = \frac{e^{x/y}}{y}\int_0^{\infty} e^{-\sigma}\,
+C_0\!\left(\frac{x\sigma}{y}\right) g(-y\sigma)\,d\sigma.
+\label{eq:4.3.3}
+\end{equation}
+
+If $g(x) = \sum_{n=0}^{\infty} a_n \frac{x^n}{n!}$, we can write
+\begin{equation}
+F(x,y) = e^{-y\,\partial_x \hat D_x^{-1}}
+\sum_{n=0}^{\infty} a_n \frac{x^n}{n!}
+= \sum_{n=0}^{\infty} a_n (-1)^n L_n(x,y).
+\label{eq:4.3.4}
+\end{equation}
+
+The use of identity \eqref{eq:4.2.7} allows us to cast the previous
+equation as
+\begin{equation}
+F(x,y) = \sum_{n=0}^{\infty} (-1)^n a_n L_n(x,y)
+= \frac{e^{x/y}}{y}\int_0^{\infty} e^{-\sigma}\,
+C_0\!\left(\frac{x\sigma}{y}\right) g(-y\sigma)\,d\sigma,
+\label{eq:4.3.5}
+\end{equation}
+which holds provided that summation and integration can be interchanged.
+
+We can therefore proceed as in the previous section to get the set of
+functions bi-orthogonal to the Laguerre family. For simplicity we consider
+$y=1$ and assume that $g(x)$ can be expanded in series of LP:
+\begin{equation}
+g(x) = \sum_{n=0}^{\infty} \alpha_n L_n(x).
+\label{eq:4.3.6}
+\end{equation}
+
+Applying $\partial_x \hat D_x^{-1}$ to the expansion yields
+\begin{equation}
+\partial_x \hat D_x^{-1} \Phi(x)
+= \sum_{n=0}^{\infty} \frac{\alpha_n}{n!}\,(-x)^n.
+\label{eq:4.3.7}
+\end{equation}
+
+The use of the Weierstrass transform yields
+\begin{equation}
+\partial_x \hat D_x^{-1} \Phi(x)
+= e^{-x}\int_0^{\infty} e^{-\sigma}\,C_0(-x\sigma)\,g(\sigma)\,d\sigma.
+\label{eq:4.3.8}
+\end{equation}
+
+These three equations finally give
+\begin{equation}
+\sum_{n=0}^{\infty} \frac{\alpha_n}{n!}\,(-x)^n
+= e^{-x}\int_0^{\infty} e^{-\sigma}\,C_0(-x\sigma)\,g(\sigma)\,d\sigma.
+\label{eq:4.3.9}
+\end{equation}
+
+Using the generating function of LP in terms of the 0-th order
+Tricomi--Bessel function (see eq.~\eqref{eq:4.2.3}) allows us to write
+\begin{equation}
+\sum_{r=0}^{\infty} \frac{\alpha_r}{r!}\,(-x)^r
+= \sum_{n=0}^{\infty} \frac{(-x)^n}{n!}
+\int_0^{\infty} e^{-\sigma}\,L_n(\sigma)\,g(\sigma)\,d\sigma,
+\label{eq:4.3.10}
+\end{equation}
+and thus
+\begin{equation}
+\alpha_n = \int_0^{\infty} e^{-\sigma}\,L_n(\sigma)\,g(\sigma)\,d\sigma.
+\label{eq:4.3.11}
+\end{equation}
+
+At this point, it is not difficult to conclude that the bi-orthogonal
+functions associated with the Laguerre polynomials are
+\begin{equation}
+\varphi_n(x) = e^{-x} L_n(x),
+\label{eq:4.3.12}
+\end{equation}
+in such a way that
+\begin{equation}
+\int_0^{\infty} \varphi_n(x)\,L_m(x)\,dx = \delta_{nm}.
+\label{eq:4.3.13}
+\end{equation}
+
+The functions $\varphi_n(x)$ satisfy a second-order differential equation
+which can be directly inferred from that of the LP. We define
+\begin{equation}
+\hat h_{\mathrm{lag}}\,L_n(x) = 0,
+\qquad
+\hat h_{\mathrm{lag}} = x\partial_x^2 + (1-x)\partial_x + n,
+\label{eq:4.3.14}
+\end{equation}
+and then the Hermitian associate
+\begin{equation}
+\hat h_{\mathrm{lag}}^\dagger \varphi_n(x) = 0,
+\qquad
+\hat h_{\mathrm{lag}}^\dagger = x\partial_x^2 + (1+x)\partial_x + n + 1.
+\label{eq:4.3.15}
+\end{equation}
+
+The Laguerre orthogonal functions are
+\begin{equation}
+\ell_n(x) = e^{-x/2} L_n(x),
+\label{eq:4.3.16}
+\end{equation}
+and play, in applications (Quantum Mechanics, Optics, \dots), the same role
+as Hermite orthogonal functions. The relevant ODE can be written as
+\begin{equation}
+x\,\ell_n''(x) + \ell_n'(x)
++ \left(n - \frac{x}{4} + \frac{1}{2}\right)\ell_n(x) = 0.
+\label{eq:4.3.17}
+\end{equation}
+
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.7\linewidth,keepaspectratio]{fig4_3.png}
+\caption{The first 5 Laguerre orthogonal functions $\ell_n(x)$.}
+\label{fig:4.3}
+\end{figure}
+
+In Fig.~\ref{fig:4.3} we have reported some examples of the behaviour of
+the first few Laguerre orthogonal functions.
+
+\section{Bessel Functions}
+
+We have already introduced the function $C_0(x)$, which has been shown to
+be an eigenfunction of the Laguerre derivative. It is the 0-th order of a
+more general family of Bessel-type functions. By taking repeated derivatives
+of $C_0(x)$ we find
+\begin{equation}
+\partial_x^n C_0(x) = (-1)^n C_n(x),
+\label{eq:4.4.1}
+\end{equation}
+where
+\begin{equation}
+C_n(x) = \sum_{r=0}^{\infty} \frac{(-1)^r x^r}{r!\,(n+r)!}.
+\label{eq:4.4.2}
+\end{equation}
+The functions $C_n(x)$ are higher-order Bessel-like functions of Tricomi type.
+
+It is evident that the following recurrence follows from eq.~\eqref{eq:4.4.1}:
+\begin{equation}
+\partial_x C_n(x) = -C_{n+1}(x),
+\label{eq:4.4.3}
+\end{equation}
+while from eq.~\eqref{eq:4.4.2} we get
+\begin{equation}
+n\,C_n(x) = C_{n-1}(x) - x\,\partial_x C_n(x)
+= C_{n-1}(x) + x\,C_{n+1}(x).
+\label{eq:4.4.4}
+\end{equation}
+
+From the above two recurrences we can derive the differential equation
+satisfied by the Tricomi--Bessel functions. Eqs.~\eqref{eq:4.4.3}--\eqref{eq:4.4.4}
+can be written as
+\begin{equation}
+\hat s_+ C_n(x) = C_{n+1}(x),
+\qquad
+\hat s_- C_n(x) = C_{n-1}(x),
+\label{eq:4.4.5}
+\end{equation}
+where
+\begin{equation}
+\hat s_+ = -\partial_x,
+\qquad
+\hat s_- = \hat n + x\partial_x.
+\label{eq:4.4.6}
+\end{equation}
+The operators $\hat s_\pm$ are called \emph{shift operators} and the number
+operator $\hat n$ is defined by
+\begin{equation}
+\hat n\,C_m(x) = m\,C_m(x).
+\label{eq:4.4.7}
+\end{equation}
+
+The ODE satisfied by $C_n(x)$ follows from
+\begin{equation}
+\hat s_+ \hat s_- C_n(x) = C_n(x),
+\label{eq:4.4.8}
+\end{equation}
+which implies
+\begin{equation}
+x\,C_n''(x) + (1+n)\,C_n'(x) + C_n(x) = 0.
+\label{eq:4.4.9}
+\end{equation}
+
+Tricomi--Bessel functions are also easily shown to be specified by the
+generating function
+\begin{equation}
+B(x,t) = \sum_{n=-\infty}^{\infty} t^n C_n(x)
+= e^{\,t - x/t}.
+\label{eq:4.4.10}
+\end{equation}
+
+Furthermore, multiplying both sides of eq.~\eqref{eq:4.4.4} by $t^{n-1}$
+we find
+\begin{equation}
+n\,t^{n-1} C_n = t^{n-1} C_{n-1} + \frac{x}{t^2}\,t^{n+1} C_{n+1},
+\label{eq:4.4.11}
+\end{equation}
+from which we can derive the differential equation satisfied by $B(x,t)$:
+\begin{equation}
+\begin{cases}
+\partial_t B(x,t) = \left(1 + \dfrac{x}{t^2}\right) B(x,t),\\[4pt]
+B(x,0) = 1.
+\end{cases}
+\label{eq:4.4.12}
+\end{equation}
+
+Tricomi--Bessel functions are linked to the ordinary cylindrical Bessel
+functions by the identity
+\begin{equation}
+C_n(x) = \left(\frac{x}{2}\right)^{-n} J_n\!\left(2\sqrt{x}\right),
+\label{eq:4.4.13}
+\end{equation}
+which, once inverted, yields
+\begin{equation}
+J_n(x) = \left(\frac{x}{2}\right)^{\!n}
+C_n\!\left(\frac{x^2}{4}\right).
+\label{eq:4.4.14}
+\end{equation}
+
+The properties of the cylindrical Bessel functions can be deduced directly
+from those of the Tricomi functions. They are summarized below.
+
+\subsection*{Bessel $J_n(x)$: key properties}
+
+\begin{enumerate}
+\item \textbf{Series expansion}
+\begin{equation}
+J_n(x) = \sum_{r=0}^{\infty}
+\frac{(-1)^r (x/2)^{n+2r}}{r!\,(n+r)!}.
+\label{eq:4.4.15}
+\end{equation}
+
+\item \textbf{Reflection property}
+\begin{equation}
+J_{-n}(x) = J_n(-x) = (-1)^n J_n(x).
+\label{eq:4.4.16}
+\end{equation}
+
+\item \textbf{Generating function}
+\begin{equation}
+J(x,t) = \sum_{n=-\infty}^{\infty} t^n J_n(x)
+= \exp\!\left[\frac{x}{2}\left(t - \frac{1}{t}\right)\right].
+\label{eq:4.4.17}
+\end{equation}
+
+\item \textbf{Recurrences}
+\begin{align}
+\partial_x J_n(x) &= \tfrac12\bigl(J_{n-1}(x) - J_{n+1}(x)\bigr),\\
+n\,J_n(x) &= \tfrac{x}{2}\bigl(J_{n-1}(x) + J_{n+1}(x)\bigr).
+\label{eq:4.4.18}
+\end{align}
+
+\item \textbf{Bessel differential equation}
+\begin{equation}
+x^2 J_n''(x) + x\,J_n'(x) + (x^2 - n^2)\,J_n(x) = 0.
+\label{eq:4.4.19}
+\end{equation}
+
+\item \textbf{Jacobi generating function}
+\begin{equation}
+\sum_{n=-\infty}^{\infty} e^{in\vartheta} J_n(x) = e^{i x\sin\vartheta}.
+\label{eq:4.4.20}
+\end{equation}
+
+\item \textbf{Integral representation}
+\begin{equation}
+J_n(x) = \frac{1}{\pi}\int_0^{\pi}
+\cos\!\bigl(x\sin\vartheta - n\vartheta\bigr)\,d\vartheta.
+\label{eq:4.4.21}
+\end{equation}
+\end{enumerate}
+
+\begin{figure}[h]
+\centering
+\begin{minipage}{0.48\linewidth}
+\includegraphics[max width=\linewidth,keepaspectratio]{fig4_4a.png}
+\subcaption{$C_n(x)$ vs $x$.}
+\end{minipage}\hfill
+\begin{minipage}{0.48\linewidth}
+\includegraphics[max width=\linewidth,keepaspectratio]{fig4_4b.png}
+\subcaption{$C_n(x)$ vs $\log x$ (semi-log plot).}
+\end{minipage}
+\caption{Tricomi--Bessel functions $C_n(x)$: (a) the first 3 functions;
+(b) log-linear plot showing the long-term oscillatory behaviour.}
+\label{fig:4.4}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\setlength{\fboxsep}{6pt}\framebox[\textwidth]{\rule{0pt}{1.2cm}
+  \textbf{Fig.\,4.5 (placeholder):} Comparison between the first three
+  Tricomi--Bessel $C_n(x)$ and Bessel $J_n(x)$ functions.}
+\caption{Comparison between the first three Tricomi--Bessel $C_n(x)$ and
+Bessel $J_n(x)$ functions.}
+\label{fig:4.5}
+\end{figure}
+
+\section{Associated Laguerre Polynomials}
+
+In the previous sections we have treated the theory of Laguerre
+polynomials and we have seen that their generating function is associated
+with the 0-order Tricomi function. We may wonder whether new families
+of LP can be obtained by modifying the generating function as follows:
+\begin{equation}
+\sum_{n=0}^{\infty} \frac{t^n}{(n+m)!}\,L_n^{(m)}(x,y)
+= e^{yt}\,C_m(xt).
+\label{eq:4.5.1}
+\end{equation}
+
+It can directly be checked that
+\begin{equation}
+L_n^{(m)}(x,y)
+= \frac{(n+m)!}{n!}\,
+\sum_{r=0}^{n} \frac{(-1)^r y^{\,n-r} x^r}{(n-r)!\,(m+r)!\,r!}.
+\label{eq:4.5.2}
+\end{equation}
+
+The previous definition is also compatible with the operational form
+\begin{equation}
+L_n^{(m)}(x,y)
+= (1 - y\partial_x)^m (y - \hat D_x^{-1})^n 1,
+\label{eq:4.5.3}
+\end{equation}
+according to which we can derive most of the properties of this extension of
+the LP, as for example the generating function
+\begin{equation}
+\sum_{n=0}^{\infty} t^n L_n^{(m)}(x,y)
+= \frac{1}{(1-yt)^{m+1}}\,\exp\!\left(-\frac{xt}{1-yt}\right).
+\label{eq:4.5.4}
+\end{equation}
+
+The Laguerre derivative for the associated Laguerre polynomials,
+i.e. the operator satisfying
+\begin{equation}
+{}^{(m)}\!\hat{\mathcal L}\!\hat D_x\,
+L_n^{(m)}(x,y) = (n+m)\,L_{n-1}^{(m)}(x,y),
+\label{eq:4.5.5}
+\end{equation}
+is
+\begin{equation}
+{}^{(m)}\!\hat{\mathcal L}\!\hat D_x
+= -\partial_x \hat D_x^{-1} - m\,\partial_x.
+\label{eq:4.5.6}
+\end{equation}
+
+The relevant ODE can be derived in a fairly simple way starting from the
+relation
+\begin{equation}
+L_n(x,y) = \frac{n!}{(n+m)!}\,\partial_x^m
+\bigl[x^m L_n^{(m)}(x,y)\bigr].
+\label{eq:4.5.7}
+\end{equation}
+
+Using the fact that the multiplicative operator has the same form as in the
+ordinary ($m=0$) case yields
+\begin{equation}
+y\,x\,\partial_x^2 L_n^{(m)}
++ \bigl((1+m)y - x\bigr)\partial_x L_n^{(m)}
++ n\,L_n^{(m)} = 0.
+\label{eq:4.5.8}
+\end{equation}
+
+We have now acquired sufficient skill to prove that the set of functions
+($y=1$)
+\begin{equation}
+\ell_n^{(m)}(x) = \sqrt{\frac{n!}{(n+m)!}}\,e^{-x/2} x^{m/2}
+L_n^{(m)}(x)
+\label{eq:4.5.9}
+\end{equation}
+is orthogonal. The differential equation satisfied by these functions is
+\begin{equation}
+x\,\ell_n^{(m)\prime\prime}
++ \ell_n^{(m)\prime}
++ \left[n + \frac{1}{2} - \frac{x}{4} - \frac{m(m-2x)}{4x}\right]
+\ell_n^{(m)} = 0.
+\label{eq:4.5.10}
+\end{equation}
+
+Examples of the behaviour of the above functions for different values of
+$m$ are shown in Fig.~\ref{fig:4.6}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.7\linewidth,keepaspectratio]{fig4_6.png}
+\caption{Laguerre orthogonal functions $\ell_n^{(m)}(x)$ for different values of
+$m$ and $n$: (a) $n=3,\ m=0,4$; (b) $n=2,\ m=0,4$.}
+\label{fig:4.6}
+\end{figure}
+
+\section{Legendre Polynomials}
+
+We have claimed that the use of an extra variable in defining Laguerre or
+Hermite functions is particularly useful since it yields a further degree of
+freedom in the formalism. For Legendre polynomials $P_n(x)$ the
+generating function is
+\begin{equation}
+\frac{1}{\sqrt{1-2xt+t^2}} = \sum_{n=0}^{\infty} t^n P_n(x),
+\qquad |t|<1.
+\label{eq:4.6.1}
+\end{equation}
+
+The Legendre polynomials satisfy the orthogonality relation
+\begin{equation}
+\int_{-1}^{1} P_n(x)\,P_m(x)\,dx = \frac{2}{2n+1}\,\delta_{nm},
+\label{eq:4.6.2}
+\end{equation}
+and are solutions of Legendre's differential equation
+\begin{equation}
+(1-x^2)P_n''(x) - 2x\,P_n'(x) + n(n+1)\,P_n(x) = 0.
+\label{eq:4.6.3}
+\end{equation}
+
+\section{Miscellaneous Applications and Comments}
+
+Applications of Laguerre and Bessel functions include multipole expansions,
+spherical Bessel functions in scattering theory, and the use of generating
+functions to evaluate radial integrals in atomic physics. The associated
+Laguerre functions appear naturally in the hydrogen-atom radial
+wavefunctions, where the parameter $m$ is linked to the orbital angular
+momentum quantum number $\ell$.
+
+Further comments on Bessel functions and on their applications can be
+found in Chapters~8--9.
+
+\section{Appell Polynomials and Final Comments}
+
+Appell polynomials $A_n(x)$ satisfy $A_n'(x) = n\,A_{n-1}(x)$ and form
+the backbone of the umbral calculus treated in Chapter~9. The two-variable
+Laguerre polynomials introduced in this chapter are indeed a particular
+case of the Appell classification.
+
+In Chapter~8 we will see how the same results can be achieved by the use
+of a complementary technique, based on the ``umbral'' method.
+
+\section*{Bibliography}
+
+\begin{thebibliography}{99}
+
+\bibitem{Lag1}
+G. Szeg\H{o}, \emph{Orthogonal Polynomials}, 4th ed.,
+Amer. Math. Soc. Colloq. Publ., Vol.~23, Providence, RI, 1975.
+
+\bibitem{Lag2}
+M. Abramowitz, I.A. Stegun (Eds.),
+\emph{Handbook of Mathematical Functions},
+Dover, New York, 1965.
+
+\bibitem{Lag3}
+W. Magnus, F. Oberhettinger, R.P. Soni,
+\emph{Formulas and Theorems for the Special Functions of Mathematical Physics},
+3rd ed., Springer, Berlin, 1966.
+
+\bibitem{Lag4}
+G. Dattoli, P.L. Ottaviani, A. Torre, L. Vazquez,
+``Evolution operator equations, integration with algebraic and finite difference
+methods: applications to physical problems in classical and quantum
+mechanics,''
+\emph{Riv. Nuovo Cimento} \textbf{20}, pp.~1--133, 1997.
+
+\bibitem{Lag5}
+G. Dattoli, S. Lorenzutta, A. Torre,
+``Theory of multi-index multivariable Bessel functions and Hermite
+polynomials,''
+\emph{Matematiche} (Catania) \textbf{52}, pp.~179--197, 1997.
+
+\bibitem{Lag6}
+G. Dattoli, H.M. Srivastava, K. Zhukovsky,
+``Orthogonality properties of the Hermite and related polynomials,''
+\emph{J. Comput. Appl. Math.} \textbf{182}(1), pp.~165--172, 2005.
+
+\bibitem{Lag7}
+F.G. Tricomi,
+\emph{Funzioni Ipergeometriche Confluenti},
+Cremonese, Roma, 1954.
+
+\bibitem{Lag8}
+N.N. Lebedev,
+\emph{Special Functions and Their Applications},
+Dover Books on Mathematics, 1972.
+
+\end{thebibliography}

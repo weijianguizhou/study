@@ -1,0 +1,233 @@
+% ch10.tex — 初窥 Feynman 图的数学（中文版）
+\chapter{初窥 Feynman 图的数学}
+
+\section{引言：非相对论散射理论与 Lippmann--Schwinger 方程}
+
+Lippmann--Schwinger 方程是散射态定态 Schr\"odinger 方程的积分形式：
+\begin{equation}
+|\psi^{(\pm)}\rangle = |k\rangle
++ \frac{1}{E-H_0\pm i0}\,\hat V\,|\psi^{(\pm)}\rangle,
+\label{eq:10.1.1}
+\end{equation}
+其中 $|k\rangle$ 是动量为 $\hbar k$、能量为 $E=\hbar^2k^2/(2m)$ 的自由粒子态。
+
+自由哈密顿量的 Green 函数为
+\begin{equation}
+G_0^{(\pm)}(E) = \frac{1}{E-H_0\pm i0}
+= \lim_{\epsilon\to0^+}\frac{1}{E-H_0\pm i\epsilon}.
+\label{eq:10.1.2}
+\end{equation}
+
+$S$ 矩阵联系入射与出射渐近态：
+$S_{fi}=\delta_{fi}-2\pi i\,\delta(E_f-E_i)\,T_{fi}$，其中
+$T_{fi}=\langle f|\hat V|\psi_i^{(+)}\rangle$。
+
+\begin{exercise}
+通过对 $E-H_0\pm i0$ 求逆，从 $(E-H_0)\psi=V\psi$ 推导 Lippmann--Schwinger 方程。
+\end{exercise}
+
+\section{Fermi 黄金规则}
+
+从初态 $|i\rangle$ 到连续谱 $\{|f\rangle\}$ 的跃迁率由 Fermi 黄金规则给出：
+\begin{equation}
+\Gamma_{i\to f} = \frac{2\pi}{\hbar}\,
+\bigl|\langle f|\hat V|i\rangle\bigr|^2\,\rho(E_f),
+\label{eq:10.2.1}
+\end{equation}
+其中 $\rho(E_f)$ 是末态密度。
+
+\subsection{Fermi 黄金规则的应用}
+
+对于通过发射能量为 $\hbar\omega=E_e-E_g$ 的光子从激发态 $|e\rangle$ 衰变到基态 $|g\rangle$ 的原子，
+\begin{equation}
+\Gamma_{e\to g} = \frac{4\alpha\omega^3}{3c^2}\,
+\bigl|\langle g|\vect r|e\rangle\bigr|^2,
+\label{eq:10.2.2}
+\end{equation}
+其中 $\alpha=e^2/(4\pi\epsilon_0\hbar c)$ 是精细结构常数。
+
+\begin{exercise}
+从最小耦合哈密顿量
+$\hat H_{\rm int}=-(e/m)\vect A\cdot\vect p$ 与 Fermi 黄金规则推导 \eqref{eq:10.2.2}。
+\end{exercise}
+
+\section{Feynman 图：入门规则}
+
+对于标量 $\phi^4$ 理论，$\mathcal L_{\rm int}=-\frac{\lambda}{4!}\phi^4$，
+Feynman 规则为：
+\begin{itemize}
+\item 传播子：每条内线对应 $\tilde\Delta_F(k)=\frac{1}{k^2-m^2+i0}$。
+\item 顶点：每个四顶点给出因子 $-i\lambda$。
+\item 动量守恒：每个顶点处 $\delta^{(4)}(\sum p_{\rm in}-\sum p_{\rm out})$。
+\item 对称因子：每个图给出 $1/S$。
+\end{itemize}
+
+对于 QED，顶点为 $-ie\gamma^\mu$，光子传播子为
+$-ig_{\mu\nu}/(k^2+i0)$。
+
+\begin{exercise}
+画出 $\phi^4$ 理论中 $2\to2$ 散射的两个树级 Feynman 图，并写出相应的振幅。
+\end{exercise}
+
+\section{虚粒子与传播子}
+
+离壳内线携带不满足 $k^2=m^2$ 的动量 $k$。
+传播子通过 $i0$ 处方编码因果性：
+\begin{equation}
+\Delta_F(x-y) = \int\frac{d^4k}{(2\pi)^4}\,
+\frac{e^{-ik\cdot(x-y)}}{k^2-m^2+i0}.
+\label{eq:10.4.1}
+\end{equation}
+
+$i0$ 处方选择 Feynman 围道：正能量的粒子随时间向前传播，负能量的反粒子向后传播。
+
+\begin{exercise}
+证明 Feynman 传播子满足
+$(\Box+m^2)\Delta_F(x-y)=-\delta^{(4)}(x-y)$。
+\end{exercise}
+
+\section{类空与类时 Feynman 图}
+
+$q^2=(p_1-p_2)^2$ 的符号区分
+类空（$q^2<0$）与类时（$q^2>0$）动量转移，
+两者的传播子解析结构不同。
+
+对于类空 $q^2<0$，传播子 $\sim 1/|q^2|$ 是实的（没有在壳中间态）。对于类时 $q^2>0$，传播子通过 $i0$ 发展出虚部（可能产生在壳态）。
+
+\begin{exercise}
+对于 $e^+e^-\to\mu^+\mu^-$，判断交换的虚光子是类空还是类时，并计算 $q^2$。
+\end{exercise}
+
+\section{Dirac Gamma 矩阵}
+
+Clifford 代数：
+\begin{equation}
+\{\gamma^\mu,\gamma^\nu\} = 2\eta^{\mu\nu}\hat 1,
+\qquad \eta={\rm diag}(-1,1,1,1).
+\label{eq:10.6.1}
+\end{equation}
+
+显式 Dirac 表示（$2\times2$ 分块）：
+\begin{align}
+\gamma^0 &= \mat{\hat 1&\hat 0\\\hat 0&-\hat 1},\\
+\gamma^i &= \mat{\hat 0&\hat\sigma_i\\-\hat\sigma_i&\hat 0},\\
+\gamma^5 &= i\gamma^0\gamma^1\gamma^2\gamma^3
+= \mat{\hat 0&\hat 1\\\hat 1&\hat 0}.
+\label{eq:10.6.2}
+\end{align}
+
+关键恒等式：
+\begin{align}
+\gamma^\mu\gamma^\nu+\gamma^\nu\gamma^\mu &= 2\eta^{\mu\nu},\\
+\tr(\gamma^\mu\gamma^\nu) &= 4\eta^{\mu\nu},\\
+\tr(\gamma^5\gamma^\mu\gamma^\nu) &= 0,\\
+\gamma^5\gamma^\mu+\gamma^\mu\gamma^5 &= 0.
+\label{eq:10.6.3}
+\end{align}
+
+手征投影算子：$P_L=\frac12(1-\gamma^5)$，$P_R=\frac12(1+\gamma^5)$。
+
+\begin{exercise}
+验证 Dirac 表示满足 Clifford 代数，且 $(\gamma^5)^2=\hat 1$。
+\end{exercise}
+
+\section{Dirac 方程的数学}
+
+自由粒子的 Dirac 方程：
+\begin{equation}
+(i\gamma^\mu\partial_\mu - m)\psi(x) = 0.
+\label{eq:10.7.1}
+\end{equation}
+
+平方后给出 Klein--Gordon 方程：
+$(-\Box-m^2)\psi=0$，证实了正确的相对论色散关系。
+
+平面波解：
+\begin{equation}
+u(p,s) = \sqrt{\frac{E+m}{2m}}
+\mat{\chi_s\\\frac{\vect\sigma\cdot\vect p}{E+m}\chi_s},\qquad
+v(p,s) = \sqrt{\frac{E+m}{2m}}
+\mat{\frac{\vect\sigma\cdot\vect p}{E+m}\chi_s\\\chi_s},
+\label{eq:10.7.2}
+\end{equation}
+分别对应粒子（$u$）与反粒子（$v$），旋量 $\chi_s$。
+
+Dirac 伴随为 $\bar\psi=\psi^\dagger\gamma^0$，守恒流为 $j^\mu=\bar\psi\gamma^\mu\psi$。
+
+\begin{exercise}
+证明 $u^\dagger(p,s)u(p,s')=2E\delta_{ss'}$ 且
+$\bar u(p,s)u(p,s')=2m\delta_{ss'}$。
+\end{exercise}
+
+\section{略谈量子电动力学}
+
+QED 顶点通过 $-ie\gamma^\mu$ 把电子与光子耦合起来。
+第 7 章的 Dyson 级数生成微扰 $S$ 矩阵与 Feynman 图。
+
+QED 拉格朗日量：
+\begin{equation}
+\mathcal L_{\rm QED} = \bar\psi(i\slashed\partial-m)\psi
+- \frac14 F_{\mu\nu}F^{\mu\nu} - e\bar\psi\gamma^\mu\psi A_\mu,
+\label{eq:10.8.1}
+\end{equation}
+其中 $\slashed\partial=\gamma^\mu\partial_\mu$，$F_{\mu\nu}=\partial_\mu A_\nu-\partial_\nu A_\mu$。
+
+电子单圈自能给出质量重整化，真空极化修正光子传播子。
+
+\begin{exercise}
+写出动量空间中电子传播子的 Feynman 规则，并验证其在 $p^2=m^2$ 处的极点结构。
+\end{exercise}
+
+\section{物理中量纲与单位的形式观点}
+
+量纲分析：每个物理量都有由 $[M]$、$[L]$、$[T]$、$[I]$ 等构建的量纲。
+
+自然单位制：$\hbar=c=1$ 把所有量纲化为能量的幂次：
+$[E]=[M]=[L]^{-1}=[T]^{-1}$。
+
+Feynman 积分中的标度：圈积分
+$\int d^4k/(2\pi)^4\,f(k,p)$ 的量纲为 $[E]^{4-n_f}$，其中 $n_f$
+是分子中合并的质量量纲。
+
+可重整化性：在 QED 中，自然单位制下耦合常数 $e$ 无量纲，使理论可重整化。
+
+\begin{exercise}
+在自然单位制下，证明精细结构常数
+$\alpha=e^2/(4\pi)$ 无量纲，并计算其数值。
+\end{exercise}
+
+% 图形
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig10_1.png}
+\caption{Feynman 图：电子--正电子湮灭为两个光子。}
+\label{fig:10.1}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig10_2.png}
+\caption{$2\to2$ 散射的树级 Feynman 图。}
+\label{fig:10.2}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig10_7.png}
+\caption{电子传播子的单圈修正（自能）。}
+\label{fig:10.7}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig10_12.png}
+\caption{真空极化：光子传播子的单圈修正。}
+\label{fig:10.12}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig10_22.png}
+\caption{Feynman 规则：顶点、传播子与对称因子约定。}
+\label{fig:10.22}
+\end{figure}

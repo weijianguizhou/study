@@ -1,0 +1,83 @@
+% !TEX program = xelatex
+% main.tex — Mathematical Methods for Physicists (Babusci et al.)
+% XeLaTeX 工程主文件
+
+\documentclass[11pt,a4paper]{book}
+
+% ===== 中文字体（如果需要中文） =====
+% \usepackage{ctex}  % 取消注释以启用中文
+
+% ===== 英文字体 =====
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\setsansfont{Arial}
+
+% ===== 数学 =====
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{bm}
+\usepackage{mathtools}
+
+% ===== 图形 =====
+\usepackage{graphicx}
+\usepackage{float}
+
+% ===== 表格 =====
+\usepackage{array,booktabs}
+
+% ===== 超链接与书签 =====
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+% ===== 页面布局 =====
+\usepackage[left=25mm,right=25mm,top=25mm,bottom=25mm]{geometry}
+
+% ===== 目录深度 =====
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{3}
+
+% ===== 图形搜索路径（按章节分目录） =====
+\graphicspath{{figures/}}
+
+% ===== 自定义宏 =====
+\newcommand{\mat}[1]{\begin{pmatrix}#1\end{pmatrix}}
+\newcommand{\vect}[1]{\bm{#1}}
+\newcommand{\pauli}{\hat{\sigma}}
+\newcommand{\spp}{\pauli_{+}}
+\newcommand{\smm}{\pauli_{-}}
+\newcommand{\sigx}{\pauli_{x}}
+\newcommand{\sigy}{\pauli_{y}}
+\newcommand{\sigz}{\pauli_{z}}
+\newcommand{\tr}{\operatorname{Tr}}
+\newcommand{\sincf}{\operatorname{sinc}}
+\newcommand{\diag}[1]{\operatorname{diag}(#1)}
+\newcommand{\sinc}{\operatorname{sinc}}
+
+% ===== 定理类环境 =====
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}{Proposition}[chapter]
+\newtheorem{exercise}{Exercise}[chapter]
+
+% ===== 标题信息 =====
+\title{Mathematical Methods for Physicists}
+\author{Danilo Babusci \\ Giuseppe Dattoli \\ Silvia Licciardi \\ Elio Sabia}
+\date{LaTeX transcription}
+
+\begin{document}
+
+\frontmatter
+\maketitle
+\tableofcontents
+
+\mainmatter
+
+\include{ch1}
+\include{ch2}
+\include{ch3}
+\include{ch4}
+\include{ch5}
+\include{ch6}
+\include{ch7}
+\include{ch8}
+\include{ch9}
+\include{ch10}
+
+\end{document}

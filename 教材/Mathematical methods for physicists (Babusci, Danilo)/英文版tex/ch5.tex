@@ -1,0 +1,238 @@
+% ch5.tex — Exercises and Complements I (hand-typeset)
+\chapter{Exercises and Complements I}
+
+\section{Pauli and Jones Matrices and Mueller Calculus}
+
+Jones vectors describe fully polarised light; a Jones vector for a monochromatic
+plane wave is
+\begin{equation}
+\vect{E} = \begin{pmatrix} E_x \\ E_y \end{pmatrix} e^{i(kz-\omega t)},
+\label{eq:5.1.1}
+\end{equation}
+and any lossless optical element acting on it is represented by a $2\times2$
+unitary matrix (a Jones matrix). The Pauli matrices form a convenient basis:
+\begin{equation}
+\hat J = c_0\hat 1 + c_1\hat\sigma_x + c_2\hat\sigma_y + c_3\hat\sigma_z,
+\qquad |c_0|^2+|c_1|^2+|c_2|^2+|c_3|^2 = 1.
+\label{eq:5.1.2}
+\end{equation}
+
+For partially polarised light one uses the \emph{Stokes parameters}
+$S_0,S_1,S_2,S_3$ assembled into a Stokes vector, transformed by $4\times4$
+Mueller matrices. The connection to Jones calculus is
+\begin{equation}
+\vect S = \begin{pmatrix} S_0\\S_1\\S_2\\S_3 \end{pmatrix}
+= \begin{pmatrix}
+E_xE_x^*+E_yE_y^*\\
+E_xE_x^*-E_yE_y^*\\
+E_xE_y^*+E_yE_x^*\\
+i(E_xE_y^*-E_yE_x^*)
+\end{pmatrix}.
+\label{eq:5.1.3}
+\end{equation}
+
+\begin{exercise}
+Show that a quarter-wave plate with fast axis at $45^\circ$ to the $x$-axis
+corresponds to the Jones matrix
+$\frac{1}{\sqrt2}\mat{1&-i\\-i&1}$
+and to the Mueller matrix
+$\frac12\mat{1&0&0&1\\0&0&0&0\\0&0&1&0\\1&0&0&0}$.
+\end{exercise}
+
+\section{Magnetic Lenses and Matrix Description}
+
+A charged particle in a uniform magnetic field $\vect B = B\hat z$ undergoes
+cyclotron motion. A magnetic \emph{lens} with focal length $f$ in a drift of
+length $L$ is described by the transfer matrix
+\begin{equation}
+\hat M = \hat O(L)\,\hat F(f) =
+\mat{1&L\\0&1}\mat{1&0\\-1/f&1}
+= \mat{1-L/f & L \\ -1/f & 1},
+\label{eq:5.2.1}
+\end{equation}
+reproducing the thin-lens ABCD law of Chapter~1.
+
+For a quadrupole magnetic lens the transfer matrix in the focusing plane is
+\begin{equation}
+\hat M_q = \mat{\cos\sqrt{k}L & \frac{1}{\sqrt{k}}\sin\sqrt{k}L
+           \\ -\sqrt{k}\sin\sqrt{k}L & \cos\sqrt{k}L},
+\qquad k = \frac{qB_0}{p},
+\label{eq:5.2.2}
+\end{equation}
+with $p$ the particle momentum. A FODO cell (focus--drift--defocus--drift)
+is the building block of most accelerator lattices.
+
+\begin{exercise}
+For a FODO cell with equal drift lengths $L$ and quadrupole lengths
+$\ell$, show that the cell matrix is
+$\hat M_{\rm cell}=\hat O(L)\hat Q_f(\ell)\hat O(2L)\hat Q_d(\ell)\hat O(L)$
+and that stability requires $|{\rm Tr}\,\hat M_{\rm cell}/2|<1$.
+\end{exercise}
+
+\section{Miscellanea on the Matrix Formalism and Solution of Evolution Problems}
+
+\subsection{Matrices and Quaternions}
+
+Quaternions $q=q_0+\vect q\cdot\vect\sigma$ with $\vect\sigma=(\hat\sigma_x,\hat\sigma_y,\hat\sigma_z)$
+map to $SU(2)$ and describe 3D rotations via
+\begin{equation}
+\vect r' = q\,\vect r\,\bar q, \qquad \bar q = q_0 - \vect q\cdot\vect\sigma.
+\label{eq:5.3.1}
+\end{equation}
+The quaternion conjugate corresponds to the inverse rotation.
+
+\subsection{Matrix Solution of Evolution Problems}
+
+The disentanglement identities of Chapter~1 extend to quaternion/rotation
+evolution. For a time-dependent torque $\vect\Omega(t)$,
+\begin{equation}
+\hat U(t) = \exp\!\left(-i\int_0^t \vect\Omega(t')\cdot\frac{\vect\sigma}{2}\,dt'\right)
+\label{eq:5.3.2}
+\end{equation}
+is the solution of $i\partial_t\vect\sigma = \vect\Omega\times\vect\sigma$.
+
+\section{Lorentz Transformation}
+
+Lorentz boosts in the $(ct,x)$ plane with velocity $v$ are
+\begin{equation}
+\begin{pmatrix} ct'\\x' \end{pmatrix}
+=
+\mat{\gamma&-\beta\gamma\\-\beta\gamma&\gamma}
+\begin{pmatrix} ct\\x \end{pmatrix},
+\qquad
+\gamma=\frac{1}{\sqrt{1-\beta^2}},\ \beta=\frac{v}{c}.
+\label{eq:5.4.1}
+\end{equation}
+This is a hyperbolic rotation with rapidity $\alpha$:
+$\beta=\tanh\alpha$, $\gamma=\cosh\alpha$, $\beta\gamma=\sinh\alpha$.
+
+The boost can be written in exponential form:
+\begin{equation}
+\hat\Lambda(\beta) = \exp(-\alpha\hat K_x), \qquad
+\hat K_x = \mat{0&-1\\-1&0},
+\label{eq:5.4.2}
+\end{equation}
+with $[\hat K_x,\hat J_y]=i\hat K_z$ etc., closing the Lorentz-algebra
+commutators.
+
+\begin{exercise}
+Verify that $\hat\Lambda(\beta_1)\hat\Lambda(\beta_2)\neq\hat\Lambda(\beta_2)\hat\Lambda(\beta_1)$
+and derive the velocity-addition formula
+$v_{12}=(v_1+v_2)/(1+v_1v_2/c^2)$.
+\end{exercise}
+
+\section{Hyperbolic Trigonometry and Special Relativity}
+
+Hyperbolic rotations $\hat R_h(\alpha)$ with $\alpha=\operatorname{artanh}\beta$ give the boost
+matrix, linking the hyperbolic unit $\hat h$ of Chapter~1 to rapidity.
+Key identities:
+\begin{align}
+\cosh(\alpha_1+\alpha_2) &= \cosh\alpha_1\cosh\alpha_2 + \sinh\alpha_1\sinh\alpha_2,\\
+\sinh(\alpha_1+\alpha_2) &= \sinh\alpha_1\cosh\alpha_2 + \cosh\alpha_1\sinh\alpha_2.
+\label{eq:5.5.1}
+\end{align}
+
+The invariant interval $ds^2 = -c^2dt^2 + dx^2+dy^2+dz^2$ is preserved by
+all Lorentz transformations. Proper time is
+$d\tau = dt/\gamma$.
+
+\begin{exercise}
+Show that the Doppler shift for light emitted by a source moving with
+rapidity $\alpha$ is $\omega'=\omega e^{\alpha}$ (longitudinal case).
+\end{exercise}
+
+\section{A Touch on Elliptic Functions}
+
+Jacobi elliptic functions $\sn u$, $\cn u$, $\dn u$ (parameter $k$, $0\le k\le1$)
+solve the nonlinear pendulum equation
+\begin{equation}
+\theta'' + \omega^2\sin\theta = 0
+\label{eq:5.6.1}
+\end{equation}
+in the form
+\begin{equation}
+\theta(u) = 2\arcsin\bigl(k\,\sn(u;k)\bigr), \qquad u = \omega t.
+\label{eq:5.6.2}
+\end{equation}
+
+They satisfy
+\begin{align}
+\sn^2 u + \cn^2 u &= 1,\\
+\dn^2 u + k^2\sn^2 u &= 1,\\
+\frac{d}{du}\sn u &= \cn u\,\dn u.
+\label{eq:5.6.3}
+\end{align}
+
+Addition formulae:
+\begin{align}
+\sn(u+v) &= \frac{\sn u\,\cn v\,\dn v + \sn v\,\cn u\,\dn u}
+                  {1-k^2\sn^2 u\,\sn^2 v},\\
+\cn(u+v) &= \frac{\cn u\,\cn v - \sn u\,\dn u\,\sn v\,\dn v}
+                {1-k^2\sn^2 u\,\sn^2 v},\\
+\dn(u+v) &= \frac{\dn u\,\dn v - k^2\sn u\,\cn u\,\sn v\,\cn v}
+                {1-k^2\sn^2 u\,\sn^2 v}.
+\label{eq:5.6.4}
+\end{align}
+
+Periodicity: $\sn(u+4K)=\sn u$, $\cn(u+4K)=\cn u$, $\dn(u+2K)=\dn u$,
+where $K(k)=\int_0^{\pi/2}(1-k^2\sin^2\phi)^{-1/2}d\phi$ is the complete
+elliptic integral of the first kind.
+
+Limiting cases:
+\begin{align}
+k\to0:&\quad \sn u\to\sin u,\ \cn u\to\cos u,\ \dn u\to1,\\
+k\to1:&\quad \sn u\to\tanh u,\ \cn u\to\sech u,\ \dn u\to\sech u.
+\label{eq:5.6.5}
+\end{align}
+
+\begin{exercise}
+Derive the duplication formulae
+\begin{align}
+\sn(2u) &= \frac{2\sn u\,\cn u\,\dn u}{1-k^2\sn^4 u},\\
+\cn(2u) &= \frac{\cn^2 u - \sn^2 u\,\dn^2 u}{1-k^2\sn^4 u},\\
+\dn(2u) &= \frac{\dn^2 u - k^2\sn^2 u\,\cn^2 u}{1-k^2\sn^4 u}.
+\end{align}
+\end{exercise}
+
+\begin{exercise}
+Show that $\sn(u+K) = \cn u/\dn u$ and
+$\cn(u+K) = -\sqrt{1-k^2}\,\sn u/\dn u$.
+\end{exercise}
+
+\section{Concluding Comments}
+
+The matrix methods of Chapters~1--2 extend uniformly to Lorentz, spinor,
+and quaternion formalisms. The hyperbolic/elliptic functions provide the
+exact (non-perturbative) solutions that Euler-angle and rapidity parameters
+only parametrise perturbatively. In the next chapters we turn to Fourier
+methods and special functions that diagonalise these same problems in
+momentum space.
+
+% Figures for this chapter
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig5_1.png}
+\caption{Jones vectors: polarisation states on the Poincar\'e sphere.}
+\label{fig:5.1}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig5_3.png}
+\caption{Stokes parameters and the Poincar\'e sphere representation.}
+\label{fig:5.3}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig5_16.png}
+\caption{Elliptic functions: $\sn$, $\cn$, $\dn$ vs $u$ for various $k$.}
+\label{fig:5.16}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig5_17.png}
+\caption{Addition theorem for Jacobi elliptic functions.}
+\label{fig:5.17}
+\end{figure}

@@ -1,0 +1,95 @@
+% !TEX program = xelatex
+% main.tex — 物理学家用数学方法 (Babusci et al.) 中文版
+% XeLaTeX 工程主文件
+
+\documentclass[11pt,a4paper]{book}
+
+% ===== 中文支持 =====
+\usepackage{ctex}
+
+% ===== 英文字体 =====
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\setsansfont{Arial}
+
+% ===== 数学 =====
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{bm}
+\usepackage{mathtools}
+\usepackage{slashed}
+
+% ===== 图形 =====
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage[export]{adjustbox}
+
+% ===== 列表 =====
+\usepackage[shortlabels]{enumitem}
+
+% ===== 表格 =====
+\usepackage{array,booktabs}
+
+% ===== 超链接与书签 =====
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+% ===== 页面布局 =====
+\usepackage[left=25mm,right=25mm,top=25mm,bottom=25mm]{geometry}
+
+% ===== 目录深度 =====
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{3}
+
+% ===== 图形搜索路径（按章节分目录） =====
+\graphicspath{{figures/}}
+
+% ===== 自定义宏 =====
+\newcommand{\mat}[1]{\begin{pmatrix}#1\end{pmatrix}}
+\newcommand{\vect}[1]{\bm{#1}}
+\newcommand{\pauli}{\hat{\sigma}}
+\newcommand{\spp}{\pauli_{+}}
+\newcommand{\smm}{\pauli_{-}}
+\newcommand{\sigx}{\pauli_{x}}
+\newcommand{\sigy}{\pauli_{y}}
+\newcommand{\sigz}{\pauli_{z}}
+\newcommand{\tr}{\operatorname{Tr}}
+\newcommand{\sincf}{\operatorname{sinc}}
+\newcommand{\diag}[1]{\operatorname{diag}(#1)}
+\newcommand{\sinc}{\operatorname{sinc}}
+\newcommand{\erfi}{\operatorname{erfi}}
+\newcommand{\erfc}{\operatorname{erfc}}
+\newcommand{\sn}{\operatorname{sn}}
+\newcommand{\cn}{\operatorname{cn}}
+\newcommand{\dn}{\operatorname{dn}}
+\newcommand{\sech}{\operatorname{sech}}
+
+% ===== 定理类环境 =====
+\newtheorem{theorem}{定理}[chapter]
+\newtheorem{proposition}{命题}[chapter]
+\newtheorem{exercise}{练习}[chapter]
+
+% ===== 标题信息 =====
+\title{物理学家用数学方法}
+\author{Danilo Babusci \\ Giuseppe Dattoli \\ Silvia Licciardi \\ Elio Sabia}
+\date{LaTeX 中文转写版}
+
+\begin{document}
+
+\frontmatter
+\maketitle
+\tableofcontents
+
+\mainmatter
+
+\include{ch1}
+\include{ch2}
+\include{ch3}
+\include{ch4}
+\include{ch5}
+\include{ch6}
+\include{ch7}
+\include{ch8}
+\include{ch9}
+\include{ch10}
+
+\end{document}

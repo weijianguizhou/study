@@ -1,0 +1,66 @@
+% !TEX program = xelatex
+\documentclass[11pt,a4paper]{book}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{hyperref}
+
+\graphicspath{{./Figures/}{../Figures/}}
+
+\usepackage{fontspec}
+\setmainfont{TeX Gyre Termes}
+\setmonofont{TeX Gyre Cursor}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!60!black,
+    citecolor=blue!60!black,
+    urlcolor=blue!60!black
+}
+
+\newtheorem{exercise}{Exercise}[chapter]
+\newtheorem{example}{Example}[chapter]
+
+\titlespacing{\chapter}{0pt}{*4}{*2}
+\titlespacing{\section}{0pt}{*3}{*1.5}
+\titlespacing{\subsection}{0pt}{*2}{*1}
+
+\setlength{\headheight}{14pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[RE]{\nouppercase{\leftmark}}
+\fancyhead[LO]{\nouppercase{\rightmark}}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% Use teletype for escaped math lines (readable monospaced)
+\renewcommand{\textbackslash}{$\backslash$}
+
+\title{A Student's Guide to Lagrangians and Hamiltonians}
+\author{Patrick Hamill \\ \small San Jose State University}
+\date{}
+
+\begin{document}
+
+\frontmatter
+\maketitle
+\tableofcontents
+
+\mainmatter
+\include{chapters/Ch_intro}
+\include{chapters/Ch1}
+\include{chapters/Ch2}
+\include{chapters/Ch3}
+\include{chapters/Ch4}
+\include{chapters/Ch5}
+\include{chapters/Ch6}
+\include{chapters/Ch7}
+
+\end{document}

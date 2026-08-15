@@ -1,0 +1,932 @@
+% ch2.tex — 第 2 章（中文版）
+% 常微分与偏微分方程、演化算子方法及其应用
+
+\chapter{常微分与偏微分方程、演化算子方法及其应用}
+
+% ============================================================
+\section{常微分方程、矩阵与指数算子}
+% ============================================================
+
+在上一章中，我们利用演化算子技术这种非常简单的方法研究了常微分方程（ODE）。在本章中，我们将强调：演化算子技术是一种范式性的工具，可用于处理各类 Cauchy 初值问题。特别地，我们将考虑偏微分方程（PDE）的情形。
+
+我们首先考虑第 1 章中已遇到过的一阶 ODE，写成如下形式
+\begin{equation}
+\begin{cases}
+y'(x)+\alpha(x)\,y(x)=\beta(x),\\[2mm]
+y(0)=y_{0}.
+\end{cases}
+\label{eq:2.1.1}
+\end{equation}
+它代表一个基本的非齐次 Cauchy 问题，其通解为
+\begin{equation}
+y(x)=e^{-\int_{0}^{x}\alpha(\xi)\,d\xi}\,y_{0}+N(x),
+\label{eq:2.1.2}
+\end{equation}
+其中
+\begin{equation}
+N(x)=e^{-\int_{0}^{x}\alpha(\xi)\,d\xi}
+\int_{0}^{x} e^{\int_{0}^{\eta}\alpha(\chi)\,d\chi}\,\beta(\eta)\,d\eta.
+\label{eq:2.1.3}
+\end{equation}
+
+在第 1 章中我们处理了一个更简单的版本，其中 $\alpha$ 和 $\beta$ 为常数。此时解取简单形式
+\begin{equation}
+y(x)=e^{-\alpha x}y_{0}+\int_{0}^{x}e^{-\alpha(x-x')}\beta\,dx'
+=e^{-\alpha x}y_{0}+\frac{1-e^{-\alpha x}}{\alpha}\,\beta.
+\label{eq:2.1.4}
+\end{equation}
+
+众所周知，有许多物理现象可以用上述方程描述，例如物体在黏性介质中的下落，或电容器通过电阻放电。我们可以把上面的解的形式作为参考示例来研究更复杂的情形。我们将沿用解~\eqref{eq:2.1.2}--\eqref{eq:2.1.4} 的同样的形式``结构''来处理下述一阶 ODE
+\begin{equation}
+\begin{cases}
+\dfrac{d}{d\tau}\,\underline{x}=-\omega\hat{A}\,\underline{x}+\underline{b},\\[2mm]
+\underline{x}\big|_{\tau=0}=\underline{x}_{0}.
+\end{cases}
+\label{eq:2.1.5}
+\end{equation}
+
+这里的未知函数由 $n$ 分量列矢量 $\underline{x}(\tau)$ 及相应的初始条件给出。此外，$\omega$ 是标量，$\hat{A}$ 和 $\underline{b}$ 分别是矩阵和列矢量，且假定它们与积分变量无关。根据式~\eqref{eq:2.1.2}--\eqref{eq:2.1.4}，解可以写成
+\begin{equation}
+\underline{x}(\tau)=\hat{U}(\tau)\,\underline{x}_{0}+\hat{B}(\tau)\,\underline{b},
+\label{eq:2.1.6}
+\end{equation}
+其中
+\begin{equation}
+\hat{U}(\tau)=e^{-\omega\hat{A}\tau},\qquad
+\hat{B}(\tau)=e^{-\omega\hat{A}\tau}\int_{0}^{\tau}e^{\omega\hat{A}\tau'}\,d\tau'
+=\int_{0}^{\tau}\hat{U}(\tau-\tau')\,d\tau'.
+\label{eq:2.1.7}
+\end{equation}
+
+值得强调的是，与式~\eqref{eq:2.1.2}--\eqref{eq:2.1.4} 不同，这里次序很重要，解~\eqref{eq:2.1.6} 应理解为算子 $\hat{U}$ 和 $\hat{B}$ 分别作用于初始条件与非齐次项的结果。例如，若矩阵 $\hat{A}$ 是虚矩阵 $\hat{i}$，则解~\eqref{eq:2.1.6} 可写为
+\begin{equation}
+\underline{x}(\tau)=\hat{R}(-\omega\tau)\,\underline{x}_{0}
++\frac{\hat{1}-\hat{R}(-\omega\tau)}{\omega}\,\hat{i}^{-1}\underline{b},
+\label{eq:2.1.8}
+\end{equation}
+这本质上就是式~\eqref{eq:2.1.4} 的推广，很容易验证。此外，通过直接的代数运算得到
+\begin{equation}
+\underline{x}(\tau)=\hat{R}(-\omega\tau)\,\underline{x}_{0}
++\tau\,\sincf\!\left(\frac{\omega\tau}{2}\right)
+\hat{R}\!\left(-\frac{\omega\tau}{2}\right)\underline{b},
+\qquad \sincf x=\frac{\sin x}{x}.
+\label{eq:2.1.9}
+\end{equation}
+
+在继续之前，我们在此指出：要使解具有式~\eqref{eq:2.1.6} 这样的直接形式，关键在于矩阵 $\hat{A}$ 不显式依赖积分变量。否则，求解会被所谓的时间排序（time ordering）问题所困扰，这一点将在本书后续部分讨论。
+
+现在考虑一个二阶非齐次 ODE（为简洁起见，以下记 $y(x)=y$）
+\begin{equation}
+\begin{cases}
+y''=-\omega^{2}(x)\,y+\beta(x),\\[1mm]
+y'(0)=y_{0}',\\
+y(0)=y_{0}.
+\end{cases}
+\label{eq:2.1.10}
+\end{equation}
+
+我们令
+\begin{equation}
+y'=\eta,
+\label{eq:2.1.11}
+\end{equation}
+即可把上述方程化为矩阵形式，从而式~\eqref{eq:2.1.10} 可写成
+\begin{equation}
+\underline{z}'=\hat{M}(x)\,\underline{z}+\underline{\phi}(x),
+\label{eq:2.1.12}
+\end{equation}
+其中
+\begin{equation}
+\underline{z}=\mat{\eta\\y},\qquad
+\hat{M}=\mat{0&-\omega^{2}(x)\\1&0},\qquad
+\underline{\phi}(x)=\mat{\beta(x)\\0}.
+\label{eq:2.1.13}
+\end{equation}
+
+虽然我们将在后续课程中更仔细地讨论这些结果的用途，但这里要指出：把二阶微分方程化为矩阵方程的好处在于我们可以使用矩阵形式体系，它甚至在数值实现中也非常简便。
+
+我们现在引出上文讨论的几个基本推论，它们构成我们未来发展的基础。假定 $\omega$、$\beta$ 与 $x$ 无关，则式~\eqref{eq:2.1.12} 的解可以写成
+\begin{equation}
+\underline{z}(x)=e^{\hat{M}x}\,\underline{z}_{0}
++\int_{0}^{x}e^{-\hat{M}(x'-x)}\,\underline{\phi}\,dx',
+\label{eq:2.1.14}
+\end{equation}
+又因
+\begin{equation}
+\hat{M}=\spp-\omega^{2}\smm,
+\label{eq:2.1.15}
+\end{equation}
+我们可以应用第 1 章讨论的方法，把式~\eqref{eq:2.1.14} 中出现的指数矩阵写成
+\begin{equation}
+e^{\hat{M}x}=
+\mat{\cos(\omega x)&-\omega\sin(\omega x)\\[1mm]
+\dfrac{1}{\omega}\sin(\omega x)&\cos(\omega x)}.
+\label{eq:2.1.16}
+\end{equation}
+
+因此，式~\eqref{eq:2.1.12} 的解最终可用圆函数显式表示为
+\begin{align}
+\underline{z}(x)&=
+\mat{\cos(\omega x)&-\omega\sin(\omega x)\\[1mm]
+\dfrac{1}{\omega}\sin(\omega x)&\cos(\omega x)}
+\mat{y_{0}\\y_{0}'}\notag\\[2mm]
+&\quad+x\,\sincf\!\left(\frac{\omega x}{2}\right)
+\mat{\cos\left(\dfrac{\omega x}{2}\right)&-\omega\sin\left(\dfrac{\omega x}{2}\right)\\[1mm]
+\dfrac{1}{\omega}\sin\left(\dfrac{\omega x}{2}\right)&\cos\left(\dfrac{\omega x}{2}\right)}
+\mat{\beta\\0}.
+\label{eq:2.1.17}
+\end{align}
+
+在接下来的几节中，我们将改进这一基本形式体系，以处理不太直接的微分方程。
+
+% ============================================================
+\section{偏微分方程与指数算子，I}
+% ============================================================
+
+本节伊始，我们先回顾一些关于 Gauss 积分的内容。恒等式
+\begin{equation}
+I=\int_{-\infty}^{\infty}e^{-x^{2}}\,dx=\sqrt{\pi}
+\label{eq:2.2.1}
+\end{equation}
+是微积分的里程碑之一，可如下证明。将式~\eqref{eq:2.2.1} 两边平方，得
+\begin{equation}
+I^{2}=\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}
+e^{-(x^{2}+y^{2})}\,dx\,dy,
+\label{eq:2.2.2}
+\end{equation}
+变换为极坐标后得到
+\begin{equation}
+I^{2}=\int_{0}^{2\pi}d\vartheta\int_{0}^{\infty}\rho\,e^{-\rho^{2}}\,d\rho=\pi.
+\label{eq:2.2.3}
+\end{equation}
+
+利用上述关系可以推出下列恒等式（其证明留作练习）
+\begin{equation}
+\int_{-\infty}^{\infty}e^{-a x^{2}+b x}\,dx
+=\sqrt{\frac{\pi}{a}}\;e^{\frac{b^{2}}{4a}},
+\label{eq:2.2.4}
+\end{equation}
+该式对我们的目的至关重要，应当予以高度重视。
+
+\begin{exercise}
+证明式~\eqref{eq:2.2.4}。\\
+\textit{提示：}注意 $a\!\left(x^{2}-\frac{b}{a}x\right)=a\!\left(x-\frac{b}{2a}\right)^{2}-\frac{b^{2}}{4a}$。
+\end{exercise}
+
+在第 2.1 节中我们看到，矩阵形式体系与矩阵指数为处理各类问题提供了高效的工具。为与上一节衔接，我们给出一个结合了~\eqref{eq:2.1.1} 型一阶 ODE 与非常规 Gauss 积分计算的应用。我们提出的问题是计算积分
+\begin{equation}
+I(b)=\int_{0}^{\infty}e^{-a^{2}x^{2}-\frac{b^{2}}{x^{2}}}\,dx,
+\label{eq:2.2.5}
+\end{equation}
+其中把 $b$ 看作变量、$a$ 看作参数。对式~\eqref{eq:2.2.5} 两边关于 $b$ 求导，可得基本微分方程
+\begin{equation}
+\partial_{b}I(b)+2a\,I(b)=0.
+\label{eq:2.2.6}
+\end{equation}
+
+\begin{exercise}
+推导式~\eqref{eq:2.2.6}。\\
+\textit{提示：}注意
+$-2\int_{0}^{\infty}\frac{b}{x^{2}}\,e^{-a^{2}x^{2}-b^{2}/x^{2}}\,dx
+=2a\int_{0}^{\infty}e^{-a^{2}x^{2}-b^{2}/x^{2}}\,d\!\left(\frac{b}{ax}\right)$。
+\end{exercise}
+
+式~\eqref{eq:2.2.6} 的解给出积分~\eqref{eq:2.2.5}。我们得到
+\begin{equation}
+I(b)=I(0)\,e^{-2ab},\qquad
+I(0)=\int_{0}^{\infty}e^{-a^{2}x^{2}}\,dx=\frac{1}{2}\,\frac{\sqrt{\pi}}{a}.
+\label{eq:2.2.7}
+\end{equation}
+
+现在我们已经具备足够的能力来证明：以普通微分算子为自变量的指数算子，是如何为处理若干线性 PDE 族提供强大工具的。作为入门示例，考虑方程
+\begin{equation}
+\begin{cases}
+\partial_{t}F(x,t)=a\,\partial_{x}F(x,t),\\[1mm]
+F(x,0)=g(x),
+\end{cases}
+\label{eq:2.2.8}
+\end{equation}
+其中 $a$ 为常数。上述方程只是关于变量 $t$（通常称为时间变量）的初值问题。它与式~\eqref{eq:2.1.1} 有一些相似之处。事实上，若建立对应关系
+\begin{equation}
+\partial_{t}F(x,t)\rightarrow y',\qquad
+a\,\partial_{x}\rightarrow -\alpha,\qquad
+g(x)\rightarrow y_{0},
+\label{eq:2.2.9}
+\end{equation}
+则式~\eqref{eq:2.2.8} 的``形式''解为
+\begin{equation}
+F(x,t)=e^{a t\partial_{x}}\,g(x),
+\label{eq:2.2.10}
+\end{equation}
+它应理解为含一阶导数的指数算子作用于``初始条件''（一个依赖 $x$ 的函数）的结果。这里同样需要注意次序：``演化''算子应出现在初始条件的左侧。与前几节一样，我们可以通过展开指数而得到一个有意义的有效解：
+\begin{align}
+F(x,t)&=e^{a t\partial_{x}}\,g(x)
+=\sum_{n=0}^{\infty}\frac{(a t)^{n}}{n!}\,\partial_{x}^{n}g(x)\notag\\
+&=g(x+at).
+\label{eq:2.2.11}
+\end{align}
+上述算子作用于函数 $g(x)$（默认其无限次可微）的效果不过是坐标平移。正因如此，这样的指数算子被称为平移的生成元。
+
+演化算子方法可以相当直接地推广，但通常面临的问题是恰当地定义该算子对初始函数的作用。众所周知，扩散方程（通常称为热传导方程）可写为
+\begin{equation}
+\begin{cases}
+\partial_{t}F(x,t)=a\,\partial_{x}^{2}F(x,t),\\[1mm]
+F(x,0)=g(x).
+\end{cases}
+\label{eq:2.2.12}
+\end{equation}
+
+除了右边出现的是二阶导数而非一阶导数之外，我们可以沿用与之前相同的步骤得到形式解
+\begin{equation}
+F(x,t)=e^{a t\partial_{x}^{2}}\,g(x).
+\label{eq:2.2.13}
+\end{equation}
+
+尽管二阶导数的出现并不妨碍形式解的推导，但它对获得有效解却产生了很大差别。式~\eqref{eq:2.2.13} 右端的算子通常称为扩散算子，它对初始条件的作用导致解需要一些巧妙猜测。
+
+下面我们使用一个本书中经常用到的技巧。我们将某个算子的指数算子``变换''成包含其平方根的指数。这可以通过下列由 Gauss 积分（见式~\eqref{eq:2.2.4}）得到的恒等式完成：
+\begin{equation}
+e^{b^{2}}=\frac{1}{\sqrt{\pi}}\int_{-\infty}^{\infty}e^{-\xi^{2}+2b\xi}\,d\xi.
+\label{eq:2.2.14}
+\end{equation}
+
+如果我们假定该恒等式对算子也成立，就可以写出
+\begin{equation}
+F(x,t)=e^{a t\partial_{x}^{2}}\,g(x)
+=\frac{1}{\sqrt{\pi}}\int_{-\infty}^{\infty}
+e^{-\xi^{2}+2\xi\sqrt{a t}\,\partial_{x}}\,g(x)\,d\xi,
+\label{eq:2.2.15}
+\end{equation}
+再利用平移（位移）算子的性质（式~\eqref{eq:2.2.11}）得到
+\begin{equation}
+F(x,t)=\frac{1}{\sqrt{\pi}}\int_{-\infty}^{\infty}
+e^{-\xi^{2}}\,g(x+2\sqrt{a t}\,\xi)\,d\xi,
+\label{eq:2.2.16}
+\end{equation}
+经过适当的变量代换，可改写为更``流行''的形式
+\begin{equation}
+F(x,t)=\frac{1}{2\sqrt{\pi a t}}
+\int_{-\infty}^{\infty}e^{-\frac{(\sigma-x)^{2}}{4 a t}}\,g(\sigma)\,d\sigma.
+\label{eq:2.2.17}
+\end{equation}
+
+这个解是初始条件与一个核（称为热方程核）的卷积，通常称为 Gauss--Weierstrass 变换。它仅在式~\eqref{eq:2.2.17} 中的积分存在时成立。
+
+\begin{exercise}[Glaisher 恒等式]
+证明：对于 $g(x)=e^{-x^{2}}$，式~\eqref{eq:2.2.12} 的解可写为
+\begin{equation}
+F(x,t)=e^{a t\partial_{x}^{2}}\,e^{-x^{2}}
+=\frac{1}{\sqrt{1+4 a t}}\;e^{-\frac{x^{2}}{1+4 a t}}.
+\label{eq:2.2.18}
+\end{equation}
+该关系将在后续应用中大量使用，应当予以高度重视。
+\end{exercise}
+
+\begin{exercise}[Hermite / 热多项式]
+证明：对于 $g(x)=x^{n}$，$n\in\mathbb{Z}$，式~\eqref{eq:2.2.12} 的解可写为
+\begin{equation}
+F(x,t)=H_{n}(x,a t),\qquad
+H_{n}(x,y)=n!\sum_{r=0}^{\lfloor n/2\rfloor}
+\frac{x^{\,n-2r}\,y^{r}}{(n-2r)!\,r!},
+\label{eq:2.2.19}
+\end{equation}
+其中 $\lfloor k\rfloor$ 表示数 $k$ 的下整数部分，$H_{n}(x,y)$ 是 Hermite 多项式，有时也称为热多项式。
+\end{exercise}
+
+\begin{exercise}[扩散 $+$ 平移]
+证明方程
+\begin{equation}
+\begin{cases}
+\partial_{t}F(x,t)=a\,\partial_{x}^{2}F(x,t)+b\,\partial_{x}F(x,t),\\[1mm]
+F(x,0)=g(x),
+\end{cases}
+\label{eq:2.2.20}
+\end{equation}
+（描述扩散与平移同时进行的过程）的解为
+\begin{equation}
+F(x,t)=\frac{1}{2\sqrt{\pi a t}}
+\int_{-\infty}^{\infty}
+e^{-\frac{(\sigma-x-bt)^{2}}{4 a t}}\,g(\sigma)\,d\sigma.
+\label{eq:2.2.21}
+\end{equation}
+\textit{提示：}注意 $F(x,t)=e^{b t\partial_{x}}\!\left(e^{a t\partial_{x}^{2}}g(x)\right)$。
+\end{exercise}
+
+在结束本节之前，我们回到带非齐次项的式~\eqref{eq:2.2.8}，即
+\begin{equation}
+\begin{cases}
+\partial_{t}F(x,t)=a\,\partial_{x}F(x,t)+s(x),\\[1mm]
+F(x,0)=g(x),
+\end{cases}
+\label{eq:2.2.22}
+\end{equation}
+其解为（证明留作练习）
+\begin{equation}
+F(x,t)=g(x+a t)+\int_{0}^{t}s\!\bigl(x+a(t-\tau)\bigr)\,d\tau.
+\label{eq:2.2.23}
+\end{equation}
+
+% ============================================================
+\section{偏微分方程与指数算子，II}
+% ============================================================
+
+在第 2.2 节中，我们使用了非常朴素但有效的方法来处理演化型 PDE。在本节中，我们说明这一技术如何推广到对时间含更高阶导数的方程。一个很自然的例子是 D'Alembert 方程
+\begin{equation}
+\begin{cases}
+\partial_{t}^{2}F(x,t)-v^{2}\partial_{x}^{2}F(x,t)=0,\\[1mm]
+F(x,0)=g(x),\\
+\partial_{t}F(x,t)\big|_{t=0}=h(x).
+\end{cases}
+\label{eq:2.3.1}
+\end{equation}
+
+上述方程对时间是二阶的，因此有两个初始条件，由函数 $g(x)$ 和 $h(x)$ 给出。利用与二阶常微分方程（见式~\eqref{eq:2.1.10}）的类比，可以把上述问题的解写成如下形式（显式推导留作练习）
+\begin{equation}
+\mat{F(x,t)\\\Phi(x,t)}=\hat{U}(t)\mat{g(x)\\h(x)},
+\label{eq:2.3.2}
+\end{equation}
+其中，令 $\hat{\omega}=v\,\partial_{x}$，
+\begin{equation}
+\Phi(x,t)=\partial_{t}F(x,t),\qquad
+\hat{U}(t)=
+\mat{\cosh(\hat{\omega}t)&\hat{\omega}^{-1}\sinh(\hat{\omega}t)\\[1mm]
+\hat{\omega}\sinh(\hat{\omega}t)&\cosh(\hat{\omega}t)}.
+\label{eq:2.3.3}
+\end{equation}
+
+由上述关系，我们得到 D'Alembert 方程的形式解
+\begin{equation}
+F(x,t)=\cosh(\hat{\omega}t)\,g(x)
++\hat{\omega}^{-1}\sinh(\hat{\omega}t)\,h(x).
+\label{eq:2.3.4}
+\end{equation}
+
+该方程包含一个令人困惑的元素：算子 $\hat{\omega}^{-1}$。虽然我们将在后续更深入地分析算子逆的定义，但这里我们指出：由于它本质上是导数的逆，我们可以写出
+\begin{equation}
+\hat{\omega}^{-1}h(x)=\sigma(x)=v^{-1}\int^{x}h(\xi)\,d\xi,
+\label{eq:2.3.5}
+\end{equation}
+再考虑到式~\eqref{eq:2.2.11}，便得到
+\begin{equation}
+F(x,t)=\frac{1}{2}\bigl[g(x+v t)+g(x-v t)\bigr]
++\frac{1}{2}\bigl[\sigma(x+v t)-\sigma(x-v t)\bigr],
+\label{eq:2.3.6}
+\end{equation}
+这就是 D'Alembert 方程解的经典形式。非齐次项的引入是直接的，留作练习。
+
+在结束本节之前，我们想强调一个与指数算子有关的进一步问题，并讨论 $\hat{\omega}=b\,x\partial_{x}$ 情形下的上述例子。与此例相关的演化算子有时称为 Euler 算子，它既不代表平移也不代表扩散，而代表膨胀（dilatation）。与扩散算子的情形一样，我们采用把 $e^{a x\partial_{x}}f(x)$ 化为平移的策略：作变量代换 $x=e^{\vartheta}\rightarrow\partial_{x}=e^{-\vartheta}\partial_{\vartheta}$，得到
+\begin{equation}
+e^{a x\partial_{x}}f(x)=e^{a\partial_{\vartheta}}f(e^{\vartheta})
+=f(e^{\vartheta+a})=f(e^{a}e^{\vartheta}),
+\label{eq:2.3.7}
+\end{equation}
+因此
+\begin{equation}
+e^{a x\partial_{x}}f(x)=f(e^{a}x).
+\label{eq:2.3.8}
+\end{equation}
+
+牢记这个恒等式，就可以在 $\hat{\omega}=b\,x\partial_{x}$ 的情形下求解式~\eqref{eq:2.3.1}。
+
+显然，Euler 算子是扩束器的微分表示，其矩阵形式已在上一节描述。这一评注是各种算子表示之间存在某种等价性的第一个提示。问题的这一方面将在后续更仔细地讨论。
+
+% ============================================================
+\section{算子排序（Operator Ordering）}
+% ============================================================
+
+在前几节中，我们学会了如何使用指数算子求解 PDE 和 ODE。我们或许给人留下了这样的印象：只要把微分算子当作普通代数量来处理，就能解决所有涉及 PDE 的问题。然而问题往往因下述事实而复杂化：与数不同，算子是更一般的实体，彼此不互相对易。我们将讨论在出现排序问题时应当如何谨慎行事。
+
+为了恰当地界定我们要处理的问题，我们提醒：这是量子力学形式体系的关键方面，因此我们从一个看似不太熟悉的例子入手。我们注意到方程
+\begin{equation}
+\begin{cases}
+\dfrac{d}{dt}\hat{O}=[\hat{B},\hat{O}],\\[2mm]
+\hat{O}(0)=\hat{O}_{0},
+\end{cases}
+\label{eq:2.4.1}
+\end{equation}
+（涉及非对易量之间的对易子 $[a,b]=ab-ba$）的解可以写成
+\begin{equation}
+\hat{O}(t)=e^{t\hat{B}}\,\hat{O}_{0}\,e^{-t\hat{B}}.
+\label{eq:2.4.2}
+\end{equation}
+
+尽管并不明显，式~\eqref{eq:2.4.1} 是一个初值问题。事实上，该方程可以写成
+\begin{equation}
+\frac{d}{dt}\hat{O}=(\hat{B}\circ)\hat{O},
+\label{eq:2.4.3}
+\end{equation}
+其中我们定义了新算子 $\hat{B}\circ$，使得
+\begin{align}
+(\hat{B}\circ)\hat{O}&=[\hat{B},\hat{O}],\\
+(\hat{B}\circ)^{2}\hat{O}&=[\hat{B},[\hat{B},\hat{O}]],\\
+(\hat{B}\circ)^{3}\hat{O}&=[\hat{B},[\hat{B},[\hat{B},\hat{O}]]],\;\ldots
+\label{eq:2.4.4}
+\end{align}
+
+我们把式~\eqref{eq:2.4.3} 的解写成
+\begin{equation}
+\hat{O}(t)=e^{(\hat{B}\circ)t}\hat{O}_{0}
+=\sum_{n=0}^{\infty}\frac{t^{n}}{n!}\,(\hat{B}\circ)^{n}\hat{O}_{0}
+=\sum_{n=0}^{\infty}\frac{t^{n}}{n!}\,
+\bigl[\hat{B},\ldots[\hat{B},[\hat{B},\hat{O}_{0}]]\bigr],
+\label{eq:2.4.5}
+\end{equation}
+最后一步用到了 Baker--Campbell--Hausdorff 关系。
+
+这个展开为什么对我们重要？首先，考虑一个指数算子作用于另一个算子，即
+\begin{equation}
+\hat{C}=e^{\xi\hat{A}}\hat{B}.
+\label{eq:2.4.6}
+\end{equation}
+
+由于 $e^{\xi\hat{A}}e^{-\xi\hat{A}}=e^{-\xi\hat{A}}e^{\xi\hat{A}}=\hat{1}$，我们得到
+\begin{equation}
+\hat{C}=\bigl(e^{\xi\hat{A}}\hat{B}e^{-\xi\hat{A}}\bigr)e^{\xi\hat{A}}
+=\sum_{n=0}^{\infty}\frac{\xi^{n}}{n!}\,(\hat{A}\circ)^{n}\hat{B}\;e^{\xi\hat{A}}.
+\label{eq:2.4.7}
+\end{equation}
+
+同样地，可以证明下列恒等式
+\begin{equation}
+e^{\xi\hat{A}}\hat{B}^{n}
+=\bigl(e^{\xi\hat{A}}\hat{B}e^{-\xi\hat{A}}\bigr)^{n}e^{\xi\hat{A}},\qquad
+e^{\xi\hat{A}}f(\hat{B})
+=f\!\left(e^{\xi\hat{A}}\hat{B}e^{-\xi\hat{A}}\right)e^{\xi\hat{A}},
+\label{eq:2.4.8}
+\end{equation}
+它们初步表明处理算子代数时应当保持的谨慎程度。同样不难看出，对于
+\begin{equation}
+[\hat{A},\hat{B}]=k\,\hat{1},
+\label{eq:2.4.9}
+\end{equation}
+展开式~\eqref{eq:2.4.7} 化为
+\begin{equation}
+e^{\xi\hat{A}}\hat{B}=(\hat{B}+k\xi\hat{1})\,e^{\xi\hat{A}}.
+\label{eq:2.4.10}
+\end{equation}
+
+此外，容易论证在假设~\eqref{eq:2.4.9} 下
+\begin{equation}
+e^{\xi\hat{A}}f(\hat{B})
+=f(\hat{B}+k\xi\hat{1})\,e^{\xi\hat{A}},
+\label{eq:2.4.11}
+\end{equation}
+以及（提醒 $[\hat{A}^{m},\hat{B}]=km\hat{A}^{m-1}$）
+\begin{equation}
+e^{\xi\hat{A}^{m}}f(\hat{B})
+=f\!\left(\hat{B}+k\xi m\hat{A}^{m-1}\right)e^{\xi\hat{A}}.
+\label{eq:2.4.12}
+\end{equation}
+式~\eqref{eq:2.4.12} 称为 Crofton 恒等式。它特别有趣：把 $\hat{A}$ 等同于求导算子后，可以把~\eqref{eq:2.4.12} 理解为平移算子作用的推广，得到
+\begin{equation}
+e^{y\partial_{x}^{m}}f(x)
+=f\!\left(x+my\partial_{x}^{m-1}\right)e^{y\partial_{x}^{m}},
+\label{eq:2.4.13}
+\end{equation}
+因为
+\begin{equation}
+[\partial_{x},x]=\hat{1}.
+\label{eq:2.4.14}
+\end{equation}
+
+我们提到排序问题是算子不对易的后果，因此可以预期
+\begin{equation}
+e^{a\partial_{x}+b x}\neq e^{a\partial_{x}}\,e^{b x}
+\neq e^{b x}\,e^{a\partial_{x}}.
+\label{eq:2.4.15}
+\end{equation}
+
+我们可以利用结果~\eqref{eq:2.4.13} 得到~\eqref{eq:2.4.15} 型指数算子的有序解缠形式。结果是
+\begin{equation}
+\hat{Q}=e^{c\partial_{x}^{2}}\,e^{a x}
+=e^{a x+b\partial_{x}}\,e^{c\partial_{x}^{2}},\qquad b=2ac.
+\label{eq:2.4.16}
+\end{equation}
+
+现在把算子 $\hat{Q}$ 作用于函数 $f(x)$。考虑到式~\eqref{eq:2.2.15}，我们得到
+\begin{align}
+\hat{Q}f(x)&=e^{c\partial_{x}^{2}}e^{a x}f(x)\notag\\
+&=\frac{1}{\sqrt{\pi}}\int_{-\infty}^{\infty}e^{-\xi^{2}}
+e^{2\sqrt{c}\,\xi\partial_{x}}\!\left(e^{a x}f(x)\right)d\xi\notag\\
+&=\frac{1}{\sqrt{\pi}}\int_{-\infty}^{\infty}e^{-\xi^{2}}
+\Bigl(e^{a[x+2\sqrt{c}\xi]}f(x+2\sqrt{c}\xi)\Bigr)d\xi\notag\\
+&=e^{a x+\frac{a b}{2}}\,
+\frac{1}{\sqrt{\pi}}\int_{-\infty}^{\infty}e^{-(\xi-a\sqrt{c})^{2}}
+f(x+2\sqrt{c}\xi)\,d\xi\notag\\
+&=e^{a x+\frac{a b}{2}}\,e^{b\partial_{x}}\,e^{c\partial_{x}^{2}}f(x),
+\label{eq:2.4.17}
+\end{align}
+与式~\eqref{eq:2.4.16} 比较，得到
+\begin{equation}
+e^{a x+b\partial_{x}}=e^{\frac{a b}{2}}\,e^{a x}\,e^{b\partial_{x}}.
+\label{eq:2.4.18}
+\end{equation}
+
+令
+\begin{equation}
+\hat{A}=a x,\qquad \hat{B}=b\partial_{x},
+\label{eq:2.4.19}
+\end{equation}
+我们得到
+\begin{equation}
+[\hat{A},\hat{B}]=-ab\,\hat{1},
+\label{eq:2.4.20}
+\end{equation}
+于是恒等式~\eqref{eq:2.4.18} 可以改写为 Weyl 恒等式
+\begin{equation}
+e^{\hat{A}+\hat{B}}=e^{\hat{A}}\,e^{\hat{B}}\,e^{-\frac{1}{2}[\hat{A},\hat{B}]},
+\label{eq:2.4.21}
+\end{equation}
+条件是 $[\hat{A},\hat{B}]=k\hat{1}$，$k\in\mathbb{C}$。值得强调的是，上述恒等式在下列情形也成立
+\begin{equation}
+[\hat{A},\hat{B}]=\hat{O},\qquad
+[\hat{O},\hat{A}]=[\hat{O},\hat{B}]=0,
+\label{eq:2.4.22}
+\end{equation}
+即 $\hat{A}$ 与 $\hat{B}$ 的对易子是另一个算子（不必是单位算子），但它与 $\hat{A}$ 和 $\hat{B}$ 都对易。
+
+\begin{exercise}
+证明恒等式
+\begin{equation}
+e^{a x+b\partial_{x}}=e^{-\frac{a b}{2}}\,e^{b\partial_{x}}\,e^{a x}
+\label{eq:2.4.23}
+\end{equation}
+并说明由上述恒等式可立即推出式~\eqref{eq:2.4.18}。\\
+\textit{提示：}注意 $e^{-ab/2}e^{b\partial_{x}}e^{ax}
+=e^{-ab/2}e^{ba}e^{ax}e^{b\partial_{x}}$。
+\end{exercise}
+
+解缠公式~\eqref{eq:2.4.21} 与算子方法可以应用于如下问题
+\begin{equation}
+\begin{cases}
+\partial_{t}F(x,t)=b\,\partial_{x}F(x,t)+a x\,F(x,t),\\[1mm]
+F(x,0)=g(x),
+\end{cases}
+\label{eq:2.4.24}
+\end{equation}
+根据上述算子技术，其解为
+\begin{equation}
+F(x,t)=e^{t(b\partial_{x}+a x)}g(x)
+=e^{\frac{a b}{2}t^{2}}\,e^{a t x}\,g(x+b t).
+\label{eq:2.4.25}
+\end{equation}
+
+Weyl 恒等式应用的另一个例子是研究下列 PDE 的解
+\begin{equation}
+\begin{cases}
+\partial_{t}F(x,y,t)=a\,\partial_{x,y}F(x,y,t)+b x\,F(x,y,t),\\[1mm]
+F(x,y,0)=g(x,y),
+\end{cases}
+\label{eq:2.4.26}
+\end{equation}
+其解可写为
+\begin{align}
+F(x,y,t)&=e^{t(a\partial_{x,y}+b x)}g(x,y)\notag\\
+&=e^{\frac{a b}{2}t^{2}\partial_{y}}\,e^{b t x}\,g(x+a t,y)\notag\\
+&=e^{b t x}\,g\!\left(x+a t,\;y+\frac{a b}{2}t^{2}\right).
+\label{eq:2.4.27}
+\end{align}
+
+鉴于 Weyl 公式的重要性，我们给出另一种或许更简单的证明。引入指数算子
+\begin{equation}
+\hat{E}(\xi)=e^{\xi(\hat{A}+\hat{B})},\qquad \hat{E}(0)=\hat{1},
+\label{eq:2.4.28}
+\end{equation}
+其中 $[\hat{A},\hat{B}]=k\hat{1}$。对上述方程两边关于 $\xi$ 求导，得
+\begin{equation}
+\partial_{\xi}\hat{E}(\xi)=(\hat{A}+\hat{B})\hat{E}(\xi).
+\label{eq:2.4.29}
+\end{equation}
+
+现在令
+\begin{equation}
+\hat{E}(\xi)=e^{\xi\hat{A}}\hat{F}(\xi),
+\label{eq:2.4.30}
+\end{equation}
+代入式~\eqref{eq:2.4.29} 并考虑到式~\eqref{eq:2.4.10}，得到
+\begin{equation}
+\partial_{\xi}\hat{F}(\xi)
+=e^{-\xi\hat{A}}\hat{B}e^{\xi\hat{A}}\hat{F}(\xi)
+=(\hat{B}-k\xi\hat{1})\hat{F}(\xi).
+\label{eq:2.4.31}
+\end{equation}
+
+上述方程的积分是直接的，得到
+\begin{equation}
+\hat{E}(\xi)=e^{\hat{A}\xi}\,e^{\hat{B}\xi}\,e^{-\frac{1}{2}k\xi^{2}},
+\label{eq:2.4.32}
+\end{equation}
+取 $\xi=1$ 即得式~\eqref{eq:2.4.21}。
+
+现在我们可以应用迄今概述的方法来推导更复杂的解缠恒等式，如下所示。
+
+\begin{enumerate}[(a)]
+\item 若 $[\hat{A},\hat{B}]=k\hat{1}$，
+\begin{equation}
+e^{\hat{A}^{2}+a\hat{B}}
+=e^{a\hat{B}}\,e^{\hat{A}^{2}-a k\hat{A}+\frac{1}{3}(a k)^{2}}.
+\label{eq:2.4.33}
+\end{equation}
+（\textit{提示：}令 $\hat{E}(\xi)=e^{a\xi\hat{B}}\hat{F}(\xi)$，注意
+$\partial_{\xi}\hat{F}(\xi)=(\hat{A}-ak\xi)^{2}\hat{F}(\xi)$。）
+
+\item 若 $[\hat{A},\hat{B}]=m\hat{A}$，
+\begin{equation}
+e^{\hat{A}+\hat{B}}
+=e^{\frac{1-e^{-m}}{m}\hat{A}}\,e^{\hat{B}}.
+\label{eq:2.4.34}
+\end{equation}
+
+\item 若 $[\hat{A},\hat{B}]=m\hat{A}^{1/2}$，
+\begin{equation}
+e^{\hat{A}+\hat{B}}
+=e^{\hat{B}}\,e^{\hat{A}+\frac{m}{2}\hat{A}^{-1/2}+\cdots}.
+\end{equation}
+\end{enumerate}
+
+% ============================================================
+\section{Schr\"odinger 方程与经典光学的近轴波动方程}
+% ============================================================
+
+量子力学 Schr\"odinger 方程与经典光学近轴波动方程之间的形式类比，是不同物理分支中数学方法统一性的最引人注目的例子之一。
+
+质量为 $m$ 的粒子在势 $V(\vect{r})$ 中的含时 Schr\"odinger 方程为
+\begin{equation}
+i\hbar\,\partial_{t}\Psi(\vect{r},t)
+=\left[-\frac{\hbar^{2}}{2m}\nabla^{2}+V(\vect{r})\right]\Psi(\vect{r},t).
+\label{eq:2.5.1}
+\end{equation}
+
+在经典光学的近轴近似中，单色激光束沿 $z$ 轴的传播由下式描述
+\begin{equation}
+2ik\,\partial_{z}u(x,y,z)+\partial_{x}^{2}u+\partial_{y}^{2}u=0,
+\label{eq:2.5.2}
+\end{equation}
+其中 $k=n\omega/c$ 是介质中的波数，$u(x,y,z)$ 是电场的缓变包络。
+
+引入形式代换
+\begin{equation}
+t\rightarrow z,\qquad
+\frac{\hbar^{2}}{2m}\rightarrow\frac{1}{2k},\qquad
+V\rightarrow 0,
+\label{eq:2.5.3}
+\end{equation}
+可以看出式~\eqref{eq:2.5.2} 与二维横向自由粒子 Schr\"odinger 方程在数学上完全相同。这一类比使我们能够把前几节发展的整个演化算子机制移植到光学领域。
+
+特别地，光学中的自由空间传播核（Green 函数）不过就是量子力学自由粒子传播子的对应物。对于传播距离 $L$，光场按
+\begin{equation}
+u(x,y,L)=e^{-i\frac{L}{2k}(\partial_{x}^{2}+\partial_{y}^{2})}\,u(x,y,0),
+\label{eq:2.5.4}
+\end{equation}
+变换，这正是量子力学自由演化算子
+\begin{equation}
+\hat{U}(t)=e^{-i\frac{t}{2m}\hat{p}^{2}},\qquad \hat{p}=-i\hbar\nabla.
+\label{eq:2.5.5}
+\end{equation}
+的直接对应物。
+
+第 1 章讨论的光线传播 ABCD 定律，在波光学中的对应物是 Collins 积分（或广义 Huygens--Fresnel 积分），它描述场振幅穿过由 $ABCD$ 矩阵表征的任意近轴光学系统的变换。
+
+这种形式等价是序言所述论断的有力例证：同一套数学工具可以用来刻画物理的不同侧面，从量子力学到激光束传播。
+
+% ============================================================
+\section{Fokker--Planck、Schr\"odinger 与 Liouville 方程示例}
+% ============================================================
+
+本节我们给出几个分属不同物理领域的演化方程示例，它们都可以用迄今发展的算子形式体系处理。
+
+\paragraph{Fokker--Planck 方程。}
+一维原型 Fokker--Planck 方程为
+\begin{equation}
+\partial_{t}P(x,t)=\partial_{x}\!\left[D_{1}(x)P(x,t)\right]
++\partial_{x}^{2}\!\left[D_{2}(x)P(x,t)\right],
+\label{eq:2.6.1}
+\end{equation}
+其中 $D_{1}(x)$ 是漂移系数，$D_{2}(x)$ 是扩散系数。对于常数系数 $D_{1}=v$、$D_{2}=D$，式~\eqref{eq:2.6.1} 化为
+\begin{equation}
+\partial_{t}P=v\,\partial_{x}P+D\,\partial_{x}^{2}P,
+\label{eq:2.6.2}
+\end{equation}
+给定初始分布 $P(x,0)=P_{0}(x)$，其解为
+\begin{equation}
+P(x,t)=\frac{1}{2\sqrt{\pi D t}}
+\int_{-\infty}^{\infty}
+e^{-\frac{(\sigma-x-vt)^{2}}{4Dt}}\,P_{0}(\sigma)\,d\sigma,
+\label{eq:2.6.3}
+\end{equation}
+这是扩散+平移结果（式~\eqref{eq:2.2.21}）的直接应用。
+
+\paragraph{Liouville 方程。}
+在经典统计力学中，相空间密度 $\rho(q,p,t)$ 的时间演化由 Liouville 方程
+\begin{equation}
+\partial_{t}\rho=\{H,\rho\},
+\label{eq:2.6.4}
+\end{equation}
+支配，其中 $\{H,\rho\}$ 是 Poisson 括号。对于一维哈密顿量 $H=\frac{p^{2}}{2m}+V(q)$，该方程变为
+\begin{equation}
+\partial_{t}\rho+p\,\partial_{q}\rho-\partial_{q}V(q)\,\partial_{p}\rho=0.
+\label{eq:2.6.5}
+\end{equation}
+形式解可以用经典演化算子写出
+\begin{equation}
+\rho(q,p,t)=e^{t(\partial_{q}H\,\partial_{p}-\partial_{p}H\,\partial_{q})}\,\rho(q,p,0),
+\label{eq:2.6.6}
+\end{equation}
+它生成相空间中的哈密顿流。
+
+\paragraph{哈密顿量为 $\hat{H}=\hbar\Omega\,\vec{n}\cdot\vec{\sigma}$ 的 Schr\"odinger 方程。}
+由第 1 章，二能级系统的演化算子为
+\begin{equation}
+\hat{U}(t)=e^{-i\Omega t\,\vec{n}\cdot\vec{\sigma}}
+=\cos\!\left(\frac{\Omega t}{2}\right)\hat{1}
+-2i\sin\!\left(\frac{\Omega t}{2}\right)\vec{n}\cdot\vec{\sigma}.
+\label{eq:2.6.7}
+\end{equation}
+初始处于态 $\chi(0)=\mat{a_{+}(0)\\a_{-}(0)}$ 的系统，其几率振幅按
+\begin{equation}
+\chi(t)=\hat{U}(t)\,\chi(0).
+\label{eq:2.6.8}
+\end{equation}
+演化。
+
+% ============================================================
+\section{结语}
+% ============================================================
+
+在本章中，我们把演化算子方法发展为处理物理学中出现的常微分与偏微分方程的统一范式。核心思想可概括如下：
+
+\begin{enumerate}
+\item \textbf{矩阵 ODE：}一阶 ODE 组总可以写成 $\underline{z}'=\hat{M}\underline{z}+\underline{\phi}$ 的形式，其解形式上是 $\underline{z}(t)=e^{\hat{M}t}\underline{z}_{0}+\int e^{\hat{M}(t-\tau)}\underline{\phi}(\tau)\,d\tau$。
+
+\item \textbf{平移算子：}$e^{a\partial_{x}}$ 起平移作用：$e^{a\partial_{x}}f(x)=f(x+a)$。这个简单恒等式是处理输运方程和扩散方程的基石。
+
+\item \textbf{扩散/热方程：}算子 $e^{a t\partial_{x}^{2}}$ 生成 Gaussian 卷积（Gauss--Weierstrass 变换），给出任意初始数据下热方程的解。
+
+\item \textbf{D'Alembert 方程：}二阶波动方程可以改写为矩阵形式，并通过算子 $\hat{\omega}=v\partial_{x}$ 的双曲函数求解。
+
+\item \textbf{算子排序：}算子的不对易性要求对指数进行仔细的解缠。Weyl 恒等式
+\[
+e^{\hat{A}+\hat{B}}=e^{\hat{A}}e^{\hat{B}}e^{-\frac{1}{2}[\hat{A},\hat{B}]}
+\]
+（当 $[\hat{A},\hat{B}]=k\hat{1}$ 时）是处理此类问题的基本工具。
+
+\item \textbf{方法的统一性：}同一套算子形式体系适用于 Schr\"odinger 方程、光学近轴波动方程、Fokker--Planck 方程和 Liouville 方程，体现了数学方法在物理学中的``不可思议的有效性''。
+\end{enumerate}
+
+在接下来的章节中，我们将把这些技术应用到若干具体的特殊函数族（Hermite、Laguerre、Legendre 多项式），并探讨它们在量子力学、经典光学等领域的物理应用。
+
+% ============================================================
+\begin{thebibliography}{99}
+\addcontentsline{toc}{section}{参考文献}
+
+\bibitem{Gantmaker}
+F.~R.\ Gantmaker, \emph{The Theory of Matrices}, Chelsea, New York, 1959.
+
+\bibitem{Lancaster}
+P.~Lancaster, M.~Tismenetsky, \emph{The Theory of Matrices with Applications}, Elsevier, 1985.
+
+\bibitem{Bronson1}
+R.~Bronson, \emph{Matrix Methods: An Introduction}, Academic Press, 1970.
+
+\bibitem{Bronson2}
+R.~Bronson, \emph{Schaum's Outline of Theory and Problems of Matrix Operations}, McGraw-Hill, 1989.
+
+\bibitem{Brown}
+W.~Brown, \emph{Matrices and Vector Spaces}, Marcel Dekker, 1991.
+
+\bibitem{Leonhardt}
+U.~Leonhardt, \emph{Essential Quantum Optics}, Cambridge University Press, 2000.
+
+\bibitem{Gasiorowicz}
+S.~Gasiorowicz, \emph{Quantum Physics}, Wiley, 1974.
+
+\bibitem{Goldstein}
+H.~Goldstein, \emph{Classical Mechanics}, 2nd ed., Addison-Wesley, 1980.
+
+\bibitem{Dattoli1990}
+G.~Dattoli, M.~Richetta, G.~Schettini, A.~Torre,
+``Lie algebraic methods and solutions of linear partial differential equations,''
+\emph{J.\ Math.\ Phys.}, \textbf{31}, 2856 (1990).
+
+\bibitem{WeiNorman}
+J.~Wei, E.~Norman,
+``Lie algebraic solution of linear differential equations,''
+\emph{J.\ Math.\ Phys.}, \textbf{4}(4), 575--581 (1963).
+
+\bibitem{Dattoli1987}
+G.~Dattoli, P.~Di Lazzaro, A.~Torre,
+``SU(1,1), SU(2) and SU(3) coherence-preserving Hamiltonians and time-ordering techniques,''
+\emph{Phys.\ Rev.\ A}, \textbf{35}, 1582 (1987).
+
+\bibitem{VanderLugt}
+A.~Vander Lugt,
+``Operational Notation for the Analysis and Synthesis of Optical Data Processing Systems,''
+\emph{Proc.\ IEEE}, \textbf{54}, 1055 (1966).
+
+\bibitem{Stoler}
+D.~Stoler,
+``Operator Methods in Physical Optics,''
+\emph{J.\ Opt.\ Soc.\ Am.}, \textbf{71}(3), 334 (1981).
+
+\bibitem{Bacry}
+H.~Bacry, M.~Cadilhac,
+``Metaplectic Group and Fourier Optics,''
+\emph{Phys.\ Rev.\ A}, \textbf{23}, 2533 (1981).
+
+\bibitem{Sanchez}
+J.~Sanchez-Mandragon, K.~B.~Wolf,
+\emph{Lie Methods in Optics}, Springer-Verlag, 1986.
+
+\bibitem{Dattoli1988}
+G.~Dattoli, A.~Torre, J.~C.~Gallardo,
+``Operatorial methods in Optics,''
+\emph{Riv.\ Nuovo Cimento}, \textbf{11}, 1 (1988).
+
+\bibitem{Dattoli1987b}
+G.~Dattoli, S.~Solimeno, A.~Torre,
+``Algebraic view of the optical propagation in a nonhomogeneous medium,''
+\emph{Phys.\ Rev.\ A}, \textbf{35}, 1668 (1987).
+
+\bibitem{Torre}
+A.~Torre, \emph{Linear Ray and Wave Optics in Phase Space}, Elsevier, 2005.
+
+\bibitem{Dattoli1990b}
+G.~Dattoli, P.~Di Lazzaro, A.~Torre,
+``A Spinor Approach to the Propagation in Self-Focusing Fibers,''
+\emph{Nuovo Cimento}, \textbf{105B}, 165 (1990).
+
+\bibitem{Feynman1957}
+R.~P.~Feynman, L.~P.~Vernon, R.~W.~Hellwarth,
+``Geometrical Representation of the Schr\"odinger Equation to Solve Maser Problems,''
+\emph{J.\ Appl.\ Phys.}, \textbf{28}, 49 (1957).
+
+\bibitem{Wu1957}
+C.~S.~Wu \emph{et al.},
+``Experimental Test of Parity Conservation in Beta Decay,''
+\emph{Phys.\ Rev.}, \textbf{105}(4), 1413 (1957).
+
+\bibitem{Yariv}
+A.~Yariv, \emph{Quantum Electronics}, Wiley, 1985.
+
+\bibitem{Hallen}
+L.~Hallen, J.~H.~Eberly, \emph{Optical Resonance and Two-Level Atoms}, Wiley, 1975.
+
+\bibitem{Baym}
+G.~Baym, \emph{Lectures on Quantum Mechanics}, W.~A.~Benjamin, 1969.
+
+\bibitem{Cabibbo}
+N.~Cabibbo,
+``Unitary Symmetry and Leptonic Decays,''
+\emph{Phys.\ Rev.\ Lett.}, \textbf{10}, 531 (1963).
+
+\bibitem{Kobayashi}
+M.~Kobayashi, T.~Maskawa,
+``CP Violation in the Renormalizable Theory of Weak Interaction,''
+\emph{Prog.\ Theor.\ Phys.}, \textbf{49}, 652 (1973).
+
+\bibitem{Wolfenstein}
+L.~Wolfenstein,
+``Parametrization of the Kobayashi-Maskawa Matrix,''
+\emph{Phys.\ Rev.\ Lett.}, \textbf{51}, 1945 (1983).
+
+\bibitem{Dattoli1994}
+G.~Dattoli,
+``Weak mixing angles, CP-violating phase and exponential parametrization of the Cabibbo-Kobayashi-Maskawa matrix,''
+\emph{Nuovo Cim.\ A}, \textbf{107}, 1243 (1994).
+
+\bibitem{Mohapatra}
+R.~N.~Mohapatra, \emph{Physics of Neutrino Masses}, SLAC Summer Institute, 2004.
+
+\bibitem{GellMann}
+M.~Gell-Mann, \emph{The Eightfold Way}, W.~A.~Benjamin, 1964.
+
+\bibitem{Lichtenberg}
+D.~B.~Lichtenberg, \emph{Unitary Symmetry and Elementary Particles}, Academic Press, 1978.
+
+\bibitem{Peskin}
+M.~E.~Peskin, D.~V.~Schroeder, \emph{An Introduction to Quantum Field Theory}, Addison Wesley, 1995.
+
+\bibitem{Mangano}
+M.~L.~Mangano, \emph{Introduction to QCD}, European School of Conference, 1998.
+
+\bibitem{Babusci2011}
+D.~Babusci, G.~Dattoli, E.~Sabia,
+``Operational Methods and Lorentz Type Equations,''
+\emph{J.\ Phys.\ Math.}, \textbf{3}, P110601 (2011).
+
+\bibitem{Varshalovich}
+D.~A.~Varshalovich, A.~N.~Moskalev, V.~K.~Khersonskii,
+\emph{Quantum Theory of Angular Momentum}, World Scientific, 1988.
+
+\bibitem{Morin}
+D.~Morin, \emph{Relativity (Kinematics)}, Ch.~11, Harvard, 2007.
+
+\bibitem{Good}
+R.~H.~Good Jr.,
+``Properties of Dirac Matrices,''
+\emph{Rev.\ Mod.\ Phys.}, \textbf{27}, 187 (1955).
+
+\bibitem{Bjorken}
+S.~D.~Bjorken, S.~D.~Drell, \emph{Relativistic Quantum Mechanics}, McGraw-Hill, 1964.
+
+\end{thebibliography}

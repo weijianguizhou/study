@@ -1,0 +1,252 @@
+% ch10.tex — A Glimpse into the Math of Feynman Diagrams (hand-typeset)
+\chapter{A Glimpse into the Math of Feynman Diagrams}
+
+\section{Introduction: Non Relativistic Scattering Theory and Lippmann-Schwinger Equation}
+
+The Lippmann--Schwinger equation is the integral form of the stationary
+Schr\"odinger equation for scattering states:
+\begin{equation}
+|\psi^{(\pm)}\rangle = |k\rangle
++ \frac{1}{E-H_0\pm i0}\,\hat V\,|\psi^{(\pm)}\rangle,
+\label{eq:10.1.1}
+\end{equation}
+where $|k\rangle$ is a free-particle state of momentum $\hbar k$ and energy
+$E=\hbar^2k^2/(2m)$.
+
+The Green's function for the free Hamiltonian is
+\begin{equation}
+G_0^{(\pm)}(E) = \frac{1}{E-H_0\pm i0}
+= \lim_{\epsilon\to0^+}\frac{1}{E-H_0\pm i\epsilon}.
+\label{eq:10.1.2}
+\end{equation}
+
+The $S$-matrix relates in-coming and out-going asymptotic states:
+$S_{fi}=\delta_{fi}-2\pi i\,\delta(E_f-E_i)\,T_{fi}$, with
+$T_{fi}=\langle f|\hat V|\psi_i^{(+)}\rangle$.
+
+\begin{exercise}
+Derive the Lippmann--Schwinger equation from
+$(E-H_0)\psi=V\psi$ by inverting $E-H_0\pm i0$.
+\end{exercise}
+
+\section{Fermi Golden Rule}
+
+The transition rate from an initial state $|i\rangle$ to a continuum
+$\{|f\rangle\}$ is given by Fermi's golden rule:
+\begin{equation}
+\Gamma_{i\to f} = \frac{2\pi}{\hbar}\,
+\bigl|\langle f|\hat V|i\rangle\bigr|^2\,\rho(E_f),
+\label{eq:10.2.1}
+\end{equation}
+where $\rho(E_f)$ is the density of final states.
+
+\subsection{Fermi Golden Rule Application}
+
+For an atom decaying from an excited state $|e\rangle$ to the ground state
+$|g\rangle$ by emitting a photon of energy $\hbar\omega=E_e-E_g$,
+\begin{equation}
+\Gamma_{e\to g} = \frac{4\alpha\omega^3}{3c^2}\,
+\bigl|\langle g|\vect r|e\rangle\bigr|^2,
+\label{eq:10.2.2}
+\end{equation}
+where $\alpha=e^2/(4\pi\epsilon_0\hbar c)$ is the fine-structure constant.
+
+\begin{exercise}
+Derive \eqref{eq:10.2.2} from the minimal-coupling Hamiltonian
+$\hat H_{\rm int}=-(e/m)\vect A\cdot\vect p$ and Fermi's golden rule.
+\end{exercise}
+
+\section{Feynman Diagrams: Introductory Rules}
+
+For scalar $\phi^4$ theory with $\mathcal L_{\rm int}=-\frac{\lambda}{4!}\phi^4$,
+the Feynman rules are:
+\begin{itemize}
+\item Propagator: $\tilde\Delta_F(k)=\frac{1}{k^2-m^2+i0}$ for each internal line.
+\item Vertex: a factor $-i\lambda$ for each four-point vertex.
+\item Momentum conservation: $\delta^{(4)}(\sum p_{\rm in}-\sum p_{\rm out})$
+      at each vertex.
+\item Symmetry factor: $1/S$ for each diagram.
+\end{itemize}
+
+For QED, the vertex is $-ie\gamma^\mu$ and the photon propagator is
+$-ig_{\mu\nu}/(k^2+i0)$.
+
+\begin{exercise}
+Draw the two tree-level Feynman diagrams for $2\to2$ scattering in
+$\phi^4$ theory and write the corresponding amplitudes.
+\end{exercise}
+
+\section{Virtual Particles and Propagators}
+
+Off-shell internal lines carry momentum $k$ not satisfying $k^2=m^2$.
+The propagator encodes causality via the $i0$ prescription:
+\begin{equation}
+\Delta_F(x-y) = \int\frac{d^4k}{(2\pi)^4}\,
+\frac{e^{-ik\cdot(x-y)}}{k^2-m^2+i0}.
+\label{eq:10.4.1}
+\end{equation}
+
+The $i0$ prescription selects the Feynman contour: positive-energy
+particles propagate forward in time, negative-energy antiparticles
+propagate backward.
+
+\begin{exercise}
+Show that the Feynman propagator satisfies
+$(\Box+m^2)\Delta_F(x-y)=-\delta^{(4)}(x-y)$.
+\end{exercise}
+
+\section{Space- and Time-like Feynman Diagrams}
+
+The sign of $q^2=(p_1-p_2)^2$ distinguishes
+spacelike ($q^2<0$) from timelike ($q^2>0$) momentum transfer,
+with different analytic structure of the propagator.
+
+For spacelike $q^2<0$, the propagator $\sim 1/|q^2|$ is real (no on-shell
+intermediate state). For timelike $q^2>0$, the propagator develops an
+imaginary part via $i0$ (on-shell production possible).
+
+\begin{exercise}
+For $e^+e^-\to\mu^+\mu^-$, determine whether the exchanged virtual
+photon is spacelike or timelike and compute $q^2$.
+\end{exercise}
+
+\section{Dirac Gamma Matrices}
+
+The Clifford algebra:
+\begin{equation}
+\{\gamma^\mu,\gamma^\nu\} = 2\eta^{\mu\nu}\hat 1,
+\qquad \eta={\rm diag}(-1,1,1,1).
+\label{eq:10.6.1}
+\end{equation}
+
+Explicit Dirac representation ($2\times2$ blocks):
+\begin{align}
+\gamma^0 &= \mat{\hat 1&\hat 0\\\hat 0&-\hat 1},\\
+\gamma^i &= \mat{\hat 0&\hat\sigma_i\\-\hat\sigma_i&\hat 0},\\
+\gamma^5 &= i\gamma^0\gamma^1\gamma^2\gamma^3
+= \mat{\hat 0&\hat 1\\\hat 1&\hat 0}.
+\label{eq:10.6.2}
+\end{align}
+
+Key identities:
+\begin{align}
+\gamma^\mu\gamma^\nu+\gamma^\nu\gamma^\mu &= 2\eta^{\mu\nu},\\
+\tr(\gamma^\mu\gamma^\nu) &= 4\eta^{\mu\nu},\\
+\tr(\gamma^5\gamma^\mu\gamma^\nu) &= 0,\\
+\gamma^5\gamma^\mu+\gamma^\mu\gamma^5 &= 0.
+\label{eq:10.6.3}
+\end{align}
+
+Chiral projectors: $P_L=\frac12(1-\gamma^5)$, $P_R=\frac12(1+\gamma^5)$.
+
+\begin{exercise}
+Verify the Dirac representation satisfies the Clifford algebra and that
+$(\gamma^5)^2=\hat 1$.
+\end{exercise}
+
+\section{Mathematics of the Dirac Equation}
+
+The Dirac equation for a free particle:
+\begin{equation}
+(i\gamma^\mu\partial_\mu - m)\psi(x) = 0.
+\label{eq:10.7.1}
+\end{equation}
+
+Squaring gives the Klein--Gordon equation:
+$(-\Box-m^2)\psi=0$, confirming the correct relativistic dispersion.
+
+Plane-wave solutions:
+\begin{equation}
+u(p,s) = \sqrt{\frac{E+m}{2m}}
+\mat{\chi_s\\\frac{\vect\sigma\cdot\vect p}{E+m}\chi_s},\qquad
+v(p,s) = \sqrt{\frac{E+m}{2m}}
+\mat{\frac{\vect\sigma\cdot\vect p}{E+m}\chi_s\\\chi_s},
+\label{eq:10.7.2}
+\end{equation}
+for particle ($u$) and antiparticle ($v$) with spinor $\chi_s$.
+
+The Dirac adjoint is $\bar\psi=\psi^\dagger\gamma^0$, and the conserved
+current is $j^\mu=\bar\psi\gamma^\mu\psi$.
+
+\begin{exercise}
+Show that $u^\dagger(p,s)u(p,s')=2E\delta_{ss'}$ and
+$\bar u(p,s)u(p,s')=2m\delta_{ss'}$.
+\end{exercise}
+
+\section{A Touch on Quantum Electrodynamics}
+
+QED vertices couple electrons to photons via $-ie\gamma^\mu$.
+The Dyson series of Chapter~7 generates the perturbative $S$-matrix
+and Feynman diagrams.
+
+The QED Lagrangian:
+\begin{equation}
+\mathcal L_{\rm QED} = \bar\psi(i\slashed\partial-m)\psi
+- \frac14 F_{\mu\nu}F^{\mu\nu} - e\bar\psi\gamma^\mu\psi A_\mu,
+\label{eq:10.8.1}
+\end{equation}
+where $\slashed\partial=\gamma^\mu\partial_\mu$ and $F_{\mu\nu}=\partial_\mu A_\nu-\partial_\nu A_\mu$.
+
+The electron self-energy at one loop gives the mass renormalisation,
+and the vacuum polarisation modifies the photon propagator.
+
+\begin{exercise}
+Write the Feynman rule for the electron propagator in momentum space
+and verify its pole structure at $p^2=m^2$.
+\end{exercise}
+
+\section{Formal Point of View on Dimensions and Units in Physics}
+
+Dimensional analysis: every physical quantity has dimensions built from
+$[M]$, $[L]$, $[T]$, $[I]$ etc.
+
+Natural units: $\hbar=c=1$ sets all dimension to powers of energy:
+$[E]=[M]=[L]^{-1}=[T]^{-1}$.
+
+Scaling in Feynman integrals: a loop integral
+$\int d^4k/(2\pi)^4\,f(k,p)$ has dimension $[E]^{4-n_f}$ where $n_f$
+is the combined mass dimension of the numerator.
+
+Renormalisability: in QED, the coupling $e$ is dimensionless in
+natural units, making the theory renormalisable.
+
+\begin{exercise}
+In natural units, show that the fine-structure constant
+$\alpha=e^2/(4\pi)$ is dimensionless and compute its numerical value.
+\end{exercise}
+
+% Figures
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig10_1.png}
+\caption{Feynman diagram: electron--positron annihilation into two photons.}
+\label{fig:10.1}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig10_2.png}
+\caption{Tree-level Feynman diagrams for $2\to2$ scattering.}
+\label{fig:10.2}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig10_7.png}
+\caption{One-loop correction to the electron propagator (self-energy).}
+\label{fig:10.7}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig10_12.png}
+\caption{Vacuum polarisation: one-loop correction to the photon propagator.}
+\label{fig:10.12}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig10_22.png}
+\caption{Feynman rules: vertex, propagator, and symmetry-factor conventions.}
+\label{fig:10.22}
+\end{figure}

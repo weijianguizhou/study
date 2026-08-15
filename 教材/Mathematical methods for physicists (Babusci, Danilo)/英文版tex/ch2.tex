@@ -1,0 +1,2755 @@
+% ch2.tex — Chapter 2
+% Ordinary and Partial Differential Equations, Evolution Operator Method and Applications
+
+\chapter{Ordinary and Partial Differential Equations, Evolution Operator Method and Applications}
+
+% ============================================================
+\section{Ordinary Differential Equations, Matrices and Exponential Operators}
+% ============================================================
+
+In the previous chapter, we have used very simple methods employing the evolution operator techniques to study ordinary differential equations (ODE). In this chapter, we will emphasize that the evolution operator technique is a kind of paradigmatic tool which can be exploited to treat a variety of Cauchy initial value problems. In particular, we will consider the case of Partial Differential Equations (PDE).
+
+We start by considering a first order ODE, already encountered in Chapter~1, written in the form
+\begin{equation}
+\begin{cases}
+y'(x)+\alpha(x)\,y(x)=\beta(x),\\[2mm]
+y(0)=y_{0}.
+\end{cases}
+\label{eq:2.1.1}
+\end{equation}
+It represents an elementary non-homogeneous Cauchy problem whose general solution reads
+\begin{equation}
+y(x)=e^{-\int_{0}^{x}\alpha(\xi)\,d\xi}\,y_{0}+N(x),
+\label{eq:2.1.2}
+\end{equation}
+where
+\begin{equation}
+N(x)=e^{-\int_{0}^{x}\alpha(\xi)\,d\xi}
+\int_{0}^{x} e^{\int_{0}^{\eta}\alpha(\chi)\,d\chi}\,\beta(\eta)\,d\eta.
+\label{eq:2.1.3}
+\end{equation}
+
+In Chapter~1 we have dealt with a simpler version, having $\alpha$ and $\beta$ constants. The solution in this case takes the simple form
+\begin{equation}
+y(x)=e^{-\alpha x}y_{0}+\int_{0}^{x}e^{-\alpha(x-x')}\beta\,dx'
+=e^{-\alpha x}y_{0}+\frac{1-e^{-\alpha x}}{\alpha}\,\beta.
+\label{eq:2.1.4}
+\end{equation}
+
+It is well known there is a plethora of physical phenomena which can be described by the previous equation as, for example, the fall of an object in viscous media or the discharge of a capacitor through a resistor. We can use the above form of solution as a reference example to treat more complicated cases. We will exploit the same formal ``structure'' of the solution, eqs.~\eqref{eq:2.1.2}--\eqref{eq:2.1.4}, to treat the following first order ODE
+\begin{equation}
+\begin{cases}
+\dfrac{d}{d\tau}\,\underline{x}=-\omega\hat{A}\,\underline{x}+\underline{b},\\[2mm]
+\underline{x}\big|_{\tau=0}=\underline{x}_{0}.
+\end{cases}
+\label{eq:2.1.5}
+\end{equation}
+
+The unknown function is provided here by the $n$-component column vector $\underline{x}(\tau)$ and by the associated initial conditions. Furthermore, $\omega$ is a scalar, $\hat{A}$ and $\underline{b}$ are a matrix and column vectors, respectively, which are assumed to be independent of the integration variable. According to eqs.~\eqref{eq:2.1.2}--\eqref{eq:2.1.4}, the solution can be written in the form
+\begin{equation}
+\underline{x}(\tau)=\hat{U}(\tau)\,\underline{x}_{0}+\hat{B}(\tau)\,\underline{b},
+\label{eq:2.1.6}
+\end{equation}
+where
+\begin{equation}
+\hat{U}(\tau)=e^{-\omega\hat{A}\tau},\qquad
+\hat{B}(\tau)=e^{-\omega\hat{A}\tau}\int_{0}^{\tau}e^{\omega\hat{A}\tau'}\,d\tau'
+=\int_{0}^{\tau}\hat{U}(\tau-\tau')\,d\tau'.
+\label{eq:2.1.7}
+\end{equation}
+
+It is worth stressing that, unlike eqs.~\eqref{eq:2.1.2}--\eqref{eq:2.1.4}, order is important and the solution~\eqref{eq:2.1.6} should be understood as provided by the action of the operators $\hat{U}$ and $\hat{B}$ on the initial conditions and on the inhomogeneous part, respectively. If, for example, the matrix $\hat{A}$ is the imaginary matrix $\hat{i}$, the solution~\eqref{eq:2.1.6} can be written in the form
+\begin{equation}
+\underline{x}(\tau)=\hat{R}(-\omega\tau)\,\underline{x}_{0}
++\frac{\hat{1}-\hat{R}(-\omega\tau)}{\omega}\,\hat{i}^{-1}\underline{b},
+\label{eq:2.1.8}
+\end{equation}
+which is essentially a generalization of eq.~\eqref{eq:2.1.4}, as easily verified. Moreover, straightforward manipulation leads to
+\begin{equation}
+\underline{x}(\tau)=\hat{R}(-\omega\tau)\,\underline{x}_{0}
++\tau\,\sincf\!\left(\frac{\omega\tau}{2}\right)
+\hat{R}\!\left(-\frac{\omega\tau}{2}\right)\underline{b},
+\qquad \sincf x=\frac{\sin x}{x}.
+\label{eq:2.1.9}
+\end{equation}
+
+Before proceeding further, we note here that it is essential, to get the solution in the straightforward form~\eqref{eq:2.1.6}, that the matrix $\hat{A}$ be not explicitly dependent on the integration variable. Otherwise, the search for a solution is complicated by the so called time ordering problems which will be discussed in the forthcoming parts of this book.
+
+Let us now consider a second order non-homogeneous ODE (in the following $y(x)=y$, for brevity)
+\begin{equation}
+\begin{cases}
+y''=-\omega^{2}(x)\,y+\beta(x),\\[1mm]
+y'(0)=y_{0}',\\
+y(0)=y_{0}.
+\end{cases}
+\label{eq:2.1.10}
+\end{equation}
+
+We can reduce the above equation to a matrix form, by setting
+\begin{equation}
+y'=\eta,
+\label{eq:2.1.11}
+\end{equation}
+so that eq.~\eqref{eq:2.1.10} can be written as
+\begin{equation}
+\underline{z}'=\hat{M}(x)\,\underline{z}+\underline{\phi}(x),
+\label{eq:2.1.12}
+\end{equation}
+where
+\begin{equation}
+\underline{z}=\mat{\eta\\y},\qquad
+\hat{M}=\mat{0&-\omega^{2}(x)\\1&0},\qquad
+\underline{\phi}(x)=\mat{\beta(x)\\0}.
+\label{eq:2.1.13}
+\end{equation}
+
+Although we will discuss the usefulness of these results in the following parts of these lectures more carefully, here we note that the convenience of transforming a second order differential equation into a matrix equation stems from the fact that we can use the formalism of matrices which is extremely simple to use even for numerical implementations.
+
+We will now draw just a few elementary consequences which follow from the previous discussions and form the basis of our future developments. By assuming that $\omega$, $\beta$ are independent of $x$, we can cast the solution of eq.~\eqref{eq:2.1.12} in the form
+\begin{equation}
+\underline{z}(x)=e^{\hat{M}x}\,\underline{z}_{0}
++\int_{0}^{x}e^{-\hat{M}(x'-x)}\,\underline{\phi}\,dx',
+\label{eq:2.1.14}
+\end{equation}
+and, since
+\begin{equation}
+\hat{M}=\spp-\omega^{2}\smm,
+\label{eq:2.1.15}
+\end{equation}
+we can apply the methods discussed in Chapter~1 to write the exponential matrix appearing in eq.~\eqref{eq:2.1.14} as
+\begin{equation}
+e^{\hat{M}x}=
+\mat{\cos(\omega x)&-\omega\sin(\omega x)\\[1mm]
+\dfrac{1}{\omega}\sin(\omega x)&\cos(\omega x)}.
+\label{eq:2.1.16}
+\end{equation}
+
+Therefore, for the solution of eq.~\eqref{eq:2.1.12}, we end up with the explicit form in terms of circular functions
+\begin{align}
+\underline{z}(x)&=
+\mat{\cos(\omega x)&-\omega\sin(\omega x)\\[1mm]
+\dfrac{1}{\omega}\sin(\omega x)&\cos(\omega x)}
+\mat{y_{0}\\y_{0}'}\notag\\[2mm]
+&\quad+x\,\sincf\!\left(\frac{\omega x}{2}\right)
+\mat{\cos\left(\dfrac{\omega x}{2}\right)&-\omega\sin\left(\dfrac{\omega x}{2}\right)\\[1mm]
+\dfrac{1}{\omega}\sin\left(\dfrac{\omega x}{2}\right)&\cos\left(\dfrac{\omega x}{2}\right)}
+\mat{\beta\\0}.
+\label{eq:2.1.17}
+\end{align}
+
+In the forthcoming sections, we improve this elementary formalism to treat less straightforward differential equations.
+
+% ============================================================
+\section{Partial Differential Equations and Exponential Operators, I}
+% ============================================================
+
+We begin this section by reminding some notions about Gaussian integrals. The identity
+\begin{equation}
+I=\int_{-\infty}^{\infty}e^{-x^{2}}\,dx=\sqrt{\pi}
+\label{eq:2.2.1}
+\end{equation}
+is one of the milestones of calculus and can be proved as follows. By squaring both sides of eq.~\eqref{eq:2.2.1} we find
+\begin{equation}
+I^{2}=\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}
+e^{-(x^{2}+y^{2})}\,dx\,dy,
+\label{eq:2.2.2}
+\end{equation}
+which, transformed into polar coordinates, yields
+\begin{equation}
+I^{2}=\int_{0}^{2\pi}d\vartheta\int_{0}^{\infty}\rho\,e^{-\rho^{2}}\,d\rho=\pi.
+\label{eq:2.2.3}
+\end{equation}
+
+The use of the previous relations allows us to derive the identity (the relevant proof is left as exercise)
+\begin{equation}
+\int_{-\infty}^{\infty}e^{-a x^{2}+b x}\,dx
+=\sqrt{\frac{\pi}{a}}\;e^{\frac{b^{2}}{4a}},
+\label{eq:2.2.4}
+\end{equation}
+which is of paramount importance for our purposes and should be considered very carefully.
+
+\begin{exercise}
+Prove eq.~\eqref{eq:2.2.4}.\\
+\textit{Hint:} note that $a\!\left(x^{2}-\frac{b}{a}x\right)=a\!\left(x-\frac{b}{2a}\right)^{2}-\frac{b^{2}}{4a}$.
+\end{exercise}
+
+In Section~2.1, we have seen that the use of the matrix formalism and exponent of matrices provide an efficient tool to treat a variety of problems. For reasons of continuity with the previous section, we present an application which combines first order ODE of the type~\eqref{eq:2.1.1} and the evaluation of non trivial Gaussian integrals. The problem we propose is the calculation of the integral
+\begin{equation}
+I(b)=\int_{0}^{\infty}e^{-a^{2}x^{2}-\frac{b^{2}}{x^{2}}}\,dx,
+\label{eq:2.2.5}
+\end{equation}
+where we consider $b$ as a variable and $a$ as a parameter. By taking the derivative of both sides of eq.~\eqref{eq:2.2.5} with respect to $b$, we can obtain the elementary differential equation
+\begin{equation}
+\partial_{b}I(b)+2a\,I(b)=0.
+\label{eq:2.2.6}
+\end{equation}
+
+\begin{exercise}
+Derive eq.~\eqref{eq:2.2.6}.\\
+\textit{Hint:} note that
+$-2\int_{0}^{\infty}\frac{b}{x^{2}}\,e^{-a^{2}x^{2}-b^{2}/x^{2}}\,dx
+=2a\int_{0}^{\infty}e^{-a^{2}x^{2}-b^{2}/x^{2}}\,d\!\left(\frac{b}{ax}\right)$.
+\end{exercise}
+
+The solution of eq.~\eqref{eq:2.2.6} yields the integral~\eqref{eq:2.2.5}. We find
+\begin{equation}
+I(b)=I(0)\,e^{-2ab},\qquad
+I(0)=\int_{0}^{\infty}e^{-a^{2}x^{2}}\,dx=\frac{1}{2}\,\frac{\sqrt{\pi}}{a}.
+\label{eq:2.2.7}
+\end{equation}
+
+We are now sufficiently skilled to prove how the use of exponential operators, having as argument ordinary differential operators, provides a powerful tool to deal with some families of linear PDE. As an introductory example, let us consider the equation
+\begin{equation}
+\begin{cases}
+\partial_{t}F(x,t)=a\,\partial_{x}F(x,t),\\[1mm]
+F(x,0)=g(x),
+\end{cases}
+\label{eq:2.2.8}
+\end{equation}
+with $a$ being a constant. The above equation is just an initial value problem with respect to the variable $t$ which will generically be defined as time variable. It shares some analogies with eq.~\eqref{eq:2.1.1}. Indeed, if we establish the correspondences
+\begin{equation}
+\partial_{t}F(x,t)\rightarrow y',\qquad
+a\,\partial_{x}\rightarrow -\alpha,\qquad
+g(x)\rightarrow y_{0},
+\label{eq:2.2.9}
+\end{equation}
+we get the ``formal'' solution of eq.~\eqref{eq:2.2.8} as
+\begin{equation}
+F(x,t)=e^{a t\partial_{x}}\,g(x),
+\label{eq:2.2.10}
+\end{equation}
+which should be understood as the action of an exponential operator, containing a first order derivative, on the ``initial condition'' represented by an $x$-dependent function. Also in this case the ordering is important and the ``evolution'' operator should appear on the left of the initial condition. As already done in the previous sections, we can obtain an effective meaningful solution by expanding the exponential thus getting
+\begin{align}
+F(x,t)&=e^{a t\partial_{x}}\,g(x)
+=\sum_{n=0}^{\infty}\frac{(a t)^{n}}{n!}\,\partial_{x}^{n}g(x)\notag\\
+&=g(x+at).
+\label{eq:2.2.11}
+\end{align}
+The action of the above operator on a function $g(x)$, tacitly assumed to be infinitely differentiable, is just a coordinate translation. This is why such an exponential operator is said to be the generator of a translation.
+
+The evolution operator method can be extended in quite a straightforward way but the problem one is usually faced with is that of properly defining the action of this operator on the initial function. As is well known, the diffusion equation usually referred to as heat equation, writes
+\begin{equation}
+\begin{cases}
+\partial_{t}F(x,t)=a\,\partial_{x}^{2}F(x,t),\\[1mm]
+F(x,0)=g(x).
+\end{cases}
+\label{eq:2.2.12}
+\end{equation}
+
+Apart from the fact that a second order instead of a first order derivative appears on the right hand side (r.h.s.), we can apply the same procedure as before to get the formal solution
+\begin{equation}
+F(x,t)=e^{a t\partial_{x}^{2}}\,g(x).
+\label{eq:2.2.13}
+\end{equation}
+
+Even though the presence of a second order derivative does not represent any problem in the derivation of the formal solution, it makes a big difference to get an effective solution. The operator on the r.h.s. of eq.~\eqref{eq:2.2.13} is usually referred to as the diffusive operator and its action on the initial condition leads to a solution requiring a few educated guesses.
+
+In the following, we will use a trick which will be often exploited in this book. We will ``transform'' the exponential operator of a given operator into an exponential containing its square root. This can be done by means of the following identity, known from Gaussian integrals (see eq.~\eqref{eq:2.2.4})
+\begin{equation}
+e^{b^{2}}=\frac{1}{\sqrt{\pi}}\int_{-\infty}^{\infty}e^{-\xi^{2}+2b\xi}\,d\xi.
+\label{eq:2.2.14}
+\end{equation}
+
+If we assume that the identity holds also in the case of operators, we can write
+\begin{equation}
+F(x,t)=e^{a t\partial_{x}^{2}}\,g(x)
+=\frac{1}{\sqrt{\pi}}\int_{-\infty}^{\infty}
+e^{-\xi^{2}+2\xi\sqrt{a t}\,\partial_{x}}\,g(x)\,d\xi,
+\label{eq:2.2.15}
+\end{equation}
+and we can use the property of the translation (or shift) operator (eq.~\eqref{eq:2.2.11}) to get
+\begin{equation}
+F(x,t)=\frac{1}{\sqrt{\pi}}\int_{-\infty}^{\infty}
+e^{-\xi^{2}}\,g(x+2\sqrt{a t}\,\xi)\,d\xi,
+\label{eq:2.2.16}
+\end{equation}
+which, after an appropriate change of variables, can be re-written in the more ``popular'' form
+\begin{equation}
+F(x,t)=\frac{1}{2\sqrt{\pi a t}}
+\int_{-\infty}^{\infty}e^{-\frac{(\sigma-x)^{2}}{4 a t}}\,g(\sigma)\,d\sigma.
+\label{eq:2.2.17}
+\end{equation}
+
+This solution is a kind of convolution of the initial condition on a kernel, known as the heat equation kernel, and usually referred to as the Gauss--Weierstrass transform. It holds if the integral in eq.~\eqref{eq:2.2.17} exists.
+
+\begin{exercise}[Glaisher identity]
+Prove that for $g(x)=e^{-x^{2}}$ the solution of eq.~\eqref{eq:2.2.12} writes
+\begin{equation}
+F(x,t)=e^{a t\partial_{x}^{2}}\,e^{-x^{2}}
+=\frac{1}{\sqrt{1+4 a t}}\;e^{-\frac{x^{2}}{1+4 a t}}.
+\label{eq:2.2.18}
+\end{equation}
+This relation will be largely exploited in the forthcoming application and should be considered very carefully.
+\end{exercise}
+
+\begin{exercise}[Hermite / heat polynomials]
+Prove that for $g(x)=x^{n}$, $n\in\mathbb{Z}$, the solution of eq.~\eqref{eq:2.2.12} writes
+\begin{equation}
+F(x,t)=H_{n}(x,a t),\qquad
+H_{n}(x,y)=n!\sum_{r=0}^{\lfloor n/2\rfloor}
+\frac{x^{\,n-2r}\,y^{r}}{(n-2r)!\,r!},
+\label{eq:2.2.19}
+\end{equation}
+where $\lfloor k\rfloor$ denotes the lower integer part of the number $k$ and $H_{n}(x,y)$ are Hermite polynomials, sometimes called heat polynomials.
+\end{exercise}
+
+\begin{exercise}[Diffusion + translation]
+Prove that the solution of the equation
+\begin{equation}
+\begin{cases}
+\partial_{t}F(x,t)=a\,\partial_{x}^{2}F(x,t)+b\,\partial_{x}F(x,t),\\[1mm]
+F(x,0)=g(x),
+\end{cases}
+\label{eq:2.2.20}
+\end{equation}
+describing a process of diffusion and translation, is
+\begin{equation}
+F(x,t)=\frac{1}{2\sqrt{\pi a t}}
+\int_{-\infty}^{\infty}
+e^{-\frac{(\sigma-x-bt)^{2}}{4 a t}}\,g(\sigma)\,d\sigma.
+\label{eq:2.2.21}
+\end{equation}
+\textit{Hint:} note that $F(x,t)=e^{b t\partial_{x}}\!\left(e^{a t\partial_{x}^{2}}g(x)\right)$.
+\end{exercise}
+
+Before concluding this section, let us go back to eq.~\eqref{eq:2.2.8} with a non-homogeneous term, namely
+\begin{equation}
+\begin{cases}
+\partial_{t}F(x,t)=a\,\partial_{x}F(x,t)+s(x),\\[1mm]
+F(x,0)=g(x),
+\end{cases}
+\label{eq:2.2.22}
+\end{equation}
+whose relevant solution writes (proof for exercise)
+\begin{equation}
+F(x,t)=g(x+a t)+\int_{0}^{t}s\!\bigl(x+a(t-\tau)\bigr)\,d\tau.
+\label{eq:2.2.23}
+\end{equation}
+
+% ============================================================
+\section{Partial Differential Equations and Exponential Operators, II}
+% ============================================================
+
+In Section~2.2, we have employed very naive but effective methods to deal with evolution type PDE. In this section, we show how this technique can be extended to equations having higher order derivatives in time. A quite natural example is the D'Alembert equation
+\begin{equation}
+\begin{cases}
+\partial_{t}^{2}F(x,t)-v^{2}\partial_{x}^{2}F(x,t)=0,\\[1mm]
+F(x,0)=g(x),\\
+\partial_{t}F(x,t)\big|_{t=0}=h(x).
+\end{cases}
+\label{eq:2.3.1}
+\end{equation}
+
+The above equation, being second order in time, has two initial conditions provided by the functions $g(x)$ and $h(x)$. The use of the analogy with an ordinary second order (see eq.~\eqref{eq:2.1.10}) allows casting the solution of the above problem in the form (the explicit derivation is left as exercise)
+\begin{equation}
+\mat{F(x,t)\\\Phi(x,t)}=\hat{U}(t)\mat{g(x)\\h(x)},
+\label{eq:2.3.2}
+\end{equation}
+where, with $\hat{\omega}=v\,\partial_{x}$,
+\begin{equation}
+\Phi(x,t)=\partial_{t}F(x,t),\qquad
+\hat{U}(t)=
+\mat{\cosh(\hat{\omega}t)&\hat{\omega}^{-1}\sinh(\hat{\omega}t)\\[1mm]
+\hat{\omega}\sinh(\hat{\omega}t)&\cosh(\hat{\omega}t)}.
+\label{eq:2.3.3}
+\end{equation}
+
+From the previous relation, we obtain the formal solution of the D'Alembert equation in the form
+\begin{equation}
+F(x,t)=\cosh(\hat{\omega}t)\,g(x)
++\hat{\omega}^{-1}\sinh(\hat{\omega}t)\,h(x).
+\label{eq:2.3.4}
+\end{equation}
+
+This equation contains a confusing element associated with the presence of the operator $\hat{\omega}^{-1}$. Even though we will devote a more thorough analysis to the definition of inverse of operators, here we note that since it is essentially the inverse of a derivative, we can write
+\begin{equation}
+\hat{\omega}^{-1}h(x)=\sigma(x)=v^{-1}\int^{x}h(\xi)\,d\xi,
+\label{eq:2.3.5}
+\end{equation}
+and thus, taking into account eq.~\eqref{eq:2.2.11}, one has
+\begin{equation}
+F(x,t)=\frac{1}{2}\bigl[g(x+v t)+g(x-v t)\bigr]
++\frac{1}{2}\bigl[\sigma(x+v t)-\sigma(x-v t)\bigr],
+\label{eq:2.3.6}
+\end{equation}
+which is the classical form of the solution of the D'Alembert equation. The inclusion of non-homogeneous terms is straightforward and is left as exercise.
+
+Before closing this section, we want to emphasize a further problem concerning the exponential operators and discuss the previous example in the case in which $\hat{\omega}$ is equal to $b\,x\partial_{x}$. The evolution operator associated to this example, sometimes called the Euler operator, does not represent neither a translation nor diffusion, but a dilatation. As in the case of the diffusion operator, we follow the strategy of reducing $e^{a x\partial_{x}}f(x)$ to a translation by performing the change of variable $x=e^{\vartheta}\rightarrow\partial_{x}=e^{-\vartheta}\partial_{\vartheta}$, obtaining
+\begin{equation}
+e^{a x\partial_{x}}f(x)=e^{a\partial_{\vartheta}}f(e^{\vartheta})
+=f(e^{\vartheta+a})=f(e^{a}e^{\vartheta}),
+\label{eq:2.3.7}
+\end{equation}
+and therefore
+\begin{equation}
+e^{a x\partial_{x}}f(x)=f(e^{a}x).
+\label{eq:2.3.8}
+\end{equation}
+
+With this identity in mind, it is possible to solve eq.~\eqref{eq:2.3.1} with $\hat{\omega}=b\,x\partial_{x}$.
+
+It is evident that the Euler operator is the differential representation of the beam expander whose matrix form has been described in the previous section. This remark is a first hint on some sort of equivalence between different forms of operator representations. This aspect of the problem will be discussed more carefully in the following.
+
+% ============================================================
+\section{Operator Ordering}
+% ============================================================
+
+In the previous sections, we have learned how we can use exponential operators to solve PDE and ODE as well. We have perhaps given the impression that it is sufficient to treat differential operators like ordinary algebraic quantity to treat all problems involving PDE. The problem is often complicated by the fact that, unlike numbers, operators are more general entities and do not commute with each other. We will discuss how carefully one should behave when ordering problems arise.
+
+To properly frame the problem we are going to deal with, we remind that it is the key aspect of the formalism of Quantum Mechanics, so we start with an apparently not familiar example. We note that the solution of the equation
+\begin{equation}
+\begin{cases}
+\dfrac{d}{dt}\hat{O}=[\hat{B},\hat{O}],\\[2mm]
+\hat{O}(0)=\hat{O}_{0},
+\end{cases}
+\label{eq:2.4.1}
+\end{equation}
+involving a commutator $[a,b]=ab-ba$ between non commuting quantities, can be written as
+\begin{equation}
+\hat{O}(t)=e^{t\hat{B}}\,\hat{O}_{0}\,e^{-t\hat{B}}.
+\label{eq:2.4.2}
+\end{equation}
+
+Although not evident, eq.~\eqref{eq:2.4.1} is an initial value problem. In fact this equation can be written in the form
+\begin{equation}
+\frac{d}{dt}\hat{O}=(\hat{B}\circ)\hat{O},
+\label{eq:2.4.3}
+\end{equation}
+where we have defined the new operator $\hat{B}\circ$ such that
+\begin{align}
+(\hat{B}\circ)\hat{O}&=[\hat{B},\hat{O}],\\
+(\hat{B}\circ)^{2}\hat{O}&=[\hat{B},[\hat{B},\hat{O}]],\\
+(\hat{B}\circ)^{3}\hat{O}&=[\hat{B},[\hat{B},[\hat{B},\hat{O}]]],\;\ldots
+\label{eq:2.4.4}
+\end{align}
+
+We obtain the solution of eq.~\eqref{eq:2.4.3} in the form
+\begin{equation}
+\hat{O}(t)=e^{(\hat{B}\circ)t}\hat{O}_{0}
+=\sum_{n=0}^{\infty}\frac{t^{n}}{n!}\,(\hat{B}\circ)^{n}\hat{O}_{0}
+=\sum_{n=0}^{\infty}\frac{t^{n}}{n!}\,
+\bigl[\hat{B},\ldots[\hat{B},[\hat{B},\hat{O}_{0}]]\bigr],
+\label{eq:2.4.5}
+\end{equation}
+by using the Baker--Campbell--Hausdorff relation in the last step.
+
+Why is this expansion important for our purposes? First of all, we consider the action of an exponential operator on another operator, namely
+\begin{equation}
+\hat{C}=e^{\xi\hat{A}}\hat{B}.
+\label{eq:2.4.6}
+\end{equation}
+
+Since $e^{\xi\hat{A}}e^{-\xi\hat{A}}=e^{-\xi\hat{A}}e^{\xi\hat{A}}=\hat{1}$, we find
+\begin{equation}
+\hat{C}=\bigl(e^{\xi\hat{A}}\hat{B}e^{-\xi\hat{A}}\bigr)e^{\xi\hat{A}}
+=\sum_{n=0}^{\infty}\frac{\xi^{n}}{n!}\,(\hat{A}\circ)^{n}\hat{B}\;e^{\xi\hat{A}}.
+\label{eq:2.4.7}
+\end{equation}
+
+In the same way, we can prove the following identities
+\begin{equation}
+e^{\xi\hat{A}}\hat{B}^{n}
+=\bigl(e^{\xi\hat{A}}\hat{B}e^{-\xi\hat{A}}\bigr)^{n}e^{\xi\hat{A}},\qquad
+e^{\xi\hat{A}}f(\hat{B})
+=f\!\left(e^{\xi\hat{A}}\hat{B}e^{-\xi\hat{A}}\right)e^{\xi\hat{A}},
+\label{eq:2.4.8}
+\end{equation}
+which yield a very first idea of the caution one should keep to deal with the operator algebra. It is also quite straightforward to realize that for
+\begin{equation}
+[\hat{A},\hat{B}]=k\,\hat{1},
+\label{eq:2.4.9}
+\end{equation}
+the expansion~\eqref{eq:2.4.7} reduces to
+\begin{equation}
+e^{\xi\hat{A}}\hat{B}=(\hat{B}+k\xi\hat{1})\,e^{\xi\hat{A}}.
+\label{eq:2.4.10}
+\end{equation}
+
+Furthermore, it is easily argued that under the hypothesis~\eqref{eq:2.4.9}
+\begin{equation}
+e^{\xi\hat{A}}f(\hat{B})
+=f(\hat{B}+k\xi\hat{1})\,e^{\xi\hat{A}},
+\label{eq:2.4.11}
+\end{equation}
+and (remind $[\hat{A}^{m},\hat{B}]=km\hat{A}^{m-1}$)
+\begin{equation}
+e^{\xi\hat{A}^{m}}f(\hat{B})
+=f\!\left(\hat{B}+k\xi m\hat{A}^{m-1}\right)e^{\xi\hat{A}}.
+\label{eq:2.4.12}
+\end{equation}
+Equation~\eqref{eq:2.4.12} is known as the Crofton identity. It is particularly interesting because by identifying $\hat{A}$ with the derivative operator, we can interpret~\eqref{eq:2.4.12} as a generalization of the action of the translation operator, by obtaining
+\begin{equation}
+e^{y\partial_{x}^{m}}f(x)
+=f\!\left(x+my\partial_{x}^{m-1}\right)e^{y\partial_{x}^{m}},
+\label{eq:2.4.13}
+\end{equation}
+since
+\begin{equation}
+[\partial_{x},x]=\hat{1}.
+\label{eq:2.4.14}
+\end{equation}
+
+We have mentioned that ordering problems are a consequence of the non commutativity between operators, and therefore we expect that
+\begin{equation}
+e^{a\partial_{x}+b x}\neq e^{a\partial_{x}}\,e^{b x}
+\neq e^{b x}\,e^{a\partial_{x}}.
+\label{eq:2.4.15}
+\end{equation}
+
+We can use the result~\eqref{eq:2.4.13} to obtain an ordered disentangled form for exponential operators of the type~\eqref{eq:2.4.15}. It turns out that
+\begin{equation}
+\hat{Q}=e^{c\partial_{x}^{2}}\,e^{a x}
+=e^{a x+b\partial_{x}}\,e^{c\partial_{x}^{2}},\qquad b=2ac.
+\label{eq:2.4.16}
+\end{equation}
+
+Let us now apply the operator $\hat{Q}$ on a given function $f(x)$. Taking into account eq.~\eqref{eq:2.2.15}, we obtain
+\begin{align}
+\hat{Q}f(x)&=e^{c\partial_{x}^{2}}e^{a x}f(x)\notag\\
+&=\frac{1}{\sqrt{\pi}}\int_{-\infty}^{\infty}e^{-\xi^{2}}
+e^{2\sqrt{c}\,\xi\partial_{x}}\!\left(e^{a x}f(x)\right)d\xi\notag\\
+&=\frac{1}{\sqrt{\pi}}\int_{-\infty}^{\infty}e^{-\xi^{2}}
+\Bigl(e^{a[x+2\sqrt{c}\xi]}f(x+2\sqrt{c}\xi)\Bigr)d\xi\notag\\
+&=e^{a x+\frac{a b}{2}}\,
+\frac{1}{\sqrt{\pi}}\int_{-\infty}^{\infty}e^{-(\xi-a\sqrt{c})^{2}}
+f(x+2\sqrt{c}\xi)\,d\xi\notag\\
+&=e^{a x+\frac{a b}{2}}\,e^{b\partial_{x}}\,e^{c\partial_{x}^{2}}f(x),
+\label{eq:2.4.17}
+\end{align}
+which, once compared with eq.~\eqref{eq:2.4.16}, yields
+\begin{equation}
+e^{a x+b\partial_{x}}=e^{\frac{a b}{2}}\,e^{a x}\,e^{b\partial_{x}}.
+\label{eq:2.4.18}
+\end{equation}
+
+By setting
+\begin{equation}
+\hat{A}=a x,\qquad \hat{B}=b\partial_{x},
+\label{eq:2.4.19}
+\end{equation}
+we find
+\begin{equation}
+[\hat{A},\hat{B}]=-ab\,\hat{1},
+\label{eq:2.4.20}
+\end{equation}
+and the identity~\eqref{eq:2.4.18} can be rewritten as the Weyl identity
+\begin{equation}
+e^{\hat{A}+\hat{B}}=e^{\hat{A}}\,e^{\hat{B}}\,e^{-\frac{1}{2}[\hat{A},\hat{B}]},
+\label{eq:2.4.21}
+\end{equation}
+provided that $[\hat{A},\hat{B}]=k\hat{1}$, with $k\in\mathbb{C}$. It is worth stressing that the above identity holds also in the case
+\begin{equation}
+[\hat{A},\hat{B}]=\hat{O},\qquad
+[\hat{O},\hat{A}]=[\hat{O},\hat{B}]=0,
+\label{eq:2.4.22}
+\end{equation}
+namely, if the commutator between $\hat{A}$ and $\hat{B}$ is a further operator different from the unit operator but commuting with either $\hat{A}$ and $\hat{B}$.
+
+\begin{exercise}
+Prove the identity
+\begin{equation}
+e^{a x+b\partial_{x}}=e^{-\frac{a b}{2}}\,e^{b\partial_{x}}\,e^{a x}
+\label{eq:2.4.23}
+\end{equation}
+and show that from the above identity eq.~\eqref{eq:2.4.18} follows straightforwardly.\\
+\textit{Hint:} note that $e^{-ab/2}e^{b\partial_{x}}e^{ax}
+=e^{-ab/2}e^{ba}e^{ax}e^{b\partial_{x}}$.
+\end{exercise}
+
+The disentanglement formula~\eqref{eq:2.4.21} and the operator method can be applied to problems like
+\begin{equation}
+\begin{cases}
+\partial_{t}F(x,t)=b\,\partial_{x}F(x,t)+a x\,F(x,t),\\[1mm]
+F(x,0)=g(x),
+\end{cases}
+\label{eq:2.4.24}
+\end{equation}
+which, according to the previous operator technique, can be solved as
+\begin{equation}
+F(x,t)=e^{t(b\partial_{x}+a x)}g(x)
+=e^{\frac{a b}{2}t^{2}}\,e^{a t x}\,g(x+b t).
+\label{eq:2.4.25}
+\end{equation}
+
+A further example of application of the Weyl identity is provided by the study of the solution of the following PDE
+\begin{equation}
+\begin{cases}
+\partial_{t}F(x,y,t)=a\,\partial_{x,y}F(x,y,t)+b x\,F(x,y,t),\\[1mm]
+F(x,y,0)=g(x,y),
+\end{cases}
+\label{eq:2.4.26}
+\end{equation}
+whose solution writes
+\begin{align}
+F(x,y,t)&=e^{t(a\partial_{x,y}+b x)}g(x,y)\notag\\
+&=e^{\frac{a b}{2}t^{2}\partial_{y}}\,e^{b t x}\,g(x+a t,y)\notag\\
+&=e^{b t x}\,g\!\left(x+a t,\;y+\frac{a b}{2}t^{2}\right).
+\label{eq:2.4.27}
+\end{align}
+
+Given the importance of the Weyl formula, we provide an alternative and perhaps simpler proof. We introduce the exponential operator
+\begin{equation}
+\hat{E}(\xi)=e^{\xi(\hat{A}+\hat{B})},\qquad \hat{E}(0)=\hat{1},
+\label{eq:2.4.28}
+\end{equation}
+with $[\hat{A},\hat{B}]=k\hat{1}$. By taking the derivative with respect to $\xi$ for both sides of the previous equation, we find
+\begin{equation}
+\partial_{\xi}\hat{E}(\xi)=(\hat{A}+\hat{B})\hat{E}(\xi).
+\label{eq:2.4.29}
+\end{equation}
+
+Let us now set
+\begin{equation}
+\hat{E}(\xi)=e^{\xi\hat{A}}\hat{F}(\xi),
+\label{eq:2.4.30}
+\end{equation}
+which, inserted in eq.~\eqref{eq:2.4.29} and taking into account eq.~\eqref{eq:2.4.10}, yields
+\begin{equation}
+\partial_{\xi}\hat{F}(\xi)
+=e^{-\xi\hat{A}}\hat{B}e^{\xi\hat{A}}\hat{F}(\xi)
+=(\hat{B}-k\xi\hat{1})\hat{F}(\xi).
+\label{eq:2.4.31}
+\end{equation}
+
+The integration of the above equation is straightforward and yields
+\begin{equation}
+\hat{E}(\xi)=e^{\hat{A}\xi}\,e^{\hat{B}\xi}\,e^{-\frac{1}{2}k\xi^{2}},
+\label{eq:2.4.32}
+\end{equation}
+and therefore eq.~\eqref{eq:2.4.21} for $\xi=1$.
+
+We can now apply the methods outlined so far to derive more complicated disentanglement identities which are sketched below.
+
+\begin{enumerate}[(a)]
+\item If $[\hat{A},\hat{B}]=k\hat{1}$,
+\begin{equation}
+e^{\hat{A}^{2}+a\hat{B}}
+=e^{a\hat{B}}\,e^{\hat{A}^{2}-a k\hat{A}+\frac{1}{3}(a k)^{2}}.
+\label{eq:2.4.33}
+\end{equation}
+(\textit{Hint:} set $\hat{E}(\xi)=e^{a\xi\hat{B}}\hat{F}(\xi)$ and note
+$\partial_{\xi}\hat{F}(\xi)=(\hat{A}-ak\xi)^{2}\hat{F}(\xi)$.)
+
+\item If $[\hat{A},\hat{B}]=m\hat{A}$,
+\begin{equation}
+e^{\hat{A}+\hat{B}}
+=e^{\frac{1-e^{-m}}{m}\hat{A}}\,e^{\hat{B}}.
+\label{eq:2.4.34}
+\end{equation}
+
+\item If $[\hat{A},\hat{B}]=m\hat{A}^{1/2}$,
+\begin{equation}
+e^{\hat{A}+\hat{B}}
+=e^{\hat{B}}\,e^{\hat{A}+\frac{m}{2}\hat{A}^{-1/2}+\cdots}.
+\end{equation}
+\end{enumerate}
+
+% ============================================================
+\section{Schr\"odinger Equation and Paraxial Wave Equation of Classical Optics}
+% ============================================================
+
+The formal analogy between the Schr\"odinger equation of Quantum Mechanics and the paraxial wave equation of Classical Optics is one of the most striking examples of the unity of mathematical methods across different branches of Physics.
+
+The time-dependent Schr\"odinger equation for a particle of mass $m$ in a potential $V(\vect{r})$ reads
+\begin{equation}
+i\hbar\,\partial_{t}\Psi(\vect{r},t)
+=\left[-\frac{\hbar^{2}}{2m}\nabla^{2}+V(\vect{r})\right]\Psi(\vect{r},t).
+\label{eq:2.5.1}
+\end{equation}
+
+In the paraxial approximation of Classical Optics, the propagation of a monochromatic laser beam along the $z$-axis is governed by
+\begin{equation}
+2ik\,\partial_{z}u(x,y,z)+\partial_{x}^{2}u+\partial_{y}^{2}u=0,
+\label{eq:2.5.2}
+\end{equation}
+where $k=n\omega/c$ is the wave number in the medium and $u(x,y,z)$ is the slowly varying envelope of the electric field.
+
+By introducing the formal substitutions
+\begin{equation}
+t\rightarrow z,\qquad
+\frac{\hbar^{2}}{2m}\rightarrow\frac{1}{2k},\qquad
+V\rightarrow 0,
+\label{eq:2.5.3}
+\end{equation}
+one sees that eq.~\eqref{eq:2.5.2} is mathematically identical to the free-particle Schr\"odinger equation in two transverse dimensions. This analogy allows us to import the entire machinery of evolution operators developed in the previous sections to the optical domain.
+
+In particular, the free-space propagation kernel (Green's function) in Optics is nothing but the analogous of the quantum mechanical free-particle propagator. For a propagation distance $L$, the optical field transforms as
+\begin{equation}
+u(x,y,L)=e^{-i\frac{L}{2k}(\partial_{x}^{2}+\partial_{y}^{2})}\,u(x,y,0),
+\label{eq:2.5.4}
+\end{equation}
+which is the direct analogue of the quantum mechanical free evolution operator
+\begin{equation}
+\hat{U}(t)=e^{-i\frac{t}{2m}\hat{p}^{2}},\qquad \hat{p}=-i\hbar\nabla.
+\label{eq:2.5.5}
+\end{equation}
+
+The ABCD law for ray propagation discussed in Chapter~1 finds its wave-optical counterpart in the Collins integral (or generalized Huygens--Fresnel integral), which describes the transformation of the field amplitude through an arbitrary paraxial optical system characterized by the $ABCD$ matrix.
+
+This formal equivalence is a powerful example of what was stated in the Preface: the same mathematical tools can be exploited to model different aspects of Physics, from quantum mechanics to laser beam propagation.
+
+% ============================================================
+\section{Examples of Fokker--Planck, Schr\"odinger and Liouville Equations}
+% ============================================================
+
+In this section we provide a few examples of evolution equations belonging to different areas of Physics, all amenable to the operator formalism developed so far.
+
+\paragraph{Fokker--Planck equation.}
+A prototypical Fokker--Planck equation in one dimension reads
+\begin{equation}
+\partial_{t}P(x,t)=\partial_{x}\!\left[D_{1}(x)P(x,t)\right]
++\partial_{x}^{2}\!\left[D_{2}(x)P(x,t)\right],
+\label{eq:2.6.1}
+\end{equation}
+where $D_{1}(x)$ is the drift coefficient and $D_{2}(x)$ the diffusion coefficient. For constant coefficients $D_{1}=v$, $D_{2}=D$, eq.~\eqref{eq:2.6.1} reduces to
+\begin{equation}
+\partial_{t}P=v\,\partial_{x}P+D\,\partial_{x}^{2}P,
+\label{eq:2.6.2}
+\end{equation}
+whose solution, given an initial distribution $P(x,0)=P_{0}(x)$, is
+\begin{equation}
+P(x,t)=\frac{1}{2\sqrt{\pi D t}}
+\int_{-\infty}^{\infty}
+e^{-\frac{(\sigma-x-vt)^{2}}{4Dt}}\,P_{0}(\sigma)\,d\sigma,
+\label{eq:2.6.3}
+\end{equation}
+a direct application of the diffusion+translation result, eq.~\eqref{eq:2.2.21}.
+
+\paragraph{Liouville equation.}
+In Classical Statistical Mechanics, the time evolution of the phase-space density $\rho(q,p,t)$ is governed by the Liouville equation
+\begin{equation}
+\partial_{t}\rho=\{H,\rho\},
+\label{eq:2.6.4}
+\end{equation}
+where $\{H,\rho\}$ is the Poisson bracket. For a one-dimensional Hamiltonian $H=\frac{p^{2}}{2m}+V(q)$, this becomes
+\begin{equation}
+\partial_{t}\rho+p\,\partial_{q}\rho-\partial_{q}V(q)\,\partial_{p}\rho=0.
+\label{eq:2.6.5}
+\end{equation}
+The formal solution can be written using the classical evolution operator
+\begin{equation}
+\rho(q,p,t)=e^{t(\partial_{q}H\,\partial_{p}-\partial_{p}H\,\partial_{q})}\,\rho(q,p,0),
+\label{eq:2.6.6}
+\end{equation}
+which generates the Hamiltonian flow in phase space.
+
+\paragraph{Schr\"odinger equation with Hamiltonian $\hat{H}=\hbar\Omega\,\vec{n}\cdot\vec{\sigma}$.}
+From Chapter~1, the evolution operator for a two-level system is
+\begin{equation}
+\hat{U}(t)=e^{-i\Omega t\,\vec{n}\cdot\vec{\sigma}}
+=\cos\!\left(\frac{\Omega t}{2}\right)\hat{1}
+-2i\sin\!\left(\frac{\Omega t}{2}\right)\vec{n}\cdot\vec{\sigma}.
+\label{eq:2.6.7}
+\end{equation}
+The probability amplitudes for a system initially in state $\chi(0)=\mat{a_{+}(0)\\a_{-}(0)}$ evolve as
+\begin{equation}
+\chi(t)=\hat{U}(t)\,\chi(0).
+\label{eq:2.6.8}
+\end{equation}
+
+% ============================================================
+\section{Concluding Remarks}
+% ============================================================
+
+In this chapter, we have developed the evolution operator method as a unifying paradigm for treating both ordinary and partial differential equations arising in Physics. The key ideas can be summarized as follows:
+
+\begin{enumerate}
+\item \textbf{Matrix ODEs:} A system of first-order ODEs can always be written in the form $\underline{z}'=\hat{M}\underline{z}+\underline{\phi}$, whose solution is formally $\underline{z}(t)=e^{\hat{M}t}\underline{z}_{0}+\int e^{\hat{M}(t-\tau)}\underline{\phi}(\tau)\,d\tau$.
+
+\item \textbf{Translation operator:} $e^{a\partial_{x}}$ acts as a shift: $e^{a\partial_{x}}f(x)=f(x+a)$. This simple identity is the cornerstone for treating both the transport equation and the diffusion equation.
+
+\item \textbf{Diffusion/heat equation:} The operator $e^{a t\partial_{x}^{2}}$ generates a Gaussian convolution (the Gauss--Weierstrass transform), providing the solution to the heat equation for arbitrary initial data.
+
+\item \textbf{D'Alembert equation:} The second-order wave equation can be recast in matrix form and solved using hyperbolic functions of the operator $\hat{\omega}=v\partial_{x}$.
+
+\item \textbf{Operator ordering:} The non-commutativity of operators necessitates careful disentanglement of exponentials. The Weyl identity
+\[
+e^{\hat{A}+\hat{B}}=e^{\hat{A}}e^{\hat{B}}e^{-\frac{1}{2}[\hat{A},\hat{B}]}
+\]
+(for $[\hat{A},\hat{B}]=k\hat{1}$) is the fundamental tool for handling such problems.
+
+\item \textbf{Unity of methods:} The same operator formalism applies to the Schr\"odinger equation, the paraxial wave equation of optics, the Fokker--Planck equation, and the Liouville equation, demonstrating the ``unreasonable effectiveness'' of mathematical methods in Physics.
+\end{enumerate}
+
+In the next chapters, we will apply these techniques to specific families of special functions (Hermite, Laguerre, Legendre polynomials) and explore their physical applications in Quantum Mechanics, Classical Optics, and beyond.
+
+% ============================================================
+\begin{thebibliography}{99}
+\addcontentsline{toc}{section}{Bibliography}
+
+\bibitem{Gantmaker}
+F.~R.\ Gantmaker, \emph{The Theory of Matrices}, Chelsea, New York, 1959.
+
+\bibitem{Lancaster}
+P.~Lancaster, M.~Tismenetsky, \emph{The Theory of Matrices with Applications}, Elsevier, 1985.
+
+\bibitem{Bronson1}
+R.~Bronson, \emph{Matrix Methods: An Introduction}, Academic Press, 1970.
+
+\bibitem{Bronson2}
+R.~Bronson, \emph{Schaum's Outline of Theory and Problems of Matrix Operations}, McGraw-Hill, 1989.
+
+\bibitem{Brown}
+W.~Brown, \emph{Matrices and Vector Spaces}, Marcel Dekker, 1991.
+
+\bibitem{Leonhardt}
+U.~Leonhardt, \emph{Essential Quantum Optics}, Cambridge University Press, 2000.
+
+\bibitem{Gasiorowicz}
+S.~Gasiorowicz, \emph{Quantum Physics}, Wiley, 1974.
+
+\bibitem{Goldstein}
+H.~Goldstein, \emph{Classical Mechanics}, 2nd ed., Addison-Wesley, 1980.
+
+\bibitem{Dattoli1990}
+G.~Dattoli, M.~Richetta, G.~Schettini, A.~Torre,
+``Lie algebraic methods and solutions of linear partial differential equations,''
+\emph{J.\ Math.\ Phys.}, \textbf{31}, 2856 (1990).
+
+\bibitem{WeiNorman}
+J.~Wei, E.~Norman,
+``Lie algebraic solution of linear differential equations,''
+\emph{J.\ Math.\ Phys.}, \textbf{4}(4), 575--581 (1963).
+
+\bibitem{Dattoli1987}
+G.~Dattoli, P.~Di Lazzaro, A.~Torre,
+``SU(1,1), SU(2) and SU(3) coherence-preserving Hamiltonians and time-ordering techniques,''
+\emph{Phys.\ Rev.\ A}, \textbf{35}, 1582 (1987).
+
+\bibitem{VanderLugt}
+A.~Vander Lugt,
+``Operational Notation for the Analysis and Synthesis of Optical Data Processing Systems,''
+\emph{Proc.\ IEEE}, \textbf{54}, 1055 (1966).
+
+\bibitem{Stoler}
+D.~Stoler,
+``Operator Methods in Physical Optics,''
+\emph{J.\ Opt.\ Soc.\ Am.}, \textbf{71}(3), 334 (1981).
+
+\bibitem{Bacry}
+H.~Bacry, M.~Cadilhac,
+``Metaplectic Group and Fourier Optics,''
+\emph{Phys.\ Rev.\ A}, \textbf{23}, 2533 (1981).
+
+\bibitem{Sanchez}
+J.~Sanchez-Mandragon, K.~B.~Wolf,
+\emph{Lie Methods in Optics}, Springer-Verlag, 1986.
+
+\bibitem{Dattoli1988}
+G.~Dattoli, A.~Torre, J.~C.~Gallardo,
+``Operatorial methods in Optics,''
+\emph{Riv.\ Nuovo Cimento}, \textbf{11}, 1 (1988).
+
+\bibitem{Dattoli1987b}
+G.~Dattoli, S.~Solimeno, A.~Torre,
+``Algebraic view of the optical propagation in a nonhomogeneous medium,''
+\emph{Phys.\ Rev.\ A}, \textbf{35}, 1668 (1987).
+
+\bibitem{Torre}
+A.~Torre, \emph{Linear Ray and Wave Optics in Phase Space}, Elsevier, 2005.
+
+\bibitem{Dattoli1990b}
+G.~Dattoli, P.~Di Lazzaro, A.~Torre,
+``A Spinor Approach to the Propagation in Self-Focusing Fibers,''
+\emph{Nuovo Cimento}, \textbf{105B}, 165 (1990).
+
+\bibitem{Feynman1957}
+R.~P.~Feynman, L.~P.~Vernon, R.~W.~Hellwarth,
+``Geometrical Representation of the Schr\"odinger Equation to Solve Maser Problems,''
+\emph{J.\ Appl.\ Phys.}, \textbf{28}, 49 (1957).
+
+\bibitem{Wu1957}
+C.~S.~Wu \emph{et al.},
+``Experimental Test of Parity Conservation in Beta Decay,''
+\emph{Phys.\ Rev.}, \textbf{105}(4), 1413 (1957).
+
+\bibitem{Yariv}
+A.~Yariv, \emph{Quantum Electronics}, Wiley, 1985.
+
+\bibitem{Hallen}
+L.~Hallen, J.~H.~Eberly, \emph{Optical Resonance and Two-Level Atoms}, Wiley, 1975.
+
+\bibitem{Baym}
+G.~Baym, \emph{Lectures on Quantum Mechanics}, W.~A.~Benjamin, 1969.
+
+\bibitem{Cabibbo}
+N.~Cabibbo,
+``Unitary Symmetry and Leptonic Decays,''
+\emph{Phys.\ Rev.\ Lett.}, \textbf{10}, 531 (1963).
+
+\bibitem{Kobayashi}
+M.~Kobayashi, T.~Maskawa,
+``CP Violation in the Renormalizable Theory of Weak Interaction,''
+\emph{Prog.\ Theor.\ Phys.}, \textbf{49}, 652 (1973).
+
+\bibitem{Wolfenstein}
+L.~Wolfenstein,
+``Parametrization of the Kobayashi-Maskawa Matrix,''
+\emph{Phys.\ Rev.\ Lett.}, \textbf{51}, 1945 (1983).
+
+\bibitem{Dattoli1994}
+G.~Dattoli,
+``Weak mixing angles, CP-violating phase and exponential parametrization of the Cabibbo-Kobayashi-Maskawa matrix,''
+\emph{Nuovo Cim.\ A}, \textbf{107}, 1243 (1994).
+
+\bibitem{Mohapatra}
+R.~N.~Mohapatra, \emph{Physics of Neutrino Masses}, SLAC Summer Institute, 2004.
+
+\bibitem{GellMann}
+M.~Gell-Mann, \emph{The Eightfold Way}, W.~A.~Benjamin, 1964.
+
+\bibitem{Lichtenberg}
+D.~B.~Lichtenberg, \emph{Unitary Symmetry and Elementary Particles}, Academic Press, 1978.
+
+\bibitem{Peskin}
+M.~E.~Peskin, D.~V.~Schroeder, \emph{An Introduction to Quantum Field Theory}, Addison Wesley, 1995.
+
+\bibitem{Mangano}
+M.~L.~Mangano, \emph{Introduction to QCD}, European School of Conference, 1998.
+
+\bibitem{Babusci2011}
+D.~Babusci, G.~Dattoli, E.~Sabia,
+``Operational Methods and Lorentz Type Equations,''
+\emph{J.\ Phys.\ Math.}, \textbf{3}, P110601 (2011).
+
+\bibitem{Varshalovich}
+D.~A.~Varshalovich, A.~N.~Moskalev, V.~K.~Khersonskii,
+\emph{Quantum Theory of Angular Momentum}, World Scientific, 1988.
+
+\bibitem{Morin}
+D.~Morin, \emph{Relativity (Kinematics)}, Ch.~11, Harvard, 2007.
+
+\bibitem{Good}
+R.~H.~Good Jr.,
+``Properties of Dirac Matrices,''
+\emph{Rev.\ Mod.\ Phys.}, \textbf{27}, 187 (1955).
+
+\bibitem{Bjorken}
+S.~D.~Bjorken, S.~D.~Drell, \emph{Relativistic Quantum Mechanics}, McGraw-Hill, 1964.
+
+\end{thebibliography}
+
+\section*{Transcribed Notes (raw OCR, verbatim)}
+\begin{verbatim}
+48 Mathematical Methods for Physicists
+where ⃗S is a three-component vector and the evolution operator is given by
+ˆU(t) = exp
+
+t
+
+
+0 −Ω3 Ω2
+Ω3 0 −Ω1
+−Ω2 Ω1 0
+
+
+
+. (1.6.16)
+This operator can always be re-written as a rotation matrix, which is given
+by the Rodrigues matrix rotation reported below
+ˆU(t) =
+
+
+2 (x2− 1)s2 + 1 2 xys 2− 2zcs 2xzs 2 + 2ycs
+2xys 2 + 2zcs 2 (y2− 1)s2 + 1 2 zys 2− 2xcs
+2xzs 2− 2ycs 2zys 2 + 2xcs 2 (z2− 1)s2 + 1
+
+, (1.6.17)
+where
+s = sin
+(Ωt
+2
+)
+, c = cos
+(Ωt
+2
+)
+,
+x = Ω1
+Ω, y = Ω2
+Ω, z = Ω3
+Ω.
+(1.6.18)
+This result is again a Rodrigues rotation. The result can be achieved by
+rearranging eq. (1.6.8) or by using the following properties of matrices.
+1. Any exponential operator containing a n×n matrix corresponds to a
+n×n matrix;
+2. Any exponential of a n×n matrix ˆA can be written in terms of the
+polynomial
+e
+ˆAt =p( ˆAt ) =
+n∑
+m=1
+αn−m
+(
+ˆAt
+)n−m
+. (1.6.19)
+According to the above equation, the expansion of an exponential matrix in
+ﬁnite terms is obtained when the coeﬃcients α are known.
+Let us now consider the diagonalization of both sides of eq. (1.6.19) which
+yields
+e
+ˆΛ =
+m∑
+n=1
+αn−m ˆΛn−m, Λ =
+
+
+λ1 0 0 0
+0 λ2 0 0
+0 0 λ3 0
+0 0 0 λ3
+
+ (1.6.20)
+Matrices, Exponential Operators and Physical Applications 49
+whereλi are the eigenvalues of the matrix ˆAt . The coeﬃcients α are therefore
+calculated from the following equation linear system of n equations with n
+unknown quantities
+eλi =
+n∑
+m=1
+αn−mλn−m
+i (1.6.21)
+which is a linear system of n equations with n unknown quantities if the
+eigenvalues are all distinct. If one of them has multiplicity k we can use the
+further condition
+eλi = ds
+dξs p(ξ)
+⏐⏐⏐⏐
+ξ=λi
+, s = 1,...,k − 1. (1.6.22)
+The procedure we have described is a consequence of the Cayley-Hamilton
+Theorem30.
+Exercise 11. Prove the identities eqs. (1.6.19)-(1.6.22) and extend the va-
+lidity of the method to any function admitting a Taylor series expansion.
+The following examples may be useful to check the level of achieved com-
+putational ability
+e
+ˆA1t =
+
+
+1 t t2
+2
+0 1 t
+0 0 1
+
+ e3t, ˆA1 =
+
+
+3 1 0
+0 3 1
+0 0 3
+
+,
+e
+ˆA2t =
+
+
+1 0 0
+t 1 0
+et− 1 0 et
+
+, ˆA2 =
+
+
+0 0 0
+1 0 0
+1 0 1
+
+.
+(1.6.23)
+The use of examples with higher order matrices becomes more cumber-
+some since algebraic equations of fourth or larger order should be taken into
+account.
+30Denoting by p(λ) = det
+(
+λ ˆ1− ˆA
+)
+the characteristic polynomial of a square matix ˆA,
+the Cayley-Hamilton theorem states that every square matrix over the real or complex
+ﬁeld satisﬁes its own characteristic equation, namely p( ˆA) = 0.
+50 Mathematical Methods for Physicists
+1.6.3 Cabibbo-Kobayashi-Maskawa Matrix
+We will apply the previous Theorem to a generalization of the Cabibbo ro-
+tation known, in elementary Particle Physics, as the Cabibbo-Kobayashi-
+Maskawa matrix (CKM ).
+We have already noted that the d−s quarks, both with charge − 1
+3 and
+eigenstates of the strangeness operator, are transformed into weak interac-
+tion eigenstates d′−s′ by means of a rotation, which can be generated by an
+exponential operator, written in terms of the imaginary matrix.
+It is experimentally known that the quarks with charge− 1
+3 are three (d−s−b)
+and that the third quark b, signiﬁcantly heavier than the ﬁrst two, carries
+the beauty quantum number, which, in analogy to the strangeness, is not
+preserved by the weak interactions. It is therefore almost natural to assume
+that the original Cabibbo mixing can be generalized by extending the rotation
+to the three dimensional case. As in the ordinary case, we assume that the
+mixing is due to an interaction described by the Hamiltonian
+ˆH =i ˆΦ (1.6.24)
+such that the associated evolution operator given by
+ˆU =e
+ˆΩ, ˆΩ =t ˆΦ, (1.6.25)
+where ˆΩ is the matrix in the rhs of eq. (1.6.14). Therefore, we get
+
+
+d′
+s′
+b′
+
+ =e
+ˆΩ
+
+
+d
+s
+b
+
+. (1.6.26)
+It has been show that the entries of the matrix ˆΩ can be written in terms of
+the Cabibbo angle, as it follows (see eq. (1.6.18) for notation)
+Ω3 =ϑc, Ω2 =xϑ 2
+c, Ω1 =yϑ 3
+c, (1.6.27)
+where ϑc≃ 0.22 rad.
+Matrices, Exponential Operators and Physical Applications 51
+Exercise 12. Discuss the physical meaning of the assumption in eq. (1.6.27)
+and use the Cayley-Hamilton Theorem to prove that
+ˆU = ˆ1 + sin Ω
+Ω
+ˆΩ +
+(
+sin
+( Ω
+2
+)
+Ω
+2
+)2
+ˆΩ2,
+| Ω|=
+√
+Ω2
+1 + Ω2
+2 + Ω2
+3 =ϑc
+√
+1 +x2ϑ2
+c +y2ϑ3
+c.
+(1.6.28)
+The example we have just reported is a simpliﬁed version of the CKM ma-
+trix, it does not contain any term accounting for the CP -violating eﬀects.
+Even though they can be included in this model by means of an appropriate
+modiﬁcation of the entries (1.6.27) of the matrix, we will not discuss this
+aspect as it is beyond the scope of the present book.
+1.6.4 Frenet-Serret Equations
+The equations reported below
+d
+ds F =
+
+
+0 κ 0
+−κ 0 τ
+0 −τ 0
+
+ F, F =
+
+
+T
+N
+B
+
+ (1.6.29)
+are used to describe the kinematics of a particle moving along a continuous,
+diﬀerentiable curve in the three dimensional Euclidean space, as shown in
+Fig. 1.31.
+Figure 1.31: Motion on a curve of a space spanned by the vectors T,N,B . The vectors
+T , and N individuate the curve of the osculating plane.
+52 Mathematical Methods for Physicists
+Here ⃗T is the vector tangent to the curve, ⃗N = d⃗T
+ds
+⏐⏐⏐d⃗T
+ds
+⏐⏐⏐
+−1
+and ⃗B =
+⃗T× ⃗N. Furthermore κ,τ denote the curvature and the torsion of the curve,
+respectively. The derivative d
+ds is taken with respect to the arc length.
+Exercise 13. Solve the equations assuming that curvature and torsion are
+both constant and positive. show that the curve associated with the Frenet-
+Serret ⃗T, ⃗N, ⃗B triple is a helix.
+1.6.5 Matrix, Rotations and Euler Angles
+We have so far dealt with vector evolution equations representing rota-
+tions in Euclidean space. It is therefore worth to quote the Euler angles, Fig.
+1.32, and frame the relevant formalism within the context of the evolution
+operator and matrix formalism. The Euler angle formalism represents succes-
+sive rotation about the reference axes in space and can be used to reproduce
+any ﬁnal rotation.
+Figure 1.32: The Euler angles. The angle γ refers to a rotation around the axis z of the
+referred frame,α refers to a rotation around the same axis, β represents a rotation around
+the line of nodes N.
+Matrices, Exponential Operators and Physical Applications 53
+In our formalism they can be deﬁned through the following matrix product
+ˆR = exp
+
+α
+
+
+0 −1 0
+1 0 0
+0 0 0
+
+
+
+ exp
+
+β
+
+
+0 0 0
+0 0 −1
+0 1 0
+
+
+
+ exp
+
+γ
+
+
+0 −1 0
+1 0 0
+0 0 0
+
+
+
+
+=
+
+
+cosα − sinα 0
+sinα cosα 0
+0 0 1
+
+
+
+
+1 0 0
+0 cos β − sinβ
+0 sin β cosβ
+
+
+
+
+cosγ − sinγ 0
+sinγ cosγ 0
+0 0 1
+
+
+(1.6.30)
+Exercise 14. Check eq. (1.6.30) by using what we have discussed in this
+chapter and compare the above deﬁnition and convention with diﬀerent con-
+ventions employing for example rotation matrices generated by
+ˆR′ =
+= exp
+
+ψ
+
+
+0 −1 0
+1 0 0
+0 0 0
+
+
+
+ exp
+
+ϑ
+
+
+0 0 1
+0 0 0
+−1 0 0
+
+
+
+ exp
+
+ϕ
+
+
+0 0 0
+0 1 0
+−1 0 0
+
+
+
+.
+(1.6.31)
+Get a conversion table between the diﬀerent representations.
+Use the previous results to show that a parity transformation of the type
+reported in eq. (1.3.27) cannot be considered a space rotation.
+Compare the CKM matrix with the rotations (1.6.30)-(1.6.31) and ﬁnd a
+suitable expression for the Euler rotation angles in terms of the Cabibbo angle.
+1.6.6 4-Vectors and Lorentz Transformations
+In this subsection, we introduce the notion of 4-vectors and the relevant
+formalism. We refer essentially to the Minkowski space and deﬁne a point
+event through the 4-vectors
+xµ≡ (x0,x 1,x 2,x 3) = (x0,⃗ r) = (ct,x,y,z ), (1.6.32)
+whereµ = 0, 1, 2, 3. In the last formula, the time t is multiplied by the speed
+of light c so that all the coordinates have the same dimensions. The above
+coordinates specify the components of the contravariant position 4-vector
+for the event. The deﬁnition of the scalar product between 4-vectors needs
+54 Mathematical Methods for Physicists
+the speciﬁcation of a norm which in the case of Minkowski space can be
+introduced by means of the tensor
+ηµν =
+
+
+−1 0 0 0
+0 1 0 0
+0 0 1 0
+0 0 0 1
+
+. (1.6.33)
+In terms of this tensor the scalar product between the 4-vectors U,V is
+U◦V =ηµνUµVν =
+(
+u0 u1 u2 u3 )
+
+
+−1 0 0 0
+0 1 0 0
+0 0 1 0
+0 0 0 1
+
+
+
+
+v0
+v1
+v2
+v3
+
+
+=−U 0V 0 + ⃗U·⃗V.
+(1.6.34)
+More often, the scalar product can be deﬁned by introducing the covariant
+coordinate
+Uµ =ηµνUν. (1.6.35)
+This allows to re-write the scalar product between 4-vectors as follows
+U◦V =UµVµ. (1.6.36)
+The Lorentz transformations are rotations in a non Euclidean space
+describing the transformation of coordinate from reference frame R to ref-
+erence R′ in motion respect to it. For example, if the motion is along the
+x-direction with velocityβc , the transformation between the two frames can
+be written in the following matrix form
+
+
+ct′
+x′
+y′
+z′
+
+ =
+
+
+γ −γβ 0 0
+−γβ γ 0 0
+0 0 1 0
+0 0 0 1
+
+
+
+
+ct
+x
+y
+z
+
+, γ = 1√
+1−β2
+.
+(1.6.37)
+Exercise 15. Consider carefully the meaning of the eq. (1.6.37) and explain
+the physical content of Fig. 1.33 where we have shown the relation between
+primed and unprimed frames. In particular, explain the relationship of the
+Matrices, Exponential Operators and Physical Applications 55
+Figure 1.33: Lorentz transformation, time dilatation and Fitzgerald contraction.
+clock ticks in the system at rest (solid dots) and those in the moving frame
+(empty dots)
+(hint: put γ = coshα ...).
+In the second part of this book, we will further comment on the Lorentz
+boosts and go deeper into their geometrical interpretation. We invite the
+reader to carefully consider these examples as a useful complement to the
+topic treated in this chapter.
+1.6.7 Dirac Matrices
+Before concluding this section, it is useful to touch on the so called Dirac
+matrices, one of the most common work-horses in Quantum Electrodynam-
+ics. They are 4 × 4 matrices and can be considered as the components of a
+4-vector deﬁned as
+γ0 =
+( ˆ1 ˆO
+ˆO −ˆ1
+)
+, γ1 =
+( ˆO ˆh
+−ˆh ˆO
+)
+, γ2 =−i
+( ˆO ˆi
+−ˆi ˆO
+)
+, γ3 =
+( ˆO ˆt
+−ˆt ˆO
+)
+.
+(1.6.38)
+This is a short hand notation to write 4×4 matrices in terms of 2×2 matrices
+( ˆO ˆh
+−ˆh ˆO
+)
+=
+
+
+0 0 0 1
+0 0 1 0
+0 −1 0 0
+−1 0 0 0
+
+. (1.6.39)
+56 Mathematical Methods for Physicists
+Along with the above matrices, the following matrix is also introduced
+γ5 =iγ 0γ1γ2γ3 . (1.6.40)
+Exercise 16. Prove that
+γ5 =
+( ˆO ˆ1
+ˆ1 ˆO
+)
+. (1.6.41)
+Propose a physical argument about the reason why they are used to describe
+left and right-particles in Chiral Theory and weak interactions (see Fig. 1.34)
+(hint: look at Sec. 5.3).
+Figure 1.34: Right particles have the spin directed as the particle velocity vector, left
+particles have the spin pointing in the opposite direction.
+Along with the γ, the matrices for i = 1, 2, 3 β = γ0, αi = γ0γi are also
+introduced. Write the explicit form of the α matrices.
+The Dirac equation for free particles with spin- 1
+2 can be written as
+i ℏ∂tΨ =⃗ α·⃗ pΨ +βmc 2Ψ. (1.6.42)
+The Dirac Hamiltonian is therefore given by
+ˆHD =⃗ α·⃗ p+βmc 2. (1.6.43)
+Exercise 17. Use the properties of the Dirac matrices to prove the identity
+ˆU =eβ⃗ α·⃗ pϑ= cosθ +β⃗ α·⃗ np sinθ, ⃗ n p = ⃗ p
+p (1.6.44)
+and that, for tan(2ϑ) = p
+mc ,
+H′
+D = ˆU ˆHD ˆU−1 =β
+√
+p2 + (mc 2)2 (1.6.45)
+(hint: note [ ˆU, ˆHD]= ˆU−1, ˆU−2 =cos(2θ)−β⃗ α·⃗ psin(2θ) and αiβ +βαi = 0,
+αiαk−αkαi =2δi,k, ˆβ2 = ˆα2 = ˆ1).
+Matrices, Exponential Operators and Physical Applications 57
+The above transformation is known as Dirac free particleFoldy-Wouthuysen
+transformation (consider its physical meaning).
+Exercise 18. Show that, for a particle at rest ( ⃗ p= 0), the stationary solu-
+tions of the Dirac equation can be derived from the relation
+E
+( χ
+φ
+)
+=
+( mc 2 0
+0 −mc 2
+)( χ
+φ
+)
+, (1.6.46)
+which states that solutions with negative energy are naturally contained in the
+Dirac equation. The appearance of negative solutions could have been treated
+in two diﬀerent ways: a) discard them as non physical and b) understand
+their physical meaning.
+The second option was that considered by Dirac, whose penetrating analy-
+sis provided the discovery of anti-matter. Dirac assumed that all the states
+with negative energy are ﬁlled and therefore, according to the Pauli prin-
+ciple, electrons cannot “fall” into negative energy states. When a negative
+electron is removed and “promoted” to positive energies, it leaves a hole in
+the negative energy sea which is interpreted as an antiparticle (see Fig. 1.35).
+Figure 1.35: Dirac interpretation of negative energy fermions and of the relevant particles.
+58 Mathematical Methods for Physicists
+Exercise 19. Explain the so called Stuckelberg-Feynman31 interpretation
+according to which negative energy particles propagate backward in time
+(hint: note that e−i E
+ℏ t =e−i(−E)
+ℏ (−t) . . . ).
+Discuss the physical meaning of this interpretation with the aid of Fig. 1.36.
+Positive energy state
+flowing forwards in time
+Negtive energy state flowing
+backward in time
+positive energy anti-particle state
+flowing forwards in time
+Figure 1.36: Stuckelberg-Feynman interpretation of negative Energy particle evolution.
+Explain why this interpretation is more appropriate for the understanding of
+antiparticles associated with bosons
+(hint: bosons are not subject to the Pauli exclusion principle . . . ).
+Explain what are the anti-particles of zero charge baryons like the neutron
+and of zero charge mesons.
+31E. Stuckelberg was one of the greatest physicist of the last century. Most of his discov-
+eries came much before those of other eminent scientists, but, he has never been credited
+as he should. Just to give a few examples, he was the ﬁrst to discover the perturbation
+methods in QED now referred as Feynman diagram technique. He proposed the renor-
+malization group (in a paper rejected by Physical Review) and what is now referred as
+the Higgs mechanism.
+Matrices, Exponential Operators and Physical Applications 59
+Bibliography
+Matrices
+[1] F.R. Gantmarker, “The Theory of Matrices”, Chelsea, New York, 1959.
+[2] P. Lancaster, M. Tismenetsky, “The Theory of Matrices with Applica-
+tions”, Computer Science and Scientiﬁc Computing, Elsevier, 1985.
+[3] R. Bronson, “Matrix Methods: An Introduction”, New York: Academic
+Press, 1970, LCCN 70097490.
+[4] R. Bronson, “Schaum’s outline of theory and problems of matrix oper-
+ations”, New York:McGraw–Hill, 1989.
+[5] W. Brown, “Matrices and vector spaces” New York, NY: Marcel Dekker,
+1991.
+Pauli Matrices, Evolution Operators, Ordering Procedures
+[6] U. Leonhardt, “Essential Quantum Optics”, Cambridge University
+Press, 2000, ISBN 0-521-14505-8.
+[7] S. Gasiorowicz, “Quantum Physics”, New York: Wiley, pp. 232-233,
+1974.
+[8] H. Goldstein, “The Cayley-Klein Parameters and Related Quantities”,
+Classical Mechanics, 2nd ed., Reading, MA: Addison-Wesley, 1980.
+[9] G. Dattoli, M. Richetta, G. Schettini, A. Torre, “Lie algebraic methods
+and solutions of linear partial diﬀerential equations”, J. Math. Phys.,31,
+2856, 1990.
+60 Mathematical Methods for Physicists
+[10] J. Wei, E. Norman, “Lie algebraic solution of linear diﬀerential equa-
+tions”, J. Math. Phys., 4(4), pp. 575-581, 1963.
+[11] G. Dattoli, P. Di Lazzaro, A. Torre, “SU(1, 1), SU(2) and SU(3)
+coherence-preserving Hamiltonians and time-ordering techniques”,
+Phys. Rev. A, 35, pp. 1582-1589, 1987.
+Matrices and Classical Optics
+[12] A. Vander Lugt, “Operational Notation for the analysis and synthesis
+of optical data processing systems”, Proc. IEEE -54, 1055, 1966.
+[13] D. Stoler, “Operator Methods in Physical Optics”, Journal of the Opti-
+cal Society of America, Vol. 71, 3, pp. 334-341, 1981.
+[14] H. Bacry, M. Cadilhac, “Metaplectic Group and Fourier Optics”, Phys.
+Rev. A 23, 2533, 1981.
+[15] J. Sanchez-Mandragon, K.B. Wolf, “Lie Methods in Optics”, Springer-
+Verlag, Berlin, 1986.
+[16] G. Dattoli, A. Torre, J.C. Gallardo, “Operatorial methods in Optics”,
+Riv. Nuovo Cimento, 11, pp. 1-124, 1988.
+[17] G. Dattoli, S. Solimeno, A. Torre, “Algebraic view of the optical propa-
+gation in a nonhomogeneous medium”, Phys. Rev. A 35, pp. 1668-1672,
+1987.
+[18] A. Torre, “Linear Ray and Wave Optics in Phase Space”, Elsevier Am-
+sterdam, 2005.
+[19] G. Dattoli, P. Di Lazzaro, A. Torre, “A Spinor Approach to the propa-
+gation in self-focusing ﬁbers”, Il Nuovo Cimento 105 B, 165, 1990.
+Quantum Mechanics Applications
+[20] R. P. Feynman, L. P. Vernon, R. W. Hellwarth, “Geometrical Represen-
+tation of the Schr¨ odinger Equation to Solve Maser Problems”, J. Appl.
+Phys. 28, 49, 1957.
+[21] C.S Wu et al., “Experimental Test of Parity Conservation in Beta De-
+cay”, Physical Review 105(4), 1957.
+Matrices, Exponential Operators and Physical Applications 61
+[22] A. Yariv, “Quantum Electronics”, Wiley New York, 1985.
+[23] L. Hallen, J. H. Eberly, “Optical Resonance and two level Atoms”,
+Wiley, New York, 1975.
+Kaon Mixing, Cabibbo Angle, Seesaw Mechanism and
+Gell-Mann Matrices
+[24] G. Baym, “Lectures on Quantum Mechanics”, W.A. Benjamin, Inc.,
+New York, 1969.
+[25] N. Cabibbo, “Unitary Symmetry and Leptonic Decays”, Phys. Rev.
+Lett. 10, 531, 1963.
+[26] M. Kobayashi, T. Maskawa, “CP Violation in the Renormalizable The-
+ory of Weak Interaction”, Prog. Theor. Phys. 49, pp. 652-657, 1973.
+[27] L. Wolfenstein, “Parametrization of the Kobayashi-Maskawa Matrix”,
+Phys. Rev. Lett. 51, 1945, 1983.
+[28] G. Dattoli, “Weak mixing angles, CP-violating phase and exponential
+parametrization of the Cabibbo-Kobayashi-Maskawa matrix”, Nuovo
+Cim. A 107, 1243, 1994.
+[29] R.N. Mohapatra, “Physics of Neutrino Masses”, SLAC Summer Insti-
+tute on Particle Physics (SSI04), Aug. 2-13, 2004.
+[30] M. Gell-Mann, “The Eightfold Way”, Y. Ne’eman, eds., W. A. Ben-
+jamin. Inc, 1964.
+[31] D.B. Lichtenberg, “Unitary Symmetry and Elementary Particles”, Aca-
+demic Press Inc. New York, 1978.
+[32] M.E. Peskin, D.V. Schroeder, “An Introduction to Quantum Field The-
+ory”, Addison Wesley, 1995.
+[33] M.L. Mangano, “Introduction to QCD”, Proceedings for 1998 European
+School of Conference C99-01-31, 1998.
+62 Mathematical Methods for Physicists
+Matrix Diﬀerential Equations and Rotations
+[34] D. Babusci, G. Dattoli, E. Sabia, “Operational Methods and Lorentz
+Type equations”, Journal of Physical Mathematics Vol. 3, 2011, Art. ID
+P110601.
+[35] D.A. Varshalovich, A.N. Moskalev, V.K. Khersonskii, “Description of
+Rotation in Terms of the Euler Angles”, §1.4.1 in Quantum Theory of
+Angular Momentum. Singapore: World Scientiﬁc, pp. 21-23, 1988.
+[36] H. Goldstein, “The Euler Angles and Euler Angles in Alternate Conven-
+tions”,§4-4 and Appendix B in Classical Mechanics, 2nd ed. Reading,
+MA: Addison-Wesley, pp. 143-148 and 606-610, 1980.
+[37] D. Morin, “Relativity (Kynematics)”, 2007, Ch. 11, www.people.fas.
+harvard.edu/ djmorin/Relativity Chap11.
+[38] R.H. Good Jr., “Properties of Dirac Matrices”, Rev. Mod. Phys. 27,
+pp. 187-211, 1955.
+[39] S.D. Bjorken, S.D. Drell, “Relativistic Quantum Mechanics”, New York:
+McGraw-Hill, 1964.
+Chapter 2
+Ordinary and Partial
+Diﬀerential Equations,
+Evolution Operator Method
+and Applications
+2.1 Ordinary Diﬀerential Equations,
+Matrices and Exponential Operators
+In the previous chapter, we have used very simple methods employing
+the evolution operator techniques to study ordinary diﬀerential equations
+(ODE). In this chapter, we will emphasize that the evolution operator tech-
+nique is a kind of paradigmatic tool which can be exploited to treat a variety
+of Cauchy initial value problems. In particular, we will consider the case of
+Partial Diﬀerential Equations (PDE ).
+We start by considering a ﬁrst orderODE, already encountered in Chap-
+ter 1, written in the form
+{
+y′(x) +α(x)y(x) =β(x)
+y(0) =y0
+. (2.1.1)
+It represents an elementary non-homogeneousCauchy problemwhose gene-
+ral solution reads
+y(x) =e−
+∫x
+0 α(ξ)dξy0 +N(x) (2.1.2)
+63
+64 Mathematical Methods for Physicists
+where
+N(x) =e−
+∫x
+0 α(ξ)dξ
+∫ x
+0
+e
+∫η
+0 α(χ)dχβ(η)dη. (2.1.3)
+In Chapter 1 we have dealt with a simpler version, havingα andβ constants.
+The solution in this case takes the simple form
+y(x) =e−αxy0 +
+∫ x
+0
+e−α (x−x′)βdx′ =e−αxy0 + 1−e−αx
+α β. (2.1.4)
+It is well known there is a plethora of physical phenomena which can be
+described by the previous equation as, for example, the fall of an object in
+viscous media or the discharge of capacitor through a resistor. We can use the
+above form of solution as a reference example to treat more complicated cases.
+We will exploit the same formal “structure” of the solution eqs. (2.1.2)-(2.1.4)
+to treat the following ﬁrst order ODE
+
+
+d
+dτ x =−ω ˆAx +b
+x|τ=0 =x 0
+. (2.1.5)
+The unknown function is provided here by the n-components column vector
+x(τ) and by the associated initial conditions. Furthermore, ω is a scalar, ˆA
+and b are a matrix and column vectors, respectively, which are assumed to
+be independent of the integration variable. According to eqs. (2.1.2)-(2.1.4),
+the solution can be written as
+x(τ) = ˆU(τ)x0 + ˆB(τ)b (2.1.6)
+where
+ˆU(τ) =e−ω ˆAτ, ˆB(τ) =e−ω ˆAτ
+∫ τ
+0
+eω ˆAτ′
+dτ′ =
+∫ τ
+0
+ˆU(τ−τ′)dτ′.
+(2.1.7)
+It is worth stressing that unlike eqs. (2.1.2)-(2.1.4), order is important and
+the solution (2.1.6) should be understood as provided by the action of the
+operators ˆU and ˆB on the initial conditions and on the inhomogeneous part,
+respectively. If for e.g. the matrix ˆA is the imaginary matrix ˆi, the solution
+(2.1.6) can be written in the form 1
+x(τ) = ˆR(−ωτ )x0 +
+ˆ1− ˆR(−ωτ )
+ω
+ˆi−1b (2.1.8)
+1We stress this point because it is extremely important to develop the hability of
+understanding the analogies and to ﬁnd a way to guess possible generalizations.
+Ordinary and PDE, Evolution Operator Method and Applications 65
+which is essentially a generalization of eq. (2.1.4), as easily veriﬁed. More-
+over, straightforward manipulation leads to 2
+x(τ) = ˆR(−ωτ )x0 +τ sinc
+(ωτ
+2
+)
+ˆR
+(
+−ωτ
+2
+)
+b, sinc x = sin x
+x . (2.1.9)
+Before proceeding further, we note here that it is essential to get the solu-
+tion in the straightforward form (2.1.6), that the matrix ˆA be not explicitly
+dependent on the integration variable. Otherwise, the search of a solution is
+complicated by the so called time ordering problems which will be discussed
+in the forthcoming parts of this book.
+Let us now consider a second order non-homogeneous ODE (in the fol-
+lowingy(x) =y, for brevity)
+
+
+
+y′′ =−ω2(x)y +β(x)
+y′(0) =y′
+0
+y (0) =y0
+. (2.1.10)
+We can reduce the above equation to a matrix form, by setting
+y′ =η (2.1.11)
+so that eq. (2.1.10) can be written as
+z′ = ˆM(x)z +φ(x) (2.1.12)
+where
+z =
+( η
+y
+)
+, ˆM =
+( 0 −ω2(x)
+1 0
+)
+, φ (x) =
+( β(x)
+0
+)
+. (2.1.13)
+Although we will discuss the usefulness of these results in the following parts
+of these lectures more carefully, here we note that the convenience of trans-
+forming a second order diﬀerential equation into a matrix equation stems
+2Using the property of the imaginary matrix, show also that
+N∏
+n=1
+ˆR(αn) = ˆR
+( N∑
+n=1
+αn
+)
+.
+66 Mathematical Methods for Physicists
+from the fact that we can use the formalism of matrices which is extremely
+simple to use even for numerical implementations.
+We will now draw just a few elementary consequences which follow from
+the previous discussions and form the basis of our future developments. By
+assuming that ω, e and β are independent of x, we can cast the solution of
+eq. (2.1.12) in the form
+z(x) =e
+ˆMxz0 +
+∫ x
+0
+e− ˆM(x′−x)φdx′ (2.1.14)
+and, since
+ˆM = ˆσ−−ω2ˆσ+, (2.1.15)
+we can apply the methods discussed in Chapter 1 to write the exponential
+matrix appearing in eq. (2.1.14) as
+e
+ˆMx =
+
+
+cos(ωx ) −ω sin(ωx )
+1
+ω sin(ωx ) cos( ωx )
+
+ . (2.1.16)
+Therefore, for the solution of eq. (2.1.12), we end up with the explicit form
+in terms of circular functions
+z(x) =
+
+
+cos(ωx ) −ω sin(ωx )
+1
+ω sin(ωx ) cos( ωx )
+
+
+(
+y0
+y′
+0
+)
++x sinc
+(ωx
+2
+)
+
+
+cos
+(ωx
+2
+)
+−ω sin
+(ωx
+2
+)
+1
+ω sin
+(ωx
+2
+)
+cos
+(ωx
+2
+)
+
+
+(
+β
+0
+)
+.
+(2.1.17)
+In the forthcoming sections, we improve this elementary formalism to
+treat less straightforward diﬀerential equations.
+2.2 Partial Diﬀerential Equations and
+Exponential Operators, I
+We begin this section by reminding some notions about Gaussian inte-
+grals. The identity
+I =
+∫ ∞
+−∞
+e−x2
+dx =√π (2.2.1)
+Ordinary and PDE, Evolution Operator Method and Applications 67
+is one of milestones of calculus and can be proved as follows. By keeping the
+square of both sides of eq. (2.2.1) we ﬁnd
+I2 =
+∫ ∞
+−∞
+∫ ∞
+−∞
+e−(x2+y2)dxdy (2.2.2)
+which, transformed into polar coordinates, yields
+I2 =
+∫ 2π
+0
+dϑ
+∫ ∞
+0
+ρe−ρ2
+dρ =π. (2.2.3)
+The use of the previous relations allows to derive the identity (the relevant
+proof is left as exercise)
+∫ ∞
+−∞
+e−ax 2+bxdx =
+√π
+ae
+b2
+4a, (2.2.4)
+which is of paramount importance for our purposes and should be considered
+very carefully.
+(hint: note that a
+(
+x2− b
+ax
+)
+=a
+(
+x− b
+2a
+)2
+− b2
+4a . . . )
+In Section 2.1, we have seen that the use of the matrix formalism and
+exponent of matrices provide an eﬃcient tool to treat a variety of problems.
+For reasons of continuity with the previous section, we present an application
+which combines ﬁrst orderODE of the type (2.1.1) and the evaluation of non
+trivial Gaussian integrals. The problem we propose is the calculation of the
+integral
+I(b) =
+∫ ∞
+0
+e−a2x2−b2
+x2dx (2.2.5)
+where we consider b as a variable and a as a parameter. By keeping the
+derivate of both sides of eq. (2.2.5) with respect to b, we can obtain the
+elementary diﬀerential equation
+∂b I(b) + 2aI (b) = 0. (2.2.6)
+(hint: note that −2
+∫∞
+0
+b
+x2e−a2x2−b2
+x2dx = 2a
+∫∞
+0 e−a2x2−b2
+x2d
+( b
+ax
+)
+=... )
+68 Mathematical Methods for Physicists
+The solution of eq. (2.2.6) yields the integral (2.2.5). We ﬁnd
+I(b) =I(0)e−2ab, I (0) =
+∫ ∞
+0
+e−a2x2
+dx = 1
+2
+√π
+a . (2.2.7)
+We are now suﬃciently skilled to prove how the use of exponential opera-
+tors, having as argument ordinary diﬀerential operators, provides a powerful
+tool to deal with some families of linear PDE . As an introductory example,
+let us consider the equation
+{∂tF (x,t ) =a∂xF (x,t )
+F (x, 0) =g(x)
+(2.2.8)
+witha being a constant. The above equation is just an initial value problem
+with respect to the variable t which will generically be deﬁned as time vari-
+able. It shares some analogies with eq. (2.1.1). Indeed, if we establish the
+correspondences
+∂tF (x,t )→y′, a∂ x→−α, g (x)→y0, (2.2.9)
+we get the “formal” solution of eq. (2.2.8) as
+F (x,t ) =eat∂ xg(x) (2.2.10)
+which should be understood as the action of an exponential operator, con-
+taining a ﬁrst order derivative, on the “initial condition” represented by an
+x-dependent function. Also in this case the ordering is important and the
+“evolution” operator should appear on the left of the initial condition.
+As already done in the previous sections, we can obtain an eﬀective mean-
+ingful solution by expanding the exponential thus getting
+F (x,t ) =eat∂ xg(x) =
+∞∑
+n=0
+(at )n
+n! ∂n
+xg(x) =g(x +at ). (2.2.11)
+The action of the above operator on a function g(x), tacitly assumed to be
+inﬁnitely diﬀerentiable, is just a coordinate translation. This is why such an
+exponential operator is said to be the generator of a translation .
+The evolution operator method can be extended in quite a straightforward
+way but the problem one is usually faced with is that of properly deﬁning the
+Ordinary and PDE, Evolution Operator Method and Applications 69
+action of this operator on the initial function. As is well known, the diﬀusion
+equation usually referred as heat equation, writes
+{
+∂tF (x,t ) =a∂ 2
+xF (x,t )
+F (x, 0) =g(x) . (2.2.12)
+Apart from the fact that a second order instead of a ﬁrst order derivative
+appears on the right hand side (r.h.s.), we can apply the same procedure as
+before to get the formal solution
+F (x,t ) =eat∂ 2
+xg(x). (2.2.13)
+Even though the presence of a second order derivative does not represent any
+problem in the derivation of the formal solution, it makes a big diﬀerence to
+get an eﬀective solution. The operators on the r.h.s. of eq. (2.2.13) is usually
+referred to as diﬀusive operator and its action on the initial condition leads
+to a solution requiring a few educated guesses.
+In the following, we will use a trick which will be often exploited in this
+book. We will “transform” the exponential operator of a given operator into
+an exponential containing its square root. This can be done by means of the
+following identity, known from Gaussian integrals (see eq. (2.2.4))
+eb2
+= 1√π
+∫ ∞
+−∞
+e−ξ2+2bξdξ. (2.2.14)
+If we assume that the identity holds also in the case of operators, we can
+write
+F (x,t ) =eat∂ 2
+xg(x) = 1√π
+∫ ∞
+−∞
+e−ξ2+2ξ
+√
+at∂ xg(x)dξ (2.2.15)
+and we can use the property of the translation (or shift) operator
+(eq. (2.2.11)) to get
+F (x,t ) = 1√π
+∫ ∞
+−∞
+e−ξ2
+g
+(
+x + 2
+√
+atξ
+)
+dξ (2.2.16)
+which, after an appropriate change of variables, can be re-written in the more
+“popular” form
+F (x,t ) = 1
+2
+√
+πa t
+∫ ∞
+−∞
+e− (σ−x)2
+4at g(σ)dσ. (2.2.17)
+70 Mathematical Methods for Physicists
+This solution is a kind of convolution of the initial condition on a ker-
+nel, known as the heat equation kernel, and usually referred to as Gauss-
+Weierstrass transform. It holds if the integral in eq. (2.2.17) exists. An
+example of diﬀusion is shown in Fig. 2.1 where we have reported the evolu-
+tion, at diﬀerent times, of the initial distribution g(x) = x2e−x2
+undergoing
+a diﬀusive process ruled by eq. (2.2.12) ( a = 1).
+Figure 2.1: Evolution of initial distribution g(x) =x2e−x2
+at diﬀerent times.
+The mechanisms of diﬀusions are of crucial importance in Physics (as well
+as in other branches of science, including economical phenomena, as we will
+discuss in the forthcoming chapter) and, therefore, we consider below some
+examples of paramount importance for the forthcoming developments.
+Exercise 20. Prove that for g(x) =e−x2
+the solution of eq. (2.2.12) writes
+F (x,t ) =eat∂ 2
+xe−x2
+= 1√1 + 4ate− x2
+1+4at, (2.2.18)
+usually called Glaisher identity . This relation will be largely exploited in
+the forthcoming application and should be considered very carefully.
+Exercise 21. Prove that for g(x) = xn, n∈ Z, the solution of eq. (2.2.12)
+writes (see Chapter 3)
+F (x,t ) =Hn(x, at), H n(x,y ) =n!
+⌊n
+2⌋∑
+r=0
+xn−2ryr
+(n− 2r)!r!, (2.2.19)
+Ordinary and PDE, Evolution Operator Method and Applications 71
+where⌊k⌋ denotes the lower integer part of the number k and Hn(x,y ) are
+Hermite polynomials, sometimes called heat polynomials 3.
+Exercise 22. A further useful exercise is to prove that the solution of the
+equation {
+∂tF (x,t ) =a∂ 2
+xF (x,t ) +b∂xF (x,t )
+F (x, 0) =g(x) (2.2.20)
+describing a process of diﬀusion and translation, is
+F (x,t ) = 1
+2
+√
+πat
+∫ ∞
+−∞
+e− (σ−x−bt )2
+4at g(σ)dσ (2.2.21)
+(hint: note that F (x,t ) =ebt∂ x
+(
+eat∂ 2
+xg(x)
+)
+).
+In Fig. 2.2 we have reported the evolution of the same distribution of Fig.
+2.1 with the inclusion of a translation term.
+Figure 2.2: Evolution of the initial distribution g(x) = x2e−x2
+at diﬀerent times in the
+case of eq. (2.2.20) for a = 1 and b = 8.
+Before concluding this section, let us go back to eq. (2.2.8) with a non-
+homogeneous term, namely
+3Hermite polynomials will be carefully discussed in the forthcoming chapters along with
+their orthogonality properties.
+72 Mathematical Methods for Physicists
+{
+∂tF (x,t ) =a∂xF (x,t ) +s(x)
+F (x, 0) =g(x) (2.2.22)
+whose relevant solution writes (proof for exercise)
+F (x,t ) =g(x +at ) +
+∫ t
+0
+s (x +a(t−τ)) dτ. (2.2.23)
+2.3 Partial Diﬀerential Equations and
+Exponential Operators, II
+In Section 2.2, we have employed very na¨ ıve but eﬀective methods to deal
+with evolution type PDE . In this section, we show how this technique can
+be extended to equations having higher order derivatives in time. A quite
+natural example is the D’Alembert equation
+
+
+
+∂2
+tF (x,t )−v2∂2
+xF (x,t ) = 0
+F (x, 0) =g(x)
+∂tF (x,t )|t=0 =h(x)
+. (2.3.1)
+The above equation, being second order in time, has two initial conditions
+provided by the functions g(x) and h(x). The use of the analogy with an
+ordinary second order (see eq. (2.1.10)) allows casting the solution of the
+above problem in the form (the explicit derivation is left as exercise)
+( F (x,t )
+Φ(x,t )
+)
+= ˆU(t)
+( g(x)
+h(x)
+)
+(2.3.2)
+where, with ˆω =v∂x,
+Φ(x,t ) =∂t F (x,t ), ˆU(t) =
+(
+cosh(ˆωt ) ˆ ω−1 sinh(ˆωt )
+ˆω sinh(ˆωt ) cosh(ˆ ωt )
+)
+.
+(2.3.3)
+From the previous relation, we obtain the formal solution of the D’Alembert
+equation in the form
+F (x,t ) = cosh(ˆωt )g(x) + ˆω−1 sinh(ˆωt )h(x). (2.3.4)
+Ordinary and PDE, Evolution Operator Method and Applications 73
+This equation contains a confusing element associated with the presence of
+the operator ˆω−1. Even though we will devote a more thorough analysis to the
+deﬁnition of inverse of operators, here we note that since it is essentially the
+inverse of a derivative, we can write
+ˆω−1h(x) =σ(x) =v−1
+∫ x
+h(ξ)dξ (2.3.5)
+and thus, taking into account eq. (2.2.11), one has
+F (x,t ) = 1
+2 [g(x +vt ) +g(x−vt )] + 1
+2 [σ(x +vt )−σ (v−vt )] (2.3.6)
+which is the classical form of the solution of the D’Alembert equation. The
+inclusion of non-homogeneous terms is straightforward and is left as exercise.
+Before closing this section, we want to emphasize a further problem con-
+cerning the exponential operators and discuss the previous example in the
+case in which ˆω is equal to bx∂x. The evolution operator associated to this
+example, sometimes called the Euler operator, does not represent neither
+a translation nor diﬀusion, but a dilatation. As in the case of the diﬀusion
+operator, we follow the strategy of reducing eax∂ xf(x) to a translation by
+performing the change of variable x=eϑ → ∂x =e−ϑ∂ϑ, obtaining
+eax∂ xf(x) =ea∂ϑf(eϑ) =f(eϑ+a) =f
+(
+eaeϑ)
+(2.3.7)
+and therefore
+eax∂ xf(x) =f (eax) . (2.3.8)
+With this identity in mind, it is possible to solve eq. (2.3.1) with ˆω =bx∂ x.
+It is evident that the Euler operator is the diﬀerential representation of the
+beam expander whose matrix form has been described in the previous section.
+This remark is a ﬁrst hint on some sort of equivalence between diﬀerent forms
+of operator representations. This aspect of the problem will be discussed
+more carefully in the following.
+2.4 Operator Ordering
+In the previous sections, we have learned how we can use exponential oper-
+ators to solvePDE andODE as well. We have perhaps given the impression
+74 Mathematical Methods for Physicists
+that it is suﬃcient to treat diﬀerential operators like ordinary algebraic quan-
+tity to treat all problems involving PDE . The problem is often complicated
+by the fact that, unlike numbers, operators are more general entities and
+do not commute with each other. We will discuss how carefully one should
+behave when ordering problems arise. To properly frame the problem we are
+going to deal with, we remind that it is the key aspect of the formalism of
+Quantum Mechanics, so we start with an apparently not familiar example.
+We note that the solution of the equation
+
+
+
+d
+dt
+ˆO =
+[
+ˆB, ˆO
+]
+ˆO(0) = ˆO0
+(2.4.1)
+involving a commutator [a,b ] =ab−ba between non commuting quantities,
+can be written as 4
+ˆO(t) =et ˆB ˆO0e−t ˆB. (2.4.2)
+Although not evident, eq. (2.4.1) is an initial value problem. In fact this
+equation can be written in the form
+d
+dt
+ˆO =
+(
+ˆB◦
+)
+ˆO (2.4.3)
+where we have deﬁned the new operator ˆB0 such that
+(
+ˆB◦
+)
+ˆO =
+[
+ˆB, ˆO
+]
+,
+(
+ˆB◦
+)2
+ˆO =
+[
+ˆB,
+[
+ˆB, ˆO
+]]
+,
+(
+ˆB◦
+)3
+ˆO =
+[
+ˆB,
+[
+ˆB,
+[
+ˆB, ˆO
+]]]
+, ... .
+(2.4.4)
+We obtain the solution of eq. (2.4.3) in the form
+ˆO(t) =e( ˆB◦) t ˆO0 =
+∞∑
+n=0
+tn
+n!
+(
+ˆB◦
+)n
+ˆO0 =
+∞∑
+n=0
+tn
+n!
+[
+ˆB,...
+[
+ˆB,
+[
+ˆB, ˆO0
+]]]
+(2.4.5)
+by using the Baker-Campbell-Hausdorﬀ relation in the last step. Why
+this expansion is important for our purposes? First of all, we consider the
+action of an exponential operator on another operator, namely
+ˆC =eξ ˆA ˆB. (2.4.6)
+4The solution can be checked by taking the time derivative of both sides of eq. (2.4.2).
+Ordinary and PDE, Evolution Operator Method and Applications 75
+Since eξ ˆAe−ξ ˆA =e−ξ ˆAeξ ˆA = ˆ1, we ﬁnd
+ˆC = (eξ ˆA ˆBe−ξ ˆA)eξ ˆA =
+∞∑
+n=0
+ξn
+n! ( ˆA◦)n ˆBeξ ˆA. (2.4.7)
+In the same way, we can prove the following identities
+eξ ˆA ˆBn =
+(
+eξ ˆA ˆBe−ξ ˆA
+)n
+eξ ˆA, e ξ ˆAf( ˆB) =f
+(
+eξ ˆA ˆBe−ξ ˆA
+)
+eξ ˆA
+(2.4.8)
+which yield a very ﬁrst idea of the caution one should keep to deal with the
+operator algebra. It is also quite straightforward to realize that for
+[
+ˆA, ˆB
+]
+=kˆ1, (2.4.9)
+the expansion (2.4.7) reduces to
+eξ ˆA ˆB = ( ˆB +kξ ˆ1)eξ ˆA . (2.4.10)
+Furthermore, it is easily argued that under the hypothesis (2.4.9)
+eξ ˆAf( ˆB) =f( ˆB +kξ 1)eξ ˆA (2.4.11)
+and (remind [ ˆAm, ˆB] =km ˆAm−1)
+eξ ˆAm
+f( ˆB) =f( ˆB +kξm ˆAm−1)eξ ˆA, (2.4.12)
+eq. (2.4.12) is known as the Crofton identity. It is particularly interesting
+because by identifyig ˆA with the derivative operator, we can interpret (2.4.12)
+as a generalization of the action of the translation operator, by obtaining
+ey ∂m
+x f(x) =f(x +my ∂m−1
+x )ey ∂m
+x (2.4.13)
+since5
+[∂x,x ] = ˆ1. (2.4.14)
+We have mentioned that ordering problems are a consequence of the non
+commutativity between operators and, therefore, we expect that
+ea∂x+bx̸=ea∂xebx̸=ebxea∂x. (2.4.15)
+5Strictly speaking we should write [∂x,x ]g(x) =g(x). We will treat the diﬀerential op-
+erators in abstract terms without making reference to their action on continous functions.
+76 Mathematical Methods for Physicists
+We can use the result (2.4.13) to obtain an ordered disentangled form for
+exponential operators of the type (2.4.15). It turns out that
+ˆQ =ec∂ 2
+xeax =eax +b∂xec∂ 2
+x, b = 2ac. (2.4.16)
+Let us now apply the operator ˆQ on a given functionf(x). Taking into account
+eq. (2.2.15), we obtain
+ˆQf (x) =ec∂ 2
+xeaxf(x) = 1√π
+∫ ∞
+−∞
+e−ξ2
+e2√cξ∂ x(eaxf(x))dξ
+= 1√π
+∫ ∞
+−∞
+e−ξ2
+(ea [x+2√cξ ]f(x + 2√cξ ))dx
+= eax +ab
+2
+√π
+∫ ∞
+−∞
+e−(ξ−a√c)2
+f(x + 2√cξ )dξ =eax +ab
+2 eb∂xec∂ 2
+xf(x)
+(2.4.17)
+which, once compared with eq. (2.4.17), yields
+eax +b∂x =e
+ab
+2 eaxeb∂x. (2.4.18)
+By setting
+ˆA =ax, ˆB =b∂x, (2.4.19)
+we ﬁnd [
+ˆA, ˆB
+]
+=−ab ˆ1 (2.4.20)
+and the identity (2.4.18) can be rewritten as the Weyl identity
+e
+ˆA+ ˆB =e
+ˆAe
+ˆBe− 1
+2[ ˆA, ˆB], (2.4.21)
+provided that
+[
+ˆA, ˆB
+]
+=k ˆ1, with k∈ C. It is worth stressing that the above
+identity holds also in the case
+[
+ˆA, ˆB
+]
+= ˆO,
+[
+ˆO, ˆA
+]
+=
+[
+ˆO, ˆB
+]
+= 0 (2.4.22)
+namely, if the commutator between ˆA and ˆB is a further operator diﬀerent
+from the unit operator but commuting with either ˆA and ˆB. It is worth to
+prove the identity
+eax +b∂x =e−ab
+2 eb∂xeax (2.4.23)
+Ordinary and PDE, Evolution Operator Method and Applications 77
+and that from the above identity eq. (2.4.18) follows straightforwardly
+(hint: note that e−ab
+2 eb∂xeax =e−ab
+2 ebaeaxeb∂x . . . ).
+The disentanglement formula (2.4.21) and the operator method can be
+applied to problems like
+{
+∂tF (x,t ) =b∂xF (x,t ) +axF (x,t )
+F (x, 0) =g(x) (2.4.24)
+which, according to the previous operator technique, can be solved as
+F (x,t ) =et (b∂x+ax )g(x) =e
+ab
+2 t2
+eatxg(x +bt ). (2.4.25)
+A further example of application of the Weyl identity is provided by the
+study of the solution of the following PDE
+{
+∂tF (x,y,t ) =a∂x,yF (x,y,t ) +bxF (x,y,t )
+F (x,y, 0) =g(x,y ) (2.4.26)
+whose solution writes
+F (x,y,t ) =et (a∂x,y+bx )g(x,y ) =e
+ab
+2 t2∂yebtxg(x +at,y )
+=ebtxg
+(
+x +at,y + ab
+2 t2
+) (2.4.27)
+(hint: note that [∂x,y , x]=∂y, [∂y , x]=0 . . . ).
+Given the importance of the Weyl formula, we provide an alternative and
+perhaps simpler proof. We introduce the exponential operator
+ˆE(ξ) =eξ ( ˆA+ ˆB), ˆE(0) = ˆ1 (2.4.28)
+with
+[
+ˆA, ˆB
+]
+=kˆ1. By keeping the derivative with respect to ξ for both sides
+of the previous equation, we ﬁnd
+∂ξ ˆE(ξ) = ( ˆA + ˆB) ˆE(ξ). (2.4.29)
+Let us now set
+ˆE(ξ) =eξ ˆA ˆF (ξ) (2.4.30)
+78 Mathematical Methods for Physicists
+which, inserted in eq. (2.4.29) and taking into account eq. (2.4.10), yields
+∂ξ ˆF (ξ) =e−ξ ˆA ˆBeξ ˆA ˆF (ξ) = ( ˆB−kξ ˆ1) ˆF (ξ). (2.4.31)
+The integration of the above equation is straightforward and yields
+ˆE(ξ) =e
+ˆAξe
+ˆBξe− 1
+2kξ 2
+(2.4.32)
+and therefore the eq. (2.4.21) for ξ = 1.
+We can now apply the methods outlined so far to derive more complicated
+disentanglement identities which are sketched below
+a) If [ ˆA, ˆB] =kˆ1
+e
+ˆA2+a ˆB =ea ˆBe
+ˆA2−ak ˆA+ 1
+3 (ak ) 2
+(2.4.33)
+(hint: set ˆE(ξ)=eaξ ˆB ˆF (ξ) and note ∂ξ ˆF (ξ)=( ˆA−akξ ˆ1)2 ˆF (ξ) . . . ).
+b) If [ ˆA, ˆB] =m ˆA
+e
+ˆA+ ˆB =e
+1−e−m
+m
+ˆA e
+ˆB. (2.4.34)
+c) If [ ˆA, ˆB] =m ˆA
+1
+2 .
+e
+ˆA+ ˆB =e
+m2
+12−m
+2
+ˆA
+1
+2 + ˆAe
+ˆB. (2.4.35)
+The proof of the previous identities is just outlined here and the full result
+can be obtained as a useful exercise. A possible realization of the operators
+ˆA and ˆB in (2.4.34) is
+ˆA =∂x, ˆB =mx∂ x (2.4.36)
+so that the exponential operator can be written as
+e
+ˆA+ ˆB =emY∂x, Y =mx + 1 (2.4.37)
+and, by using repeatedly eq. (2.3.7), one obtains
+emx∂x+∂xf(x) =emY ∂Yf
+(Y− 1
+m
+)
+=f
+(emY− 1
+m
+)
+=f
+(
+xem + em− 1
+m
+)
+=e
+(
+1−e−m
+m +mx
+)
+∂x
+f(x)
+(2.4.38)
+Ordinary and PDE, Evolution Operator Method and Applications 79
+which proves the validity of the identity in eq. (2.4.34). The proof of the
+identity eq. (2.4.35) can be achieved by means of the following realization of
+the operators ˆA and ˆB
+ˆA =x2, ˆB = m
+2∂x (2.4.39)
+and by the use of eq. (2.4.33).
+After these remarks, we will devote the forthcoming sections of this chap-
+ter to some applications.
+2.5 Schr¨ odinger Equation and Paraxial
+Wave Equation of Classical Optics
+The ﬁrst example we will consider here is the solution of the Schr¨ odinger
+equation for a free propagating particle of mass m, namely
+
+
+
+i ℏ∂tΨ(x,t ) =− ℏ2
+2m∂2
+xΨ(x,t )
+Ψ(x, 0) =Ne− x2
+σ2
+. (2.5.1)
+We have chosen an initially Gaussian packet because it frequently occurs in
+the solution of quantum and classical problems involving equations of the
+type (2.5.1). For future convenience, we write this equation in a form which
+will be referred to as the Helmholtz equation6
+ikc∂sΨ(x,t ) =−1
+2∂2
+xΨ(x,t ) (2.5.2)
+with
+kc = 2π
+λc
+, λ c = h
+mc, s =ct, (2.5.3)
+whereλc is the Compton wavelength associated with the particle under study.
+The use of the evolution operator formalism allows to cast eqs. (2.5.1)-(2.5.2)
+in the form
+Ψ(x,t ) =ei s
+2kc ∂2
+xΨ(x, 0) (2.5.4)
+6Strictly speaking eq. (2.5.2) is the paraxial approximation of the Helmholtz equation.
+80 Mathematical Methods for Physicists
+and the direct application of the Glaisher identity (see eq. (2.2.18)) yields
+the solution in a explicit time-dependent form
+Ψ(x,s ) =N σ
+σc(s)e
+− x2
+σc(s)2 (2.5.5)
+where we have introduced the complex width
+σc(s) =
+√
+σ2 +i2s
+kc
+=σ
+√
+1 +i s
+sc
+. (2.5.6)
+The above result is well known from elementary Quantum Mechanics and
+describes the quantum spreading of an initially Gaussian wave-packet. To
+make the previous analysis more transparent from the physical point, we
+rearrange the solution in the form
+Ψ(x,s ) = N
+Σ (s)e
+− x2
+Σ2(s) +i kc
+2
+x2
+R(s)−iζ(s)
+(2.5.7)
+with
+Σ(s) =σ
+√
+1 +
+(s
+sc
+)2
+, R (s) =s
+[
+1 +
+(sc
+s
+)2]
+, ζ (s) = 1
+2 tan−1
+(s
+sc
+)
+.
+(2.5.8)
+Within the above framework, the quantity sc = kcσ2
+2 yields a kind of length
+scale specifying the eﬀect of the quantum spreading. The further terms are
+essentially phases which better specify the wave nature of this motion.
+Even though we have referred to the Schr¨ odinger equation and thus we
+have considered problems of quantum nature, we can apply the same for-
+malism to the propagation of optical waves in the paraxial approximation.
+As already remarked, this is the case in which the wave amplitude is slowly
+depending on the direction of propagation and, therefore, the second order
+derivatives with respect to this variable can be neglected. The equation we
+deal with writes
+i k∂zF (x,y,z ) =−1
+2
+[
+∂2
+x +∂2
+y
+]
+F (x,y,z ) (2.5.9)
+where z is the direction of propagation and x, ythe transverse coordinates.
+Moreover, k = 2π
+λ is the wave vector of the propagating wave and λ is
+Ordinary and PDE, Evolution Operator Method and Applications 81
+its wavelength. The equation (2.5.9) is essentially a Schr¨ odinger equation
+in two dimensions and assuming that its initial condition is provided by (if
+cylindrical symmetry holds)
+F (r, 0) =Ne
+− r2
+W2
+0, r =
+√
+x2 +y2, (2.5.10)
+by applying the same method leading to the solution of eq. (2.5.1) we can
+obtain the solution in the form 7
+F (r,z ) =F0
+W0
+W (z) exp
+{
+− r2
+W (z)2−iφ−ik r2
+2R(z) +iζ(z)
+}
+(2.5.11)
+with
+W (z) =W0
+√
+1 +
+( z
+zR
+)2
+, R (z) =z
+[
+1 +
+(zR
+z
+)2]
+,
+ζ(z) = tan−1
+( z
+zR
+)
+, z R = πW 2
+0
+λ , φ =kz.
+(2.5.12)
+In Fig. 2.3 we have reported the physical meaning of some of the intro-
+duced parameters: the beam waist W (z), which achieves its minimum value
+at the origin, and the diﬀraction length, which is essentially linked to the
+Rayleigh length zR and should be understood as the length of propagation
+for which the beam waist is
+√
+2W0.
+We have denoted byR(z) the radius of curvature of the wavefront which
+is shown as a function of the longitudinal coordinate (normalized to the
+Rayleigh length) in Fig. 2.4, where it is shown that it is inﬁnite at the waist,
+thus meaning that the wave front is a plane and increases linearly in the far
+ﬁeld region with a behavior typical for a spherical wave generated by a point-
+like source at z = 0.
+7It is a very useful exercise to consider the comparison of eq. (2.5.9) with (2.5.2). In
+the case of the electromagnetic wave propagation, the solution we have discussed is the
+product of two Gaussian beams, therefore the dependence on W (z) is diﬀerent from the
+case of a single Gaussian. The phase φ takes into account the plane wave part and, strictly
+speaking, it should not appear. It is just a consequence of the paraxial approximation.
+82 Mathematical Methods for Physicists
+Figure 2.3: Gaussian beam waist evolution vs z with parameters W0 = 0.1, zR = 0.73.
+Figure 2.4: Gaussian beam radius of curvature vs z.
+In Fig. 2.5, we have also reported the behavior of the beam divergence
+which is deﬁned as the angle that the direction of propagation forms with
+the oblique asymptote of the waist proﬁle and is given by
+ϑ≃ W0
+zR
+. (2.5.13)
+We have so far shown that the same formalism can be adopted to study the
+behavior of quantum diﬀusion processes and of the propagation of Gaussian
+beams. We will reconsider these problems in the forthcoming chapter, when
+we will treat the properties of orthogonal polynomials and functions.
+Before closing this section, let us add a few comments to clarify more
+precisely what we have discussed. Eq. (2.5.13) represents the complex am-
+plitude of the electric ﬁeld associated with the propagating wave (see Fig.
+2.6). The dimensions of F0 are, therefore, V·m−1. The associated intensity,
+called irradiance (units W·m−2), is instead given, for a wave propagating in
+Ordinary and PDE, Evolution Operator Method and Applications 83
+Figure 2.5: Beam divergence.
+vacuum, by
+I(r, z) =|F (r, z)|
+2Z0
+= I0
+W (z)2e
+−2 r2
+W(z)2 (2.5.14)
+where Z0 = 377 Ω is the vacuum impedance.
+Figure 2.6: Spot size, electric ﬁeld amplitude and intensity.
+In Fig. 2.6, we have reported the proﬁle of the ﬁeld amplitude and in-
+tensity along with an image of the spot size. We can introduce the complex
+quantity
+1
+q(z) = 1
+R(z)−i λ
+πW (z)2, (2.5.15)
+which is a global parameter accounting both for curvature and transverse
+dimensions. It is important to realize that the introduction of the above
+quantity allows writing the gaussian beam shape as
+F (r,z )∝ e−ik r2
+q(z) (2.5.16)
+84 Mathematical Methods for Physicists
+and that the propagation through an optical system ruled by the already
+discussed ABCD law (see Fig. 2.7) can be treated by replacing q(z) with
+q1(z) = Aq (z) +B
+Cq (z) +D. (2.5.17)
+Figure 2.7: A paraxial ray beam going through an optical system ruled by the ABCD
+law.
+We invite to explain the physical meaning of eq. (2.5.17) and the relevant
+link with the matrix formalism of the previous chapter.
+2.6 Examples of Fokker-Planck, Schr¨ odinger
+and Liouville Equations
+In this section, we will study two further mathematical problems with im-
+portant physical implications. We will discuss an example of Fokker-Plank
+equation, usually exploited to describe diﬀusion dissipative phenomena, and
+the solution of the Schr¨ odinger equation applied to the motion of a charged
+particle in a static electric ﬁeld.
+Let us consider the following equation
+{
+∂tF (v,t ) =α∂ 2
+vF (v,t ) +β∂v(vF (v,t ))
+F (v, 0) =g(v) (2.6.1)
+which is recognized as a generalization of the heat equation. It describes pro-
+cesses involving heating and friction damping occurring, for example, in par-
+Ordinary and PDE, Evolution Operator Method and Applications 85
+ticles storage ring. The formal solution of eq. (2.6.1) is given by
+F (v,t ) =et(α ∂2
+v+βv∂ v+β)g(v). (2.6.2)
+The explicit form of the solution can be obtained by introducing the operators
+ˆA =αt∂ 2
+v, ˆB =βtv∂ v (2.6.3)
+and by noting that
+[
+ˆA, ˆB
+]
+=m ˆA, m = 2βt. (2.6.4)
+The use of eq. (2.4.34) and of the other identities concerning the properties
+of the exponential operators yields
+F (v,t ) =eβte
+1−e−2βt
+2β α∂ 2
+veβtv∂ vg(v) =eβte
+1−e−2βt
+2β α∂ 2
+vg
+(
+eβtv
+)
+=
+= 1
+2
+√
+πσ (t)
+∫ ∞
+−∞
+e− (v−ξe−βt )2
+4σ(t) g(ξ)dξ
+(2.6.5)
+with
+σ(t) = α
+2β (1−e−2βt ). (2.6.6)
+The Schr¨ odinger equation describing an electron in a constant electric
+ﬁeld can be written as
+
+
+
+i ℏ∂tΨ(x,t ) =− ℏ2
+2m∂2
+xΨ(x,t )−eEx Ψ(x,t )
+Ψ(x, 0) =φ(x)
+. (2.6.7)
+This problem is usually treated as an eigenvalue problem. Here we are in-
+terested to its time-dependent solution. For future convenience, we write eq.
+(2.6.7) in the form
+i∂ξΨ(x,ξ ) =−α1
+2∂2
+xΨ(x,ξ )− x
+L3
+c
+Ψ(x,ξ ) (2.6.8)
+where
+α = ℏkc
+mc , ξ = ct
+kc
+, 1
+L3
+c
+= eE
+ℏc kc. (2.6.9)
+\end{verbatim}

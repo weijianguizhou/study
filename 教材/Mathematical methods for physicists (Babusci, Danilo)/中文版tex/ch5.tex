@@ -1,0 +1,214 @@
+% ch5.tex — 练习与补充 I（中文版）
+\chapter{练习与补充 I}
+
+\section{Pauli 与 Jones 矩阵以及 Mueller 演算}
+
+Jones 矢量描述完全偏振光；单色平面波的 Jones 矢量为
+\begin{equation}
+\vect{E} = \begin{pmatrix} E_x \\ E_y \end{pmatrix} e^{i(kz-\omega t)},
+\label{eq:5.1.1}
+\end{equation}
+作用其上的任何无损耗光学元件都由一个 $2\times2$ 幺正矩阵（Jones 矩阵）表示。Pauli 矩阵构成一个方便的基：
+\begin{equation}
+\hat J = c_0\hat 1 + c_1\hat\sigma_x + c_2\hat\sigma_y + c_3\hat\sigma_z,
+\qquad |c_0|^2+|c_1|^2+|c_2|^2+|c_3|^2 = 1.
+\label{eq:5.1.2}
+\end{equation}
+
+对于部分偏振光，使用\emph{Stokes 参数} $S_0,S_1,S_2,S_3$，它们组成 Stokes 矢量，由 $4\times4$ 的 Mueller 矩阵变换。与 Jones 演算的联系是
+\begin{equation}
+\vect S = \begin{pmatrix} S_0\\S_1\\S_2\\S_3 \end{pmatrix}
+= \begin{pmatrix}
+E_xE_x^*+E_yE_y^*\\
+E_xE_x^*-E_yE_y^*\\
+E_xE_y^*+E_yE_x^*\\
+i(E_xE_y^*-E_yE_x^*)
+\end{pmatrix}.
+\label{eq:5.1.3}
+\end{equation}
+
+\begin{exercise}
+证明快轴与 $x$ 轴成 $45^\circ$ 的四分之一波片对应 Jones 矩阵
+$\frac{1}{\sqrt2}\mat{1&-i\\-i&1}$
+与 Mueller 矩阵
+$\frac12\mat{1&0&0&1\\0&0&0&0\\0&0&1&0\\1&0&0&0}$。
+\end{exercise}
+
+\section{磁透镜与矩阵描述}
+
+均匀磁场 $\vect B = B\hat z$ 中的带电粒子作回旋运动。焦距为 $f$ 的磁\emph{透镜}在长度为 $L$ 的漂移段中由传输矩阵
+\begin{equation}
+\hat M = \hat O(L)\,\hat F(f) =
+\mat{1&L\\0&1}\mat{1&0\\-1/f&1}
+= \mat{1-L/f & L \\ -1/f & 1},
+\label{eq:5.2.1}
+\end{equation}
+描述，重现了第 1 章的薄透镜 ABCD 定律。
+
+对于四极磁透镜，聚焦平面中的传输矩阵为
+\begin{equation}
+\hat M_q = \mat{\cos\sqrt{k}L & \frac{1}{\sqrt{k}}\sin\sqrt{k}L
+           \\ -\sqrt{k}\sin\sqrt{k}L & \cos\sqrt{k}L},
+\qquad k = \frac{qB_0}{p},
+\label{eq:5.2.2}
+\end{equation}
+其中 $p$ 是粒子动量。FODO 单元（聚焦--漂移--散焦--漂移）是大多数加速器格点（lattice）的构造单元。
+
+\begin{exercise}
+对于漂移长度 $L$ 与四极长度 $\ell$ 均相等的 FODO 单元，证明单元矩阵为
+$\hat M_{\rm cell}=\hat O(L)\hat Q_f(\ell)\hat O(2L)\hat Q_d(\ell)\hat O(L)$，
+且稳定性要求 $|{\rm Tr}\,\hat M_{\rm cell}/2|<1$。
+\end{exercise}
+
+\section{矩阵形式体系杂谈与演化问题的求解}
+
+\subsection{矩阵与四元数}
+
+四元数 $q=q_0+\vect q\cdot\vect\sigma$（其中 $\vect\sigma=(\hat\sigma_x,\hat\sigma_y,\hat\sigma_z)$）映射到 $SU(2)$，并通过
+\begin{equation}
+\vect r' = q\,\vect r\,\bar q, \qquad \bar q = q_0 - \vect q\cdot\vect\sigma.
+\label{eq:5.3.1}
+\end{equation}
+描述三维旋转。四元数共轭对应逆旋转。
+
+\subsection{演化问题的矩阵求解}
+
+第 1 章的解缠恒等式可推广到四元数/旋转演化。对于含时扭矩 $\vect\Omega(t)$，
+\begin{equation}
+\hat U(t) = \exp\!\left(-i\int_0^t \vect\Omega(t')\cdot\frac{\vect\sigma}{2}\,dt'\right)
+\label{eq:5.3.2}
+\end{equation}
+是 $i\partial_t\vect\sigma = \vect\Omega\times\vect\sigma$ 的解。
+
+\section{Lorentz 变换}
+
+$(ct,x)$ 平面内速度为 $v$ 的 Lorentz boost 为
+\begin{equation}
+\begin{pmatrix} ct'\\x' \end{pmatrix}
+=
+\mat{\gamma&-\beta\gamma\\-\beta\gamma&\gamma}
+\begin{pmatrix} ct\\x \end{pmatrix},
+\qquad
+\gamma=\frac{1}{\sqrt{1-\beta^2}},\ \beta=\frac{v}{c}.
+\label{eq:5.4.1}
+\end{equation}
+这是快度（rapidity）为 $\alpha$ 的双曲旋转：
+$\beta=\tanh\alpha$，$\gamma=\cosh\alpha$，$\beta\gamma=\sinh\alpha$。
+
+boost 可以写成指数形式：
+\begin{equation}
+\hat\Lambda(\beta) = \exp(-\alpha\hat K_x), \qquad
+\hat K_x = \mat{0&-1\\-1&0},
+\label{eq:5.4.2}
+\end{equation}
+且 $[\hat K_x,\hat J_y]=i\hat K_z$ 等等，封闭 Lorentz 代数的对易子。
+
+\begin{exercise}
+验证 $\hat\Lambda(\beta_1)\hat\Lambda(\beta_2)\neq\hat\Lambda(\beta_2)\hat\Lambda(\beta_1)$，
+并推导速度合成公式
+$v_{12}=(v_1+v_2)/(1+v_1v_2/c^2)$。
+\end{exercise}
+
+\section{双曲三角学与狭义相对论}
+
+$\alpha=\operatorname{artanh}\beta$ 的双曲旋转 $\hat R_h(\alpha)$ 给出 boost 矩阵，把第 1 章的双曲单位 $\hat h$ 与快度联系起来。关键恒等式：
+\begin{align}
+\cosh(\alpha_1+\alpha_2) &= \cosh\alpha_1\cosh\alpha_2 + \sinh\alpha_1\sinh\alpha_2,\\
+\sinh(\alpha_1+\alpha_2) &= \sinh\alpha_1\cosh\alpha_2 + \cosh\alpha_1\sinh\alpha_2.
+\label{eq:5.5.1}
+\end{align}
+
+不变量隔 $ds^2 = -c^2dt^2 + dx^2+dy^2+dz^2$ 被所有 Lorentz 变换保持。固有时为
+$d\tau = dt/\gamma$。
+
+\begin{exercise}
+证明以快度 $\alpha$ 运动的源发出的光的 Doppler 频移为 $\omega'=\omega e^{\alpha}$（纵向情形）。
+\end{exercise}
+
+\section{略谈椭圆函数}
+
+Jacobi 椭圆函数 $\sn u$、$\cn u$、$\dn u$（参数 $k$，$0\le k\le1$）以如下形式求解非线性摆方程
+\begin{equation}
+\theta'' + \omega^2\sin\theta = 0
+\label{eq:5.6.1}
+\end{equation}
+\begin{equation}
+\theta(u) = 2\arcsin\bigl(k\,\sn(u;k)\bigr), \qquad u = \omega t.
+\label{eq:5.6.2}
+\end{equation}
+
+它们满足
+\begin{align}
+\sn^2 u + \cn^2 u &= 1,\\
+\dn^2 u + k^2\sn^2 u &= 1,\\
+\frac{d}{du}\sn u &= \cn u\,\dn u.
+\label{eq:5.6.3}
+\end{align}
+
+加法公式：
+\begin{align}
+\sn(u+v) &= \frac{\sn u\,\cn v\,\dn v + \sn v\,\cn u\,\dn u}
+                  {1-k^2\sn^2 u\,\sn^2 v},\\
+\cn(u+v) &= \frac{\cn u\,\cn v - \sn u\,\dn u\,\sn v\,\dn v}
+                {1-k^2\sn^2 u\,\sn^2 v},\\
+\dn(u+v) &= \frac{\dn u\,\dn v - k^2\sn u\,\cn u\,\sn v\,\cn v}
+                {1-k^2\sn^2 u\,\sn^2 v}.
+\label{eq:5.6.4}
+\end{align}
+
+周期性：$\sn(u+4K)=\sn u$，$\cn(u+4K)=\cn u$，$\dn(u+2K)=\dn u$，
+其中 $K(k)=\int_0^{\pi/2}(1-k^2\sin^2\phi)^{-1/2}d\phi$ 是第一类完全椭圆积分。
+
+极限情形：
+\begin{align}
+k\to0:&\quad \sn u\to\sin u,\ \cn u\to\cos u,\ \dn u\to1,\\
+k\to1:&\quad \sn u\to\tanh u,\ \cn u\to\sech u,\ \dn u\to\sech u.
+\label{eq:5.6.5}
+\end{align}
+
+\begin{exercise}
+推导倍角公式
+\begin{align}
+\sn(2u) &= \frac{2\sn u\,\cn u\,\dn u}{1-k^2\sn^4 u},\\
+\cn(2u) &= \frac{\cn^2 u - \sn^2 u\,\dn^2 u}{1-k^2\sn^4 u},\\
+\dn(2u) &= \frac{\dn^2 u - k^2\sn^2 u\,\cn^2 u}{1-k^2\sn^4 u}.
+\end{align}
+\end{exercise}
+
+\begin{exercise}
+证明 $\sn(u+K) = \cn u/\dn u$，且
+$\cn(u+K) = -\sqrt{1-k^2}\,\sn u/\dn u$。
+\end{exercise}
+
+\section{结论性评论}
+
+第 1--2 章的矩阵方法可以统一地推广到 Lorentz、旋量与四元数形式体系。双曲/椭圆函数提供了 Euler 角与快度参数只能微扰地参数化的那些问题的精确（非微扰）解。在接下来的章节中，我们将转向 Fourier 方法与特殊函数，它们在动量空间中使同样的这些问题对角化。
+
+% 本章图形
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig5_1.png}
+\caption{Jones 矢量：Poincar\'e 球上的偏振态。}
+\label{fig:5.1}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig5_3.png}
+\caption{Stokes 参数与 Poincar\'e 球表示。}
+\label{fig:5.3}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig5_16.png}
+\caption{椭圆函数：不同 $k$ 下 $\sn$、$\cn$、$\dn$ 关于 $u$ 的图形。}
+\label{fig:5.16}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig5_17.png}
+\caption{Jacobi 椭圆函数的加法定理。}
+\label{fig:5.17}
+\end{figure}

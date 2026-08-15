@@ -1,0 +1,235 @@
+% ch9.tex — 特殊函数、Umbral 方法及其应用（中文版）
+\chapter{特殊函数、Umbral 方法及其应用}
+
+\section{Umbral 方法导论及相应应用}
+
+Umbral 演算把满足 $\hat\theta x^n = x\,x^{n-1}$ 的指标移位算子 $\hat\theta$ 形式上当作一个数来处理。它把特殊多项式的恒等式转化为代数运算。
+
+对于任何 $\deg P_n=n$ 的多项式族 $P_n(x)$，引入 umbral 算子 $\hat\theta$，使得
+\begin{equation}
+\hat\theta^n\cdot 1 = P_n(x),
+\label{eq:9.1.1}
+\end{equation}
+其中点表示作用于``真空'' $1$。
+
+加法公式：若 $P_n(x+y)=\sum_k\binom{n}{k}P_k(x)P_{n-k}(y)$，在 umbral 记号下它变为
+$(\hat\theta_1+\hat\theta_2)^n\cdot1 = \sum_k\binom{n}{k}\hat\theta_1^k\hat\theta_2^{n-k}\cdot1$。
+
+\begin{exercise}
+通过把 $\hat\theta$ 等同于乘以 $x$，证明 umbral 方法重现 $(x+y)^n$ 的二项式定理。
+\end{exercise}
+
+\section{关于 Umbral 方法、无穷积分与 Borel 变换的进一步说明}
+
+形式级数
+$f(z)=\sum_{n=0}^\infty a_n z^n$ 的 Borel 变换为
+\begin{equation}
+\mathcal B[f](s) = \sum_{n=0}^\infty \frac{a_n}{n!}\,s^n.
+\label{eq:9.2.1}
+\end{equation}
+
+若 $\mathcal B[f](s)$ 的收敛半径非零，原级数可以通过逆 Borel 变换
+\begin{equation}
+f(z) = \int_0^\infty e^{-t}\,\mathcal B[f](zt)\,dt,
+\label{eq:9.2.2}
+\end{equation}
+恢复，前提是该积分收敛。
+
+Borel 变换把阶乘型发散微扰级数转化为收敛级数，是渐近展开重整求和的基石。
+
+\begin{exercise}
+计算 $\sum_{n=0}^\infty n!\,z^n$ 的 Borel 变换，并证明逆 Borel 积分重现原渐近级数。
+\end{exercise}
+
+\section{Borel 变换及其应用}
+
+\subsection{Borel--Pad\'e}
+
+Borel 变换的 Pad\'e 近似加速收敛，并从微扰级数中提取非微扰信息。
+
+给定 Borel 变换 $B(s)=\sum b_n s^n$，构造 $[N/M]$ 阶 Pad\'e 近似 $B_{[N/M]}(s)=P_N(s)/Q_M(s)$，然后
+\begin{equation}
+f_{\rm BP}(z) = \int_0^\infty e^{-t}\,B_{[N/M]}(zt)\,dt.
+\label{eq:9.3.1}
+\end{equation}
+
+这种 Borel--Pad\'e 方法被广泛用于量子场论与统计力学中对发散微扰级数求和。
+
+\begin{exercise}
+对于 $B(s)=1/(1-s)$，计算 $[1/1]$ 阶 Pad\'e 近似并计算 Borel--Pad\'e 积分。
+\end{exercise}
+
+\section{Umbral 形式体系与 Laguerre 多项式}
+
+Laguerre 多项式可以用 umbral 表示为
+\begin{equation}
+L_n(x) = (\hat\theta)_n\,e^{-x\hat\theta},
+\qquad (\hat\theta)_n = \hat\theta(\hat\theta-1)\cdots(\hat\theta-n+1),
+\label{eq:9.4.1}
+\end{equation}
+使递推关系代数化。
+
+生成函数变为
+\begin{equation}
+\sum_{n=0}^\infty L_n(x)\,t^n
+= \frac{1}{1-t}\,\exp\!\left(-\frac{xt}{1-t}\right),
+\label{eq:9.4.2}
+\end{equation}
+它由 umbral 移位得出，注意到
+$e^{-x\hat\theta}\cdot(1-t)^{-\hat\theta}=e^{-x\hat\theta/(1-t)}$。
+
+正交性：
+\begin{equation}
+\int_0^\infty e^{-x}L_n(x)L_m(x)\,dx = \delta_{nm}.
+\label{eq:9.4.3}
+\end{equation}
+
+\begin{exercise}
+用 umbral 表示证明三项递推
+$(n+1)L_{n+1}(x)=(2n+1-x)L_n(x)-nL_{n-1}(x)$。
+\end{exercise}
+
+\section{Umbral 形式体系与 Hermite 多项式}
+
+Hermite 多项式的 umbral 形式：
+\begin{equation}
+H_n(x) = (\hat\theta+x)^n\cdot 1,
+\qquad \hat\theta\frac{d}{dx}=1.
+\label{eq:9.5.1}
+\end{equation}
+
+生成函数：
+\begin{equation}
+\sum_{n=0}^\infty H_n(x)\,\frac{t^n}{n!}
+= \exp(2xt-t^2),
+\label{eq:9.5.2}
+\end{equation}
+由 $e^{t(\hat\theta+x)}\cdot1=e^{xt}e^{-t^2}$ 得出，其中用到 $\hat\theta\cdot1=0$、$\hat\theta x^n=nx^{n-1}$。
+
+正交性：
+\begin{equation}
+\int_{-\infty}^{\infty} e^{-x^2}H_n(x)H_m(x)\,dx
+= 2^n n!\sqrt{\pi}\,\delta_{nm}.
+\label{eq:9.5.3}
+\end{equation}
+
+\begin{exercise}
+从 umbral 表示推导递推 $H_{n+1}(x)=2xH_n(x)-2nH_{n-1}(x)$。
+\end{exercise}
+
+\section{Umbral 形式体系与算子排序}
+
+Wei--Norman 与 Weyl 排序得以简化：umbral 移位把对易子化为 c 数系数。
+
+对于 $[\hat A,\hat B]=k\hat 1$，Weyl 恒等式
+$e^{\hat A+\hat B}=e^{\hat A}e^{\hat B}e^{-k/2}$
+通过注意到在 umbral 形式下对易子变为简单的移位而得到。
+
+Umbral 记号下的 Crofton 恒等式：
+\begin{equation}
+e^{\xi\hat A}\hat B^n = (\hat B+\xi k)^n e^{\xi\hat A},
+\label{eq:9.6.1}
+\end{equation}
+它由 $\hat A\hat B^n - \hat B^n\hat A = nk\hat B^{n-1}$ 得出。
+
+\begin{exercise}
+用 umbral 方法推导二阶 BCH 公式：
+$e^{\hat A}e^{\hat B}=e^{\hat A+\hat B+\frac12[\hat A,\hat B]}$。
+\end{exercise}
+
+\section{Mittag-Leffler 函数与分数阶微积分应用}
+
+Mittag-Leffler 函数推广了指数函数：
+\begin{equation}
+E_\alpha(z) = \sum_{n=0}^{\infty}\frac{z^n}{\Gamma(\alpha n+1)},
+\qquad \alpha>0.
+\label{eq:9.7.1}
+\end{equation}
+
+特殊情况：$E_1(z)=e^z$，$E_2(z^2)=\cosh z$，
+$E_{1/2}(-\sqrt{z})=e^{-z}\erfc(\sqrt{z})$。
+
+分数阶微分方程：
+\begin{equation}
+\frac{d^\alpha}{dt^\alpha}F(t) = \lambda F(t), \qquad F(0)=1,
+\label{eq:9.7.2}
+\end{equation}
+的解为 $F(t)=E_\alpha(\lambda t^\alpha)$。
+
+分数阶扩散：$\partial_t^\alpha F = D\,\partial_x^2 F$ 的基本解用 $E_\alpha$ 与热核表示。
+
+\begin{exercise}
+证明 $\alpha=1/2$ 时的 $E_\alpha(z)$ 化为误差函数，并求解 $\alpha=1/2$ 的分数阶弛豫方程。
+\end{exercise}
+
+\section{负导数形式体系与定积分}
+
+作用于多项式的负导数 $\partial_x^{-1}$ 产生积分：$\partial_x^{-1}x^n = x^{n+1}/(n+1)$。
+
+迭代给出 Riemann--Liouville 分数阶积分：
+\begin{equation}
+\partial_x^{-\nu}f(x) = \frac{1}{\Gamma(\nu)}\int_0^x (x-t)^{\nu-1}f(t)\,dt,
+\qquad \nu>0.
+\label{eq:9.8.1}
+\end{equation}
+
+分数阶导数由 $\partial_x^\alpha = \partial_x^n\circ\partial_x^{\alpha-n}$ 定义，
+其中 $n-1<\alpha<n$。
+
+在 umbral 语言中，$\partial_x^{-\nu}$ 对应于适当基中的移位算子
+$\hat\theta\mapsto\hat\theta+\nu$。
+
+\begin{exercise}
+用 Riemann--Liouville 定义计算 $\partial_x^{-1/2}1$ 与 $\partial_x^{-1/2}x$。
+\end{exercise}
+
+\section{Umbral 形式体系、对偶数与超 Gauss 光束传输}
+
+对偶数 $(a+b\epsilon,\epsilon^2=0)$ 与 umbral 移位结合，可以模拟超 Gauss 激光束及其 ABCD 传输。
+
+对偶数 $\hat z_\pm = x\hat 1\pm\epsilon y$ 作用于函数为
+\begin{equation}
+f(\hat z_\pm) = f(x)\hat 1 \pm \epsilon y\,f'(x).
+\label{eq:9.9.1}
+\end{equation}
+
+矩阵实现：
+\begin{equation}
+f(\hat z_+) = \mat{f(x)&yf'(x)\\0&f(x)},\qquad
+f(\hat z_-) = \mat{f(x)&0\\yf'(x)&f(x)}.
+\label{eq:9.9.2}
+\end{equation}
+
+超 Gauss 光束：强度分布 $I(r)=I_0\exp[-(r/w)^n]$，其中
+$n>2$（平顶）。光束穿过光学元件的传输由推广到对偶数相空间的 ABCD 定律描述。
+
+\begin{exercise}
+证明对偶数代数蕴含
+$f(\hat z_+)g(\hat z_+) = (fg)(\hat z_+)$（函数复合）。
+\end{exercise}
+
+\begin{exercise}
+用对偶数形式体系推导超 Gauss 光束穿过焦距为 $f$ 的透镜的传输矩阵。
+\end{exercise}
+
+% 图形
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig9_1.png}
+\caption{不同 $\alpha$ 的 Mittag-Leffler 函数 $E_\alpha(z)$。}
+\label{fig:9.1}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig9_4.png}
+\caption{分数阶扩散：不同时刻的解剖面。}
+\label{fig:9.4}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig9_9.png}
+\caption{超 Gauss 光束穿过光学系统的传输。}
+\label{fig:9.9}
+\end{figure}

@@ -1,0 +1,1539 @@
+% ch3.tex — Hermite Polynomials and Applications
+% Hand-typeset精修版，对应原书 Chapter 3 (book pages 101–132)
+
+\chapter{Hermite Polynomials and Applications}
+
+\section{Introduction}
+\label{sec:3.1}
+
+In this chapter and the next, we will discuss the theory of orthogonal
+polynomials and their applications to some problems in Physics. We will
+essentially discuss the case of Hermite and Laguerre polynomials (HP,
+LP) and touch on the other families.
+
+In the previous chapters, we have ``evocated'' the Hermite type
+polynomials many times and we have shown that they can be defined
+through the operational identity (see eq.~(2.2.19))
+\begin{equation}
+H_n(x,y)=e^{y\partial_x^2}(x^n).
+\label{eq:3.1.1}
+\end{equation}
+Even though we have already left as exercise the explicit derivation of
+$H_n(x,y)$, we give it here for the sake of completeness, in view of
+their importance for the present book.
+
+By expanding the exponential operator, we find
+\begin{equation}
+H_n(x,y)=\sum_{s=0}^{\infty}\frac{y^s}{s!}\,\partial_x^{2s}(x^n).
+\label{eq:3.1.2}
+\end{equation}
+
+\noindent{\itshape Remark.} The polynomials $H_n(x,y)$ are not the Hermite
+polynomials in their canonical form. They are sometimes called heat,
+Kamp\'e de F\'eriet, Gould--Hopper \ldots{} polynomials. In the
+following we will refer to them as Hermite or heat polynomials.
+
+By using the identity
+\[
+\partial_x^m(x^n)=
+\begin{cases}
+\dfrac{n!}{(n-m)!}\,x^{n-m}, & n>m,\\[6pt]
+0, & n<m,
+\end{cases}
+\label{eq:3.1.3}
+\]
+we obtain
+\begin{equation}
+H_n(x,y)=n!\sum_{s=0}^{\lfloor n/2\rfloor}
+\frac{x^{\,n-2s}\,y^s}{(n-2s)!\,s!},
+\qquad H_n(x,0)=x^n.
+\label{eq:3.1.4}
+\end{equation}
+
+The above family of polynomials are not the HP in their canonical
+form but belong to the Hermite-like polynomial families. As already
+mentioned, they are known as the \emph{heat polynomials} since they
+provide a natural solution to the heat equation and, as we will show in
+the following, they are not orthogonal for all values of the $y$
+coordinate.
+
+In Fig.~\ref{fig:3.1} we have reported the first four heat
+polynomials~\eqref{eq:3.1.4} vs.\ the variable $x$ for two different
+values of $y$ (playing the role of a parameter).
+
+\begin{figure}[H]
+\centering
+\includegraphics[max width=0.95\linewidth,keepaspectratio]{fig3_1.png}\caption{Heat polynomials $H_n(x,y)$ vs.\ the variable $x$ for
+(a)~$y=-1$ and (b)~$y=+1$.}
+\label{fig:3.1}
+\end{figure}
+
+We can note a first substantial difference: the polynomials with
+negative $y$ can take positive and negative values and have a number
+of zeros equal to the order of the polynomial. In the other case, even
+order polynomials have no real zeros and the odd order are
+anti-symmetric with only one zero at the origin.
+
+\medskip
+The operational definition~\eqref{eq:3.1.1} greatly simplifies the
+study of the properties of HP and of their generalizations as well.
+From this definition, it is evident that
+\[
+H_{n+1}(x,y)=e^{y\partial_x^2}(x^{n+1})
+=e^{y\partial_x^2}\,x\,e^{-y\partial_x^2}\,e^{y\partial_x^2}(x^n)
+=e^{y\partial_x^2}\,x\,e^{-y\partial_x^2}\,H_n(x,y).
+\]
+By taking into account eq.~\eqref{eq:2.4.16},
+\[
+e^{y\partial_x^2}\,x\,e^{-y\partial_x^2}=x+2y\partial_x,
+\]
+we obtain the recurrence relation
+\begin{equation}
+H_{n+1}(x,y)=x\,H_n(x,y)+2y\,\partial_x H_n(x,y).
+\label{eq:3.1.7}
+\end{equation}
+The use of an analogous procedure yields the recurrence relation
+\begin{equation}
+\partial_x H_n(x,y)=n\,H_{n-1}(x,y).
+\label{eq:3.1.8}
+\end{equation}
+These two recurrences can be combined to prove that the heat
+polynomials satisfy the ODE
+\begin{equation}
+2y\,z_{xx}+x\,z_x=n\,z,\qquad z=H_n(x,y).
+\label{eq:3.1.9}
+\end{equation}
+In the above equation, the derivative taken with respect to $x$ and
+$y$ is viewed as a parameter.
+
+It is also easily checked that, by considering $y$ as a variable,
+the following relation holds:
+\begin{equation}
+\partial_y H_n(x,y)=n(n-1)\,H_{n-2}(x,y).
+\label{eq:3.1.10}
+\end{equation}
+
+To frame the previous results in a more general context, we introduce
+the notion of \emph{quasi-monomials}: those families of polynomials
+$p_n(x)$ for which one can define a couple of operators $\hat P$ and
+$\hat M$ (referred to as derivative and multiplicative operators,
+respectively) such that
+\begin{equation}
+\hat P\,p_n(x)=n\,p_{n-1}(x),\qquad
+\hat M\,p_n(x)=p_{n+1}(x).
+\label{eq:3.1.11}
+\end{equation}
+Furthermore, if we add the condition
+\begin{equation}
+p_0(x)=1,
+\label{eq:3.1.12}
+\end{equation}
+we can construct the quasi-monomial family using the multiplicative
+operator only, according to the identity
+\begin{equation}
+\hat M^n\,1=p_n(x).
+\label{eq:3.1.13}
+\end{equation}
+which is obtained by iteration from the second of
+eq.~\eqref{eq:3.1.11}. Furthermore, if the operators $\hat M$ and
+$\hat P$ have a differential realization, the polynomials $p_n(x)$ are
+easily shown to satisfy the differential equation
+\begin{equation}
+\hat M\hat P\,p_n(x)=n\,p_n(x).
+\label{eq:3.1.14}
+\end{equation}
+
+In the following, we will discuss a general procedure to construct
+quasi-monomials starting from the ordinary monomial $x^n$, whose
+relevant multiplicative and derivative operators are $x$ and the
+ordinary derivative, respectively. It is evident that, according to
+the above definition, the $H_n(x,y)$ are quasi-monomials and that
+the relevant multiplicative and derivative operators can be identified as
+\begin{equation}
+\hat M=x+2y\partial_x,\qquad \hat P=\partial_x
+\label{eq:3.1.15}
+\end{equation}
+and
+\begin{equation}
+\hat M\hat P=x\partial_x+2y\partial_x^2.
+\label{eq:3.1.16}
+\end{equation}
+Therefore, HP are eigenfunctions of the operator~\eqref{eq:3.1.16}
+with (real) eigenvalues~$n$.
+
+\noindent{\itshape Remark.} In this case $y$ should be considered a
+parameter and not a variable. The notation of total derivative
+should be used but we use the partial derivative for continuity of
+notation.
+
+The above introductory remarks provide the back-bone of the
+discussion to be developed in the forthcoming sections.
+
+% ------------------------------------------------------------------
+\section{Hermite Polynomials Generating Function}
+\label{sec:3.2}
+
+\subsection{Introducing the Generating Function}
+\label{sec:3.2.1}
+
+Being the polynomials $H_n(x,y)$ solutions of the heat equation,
+they can be introduced through an operational definition involving an
+evolution operator with a second order derivative as argument. The
+following two important identities are a direct consequence of such a
+definition:
+\begin{equation}
+e^{z\partial_x^2}H_n(x,y)=H_n(x,y+z),\qquad
+e^{-y\partial_x^2}H_n(x,y)=x^n.
+\label{eq:3.2.1}
+\end{equation}
+which, albeit straightforward, are very important and should be
+carefully considered.
+
+A further important property of Hermite (heat) polynomials is the
+generating function, which will be widely exploited in the following.
+By generating function associated with a given polynomial family
+$p_n(x)$, we mean the function
+\begin{equation}
+G(x,t)=\sum_{n=0}^{\infty}\frac{t^n}{n!}\,p_n(x)
+\label{eq:3.2.2}
+\end{equation}
+which is essentially a function of the variables $t$ and $x$. The
+relevant expansion in a Taylor series in the variable $t$, called the
+expansion variable of the generating function, yields the
+coefficients $\partial_t^n G(x,t)|_{t=0}$ which are just identified
+with $p_n(x)$ polynomials. It is evident that the ordinary
+monomials are generated by
+\begin{equation}
+\sum_{n=0}^{\infty}\frac{t^n}{n!}\,x^n=e^{xt}.
+\label{eq:3.2.3}
+\end{equation}
+
+According to eq.~\eqref{eq:3.1.1}, we can define the generating
+function of the HP as
+\[
+\sum_{n=0}^{\infty}\frac{t^n}{n!}\,H_n(x,y)
+=e^{y\partial_x^2}\!\left(\sum_{n=0}^{\infty}\frac{t^n}{n!}\,x^n\right)
+=e^{y\partial_x^2}\,e^{xt}.
+\]
+By using $e^{y\partial_x^2}\,e^{xt}=e^{xt+yt^2}$ (since
+$\partial_x^m e^{xt}=t^m e^{xt}$), we get
+\begin{equation}
+\sum_{n=0}^{\infty}\frac{t^n}{n!}\,H_n(x,y)=e^{xt+yt^2}.
+\label{eq:3.2.5}
+\end{equation}
+
+\noindent{\itshape Remark.} It is to be noted that
+$e^{2yt\partial_x}\neq 1$ in general, hence the intermediate steps
+require the operator disentanglement
+$e^{y\partial_x^2}\,e^{xt}=e^{yt^2}\,e^{xt}\,e^{2yt\partial_x}$ and
+subsequent action on the vacuum $1$.
+
+\medskip
+As will be shown in the following, this is an extremely important
+relation in the theory of Hermite polynomials.
+
+We have derived the generating function of HP as a by-product of an
+operational formalism and after having stated the main properties of
+this polynomial family. In more classical textbooks on special
+functions, the explicit form of the HP is inferred directly from the
+generating function. To understand such a procedure, we remind the
+Cauchy formula for the series product: namely, given the two infinite
+series
+\[
+S_1=\sum_{s=0}^{\infty}b_s\,x^s,\qquad
+S_2=\sum_{r=0}^{\infty}a_r\,x^r,
+\]
+we obtain
+\[
+S_1S_2=\sum_{s=0}^{\infty}\sum_{r=0}^{\infty}b_s\,a_r\,x^{r+s}
+=\sum_{n=0}^{\infty}c_n\,x^n,\qquad
+c_n=\sum_{r=0}^{n}a_r\,b_{n-r}.
+\]
+
+Therefore, we can directly derive the HP from the generating
+function~\eqref{eq:3.2.5}:
+\[
+e^{xt+yt^2}=e^{xt}\,e^{yt^2}
+=\sum_{r=0}^{\infty}\frac{x^r t^r}{r!}
+ \sum_{s=0}^{\infty}\frac{y^s t^{2s}}{s!}
+=\sum_{n=0}^{\infty}\frac{t^n}{n!}\,H_n(x,y),
+\]
+and, by setting $r+2s=n$, according to the
+definition~\eqref{eq:3.1.4}, we get
+\[
+\sum_{n=0}^{\infty}\frac{t^n}{n!}\,H_n(x,y)
+=e^{xt+yt^2}.
+\]
+
+\subsection{Generating Function Applications}
+\label{sec:3.2.2}
+
+Integrals of the type
+\begin{equation}
+I_n(a,b)=\int_{-\infty}^{\infty}(x+b)^n\,e^{-ax^2}\,dx
+\label{eq:3.2.11}
+\end{equation}
+occur very often in the solution of problems in Physics or
+Engineering. The use of the generating function method is extremely
+efficient to evaluate these integrals. If we note that
+\[
+\sum_{n=0}^{\infty}\frac{t^n}{n!}\,I_n(a,b)
+=\int_{-\infty}^{\infty}e^{tb}\,e^{tx}\,e^{-ax^2}\,dx
+=e^{tb}\,\sqrt{\frac{\pi}{a}}\;e^{\frac{t^2}{4a}},
+\label{eq:3.2.12}
+\]
+according to eq.~\eqref{eq:3.2.5} and by applying the principle of
+identity of polynomials to eq.~\eqref{eq:3.2.12}, namely by equating
+the like $t$-powers, we obtain the following result
+\begin{equation}
+I_n(a,b)=\sqrt{\frac{\pi}{a}}\;\frac{1}{a^{n/2}}\,
+H_n\!\left(\frac{b}{\sqrt{a}},\frac{1}{4a}\right).
+\label{eq:3.2.13}
+\end{equation}
+
+The further two properties
+\begin{equation}
+\partial_x^n e^{ax^2}=H_n(2ax,a)\,e^{ax^2},
+\label{eq:3.2.14}
+\end{equation}
+\begin{equation}
+a^n H_n(x,y)=H_n(ax,a^2y),
+\label{eq:3.2.15}
+\end{equation}
+can be proved by means of the generating function method.
+Eq.~\eqref{eq:3.2.14} is indeed easily proved as a consequence of
+the properties of the shift operators:
+\[
+\sum_{n=0}^{\infty}\frac{t^n}{n!}\,\partial_x^n e^{ax^2}
+=e^{t\partial_x}e^{ax^2}=e^{a(x+t)^2}
+=e^{ax^2}\,e^{2atx+at^2}
+=e^{ax^2}\sum_{n=0}^{\infty}\frac{t^n}{n!}\,H_n(2ax,a),
+\]
+while eq.~\eqref{eq:3.2.15} is left as exercise.
+
+\noindent{\itshape Remark.} Note that an important consequence of
+eq.~\eqref{eq:3.2.15} is the identity
+$(-1)^n H_n(x,y)=H_n(-x,y)$.
+
+\medskip
+As a further example of the application of the generating function
+method, we consider the proof of the following Theorem.
+
+\begin{theorem}[Addition]
+$\forall\,x,y,z\in\mathbb{R},\;\forall n\in\mathbb{N}$
+\begin{equation}
+H_n(x+z,y)=\sum_{s=0}^{n}\binom{n}{s}\,
+H_{n-s}\!\left(x,\frac{y}{2}\right)
+H_s\!\left(z,\frac{y}{2}\right).
+\label{eq:3.2.17}
+\end{equation}
+\end{theorem}
+
+\noindent{\itshape Hint:} it is just a consequence of the fact that
+\[
+\sum_{n=0}^{\infty}\frac{t^n}{n!}\,H_n(x+z,y)
+=e^{(x+z)t+yt^2}
+=e^{xt+yt^2/2}\;e^{zt+yt^2/2}.
+\tag{3.2.18}
+\]
+
+The following problem is extremely important, since it deals with a
+non-trivial ordering problem and yields an idea of how the HP appear,
+in a quite natural way, in manipulating expressions containing
+multiplicative derivative operators. The problem consists in finding
+the analogue of the Newton binomial form for the operator
+\begin{equation}
+\hat O_n=(\alpha\partial_x+\beta x)^n.
+\label{eq:3.2.19}
+\end{equation}
+
+According to the previous discussion, we have
+\[
+\sum_{n=0}^{\infty}\frac{t^n}{n!}\,\hat O_n
+=e^{t(\alpha\partial_x+\beta x)}
+=e^{\beta t x+\frac{\alpha\beta}{2}t^2}\;e^{\alpha t\partial_x},
+\]
+and, taking into account eq.~\eqref{eq:3.2.5}, we can write
+\[
+e^{\beta t x+\frac{\alpha\beta}{2}t^2}
+=\sum_{r=0}^{\infty}\frac{t^r}{r!}\,
+H_r\!\left(\beta x,\frac{\alpha\beta}{2}\right)
+=\sum_{r=0}^{\infty}\frac{t^r}{r!}\,H_r\!\left(\beta x,\frac{\alpha\beta}{2}\right)
+ \sum_{s=0}^{\infty}\frac{(\alpha t)^s}{s!}\,\partial_x^s,
+\]
+which, after applying the Cauchy product formula and comparing with
+$\sum t^n\hat O_n/n!$, yields
+\begin{equation}
+\hat O_n=\sum_{s=0}^{n}\frac{1}{s!}\,
+\alpha^s\,H_{n-s}\!\left(\beta x,\frac{\alpha\beta}{2}\right)\,\partial_x^s,
+\label{eq:3.2.22}
+\end{equation}
+which is a generalization of the so-called \emph{Burchnall}
+operational rule and can be used to prove the identity
+\begin{equation}
+\hat O_n\,e^{-x^2}
+=\sum_{s=0}^{n}\frac{(-\alpha)^s}{s!}\,
+H_{n-s}\!\left(\beta x,\frac{\alpha\beta}{2}\right)
+H_s(2x,-1)\,e^{-x^2}
+=H_n\!\left((\beta-2\alpha)x,\frac{\alpha(\beta-2\alpha)}{2}\right)e^{-x^2}.
+\label{eq:3.2.23}
+\end{equation}
+
+We will discuss further examples of applications of the generating
+function method in the second part of this book.
+
+% ------------------------------------------------------------------
+\section{Hermite Polynomials as an Orthogonal Basis}
+\label{sec:3.3}
+
+We will more carefully define the concept of orthogonal polynomials
+later. Here we will address the following problem: under which
+condition can a given function of $x$ be expanded in terms of
+Hermite polynomials?
+
+To this aim, we treat the second variable $y$ as a parameter and
+limit ourselves to the case $y<0$. We therefore write
+\begin{equation}
+F(x)=\sum_{n=0}^{\infty}a_n\,H_n(x,-|y|).
+\label{eq:3.3.1}
+\end{equation}
+Our task is now to evaluate the coefficients $a_n$ of the above
+expansion. According to the definition~\eqref{eq:3.1.1}, we can
+recast~\eqref{eq:3.3.1} in the form
+\[
+F(x)=e^{-|y|\partial_x^2}\!\left(\sum_{n=0}^{\infty}a_n\,x^n\right),
+\]
+which can be inverted to get
+\[
+\Phi(x)\equiv e^{|y|\partial_x^2}\!\bigl(F(x)\bigr)
+=\sum_{n=0}^{\infty}a_n\,x^n.
+\]
+According to the Gauss--Weierstrass transform (see
+eq.~\eqref{eq:2.2.17}), the following integral representation for
+the function $\Phi(x)$ holds:
+\begin{equation}
+\Phi(x)=\frac{1}{\sqrt{4\pi|y|}}\int_{-\infty}^{\infty}
+e^{-\frac{(x-\sigma)^2}{4|y|}}\,F(\sigma)\,d\sigma.
+\label{eq:3.3.4}
+\end{equation}
+By using the generating function of HP, the last identity can be
+written as
+\[
+\Phi(x)=\frac{1}{\sqrt{4\pi|y|}}
+ \sum_{n=0}^{\infty}\frac{1}{n!}
+ \int_{-\infty}^{\infty}
+ H_n\!\left(\frac{\sigma}{2\sqrt{|y|}},-\frac{1}{4}\right)
+ e^{-\frac{(x-\sigma)^2}{4|y|}}\,F(\sigma)\,d\sigma,
+\]
+which, compared to $\Phi(x)=\sum a_n x^n$, gives for the
+coefficients $a_n$ the expression
+\begin{equation}
+a_n=\frac{1}{2^n n!\sqrt{\pi|y|}}
+\int_{-\infty}^{\infty}
+H_n\!\left(\frac{\sigma}{2\sqrt{|y|}},-\frac{1}{4}\right)
+e^{-\frac{\sigma^2}{4|y|}}\,F(\sigma)\,d\sigma.
+\label{eq:3.3.6}
+\end{equation}
+
+We remark that, as a consequence of eq.~\eqref{eq:3.3.1}, the
+functions
+\begin{equation}
+\phi_n(x)=\frac{1}{\sqrt{2^n n!\,\pi|y|}}\,
+H_n\!\left(\frac{x}{2\sqrt{|y|}},-\frac{1}{4}\right)
+e^{-\frac{x^2}{4|y|}}
+\label{eq:3.3.7}
+\end{equation}
+are bi-orthogonal to the Hermite polynomials
+$H_n(x,-|y|)$. In more conventional terms, we can state that the
+polynomials $H_n\!\left(\frac{x}{2\sqrt{|y|}},-\frac{1}{4}\right)$ are
+orthogonal to the $H_n(x,-|y|)$ with weight function
+$e^{-x^2/(4|y|)}$. The canonical form of the HP uses $|y|=1/2$ and
+is denoted by $\mathrm{He}_n(x)$, i.e.
+\begin{equation}
+\mathrm{He}_n(x)=H_n\!\left(x,-\frac{1}{2}\right).
+\label{eq:3.3.8}
+\end{equation}
+In the applications, the form
+\begin{equation}
+H_n(x)=H_n(2x,-1)=2^n H_n\!\left(x,-\frac{1}{4}\right)
+\label{eq:3.3.9}
+\end{equation}
+is also used and we will adopt both notations. These two forms are
+linked by the identity
+\begin{equation}
+H_n(x)=2^{n/2}\,\mathrm{He}_n\!\left(\frac{x}{\sqrt{2}}\right).
+\label{eq:3.3.10}
+\end{equation}
+Furthermore, the link of the $H_n(x,y)$ to the Hermite canonical
+form is provided by
+\begin{equation}
+H_n(x,y)=(-i)^n\,y^{n/2}\,
+H_n\!\left(\frac{x}{2\sqrt{-y}}\right)
+=2^n\,(-iy)^{n/2}\,
+\mathrm{He}_n\!\left(\frac{x}{2\sqrt{-iy}}\right).
+\label{eq:3.3.11}
+\end{equation}
+
+As it can be easily checked, the above relations are a
+straightforward consequence of the previously outlined properties.
+
+\noindent{\itshape Remark.} Two sets of functions $\gamma_n(x)$,
+$\lambda_n(x)$ are said \emph{bi-orthogonal} if
+$\int \gamma_n(x)\,\lambda_m(x)\,dx=\delta_{nm}$. For example
+$\sin(nx)$, $\cos(mx)$ are bi-orthogonal in the interval
+$[0,2\pi]$.
+
+\medskip
+Let us now derive the differential equation satisfied by the
+function~\eqref{eq:3.3.7}. It will be determined by means of a
+simple but effective procedure. From eq.~\eqref{eq:3.3.7}, one has
+\[
+H_n\!\left(\frac{x}{2\sqrt{|y|}},-\frac{1}{4}\right)
+=A_n\,e^{\frac{x^2}{4|y|}}\,\phi_n(x),\qquad
+A_n=\sqrt{2^n n!\,\pi|y|}.
+\]
+
+In operational terms, the ODE specifying the differential equation of
+the polynomials $H_n(x,y)$ can be written as (see
+eqs.~\eqref{eq:3.1.14} and~\eqref{eq:3.1.16})
+\[
+\hat h_{\mathrm{er}}\,H_n(ax,y)=0,\qquad
+\hat h_{\mathrm{er}}=\partial_x^2+a^2x\partial_x-n a^2.
+\]
+The operator $\hat h_{\mathrm{er}}$ applied to eq.~\eqref{eq:3.3.7}
+yields
+\[
+\left(-2|y|\partial_x^2+x\partial_x-n\right)e^{\frac{x^2}{4|y|}}\phi_n(x)=0,
+\]
+and thus, for $\phi_n(x)$, we obtain the second order differential
+equation with non-constant coefficients
+\begin{equation}
+\left(-2|y|\partial_x^2-x\partial_x-1\right)\phi_n(x)=n\,\phi_n(x).
+\label{eq:3.3.15}
+\end{equation}
+This result means that the function $\phi_n$ is the eigenfunction
+with eigenvalue $n$ of the operator
+\begin{equation}
+\hat\eta_{\mathrm{her}}=-2|y|\partial_x^2-x\partial_x-1,
+\label{eq:3.3.16}
+\end{equation}
+which, for $y<0$, is the Hermitian conjugate of the
+operator in eq.~\eqref{eq:3.1.16}.
+
+\noindent{\itshape Remark.} We remind that the Hermitian conjugate of
+the product of two operators is
+$(\hat A\hat B)^\dagger=\hat B^\dagger\hat A^\dagger$ and being
+$\hat x^\dagger=\hat x$ and $\partial_x^\dagger=-\partial_x$, we find
+$(x\partial_x)^\dagger=-\partial_x x\ldots$
+
+\medskip
+Even though without proof, we underscore the following statement.
+
+\begin{proposition}
+The eigenfunctions of two operators Hermitian conjugate to each
+other form a bi-orthogonal set.
+\end{proposition}
+
+Let us now consider the case of the canonical Hermite polynomials
+with $y=-1/2$ and define the function
+\begin{equation}
+\Phi_n(x)=\alpha_n\,\mathrm{He}_n(x)\,e^{-x^2/4}.
+\label{eq:3.3.17}
+\end{equation}
+which, evidently, provides an orthogonal set of functions whose
+normalization constant $\alpha_n$ will be specified later. The
+differential equation satisfied by the orthogonal
+functions~\eqref{eq:3.3.17} can be obtained by proceeding as
+illustrated before, for the function~\eqref{eq:3.3.7}, namely, if we
+get
+\[
+\phi_n(x)=\Phi_n(x)\,e^{x^2/4}.
+\]
+According to eq.~\eqref{eq:3.3.15}, the ODE satisfied by the
+function $\Phi_n(x)$ is
+\begin{equation}
+\left(\frac{x^2}{4}-\partial_x^2-\frac{1}{2}\right)\Phi_n(x)
+=n\,\Phi_n(x),
+\label{eq:3.3.19}
+\end{equation}
+which is recognized as the quantum harmonic oscillator equation. The
+harmonic oscillator eigenfunctions are usually written in the base
+$H_n(x)$ and read
+\begin{equation}
+\Phi_n(x)=\frac{1}{\sqrt{2^n n!\sqrt{\pi}}}\,
+H_n(x)\,e^{-x^2/2}.
+\label{eq:3.3.20}
+\end{equation}
+
+\begin{exercise}
+Prove that eq.~\eqref{eq:3.3.20} provides an orthonormal set in
+the sense that $\Phi_n(x)$ are orthogonal and normalized to unity.
+\end{exercise}
+
+In Fig.~\ref{fig:3.2} we have shown the behavior of the first six
+harmonic oscillator eigenfunctions.
+
+\begin{figure}[H]
+\centering
+\includegraphics[max width=0.95\linewidth,keepaspectratio]{fig3_2.png}\caption{Harmonic oscillator eigenfunctions $\Phi_n(x)$.}
+\label{fig:3.2}
+\end{figure}
+
+The expansion of functions in terms of HP will be discussed in the
+part devoted to exercises and complements. Here we propose a very
+simple, but important, example of this kind of expansion.
+
+\begin{exercise}
+Show that
+\begin{equation}
+x^n=\sum_{s=0}^{\lfloor n/2\rfloor}
+\frac{n!}{s!\,(n-2s)!}\,(-1)^s\,y^s\,H_{n-2s}(x,y).
+\tag{3.3.21}
+\end{equation}
+\noindent{\itshape Hint:} use the generating function method and note
+that $e^{xt}=e^{xt+yt^2-yt^2}$.
+\end{exercise}
+
+% ------------------------------------------------------------------
+\section{Hermite Polynomials in Quantum Mechanics:
+         Creation and Annihilation Operators}
+\label{sec:3.4}
+
+The use of the formalism of the harmonic oscillator is almost
+ubiquitous in any field of Physics and it is therefore difficult to
+select examples which can be considered the most representative.
+Here we follow the ``tradition'' that, although not original, has the
+merit of offering a fairly solid and pedagogically effective way to
+approach the problem.
+
+We will therefore consider some examples from Quantum Mechanics
+and introduce our discussion starting from the Hamiltonian of a single
+particle driven by a harmonic oscillator potential, namely
+\begin{equation}
+\hat H=\frac{\hat p^2}{2m}+\frac{1}{2}\,k\,\hat x^2.
+\label{eq:3.4.1}
+\end{equation}
+The associated Schr\"odinger equation writes
+\begin{equation}
+i\hbar\,\partial_t\Psi=-\frac{\hbar^2}{2m}\,\partial_x^2\Psi
++\frac{1}{2}\,k\,x^2\Psi
+\label{eq:3.4.2}
+\end{equation}
+and its stationary solution can be cast in the form
+\begin{equation}
+\Psi(x,t)=e^{-iE_n t/\hbar}\,\Phi_n(x).
+\label{eq:3.4.3}
+\end{equation}
+
+\begin{figure}[H]
+\centering
+\includegraphics[max width=0.95\linewidth,keepaspectratio]{fig3_3.png}\caption{Energy levels, harmonic oscillator potential and the first
+eight eigenfunctions vs.\ the position coordinate.}
+\label{fig:3.3}
+\end{figure}
+
+which, inserted in eq.~\eqref{eq:3.4.2}, yields
+\begin{equation}
+E_n\,\Phi_n(x)=-\frac{\hbar^2}{2m}\,\partial_x^2\Phi_n(x)
++\frac{1}{2}\,k\,x^2\Phi_n(x),
+\label{eq:3.4.4}
+\end{equation}
+where $\omega=\sqrt{k/m}$ is the characteristic frequency of our
+problem. Eq.~\eqref{eq:3.4.4} is just the ODE satisfied by the
+harmonic oscillator eigenfunctions (note that we refer to the
+eigenfunctions in the base $H_n(x)$). We remark that the quantity
+\begin{equation}
+x_q\equiv\sqrt{\frac{\hbar}{m\omega}}
+\label{eq:3.4.5}
+\end{equation}
+has the dimensions of a length (its physical meaning will be
+discussed below) and by rewriting eq.~\eqref{eq:3.4.4} in terms of
+the variable $\xi=x/x_q$, we find
+\begin{equation}
+E_n\,\Phi_n(\xi)=-\frac{\hbar\omega}{2}\,\partial_\xi^2\Phi_n(\xi)
++\frac{\hbar\omega}{2}\,\xi^2\Phi_n(\xi),
+\label{eq:3.4.6}
+\end{equation}
+with the energy eigenvalues $E_n$ which can be written in terms of
+the characteristic frequency as
+\begin{equation}
+E_n=\hbar\omega\!\left(n+\frac{1}{2}\right).
+\label{eq:3.4.7}
+\end{equation}
+
+In Fig.~\ref{fig:3.3}, we have reported the quadratic potential,
+the energy levels and the first eight wave functions. It is evident
+that the larger the order of the excitation, the larger the spatial
+extension of the distribution function. It must be stressed that the
+0-order eigenfunction, i.e.\ the lowest energy level, is specified by
+\[
+\Phi_0(x)\propto e^{-x^2/(2x_q^2)},
+\]
+i.e.\ a wave packet with an r.m.s.\ proportional to $x_q$.
+
+In the previous discussion, we have introduced the elastic constant
+$k$ which is the most important physical parameter because it
+specifies the oscillation frequency and, thus, the spacing between
+the energy eigenvalues. We will discuss in the forthcoming section
+examples involving specific applications like the case of diatomic
+molecules. Here we pursue in fixing the formalism we will use in the
+following, by introducing the creation--annihilation operators.
+
+To this aim, we cast eq.~\eqref{eq:3.4.6} in the form
+\begin{equation}
+\left(\xi^2-\partial_\xi^2-1\right)\Phi_n(\xi)=2n\,\Phi_n(\xi),
+\label{eq:3.4.9}
+\end{equation}
+which suggests the introduction of the operators
+\begin{equation}
+\hat a=\frac{1}{\sqrt{2}}\,(\xi+\partial_\xi),\qquad
+\hat a^\dagger=\frac{1}{\sqrt{2}}\,(\xi-\partial_\xi).
+\label{eq:3.4.10}
+\end{equation}
+These operators are Hermitian conjugate to each other and satisfy the
+rule of commutation
+\begin{equation}
+[\hat a,\hat a^\dagger]=\hat 1.
+\label{eq:3.4.11}
+\end{equation}
+and, according to the manipulations we learned in Chapter~2, we can
+recast eq.~\eqref{eq:3.4.9} in the form
+\begin{equation}
+\hat a^\dagger\hat a\,\Phi_n(\xi)=n\,\Phi_n(\xi).
+\label{eq:3.4.12}
+\end{equation}
+
+In the previous section, we have seen how to construct the
+polynomials by using the multiplicative operator acting many times on
+the 0-order polynomial. We will now prove that the action of the
+$n$th power of the operator $\hat a^\dagger$ on what we define as
+the vacuum state, represented by the lowest order harmonic
+oscillator function, yields
+\begin{equation}
+\frac{(\hat a^\dagger)^n}{\sqrt{n!}}\,\Phi_0=\Phi_n.
+\label{eq:3.4.13}
+\end{equation}
+
+To prove the correctness of the previous identity, we use the
+generating function method, according to which we find
+\[
+\sum_{n=0}^{\infty}\frac{t^n}{n!}\,(\hat a^\dagger)^n\Phi_0(\xi)
+=e^{t\hat a^\dagger}\Phi_0(\xi)
+=e^{-t^2/4}\,e^{\sqrt{t/2}\,\xi}\,
+ e^{-t^2/4}\,e^{\sqrt{t/2}\,\xi}\,e^{-\xi^2/2}
+\]
+\begin{align*}
+&=e^{-t^2/2}\,e^{\sqrt{2t}\,\xi}\,e^{-\xi^2/2}
+ =\sum_{m=0}^{\infty}\frac{t^m}{m!}\,
+  \mathrm{He}_m\!\left(\sqrt{2}\,\xi\right)\,e^{-\xi^2/2}.
+\tag{3.4.14}
+\end{align*}
+From the comparison between the same power coefficients, we obtain
+the proof of the identity~\eqref{eq:3.4.13} which also yields
+\begin{equation}
+\hat a^\dagger\Phi_n=\sqrt{n+1}\,\Phi_{n+1}.
+\label{eq:3.4.15}
+\end{equation}
+For this reason, we will refer to $\hat a^\dagger$ as the
+``creation'' operator. Along the same line, the companion identity
+for the ``annihilation'' operator can also be checked by the use of
+the same procedure as before:
+\begin{equation}
+\hat a\,\Phi_n=\sqrt{n}\,\Phi_{n-1}.
+\label{eq:3.4.16}
+\end{equation}
+
+We have thus shown that three operators play a fundamental role in
+the quantum harmonic oscillator dynamics: the Hermitian conjugate
+creation--annihilation partners (sometimes called ladder
+operators) and the Hermitian operator $\hat a^\dagger\hat a$, called
+the number operator.
+
+The Dirac notation is often exploited to describe the harmonic
+oscillator states. We have, indeed, the correspondence
+\begin{equation}
+|0\rangle\to\Phi_0(\xi),\qquad
+|n\rangle\to\Phi_n(\xi)
+\label{eq:3.4.17}
+\end{equation}
+and the orthogonality property can be expressed as
+\begin{equation}
+\langle m|n\rangle=\delta_{m,n}.
+\label{eq:3.4.18}
+\end{equation}
+
+In eq.~\eqref{eq:3.4.17}, we have kept separate the $|0\rangle$
+state which denotes the so-called vacuum state. In more rigorous
+terms the correspondence between Dirac (also called $n$-states)
+and the harmonic oscillator eigenfunctions should be written as
+\begin{equation}
+\langle \xi|n\rangle=\Phi_n(\xi).
+\label{eq:3.4.19}
+\end{equation}
+
+This aspect of the problem will be more carefully discussed in the
+second part of the book, with the introduction of the so-called
+coherent states.
+
+% ------------------------------------------------------------------
+\section{Quantum Mechanics Applications}
+\label{sec:3.5}
+
+Unfortunately, we cannot go deeply into the application of the above
+formalism to Quantum Mechanics problems and therefore we will limit
+ourselves to a few examples, which will clarify the relevant power
+and elegance. The first problem we are going to discuss is that of a
+charged particle ruled by a harmonic potential and under the action
+of a classical electric field.
+
+The relevant Hamiltonian can be written as
+\begin{equation}
+\hat H=\frac{\hat p^2}{2m}+\frac{1}{2}\,k\,\hat x^2-eE\hat x,
+\label{eq:3.5.1}
+\end{equation}
+where the electric field $E$ is constant and homogeneous, i.e.\ it is
+independent of time and coordinates. The difference with the case we
+have already studied is the presence of a linear potential,
+accounting for the effect of the electric field.
+
+The above problem can be easily turned into an ordinary harmonic
+oscillator problem by recasting the above Hamiltonian in the form
+\begin{equation}
+\hat H=\frac{\hat p^2}{2m}+\frac{1}{2}\,m\omega^2
+\left(\hat x-\frac{eE}{m\omega^2}\right)^2\hat 1
+-\frac{(eE)^2}{2m\omega^2}\,\hat 1.
+\label{eq:3.5.2}
+\end{equation}
+The last term in eq.~\eqref{eq:3.5.2}, multiplied by the unit
+operator, is a constant with the dimension of the energy, while
+\begin{equation}
+x_s\equiv\frac{eE}{m\omega^2}
+\label{eq:3.5.3}
+\end{equation}
+is a coordinate shift induced by the presence of the electric field.
+Since the electric field is constant and homogeneous, the
+rearrangement of the Hamiltonian in the form~\eqref{eq:3.5.2}
+suggests that the introduction of the coordinate operator
+\begin{equation}
+\hat X=\hat x-\frac{eE}{m\omega^2}\,\hat 1
+\label{eq:3.5.4}
+\end{equation}
+leaves unchanged the commutation relations of our problem and
+\begin{equation}
+[\hat p,\hat X]=-i\hbar\,\hat 1.
+\label{eq:3.5.5}
+\end{equation}
+We can therefore conclude that
+\begin{enumerate}
+\item The energy eigenvalues are the same as before but with an
+      additional term due to the effect of the electric field, namely
+      \begin{equation}
+      E_n=\hbar\omega\!\left(n+\frac{1}{2}\right)-\frac{(eE)^2}{2m\omega^2}.
+      \label{eq:3.5.6}
+      \end{equation}
+\item The eigenfunctions remain the same but the argument should be
+      replaced by
+      \begin{equation}
+      \xi\to\xi-\xi_0,\qquad
+      \xi_0=\frac{x_s}{x_q}=\sqrt{\frac{2}{m\hbar\omega}}\;eE.
+      \label{eq:3.5.7}
+      \end{equation}
+\end{enumerate}
+
+The second example we discuss is that of the Landau levels,
+appearing in the quantum analysis of an electron (or any charged
+particle) moving in a classical magnetic field. The Hamiltonian
+operator ruling such a process can be written as (cgs units)
+\begin{equation}
+\hat H=\frac{1}{2m}\left(\hat{\vec p}-\frac{q}{c}\,\vec A\right)^2.
+\label{eq:3.5.8}
+\end{equation}
+where $\vec A$ is the vector potential. By assuming that the
+magnetic field is directed along the $z$ direction and that the
+electron motion occurs in the $x,y$ plane,
+\begin{equation}
+\vec B=\nabla\times\vec A,
+\label{eq:3.5.9}
+\end{equation}
+we can write $\vec A$ as
+\begin{equation}
+\vec A\equiv(0,Bx,0).
+\label{eq:3.5.10}
+\end{equation}
+The Hamiltonian can therefore be written as
+\begin{equation}
+\hat H=\frac{1}{2m}\left[\hat p_x^2
++\left(\hat p_y-\frac{qB}{c}\,\hat x\right)^2\right].
+\label{eq:3.5.11}
+\end{equation}
+Since the operator $\hat p_y$ commutes with the Hamiltonian, we can
+conclude that the momentum along the $y$ direction is a conserved
+quantity and it can be replaced by its eigenvalue $\hbar k_y$. The
+Hamiltonian is hence easily recognized as a shifted harmonic
+oscillator Hamiltonian analogous to that discussed in the previous
+example:
+\[
+\hat H=\frac{\hat p_x^2}{2m}
++\frac{1}{2}\,m\omega_c^2
+\left(\hat x-x_B\,\hat 1\right)^2
++\frac{\hbar^2 k_y^2}{2m},
+\]
+\begin{equation}
+\omega_c=\frac{|q|B}{mc},\qquad x_B=\frac{\hbar c k_y}{qB}.
+\label{eq:3.5.12}
+\end{equation}
+The eigenfunctions of the above Hamiltonian can be written as
+\begin{equation}
+\Phi_{L,n}(x,y)=e^{ik_y y}\,\Phi_n(x-x_B),
+\label{eq:3.5.13}
+\end{equation}
+which is essentially the product of a plane wave and a harmonic
+oscillator eigenfunction, while the relevant eigenvalues read
+\begin{equation}
+E_n=\hbar\omega_c\!\left(n+\frac{1}{2}\right)
++\frac{\hbar^2 k_y^2}{2m}.
+\label{eq:3.5.14}
+\end{equation}
+where the frequency $\omega_c$ is said the cyclotron frequency.
+
+Before concluding this survey on applications of quantum oscillator
+formalism, we discuss the case of Morse potential used to treat the
+dynamical behavior of diatomic molecules and its approximation in
+terms of harmonic oscillator potential. The Morse potential energy
+function is of the form
+\begin{equation}
+V(r)=D_e\!\left(1-e^{-a(r-r_e)}\right)^2,
+\label{eq:3.5.15}
+\end{equation}
+where $r$ is the distance between the atoms, $r_e$ the equilibrium
+bond distance, $D_e$ is the well depth (defined relative to the
+dissociated atoms) and $a$ accounts for the ``width'' of the
+potential. The dissociation energy of the bond can be calculated by
+subtracting the zero point energy $E(0)$ from the depth of the
+well. By expanding $V(r)$ up to the lowest order in $(r-r_e)$, we
+get
+\begin{equation}
+V(r)\approx\frac{a^2D_e}{2}\,(r-r_e)^2.
+\label{eq:3.5.16}
+\end{equation}
+We can thus set $a^2D_e/2=\frac{1}{2}k$ and interpret this
+approximation as a harmonic oscillator potential. The comparison
+between the Morse potential (blue) and harmonic oscillator
+potential (green) is shown in Fig.~\ref{fig:3.4}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[max width=0.95\linewidth,keepaspectratio]{fig3_4.png}\caption{Comparison between Morse (blue) and harmonic oscillator
+(green) potentials.}
+\label{fig:3.4}
+\end{figure}
+
+The Morse potential energy levels are not equally spaced as in the
+case of the harmonic oscillator potential and their separation
+decreases as the energy approaches the dissociation energy.
+
+It is worth proving that the lowest order levels are well
+approximated by
+\begin{equation}
+E_n\approx\hbar\omega\!\left(n+\frac{1}{2}\right),\qquad
+\nu\equiv a\sqrt{\frac{2D_e}{m}},
+\label{eq:3.5.17}
+\end{equation}
+while the corrections for higher orders read
+\begin{equation}
+E_n\approx\hbar\omega\!\left(n+\frac{1}{2}\right)
+-\frac{\hbar^2\omega^2}{4D_e}\!\left(n+\frac{1}{2}\right)^2.
+\label{eq:3.5.18}
+\end{equation}
+
+The use of the ordinary Perturbation Theory allows the derivation of
+the corrections to the system wave functions.
+
+% ------------------------------------------------------------------
+\section{Coherent or Quasi-Classical States of Harmonic Oscillators}
+\label{sec:3.6}
+
+From eq.~\eqref{eq:3.4.10}, the position and momentum operators
+can be written in terms of the creation--annihilation operators as
+follows:
+\begin{equation}
+\hat\xi=\frac{1}{\sqrt{2}}\,(\hat a+\hat a^\dagger),\qquad
+\hat p_\xi=\frac{i\hbar}{\sqrt{2}}\,(\hat a^\dagger-\hat a).
+\label{eq:3.6.1}
+\end{equation}
+
+Let us now consider a Hamiltonian operator ruling a process of
+dipole transitions between equally spaced quantum levels. Such an
+operator can be cast in the form
+\begin{equation}
+\hat H=\hbar\Omega\,\hat\xi
+\label{eq:3.6.2}
+\end{equation}
+and the associated Schr\"odinger equation can be written as
+\begin{equation}
+i\partial_t\Psi(\xi,t)=\frac{\Omega}{\sqrt{2}}\,(\hat a+\hat a^\dagger)\,\Psi(\xi,t),
+\label{eq:3.6.3}
+\end{equation}
+which can be understood as a process in which a harmonic
+oscillator level is created or destroyed as it happens during the
+process of creation or destruction of photons in an electromagnetic
+process. Eq.~\eqref{eq:3.6.3} admits the solution
+\begin{equation}
+\Psi(\xi,t)=e^{-i\Omega t(\hat a+\hat a^\dagger)/\sqrt{2}}\,\Psi(x,0),
+\label{eq:3.6.4}
+\end{equation}
+i.e.\ assuming that the initial state is the vacuum, using the Dirac
+notation, we can write
+\begin{equation}
+|\alpha(t)\rangle=
+e^{-i\Omega t(\hat a+\hat a^\dagger)/\sqrt{2}}|0\rangle.
+\label{eq:3.6.5}
+\end{equation}
+The explicit solution in closed form (see eq.~\eqref{eq:2.4.22}) can
+be easily obtained
+\noindent{\itshape (Hint: remind what we have learned about
+operator ordering and disentanglement rules.)}
+\begin{equation}
+|\alpha(t)\rangle=
+e^{-(\Omega t)^2/4}\,
+e^{-i\Omega t\hat a^\dagger/\sqrt{2}}\,
+e^{-i\Omega t\hat a/\sqrt{2}}\,|0\rangle.
+\label{eq:3.6.6}
+\end{equation}
+which, on account of the fact that
+\begin{equation}
+e^{-i\Omega t\hat a/\sqrt{2}}\,|0\rangle=|0\rangle,
+\label{eq:3.6.7}
+\end{equation}
+yields
+\[
+|\alpha(t)\rangle=
+e^{-(\Omega t)^2/4}\,
+\sum_{r=0}^{\infty}\frac{(-i\sqrt{2}\,\Omega t)^r}{2^{r/2}\,r!}\,
+(\hat a^\dagger)^r|0\rangle
+\]
+\begin{equation}
+=e^{-(\Omega t)^2/4}\,
+\sum_{r=0}^{\infty}\frac{(-i\Omega t/\sqrt{2})^r}{r!}\,
+|r\rangle.
+\label{eq:3.6.8}
+\end{equation}
+
+The ``wavefunction'' $|\alpha(t)\rangle$ is given by a sum of
+harmonic oscillator states and denotes a particular quantum state,
+called \emph{coherent}, for the reasons we will specify below. The
+probability that this state, at a given time $t$, be the $m$th
+harmonic oscillator excited level, is
+\begin{equation}
+P_m(t)=|\langle m|\alpha(t)\rangle|^2
+=e^{-(\Omega t)^2/2}\,\frac{(\Omega t/2)^{2m}}{m!}.
+\label{eq:3.6.9}
+\end{equation}
+This expression, which is a consequence of the orthogonality
+property~\eqref{eq:3.4.18}, is recognised to be a Poisson
+distribution and the probabilities of finding quantum harmonic
+oscillators excited levels $0,1,2,\ldots$ are shown in
+Fig.~\ref{fig:3.5}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[max width=0.95\linewidth,keepaspectratio]{fig3_5.png}\caption{Probability of finding the coherent state in $|m\rangle$
+for $m=0,1,2,\ldots$ as a function of $\Omega t$.}
+\label{fig:3.5}
+\end{figure}
+
+We will just touch on the properties of coherent states which
+appropriately describe the electromagnetic field of coherent sources
+of laser type. One of the properties of these states is that they
+are eigenstates of the annihilation operator. From the previous
+equations, we find
+\[
+\hat a|\alpha(t)\rangle=
+e^{-(\Omega t)^2/4}\,
+\sum_{r=0}^{\infty}\frac{(-i\sqrt{2}\,\Omega t)^r}{2^{r/2}\,r!}\,
+\hat a|r\rangle
+=e^{-(\Omega t)^2/4}\,
+\sum_{r=1}^{\infty}\frac{(-i\Omega t/\sqrt{2})^{r-1}}{(r-1)!}\,
+|r-1\rangle
+\]
+\begin{equation}
+=e^{-(\Omega t)^2/4}\,
+\sum_{r=0}^{\infty}\frac{(-i\Omega t/\sqrt{2})^r}{r!}\,
+|r\rangle
+=c\,|\alpha(t)\rangle,\qquad
+c=-\frac{i\Omega t}{\sqrt{2}}.
+\label{eq:3.6.10}
+\end{equation}
+This apparently not significant result has striking consequences. It
+is also worth stressing that the coherent state is not an
+eigenvalue of the creation operator, i.e.
+\begin{equation}
+\hat a^\dagger|\alpha(t)\rangle\neq c^*|\alpha(t)\rangle.
+\label{eq:3.6.11}
+\end{equation}
+On the other side, the identity
+\begin{equation}
+\langle\alpha(t)|\hat a^\dagger=\langle\alpha(t)|c^*
+\label{eq:3.6.12}
+\end{equation}
+holds and, furthermore, it is also evident that
+\begin{equation}
+\langle\alpha(t)|\alpha(t)\rangle=1.
+\label{eq:3.6.13}
+\end{equation}
+
+Let us now derive an important physical consequence from the
+previous mathematical properties by proving that coherent states are
+\emph{minimum uncertainty states}, i.e.\ they are quantum states
+with minimum indetermination. To this aim, we evaluate the r.m.s.\
+(root mean square) of position and momentum operators of coherent
+states. According to the definition of r.m.s.\ and taking into
+account the commutation rule~\eqref{eq:3.4.11}, one has
+\begin{equation}
+\sigma_\xi^2=
+\langle\alpha(t)|\hat\xi^2|\alpha(t)\rangle-
+\bigl(\langle\alpha(t)|\hat\xi|\alpha(t)\rangle\bigr)^2.
+\label{eq:3.6.14}
+\end{equation}
+By using eq.~\eqref{eq:3.6.1} and other technicalities discussed
+here, we find
+\begin{equation}
+\sigma_\xi^2=\frac{1}{2}\bigl(c^2+(c^*)^2+2|c|^2+1\bigr)
+-\frac{1}{2}\bigl(c^2+(c^*)^2+2|c|^2\bigr)=\frac{1}{2},
+\label{eq:3.6.15}
+\end{equation}
+and, similarly, for the momentum
+\begin{equation}
+\sigma_p^2=\frac{\hbar^2}{2}.
+\label{eq:3.6.16}
+\end{equation}
+Going back to the dimensional counterparts, we get
+\begin{equation}
+\sigma_x^2=\frac{\hbar}{2m\omega},\qquad
+\sigma_p^2=\frac{m\hbar\omega}{2},
+\label{eq:3.6.17}
+\end{equation}
+and therefore
+\begin{equation}
+\sigma_x\,\sigma_p=\frac{\hbar}{2}.
+\label{eq:3.6.18}
+\end{equation}
+
+On the other side the same procedure, applied to the $n$-states,
+is shown that the uncertainty increases with the order of the level
+\begin{equation}
+(\sigma_x)_n^2=\frac{\hbar}{2m\omega}\,(2n+1),\qquad
+(\sigma_p)_n^2=\frac{m\hbar\omega}{2}\,(2n+1),
+\label{eq:3.6.19}
+\end{equation}
+\begin{equation}
+(\sigma_x\,\sigma_p)_n=\frac{\hbar}{2}\,(2n+1).
+\label{eq:3.6.20}
+\end{equation}
+
+This means that, with increasing $n$, the wave function is more
+and more spread in both position and momentum. On the contrary, we
+have found that coherent states have the peculiarity of being states
+of minimum uncertainty. Among the quantum states, they are those
+closer to a classical system.
+
+This statement is however very qualitative and some further
+comments are in order. In Fig.~\ref{fig:3.6}, we have reported a
+comparison between classical and quantum probability for the
+harmonic oscillators (see Rem.~1 for more details).
+
+In the case of states with low $n$, there is a significant
+difference between quantum and classical probabilities. It happens
+that in the classical case, the oscillator will spend most of its
+time far away from the position of equilibrium and this means that
+the maximum probability is obtained for larger value of the
+position. On the contrary, the quantum probability for $n=0$ is
+maximum around $x=0$. We also note that there is a significant
+portion of space which is not allowed classically. The quantum and
+classical probabilities tend to become more similar with increasing
+$n$, in full agreement with the correspondence principle.
+
+It is now explained why a coherent state is closer to a quantum
+state \noindent{\itshape (Hint: note that it is a superposition of
+$n$-states\ldots)}.
+
+\begin{exercise}
+Reconsider the previous results, in particular their physical
+meaning, and derive eqs.~\eqref{eq:3.6.19}.
+\end{exercise}
+
+\begin{figure}[H]
+\centering
+\includegraphics[max width=0.95\linewidth,keepaspectratio]{fig3_6.png}\caption{Comparison between classical and quantum probability for
+the harmonic oscillators for (a)~$n=0$, (b)~$n=1$, (c)~$n=2$,
+(d)~$n=3$, (e)~$n=10$.}
+\label{fig:3.6}
+\end{figure}
+
+\medskip
+\noindent{\itshape Remark~1.} A careful explanation is needed to
+appreciate the physical content of Fig.~\ref{fig:3.6}. We have
+mentioned the classical and quantum probability densities yielding
+the probability of finding a particle at the position $x$ at the
+time $t$. We have shown how to calculate the quantum probability
+but the classical counterpart is less evident. We have reported a
+very qualitative argument to evaluate the probability density by
+noting that the particle spends more time in the region of space
+where its velocity is lower. With reference to Fig.~\ref{fig:3.3}
+where we have reported the quadratic potential, the probability
+density $P(x)$ is maximum near the external points where the
+velocity vanishes. The analytical derivation of $P(x)$ is given
+below. We note that the probability of finding a particle of
+crossing the position $\Delta x$ in the time interval $\Delta t$ is
+\begin{equation}
+P(x)\,\Delta x=2\,\frac{\Delta t}{T},
+\label{eq:3.6.20}
+\end{equation}
+where $T$ is the oscillation period and the factor 2 is due to the
+fact that the particle crosses the same region twice. It is
+accordingly evident that
+\begin{equation}
+P(x)=\lim_{\Delta t\to0}\frac{2\,\Delta t}{T\,\Delta x}
+=\frac{2}{T\,|\dot x|}.
+\label{eq:3.6.21}
+\end{equation}
+It should now be reminded that for a classical harmonic
+oscillator, we have the total energy of a particle with mass $m$
+undergoing a quadratic potential to be
+\begin{equation}
+E=\frac{1}{2}\,m\dot x^2+\frac{1}{2}\,k\,x^2.
+\label{eq:3.6.22}
+\end{equation}
+We can accordingly specify the quantities appearing in
+eq.~\eqref{eq:3.6.21} as
+\[
+T=\frac{2\pi}{\omega},\qquad \omega=\sqrt{\frac{k}{m}},\qquad
+|\dot x|=\omega\sqrt{a^2-x^2},\qquad
+a^2=\frac{2E}{m\omega^2},
+\]
+thus getting
+\begin{equation}
+P(x)=\frac{1}{\pi\sqrt{a^2-x^2}}.
+\label{eq:3.6.24}
+\end{equation}
+To make the comparison between classical and quantum
+probabilities, we note that by replacing $E$ with the
+corresponding quantum value, we get
+\[
+a^2=\sigma_x^2\,(2n+1),\qquad \sigma_x^2=\frac{\hbar}{2m\omega}.
+\]
+By using the quantity $a^2$, we obtain the reference dimensionless
+position interval in which we compare the quantum and classical
+probabilities.
+
+% ------------------------------------------------------------------
+\section{Jaynes--Cummings Model}
+\label{sec:3.7}
+
+In this section, we will introduce problems involving the combined
+use of creation--annihilation operators and the Pauli matrices. We
+will study the Jaynes--Cummings model (JC) which is the extension
+of the already discussed two-level atom model (see Chapter~1) in
+which a classical electromagnetic field ensures the coupling
+between upper and lower levels.
+
+If we do not make the hypothesis of a classical field, the analysis
+of evolution of the system should be done by exploiting the
+following Hamiltonian:
+\begin{equation}
+\hat H=\hat H_F+\hat H_I,\qquad
+\hat H_F=\hbar\nu\,(\hat a^\dagger\hat a+\tfrac{1}{2}\hat\sigma_z),\qquad
+\hat H_I=\hbar g\!\left(\hat a\,\hat\sigma_+\,e^{i\delta t}
++\hat a^\dagger\,\hat\sigma_-\,e^{-i\delta t}\right),
+\label{eq:3.7.1}
+\end{equation}
+where $\nu$ is the frequency of the electromagnetic field and
+$\omega$ is the separation between the two levels. The above
+Hamiltonian should be understood as follows.
+\begin{enumerate}
+\item[(a)] The term $\hat H_F$ accounts for the free energy of the
+      system, consisting of two contributions: the first associated
+      with electromagnetic field (given by $\hbar\nu\hat a^\dagger\hat a$,
+      related to the total number of photons $n_f$) and the second
+      with the two-level part (given by $\frac{\hbar}{2}\omega\hat\sigma_z$).
+      We emphasize that the operator $\hat\sigma_z$ is associated
+      with $n_l$, i.e.\ the population difference between excited
+      and ground states.
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[max width=0.95\linewidth,keepaspectratio]{fig3_7.png}\caption{The Jaynes--Cummings model: coupling between a two-level
+atom and a single radiation mode.}
+\label{fig:3.7}
+\end{figure}
+
+\begin{exercise}
+Prove that the total Hamiltonian commutes with the field part,
+namely
+\begin{equation}
+[\hat H,\hat H_F]=0,
+\label{eq:3.7.2}
+\end{equation}
+and that this corresponds to the following relation of conservation
+\begin{equation}
+n_f+n_l=k.
+\label{eq:3.7.3}
+\end{equation}
+\end{exercise}
+
+The previous ``law'' of conservation is extremely useful because it
+allows the characterization of the dynamics of the system in terms
+of a single quantum number which is the number of photons
+exchanged during the interaction. We can therefore write the
+physical states on which the JC Hamiltonian acts as follows
+\begin{equation}
+\Psi=\binom{|n+1\rangle}{|n\rangle},
+\label{eq:3.7.4}
+\end{equation}
+(the upper level is indeed characterized by the presence of an extra
+photon).
+
+\begin{exercise}
+Prove that the matrix element yielding the transition between two
+states is just given by
+\begin{equation}
+\langle\Psi|\hat H|\Psi\rangle=
+\begin{pmatrix}
+\langle n|\hat H|n\rangle & \langle n|\hat H|n+1\rangle\\[4pt]
+\langle n+1|\hat H|n\rangle & \langle n+1|\hat H|n+1\rangle
+\end{pmatrix}
+=
+\frac{\hbar}{2}
+\begin{pmatrix}
+\omega & 2g\sqrt{n+1}\\
+2g\sqrt{n+1} & -\omega
+\end{pmatrix},
+\label{eq:3.7.5}
+\end{equation}
+and that the energy eigenvalues characterizing upper and lower
+levels are
+\begin{equation}
+E_\pm(n)=\hbar\!\left(n+\frac{1}{2}\right)\nu
+\pm\frac{\hbar}{2}\,\Omega(n,\delta),\qquad
+\Omega(n,\delta)=\sqrt{\delta^2+4g^2(n+1)},
+\label{eq:3.7.6}
+\end{equation}
+where $\delta=\omega-\nu$. Find the link with the obtained results
+in the case of a classical electromagnetic field.
+\end{exercise}
+
+% ------------------------------------------------------------------
+\section{Classical Optics and Hermite Polynomials}
+\label{sec:3.8}
+
+In Chapter~2, we have discussed the solutions of the Helmholtz
+equation, written in paraxial form, in terms of simple Gaussian
+beams. Here we will prove that the solution of this equation is
+compatible with a slightly more complicated form, involving Hermite
+polynomials. These solutions will be called \emph{Hermite--Gauss}
+beams.
+
+Thus, we consider the heat equation
+\begin{equation}
+\partial_t F(x,t)=\alpha\,\partial_x^2 F(x,t),\qquad
+F(x,0)=H_n(\beta x)\,e^{-x^2/(2\sigma^2)}.
+\label{eq:3.8.1}
+\end{equation}
+Its solution can be obtained in terms of the Weierstrass transform
+and reads
+\begin{equation}
+F_n(x,t)=\frac{1}{\sqrt{4\pi\alpha t}}
+\int_{-\infty}^{\infty}
+e^{-\frac{(x-\xi)^2}{4\alpha t}}\,
+H_n(\beta\xi)\,e^{-\xi^2/(2\sigma^2)}\,d\xi.
+\label{eq:3.8.2}
+\end{equation}
+
+The evaluation of the above integral is carried out by the use of
+the generating function method, namely
+\[
+I(x,t;\lambda)=\sum_{n=0}^{\infty}\frac{\lambda^n}{n!}\,F_n(x,t)
+=\frac{1}{\sqrt{4\pi\alpha t}}
+ \int_{-\infty}^{\infty}
+ e^{-\frac{(x-\xi)^2}{4\alpha t}}\,
+ e^{2\lambda\beta\xi-\lambda^2}\,
+ e^{-\xi^2/(2\sigma^2)}\,d\xi.
+\]
+
+The problem can therefore be easily solved using the rules of
+integration of Gaussian functions. Therefore we find
+\[
+F_n(x,t)=
+\frac{\sigma^n}{\sqrt{\sigma^2(t)}}\,
+H_n\!\left(\frac{x}{\sigma(t)},\frac{4\alpha\beta^2 t}{\sigma^4(t)}\right)\,
+\exp\!\left[-\frac{x^2}{2\sigma^2(t)}\right],
+\]
+\begin{equation}
+\sigma(t)=\sqrt{\sigma^2+4\alpha t},
+\label{eq:3.8.4}
+\end{equation}
+which, on account of eq.~\eqref{eq:3.3.9}, for
+$\beta=\sigma^{-1}$, yields
+\begin{equation}
+F_n(x,t)=
+\frac{1}{\sqrt{\sigma(t)}}\,
+H_n\!\left(\frac{x}{\sigma(t)}\right)\,
+\exp\!\left[-\frac{x^2}{2\sigma^2(t)}\right],
+\label{eq:3.8.5}
+\end{equation}
+where $H_n$ is the canonical Hermite polynomial.
+
+According to the previous result, we can write the solution of the
+Helmholtz equation (2.5.2) as
+\begin{equation}
+F_{l,m}(r,z)=
+F_0\!\left(\frac{W}{W(z)}\right)\,
+H_l\!\left(\frac{\sqrt{2}\,x}{W(z)}\right)\,
+H_m\!\left(\frac{\sqrt{2}\,y}{W(z)}\right)\,
+e^{-\frac{x^2+y^2}{W^2(z)}}\,
+e^{-i\varphi-i\frac{k}{2R(z)}(x^2+y^2)+i\zeta(z)(l+m+1)},
+\label{eq:3.8.6}
+\end{equation}
+which represents the Gauss--Hermite optical modes (also called
+$\mathrm{TEM}_{lm}$ modes) of the paraxial approximation. In
+Fig.~\ref{fig:3.8}, we have reported the relevant structures of the
+transverse distribution of the first few modes. It is also worth
+noting that the emergence of these modes breaks the cylindrical
+symmetry of the Gaussian beams, so they cannot be discussed within
+the context of a scalar theory. This aspect of the problem cannot
+however be discussed within the present book.
+
+\begin{figure}[H]
+\centering
+\includegraphics[max width=0.95\linewidth,keepaspectratio]{fig3_8.png}\caption{Transverse distribution of the first Gauss--Hermite
+$\mathrm{TEM}_{lm}$ modes.}
+\label{fig:3.8}
+\end{figure}
+
+In this chapter, we have presented the theory and applications of
+Hermite polynomials. We have used a non-conventional point of
+view, with the merit of providing a straightforward and flexible
+formalism. The reader is however invited to make a comparison
+with the conventional (and more rigorous) treatment reported in
+the bibliography below provided.
+
+% ------------------------------------------------------------------
+\section*{Bibliography}
+\addcontentsline{toc}{section}{Bibliography}
+
+\subsection*{Two Variable Hermite Polynomials}
+\begin{enumerate}[label={[\arabic*]}]
+\item P.~App\'el, J.~Kamp\'e de F\'eriet,
+      \emph{Fonctions Hypcrg\'eom\'etriques et Hypersph\'eriques,
+      polyn\^omes d'Hermite}, Gautier-Villars, Paris, 1926.
+\item Digital Library of Mathematical Functions,
+      \emph{Orthogonal Polynomials, Classical Orthogonal
+      Polynomials, Sums}, (18.18), National Institute of
+      Standards and Technology, retrieved 30 January 2015.
+\item H.W.~Gould, A.T.~Hopper,
+      ``Operational formulas connected with two generalizations
+      of Hermite polynomials'',
+      \emph{Duke Math.\ J.} \textbf{29}, pp.~51--63, 1962.
+\item N.N.~Lebedev, \emph{Special Functions and Their
+      Applications}, Dover Books on Mathematics, 1972.
+\item G.~Dattoli, ``Generalized polynomials, operational
+      identities and their applications'',
+      \emph{J.\ Comput.\ Appl.\ Math.} \textbf{118},
+      pp.~111--123, 2000.
+\item G.~Dattoli, S.~Lorezutta, A.~Torre,
+      ``Miscellaneous identities of generalized Hermite
+      polynomials'', \emph{Matematiche (Catania)} \textbf{52},
+      pp.~337--343, 1997.
+\item G.~Dattoli, S.~Lorezutta, G.~Maino, A.~Torre,
+      ``Theory of multi-index multivariable Bessel functions
+      and Hermite polynomials'',
+      \emph{Matematiche (Catania)} \textbf{52},
+      pp.~179--197, 1997.
+\item G.~Dattoli, A.~Torre, M.~Carpanese,
+      ``Operational rules and arbitrary order Hermite
+      generating functions'',
+      \emph{J.\ Math.\ Anal.\ Appl.} \textbf{227},
+      pp.~98--111, 1998.
+\item M.~Artioli, G.~Dattoli,
+      ``The Geometry of Hermite Polynomials'',
+      Wolfram Demonstrations Project, Mar.~2015,
+      \url{http://demonstrations.wolfram.com/
+      TheGeometryOfHermitePolynomials}.
+\end{enumerate}
+
+\subsection*{Monomiality}
+\begin{enumerate}[label={[\arabic*]},start=10]
+\item G.~Dattoli, A.~Torre, G.~Mazzacurati,
+      ``Quasi-monomials and isospectral problems'',
+      \emph{Nuovo Cimento B} \textbf{112}, pp.~133--138, 1997.
+\item G.~Dattoli, ``The Hermite and Laguerre Bessel Functions:
+      A by Product of the Monomiality Principle'', in:
+      D.~Cocolicchio, G.~Dattoli, H.M.~Srivastava (Eds.),
+      \emph{Advanced Special Functions and Applications},
+      Melfi, 1999, Aracne Editrice, Rome, p.~83, 2000.
+\item P.~Blasiak, G.~Dattoli, A.~Horzela, K.~Penson,
+      ``Representations of monomiality principle with
+      Sheffer-type polynomials and boson normal ordering'',
+      \emph{Phys.\ Lett.\ A} \textbf{352}, pp.~7--12, 2006.
+\item J.F.~Steffensen, ``The poweroid, an extension of the
+      mathematical notion of power'',
+      \emph{Acta Math.} \textbf{73}, pp.~333--366, 1941.
+\item A.V.~Turbiner, ``Quasi-exactly-solvable problems and
+      $\mathfrak{sl}(2)$ algebra'',
+      \emph{Commun.\ Math.\ Phys.} \textbf{118}, 46, 1988.
+\end{enumerate}
+
+\subsection*{Hermite Polynomials as Orthogonal Set}
+\begin{enumerate}[label={[\arabic*]},start=15]
+\item D.T.~Haimo, C.~Markett, ``A representation theory for
+      solutions of a higher-order heat equation I'',
+      \emph{J.\ Math.\ Anal.\ Appl.} \textbf{168},
+      pp.~89--107, 1992.
+\item D.T.~Haimo, C.~Markett, ``A representation theory for
+      solutions of a higher-order heat equation II'',
+      \emph{J.\ Math.\ Anal.\ Appl.} \textbf{168},
+      pp.~289--305, 1992.
+\item G.~Dattoli, B.~Germano, P.E.~Ricci,
+      ``Comments on monomiality, ordinary polynomials and
+      associated bi-orthogonal functions'',
+      \emph{Appl.\ Math.\ Comput.} \textbf{154},
+      pp.~219--227, 2004.
+\item G.~Dattoli, H.M.~Srivastava, K.~Zhukovsky,
+      ``Orthogonality properties of the Hermite and related
+      polynomials'',
+      \emph{J.\ Comput.\ Appl.\ Math.} \textbf{182}(1),
+      pp.~165--172, 2005.
+\item G.~Dattoli, B.~Germano, P.E.~Ricci,
+      ``Higher order Hermite polynomials, associated
+      bi-orthogonal functions and generalized heat
+      equations'',
+      \emph{Integral Transforms Spec.\ Funct.} \textbf{16},
+      2005.
+\end{enumerate}
+
+\subsection*{Geometry of Hermite Polynomials}
+\begin{enumerate}[label={[\arabic*]},start=20]
+\item M.~Artioli, G.~Dattoli,
+      ``The Geometry of Hermite Polynomials'',
+      Wolfram Demonstrations Project, 2015,
+      \url{http://demonstrations.wolfram.com/
+      TheGeometryOfHermitePolynomials}.
+\item M.~Artioli, G.~Dattoli,
+      ``Geometric Properties of Generalized Hermite
+      Polynomials'', Wolfram Demonstrations Project, 2015,
+      \url{http://demonstrations.wolfram.com/
+      GeometricPropertiesOfGeneralizedHermitePolynomials}.
+\end{enumerate}
+
+\subsection*{Applications}
+\begin{enumerate}[label={[\arabic*]},start=22]
+\item W.H.~Louisell, \emph{Quantum Statistical Properties of
+      Radiation}, Wiley, New York, 1973.
+\item G.~Dattoli, P.L.~Ottaviani, A.~Torre, L.~Vazquez,
+      ``Evolution operator equations, integration with
+      algebraic and finite difference methods: applications
+      to physical problems in classical and quantum
+      mechanics'', \emph{Riv.\ Nuovo Cimento} \textbf{20},
+      pp.~1--133, 1997.
+\end{enumerate}

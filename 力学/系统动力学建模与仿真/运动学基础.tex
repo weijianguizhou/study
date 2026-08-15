@@ -26,6 +26,9 @@
     \boldsymbol{b} = \boldsymbol{a}\cdot\boldsymbol{A}
 \end{equation}
 
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{proof}
 设$\boldsymbol{\alpha_{1}}$,$\boldsymbol{\alpha_{2}}$为坐标系$A$中的两个单位向量，且满足：
 $$
@@ -116,6 +119,9 @@ $$\mathbf{v}_{|A}=\boldsymbol{A}\mathbf{v}_{|B}$$
 \begin{myTheorem}{性质三}
     方向余弦矩阵中的 9 个数满足 6 个独立的约束方程.
 \end{myTheorem}
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{proof}
     用坐标系B中的矢量基表示坐标系A中的矢量基：
      $$\begin{bmatrix}\boldsymbol{e}_{1}\\\boldsymbol{e}_{2}\\\boldsymbol{e}_{3}\end{bmatrix}_A=\begin{bmatrix}a_{11}&a_{12}&a_{13}\\a_{21}&a_{22}&a_{23}\\a_{31}&a_{32}&a_{33}\end{bmatrix}_{AB}\begin{bmatrix}\boldsymbol{e}_{1}\\\boldsymbol{e}_{2}\\\boldsymbol{e}_{3}\end{bmatrix}_B$$
@@ -135,6 +141,9 @@ $$\mathbf{v}_{|A}=\boldsymbol{A}\mathbf{v}_{|B}$$
     \end{equation}
 \end{myTheorem}
 
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{proof}
     依旧用坐标系B中的矢量基表示坐标系A中的矢量基：
      $$\begin{bmatrix}\boldsymbol{e}_{1}\\\boldsymbol{e}_{2}\\\boldsymbol{e}_{3}\end{bmatrix}_A=\begin{bmatrix}a_{11}&a_{12}&a_{13}\\a_{21}&a_{22}&a_{23}\\a_{31}&a_{32}&a_{33}\end{bmatrix}_{AB}\begin{bmatrix}\boldsymbol{e}_{1}\\\boldsymbol{e}_{2}\\\boldsymbol{e}_{3}\end{bmatrix}_B$$
@@ -157,6 +166,9 @@ $$\boldsymbol{A}^{-1} = \boldsymbol{A}^{T}$$
         $$\boldsymbol{A}^{T}\boldsymbol{A}=\boldsymbol{I}$$
 
 \end{myTheorem}
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{proof}
     设$\mathbf{v}_{|A}$,$\mathbf{v}_{|B}$分别为$A$和$B$中的向量，且为$\mathbf{v}$在$A$和$B$中的投影，则有：
 $$\mathbf{v}_{|A}=\boldsymbol{A}\mathbf{v}_{|B}$$
@@ -173,6 +185,9 @@ $$\boldsymbol{A}^{-1} = \boldsymbol{A}^{T}$$
 \begin{myTheorem}{性质六}
     方向余弦矩阵行列式的值为正 1.
 \end{myTheorem}
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{proof}
     由性质四，还有按照行列式运算的按第一行展开即可。
 \end{proof}
@@ -203,6 +218,9 @@ $$\boldsymbol{A}^{-1} = \boldsymbol{A}^{T}$$
     \label{fig:简单旋转示意图}
 \end{figure}
 
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{proof}
     由特征多项式的定义：
     \[
@@ -306,6 +324,9 @@ f_{\boldsymbol{A}}(1) = -1 + \mathrm{tr}(\boldsymbol{A}) - \mathrm{tr}(\boldsymb
 \end{equation}
 
 那么这个神奇的式子是怎么得到的呢？
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{proof}
     我们知道，$\boldsymbol{e}_{i|A}=\boldsymbol{A}\boldsymbol{e}_{i|B}$,然后还有$a_{ij}=\boldsymbol{e}_{i|A}\cdot\boldsymbol{e}_{j|B}=\boldsymbol{e}_{i|B}\cdot(\boldsymbol{A}\boldsymbol{e}_{j|B})$
 
@@ -428,6 +449,9 @@ $$\boldsymbol{e_A} = \boldsymbol{e_B}\cos\theta - (\boldsymbol{e_B}\times\boldsy
 \end{equation}
 那么，式~\eqref{eq:欧拉参数转方向余弦}，式~\eqref{eq:方向余弦转欧拉参数},式~\eqref{eq:欧拉参数得转轴}，式~\eqref{eq:欧拉参数得转角}和式~\eqref{eq:转动公式的欧拉参数形式}是怎么得到的呢？下面给出Kane书中的证明。
 
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{proof}
 \textbf{（一）式~\eqref{eq:欧拉参数转方向余弦} 的推导。}  利用 $\boldsymbol{\lambda}$ 为单位向量，故 $1=\lambda_1^2+\lambda_2^2+\lambda_3^2$，结合式~\eqref{eq:欧拉参数归一化} 的 $\epsilon_4^2+\epsilon_1^2+\epsilon_2^2+\epsilon_3^2=1$，有
 $$
@@ -482,6 +506,9 @@ $$
 $$
 这正是式~\eqref{eq:转动公式的欧拉参数形式}，证毕。
 \end{proof}
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{example}
     \begin{figure}
         \centering
@@ -592,6 +619,9 @@ $$\rho_1 = \frac{a_{32} - a_{23}}{1 + a_{11} + a_{22} + a_{33}}$$
 \end{equation}
 所示进行运算即可。
 
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{proof}
     下面证明由式~\eqref{eq:定义式}定义的并矢 $\boldsymbol{\sigma}$ 是单位并矢，即对任意向量 $\mathbf{v}$ 都有
 $$
@@ -819,6 +849,9 @@ $$
 $$
 其中 $\boldsymbol{C}_{A\bar B}$、$\boldsymbol{C}_{\bar B C}$、$\boldsymbol{C}_{CB}$ 分别为与第一、第二、第三次转动相对应的方向余弦矩阵。
 
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{proof}
     将式 \eqref{eq:连续转动:C_Abar_B} 代入式 \eqref{eq:连续转动:C_Bar_B_B} 得
 $$
@@ -1178,6 +1211,9 @@ $$
 \noindent\rule{\textwidth}{0.4pt}
 \vspace{1em}\par
 
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{proof}
     为验证式~\eqref{eq:方向角:a1a2a3} 的正确性，可运用式~\eqref{eq:连续转动:方向余弦乘积}，并借助式~\eqref{eq:方向余弦矩阵计算式紧凑} 与式~\eqref{eq:方向余弦矩阵计算式} 构造 $\boldsymbol{C}_{A\bar B}$、$C_{\bar B\bar B}$ 与 $\boldsymbol{C}_{\bar B B}$。具体而言，对 $\mathbf{a}_1$ 旋转，令
 $$
@@ -1280,6 +1316,9 @@ $$
 $$
 \boldsymbol{\delta}^* = \frac{\boldsymbol{\rho} \cdot \boldsymbol{\delta}}{\boldsymbol{\rho}^2} \boldsymbol{\rho}
 $$
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{proof}
     若 $P^*$ 和 $P$ 均为任意选取的点，且 $\boldsymbol{a}^*$ 是在 $B$ 在 $A$ 中发生位移前，$P^*$ 相对于 $P$ 的位置矢量，$\boldsymbol{b}^*$ 是在此位移之后 $P^*$ 相对于 $P$ 的位置矢量，则 $P^*$ 的位移矢量 $\boldsymbol{\delta}^*$ 可表示为（见图~\ref{fig:螺旋运动}）
 \begin{equation}
@@ -1405,6 +1444,9 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
 \end{equation}
 式~\eqref{eq:角速度矩阵:Poisson方程} 称为泊松运动学方程（Poisson's kinematical equations）。
 
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{proof}
     将式~\eqref{eq:角速度矩阵:定义} 两端左乘 $\boldsymbol{A}$，得
 \begin{equation}
@@ -1509,6 +1551,9 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
 \par\vspace{1em}
 \noindent\rule{\textwidth}{0.4pt}
 \vspace{1em}\par
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{proof}
     对于 $i=2$，式~\eqref{eq:角速度矢量:单位矢导数} 中出现的标量积可以表示为方向余弦矩阵中的一个元素：
 \begin{equation}
@@ -1604,6 +1649,9 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
 
 \end{proof}
 
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{example}
     当点 $P$ 在固定在参考系 $A$ 中的空间曲线 $C$ 上运动时（见图~\ref{fig:角速度矢量例题}），可以通过令 $\boldsymbol{p}$ 为 $P$ 相对于固定在 $C$ 上的点 $P_0$ 的位矢，并把 $\mathbf{b}_1,\mathbf{b}_2,\mathbf{b}_3$ 定义为
     \begin{equation}
@@ -1682,13 +1730,22 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
     \label{eq:角速度分量:主要结论}
 \end{equation}
 
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{proof}
     将 $\alpha_i$ 定义为
 \begin{equation}
     \alpha_i \triangleq \boldsymbol{\alpha}\cdot\mathbf{b}_i \quad (i=1,2,3)
     \label{eq:角速度分量:alpha_i定义}
 \end{equation}
-则 $\theta_1$（见图 1.12.1）可表示为
+\begin{figure}[h]
+        \centering
+        \includegraphics[width=0.8\textwidth]{Figure/角速度分量图1.png}
+            \caption{角速度分量图1}
+            \label{fig:角速度分量图1}
+    \end{figure}
+则 $\theta_1$（见图~\ref{fig:角速度分量图1}）可表示为
 \begin{equation}
     \theta_1 = \tan^{-1}\frac{\alpha_2}{\alpha_3}
     \label{eq:角速度分量:theta1}
@@ -1723,6 +1780,13 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
     = \omega_1 - \frac{\alpha_1\alpha_2}{\alpha_2^2+\alpha_3^2}\,\omega_2 - \frac{\alpha_1\alpha_3}{\alpha_2^2+\alpha_3^2}\,\omega_3
     \label{eq:角速度分量:theta1展开}
 \end{equation}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figure/角速度分量图2.png}
+    \caption{角速度分量：单位球面上的 $\phi$ 与 $\psi$}
+    \label{fig:角速度分量图2}
+\end{figure}
 
 为完成式~\eqref{eq:角速度分量:平均导数定义} 中的积分，引入图 1.12.2 中的角度 $\phi$ 与 $\psi$，此时 $\boldsymbol{\alpha}$ 可表示为
 \begin{equation}
@@ -1764,7 +1828,16 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
 \end{proof}
 
 
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{example}
+        \begin{figure}[htbp]
+            \centering
+            \includegraphics[width=0.8\textwidth]{Figure/角速度分量图3.png}
+            \caption{角速度分量例题}
+            \label{fig:角速度分量例题}
+        \end{figure}
     在图 1.12.3 中，$B$ 表示一个圆柱形航天器，它在参考系 $A$ 中的姿态运动可以描述为锥运动（coning）与自旋（spinning）的组合：前者由角度 $\phi$ 刻画，涉及 $B$ 的对称轴在一个固定于 $A$、半顶角为常数 $\theta$ 的圆锥面上的运动；后者与角度 $\psi$ 的变化相联系，$\psi$ 是两条直线的夹角，这两条直线在 $B$ 的对称轴上相交并与之垂直，其中一条固定在 $B$ 中，另一条与圆锥的轴相交。在此情形下，满足
     \begin{equation}
         \begin{bmatrix}\mathbf{b}_1 & \mathbf{b}_2 & \mathbf{b}_3\end{bmatrix}
@@ -1856,6 +1929,9 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
     \label{eq:角速度欧拉:矩阵形式2}
 \end{equation}
 
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{proof}
     将式~\eqref{eq:欧拉参数转方向余弦}（方向余弦的欧拉参数表示）代入式~\eqref{eq:角速度矩阵:分量公式}，得
 \begin{equation}
@@ -1923,6 +1999,9 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
 
 \end{proof}
 
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{example}
     设 $B$ 关于其质心 $B^*$ 的惯性椭球为回转椭球，其回转轴平行于 $\mathbf{b}_1$。若 $\mathbf{I}$ 表示 $B$ 关于 $B^*$ 的惯性并矢，并定义 $I$ 与 $J$ 为
     \begin{equation}
@@ -2032,6 +2111,9 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
 \end{equation}
 这个关系称为角速度加法定理，当右端每一项都表示一个作简单转动（见简单转动一节）的物体的角速度（从而可按式~\eqref{eq:角速度矢量:基本关系} 表达）时特别有用。
 
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{proof}
     对任何固定在 $B$ 中的向量 $\mathbf{c}$，由式~\eqref{eq:角速度矢量:导数关系}，
 \begin{equation}
@@ -2066,6 +2148,9 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
 
 \end{proof}
 
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{example}
     在图 1.16.1 中，$\theta,\phi,\psi$ 表示用于描述刚体圆锥 $B$ 在参考系 $A$ 中姿态的角度。这些角度由如下直线构成：$L_1$ 与 $L_2$ 相互垂直且固定在 $A$ 中；$L_3$ 是 $B$ 的对称轴；$L_4$ 垂直于 $L_2$ 并与 $L_2$、$L_3$ 相交；$L_5$ 垂直于 $L_3$ 并与 $L_2$、$L_3$ 相交；$L_6$ 垂直于 $L_3$ 且固定在 $B$ 中；$L_7$ 垂直于 $L_2$ 与 $L_4$。为求 $B$ 在 $A$ 中的角速度，可以取 $A_1$ 为使 $L_2,L_4,L_7$ 固定的参考系，取 $A_2$ 为使 $L_3,L_5,L_7$ 固定的参考系，并注意到 $L_2$ 同时固定在 $A$ 与 $A_1$ 中，$L_7$ 同时固定在 $A_1$ 与 $A_2$ 中，$L_3$ 同时固定在 $A_2$ 与 $B$ 中。于是按式~\eqref{eq:角速度矢量:基本关系}，
     \begin{equation}
@@ -2161,6 +2246,13 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
     \omega_z \triangleq \boldsymbol{\omega}\cdot\mathbf{b}_z
     \label{eq:方向角角速度:omega_xyz}
 \end{equation}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figure/角速度与方向角图.png}
+    \caption{角速度与方向角：圆锥与单位向量}
+    \label{fig:角速度与方向角}
+\end{figure}
+
 其中 $\boldsymbol{\omega}$ 表示 $B$ 在 $A$ 中的角速度。这可以通过把 $\phi,\theta,\psi$ 视为体二转角、并按图 1.17.1 所示引入单位向量 $\mathbf{a}_1,\mathbf{a}_2,\mathbf{a}_3$ 来完成，即定义
 \begin{equation}
     \mathbf{b}_1 \triangleq \mathbf{b}_y,\qquad
@@ -2196,8 +2288,11 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
 \end{equation}
 在航天器动力学文献中可以见到大量把角速度测度数（measure numbers）与方向角及其时间导数联系起来的微分方程。附录 II 中列出了 24 组这样的运动学微分方程。
 
-\subsubsection{推导}
-由式~\eqref{eq:角速度矩阵:分量公式} 和空间三转角的方向余弦矩阵公式，
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
+\begin{proof}
+    由式~\eqref{eq:角速度矩阵:分量公式} 和空间三转角的方向余弦矩阵公式，
 \begin{equation}
     \omega_1 = (c_1s_2c_3+s_3s_1)\frac{\mathrm{d}}{\mathrm{d}t}(s_1s_2c_3-s_3c_1)
     + (c_1s_2s_3-c_3s_1)\frac{\mathrm{d}}{\mathrm{d}t}(s_1s_2s_3+c_3c_1)
@@ -2215,7 +2310,18 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
 
 式~\eqref{eq:方向角角速度:逆关系} 可由式~\eqref{eq:方向角角速度:基本关系} 及逆矩阵的定义得出；式~\eqref{eq:方向角角速度:空间三转角} 的第二个等式的有效性可通过验证式~\eqref{eq:方向角角速度:空间三转角} 中两个矩阵右端的乘积等于单位阵 $\boldsymbol{I}$ 来确立。类似地，把式~\eqref{eq:方向角角速度:空间三转角}--\eqref{eq:方向角角速度:体二转角} 中的第一组换成第二组、第三组或第四组，即可验证其余各式的有效性。
 
+\end{proof}
+
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{example}
+        \begin{figure}[htbp]
+            \centering
+            \includegraphics[width=0.8\textwidth]{Figure/角速度和方向角图2.png}
+            \caption{角速度与方向角例题（陀螺系统）}
+            \label{fig:角速度与方向角例题}
+        \end{figure}
     图 1.17.2 所示即第 1.7 节讨论过的陀螺系统，那里提到，在分析 $\theta_2$ 变小时宜同时采用空间三转角 $\phi_1,\phi_2,\phi_3$ 与图 1.17.2 所示的体二转角 $\theta_1,\theta_2,\theta_3$。给定 $\theta_i$ 与 $\dot{\theta}_i$（$i=1,2,3$），就需要能够求出 $\phi_i$ 与 $\dot{\phi}_i$（$i=1,2,3$）。设如第 1.7 节例题那样，在某瞬时 $\theta_1=30^\circ$、$\theta_2=45^\circ$、$\theta_3=60^\circ$，且 $\dot{\theta}_1=1.00$、$\dot{\theta}_2=2.00$、$\dot{\theta}_3=3.00$ rad/s。求该瞬时 $\dot{\phi}_1,\dot{\phi}_2,\dot{\phi}_3$ 的值。由式~\eqref{eq:方向角角速度:逆关系} 和式~\eqref{eq:方向角角速度:空间三转角}，
     \begin{equation}
         \begin{bmatrix}\dot{\phi}_1 & \dot{\phi}_2 & \dot{\phi}_3\end{bmatrix}
@@ -2291,8 +2397,11 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
 \end{equation}
 这说明在缓慢小转动中，使用空间三转角还是体三转角并无区别。
 
-\subsubsection{推导}
-由欧拉参数的定义（式~\eqref{eq:欧拉参数定义}），
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
+\begin{proof}
+    由欧拉参数的定义（式~\eqref{eq:欧拉参数定义}），
 \begin{equation}
     \boldsymbol{\epsilon} = \frac{1}{2}\boldsymbol{\lambda}\theta
 \end{equation}
@@ -2312,7 +2421,18 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
 
 式~\eqref{eq:缓慢小转动:omega_p} 由式~\eqref{eq:缓慢小转动:omega} 立即得出，因为在所考虑的近似阶数内 $\boldsymbol{p}$ 与 $\boldsymbol{\epsilon}$ 相等（由欧拉参数与罗德里格斯参数的定义可见）。最后，式~\eqref{eq:缓慢小转动:方向角} 由把式~\eqref{eq:方向角角速度:空间三转角} 或式~\eqref{eq:方向角角速度:体三转角} 中的 $\boldsymbol{M}$ 代入式~\eqref{eq:方向角角速度:基本关系} 后丢弃所有非线性项得到。
 
+\end{proof}
+
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{example}
+        \begin{figure}[htbp]
+            \centering
+            \includegraphics[width=0.8\textwidth]{Figure/小慢旋转.png}
+            \caption{缓慢小转动例题}
+            \label{fig:缓慢小转动例题}
+        \end{figure}
     在图 1.18.1 中，$B$ 表示一个通过弹性支撑连接在航天器 $A$ 上的刚体，航天器 $A$ 在牛顿参考系 $N$ 中的运动方式使得 $A$ 在 $N$ 中的角速度 $\boldsymbol{\omega}_{A|N}$ 为
     \begin{equation}
         \boldsymbol{\omega}_{A|N} = \omega_1\mathbf{a}_1+\omega_2\mathbf{a}_2+\omega_3\mathbf{a}_3
@@ -2388,7 +2508,16 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
     \label{eq:瞬时轴:v星}
 \end{equation}
 
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{proof}
+        \begin{figure}[htbp]
+            \centering
+            \includegraphics[width=0.8\textwidth]{Figure/瞬时轴.png}
+            \caption{瞬时轴的推导}
+            \label{fig:瞬时轴推导}
+        \end{figure}
     在图 1.19.1 中，$P$ 与 $Q$ 均为 $B$ 上任意选取的点，$\mathbf{p}$ 与 $\mathbf{q}$ 分别为它们相对固定在 $A$ 中的点 $O$ 的位矢，$\mathbf{r}$ 为 $P$ 相对 $Q$ 的位矢。于是
     \begin{equation}
         \mathbf{p} = \mathbf{q} + \mathbf{r}
@@ -2434,7 +2563,16 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
     与式~\eqref{eq:瞬时轴:v星} 一致。
 \end{proof}
 
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{example}
+        \begin{figure}[htbp]
+            \centering
+            \includegraphics[width=0.8\textwidth]{Figure/瞬时轴例题图.png}
+            \caption{瞬时轴例题}
+            \label{fig:瞬时轴例题}
+        \end{figure}
     在图 1.19.2 中，$B$ 表示一个缓慢自旋的圆柱形卫星，其质心 $B^*$ 在固定在参考系 $A$ 中、半径为 $R$ 的圆形轨道上运动。在整个运动过程中，$B$ 的对称轴被约束为始终与圆相切，同时 $B$ 以恒定速率绕该轴转动，使得 $B$ 中一条通过对称轴的平面在 $B^*$ 每绕轨道一周时两次与轨道平面平行。要求确定运动过程中某一典型时刻 $B$ 在 $A$ 中的瞬时轴。
 
     令 $A^*$ 为 $B^*$ 所在圆的圆心，并取 $C$ 为使圆在 $A^*$ 处的法线与连接 $A^*$、$B^*$ 的直线都固定的参考系，则 $B$ 在 $A$ 中的角速度可以表示为
@@ -2493,6 +2631,9 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
 \end{equation}
 其中 $\boldsymbol{\Omega}$ 是 $C$ 在 $A$ 中的角速度。换言之，$\alpha_{i|C}$ 是否等于 $\dot{\omega}_{i|C}$，取决于 $C$ 在 $A$ 中的运动。
 
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{proof}
     利用式~\eqref{eq:角速度矢量:导数关系}，可以把 $\boldsymbol{\alpha}$ 表示为
     \begin{equation}
@@ -2510,7 +2651,16 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
     \end{equation}
 \end{proof}
 
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{example}
+        \begin{figure}[htbp]
+            \centering
+            \includegraphics[width=0.8\textwidth]{Figure/角加速度例题图.png}
+            \caption{角加速度例题}
+            \label{fig:角加速度例题}
+        \end{figure}
     图 1.20.1 描绘了第 1.12 节例题中考虑过的系统。除了以前用过的单位向量外，图中还画出了正交单位向量 $\mathbf{c}_1,\mathbf{c}_2,\mathbf{c}_3$，并标出了使它们固定的参考系 $C$。只考虑 $\dot{\phi}$、$\dot{\psi}$ 以及 $\theta$ 均保持恒定的运动，要求确定量 $\alpha_{i|A}$、$\alpha_{i|B}$ 和 $\alpha_{i|C}$（$i=1,2,3$），它们定义为
     \begin{equation}
         \alpha_{i|A} \triangleq \boldsymbol{\alpha}\cdot\mathbf{a}_i,\qquad
@@ -2599,6 +2749,9 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
 
 正如第 4 章将看到的，利用广义速率、偏角速度与偏速度可以特别有效地列写广义力的表达式，并能以最少的工作量构造出尽可能简单的运动方程。
 
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{proof}
     对式~\eqref{eq:偏角速度:广义速率} 解出 $\dot{q}_1,\dots,\dot{q}_n$，得
     \begin{equation}
@@ -2651,7 +2804,16 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
     即得式~\eqref{eq:偏速度:速度}。
 \end{proof}
 
+\par\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}
+\vspace{1em}\par
 \begin{example}
+        \begin{figure}[htbp]
+            \centering
+            \includegraphics[width=0.8\textwidth]{Figure/偏角速度与偏速度图.png}
+            \caption{偏角速度与偏速度例题}
+            \label{fig:偏角速度与偏速度例题}
+        \end{figure}
     在图 1.21.1 中，$B$ 表示一个刚体，其质心 $B^*$ 以恒定速率 $V$ 在固定在参考系 $A$ 中、半径为 $R$ 的圆形轨道 $C$ 上运动。$\mathbf{a}_1,\mathbf{a}_2,\mathbf{a}_3$ 与 $\mathbf{b}_1,\mathbf{b}_2,\mathbf{b}_3$ 分别为固定在 $A$ 与 $B$ 中的两组成右手正交单位向量，$\boldsymbol{\tau}$ 为 $C$ 在 $B^*$ 处的单位切向量。
 
     由于 $B^*$ 在 $A$ 中的运动是给定的，三个广义坐标足以表征 $B$ 在 $A$ 中的位形。不必显式引入坐标，就可以用 $\mathbf{b}_r$ 与 $B$ 在 $A$ 中的角速度 $\boldsymbol{\omega}$ 定义广义速率：

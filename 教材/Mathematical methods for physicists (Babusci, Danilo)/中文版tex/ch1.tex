@@ -1,0 +1,507 @@
+% ch1.tex — 第 1 章：矩阵、指数算子及其物理应用（中文版）
+% 对应原书第 1–62 页（Sec. 1.1 – 1.6.7 + 参考文献）
+
+\chapter{矩阵、指数算子及其物理应用}
+\label{ch:1}
+
+% ============================================================
+\section{引言}
+\label{sec:1.1}
+
+矩阵及其相关形式体系是物理学与数学中广泛使用的工具。它们构成了处理经典与量子物理学中许多问题的支柱。因此，我们以对这些相关性质的简要回顾来开始本课程，目的是确定记号约定，并说明我们后续在求解具有物理意义的数学问题时所采用的技术细节。
+
+我们的出发点是方程
+\begin{equation}
+\hat{A}\,\underline{\zeta} = \underline{b},
+\label{eq:1.1.1}
+\end{equation}
+其中
+\[
+\hat{A} = \mat{\alpha_{11} & \alpha_{12} \\ \alpha_{21} & \alpha_{22}},\qquad
+\underline{\zeta} = \mat{z_{1} \\ z_{2}},\qquad
+\underline{b} = \mat{b_{1} \\ b_{2}},\qquad
+\forall\,\alpha_{ij},z_{i},b_{i}\in\mathbb{C}.
+\]
+方程~\eqref{eq:1.1.1} 可以看作一次代数方程的推广。只要我们把矩阵视为普通数的推广，其解就可以写成
+\begin{equation}
+\underline{\zeta} = \hat{A}^{-1}\,\underline{b},
+\label{eq:1.1.3}
+\end{equation}
+这与一次代数方程的解的形式相仿。这样的形式解只有在矩阵 $\hat{A}$ 非奇异、即可逆时才有意义。我们曾隐式地假定
+\begin{equation}
+\hat{A}\,\hat{A}^{-1} = \hat{1},
+\label{eq:1.1.4}
+\end{equation}
+其中实单位矩阵为
+\[
+\hat{1} = \mat{1 & 0 \\ 0 & 1},
+\]
+它满足
+\[
+\hat{1}\,\hat{B} = \hat{B}\,\hat{1} = \hat{B},\qquad \hat{1}\,\underline{\zeta} = \underline{\zeta}.
+\]
+
+对于二维情形，$\hat{A}$ 的逆为
+\[
+\hat{A}^{-1} = \frac{1}{\Delta}\mat{\alpha_{22} & -\alpha_{12} \\ -\alpha_{21} & \alpha_{11}},\qquad
+\Delta = \alpha_{11}\alpha_{22} - \alpha_{12}\alpha_{21}.
+\]
+若行列式为零，则矩阵是奇异（不可逆）的。
+
+与单位矩阵一道，我们还引入\emph{虚矩阵}
+\begin{equation}
+\hat{i} = \mat{0 & 1 \\ -1 & 0},\qquad \hat{i}^{2} = -\hat{1}.
+\label{eq:1.1.9}
+\end{equation}
+
+矩阵的函数通过其 Maclaurin 展开定义
+\[
+f(\hat{A}) = \sum_{n=0}^{\infty}\frac{f^{(n)}(0)}{n!}\,\hat{A}^{n}.
+\]
+对 $\hat{i}$ 取指数便得到矩阵形式的 Euler 公式：
+\begin{align}
+e^{\alpha\hat{i}}
+&= \sum_{n=0}^{\infty}\frac{\alpha^{n}}{n!}\,\hat{i}^{n}
+ = \cos\alpha\,\hat{1} + \sin\alpha\,\hat{i} \notag \\
+&= \mat{\cos\alpha & \sin\alpha \\ -\sin\alpha & \cos\alpha}
+ = \hat{R}(\alpha).
+\label{eq:1.1.17}
+\end{align}
+因此，虚矩阵的指数化给出二维旋转矩阵。
+
+\emph{双曲单位矩阵}
+\[
+\hat{h} = \mat{0 & 1 \\ 1 & 0},\qquad \hat{h}^{2} = \hat{1},
+\]
+给出
+\[
+e^{\alpha\hat{h}} = \mat{\cosh\alpha & \sinh\alpha \\ \sinh\alpha & \cosh\alpha}
+= \hat{R}_{h}(\alpha).
+\]
+
+这三个单位不互相对易：
+\[
+[\hat{i},\hat{h}] = 2\hat{t},\qquad
+\hat{t} = \mat{1 & 0 \\ 0 & -1}.
+\]
+任何 $2\times 2$ 矩阵都可以展开为
+\[
+\mat{\alpha_{11} & \alpha_{12} \\ \alpha_{21} & \alpha_{22}}
+= a\,\hat{1} + b\,\hat{i} + c\,\hat{h} + d\,\hat{t}.
+\]
+
+厄米共轭定义为
+\[
+\hat{A}^{\dagger} = \mat{\alpha_{11}^{*} & \alpha_{21}^{*} \\ \alpha_{12}^{*} & \alpha_{22}^{*}}.
+\]
+我们有 $\hat{i}^{\dagger} = -\hat{i}$（反厄米），而 $\hat{h},\hat{t},\hat{1}$ 是厄米的。
+
+% ============================================================
+\section{Pauli 矩阵}
+\label{sec:1.2}
+
+定义升降算子
+\[
+\spp = \mat{0 & 1 \\ 0 & 0},\qquad
+\smm = \mat{0 & 0 \\ 1 & 0},\qquad
+\spp^{2} = \smm^{2} = \hat{0},
+\]
+于是
+\[
+\hat{i} = \spp - \smm.
+\]
+Pauli--$z$ 矩阵为
+\[
+\sigz = \frac{1}{2}\hat{t} = \mat{\tfrac{1}{2} & 0 \\ 0 & -\tfrac{1}{2}}.
+\]
+
+对易关系为
+\begin{equation}
+[\spp,\smm] = 2\sigz,\qquad
+[\sigz,\spp] = \spp,\qquad
+[\sigz,\smm] = -\smm,
+\label{eq:1.2.8}
+\end{equation}
+它们正是 $SU(2)$ 代数。标准 Pauli 矢量是
+\[
+\sigx = \frac{1}{2}(\spp+\smm),\quad
+\sigy = \frac{1}{2i}(\spp-\smm),\quad
+\sigz = \frac{1}{2}\mat{1 & 0 \\ 0 & -1},
+\]
+且
+\[
+[\pauli_{j},\pauli_{k}] = i\,\varepsilon_{jkl}\,\pauli_{l}.
+\]
+
+对于哈密顿量 $\hat{H} = \hbar\,\vec{\Omega}\!\cdot\!\vec{\sigma}$，演化算子为
+\[
+\hat{U}(t) = e^{-i\Omega t\,\vec{n}\!\cdot\!\vec{\sigma}}
+= \cos\!\left(\frac{\Omega t}{2}\right)\hat{1}
+- 2i\sin\!\left(\frac{\Omega t}{2}\right)\vec{n}\!\cdot\!\vec{\sigma}.
+\]
+
+对于无迹反厄米 $2\times 2$ 矩阵，一个有用的解缠（disentanglement）公式为
+\[
+e^{\alpha(\spp-\smm)}
+= e^{2h(\alpha)\sigz}\,e^{f(\alpha)\spp}\,e^{-g(\alpha)\smm},
+\]
+其中 $h(0)=f(0)=g(0)=0$，且（对这一特殊情形）
+\[
+e^{h(\alpha)} = \sec\alpha,\qquad
+f(\alpha) = \tfrac{1}{2}\sin 2\alpha,\qquad
+g(\alpha) = \tan\alpha.
+\]
+
+对于一般的 $\tr\hat{\alpha}\neq 0$ 的 $2\times 2$ 矩阵 $\hat{\alpha}$，
+\[
+e^{\hat{\alpha}} = \mat{A_{11} & A_{12} \\ A_{21} & A_{22}},
+\]
+其中（$\Delta = (\alpha_{11}-\alpha_{22})^{2}+4\alpha_{12}\alpha_{21}$）
+\begin{align*}
+A_{11} &= \left\{\frac{\alpha_{11}-\alpha_{22}}{\sqrt{\Delta}}\sinh\frac{\sqrt{\Delta}}{2}
+           + \cosh\frac{\sqrt{\Delta}}{2}\right\}e^{\frac{1}{2}\tr\hat{\alpha}},\\
+A_{22} &= \left\{-\frac{\alpha_{11}-\alpha_{22}}{\sqrt{\Delta}}\sinh\frac{\sqrt{\Delta}}{2}
+           + \cosh\frac{\sqrt{\Delta}}{2}\right\}e^{\frac{1}{2}\tr\hat{\alpha}},\\
+\frac{A_{12}}{\alpha_{12}} &= \frac{A_{21}}{\alpha_{21}}
+ = \frac{2}{\sqrt{\Delta}}\sinh\frac{\sqrt{\Delta}}{2}\,e^{\frac{1}{2}\tr\hat{\alpha}}.
+\end{align*}
+
+% ============================================================
+\section{\texorpdfstring{$2\times 2$}{2x2} 矩阵的应用}
+\label{sec:1.3}
+
+\subsection{经典光学：光线传播与 ABCD 定律}
+
+近轴光线用 $\mat{r & \vartheta}^{T}$ 描述。长度为 $d$ 的自由空间：
+\[
+\hat{O} = \mat{1 & d \\ 0 & 1} = e^{d\spp}.
+\]
+焦距为 $f$ 的薄透镜：
+\[
+\hat{F} = \mat{1 & 0 \\ -1/f & 1} = e^{-\frac{1}{f}\smm},\qquad
+\hat{D} = \mat{1 & 0 \\ 1/f & 1} = e^{\frac{1}{f}\smm}.
+\]
+扩束器（squeeze）：
+\[
+e^{b\sigz} = \mat{e^{b} & 0 \\ 0 & e^{-b}}.
+\]
+ABCD 定律是
+\[
+\mat{r \\ \vartheta}_{\mathrm{out}}
+= \mat{A & B \\ C & D}
+  \mat{r \\ \vartheta}_{\mathrm{in}}.
+\]
+
+\subsection{量子力学}
+
+磁场 $\vec{B}=B\hat{y}$ 中自旋 $\tfrac{1}{2}$ 粒子的 Pauli 方程：
+\[
+i\hbar\,\partial_{t}\underline{\Phi}
+= -\frac{q\hbar}{2m}\,\vec{\sigma}\!\cdot\!\vec{B}\,\underline{\Phi}
+\;\Longrightarrow\;
+\partial_{t}\underline{\Phi}
+= \omega_{c}(\spp-\smm)\underline{\Phi},\qquad
+\omega_{c} = \frac{qB}{4m}.
+\]
+解：$\underline{\Phi}(t) = \hat{R}(\omega_{c}t)\,\underline{\Phi}_{0}$。
+
+二能级系统：
+\[
+i\hbar\,\partial_{t}\mat{a_{+} \\ a_{-}}
+= \bigl(\omega\sigz + 2\Omega\sigy\bigr)\mat{a_{+} \\ a_{-}},
+\]
+其中演化矩阵即上文给出的 $SU(2)$ 旋转矩阵。
+
+\subsection{粒子物理：Kaon 混合}
+
+中性 Kaon 态：
+\[
+|K^{0}\rangle = |\bar{s}d\rangle,\qquad
+|\bar{K}^{0}\rangle = |\bar{d}s\rangle.
+\]
+CP 本征态：
+\[
+|K_{S}\rangle = \frac{1}{\sqrt{2}}\bigl(|K^{0}\rangle + |\bar{K}^{0}\rangle\bigr),\qquad
+|K_{L}\rangle = \frac{1}{\sqrt{2}}\bigl(|K^{0}\rangle - |\bar{K}^{0}\rangle\bigr).
+\]
+用非厄米哈密顿量
+\[
+\hat{H} = \mat{E_{S}-i\Gamma_{S}/2 & 0 \\ 0 & E_{L}-i\Gamma_{L}/2}
+\]
+进行演化，得到振荡的跃迁几率
+\[
+\bigl|\langle\bar{K}^{0}\mid\Psi_{K}(t)\rangle\bigr|^{2}
+= \frac{1}{4}\Bigl(e^{-t/\tau_{S}} + e^{-t/\tau_{L}}
+- 2e^{-t/\tau^{*}}\cos\bigl((\omega_{S}-\omega_{L})t\bigr)\Bigr).
+\]
+
+% ============================================================
+\section{Cabibbo 角与跷跷板机制}
+\label{sec:1.4}
+
+$s$--$d$ 扇区中的味混合：
+\[
+\mat{d' \\ s'} = e^{\vartheta\hat{i}}\mat{d \\ s}
+= \mat{\cos\vartheta & \sin\vartheta \\ -\sin\vartheta & \cos\vartheta}\mat{d \\ s}.
+\]
+跷跷板中微子质量矩阵：
+\[
+\hat{m}_{\nu} = \mat{0 & m_{D} \\ m_{D} & M_{NHL}},\qquad M_{NHL}\gg m_{D}.
+\]
+
+% ============================================================
+\section{Gell-Mann 矩阵与 Pauli 矩阵}
+\label{sec:1.5}
+
+\subsection{自旋合成}
+
+\[
+\tfrac{1}{2}\otimes\tfrac{1}{2} = 0\oplus 1,\qquad
+\tfrac{1}{2}\otimes\tfrac{1}{2}\otimes\tfrac{1}{2}
+= \tfrac{1}{2}\oplus\tfrac{1}{2}\oplus\tfrac{3}{2}.
+\]
+
+\subsection{Gell-Mann 矩阵}
+
+八个 $3\times 3$ 的 Gell-Mann 矩阵 $\hat{\lambda}_{\alpha}$（$\alpha=1,\dots,8$）满足
+\[
+[\hat{\lambda}_{\alpha},\hat{\lambda}_{\beta}] = i\,f_{\alpha\beta\gamma}\,\hat{\lambda}_{\gamma},\qquad
+\tr(\hat{\lambda}_{\alpha}\hat{\lambda}_{\beta}) = 2\delta_{\alpha\beta}.
+\]
+具体地，
+\begin{align*}
+\hat{\lambda}_{1}&=\mat{0&1&0\\1&0&0\\0&0&0},&
+\hat{\lambda}_{2}&=\mat{0&-i&0\\i&0&0\\0&0&0},&
+\hat{\lambda}_{3}&=\mat{1&0&0\\0&-1&0\\0&0&0},\\
+\hat{\lambda}_{4}&=\mat{0&0&1\\0&0&0\\1&0&0},&
+\hat{\lambda}_{5}&=\mat{0&0&-i\\0&0&0\\i&0&0},&
+\hat{\lambda}_{6}&=\mat{0&0&0\\0&0&1\\0&1&0},\\
+\hat{\lambda}_{7}&=\mat{0&0&0\\0&0&-i\\0&i&0},&
+\hat{\lambda}_{8}&=\frac{1}{\sqrt{3}}\mat{1&0&0\\0&1&0\\0&0&-2}.
+\end{align*}
+
+\subsection{味与自旋}
+
+介子：$3\otimes\bar{3} = 1\oplus 8$。\\
+重子：$3\otimes 3\otimes 3 = 1\oplus 8\oplus 8\oplus 10$。
+
+质子波函数（味 $\times$ 自旋）：
+\[
+|p\rangle = \frac{1}{2\sqrt{3}}\,
+(duu\;\;udu\;\;uud)\,
+\mat{2&-1&-1\\-1&2&-1\\-1&-1&2}\,
+\mat{\downarrow\uparrow\uparrow \\ \uparrow\downarrow\uparrow \\ \uparrow\uparrow\downarrow}.
+\]
+
+\subsection{色与 QCD}
+
+色三重态 $R,G,B$ 使重子在色指标下为反对称：
+\[
+|\Omega^{-}\rangle = \frac{1}{\sqrt{6}}\sum_{ijk}\varepsilon_{ijk}\,|s_{i}s_{j}s_{k}\rangle.
+\]
+胶子属于 $SU(3)$ 色八重态。
+
+% ============================================================
+\section{结语}
+\label{sec:1.6}
+
+\subsection{矢量微分方程与矩阵}
+\label{sec:1.6.1}
+
+Pauli 矢量的类 Heisenberg 方程：
+\[
+\frac{d}{dt}\vec{\sigma} = \vec{\Omega}\times\vec{\sigma}.
+\]
+解（Rodrigues 旋转）：
+\begin{align}
+\vec{\sigma}(t)
+&= \cos(\Omega t)\,\vec{\sigma}_{0}
+ + \sin(\Omega t)\,(\vec{n}\times\vec{\sigma}_{0}) \notag \\
+&\quad + \bigl[1-\cos(\Omega t)\bigr]\,(\vec{n}\!\cdot\!\vec{\sigma}_{0})\,\vec{n}.
+\label{eq:rodrigues}
+\end{align}
+非齐次情形：
+\[
+\frac{d}{dt}\vec{\sigma} = \vec{\Omega}\times\vec{\sigma} + \vec{\gamma}
+\;\Longrightarrow\;
+\vec{\sigma}(t) = e^{t[\vec{\Omega}]}\vec{\sigma}_{0}
++ \int_{0}^{t} e^{(t-t')[\vec{\Omega}]}\,\vec{\gamma}\,dt'.
+\]
+
+\subsection{矩阵、矢量方程与旋转}
+\label{sec:1.6.2}
+
+对于 $\vec{S} = (S_{1},S_{2},S_{3})^{T}$，
+\[
+\frac{d}{dt}\mat{S_{1}\\S_{2}\\S_{3}}
+= \mat{0&-\Omega_{3}&\Omega_{2}\\
+        \Omega_{3}&0&-\Omega_{1}\\
+       -\Omega_{2}&\Omega_{1}&0}
+  \mat{S_{1}\\S_{2}\\S_{3}}.
+\]
+演化算子 $\hat{U}(t)$ 即 Rodrigues 旋转矩阵
+\[
+\hat{U}(t) = \hat{1} + \frac{\sin\Omega t}{\Omega}\,\hat{\Omega}
++ \frac{1-\cos\Omega t}{\Omega^{2}}\,\hat{\Omega}^{2},
+\]
+其中 $\Omega = \sqrt{\Omega_{1}^{2}+\Omega_{2}^{2}+\Omega_{3}^{2}}$。
+
+\subsection{Cabibbo--Kobayashi--Maskawa 矩阵}
+\label{sec:1.6.3}
+
+对三代夸克的推广：
+\[
+\mat{d'\\s'\\b'} = e^{\hat{\Omega}}\mat{d\\s\\b},
+\]
+其中 $\Omega_{3}=\vartheta_{c}$，$\Omega_{2}=x\vartheta_{c}^{2}$，$\Omega_{1}=y\vartheta_{c}^{3}$，且 $\vartheta_{c}\simeq 0.22$ rad。
+
+\subsection{Frenet--Serret 方程}
+\label{sec:1.6.4}
+
+\[
+\frac{d}{ds}\mat{T\\N\\B}
+= \mat{0&\kappa&0\\-\kappa&0&\tau\\0&-\tau&0}
+  \mat{T\\N\\B}.
+\]
+
+\subsection{矩阵、旋转与 Euler 角}
+\label{sec:1.6.5}
+
+Euler 角分解：
+\begin{align*}
+\hat{R}
+&= e^{\alpha\hat{J}_{z}}\,e^{\beta\hat{J}_{y}}\,e^{\gamma\hat{J}_{z}} \\
+&= \mat{\cos\alpha&-\sin\alpha&0\\\sin\alpha&\cos\alpha&0\\0&0&1}
+   \mat{1&0&0\\0&\cos\beta&-\sin\beta\\0&\sin\beta&\cos\beta}
+   \mat{\cos\gamma&-\sin\gamma&0\\\sin\gamma&\cos\gamma&0\\0&0&1}.
+\end{align*}
+
+\subsection{四矢量与 Lorentz 变换}
+\label{sec:1.6.6}
+
+Minkowski 度规：
+\[
+\eta_{\mu\nu} = \mat{-1&0&0&0\\0&1&0&0\\0&0&1&0\\0&0&0&1}.
+\]
+沿 $x$ 方向的 Lorentz boost：
+\[
+\mat{ct'\\x'\\y'\\z'}
+= \mat{\gamma&-\gamma\beta&0&0\\-\gamma\beta&\gamma&0&0\\0&0&1&0\\0&0&0&1}
+  \mat{ct\\x\\y\\z},
+\qquad \gamma = \frac{1}{\sqrt{1-\beta^{2}}}.
+\]
+
+\subsection{Dirac 矩阵}
+\label{sec:1.6.7}
+
+分块形式（用 $2\times 2$ 块 $\hat{1},\hat{i},\hat{h},\hat{t}$）：
+\[
+\gamma^{0} = \mat{\hat{1}&\hat{0}\\\hat{0}&-\hat{1}},\quad
+\gamma^{1} = \mat{\hat{0}&\hat{h}\\-\hat{h}&\hat{0}},\quad
+\gamma^{2} = -i\mat{\hat{0}&\hat{i}\\-\hat{i}&\hat{0}},\quad
+\gamma^{3} = \mat{\hat{0}&\hat{t}\\-\hat{t}&\hat{0}}.
+\]
+以及
+\[
+\gamma^{5} = i\gamma^{0}\gamma^{1}\gamma^{2}\gamma^{3}
+= \mat{\hat{0}&\hat{1}\\\hat{1}&\hat{0}}.
+\]
+
+Dirac 方程：
+\[
+i\hbar\,\partial_{t}\Psi = \vec{\alpha}\!\cdot\!\vec{p}\,\Psi + \beta\,mc^{2}\Psi.
+\]
+
+Foldy--Wouthuysen 变换：
+\[
+\hat{U} = e^{\beta\vec{\alpha}\!\cdot\!\vec{p}\,\vartheta}
+= \cos\theta + \beta\,\vec{\alpha}\!\cdot\!\vec{n}_{p}\sin\theta,\qquad
+\vec{n}_{p} = \frac{\vec{p}}{p},
+\]
+其中 $\tan(2\vartheta) = p/(mc)$。
+
+% ============================================================
+\section*{第 1 章参考文献}
+\addcontentsline{toc}{section}{第 1 章参考文献}
+
+\begin{thebibliography}{99}
+
+\bibitem{gantmaker} F.~R.\ Gantmaker, \emph{The Theory of Matrices}, Chelsea, New York, 1959.
+
+\bibitem{lancaster} P.~Lancaster, M.~Tismenetsky, \emph{The Theory of Matrices with Applications}, Academic Press, 1985.
+
+\bibitem{bronson1} R.~Bronson, \emph{Matrix Methods: An Introduction}, Academic Press, 1970.
+
+\bibitem{bronson2} R.~Bronson, \emph{Schaum's Outline of Theory and Problems of Matrix Operations}, McGraw-Hill, 1989.
+
+\bibitem{brown} W.~Brown, \emph{Matrices and Vector Spaces}, Marcel Dekker, 1991.
+
+\bibitem{leonhardt} U.~Leonhardt, \emph{Essential Quantum Optics}, Cambridge University Press, 2000.
+
+\bibitem{gasiorowicz} S.~Gasiorowicz, \emph{Quantum Physics}, Wiley, 1974.
+
+\bibitem{goldstein} H.~Goldstein, \emph{Classical Mechanics}, 2nd ed., Addison-Wesley, 1980.
+
+\bibitem{dattoli1990} G.~Dattoli, M.~Richetta, G.~Schettini, A.~Torre,
+``Lie algebraic methods and solutions of linear partial differential equations'', \emph{J.\ Math.\ Phys.}\ \textbf{31}, 2856 (1990).
+
+\bibitem{wei1963} J.~Wei, E.~Norman,
+``Lie algebraic solution of linear differential equations'', \emph{J.\ Math.\ Phys.}\ \textbf{4}, 575 (1963).
+
+\bibitem{vanderlugt} A.~Vander Lugt,
+``Operational Notation for the Analysis and Synthesis of Optical Data Processing Systems'', \emph{Proc.\ IEEE} \textbf{54}, 1055 (1966).
+
+\bibitem{stoler} D.~Stoler, ``Operator Methods in Physical Optics'', \emph{J.\ Opt.\ Soc.\ Am.}\ \textbf{71}, 334 (1981).
+
+\bibitem{bacry} H.~Bacry, M.~Cadilhac, ``Metaplectic Group and Fourier Optics'', \emph{Phys.\ Rev.\ A} \textbf{23}, 2533 (1981).
+
+\bibitem{sanchez} J.~Sanchez-Mandragon, K.~B.~Wolf, \emph{Lie Methods in Optics}, Springer, 1986.
+
+\bibitem{dattoli1988} G.~Dattoli, A.~Torre, J.~C.~Gallardo,
+``Operatorial methods in Optics'', \emph{Riv.\ Nuovo Cimento} \textbf{11}, 1 (1988).
+
+\bibitem{torre2005} A.~Torre, \emph{Linear Ray and Wave Optics in Phase Space}, Elsevier, 2005.
+
+\bibitem{feynman1957} R.~P.~Feynman, L.~P.~Vernon, R.~W.~Hellwarth,
+``Geometrical Representation of the Schrodinger Equation to Solve Maser Problems'', \emph{J.\ Appl.\ Phys.}\ \textbf{28}, 49 (1957).
+
+\bibitem{wu1957} C.~S.~Wu \emph{et al.}, ``Experimental Test of Parity Conservation in Beta Decay'', \emph{Phys.\ Rev.}\ \textbf{105}, 1413 (1957).
+
+\bibitem{yariv} A.~Yariv, \emph{Quantum Electronics}, Wiley, 1985.
+
+\bibitem{hallen} L.~Hallen, J.~H.~Eberly, \emph{Optical Resonance and Two-Level Atoms}, Wiley, 1975.
+
+\bibitem{baym} G.~Baym, \emph{Lectures on Quantum Mechanics}, Benjamin, 1969.
+
+\bibitem{cabibbo} N.~Cabibbo, ``Unitary Symmetry and Leptonic Decays'', \emph{Phys.\ Rev.\ Lett.}\ \textbf{10}, 531 (1963).
+
+\bibitem{kobayashi} M.~Kobayashi, T.~Maskawa,
+``CP Violation in the Renormalizable Theory of Weak Interaction'', \emph{Prog.\ Theor.\ Phys.}\ \textbf{49}, 652 (1973).
+
+\bibitem{wolfenstein} L.~Wolfenstein, ``Parametrization of the Kobayashi-Maskawa Matrix'', \emph{Phys.\ Rev.\ Lett.}\ \textbf{51}, 1945 (1983).
+
+\bibitem{dattoli1994} G.~Dattoli, ``Weak mixing angles, CP-violating phase and exponential parametrization of the Cabibbo-Kobayashi-Maskawa matrix'', \emph{Nuovo Cim.\ A} \textbf{107}, 1243 (1994).
+
+\bibitem{mohapatra} R.~N.~Mohapatra, ``Physics of Neutrino Masses'', SLAC Summer Institute (SSI04), 2004.
+
+\bibitem{gellmann} M.~Gell-Mann, \emph{The Eightfold Way}, Benjamin, 1964.
+
+\bibitem{lichtenberg} D.~B.~Lichtenberg, \emph{Unitary Symmetry and Elementary Particles}, Academic Press, 1978.
+
+\bibitem{peskin} M.~E.~Peskin, D.~V.~Schroeder, \emph{An Introduction to Quantum Field Theory}, Addison Wesley, 1995.
+
+\bibitem{mangano} M.~L.~Mangano, ``Introduction to QCD'', in \emph{Proc.\ 1998 European School of High-Energy Physics}.
+
+\bibitem{babusci2011} D.~Babusci, G.~Dattoli, E.~Sabia,
+``Operational Methods and Lorentz Type Equations'', \emph{J.\ Phys.\ Math.}\ \textbf{3}, P110601 (2011).
+
+\bibitem{varshalovich} D.~A.~Varshalovich, A.~N.~Moskalev, V.~K.~Khersonskii,
+\emph{Quantum Theory of Angular Momentum}, World Scientific, 1988.
+
+\bibitem{morin} D.~Morin, \emph{Relativity (Kinematics)}, Ch.~11, Harvard University, 2007.
+
+\bibitem{good} R.~H.~Good Jr., ``Properties of Dirac Matrices'', \emph{Rev.\ Mod.\ Phys.}\ \textbf{27}, 187 (1955).
+
+\bibitem{bjorken} S.~D.~Bjorken, S.~D.~Drell, \emph{Relativistic Quantum Mechanics}, McGraw-Hill, 1964.
+
+\end{thebibliography}

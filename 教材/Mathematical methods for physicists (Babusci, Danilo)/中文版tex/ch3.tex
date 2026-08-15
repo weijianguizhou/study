@@ -1,0 +1,1193 @@
+% ch3.tex — Hermite 多项式及其应用（中文版）
+% 对应原书第 3 章（书页 101–132）
+
+\chapter{Hermite 多项式及其应用}
+
+\section{引言}
+\label{sec:3.1}
+
+在本章及下一章中，我们将讨论正交多项式理论及其在物理若干问题中的应用。我们主要讨论 Hermite 与 Laguerre 多项式（分别记作 HP、LP），并略及其他族。
+
+在前几章中，我们已经多次``召唤''过 Hermite 型多项式，并表明它们可以通过算子恒等式（见式~(2.2.19)）定义
+\begin{equation}
+H_n(x,y)=e^{y\partial_x^2}(x^n).
+\label{eq:3.1.1}
+\end{equation}
+尽管 $H_n(x,y)$ 的显式推导已经留作练习，但鉴于它们对本书的重要性，此处为完整起见我们把它给出。
+
+展开指数算子，得
+\begin{equation}
+H_n(x,y)=\sum_{s=0}^{\infty}\frac{y^s}{s!}\,\partial_x^{2s}(x^n).
+\label{eq:3.1.2}
+\end{equation}
+
+\noindent{\itshape 注记.} 多项式 $H_n(x,y)$ 不是规范形式的 Hermite 多项式。它们有时被称为热多项式、Kamp\'e de F\'eriet 多项式、Gould--Hopper 多项式……在以下行文中，我们将称之为 Hermite 或热多项式。
+
+利用恒等式
+\[
+\partial_x^m(x^n)=
+\begin{cases}
+\dfrac{n!}{(n-m)!}\,x^{n-m}, & n>m,\\[6pt]
+0, & n<m,
+\end{cases}
+\label{eq:3.1.3}
+\]
+我们得到
+\begin{equation}
+H_n(x,y)=n!\sum_{s=0}^{\lfloor n/2\rfloor}
+\frac{x^{\,n-2s}\,y^s}{(n-2s)!\,s!},
+\qquad H_n(x,0)=x^n.
+\label{eq:3.1.4}
+\end{equation}
+
+上述多项式族不是规范形式的 HP，而是属于 Hermite 型多项式族。如已提到的，它们被称为\emph{热多项式}，因为它们自然地给出热方程的解，并且，我们将在后文证明，它们并非对所有 $y$ 值都正交。
+
+在图~\ref{fig:3.1} 中，我们给出了前四个热多项式~\eqref{eq:3.1.4} 关于变量 $x$（$y$ 起参数作用）在 $y$ 取两个不同值时的图形。
+
+\begin{figure}[H]
+\centering
+\includegraphics[max width=0.95\linewidth,keepaspectratio]{fig3_1.png}\caption{热多项式 $H_n(x,y)$ 关于变量 $x$ 的图形：(a)~$y=-1$ 与 (b)~$y=+1$。}
+\label{fig:3.1}
+\end{figure}
+
+我们可以注意到第一个实质性的差异：$y$ 取负值时多项式可正可负，零点的数目等于多项式的阶数。而在另一种情形，偶阶多项式没有实零点，奇阶多项式是反对称的，只在原点有一个零点。
+
+\medskip
+算子定义~\eqref{eq:3.1.1} 极大地简化了 HP 及其推广的性质研究。由此定义显然有
+\[
+H_{n+1}(x,y)=e^{y\partial_x^2}(x^{n+1})
+=e^{y\partial_x^2}\,x\,e^{-y\partial_x^2}\,e^{y\partial_x^2}(x^n)
+=e^{y\partial_x^2}\,x\,e^{-y\partial_x^2}\,H_n(x,y).
+\]
+考虑到式~\eqref{eq:2.4.16}，
+\[
+e^{y\partial_x^2}\,x\,e^{-y\partial_x^2}=x+2y\partial_x,
+\]
+我们得到递推关系
+\begin{equation}
+H_{n+1}(x,y)=x\,H_n(x,y)+2y\,\partial_x H_n(x,y).
+\label{eq:3.1.7}
+\end{equation}
+用类似的方法可以得到递推关系
+\begin{equation}
+\partial_x H_n(x,y)=n\,H_{n-1}(x,y).
+\label{eq:3.1.8}
+\end{equation}
+这两个递推关系可以结合起来证明热多项式满足如下 ODE
+\begin{equation}
+2y\,z_{xx}+x\,z_x=n\,z,\qquad z=H_n(x,y).
+\label{eq:3.1.9}
+\end{equation}
+在上述方程中，求导是对 $x$ 进行的，$y$ 被视为参数。
+
+同样容易验证，若把 $y$ 视为变量，下列关系成立：
+\begin{equation}
+\partial_y H_n(x,y)=n(n-1)\,H_{n-2}(x,y).
+\label{eq:3.1.10}
+\end{equation}
+
+为了把上述结果置于更一般的背景下，我们引入\emph{拟单项式}（quasi-monomial）的概念：那些可以为其定义一对算子 $\hat P$ 与 $\hat M$（分别称为求导算子与乘法算子），使得
+\begin{equation}
+\hat P\,p_n(x)=n\,p_{n-1}(x),\qquad
+\hat M\,p_n(x)=p_{n+1}(x).
+\label{eq:3.1.11}
+\end{equation}
+成立的多项式族 $p_n(x)$。此外，若再加上条件
+\begin{equation}
+p_0(x)=1,
+\label{eq:3.1.12}
+\end{equation}
+我们就可以只用乘法算子构造拟单项式族，根据恒等式
+\begin{equation}
+\hat M^n\,1=p_n(x).
+\label{eq:3.1.13}
+\end{equation}
+它由式~\eqref{eq:3.1.11} 第二个等式迭代得到。此外，若算子 $\hat M$ 与 $\hat P$ 具有微分实现，则容易证明多项式 $p_n(x)$ 满足微分方程
+\begin{equation}
+\hat M\hat P\,p_n(x)=n\,p_n(x).
+\label{eq:3.1.14}
+\end{equation}
+
+下面，我们将讨论从普通单项式 $x^n$ 出发构造拟单项式的一般程序，其乘法算子与求导算子分别为 $x$ 与普通求导。显然，按上述定义，$H_n(x,y)$ 是拟单项式，其乘法算子与求导算子可以确定为
+\begin{equation}
+\hat M=x+2y\partial_x,\qquad \hat P=\partial_x
+\label{eq:3.1.15}
+\end{equation}
+以及
+\begin{equation}
+\hat M\hat P=x\partial_x+2y\partial_x^2.
+\label{eq:3.1.16}
+\end{equation}
+因此，HP 是算子~\eqref{eq:3.1.16} 的（实）特征值 $n$ 的本征函数。
+
+\noindent{\itshape 注记.} 在此情形下，$y$ 应视为参数而非变量。应当使用全导数记号，但为记号连续性我们使用偏导数。
+
+以上引言性评注构成了后续各节讨论的骨架。
+
+% ------------------------------------------------------------------
+\section{Hermite 多项式的生成函数}
+\label{sec:3.2}
+
+\subsection{引入生成函数}
+\label{sec:3.2.1}
+
+由于多项式 $H_n(x,y)$ 是热方程的解，它们可以通过含二阶导数算子的演化算子的算子定义引入。下列两个重要恒等式是该定义的直接结果：
+\begin{equation}
+e^{z\partial_x^2}H_n(x,y)=H_n(x,y+z),\qquad
+e^{-y\partial_x^2}H_n(x,y)=x^n.
+\label{eq:3.2.1}
+\end{equation}
+它们虽然直接，却非常重要，应当仔细考虑。
+
+Hermite（热）多项式的另一个重要性质是生成函数，它将在后文被广泛使用。所谓给定多项式族 $p_n(x)$ 的生成函数，指的是函数
+\begin{equation}
+G(x,t)=\sum_{n=0}^{\infty}\frac{t^n}{n!}\,p_n(x)
+\label{eq:3.2.2}
+\end{equation}
+它本质上是变量 $t$ 与 $x$ 的函数。对 $t$（称为生成函数的展开变量）作 Taylor 展开，系数 $\partial_t^n G(x,t)|_{t=0}$ 正是多项式 $p_n(x)$。显然普通单项式由
+\begin{equation}
+\sum_{n=0}^{\infty}\frac{t^n}{n!}\,x^n=e^{xt}.
+\label{eq:3.2.3}
+\end{equation}
+生成。
+
+根据式~\eqref{eq:3.1.1}，我们可以把 HP 的生成函数定义为
+\[
+\sum_{n=0}^{\infty}\frac{t^n}{n!}\,H_n(x,y)
+=e^{y\partial_x^2}\!\left(\sum_{n=0}^{\infty}\frac{t^n}{n!}\,x^n\right)
+=e^{y\partial_x^2}\,e^{xt}.
+\]
+利用 $e^{y\partial_x^2}\,e^{xt}=e^{xt+yt^2}$（因为 $\partial_x^m e^{xt}=t^m e^{xt}$），得到
+\begin{equation}
+\sum_{n=0}^{\infty}\frac{t^n}{n!}\,H_n(x,y)=e^{xt+yt^2}.
+\label{eq:3.2.5}
+\end{equation}
+
+\noindent{\itshape 注记.} 应当注意，一般有 $e^{2yt\partial_x}\neq 1$，因此中间步骤需要算子解缠
+$e^{y\partial_x^2}\,e^{xt}=e^{yt^2}\,e^{xt}\,e^{2yt\partial_x}$，随后作用于真空 $1$。
+
+\medskip
+正如后文将展示的，这是 Hermite 多项式理论中一个极其重要的关系。
+
+我们作为算子形式体系的副产品、并在陈述了这一多项式族的主要性质之后推导出了 HP 的生成函数。在更经典的特殊函数教材中，HP 的显式形式直接由生成函数推得。为理解这一程序，我们回顾级数乘积的 Cauchy 公式：给定两个无穷级数
+\[
+S_1=\sum_{s=0}^{\infty}b_s\,x^s,\qquad
+S_2=\sum_{r=0}^{\infty}a_r\,x^r,
+\]
+我们得到
+\[
+S_1S_2=\sum_{s=0}^{\infty}\sum_{r=0}^{\infty}b_s\,a_r\,x^{r+s}
+=\sum_{n=0}^{\infty}c_n\,x^n,\qquad
+c_n=\sum_{r=0}^{n}a_r\,b_{n-r}.
+\]
+
+因此，我们可以直接从生成函数~\eqref{eq:3.2.5} 推出 HP：
+\[
+e^{xt+yt^2}=e^{xt}\,e^{yt^2}
+=\sum_{r=0}^{\infty}\frac{x^r t^r}{r!}
+ \sum_{s=0}^{\infty}\frac{y^s t^{2s}}{s!}
+=\sum_{n=0}^{\infty}\frac{t^n}{n!}\,H_n(x,y),
+\]
+并令 $r+2s=n$，根据定义~\eqref{eq:3.1.4}，得到
+\[
+\sum_{n=0}^{\infty}\frac{t^n}{n!}\,H_n(x,y)
+=e^{xt+yt^2}.
+\]
+
+\subsection{生成函数的应用}
+\label{sec:3.2.2}
+
+形如
+\begin{equation}
+I_n(a,b)=\int_{-\infty}^{\infty}(x+b)^n\,e^{-ax^2}\,dx
+\label{eq:3.2.11}
+\end{equation}
+的积分在物理或工程问题的求解中经常出现。用生成函数方法计算这些积分非常高效。若我们注意到
+\[
+\sum_{n=0}^{\infty}\frac{t^n}{n!}\,I_n(a,b)
+=\int_{-\infty}^{\infty}e^{tb}\,e^{tx}\,e^{-ax^2}\,dx
+=e^{tb}\,\sqrt{\frac{\pi}{a}}\;e^{\frac{t^2}{4a}},
+\label{eq:3.2.12}
+\]
+根据式~\eqref{eq:3.2.5}，并对式~\eqref{eq:3.2.12} 应用多项式恒等原理（即令同幂次的 $t$ 相等），我们得到如下结果
+\begin{equation}
+I_n(a,b)=\sqrt{\frac{\pi}{a}}\;\frac{1}{a^{n/2}}\,
+H_n\!\left(\frac{b}{\sqrt{a}},\frac{1}{4a}\right).
+\label{eq:3.2.13}
+\end{equation}
+
+另外两个性质
+\begin{equation}
+\partial_x^n e^{ax^2}=H_n(2ax,a)\,e^{ax^2},
+\label{eq:3.2.14}
+\end{equation}
+\begin{equation}
+a^n H_n(x,y)=H_n(ax,a^2y),
+\label{eq:3.2.15}
+\end{equation}
+可以用生成函数方法证明。式~\eqref{eq:3.2.14} 确实是平移算子性质的直接结果：
+\[
+\sum_{n=0}^{\infty}\frac{t^n}{n!}\,\partial_x^n e^{ax^2}
+=e^{t\partial_x}e^{ax^2}=e^{a(x+t)^2}
+=e^{ax^2}\,e^{2atx+at^2}
+=e^{ax^2}\sum_{n=0}^{\infty}\frac{t^n}{n!}\,H_n(2ax,a),
+\]
+而式~\eqref{eq:3.2.15} 留作练习。
+
+\noindent{\itshape 注记.} 注意，式~\eqref{eq:3.2.15} 的一个重要推论是恒等式
+$(-1)^n H_n(x,y)=H_n(-x,y)$。
+
+\medskip
+作为生成函数方法应用的又一例，我们考虑下列定理的证明。
+
+\begin{theorem}[加法]
+$\forall\,x,y,z\in\mathbb{R},\;\forall n\in\mathbb{N}$
+\begin{equation}
+H_n(x+z,y)=\sum_{s=0}^{n}\binom{n}{s}\,
+H_{n-s}\!\left(x,\frac{y}{2}\right)
+H_s\!\left(z,\frac{y}{2}\right).
+\label{eq:3.2.17}
+\end{equation}
+\end{theorem}
+
+\noindent{\itshape 提示：}它只是下列事实的推论：
+\[
+\sum_{n=0}^{\infty}\frac{t^n}{n!}\,H_n(x+z,y)
+=e^{(x+z)t+yt^2}
+=e^{xt+yt^2/2}\;e^{zt+yt^2/2}.
+\tag{3.2.18}
+\]
+
+下面这个问题极其重要，因为它涉及一个非平凡的排序问题，并让我们看到 HP 如何非常自然地在处理含乘法求导算子的表达式中出现。问题在于求算子
+\begin{equation}
+\hat O_n=(\alpha\partial_x+\beta x)^n.
+\label{eq:3.2.19}
+\end{equation}
+的 Newton 二项式形式的类比。
+
+根据前面的讨论，我们有
+\[
+\sum_{n=0}^{\infty}\frac{t^n}{n!}\,\hat O_n
+=e^{t(\alpha\partial_x+\beta x)}
+=e^{\beta t x+\frac{\alpha\beta}{2}t^2}\;e^{\alpha t\partial_x},
+\]
+再考虑到式~\eqref{eq:3.2.5}，可以写出
+\[
+e^{\beta t x+\frac{\alpha\beta}{2}t^2}
+=\sum_{r=0}^{\infty}\frac{t^r}{r!}\,
+H_r\!\left(\beta x,\frac{\alpha\beta}{2}\right)
+=\sum_{r=0}^{\infty}\frac{t^r}{r!}\,H_r\!\left(\beta x,\frac{\alpha\beta}{2}\right)
+ \sum_{s=0}^{\infty}\frac{(\alpha t)^s}{s!}\,\partial_x^s,
+\]
+应用 Cauchy 乘积公式并与 $\sum t^n\hat O_n/n!$ 比较，得到
+\begin{equation}
+\hat O_n=\sum_{s=0}^{n}\frac{1}{s!}\,
+\alpha^s\,H_{n-s}\!\left(\beta x,\frac{\alpha\beta}{2}\right)\,\partial_x^s,
+\label{eq:3.2.22}
+\end{equation}
+这是所谓\emph{Burchnall} 算子规则的推广，可用于证明恒等式
+\begin{equation}
+\hat O_n\,e^{-x^2}
+=\sum_{s=0}^{n}\frac{(-\alpha)^s}{s!}\,
+H_{n-s}\!\left(\beta x,\frac{\alpha\beta}{2}\right)
+H_s(2x,-1)\,e^{-x^2}
+=H_n\!\left((\beta-2\alpha)x,\frac{\alpha(\beta-2\alpha)}{2}\right)e^{-x^2}.
+\label{eq:3.2.23}
+\end{equation}
+
+我们将在本书第二部分讨论生成函数方法应用的更多例子。
+
+% ------------------------------------------------------------------
+\section{Hermite 多项式作为正交基}
+\label{sec:3.3}
+
+我们将在稍后更仔细地定义正交多项式的概念。这里我们讨论以下问题：给定关于 $x$ 的函数在什么条件下可以按 Hermite 多项式展开？
+
+为此，我们把第二变量 $y$ 视为参数，并限于 $y<0$ 的情形。因此我们写出
+\begin{equation}
+F(x)=\sum_{n=0}^{\infty}a_n\,H_n(x,-|y|).
+\label{eq:3.3.1}
+\end{equation}
+现在的任务是计算上述展开的系数 $a_n$。根据定义~\eqref{eq:3.1.1}，我们可以把~\eqref{eq:3.3.1} 改写为
+\[
+F(x)=e^{-|y|\partial_x^2}\!\left(\sum_{n=0}^{\infty}a_n\,x^n\right),
+\]
+求逆得到
+\[
+\Phi(x)\equiv e^{|y|\partial_x^2}\!\bigl(F(x)\bigr)
+=\sum_{n=0}^{\infty}a_n\,x^n.
+\]
+根据 Gauss--Weierstrass 变换（见式~\eqref{eq:2.2.17}），函数 $\Phi(x)$ 有下列积分表示：
+\begin{equation}
+\Phi(x)=\frac{1}{\sqrt{4\pi|y|}}\int_{-\infty}^{\infty}
+e^{-\frac{(x-\sigma)^2}{4|y|}}\,F(\sigma)\,d\sigma.
+\label{eq:3.3.4}
+\end{equation}
+利用 HP 的生成函数，最后一个恒等式可以写成
+\[
+\Phi(x)=\frac{1}{\sqrt{4\pi|y|}}
+ \sum_{n=0}^{\infty}\frac{1}{n!}
+ \int_{-\infty}^{\infty}
+ H_n\!\left(\frac{\sigma}{2\sqrt{|y|}},-\frac{1}{4}\right)
+ e^{-\frac{(x-\sigma)^2}{4|y|}}\,F(\sigma)\,d\sigma,
+\]
+与 $\Phi(x)=\sum a_n x^n$ 比较，给出系数 $a_n$ 的表达式
+\begin{equation}
+a_n=\frac{1}{2^n n!\sqrt{\pi|y|}}
+\int_{-\infty}^{\infty}
+H_n\!\left(\frac{\sigma}{2\sqrt{|y|}},-\frac{1}{4}\right)
+e^{-\frac{\sigma^2}{4|y|}}\,F(\sigma)\,d\sigma.
+\label{eq:3.3.6}
+\end{equation}
+
+我们指出，作为式~\eqref{eq:3.3.1} 的推论，函数
+\begin{equation}
+\phi_n(x)=\frac{1}{\sqrt{2^n n!\,\pi|y|}}\,
+H_n\!\left(\frac{x}{2\sqrt{|y|}},-\frac{1}{4}\right)
+e^{-\frac{x^2}{4|y|}}
+\label{eq:3.3.7}
+\end{equation}
+与 Hermite 多项式 $H_n(x,-|y|)$ 双正交（bi-orthogonal）。用更常规的说法，可以表述为：多项式 $H_n\!\left(\frac{x}{2\sqrt{|y|}},-\frac{1}{4}\right)$ 以权重函数 $e^{-x^2/(4|y|)}$ 与 $H_n(x,-|y|)$ 正交。HP 的规范形式取 $|y|=1/2$，记作 $\mathrm{He}_n(x)$，即
+\begin{equation}
+\mathrm{He}_n(x)=H_n\!\left(x,-\frac{1}{2}\right).
+\label{eq:3.3.8}
+\end{equation}
+在应用中，也使用形式
+\begin{equation}
+H_n(x)=H_n(2x,-1)=2^n H_n\!\left(x,-\frac{1}{4}\right)
+\label{eq:3.3.9}
+\end{equation}
+我们两种记号都会采用。这两种形式由恒等式
+\begin{equation}
+H_n(x)=2^{n/2}\,\mathrm{He}_n\!\left(\frac{x}{\sqrt{2}}\right).
+\label{eq:3.3.10}
+\end{equation}
+联系。
+
+此外，$H_n(x,y)$ 与 Hermite 规范形式的联系由下式给出
+\begin{equation}
+H_n(x,y)=(-i)^n\,y^{n/2}\,
+H_n\!\left(\frac{x}{2\sqrt{-y}}\right)
+=2^n\,(-iy)^{n/2}\,
+\mathrm{He}_n\!\left(\frac{x}{2\sqrt{-iy}}\right).
+\label{eq:3.3.11}
+\end{equation}
+
+不难验证，上述关系是前面概述性质的直接推论。
+
+\noindent{\itshape 注记.} 两组函数 $\gamma_n(x)$、$\lambda_n(x)$ 称为\emph{双正交}的，如果
+$\int \gamma_n(x)\,\lambda_m(x)\,dx=\delta_{nm}$。例如在区间 $[0,2\pi]$ 上 $\sin(nx)$、$\cos(mx)$ 是双正交的。
+
+\medskip
+现在推导函数~\eqref{eq:3.3.7} 满足的微分方程。它将通过一个简单而有效的方法确定。由式~\eqref{eq:3.3.7}，有
+\[
+H_n\!\left(\frac{x}{2\sqrt{|y|}},-\frac{1}{4}\right)
+=A_n\,e^{\frac{x^2}{4|y|}}\,\phi_n(x),\qquad
+A_n=\sqrt{2^n n!\,\pi|y|}.
+\]
+
+在算子语言中，确定多项式 $H_n(x,y)$ 微分方程的 ODE 可以写成（见式~\eqref{eq:3.1.14} 与~\eqref{eq:3.1.16}）
+\[
+\hat h_{\mathrm{er}}\,H_n(ax,y)=0,\qquad
+\hat h_{\mathrm{er}}=\partial_x^2+a^2x\partial_x-n a^2.
+\]
+将算子 $\hat h_{\mathrm{er}}$ 作用于式~\eqref{eq:3.3.7}，得到
+\[
+\left(-2|y|\partial_x^2+x\partial_x-n\right)e^{\frac{x^2}{4|y|}}\phi_n(x)=0,
+\]
+于是对 $\phi_n(x)$，我们得到具有非常数系数的二阶微分方程
+\begin{equation}
+\left(-2|y|\partial_x^2-x\partial_x-1\right)\phi_n(x)=n\,\phi_n(x).
+\label{eq:3.3.15}
+\end{equation}
+这一结果意味着函数 $\phi_n$ 是算子
+\begin{equation}
+\hat\eta_{\mathrm{her}}=-2|y|\partial_x^2-x\partial_x-1,
+\label{eq:3.3.16}
+\end{equation}
+的以 $n$ 为特征值的本征函数，当 $y<0$ 时，该算子是式~\eqref{eq:3.1.16} 中算子的厄米共轭。
+
+\noindent{\itshape 注记.} 我们提醒，两个算子乘积的厄米共轭是
+$(\hat A\hat B)^\dagger=\hat B^\dagger\hat A^\dagger$，且由 $\hat x^\dagger=\hat x$ 与 $\partial_x^\dagger=-\partial_x$，可得
+$(x\partial_x)^\dagger=-\partial_x x\ldots$
+
+\medskip
+虽然不作证明，我们强调如下命题。
+
+\begin{proposition}
+互为厄米共轭的两个算子的本征函数构成一个双正交集。
+\end{proposition}
+
+现在考虑 $y=-1/2$ 时规范 Hermite 多项式的情形，定义函数
+\begin{equation}
+\Phi_n(x)=\alpha_n\,\mathrm{He}_n(x)\,e^{-x^2/4}.
+\label{eq:3.3.17}
+\end{equation}
+它显然提供一个正交函数集，其归一化常数 $\alpha_n$ 稍后确定。函数~\eqref{eq:3.3.17} 满足的微分方程可以按照前面说明函数~\eqref{eq:3.3.7} 的方法得到，即若令
+\[
+\phi_n(x)=\Phi_n(x)\,e^{x^2/4}.
+\]
+根据式~\eqref{eq:3.3.15}，函数 $\Phi_n(x)$ 满足的 ODE 是
+\begin{equation}
+\left(\frac{x^2}{4}-\partial_x^2-\frac{1}{2}\right)\Phi_n(x)
+=n\,\Phi_n(x),
+\label{eq:3.3.19}
+\end{equation}
+这正是量子谐振子方程。谐振子本征函数通常写在基 $H_n(x)$ 下，为
+\begin{equation}
+\Phi_n(x)=\frac{1}{\sqrt{2^n n!\sqrt{\pi}}}\,
+H_n(x)\,e^{-x^2/2}.
+\label{eq:3.3.20}
+\end{equation}
+
+\begin{exercise}
+证明式~\eqref{eq:3.3.20} 给出一个标准正交集，即 $\Phi_n(x)$ 相互正交且归一化到 1。
+\end{exercise}
+
+在图~\ref{fig:3.2} 中我们给出了前六个谐振子本征函数的行为。
+
+\begin{figure}[H]
+\centering
+\includegraphics[max width=0.95\linewidth,keepaspectratio]{fig3_2.png}\caption{谐振子本征函数 $\Phi_n(x)$。}
+\label{fig:3.2}
+\end{figure}
+
+函数按 HP 的展开将在练习与补充部分讨论。这里我们给出这种展开的一个非常简单但重要的例子。
+
+\begin{exercise}
+证明
+\begin{equation}
+x^n=\sum_{s=0}^{\lfloor n/2\rfloor}
+\frac{n!}{s!\,(n-2s)!}\,(-1)^s\,y^s\,H_{n-2s}(x,y).
+\tag{3.3.21}
+\end{equation}
+\noindent{\itshape 提示：}使用生成函数方法，注意 $e^{xt}=e^{xt+yt^2-yt^2}$。
+\end{exercise}
+
+% ------------------------------------------------------------------
+\section{量子力学中的 Hermite 多项式：产生与湮灭算子}
+\label{sec:3.4}
+
+谐振子形式体系的使用几乎遍及物理学的所有领域，因此很难选出最具代表性的例子。这里我们遵循``传统''做法，它虽然并不原创，但具有提供一种相当扎实、教学上有效的方法来切入问题的优点。
+
+因此，我们将考虑量子力学中的若干例子，并从受谐振子势驱动的单粒子哈密顿量开始，即
+\begin{equation}
+\hat H=\frac{\hat p^2}{2m}+\frac{1}{2}\,k\,\hat x^2.
+\label{eq:3.4.1}
+\end{equation}
+相应的 Schr\"odinger 方程为
+\begin{equation}
+i\hbar\,\partial_t\Psi=-\frac{\hbar^2}{2m}\,\partial_x^2\Psi
++\frac{1}{2}\,k\,x^2\Psi
+\label{eq:3.4.2}
+\end{equation}
+其定态解可以写成
+\begin{equation}
+\Psi(x,t)=e^{-iE_n t/\hbar}\,\Phi_n(x).
+\label{eq:3.4.3}
+\end{equation}
+
+\begin{figure}[H]
+\centering
+\includegraphics[max width=0.95\linewidth,keepaspectratio]{fig3_3.png}\caption{能级、谐振子势与前八个本征函数关于位置坐标的图形。}
+\label{fig:3.3}
+\end{figure}
+
+代入式~\eqref{eq:3.4.2}，得到
+\begin{equation}
+E_n\,\Phi_n(x)=-\frac{\hbar^2}{2m}\,\partial_x^2\Phi_n(x)
++\frac{1}{2}\,k\,x^2\Phi_n(x),
+\label{eq:3.4.4}
+\end{equation}
+其中 $\omega=\sqrt{k/m}$ 是我们问题的特征频率。式~\eqref{eq:3.4.4} 正是谐振子本征函数满足的 ODE（注意这里指基 $H_n(x)$ 下的本征函数）。我们指出，量
+\begin{equation}
+x_q\equiv\sqrt{\frac{\hbar}{m\omega}}
+\label{eq:3.4.5}
+\end{equation}
+具有长度的量纲（其物理意义将在下面讨论），把式~\eqref{eq:3.4.4} 用变量 $\xi=x/x_q$ 改写，得到
+\begin{equation}
+E_n\,\Phi_n(\xi)=-\frac{\hbar\omega}{2}\,\partial_\xi^2\Phi_n(\xi)
++\frac{\hbar\omega}{2}\,\xi^2\Phi_n(\xi),
+\label{eq:3.4.6}
+\end{equation}
+能量本征值 $E_n$ 可以用特征频率写成
+\begin{equation}
+E_n=\hbar\omega\!\left(n+\frac{1}{2}\right).
+\label{eq:3.4.7}
+\end{equation}
+
+在图~\ref{fig:3.3} 中，我们给出了二次势、能级与前八个波函数。显然激发阶数越大，分布函数的空间延展越大。必须强调，0 阶本征函数（即最低能级）为
+\[
+\Phi_0(x)\propto e^{-x^2/(2x_q^2)},
+\]
+即一个均方根（r.m.s.）与 $x_q$ 成正比的波包。
+
+在前面的讨论中，我们引入了弹性常数 $k$，它是最重要的物理参数，因为它确定了振荡频率，从而确定了能量本征值之间的间隔。我们将在下一节讨论涉及具体应用的例子，如双原子分子。这里我们继续确定后面将使用的形式体系，即引入产生--湮灭算子。
+
+为此，把式~\eqref{eq:3.4.6} 改写为
+\begin{equation}
+\left(\xi^2-\partial_\xi^2-1\right)\Phi_n(\xi)=2n\,\Phi_n(\xi),
+\label{eq:3.4.9}
+\end{equation}
+这提示引入算子
+\begin{equation}
+\hat a=\frac{1}{\sqrt{2}}\,(\xi+\partial_\xi),\qquad
+\hat a^\dagger=\frac{1}{\sqrt{2}}\,(\xi-\partial_\xi).
+\label{eq:3.4.10}
+\end{equation}
+这两个算子互为厄米共轭，满足对易规则
+\begin{equation}
+[\hat a,\hat a^\dagger]=\hat 1.
+\label{eq:3.4.11}
+\end{equation}
+并且，根据我们在第 2 章学到的运算技巧，可以把式~\eqref{eq:3.4.9} 改写为
+\begin{equation}
+\hat a^\dagger\hat a\,\Phi_n(\xi)=n\,\Phi_n(\xi).
+\label{eq:3.4.12}
+\end{equation}
+
+在上一节中，我们看到如何通过乘法算子多次作用于 0 阶多项式来构造多项式。我们现在将证明，算子 $\hat a^\dagger$ 的 $n$ 次幂作用于我们所定义的真空态（由最低阶谐振子函数代表）的结果为
+\begin{equation}
+\frac{(\hat a^\dagger)^n}{\sqrt{n!}}\,\Phi_0=\Phi_n.
+\label{eq:3.4.13}
+\end{equation}
+
+为了证明上述恒等式正确，我们使用生成函数方法，据此得到
+\[
+\sum_{n=0}^{\infty}\frac{t^n}{n!}\,(\hat a^\dagger)^n\Phi_0(\xi)
+=e^{t\hat a^\dagger}\Phi_0(\xi)
+=e^{-t^2/4}\,e^{\sqrt{t/2}\,\xi}\,
+ e^{-t^2/4}\,e^{\sqrt{t/2}\,\xi}\,e^{-\xi^2/2}
+\]
+\begin{align*}
+&=e^{-t^2/2}\,e^{\sqrt{2t}\,\xi}\,e^{-\xi^2/2}
+ =\sum_{m=0}^{\infty}\frac{t^m}{m!}\,
+  \mathrm{He}_m\!\left(\sqrt{2}\,\xi\right)\,e^{-\xi^2/2}.
+\tag{3.4.14}
+\end{align*}
+比较同幂次系数，便证明了恒等式~\eqref{eq:3.4.13}，同时还得到
+\begin{equation}
+\hat a^\dagger\Phi_n=\sqrt{n+1}\,\Phi_{n+1}.
+\label{eq:3.4.15}
+\end{equation}
+因此，我们称 $\hat a^\dagger$ 为``产生''算子。类似地，``湮灭''算子的伴随恒等式也可以用同样的方法验证：
+\begin{equation}
+\hat a\,\Phi_n=\sqrt{n}\,\Phi_{n-1}.
+\label{eq:3.4.16}
+\end{equation}
+
+这样我们就证明了三个算子在量子谐振子动力学中起基本作用：互为厄米共轭的产生--湮灭对（有时称为升降算子），以及称为数算子的厄米算子 $\hat a^\dagger\hat a$。
+
+Dirac 记号常被用来描述谐振子态。确实有对应关系
+\begin{equation}
+|0\rangle\to\Phi_0(\xi),\qquad
+|n\rangle\to\Phi_n(\xi)
+\label{eq:3.4.17}
+\end{equation}
+正交性可以表示为
+\begin{equation}
+\langle m|n\rangle=\delta_{m,n}.
+\label{eq:3.4.18}
+\end{equation}
+
+在式~\eqref{eq:3.4.17} 中，我们把表示所谓真空态的 $|0\rangle$ 态单独列出。更严格地说，Dirac 记号（也称 $n$ 态）与谐振子本征函数之间的对应应当写成
+\begin{equation}
+\langle \xi|n\rangle=\Phi_n(\xi).
+\label{eq:3.4.19}
+\end{equation}
+
+问题的这一方面将在本书第二部分引入所谓相干态时更仔细地讨论。
+
+% ------------------------------------------------------------------
+\section{量子力学应用}
+\label{sec:3.5}
+
+遗憾的是，我们无法深入讨论上述形式体系在量子力学问题中的应用，因此我们将局限于几个能说明其强大与优雅的例子。我们要讨论的第一个问题是受谐振子势支配并处于经典电场作用下的带电粒子。
+
+相关哈密顿量可以写成
+\begin{equation}
+\hat H=\frac{\hat p^2}{2m}+\frac{1}{2}\,k\,\hat x^2-eE\hat x,
+\label{eq:3.5.1}
+\end{equation}
+其中电场 $E$ 恒定且均匀，即它与时间和坐标无关。与我们已研究情形的差别在于存在一个线性的势，它体现了电场的作用。
+
+上述问题可以通过把哈密顿量改写为
+\begin{equation}
+\hat H=\frac{\hat p^2}{2m}+\frac{1}{2}\,m\omega^2
+\left(\hat x-\frac{eE}{m\omega^2}\right)^2\hat 1
+-\frac{(eE)^2}{2m\omega^2}\,\hat 1.
+\label{eq:3.5.2}
+\end{equation}
+而轻松地转化为普通谐振子问题。式~\eqref{eq:3.5.2} 中最后一项乘以单位算子后是一个具有能量量纲的常数，而
+\begin{equation}
+x_s\equiv\frac{eE}{m\omega^2}
+\label{eq:3.5.3}
+\end{equation}
+是电场引起的坐标平移。由于电场恒定且均匀，把哈密顿量整理成形如~\eqref{eq:3.5.2} 的形式提示我们引入坐标算子
+\begin{equation}
+\hat X=\hat x-\frac{eE}{m\omega^2}\,\hat 1
+\label{eq:3.5.4}
+\end{equation}
+它不改变我们问题的对易关系，且
+\begin{equation}
+[\hat p,\hat X]=-i\hbar\,\hat 1.
+\label{eq:3.5.5}
+\end{equation}
+因此可以得出如下结论：
+\begin{enumerate}
+\item 能量本征值与之前相同，但增加了一项由电场效应引起的项，即
+      \begin{equation}
+      E_n=\hbar\omega\!\left(n+\frac{1}{2}\right)-\frac{(eE)^2}{2m\omega^2}.
+      \label{eq:3.5.6}
+      \end{equation}
+\item 本征函数保持不变，但自变量应替换为
+      \begin{equation}
+      \xi\to\xi-\xi_0,\qquad
+      \xi_0=\frac{x_s}{x_q}=\sqrt{\frac{2}{m\hbar\omega}}\;eE.
+      \label{eq:3.5.7}
+      \end{equation}
+\end{enumerate}
+
+我们要讨论的第二个例子是 Landau 能级，它出现在电子（或任何带电粒子）在经典磁场中运动的量子分析中。支配该过程的哈密顿算子可以写成（cgs 单位制）
+\begin{equation}
+\hat H=\frac{1}{2m}\left(\hat{\vec p}-\frac{q}{c}\,\vec A\right)^2.
+\label{eq:3.5.8}
+\end{equation}
+其中 $\vec A$ 是矢势。假定磁场沿 $z$ 方向，且电子在 $x,y$ 平面内运动，
+\begin{equation}
+\vec B=\nabla\times\vec A,
+\label{eq:3.5.9}
+\end{equation}
+我们可以把 $\vec A$ 写成
+\begin{equation}
+\vec A\equiv(0,Bx,0).
+\label{eq:3.5.10}
+\end{equation}
+于是哈密顿量可以写成
+\begin{equation}
+\hat H=\frac{1}{2m}\left[\hat p_x^2
++\left(\hat p_y-\frac{qB}{c}\,\hat x\right)^2\right].
+\label{eq:3.5.11}
+\end{equation}
+由于算子 $\hat p_y$ 与哈密顿量对易，可以断定沿 $y$ 方向的动量是守恒量，可以用其本征值 $\hbar k_y$ 代替。于是哈密顿量很容易被识别为与前例类似的平移谐振子哈密顿量：
+\[
+\hat H=\frac{\hat p_x^2}{2m}
++\frac{1}{2}\,m\omega_c^2
+\left(\hat x-x_B\,\hat 1\right)^2
++\frac{\hbar^2 k_y^2}{2m},
+\]
+\begin{equation}
+\omega_c=\frac{|q|B}{mc},\qquad x_B=\frac{\hbar c k_y}{qB}.
+\label{eq:3.5.12}
+\end{equation}
+上述哈密顿量的本征函数可以写成
+\begin{equation}
+\Phi_{L,n}(x,y)=e^{ik_y y}\,\Phi_n(x-x_B),
+\label{eq:3.5.13}
+\end{equation}
+它本质上是平面波与谐振子本征函数的乘积，而相应的本征值为
+\begin{equation}
+E_n=\hbar\omega_c\!\left(n+\frac{1}{2}\right)
++\frac{\hbar^2 k_y^2}{2m}.
+\label{eq:3.5.14}
+\end{equation}
+其中频率 $\omega_c$ 称为回旋频率。
+
+在结束对量子谐振子形式体系应用的这一概述之前，我们讨论用于处理双原子分子动力学行为的 Morse 势，以及它用谐振子势近似的做法。Morse 势能函数的形式为
+\begin{equation}
+V(r)=D_e\!\left(1-e^{-a(r-r_e)}\right)^2,
+\label{eq:3.5.15}
+\end{equation}
+其中 $r$ 是原子间距离，$r_e$ 是平衡键长，$D_e$ 是阱深（相对于离解后的原子定义），$a$ 表征势的``宽度''。键的解离能可以用阱深减去零点能 $E(0)$ 得到。把 $V(r)$ 对 $(r-r_e)$ 展开到最低阶，得到
+\begin{equation}
+V(r)\approx\frac{a^2D_e}{2}\,(r-r_e)^2.
+\label{eq:3.5.16}
+\end{equation}
+因此可以令 $a^2D_e/2=\frac{1}{2}k$，把该近似解释为谐振子势。Morse 势（蓝色）与谐振子势（绿色）的比较见图~\ref{fig:3.4}。
+
+\begin{figure}[H]
+\centering
+\includegraphics[max width=0.95\linewidth,keepaspectratio]{fig3_4.png}\caption{Morse 势（蓝色）与谐振子势（绿色）的比较。}
+\label{fig:3.4}
+\end{figure}
+
+Morse 势的能级不像谐振子势那样等间距，其间隔随能量接近解离能而减小。
+
+值得证明最低阶能级可由下式很好近似
+\begin{equation}
+E_n\approx\hbar\omega\!\left(n+\frac{1}{2}\right),\qquad
+\nu\equiv a\sqrt{\frac{2D_e}{m}},
+\label{eq:3.5.17}
+\end{equation}
+而更高阶的修正为
+\begin{equation}
+E_n\approx\hbar\omega\!\left(n+\frac{1}{2}\right)
+-\frac{\hbar^2\omega^2}{4D_e}\!\left(n+\frac{1}{2}\right)^2.
+\label{eq:3.5.18}
+\end{equation}
+
+利用普通微扰论可以推导系统波函数的修正。
+
+% ------------------------------------------------------------------
+\section{谐振子的相干态或准经典态}
+\label{sec:3.6}
+
+由式~\eqref{eq:3.4.10}，位置与动量算子可以用产生--湮灭算子表示为：
+\begin{equation}
+\hat\xi=\frac{1}{\sqrt{2}}\,(\hat a+\hat a^\dagger),\qquad
+\hat p_\xi=\frac{i\hbar}{\sqrt{2}}\,(\hat a^\dagger-\hat a).
+\label{eq:3.6.1}
+\end{equation}
+
+现在考虑一个支配等间距量子能级间偶极跃迁过程的哈密顿算子。这样的算子可以写成
+\begin{equation}
+\hat H=\hbar\Omega\,\hat\xi
+\label{eq:3.6.2}
+\end{equation}
+相应的 Schr\"odinger 方程可以写成
+\begin{equation}
+i\partial_t\Psi(\xi,t)=\frac{\Omega}{\sqrt{2}}\,(\hat a+\hat a^\dagger)\,\Psi(\xi,t),
+\label{eq:3.6.3}
+\end{equation}
+它可以理解为这样一个过程：谐振子能级被产生或消灭，如同电磁过程中光子产生或消灭一样。式~\eqref{eq:3.6.3} 有解
+\begin{equation}
+\Psi(\xi,t)=e^{-i\Omega t(\hat a+\hat a^\dagger)/\sqrt{2}}\,\Psi(x,0),
+\label{eq:3.6.4}
+\end{equation}
+即假定初始态为真空态，用 Dirac 记号，我们可以写出
+\begin{equation}
+|\alpha(t)\rangle=
+e^{-i\Omega t(\hat a+\hat a^\dagger)/\sqrt{2}}|0\rangle.
+\label{eq:3.6.5}
+\end{equation}
+其闭式显式解（见式~\eqref{eq:2.4.22}）很容易获得
+\noindent{\itshape （提示：回顾我们所学的算子排序与解缠规则。）}
+\begin{equation}
+|\alpha(t)\rangle=
+e^{-(\Omega t)^2/4}\,
+e^{-i\Omega t\hat a^\dagger/\sqrt{2}}\,
+e^{-i\Omega t\hat a/\sqrt{2}}\,|0\rangle.
+\label{eq:3.6.6}
+\end{equation}
+考虑到
+\begin{equation}
+e^{-i\Omega t\hat a/\sqrt{2}}\,|0\rangle=|0\rangle,
+\label{eq:3.6.7}
+\end{equation}
+得到
+\[
+|\alpha(t)\rangle=
+e^{-(\Omega t)^2/4}\,
+\sum_{r=0}^{\infty}\frac{(-i\sqrt{2}\,\Omega t)^r}{2^{r/2}\,r!}\,
+(\hat a^\dagger)^r|0\rangle
+\]
+\begin{equation}
+=e^{-(\Omega t)^2/4}\,
+\sum_{r=0}^{\infty}\frac{(-i\Omega t/\sqrt{2})^r}{r!}\,
+|r\rangle.
+\label{eq:3.6.8}
+\end{equation}
+
+``波函数'' $|\alpha(t)\rangle$ 由谐振子态的叠加给出，表示一个特定的量子态，称为\emph{相干态}，原因如下述。该态在给定时刻 $t$ 处于第 $m$ 个谐振子激发态的概率为
+\begin{equation}
+P_m(t)=|\langle m|\alpha(t)\rangle|^2
+=e^{-(\Omega t)^2/2}\,\frac{(\Omega t/2)^{2m}}{m!}.
+\label{eq:3.6.9}
+\end{equation}
+这个表达式是正交性质~\eqref{eq:3.4.18} 的推论，可识别为 Poisson 分布，找到量子谐振子激发态 $0,1,2,\ldots$ 的概率见图~\ref{fig:3.5}。
+
+\begin{figure}[H]
+\centering
+\includegraphics[max width=0.95\linewidth,keepaspectratio]{fig3_5.png}\caption{作为 $\Omega t$ 的函数，相干态处于 $|m\rangle$（$m=0,1,2,\ldots$）的概率。}
+\label{fig:3.5}
+\end{figure}
+
+我们仅略谈相干态的性质，它们恰当地描述了激光型相干光源的电磁场。这些态的性质之一是它们是湮灭算子的本征态。由前面的方程，我们得到
+\[
+\hat a|\alpha(t)\rangle=
+e^{-(\Omega t)^2/4}\,
+\sum_{r=0}^{\infty}\frac{(-i\sqrt{2}\,\Omega t)^r}{2^{r/2}\,r!}\,
+\hat a|r\rangle
+=e^{-(\Omega t)^2/4}\,
+\sum_{r=1}^{\infty}\frac{(-i\Omega t/\sqrt{2})^{r-1}}{(r-1)!}\,
+|r-1\rangle
+\]
+\begin{equation}
+=e^{-(\Omega t)^2/4}\,
+\sum_{r=0}^{\infty}\frac{(-i\Omega t/\sqrt{2})^r}{r!}\,
+|r\rangle
+=c\,|\alpha(t)\rangle,\qquad
+c=-\frac{i\Omega t}{\sqrt{2}}.
+\label{eq:3.6.10}
+\end{equation}
+这个看似不重要的结果却具有惊人的推论。还值得强调，相干态不是产生算子的本征态，即
+\begin{equation}
+\hat a^\dagger|\alpha(t)\rangle\neq c^*|\alpha(t)\rangle.
+\label{eq:3.6.11}
+\end{equation}
+另一方面，恒等式
+\begin{equation}
+\langle\alpha(t)|\hat a^\dagger=\langle\alpha(t)|c^*
+\label{eq:3.6.12}
+\end{equation}
+成立，此外显然还有
+\begin{equation}
+\langle\alpha(t)|\alpha(t)\rangle=1.
+\label{eq:3.6.13}
+\end{equation}
+
+现在我们从上述数学性质推导一个重要的物理推论，即证明相干态是\emph{最小不确定度态}，也就是不确定度最小的量子态。为此，我们计算相干态的位置与动量算子的均方根（r.m.s.）。根据 r.m.s. 的定义并考虑到对易规则~\eqref{eq:3.4.11}，有
+\begin{equation}
+\sigma_\xi^2=
+\langle\alpha(t)|\hat\xi^2|\alpha(t)\rangle-
+\bigl(\langle\alpha(t)|\hat\xi|\alpha(t)\rangle\bigr)^2.
+\label{eq:3.6.14}
+\end{equation}
+利用式~\eqref{eq:3.6.1} 及此处讨论的其他技巧，我们得到
+\begin{equation}
+\sigma_\xi^2=\frac{1}{2}\bigl(c^2+(c^*)^2+2|c|^2+1\bigr)
+-\frac{1}{2}\bigl(c^2+(c^*)^2+2|c|^2\bigr)=\frac{1}{2},
+\label{eq:3.6.15}
+\end{equation}
+类似地，对动量
+\begin{equation}
+\sigma_p^2=\frac{\hbar^2}{2}.
+\label{eq:3.6.16}
+\end{equation}
+回到有量纲的量，得到
+\begin{equation}
+\sigma_x^2=\frac{\hbar}{2m\omega},\qquad
+\sigma_p^2=\frac{m\hbar\omega}{2},
+\label{eq:3.6.17}
+\end{equation}
+因此
+\begin{equation}
+\sigma_x\,\sigma_p=\frac{\hbar}{2}.
+\label{eq:3.6.18}
+\end{equation}
+
+另一方面，把同样的方法应用于 $n$ 态，可以证明不确定度随能级阶数增加：
+\begin{equation}
+(\sigma_x)_n^2=\frac{\hbar}{2m\omega}\,(2n+1),\qquad
+(\sigma_p)_n^2=\frac{m\hbar\omega}{2}\,(2n+1),
+\label{eq:3.6.19}
+\end{equation}
+\begin{equation}
+(\sigma_x\,\sigma_p)_n=\frac{\hbar}{2}\,(2n+1).
+\label{eq:3.6.20}
+\end{equation}
+
+这意味着，随着 $n$ 增大，波函数在位置和动量上都越来越展宽。相反，我们发现相干态具有最小不确定度态的独特性质。在量子态中，它们是最接近经典系统的态。
+
+不过这一论断非常定性，需要进一步的说明。在图~\ref{fig:3.6} 中，我们给出了谐振子经典与量子概率的比较（详见注记 1）。
+
+在低 $n$ 态的情形，量子与经典概率之间存在显著差异。在经典情形，谐振子大部分时间停留在远离平衡位置的地方，这意味着最大概率出现在位置较大的地方。相反，$n=0$ 时量子概率在 $x=0$ 附近取最大。我们还注意到有相当一部分空间在经典上是不被允许的。量子与经典概率随 $n$ 增大而趋于相似，这与对应原理完全一致。
+
+现在可以解释为什么相干态更接近经典量子态\noindent{\itshape （提示：注意它是 $n$ 态的叠加……）}。
+
+\begin{exercise}
+重新考虑前面的结果，特别是它们的物理意义，并推导式~\eqref{eq:3.6.19}。
+\end{exercise}
+
+\begin{figure}[H]
+\centering
+\includegraphics[max width=0.95\linewidth,keepaspectratio]{fig3_6.png}\caption{谐振子经典与量子概率的比较：(a)~$n=0$，(b)~$n=1$，(c)~$n=2$，(d)~$n=3$，(e)~$n=10$。}
+\label{fig:3.6}
+\end{figure}
+
+\medskip
+\noindent{\itshape 注记 1.} 需要仔细的说明才能领会图~\ref{fig:3.6} 的物理内容。我们提到了经典与量子概率密度，它们给出在时刻 $t$ 于位置 $x$ 处找到粒子的概率。我们已经说明如何计算量子概率，但经典对应物不那么明显。我们给出了一个非常定性的论证来估计概率密度：注意到粒子在速度较低的空间区域停留时间更长。参照图~\ref{fig:3.3} 中给出的二次势，概率密度 $P(x)$ 在速度为零的外侧点附近取最大。$P(x)$ 的解析推导如下。我们注意到，粒子在时间间隔 $\Delta t$ 内穿越位置 $\Delta x$ 的概率是
+\begin{equation}
+P(x)\,\Delta x=2\,\frac{\Delta t}{T},
+\label{eq:3.6.23}
+\end{equation}
+其中 $T$ 是振荡周期，因子 2 来自粒子两次穿越同一区域。因此显然
+\begin{equation}
+P(x)=\lim_{\Delta t\to0}\frac{2\,\Delta t}{T\,\Delta x}
+=\frac{2}{T\,|\dot x|}.
+\label{eq:3.6.21}
+\end{equation}
+现在应提醒：对于经典谐振子，在二次势下运动的质量为 $m$ 的粒子的总能量为
+\begin{equation}
+E=\frac{1}{2}\,m\dot x^2+\frac{1}{2}\,k\,x^2.
+\label{eq:3.6.22}
+\end{equation}
+因此可以把式~\eqref{eq:3.6.21} 中出现的量确定为
+\[
+T=\frac{2\pi}{\omega},\qquad \omega=\sqrt{\frac{k}{m}},\qquad
+|\dot x|=\omega\sqrt{a^2-x^2},\qquad
+a^2=\frac{2E}{m\omega^2},
+\]
+从而得到
+\begin{equation}
+P(x)=\frac{1}{\pi\sqrt{a^2-x^2}}.
+\label{eq:3.6.24}
+\end{equation}
+为了进行经典与量子概率的比较，我们注意到把 $E$ 换成相应的量子值，得到
+\[
+a^2=\sigma_x^2\,(2n+1),\qquad \sigma_x^2=\frac{\hbar}{2m\omega}.
+\]
+利用量 $a^2$，我们获得比较量子与经典概率所用的无量纲位置参考区间。
+
+% ------------------------------------------------------------------
+\section{Jaynes--Cummings 模型}
+\label{sec:3.7}
+
+本节我们将引入涉及产生--湮灭算子与 Pauli 矩阵联合使用的问题。我们将研究 Jaynes--Cummings 模型（JC），它是已讨论的二能级原子模型（见第 1 章）的推广，其中经典电磁场保证上下能级之间的耦合。
+
+如果我们不作经典场的假设，系统演化的分析应利用下列哈密顿量进行：
+\begin{equation}
+\hat H=\hat H_F+\hat H_I,\qquad
+\hat H_F=\hbar\nu\,(\hat a^\dagger\hat a+\tfrac{1}{2}\hat\sigma_z),\qquad
+\hat H_I=\hbar g\!\left(\hat a\,\hat\sigma_+\,e^{i\delta t}
++\hat a^\dagger\,\hat\sigma_-\,e^{-i\delta t}\right),
+\label{eq:3.7.1}
+\end{equation}
+其中 $\nu$ 是电磁场的频率，$\omega$ 是两个能级之间的间隔。上述哈密顿量应作如下理解。
+\begin{enumerate}
+\item[(a)] 项 $\hat H_F$ 描述系统的自由能，包含两个贡献：第一个与电磁场相关（由 $\hbar\nu\hat a^\dagger\hat a$ 给出，与光子总数 $n_f$ 有关），第二个与二能级部分相关（由 $\frac{\hbar}{2}\omega\hat\sigma_z$ 给出）。我们强调算子 $\hat\sigma_z$ 与 $n_l$ 相关，即激发态与基态之间的布居差。
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[max width=0.95\linewidth,keepaspectratio]{fig3_7.png}\caption{Jaynes--Cummings 模型：二能级原子与单个辐射模的耦合。}
+\label{fig:3.7}
+\end{figure}
+
+\begin{exercise}
+证明总哈密顿量与场部分对易，即
+\begin{equation}
+[\hat H,\hat H_F]=0,
+\label{eq:3.7.2}
+\end{equation}
+并且这对应于下列守恒关系
+\begin{equation}
+n_f+n_l=k.
+\label{eq:3.7.3}
+\end{equation}
+\end{exercise}
+
+上述``守恒律''极其有用，因为它允许用一个量子数（即相互作用期间交换的光子数）来表征系统的动力学。因此我们可以写出 JC 哈密顿量作用的物理态如下
+\begin{equation}
+\Psi=\binom{|n+1\rangle}{|n\rangle},
+\label{eq:3.7.4}
+\end{equation}
+（上能级确实以存在一个额外光子为特征）。
+
+\begin{exercise}
+证明给出两个态之间跃迁的矩阵元正是
+\begin{equation}
+\langle\Psi|\hat H|\Psi\rangle=
+\begin{pmatrix}
+\langle n|\hat H|n\rangle & \langle n|\hat H|n+1\rangle\\[4pt]
+\langle n+1|\hat H|n\rangle & \langle n+1|\hat H|n+1\rangle
+\end{pmatrix}
+=
+\frac{\hbar}{2}
+\begin{pmatrix}
+\omega & 2g\sqrt{n+1}\\
+2g\sqrt{n+1} & -\omega
+\end{pmatrix},
+\label{eq:3.7.5}
+\end{equation}
+并且表征上下能级的能量本征值为
+\begin{equation}
+E_\pm(n)=\hbar\!\left(n+\frac{1}{2}\right)\nu
+\pm\frac{\hbar}{2}\,\Omega(n,\delta),\qquad
+\Omega(n,\delta)=\sqrt{\delta^2+4g^2(n+1)},
+\label{eq:3.7.6}
+\end{equation}
+其中 $\delta=\omega-\nu$。找出与经典电磁场情形所得结果的联系。
+\end{exercise}
+
+% ------------------------------------------------------------------
+\section{经典光学与 Hermite 多项式}
+\label{sec:3.8}
+
+在第 2 章中，我们以简单 Gaussian 光束的形式讨论了近轴形式的 Helmholtz 方程的解。这里我们将证明该方程的解与一种更复杂的形式相容，其中涉及 Hermite 多项式。这些解将被称为\emph{Hermite--Gauss} 光束。
+
+为此，考虑热方程
+\begin{equation}
+\partial_t F(x,t)=\alpha\,\partial_x^2 F(x,t),\qquad
+F(x,0)=H_n(\beta x)\,e^{-x^2/(2\sigma^2)}.
+\label{eq:3.8.1}
+\end{equation}
+其解可以用 Weierstrass 变换求得：
+\begin{equation}
+F_n(x,t)=\frac{1}{\sqrt{4\pi\alpha t}}
+\int_{-\infty}^{\infty}
+e^{-\frac{(x-\xi)^2}{4\alpha t}}\,
+H_n(\beta\xi)\,e^{-\xi^2/(2\sigma^2)}\,d\xi.
+\label{eq:3.8.2}
+\end{equation}
+
+上述积分的计算使用生成函数方法，即
+\[
+I(x,t;\lambda)=\sum_{n=0}^{\infty}\frac{\lambda^n}{n!}\,F_n(x,t)
+=\frac{1}{\sqrt{4\pi\alpha t}}
+ \int_{-\infty}^{\infty}
+ e^{-\frac{(x-\xi)^2}{4\alpha t}}\,
+ e^{2\lambda\beta\xi-\lambda^2}\,
+ e^{-\xi^2/(2\sigma^2)}\,d\xi.
+\]
+
+因此该问题可以用 Gauss 函数的积分规则轻松解决。我们得到
+\[
+F_n(x,t)=
+\frac{\sigma^n}{\sqrt{\sigma^2(t)}}\,
+H_n\!\left(\frac{x}{\sigma(t)},\frac{4\alpha\beta^2 t}{\sigma^4(t)}\right)\,
+\exp\!\left[-\frac{x^2}{2\sigma^2(t)}\right],
+\]
+\begin{equation}
+\sigma(t)=\sqrt{\sigma^2+4\alpha t},
+\label{eq:3.8.4}
+\end{equation}
+考虑到式~\eqref{eq:3.3.9}，当 $\beta=\sigma^{-1}$ 时给出
+\begin{equation}
+F_n(x,t)=
+\frac{1}{\sqrt{\sigma(t)}}\,
+H_n\!\left(\frac{x}{\sigma(t)}\right)\,
+\exp\!\left[-\frac{x^2}{2\sigma^2(t)}\right],
+\label{eq:3.8.5}
+\end{equation}
+其中 $H_n$ 是规范 Hermite 多项式。
+
+根据上述结果，我们可以把 Helmholtz 方程 (2.5.2) 的解写成
+\begin{equation}
+F_{l,m}(r,z)=
+F_0\!\left(\frac{W}{W(z)}\right)\,
+H_l\!\left(\frac{\sqrt{2}\,x}{W(z)}\right)\,
+H_m\!\left(\frac{\sqrt{2}\,y}{W(z)}\right)\,
+e^{-\frac{x^2+y^2}{W^2(z)}}\,
+e^{-i\varphi-i\frac{k}{2R(z)}(x^2+y^2)+i\zeta(z)(l+m+1)},
+\label{eq:3.8.6}
+\end{equation}
+它代表近轴近似的 Gauss--Hermite 光学模式（也称 $\mathrm{TEM}_{lm}$ 模）。在图~\ref{fig:3.8} 中，我们给出了前几个模式的横向分布的相应结构。还值得注意，这些模式的出现打破了 Gaussian 光束的柱对称性，因此不能在标量理论的框架内讨论。不过这一方面无法在本书中讨论。
+
+\begin{figure}[H]
+\centering
+\includegraphics[max width=0.95\linewidth,keepaspectratio]{fig3_8.png}\caption{前几个 Gauss--Hermite $\mathrm{TEM}_{lm}$ 模的横向分布。}
+\label{fig:3.8}
+\end{figure}
+
+在本章中，我们介绍了 Hermite 多项式的理论及其应用。我们采用了一种非常规的视角，其优点是提供了一个直接而灵活的形式体系。但我们邀请读者与下面参考文献中报告的常规（且更严格）处理进行比较。
+
+% ------------------------------------------------------------------
+\section*{参考文献}
+\addcontentsline{toc}{section}{参考文献}
+
+\subsection*{双变量 Hermite 多项式}
+\begin{enumerate}[label={[\arabic*]}]
+\item P.~App\'el, J.~Kamp\'e de F\'eriet,
+      \emph{Fonctions Hypcrg\'eom\'etriques et Hypersph\'eriques,
+      polyn\^omes d'Hermite}, Gautier-Villars, Paris, 1926.
+\item Digital Library of Mathematical Functions,
+      \emph{Orthogonal Polynomials, Classical Orthogonal
+      Polynomials, Sums}, (18.18), National Institute of
+      Standards and Technology, retrieved 30 January 2015.
+\item H.W.~Gould, A.T.~Hopper,
+      ``Operational formulas connected with two generalizations
+      of Hermite polynomials'',
+      \emph{Duke Math.\ J.} \textbf{29}, pp.~51--63, 1962.
+\item N.N.~Lebedev, \emph{Special Functions and Their
+      Applications}, Dover Books on Mathematics, 1972.
+\item G.~Dattoli, ``Generalized polynomials, operational
+      identities and their applications'',
+      \emph{J.\ Comput.\ Appl.\ Math.} \textbf{118},
+      pp.~111--123, 2000.
+\item G.~Dattoli, S.~Lorezutta, A.~Torre,
+      ``Miscellaneous identities of generalized Hermite
+      polynomials'', \emph{Matematiche (Catania)} \textbf{52},
+      pp.~337--343, 1997.
+\item G.~Dattoli, S.~Lorezutta, G.~Maino, A.~Torre,
+      ``Theory of multi-index multivariable Bessel functions
+      and Hermite polynomials'',
+      \emph{Matematiche (Catania)} \textbf{52},
+      pp.~179--197, 1997.
+\item G.~Dattoli, A.~Torre, M.~Carpanese,
+      ``Operational rules and arbitrary order Hermite
+      generating functions'',
+      \emph{J.\ Math.\ Anal.\ Appl.} \textbf{227},
+      pp.~98--111, 1998.
+\item M.~Artioli, G.~Dattoli,
+      ``The Geometry of Hermite Polynomials'',
+      Wolfram Demonstrations Project, Mar.~2015,
+      \url{http://demonstrations.wolfram.com/
+      TheGeometryOfHermitePolynomials}.
+\end{enumerate}
+
+\subsection*{拟单项性（Monomiality）}
+\begin{enumerate}[label={[\arabic*]},start=10]
+\item G.~Dattoli, A.~Torre, G.~Mazzacurati,
+      ``Quasi-monomials and isospectral problems'',
+      \emph{Nuovo Cimento B} \textbf{112}, pp.~133--138, 1997.
+\item G.~Dattoli, ``The Hermite and Laguerre Bessel Functions:
+      A by Product of the Monomiality Principle'', in:
+      D.~Cocolicchio, G.~Dattoli, H.M.~Srivastava (Eds.),
+      \emph{Advanced Special Functions and Applications},
+      Melfi, 1999, Aracne Editrice, Rome, p.~83, 2000.
+\item P.~Blasiak, G.~Dattoli, A.~Horzela, K.~Penson,
+      ``Representations of monomiality principle with
+      Sheffer-type polynomials and boson normal ordering'',
+      \emph{Phys.\ Lett.\ A} \textbf{352}, pp.~7--12, 2006.
+\item J.F.~Steffensen, ``The poweroid, an extension of the
+      mathematical notion of power'',
+      \emph{Acta Math.} \textbf{73}, pp.~333--366, 1941.
+\item A.V.~Turbiner, ``Quasi-exactly-solvable problems and
+      $\mathfrak{sl}(2)$ algebra'',
+      \emph{Commun.\ Math.\ Phys.} \textbf{118}, 46, 1988.
+\end{enumerate}
+
+\subsection*{Hermite 多项式作为正交集}
+\begin{enumerate}[label={[\arabic*]},start=15]
+\item D.T.~Haimo, C.~Markett, ``A representation theory for
+      solutions of a higher-order heat equation I'',
+      \emph{J.\ Math.\ Anal.\ Appl.} \textbf{168},
+      pp.~89--107, 1992.
+\item D.T.~Haimo, C.~Markett, ``A representation theory for
+      solutions of a higher-order heat equation II'',
+      \emph{J.\ Math.\ Anal.\ Appl.} \textbf{168},
+      pp.~289--305, 1992.
+\item G.~Dattoli, B.~Germano, P.E.~Ricci,
+      ``Comments on monomiality, ordinary polynomials and
+      associated bi-orthogonal functions'',
+      \emph{Appl.\ Math.\ Comput.} \textbf{154},
+      pp.~219--227, 2004.
+\item G.~Dattoli, H.M.~Srivastava, K.~Zhukovsky,
+      ``Orthogonality properties of the Hermite and related
+      polynomials'',
+      \emph{J.\ Comput.\ Appl.\ Math.} \textbf{182}(1),
+      pp.~165--172, 2005.
+\item G.~Dattoli, B.~Germano, P.E.~Ricci,
+      ``Higher order Hermite polynomials, associated
+      bi-orthogonal functions and generalized heat
+      equations'',
+      \emph{Integral Transforms Spec.\ Funct.} \textbf{16},
+      2005.
+\end{enumerate}
+
+\subsection*{Hermite 多项式的几何}
+\begin{enumerate}[label={[\arabic*]},start=20]
+\item M.~Artioli, G.~Dattoli,
+      ``The Geometry of Hermite Polynomials'',
+      Wolfram Demonstrations Project, 2015,
+      \url{http://demonstrations.wolfram.com/
+      TheGeometryOfHermitePolynomials}.
+\item M.~Artioli, G.~Dattoli,
+      ``Geometric Properties of Generalized Hermite
+      Polynomials'', Wolfram Demonstrations Project, 2015,
+      \url{http://demonstrations.wolfram.com/
+      GeometricPropertiesOfGeneralizedHermitePolynomials}.
+\end{enumerate}
+
+\subsection*{应用}
+\begin{enumerate}[label={[\arabic*]},start=22]
+\item W.H.~Louisell, \emph{Quantum Statistical Properties of
+      Radiation}, Wiley, New York, 1973.
+\item G.~Dattoli, P.L.~Ottaviani, A.~Torre, L.~Vazquez,
+      ``Evolution operator equations, integration with
+      algebraic and finite difference methods: applications
+      to physical problems in classical and quantum
+      mechanics'', \emph{Riv.\ Nuovo Cimento} \textbf{20},
+      pp.~1--133, 1997.
+\end{enumerate}
