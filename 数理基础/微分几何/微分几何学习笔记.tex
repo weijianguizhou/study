@@ -1,24 +1,15 @@
-% ============================================================
-%  课程笔记模板 —— LaTeX book + 中文课堂笔记排版
-%  样式源自《装备系统动力学建模与仿真》笔记（2026 更新版）
-%
-%  编译方式: XeLaTeX（中文推荐），需编译 2~3 遍生成目录与交叉引用
-%  用法:
-%    1. 替换所有 【】 标记内容；
-%    2. 每章一个 .tex 文件，在 \notebody 中用 \input{} 引入；
-%    3. 数学记号与编辑规范遵循《符号约定与工作要求.md》；
-%    4. 定理/定义/例题等环境与公式写法见 第一章示例.tex。
-% ============================================================
 \documentclass[12pt,a4paper]{book}
-\input{preamble}            % 样式：字体、颜色、定理/定义/例题环境、章节格式
+\input{preamble}
 
 % ============================================================
-%	笔记元信息（替换【】内容）
+%	笔记元信息
 % ============================================================
-\newcommand{\notename}{【课程名称】}   % 封面大标题
-\newcommand{\noteauthor}{【作者姓名】} % 封面作者
+\newcommand{\notename}{微分几何}   % 封面大标题
+\newcommand{\noteauthor}{魏舟} % 封面作者
 
-% 正文骨架：按需增删 \input{}；附录样式在 \appendix 后自动切换
+% ============================================================
+%	正文骨架：每章一个 .tex 文件，用 \input{} 引入
+% ============================================================
 \newcommand{\notebody}{
 	% 前言（可留空或填一段课程介绍）
 	\chapter*{前言}
@@ -28,13 +19,14 @@
 	\chapter{绪论}
 	\input{绪论}
 
-	% 正文各章（每章一个 .tex 文件）
-	\chapter{第一章}
-	\input{第一章示例}
-	% \chapter{第二章}
-	% \input{第二章}
-	% \chapter{第三章}
-	% \input{第三章}
+	\chapter{三维欧氏空间中的曲线}
+	\input{第一章_三维欧氏空间中的曲线}
+	\chapter{曲面的第一基本形式}
+	\input{第二章_曲面的第一基本形式}
+	\chapter{曲面的第二基本形式}
+	\input{第三章_曲面的第二基本形式}
+	\chapter{外微分形式与活动标架法}
+	\input{第四章_外微分形式与活动标架法}
 
 	% ============================================================
 	% 附录（样式自动切换为“附录 x”格式）
@@ -51,17 +43,18 @@
 	\titleformat{\subsubsection}[hang]{\normalsize\bfseries}
 	{\color{third}\thesubsubsection\enspace}{1pt}{\color{structurecolor}}
 
-	\chapter{附录}
+	\chapter{补充推导与证明}
+	\label{appendix:证明}
 	\input{附录}
 }
 
 \begin{document}
-	% 封面（样式见 cover.tex，可自行修改）
+	% 封面（样式见 cover.tex）
 	\input{cover}
 
 	\newpage
 
-	% 第 2 页：格言页（居中，可删）
+	% ---- 第 2 页：格言页（居中，可删）----
 	\thispagestyle{empty}
 	\vspace*{\fill}
 	\begin{center}

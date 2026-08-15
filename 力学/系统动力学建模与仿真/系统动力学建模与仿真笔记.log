@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2026.2.15)  14 AUG 2026 19:56
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2026.2.15)  15 AUG 2026 19:42
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -1084,8 +1084,10 @@ Package fontspec Info:
 ]
 
 LaTeX Font Info:    Font shape `TU/SimSun(0)/m/sl' in size <12> not available
-(Font)              Font shape `TU/SimSun(0)/m/it' tried instead on input line 60.
-[4])
+(Font)              Font shape `TU/SimSun(0)/m/it' tried instead on input line 59.
+[4]
+
+[5])
 \tf@toc=\write5
 \openout5 = `系统动力学建模与仿真笔记.toc'.
 
@@ -1101,21 +1103,35 @@ LaTeX Font Info:    Font shape `TU/SimSun(0)/m/sl' in size <12> not available
 
 ]
 Chapter 1.
-(./绪论.tex)
+(./绪论.tex
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
 
 [3]
 
-[4
+[4]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+
+[5]
+
+[6])
+
+[7]
+
+[8
 
 ]
 Chapter 2.
 (./数学基础.tex
 
-[5]
+[9]
 
-[6]
+[10]
 
-[7]
+[11]
 
 Package hyperref Warning: The anchor of a bookmark and its parent's must not
 (hyperref)                be the same. Added a new anchor on input line 112.
@@ -1125,14 +1141,6 @@ Underfull \vbox (badness 1014) has occurred while \output is active []
 
 
 
-[8]
-
-[9]
-
-[10]
-
-[11]
-
 [12]
 
 [13]
@@ -1140,9 +1148,6 @@ Underfull \vbox (badness 1014) has occurred while \output is active []
 [14]
 
 [15]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
 
 [16]
 
@@ -1151,8 +1156,19 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 [18]
 
 [19]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
 
 [20]
+
+[21]
+
+[22]
+
+[23]
+
+[24]
 Overfull \hbox (71.62346pt too wide) detected at line 595
 []
  []
@@ -1169,7 +1185,7 @@ Overfull \hbox (30.15015pt too wide) detected at line 611
 
 
 
-[21]
+[25]
 Overfull \hbox (37.2647pt too wide) detected at line 639
 [][][][] \OT1/cmr/m/n/12 = []([])([][])[]\OML/cmm/m/it/12 ;  [] \OT1/cmr/m/n/12 = ([][])[]\OML/cmm/m/it/12 ;  [] \OT1/cmr/m/n/12 = \OML/cmm/m/it/12 k []\OT1/cmr/m/n/12 ([][])[][]\OML/cmm/m/it/12 ;
  []
@@ -1186,7 +1202,7 @@ Overfull \hbox (26.62355pt too wide) detected at line 654
 
 
 
-[22]
+[26]
 Overfull \hbox (1.6215pt too wide) detected at line 670
 [][][][] \OT1/cmr/m/n/12 = []\OML/cmm/m/it/12 ;  [] \OT1/cmr/m/n/12 = [][]\OML/cmm/m/it/12 ;  [] \OT1/cmr/m/n/12 = []\OML/cmm/m/it/12 ;  [] \OT1/cmr/m/n/12 = [][][][]\OML/cmm/m/it/12 ;
  []
@@ -1208,11 +1224,11 @@ Overfull \hbox (135.762pt too wide) detected at line 698
 
 
 
-[23]
+[27]
 
-[24]
+[28]
 
-[25]
+[29]
 Overfull \hbox (15.2614pt too wide) detected at line 798
 []
  []
@@ -1229,52 +1245,52 @@ Overfull \hbox (51.1322pt too wide) detected at line 822
 
 
 
-[26]
+[30]
 
-[27]
+[31]
 Overfull \hbox (103.71422pt too wide) detected at line 905
 []
  []
 
 
 
-[28]
+[32]
 Overfull \hbox (6.23233pt too wide) in paragraph at lines 928--929
 []\OT1/cmr/m/n/12 ([[] []]) = \OML/cmm/m/it/12 m$ \TU/SimSun(0)/m/n/12 时 有 唯 一 解；|  两 者 相 等 但 小 于 $\OML/cmm/m/it/12 m$ \TU/SimSun(0)/m/n/12 时 有 无 穷 多 解；| $[]\OT1/cmr/m/n/12 ([]) \OML/cmm/m/it/12 < []\OT1/cmr/m/n/12 ([[] []])$
  []
 
 
 
-[29]
+[33]
 
-[30]
+[34]
 
-[31]
+[35]
 
-[32]
+[36]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
-[33]
+[37]
 
-[34]
+[38]
 Overfull \hbox (50.70325pt too wide) detected at line 1122
 []\OT1/cmr/m/n/12 [\OML/cmm/m/it/12 i \OMS/cmsy/m/n/12 ! \OML/cmm/m/it/12 j [] \OT1/cmr/m/n/12 1 []] = (\OML/cmm/m/it/12 P\OT1/cmr/m/n/12 )[]\OML/cmm/m/it/12 ;  []\OT1/cmr/m/n/12 [\OML/cmm/m/it/12 i \OMS/cmsy/m/n/12 ! \OML/cmm/m/it/12 j [] \OT1/cmr/m/n/12 2 []] = (\OML/cmm/m/it/12 P[]\OT1/cmr/m/n/12 )[]\OML/cmm/m/it/12 ;  []\OT1/cmr/m/n/12 [\OML/cmm/m/it/12 i \OMS/cmsy/m/n/12 ! \OML/cmm/m/it/12 j [] k []\OT1/cmr/m/n/12 ] = (\OML/cmm/m/it/12 P[]\OT1/cmr/m/n/12 )[]\OML/cmm/m/it/12 :
  []
 
 
 
-[35]
+[39]
 Overfull \hbox (37.27353pt too wide) detected at line 1170
 []
  []
 
 
 
-[36]
+[40]
 
-[37]
+[41]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 1221.
@@ -1289,7 +1305,7 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 
 
 
-[38]
+[42]
 
 Package fontspec Info: 
 (fontspec)             Could not resolve font "SimHei/BI" (it probably doesn't
@@ -1349,62 +1365,46 @@ Package fontspec Info:
 
 
 
-[39]
+[43]
 
-[40]
+[44]
 
-[41])
+[45])
 
-[42]
+[46]
 Chapter 3.
 (./运动学基础.tex
 
-[43
+[47
 
 ]
 File: Figure/1.1简单转动.png Graphic file (type bmp)
 <Figure/1.1简单转动.png>
 
 
-[44]
+[48]
 
 Package hyperref Warning: Difference (2) between bookmark levels is greater 
 (hyperref)                than one, level fixed on input line 105.
 
 
 
-[45]
-
-[46]
-
-[47]
-File: Figure/简单旋转示意图.png Graphic file (type bmp)
-<Figure/简单旋转示意图.png>
-
-
-[48]
-
 [49]
 
 [50]
-File: Figure/例题2.1.png Graphic file (type bmp)
-<Figure/例题2.1.png>
-
 
 [51]
+File: Figure/简单旋转示意图.png Graphic file (type bmp)
+<Figure/简单旋转示意图.png>
+
 
 [52]
 
 [53]
 
-LaTeX Font Warning: Font shape `TU/SimSun(1)/b/n' undefined
-(Font)              using `TU/SimSun(1)/m/n' instead on input line 430.
-
-
-
 [54]
-File: Figure/例题2.2.png Graphic file (type bmp)
-<Figure/例题2.2.png>
+File: Figure/例题2.1.png Graphic file (type bmp)
+<Figure/例题2.1.png>
 
 
 [55]
@@ -1413,9 +1413,14 @@ File: Figure/例题2.2.png Graphic file (type bmp)
 
 [57]
 
+LaTeX Font Warning: Font shape `TU/SimSun(1)/b/n' undefined
+(Font)              using `TU/SimSun(1)/m/n' instead on input line 432.
+
+
+
 [58]
-File: Figure/例题2.3.png Graphic file (type bmp)
-<Figure/例题2.3.png>
+File: Figure/例题2.2.png Graphic file (type bmp)
+<Figure/例题2.2.png>
 
 
 [59]
@@ -1425,13 +1430,13 @@ File: Figure/例题2.3.png Graphic file (type bmp)
 [61]
 
 [62]
+File: Figure/例题2.3.png Graphic file (type bmp)
+<Figure/例题2.3.png>
+
 
 [63]
 
 [64]
-File: Figure/陀螺转子.png Graphic file (type bmp)
-<Figure/陀螺转子.png>
-
 
 [65]
 
@@ -1440,10 +1445,8 @@ File: Figure/陀螺转子.png Graphic file (type bmp)
 [67]
 
 [68]
-Overfull \hbox (34.43181pt too wide) in paragraph at lines 1122--1123
-[]\TU/SimSun(1)/m/n/12 类 似 地，|  仅 使 用 四 个 单 位 向 量，|  即 可 使 $\OML/cmm/m/it/12 B$ \TU/SimSun(1)/m/n/12 依 次 经 历 以 $\OML/cmm/m/it/12 ^^R[][][]; ^^R[][][]; ^^R[][][]; \OMS/cmsy/m/n/12 ^^@\OML/cmm/m/it/12 ^^R[][][]; \OMS/cmsy/m/n/12 ^^@\OML/cmm/m/it/12 ^^R[][][]; \OMS/cmsy/m/n/12 ^^@\OML/cmm/m/it/12 ^^R[][][]$
- []
-
+File: Figure/陀螺转子.png Graphic file (type bmp)
+<Figure/陀螺转子.png>
 
 
 [69]
@@ -1453,6 +1456,19 @@ Overfull \hbox (34.43181pt too wide) in paragraph at lines 1122--1123
 [71]
 
 [72]
+Overfull \hbox (34.43181pt too wide) in paragraph at lines 1131--1132
+[]\TU/SimSun(1)/m/n/12 类 似 地，|  仅 使 用 四 个 单 位 向 量，|  即 可 使 $\OML/cmm/m/it/12 B$ \TU/SimSun(1)/m/n/12 依 次 经 历 以 $\OML/cmm/m/it/12 ^^R[][][]; ^^R[][][]; ^^R[][][]; \OMS/cmsy/m/n/12 ^^@\OML/cmm/m/it/12 ^^R[][][]; \OMS/cmsy/m/n/12 ^^@\OML/cmm/m/it/12 ^^R[][][]; \OMS/cmsy/m/n/12 ^^@\OML/cmm/m/it/12 ^^R[][][]$
+ []
+
+
+
+[73]
+
+[74]
+
+[75]
+
+[76]
 File: Figure/螺旋运动.png Graphic file (type bmp)
 <Figure/螺旋运动.png>
 
@@ -1461,18 +1477,6 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 
-[73]
-
-[74])
-
-[75]
-
-[76
-
-]
-Chapter 4.
-(./有限维广义变分原理.tex
-
 [77]
 
 [78]
@@ -1480,34 +1484,163 @@ Chapter 4.
 [79]
 
 [80]
+Missing character: There is no ‌ (U+200C) in font [lmroman12-regular]:mapping=tex-text;!
+Missing character: There is no ‌ (U+200C) in font [lmroman12-regular]:mapping=tex-text;!
+
 
 [81]
 
 [82]
 
 [83]
+File: Figure/角速度矢量例题.png Graphic file (type bmp)
+<Figure/角速度矢量例题.png>
 
-[84])
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+
+[84]
 
 [85]
 
 [86]
-附录 A.
-(./附录.tex
 
-[87
-
-]
+[87]
 
 [88]
 
 [89]
+Overfull \hbox (89.78342pt too wide) detected at line 1921
+[][][][][][] \OT1/cmr/m/n/12 = [][][] + [][][] + [][][] = [] []
+ []
+
+
 
 [90]
+Overfull \hbox (7.33492pt too wide) detected at line 1995
+[][][][] \OT1/cmr/m/n/12 = [](\OMS/cmsy/m/n/12 ^^@\OML/cmm/m/it/12 ![]^^O[] \OT1/cmr/m/n/12 + \OML/cmm/m/it/12 ![]^^O[] \OT1/cmr/m/n/12 + \OML/cmm/m/it/12 ![]^^O[]\OT1/cmr/m/n/12 ) = [][\OMS/cmsy/m/n/12 ^^@\OT1/cmr/m/n/12 ([][] [] \OML/cmm/m/it/12 st \OT1/cmr/m/n/12 + [][] [] \OML/cmm/m/it/12 st\OT1/cmr/m/n/12 )\OML/cmm/m/it/12 ^^O[] \OT1/cmr/m/n/12 + (\OMS/cmsy/m/n/12 ^^@[][] [] \OML/cmm/m/it/12 st \OT1/cmr/m/n/12 + [][] [] \OML/cmm/m/it/12 st\OT1/cmr/m/n/12 )\OML/cmm/m/it/12 ^^O[] \OT1/cmr/m/n/12 + [][]\OML/cmm/m/it/12 ^^O[]\OT1/cmr/m/n/12 ]
+ []
+
+
+Overfull \hbox (7.33492pt too wide) detected at line 2001
+[][][][] \OT1/cmr/m/n/12 = \OMS/cmsy/m/n/12 ^^@[]\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 ![]^^O[] \OT1/cmr/m/n/12 + \OML/cmm/m/it/12 ![]^^O[] \OT1/cmr/m/n/12 + \OML/cmm/m/it/12 ![]^^O[]\OT1/cmr/m/n/12 ) = \OMS/cmsy/m/n/12 ^^@[]\OT1/cmr/m/n/12 [([][] [] \OML/cmm/m/it/12 st \OT1/cmr/m/n/12 + [][] [] \OML/cmm/m/it/12 st\OT1/cmr/m/n/12 )\OML/cmm/m/it/12 ^^O[] \OT1/cmr/m/n/12 + (\OMS/cmsy/m/n/12 ^^@[][] [] \OML/cmm/m/it/12 st \OT1/cmr/m/n/12 + [][] [] \OML/cmm/m/it/12 st\OT1/cmr/m/n/12 )\OML/cmm/m/it/12 ^^O[] \OT1/cmr/m/n/12 + [][]\OML/cmm/m/it/12 ^^O[]\OT1/cmr/m/n/12 ]
+ []
+
+
 
 [91]
 
 [92]
+
+[93]
+
+[94]
+
+Package hyperref Warning: Difference (2) between bookmark levels is greater 
+(hyperref)                than one, level fixed on input line 2199.
+
+
+Overfull \hbox (27.58136pt too wide) detected at line 2205
+[][][]\OML/cmm/m/it/12 ![] \OT1/cmr/m/n/12 = (\OML/cmm/m/it/12 c[]s[]c[] \OT1/cmr/m/n/12 + \OML/cmm/m/it/12 s[]s[]\OT1/cmr/m/n/12 )[](\OML/cmm/m/it/12 s[]s[]c[] \OMS/cmsy/m/n/12 ^^@ \OML/cmm/m/it/12 s[]c[]\OT1/cmr/m/n/12 ) + (\OML/cmm/m/it/12 c[]s[]s[] \OMS/cmsy/m/n/12 ^^@ \OML/cmm/m/it/12 c[]s[]\OT1/cmr/m/n/12 )[](\OML/cmm/m/it/12 s[]s[]s[] \OT1/cmr/m/n/12 + \OML/cmm/m/it/12 c[]c[]\OT1/cmr/m/n/12 ) + \OML/cmm/m/it/12 c[]c[][]\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 s[]c[]\OT1/cmr/m/n/12 ) = [] \OMS/cmsy/m/n/12 ^^@ []\OML/cmm/m/it/12 s[]
+ []
+
+
+
+[95]
+Overfull \hbox (259.23299pt too wide) detected at line 2255
+[][][][] \OT1/cmr/m/n/12 = [] [] = [] [] = []
+ []
+
+
+Overfull \hbox (23.53207pt too wide) detected at line 2266
+[][][][] \OT1/cmr/m/n/12 = [] [] = []
+ []
+
+
+
+[96]
+
+Package hyperref Warning: Difference (2) between bookmark levels is greater 
+(hyperref)                than one, level fixed on input line 2294.
+
+
+
+[97]
+
+[98]
+
+[99]
+
+[100]
+
+[101]
+
+[102]
+
+[103]
+Overfull \hbox (111.40591pt too wide) detected at line 2614
+[][][][] \OT1/cmr/m/n/12 = [] [][] + [] = [] [] [] + [] = [] [] []\OML/cmm/m/it/12 W[]u[] \OT1/cmr/m/n/12 + [] []\OML/cmm/m/it/12 X[] \OT1/cmr/m/n/12 + [] (\OML/cmm/m/it/12 i \OT1/cmr/m/n/12 = 1\OML/cmm/m/it/12 ; \OT1/cmr/m/n/12 2\OML/cmm/m/it/12 ; \OT1/cmr/m/n/12 3)
+ []
+
+
+Overfull \hbox (629.95488pt too wide) detected at line 2621
+[][][][] \OT1/cmr/m/n/12 = [][] [] \OMS/cmsy/m/n/12 ^^A [][] \OT1/cmr/m/n/12 + [][] [] \OMS/cmsy/m/n/12 ^^A [][] \OT1/cmr/m/n/12 + [][] [] \OMS/cmsy/m/n/12 ^^A [][] \OT1/cmr/m/n/12 = [][] [] + [][] [] + [][] []
+ []
+
+
+Overfull \hbox (49.3583pt too wide) detected at line 2640
+[][][][] \U/msa/m/n/12 , [] \OT1/cmr/m/n/12 = [] [][] + [] = [] [] [] + [] = [] [] []\OML/cmm/m/it/12 W[]u[] \OT1/cmr/m/n/12 + [] []\OML/cmm/m/it/12 X[] \OT1/cmr/m/n/12 + []
+ []
+
+
+
+[104]
+
+[105])
+
+[106]
+Chapter 4.
+(./有限维广义变分原理.tex
+
+[107
+
+]
+
+[108]
+
+[109]
+
+[110]
+
+[111]
+
+[112]
+
+[113]
+
+[114])
+
+[115]
+
+[116]
+附录 A.
+(./附录.tex
+
+[117
+
+]
+
+[118]
+
+[119]
+
+[120]
+
+[121]
+
+[122]
 Overfull \hbox (2.5341pt too wide) detected at line 245
 []\OT1/cmr/m/n/12 ([] \OMS/cmsy/m/n/12 
  []\OT1/cmr/m/n/12 ) = [] \OML/cmm/m/it/12 ^^U[]^^V[] \OT1/cmr/m/n/12 = [][] [][] = []([])[] []([])[]\OML/cmm/m/it/12 :
@@ -1515,9 +1648,9 @@ Overfull \hbox (2.5341pt too wide) detected at line 245
 
 
 
-[93])
+[123])
 
-[94] (./系统动力学建模与仿真笔记.aux)
+[124] (./系统动力学建模与仿真笔记.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2022/08/05>
@@ -1530,15 +1663,15 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `系统动力学建模与仿真笔记.out' has not changed.
-(rerunfilecheck)             Checksum: 90355B84F742E591111F3081E586545D;9020.
+(rerunfilecheck)             Checksum: 51735E506DB8076B852E6A64FF97E106;11001.
  ) 
 Here is how much of TeX's memory you used:
- 36191 strings out of 473832
- 799679 string characters out of 5735453
- 1613738 words of memory out of 5000000
- 58591 multiletter control sequences out of 15000+600000
+ 36387 strings out of 473832
+ 804362 string characters out of 5735453
+ 1622459 words of memory out of 5000000
+ 58786 multiletter control sequences out of 15000+600000
  572167 words of font info for 152 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  107i,18n,114p,1128b,816s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on 系统动力学建模与仿真笔记.pdf (99 pages).
+Output written on 系统动力学建模与仿真笔记.pdf (130 pages).

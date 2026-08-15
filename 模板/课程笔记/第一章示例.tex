@@ -1,7 +1,9 @@
 % ============================================================
-%  示例章节 —— 展示模板提供的各类环境用法
+%  示例章节 —— 展示模板提供的各类环境用法与公式规范
 %  复制本文件为「第X章.tex」，替换正文即可；用完后在
 %  课程笔记模板.tex 中通过 \input{} 引入。
+%  数学规范：行间公式一律用 equation 环境并加 \label；
+%            向量/矩阵用 \boldsymbol，标量不加粗。
 % ============================================================
 \section{基本任务}
 在实际工程中，构件应满足如下需求：
@@ -30,7 +32,7 @@
 	这里是定理内容，例如 $a^2 + b^2 = c^2$。
 \end{theorem}
 \begin{proof}
-	这里是证明过程。
+	这里是证明过程。向量用 $\boldsymbol{a}$，矩阵用 $\boldsymbol{A}$，标量分量用 $a_i$。
 \end{proof}
 
 \begin{definition}
@@ -47,6 +49,18 @@
 \begin{remark}
 	这里是注释内容。
 \end{remark}
+
+\section{公式写法规范}
+行间公式一律使用 \texttt{equation} 环境并加 \texttt{\textbackslash label}，禁止裸 \texttt{\$\$} 与手写编号：
+\begin{equation}
+	\boldsymbol{A}^{\mathrm{T}}\boldsymbol{A}=\boldsymbol{I}
+	\label{eq:示例:正交}
+\end{equation}
+交叉引用用 \texttt{\textbackslash eqref}，例如由式~\eqref{eq:示例:正交} 可知 $\boldsymbol{A}$ 为正交矩阵。向量与矩阵用 $\boldsymbol{}$ 粗体，标量不加粗：
+\begin{equation}
+	\boldsymbol{v}_{|A}=\boldsymbol{A}\,\boldsymbol{v}_{|B}
+	\label{eq:示例:坐标变换}
+\end{equation}
 
 \section{公式框}
 \begin{myformula}

@@ -1,0 +1,141 @@
+% ============================================================
+%  附录 补充推导与证明
+%  本附录收录正文定理的补充证明与延伸推导。
+% ============================================================
+
+\section{曲线论基本定理的证明}
+
+\begin{proof}[曲线论基本定理（存在性与唯一性）]
+	给定 $\kappa(s)>0$、$\tau(s)$，考虑 Frenet 常微分方程组
+	\begin{equation}
+		\mathbf{T}'=\kappa\mathbf{N},\qquad
+		\mathbf{N}'=-\kappa\mathbf{T}+\tau\mathbf{B},\qquad
+		\mathbf{B}'=-\tau\mathbf{N},
+		\label{eq:附录:Frenet方程组}
+	\end{equation}
+	记矩阵 $X=(\mathbf{T},\mathbf{N},\mathbf{B})$，则可写成
+	\begin{equation}
+		X'=X\,A(s),\qquad
+		A(s)=
+		\begin{pmatrix}
+			0 & -\kappa & 0\\
+			\kappa & 0 & -\tau\\
+			0 & \tau & 0
+		\end{pmatrix},
+		\label{eq:附录:Frenet矩阵}
+	\end{equation}
+	其中 $A(s)$ 是\textbf{反对称矩阵}。由线性常微分方程组解的存在唯一性定理，给定初始正交标架 $X(0)$，方程组存在唯一解 $X(s)$。且
+	\begin{equation}
+		\frac{\mathrm{d}}{\mathrm{d}s}\bigl(XX^{\mathrm{T}}\bigr)
+		=X'X^{\mathrm{T}}+X(X')^{\mathrm{T}}
+		=X\bigl(A+A^{\mathrm{T}}\bigr)X^{\mathrm{T}}=0,
+		\label{eq:附录:保正交}
+	\end{equation}
+	故 $XX^{\mathrm{T}}\equiv XX^{\mathrm{T}}\big|_{s=0}=I$，即 $\{\mathbf{T}(s),\mathbf{N}(s),\mathbf{B}(s)\}$ 恒为右手正交标架。
+
+	令
+	\begin{equation}
+		\boldsymbol{r}(s)=\boldsymbol{r}(0)+\int_{0}^{s}\mathbf{T}(\sigma)\,\mathrm{d}\sigma,
+		\label{eq:附录:曲线构造}
+	\end{equation}
+	则 $\boldsymbol{r}'(s)=\mathbf{T}(s)$，$\left|\boldsymbol{r}'(s)\right|=1$，$s$ 为弧长参数。由式~\eqref{eq:附录:Frenet方程组} 有
+	\begin{equation}
+		\left|\boldsymbol{r}''(s)\right|=\left|\mathbf{T}'\right|=\left|\kappa\mathbf{N}\right|=\kappa,\qquad
+		-\mathbf{B}'\cdot\mathbf{N}=\tau,
+		\label{eq:附录:曲率挠率再现}
+	\end{equation}
+	即 $\kappa$、$\tau$ 分别是所构曲线的曲率与挠率。唯一性由初值问题解的唯一性及初始标架相差一个正交变换（对应一个刚体运动）立得。这就完成了曲线论基本定理的证明。
+\end{proof}
+
+\section{可展曲面的分类}
+
+\begin{proposition}[可展条件与三种类型]
+	直纹面 $\boldsymbol{r}(u,v)=\boldsymbol{a}(u)+v\boldsymbol{b}(u)$ 可展，即
+	\begin{equation}
+		\bigl(\boldsymbol{a}'(u),\;\boldsymbol{b}(u),\;\boldsymbol{b}'(u)\bigr)=0
+		\label{eq:附录:可展条件}
+	\end{equation}
+	恒成立。此时按 $\boldsymbol{b}(u)$ 的性质分为三类：
+	\begin{enumerate}
+		\item 若 $\boldsymbol{b}'(u)\equiv\boldsymbol{0}$，则直母线方向不变，曲面为\textbf{柱面}；
+		\item 若 $\boldsymbol{a}'(u)\parallel\boldsymbol{b}(u)$，则直母线为 $\boldsymbol{a}(u)$ 的切线，曲面为\textbf{切线曲面}；
+		\item 其余情形，可找到定点 $\boldsymbol{c}$ 与函数 $\lambda(u)$ 使
+		\begin{equation}
+			\boldsymbol{a}(u)+\lambda(u)\boldsymbol{b}(u)\equiv\boldsymbol{c},
+			\label{eq:附录:锥面顶点}
+		\end{equation}
+		即所有直母线过同一点，曲面为\textbf{锥面}。
+	\end{enumerate}
+\end{proposition}
+
+\begin{proof}[分类的说明]
+	可展条件式~\eqref{eq:附录:可展条件} 等价于法向量沿直母线方向不变。若 $\boldsymbol{b}\times\boldsymbol{b}'\neq\boldsymbol{0}$，由式~\eqref{eq:附录:可展条件} 知 $\boldsymbol{a}'\in\operatorname{span}\{\boldsymbol{b},\boldsymbol{b}'\}$，于是可把准线 $\boldsymbol{a}(u)$ 换为直母线上适当的点使各母线共点，从而化为锥面；若 $\boldsymbol{b}\times\boldsymbol{b}'=\boldsymbol{0}$ 且 $\boldsymbol{b}'\neq\boldsymbol{0}$，则 $\boldsymbol{b}$ 方向不变，即柱面；当 $\boldsymbol{a}'\parallel\boldsymbol{b}$ 时即为切线曲面。三者覆盖了全部可展曲面。
+\end{proof}
+
+\section{球面上的曲线}
+
+\begin{theorem}[球面曲线的曲率挠率关系]
+	设曲线 $\boldsymbol{r}(s)$ 的曲率 $\kappa$ 和挠率 $\tau$ 都不为零，$s$ 为弧长参数。如果该曲线落在一个半径为 $R$ 的球面上，则它的曲率和挠率必满足关系式
+	\begin{equation}
+		\frac{1}{\kappa^{2}}+\left(\frac{1}{\tau}\left(\frac{1}{\kappa}\right)'\right)^{2}=R^{2}.
+		\label{eq:附录:球面曲线关系}
+	\end{equation}
+\end{theorem}
+
+\begin{proof}
+	设球心为 $\boldsymbol{a}$，半径为 $R$，则
+	\begin{equation}
+		\left|\boldsymbol{r}(s)-\boldsymbol{a}\right|^{2}=R^{2}.
+		\label{eq:附录:球面方程}
+	\end{equation}
+	对式~\eqref{eq:附录:球面方程} 两边关于 $s$ 求导，得
+	\begin{equation}
+		\bigl(\boldsymbol{r}(s)-\boldsymbol{a}\bigr)\cdot\mathbf{T}(s)=0.
+		\label{eq:附录:球面导数1}
+	\end{equation}
+	再次求导并利用 $\mathbf{T}'=\kappa\mathbf{N}$（式~\eqref{eq:Frenet公式:方程组}），得
+	\begin{equation}
+		\bigl(\boldsymbol{r}(s)-\boldsymbol{a}\bigr)\cdot\mathbf{N}(s)=-\frac{1}{\kappa}.
+		\label{eq:附录:球面导数2}
+	\end{equation}
+	对式~\eqref{eq:附录:球面导数2} 再求导，并利用 $\mathbf{N}'=-\kappa\mathbf{T}+\tau\mathbf{B}$ 与式~\eqref{eq:附录:球面导数1}，得
+	\begin{equation}
+		\bigl(\boldsymbol{r}(s)-\boldsymbol{a}\bigr)\cdot\mathbf{B}(s)=\frac{1}{\tau}\left(\frac{1}{\kappa}\right)'.
+		\label{eq:附录:球面导数3}
+	\end{equation}
+	由式~\eqref{eq:附录:球面导数1}--\eqref{eq:附录:球面导数3} 可知，$\boldsymbol{r}(s)-\boldsymbol{a}$ 在 Frenet 标架 $\{\mathbf{T},\mathbf{N},\mathbf{B}\}$ 下的分量只有 $\mathbf{N}$、$\mathbf{B}$ 两个方向非零，于是
+	\begin{equation}
+		R^{2}=\left|\boldsymbol{r}(s)-\boldsymbol{a}\right|^{2}
+		=\frac{1}{\kappa^{2}}+\left(\frac{1}{\tau}\left(\frac{1}{\kappa}\right)'\right)^{2},
+		\label{eq:附录:球面关系推导}
+	\end{equation}
+	即式~\eqref{eq:附录:球面曲线关系} 成立。
+\end{proof}
+
+\section{任意参数下曲率公式的推导}
+
+\begin{proof}[任意参数下曲率公式的推导]
+	设曲线 $\boldsymbol{r}(t)$ 以任意参数 $t$ 表示，$s(t)$ 为弧长参数。记 $v=\left|\boldsymbol{r}'(t)\right|$，则 $\mathrm{d}s=v\,\mathrm{d}t$。单位切向量为 $\mathbf{T}=\boldsymbol{r}'/v$，由链式法则（式~\eqref{eq:向量函数:链式法则}）与式~\eqref{eq:曲率:定义} 得
+	\begin{equation}
+		\kappa=\left|\frac{\mathrm{d}\mathbf{T}}{\mathrm{d}s}\right|
+		=\frac{1}{v}\left|\frac{\mathrm{d}\mathbf{T}}{\mathrm{d}t}\right|
+		=\frac{1}{v}\left|\frac{v\boldsymbol{r}''-v'\boldsymbol{r}'}{v^{2}}\right|
+		=\frac{\left|v\boldsymbol{r}''-v'\boldsymbol{r}'\right|}{v^{3}}.
+		\label{eq:附录:曲率推导1}
+	\end{equation}
+	又 $v'=\dfrac{\boldsymbol{r}'\cdot\boldsymbol{r}''}{v}$，故
+	\begin{equation}
+		\left|v\boldsymbol{r}''-v'\boldsymbol{r}'\right|^{2}
+		=v^{2}\left|\boldsymbol{r}''\right|^{2}-2vv'\,\boldsymbol{r}'\cdot\boldsymbol{r}''+v'^{2}\left|\boldsymbol{r}'\right|^{2}
+		=\left|\boldsymbol{r}'\right|^{2}\left|\boldsymbol{r}''\right|^{2}-\left(\boldsymbol{r}'\cdot\boldsymbol{r}''\right)^{2}
+		=\left|\boldsymbol{r}'\times\boldsymbol{r}''\right|^{2}.
+		\label{eq:附录:曲率推导2}
+	\end{equation}
+	代入式~\eqref{eq:附录:曲率推导1}，即得任意参数下的曲率公式
+	\begin{equation}
+		\kappa(t)=\frac{\left|\boldsymbol{r}'(t)\times\boldsymbol{r}''(t)\right|}
+		{\left|\boldsymbol{r}'(t)\right|^{3}},
+		\label{eq:附录:曲率公式}
+	\end{equation}
+	此即正文式~\eqref{eq:曲率:任意参数公式}。
+\end{proof}
