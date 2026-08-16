@@ -1,0 +1,94 @@
+\contentsline {chapter}{\numberline {1}绪论}{3}{chapter.1}%
+\contentsline {section}{\numberline {1.1}符号说明}{3}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}数学基础记号}{4}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}参考系与单位向量}{4}{subsection.1.1.2}%
+\contentsline {subsection}{\numberline {1.1.3}转动描述}{5}{subsection.1.1.3}%
+\contentsline {subsection}{\numberline {1.1.4}相对转动量（右下标约定）}{5}{subsection.1.1.4}%
+\contentsline {subsection}{\numberline {1.1.5}运动学与动力学量}{6}{subsection.1.1.5}%
+\contentsline {subsection}{\numberline {1.1.6}爱因斯坦求和约定}{6}{subsection.1.1.6}%
+\contentsline {chapter}{\numberline {2}数学基础}{9}{chapter.2}%
+\contentsline {section}{\numberline {2.1}多元函数微积分}{9}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}多元函数}{9}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}多元函数的自由极值}{9}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}多元函数的泰勒展开式}{10}{subsection.2.1.3}%
+\contentsline {subsection}{\numberline {2.1.4}多元函数的驻点}{10}{subsection.2.1.4}%
+\contentsline {subsection}{\numberline {2.1.5}多元函数的驻点为极值点的充要条件}{11}{subsection.2.1.5}%
+\contentsline {section}{\numberline {2.2}代数基础}{11}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}矩阵分析基础}{12}{subsection.2.2.1}%
+\contentsline {subsubsection}{矩阵的定义与基本运算}{12}{section*.8}%
+\contentsline {subsubsection}{对称矩阵与反对称矩阵}{13}{equation.2.23}%
+\contentsline {subsubsection}{行列式与逆矩阵}{14}{equation.2.27}%
+\contentsline {subsubsection}{矩阵的秩}{16}{equation.2.33}%
+\contentsline {subsubsection}{正交矩阵}{17}{equation.2.36}%
+\contentsline {subsubsection}{特征值与特征向量}{18}{equation.2.39}%
+\contentsline {subsection}{\numberline {2.2.2}矩阵的 Jordan 标准形}{19}{subsection.2.2.2}%
+\contentsline {subsubsection}{二次型与正定矩阵}{21}{equation.2.48}%
+\contentsline {subsubsection}{向量与矩阵的范数}{23}{equation.2.50}%
+\contentsline {subsubsection}{矩阵的导数与梯度}{24}{equation.2.55}%
+\contentsline {subsubsection}{逆矩阵的精确关系与伪逆}{29}{equation.2.63}%
+\contentsline {subsubsection}{矩阵分解}{31}{Item.38}%
+\contentsline {subsubsection}{分块矩阵与 Schur 补}{32}{equation.2.69}%
+\contentsline {subsubsection}{线性方程组的解}{33}{equation.2.69}%
+\contentsline {subsubsection}{复矩阵}{35}{equation.2.73}%
+\contentsline {subsubsection}{幂等矩阵、幂零矩阵与幺幂矩阵}{36}{equation.2.74}%
+\contentsline {subsubsection}{单元素矩阵}{37}{equation.2.74}%
+\contentsline {subsubsection}{DFT 矩阵}{38}{equation.2.74}%
+\contentsline {subsubsection}{Toeplitz 矩阵}{38}{equation.2.75}%
+\contentsline {subsubsection}{转移矩阵}{39}{equation.2.75}%
+\contentsline {subsubsection}{单位向量、置换与平移算子}{39}{equation.2.75}%
+\contentsline {subsubsection}{Vandermonde 矩阵}{40}{equation.2.75}%
+\contentsline {subsubsection}{Kronecker 积与 vec 算子}{40}{equation.2.76}%
+\contentsline {subsubsection}{矩阵函数}{41}{equation.2.78}%
+\contentsline {section}{\numberline {2.3}广义函数与 Dirac $\delta $ 函数}{42}{section.2.3}%
+\contentsline {section}{\numberline {2.4}并矢}{42}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}并矢的定义}{43}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}并矢的运算}{43}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.3}单位并矢}{44}{subsection.2.4.3}%
+\contentsline {subsection}{\numberline {2.4.4}并矢的转置}{44}{subsection.2.4.4}%
+\contentsline {subsection}{\numberline {2.4.5}并矢的矩阵表示}{45}{subsection.2.4.5}%
+\contentsline {subsection}{\numberline {2.4.6}旋转并矢}{45}{subsection.2.4.6}%
+\contentsline {chapter}{\numberline {3}运动学基础}{47}{chapter.3}%
+\contentsline {section}{\numberline {3.1}简单转动}{47}{section.3.1}%
+\contentsline {section}{\numberline {3.2}方向余弦}{49}{section.3.2}%
+\contentsline {subsubsection}{方向余弦矩阵的基本性质}{50}{equation.3.8}%
+\contentsline {section}{\numberline {3.3}欧拉参数}{59}{section.3.3}%
+\contentsline {section}{\numberline {3.4}罗德里格斯参数}{63}{section.3.4}%
+\contentsline {section}{\numberline {3.5}间接定向法}{64}{section.3.5}%
+\contentsline {section}{\numberline {3.6}连续转动}{67}{section.3.6}%
+\contentsline {section}{\numberline {3.7}方向角}{71}{section.3.7}%
+\contentsline {section}{\numberline {3.8}小角度旋转}{79}{section.3.8}%
+\contentsline {section}{\numberline {3.9}螺旋运动}{80}{section.3.9}%
+\contentsline {section}{\numberline {3.10}角速度矩阵}{82}{section.3.10}%
+\contentsline {section}{\numberline {3.11}角速度矢量}{84}{section.3.11}%
+\contentsline {section}{\numberline {3.12}角速度分量}{89}{section.3.12}%
+\contentsline {section}{\numberline {3.13}角速度与欧拉参数}{94}{section.3.13}%
+\contentsline {section}{\numberline {3.14}辅助参考系}{98}{section.3.14}%
+\contentsline {section}{\numberline {3.15}角速度与方向角}{99}{section.3.15}%
+\contentsline {section}{\numberline {3.16}缓慢小转动}{104}{section.3.16}%
+\contentsline {section}{\numberline {3.17}瞬时轴}{107}{section.3.17}%
+\contentsline {section}{\numberline {3.18}角加速度}{111}{section.3.18}%
+\contentsline {section}{\numberline {3.19}偏角速度与偏速度}{114}{section.3.19}%
+\contentsline {chapter}{\numberline {4}有限维广义变分原理}{119}{chapter.4}%
+\contentsline {section}{\numberline {4.1}独立变分原理}{119}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}基础概念}{119}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}独立变分原理}{120}{subsection.4.1.2}%
+\contentsline {section}{\numberline {4.2}非独立变分原理}{121}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}不含冗余约束的有限维非独立变分}{121}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}含冗余约束的有限维非独立变分原理}{124}{subsection.4.2.2}%
+\contentsline {section}{\numberline {4.3}非独立变分原理在多元函数条件极值问题的应用}{126}{section.4.3}%
+\ttl@change@i {\@ne }{chapter}{0em}{}{\large \fangsong {附录\ \thecontentslabel }}{}{\hfill \contentspage }\relax 
+\ttl@change@v {chapter}{}{}{}\relax 
+\contentsline {chapter}{\numberline {A}代数基础定理与性质的证明}{129}{appendix.A}%
+\contentsline {section}{\numberline {A.1}谱分解定理的证明}{129}{section.A.1}%
+\contentsline {section}{\numberline {A.2}Jordan 标准形定理的证明}{129}{section.A.2}%
+\contentsline {section}{\numberline {A.3}Woodbury 恒等式的证明}{130}{section.A.3}%
+\contentsline {section}{\numberline {A.4}奇异值分解的证明}{131}{section.A.4}%
+\contentsline {section}{\numberline {A.5}LU 分解与 Cholesky 分解的证明}{131}{section.A.5}%
+\contentsline {section}{\numberline {A.6}特征值性质的证明}{132}{section.A.6}%
+\contentsline {section}{\numberline {A.7}正定矩阵性质的证明}{132}{section.A.7}%
+\contentsline {section}{\numberline {A.8}范数不等式}{133}{section.A.8}%
+\contentsline {section}{\numberline {A.9}伪逆性质与导数的证明}{134}{section.A.9}%
+\contentsline {section}{\numberline {A.10}Vandermonde 行列式的证明}{134}{section.A.10}%
+\contentsline {section}{\numberline {A.11}Kronecker 积性质的证明}{135}{section.A.11}%
+\contentsline {section}{\numberline {A.12}指数矩阵函数性质的证明}{135}{section.A.12}%
+\contentsfinish 

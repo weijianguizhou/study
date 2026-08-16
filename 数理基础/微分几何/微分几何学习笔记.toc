@@ -1,57 +1,12 @@
 \contentsline {chapter}{\numberline {1}绪论}{3}{chapter.1}%
 \contentsline {section}{\numberline {1.1}符号说明}{3}{section.1.1}%
-\contentsline {chapter}{\numberline {2}三维欧氏空间中的曲线}{5}{chapter.2}%
-\contentsline {section}{\numberline {2.1}三维欧氏空间与向量函数}{5}{section.2.1}%
-\contentsline {subsection}{\numberline {2.1.1}三维欧氏空间 $\mathbb {E}^3$}{5}{subsection.2.1.1}%
-\contentsline {subsection}{\numberline {2.1.2}向量运算}{5}{subsection.2.1.2}%
-\contentsline {subsection}{\numberline {2.1.3}正交标架}{6}{subsection.2.1.3}%
-\contentsline {subsection}{\numberline {2.1.4}向量函数}{7}{subsection.2.1.4}%
-\contentsline {section}{\numberline {2.2}曲线}{7}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1}曲线与正则参数曲线}{7}{subsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.2.2}切线与法平面}{8}{subsection.2.2.2}%
-\contentsline {section}{\numberline {2.3}弧长}{8}{section.2.3}%
-\contentsline {section}{\numberline {2.4}曲率}{9}{section.2.4}%
-\contentsline {subsection}{\numberline {2.4.1}单位切向量}{9}{subsection.2.4.1}%
-\contentsline {subsection}{\numberline {2.4.2}曲率}{9}{subsection.2.4.2}%
-\contentsline {section}{\numberline {2.5}挠率与 Frenet 标架}{10}{section.2.5}%
-\contentsline {subsection}{\numberline {2.5.1}Frenet 标架}{10}{subsection.2.5.1}%
-\contentsline {subsection}{\numberline {2.5.2}挠率}{10}{subsection.2.5.2}%
-\contentsline {section}{\numberline {2.6}Serret--Frenet 公式}{11}{section.2.6}%
-\contentsline {section}{\numberline {2.7}曲线在一点邻近的形态}{11}{section.2.7}%
-\contentsline {section}{\numberline {2.8}空间曲线的基本定理}{12}{section.2.8}%
-\contentsline {chapter}{\numberline {3}曲面的第一基本形式}{13}{chapter.3}%
-\contentsline {section}{\numberline {3.1}曲面的概念}{13}{section.3.1}%
-\contentsline {section}{\numberline {3.2}参数曲线网}{14}{section.3.2}%
-\contentsline {section}{\numberline {3.3}第一基本形式}{14}{section.3.3}%
-\contentsline {section}{\numberline {3.4}曲面上曲线的弧长}{15}{section.3.4}%
-\contentsline {section}{\numberline {3.5}两方向间的夹角与正交参数曲线网}{15}{section.3.5}%
-\contentsline {section}{\numberline {3.6}等距变换与保形变换}{15}{section.3.6}%
-\contentsline {section}{\numberline {3.7}曲面上的面积}{16}{section.3.7}%
-\contentsline {chapter}{\numberline {4}曲面的第二基本形式}{17}{chapter.4}%
-\contentsline {section}{\numberline {4.1}第二基本形式}{17}{section.4.1}%
-\contentsline {section}{\numberline {4.2}曲面上曲线的曲率与法曲率}{17}{section.4.2}%
-\contentsline {section}{\numberline {4.3}主曲率与主方向}{18}{section.4.3}%
-\contentsline {section}{\numberline {4.4}高斯曲率与平均曲率}{19}{section.4.4}%
-\contentsline {section}{\numberline {4.5}直纹面与可展曲面}{19}{section.4.5}%
-\contentsline {section}{\numberline {4.6}脐点与极小曲面}{20}{section.4.6}%
-\contentsline {section}{\numberline {4.7}曲面论基本定理}{20}{section.4.7}%
-\contentsline {chapter}{\numberline {5}外微分形式与活动标架法}{23}{chapter.5}%
-\contentsline {section}{\numberline {5.1}外微分形式}{23}{section.5.1}%
-\contentsline {subsection}{\numberline {5.1.1}外积}{23}{subsection.5.1.1}%
-\contentsline {subsection}{\numberline {5.1.2}外微分}{23}{subsection.5.1.2}%
-\contentsline {section}{\numberline {5.2}活动标架与结构方程}{24}{section.5.2}%
-\contentsline {subsection}{\numberline {5.2.1}活动标架}{24}{subsection.5.2.1}%
-\contentsline {subsection}{\numberline {5.2.2}结构方程}{24}{subsection.5.2.2}%
-\contentsline {section}{\numberline {5.3}活动标架法在曲线论中的应用}{25}{section.5.3}%
-\contentsline {subsection}{\numberline {5.3.1}连接形式与曲率挠率}{25}{subsection.5.3.1}%
-\contentsline {section}{\numberline {5.4}活动标架法在曲面论中的应用}{25}{section.5.4}%
-\contentsline {subsection}{\numberline {5.4.1}第一基本形式与连接形式}{26}{subsection.5.4.1}%
-\contentsline {subsection}{\numberline {5.4.2}第二基本形式与高斯曲率}{26}{subsection.5.4.2}%
+\contentsline {chapter}{\numberline {2}三维欧氏空间中的曲线论}{5}{chapter.2}%
+\contentsline {section}{\numberline {2.1}曲线 \ 曲线的切向量\ 弧长}{5}{section.2.1}%
 \ttl@change@i {\@ne }{chapter}{0em}{}{\large \fangsong {附录\ \thecontentslabel }}{}{\hfill \contentspage }\relax 
 \ttl@change@v {chapter}{}{}{}\relax 
-\contentsline {chapter}{\numberline {A}补充推导与证明}{29}{appendix.A}%
-\contentsline {section}{\numberline {A.1}曲线论基本定理的证明}{29}{section.A.1}%
-\contentsline {section}{\numberline {A.2}可展曲面的分类}{30}{section.A.2}%
-\contentsline {section}{\numberline {A.3}球面上的曲线}{30}{section.A.3}%
-\contentsline {section}{\numberline {A.4}任意参数下曲率公式的推导}{31}{section.A.4}%
+\contentsline {chapter}{\numberline {A}补充推导与证明}{9}{appendix.A}%
+\contentsline {section}{\numberline {A.1}曲线论基本定理的证明}{9}{section.A.1}%
+\contentsline {section}{\numberline {A.2}可展曲面的分类}{10}{section.A.2}%
+\contentsline {section}{\numberline {A.3}球面上的曲线}{10}{section.A.3}%
+\contentsline {section}{\numberline {A.4}任意参数下曲率公式的推导}{11}{section.A.4}%
 \contentsfinish 

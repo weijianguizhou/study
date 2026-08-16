@@ -1,0 +1,187 @@
+% ============================================================
+%  第一章 三维欧氏空间中的曲线
+%  结构沿袭苏步青、胡和生《微分几何》第一章
+%  记号约定：位置向量用 \boldsymbol{}，单位向量（T/N/B/e）用
+%            \mathbf{}，曲率/挠率等标量不加粗。
+% ============================================================
+
+\section{曲线 \ 曲线的切向量\ 弧长}
+\begin{mydefinition}{曲线}
+	设(O;xyz)是$\mathbb{E}^3$ 中的笛卡尔坐标系，
+	\begin{equation}
+		\label{eq:curve}
+		\begin{cases}
+			x=x(t)\\
+			y=y(t)\\
+			z=z(t)
+		\end{cases}
+	\end{equation}
+	于是式~\eqref{eq:curve} 给出了从$t\in(a,b)$到$\mathbb{E}^3$中$(x,y,z)$的连续可微映射
+	\begin{equation}
+		\label{eq:curve-map}
+		t \mapsto (x(t),y(t),z(t))
+	\end{equation}
+	在这个映射下，t被映射到点$\mathbf{P}(x(t),y(t),z(t)$,(a,b)的像集就构成了$\mathbb{E}^3$中的一条\textbf{连续可微的曲线}$\mathbf{C}$,简称\textbf{曲线}。我们把t称为曲线的参数，式~\eqref{eq:curve}就是曲线$C$的参数方程。常把式~~\eqref{eq:curve}写成向量形式：
+	\begin{equation}
+		\label{eq:curve-vector}
+		\mathbf{r}=\mathbf{r}(t)=(x(t),y(t),z(t))
+	\end{equation}
+	从而把曲线上的点$\mathbf{P}$称作点$\mathbf{r}(t)$,简称t点或$\mathbf{P}(t)$点
+\end{mydefinition}
+\begin{mydefinition}{曲线的切向量}
+	按照参数增加的方向可以确定曲线的正向。称向量
+	\begin{equation}
+		\label{eq:tangent-vector}
+		\frac{d\mathbf{r}(t)}{dt}=(\frac{dx(t)}{dt},\frac{dy(t)}{dt},\frac{dz(t)}{dt})
+	\end{equation}
+	为曲线$\mathbf{C}$在t点的\textbf{切向量}。
+
+	若在$t=t_0$处$\frac{d\mathbf{r}(t_0)}{dt}\neq \mathbf{0}$则称参数为$t_0$的点$\mathbf{P}(t_0)$为\textbf{正则点}，否则称为\textbf{奇点}。
+
+	当曲线上所有点都是正则点时，称曲线为\textbf{正则曲线}。
+\end{mydefinition}
+例如曲线$\mathbf{r}(t)=(a\cos(t),a\sin(t),bt)$ 是一条圆柱螺旋线，其中$a$为圆柱半径，$b$决定螺距，其图像如图~\ref{fig:helix}所示。
+\begin{figure}[htbp]
+	\centering
+	\begin{tikzpicture}[
+		x={(0.87cm,0.5cm)},
+		y={(-0.87cm,0.5cm)},
+		z={(0cm,1cm)},
+		line cap=round,
+		line join=round
+	]
+		% 坐标轴
+		\draw[-{Stealth}] (-2.3,0,0) -- (2.4,0,0) node[above left] {$x$};
+		\draw[-{Stealth}] (0,-2.3,0) -- (0,2.4,0) node[above right] {$y$};
+		\draw[-{Stealth}] (0,0,-0.3) -- (0,0,3.0) node[right] {$z$};
+		% 圆柱投影辅助圆（底面）
+		\draw[thin, gray!60, dashed] plot[domain=0:360, samples=100, smooth]
+			({1.6*cos(\x)}, {1.6*sin(\x)}, 0);
+		% 螺旋线
+		\draw[very thick, main] plot[domain=0:4*pi, samples=200, smooth]
+			({1.6*cos(deg(\x))}, {1.6*sin(deg(\x))}, {0.19*\x});
+		% 半径 a
+		\draw[dashed] (0,0,0) -- (1.6,0,0) node[midway, above, sloped] {$a$};
+	\end{tikzpicture}
+	\caption{圆柱螺旋线 $\mathbf{r}(t)=(a\cos t,\,a\sin t,\,bt)$}
+	\label{fig:helix}
+\end{figure}
+通过计算可知，这条曲线是正则曲线，无奇点。
+
+再例如曲线$\mathbf{r}(t)=(t^3,t^2,0)$ 是$xy$平面中的半立方抛物线（尖点曲线），在$t=0$处出现尖点，不是正则曲线，如图~\ref{fig:semicubical}所示。
+\begin{figure}[htbp]
+	\centering
+	\begin{tikzpicture}[
+		x={(0.87cm,0.5cm)},
+		y={(-0.87cm,0.5cm)},
+		z={(0cm,1cm)},
+		line cap=round,
+		line join=round
+	]
+		% 坐标轴
+		\draw[-{Stealth}] (-4,0,0) -- (4,0,0) node[above left] {$x$};
+		\draw[-{Stealth}] (0,-0.6,0) -- (0,3.0,0) node[above right] {$y$};
+		\draw[-{Stealth}] (0,0,-0.3) -- (0,0,0.6) node[right] {$z$};
+		% 半立方抛物线（尖点曲线）
+		\draw[very thick, main] plot[domain=-1.55:1.55, samples=200, smooth]
+			({(\x)^3}, {(\x)^2}, 0);
+		% 尖点
+		\fill (0,0,0) circle (1.5pt);
+		\node[below left] at (0,0,0) {$t=0$（尖点）};
+	\end{tikzpicture}
+	\caption{半立方抛物线 $\mathbf{r}(t)=(t^3,\,t^2,\,0)$}
+	\label{fig:semicubical}
+\end{figure}
+注意：$\frac{d\mathbf{r}}{dt}=(3t^2,2t,0)$，在$t=0$处为零向量，故原点（尖点）不是正则点。
+
+如果我们想采用另一个参数$\bar{t} $来表示同一条曲线，为了保证参数$\bar{t} $与$t$的一一对应，我们需要满足以下条件：
+\begin{equation}
+	\frac{d\bar{t}}{dt}\neq0
+\end{equation}
+为了使增加方向同时对应曲线正向，则要求
+\begin{equation}
+	\frac{d\bar{t}}{dt}> 0
+\end{equation}
+然后有链式法则可以知道
+\begin{equation}
+	\frac{d\mathbf{r}}{dt}=\frac{d\mathbf{r}}{d\bar{t}}\frac{d\bar{t}}{dt}
+\end{equation}
+参数t的正则点也必然是$\bar{t} $的正则点。即正则点的与否与参数无关。
+
+\begin{mydefinition}{弧长}
+	对于正则曲线$\mathbf{r}=\mathbf{r}(t)$，称
+	\begin{equation}
+		\label{eq:arc-length}
+		s(t)=\int_{t_0}^{t}|\frac{d\mathbf{r}}{dt}|dt
+	\end{equation}
+	为曲线从参数$t_0$到$t$的弧长。其中
+	$|\frac{d\mathbf{r}}{dt}|=\sqrt{\left(\frac{dx(t)}{dt}\right)^2+\left(\frac{dy(t)}{dt}\right)^2+\left(\frac{dz(t)}{dt}\right)^2}$
+\end{mydefinition}
+显然，弧长$s$是$t$的可微函数，且有$$\frac{ds}{dt}=|\frac{d\mathbf{r(t)}}{dt}|$$
+
+对正则曲线，因为$\frac{d\mathbf{r(t)}}{dt}\neq0$，所以$\frac{ds}{dt}>0$所以可以取$s$作为新参数。此时由于$$1=\frac{ds}{ds}=|\frac{d\mathbf{r(s)}}{ds}|$$,所以曲线的切向量$\frac{d\mathbf{r(s)}}{ds}$是单位向量。反之，当切向量为单位向量时，计算弧长被简化。由式~\eqref{eq:arc-length}可知：
+$$s=s(t)=\int_{t_0}^{t}|\frac{d\mathbf{r}}{dt}|dt=\int_{t_0}^{t}dt=t-t_0$$
+
+常用\textbf{"撇"}表示关于弧长参数$s$的导数，如：$$\mathbf{r}'(s)=\frac{d\mathbf{r}}{ds}\quad ,\quad \mathbf{r}''(s)=\frac{d^2\mathbf{r}}{ds^2}$$
+
+下面有一个重要定理：
+\begin{myTheorem}{曲率的定义定理}
+	设曲线$C:\ \mathbf{r}=\mathbf{r}(s)$的每点有一个单位向量$\mathbf{a}(s)$，则
+	\begin{equation}
+		|\mathbf{a}'(s)| =\lim_{\Delta s \to 0} \left|\frac{\Delta \theta}{\Delta s}\right|
+	\end{equation}
+	其中$\Delta\theta$为向量$\mathbf{a}(s)$转到$\mathbf{a}(s+\Delta s)$所转过的角度。
+\end{myTheorem}
+\begin{proof}
+	由导数定义，
+	\begin{equation}
+		|\mathbf{a}'(s)|=\lim_{\Delta s\to 0}\frac{|\mathbf{a}(s+\Delta s)-\mathbf{a}(s)|}{\Delta s}
+		=\lim_{\Delta s\to 0}\frac{|\Delta\mathbf{a}|}{\Delta s}
+	\end{equation}
+	设$\Delta\theta$为向量$\mathbf{a}(s)$转到$\mathbf{a}(s+\Delta s)$所转过的角度（图~\ref{fig:dtheta}）。由于$\mathbf{a}(s)$与$\mathbf{a}(s+\Delta s)$都是单位向量，由余弦定理，
+	\begin{figure}[htbp]
+		\centering
+		\begin{tikzpicture}[scale=1.8]
+			% 坐标轴
+			\draw[-{Stealth}] (-0.15,0) -- (3.7,0) node[below] {$x$};
+			\draw[-{Stealth}] (0,-0.75) -- (0,1.15) node[left] {$y$};
+			% 一般曲线 C
+			\draw[very thick, main] plot[domain=0.2:3.3, samples=120, smooth]
+				({\x}, {0.5*sin(\x r)+0.2});
+			% 曲线上两点
+			\coordinate (A) at (1.0,0.6207);
+			\coordinate (B) at (2.5,0.4992);
+			\fill (A) circle (1.2pt);
+			\fill (B) circle (1.2pt);
+			\node[fill=white, inner sep=1pt, below, yshift=-2pt] at (A) {$P(s)$};
+			\node[fill=white, inner sep=1pt, below, yshift=-2pt] at (B) {$P(s+\Delta s)$};
+			% 切向量 a(s)
+			\draw[-{Stealth}, very thick, second] (A) -- ++({0.7*cos(15.1)},{0.7*sin(15.1)})
+				node[fill=white, inner sep=1pt, above right] {$\mathbf{a}(s)$};
+			% 切向量 a(s+Δs)
+			\draw[-{Stealth}, very thick, blue] (B) -- ++({0.7*cos(-21.8)},{0.7*sin(-21.8)})
+				node[fill=white, inner sep=1pt, below right] {$\mathbf{a}(s+\Delta s)$};
+			% 夹角 Δθ（仅画弧线，避免与切向量重叠）
+			\draw[gray, thick, -{Stealth}] (A) ++(15.1:0.35)
+				arc[start angle=15.1, end angle=-21.8, radius=0.35];
+			\node[gray, fill=white, inner sep=1pt] at ($(A)+(-3.35:0.55)$) {$\Delta\theta$};
+		\end{tikzpicture}
+		\caption{一般曲线上两点切向量的夹角$\Delta\theta$}
+		\label{fig:dtheta}
+	\end{figure}
+	\begin{equation}
+		|\Delta\mathbf{a}|^2=|\mathbf{a}(s+\Delta s)|^2+|\mathbf{a}(s)|^2-2|\mathbf{a}(s+\Delta s)||\mathbf{a}(s)|\cos\Delta\theta
+		=2(1-\cos\Delta\theta)=4\sin^2\frac{\Delta\theta}{2}
+	\end{equation}
+	从而
+	\begin{equation}
+		|\Delta\mathbf{a}|=2\left|\sin\frac{\Delta\theta}{2}\right|
+	\end{equation}
+	代入导数定义式，并利用$\lim_{x\to 0}\frac{\sin x}{x}=1$，得
+	\begin{equation}
+		|\mathbf{a}'(s)|=\lim_{\Delta s\to 0}\frac{2\left|\sin\frac{\Delta\theta}{2}\right|}{\Delta s}
+		=\lim_{\Delta s\to 0}\frac{\left|\sin\frac{\Delta\theta}{2}\right|}{\frac{\Delta\theta}{2}}\cdot\frac{|\Delta\theta|}{\Delta s}
+		=\lim_{\Delta s\to 0}\left|\frac{\Delta\theta}{\Delta s}\right|
+	\end{equation}
+	命题得证。
+\end{proof}
