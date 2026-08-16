@@ -1,0 +1,140 @@
+\section{假设检验的基本概念和思想}
+\subsection{原假设与备择假设}
+\textbf{1. 原假设（Null Hypothesis：$H_0$）}：原假设是关于总体参数的一个\textbf{没有效应}、\textbf{没有差异}或\textbf{没有关联}的声明。
+\begin{itemize}
+	\item \textbf{基本观点}：它代表了\textbf{现状}或\textbf{没有变化}的立场。在进行假设检验时，我们\textbf{假设原假设是正确的}，然后看样本数据是否提供了\textbf{足够强的证据}来推翻它。
+	\item \textbf{符号}：通常包含等号（$=$, $\ge$, $\le$）。
+	\item \textbf{例子}：
+	\begin{itemize}
+		\item $\mu = 100$：总体平均值是100。
+		\item $\mu_1 = \mu_2$：两组总体的平均值\textbf{没有差异}。
+		\item $\rho = 0$：两个变量之间\textbf{没有相关性}。
+	\end{itemize}
+\end{itemize}
+
+\textbf{2. 备择假设（Alternative Hypothesis：$H_A$ 或 $H_1$）}：备择假设是研究者希望找到证据支持的声明，它与原假设\textbf{对立}。它通常声明\textbf{存在效应}、\textbf{存在差异}或\textbf{存在关联}。
+\begin{itemize}
+	\item \textbf{基本观点}：如果我们有足够的统计证据来\textbf{拒绝}原假设，那么我们将\textbf{接受}备择假设。
+	\item \textbf{形式}：备择假设决定了检验的\textbf{方向性}（单侧或双侧）：
+	\begin{itemize}
+		\item \textbf{双侧检验（Two-tailed）}：声明存在差异，但不指定方向。
+		\begin{itemize}
+			\item 例子：$\mu \neq 100$（平均值\textbf{不等于}100）。
+		\end{itemize}
+		\item \textbf{单侧检验（One-tailed：右侧）}：声明大于某个值。
+		\begin{itemize}
+			\item 例子：$\mu > 100$（平均值\textbf{大于}100）。
+		\end{itemize}
+		\item \textbf{单侧检验（One-tailed：左侧）}：声明小于某个值。
+		\begin{itemize}
+			\item 例子：$\mu < 100$（平均值\textbf{小于}100）。
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\subsection{检验法则与拒绝域}
+样本观测值的全体组成样本空间 $\boldsymbol{S}$，把 $\boldsymbol{S}$ 分成两个互不相交的子集 $\boldsymbol{W}$ 和 $\boldsymbol{W}^*$，即
+\begin{equation}
+	\boldsymbol{S}=\boldsymbol{W}\cup \boldsymbol{W}^*, \qquad \boldsymbol{W}\cap \boldsymbol{W}^*=\varnothing
+	\label{eq:假设检验:样本空间分割}
+\end{equation}
+假设当样本观测值 $(x^1,x^2,\dots,x^n)\in \boldsymbol{W}$ 时，我们就拒绝 $\boldsymbol{H}_0$；当样本观测值 $(x^1,x^2,\dots,x^n)\in \boldsymbol{W}^*$ 时，我们就接受 $\boldsymbol{H}_0$。拒绝域或临界域即为 $\boldsymbol{W}\subset \boldsymbol{S}$。这种方法称为检验法则。
+
+\subsection{检验的两种错误}
+\textcolor{red}{\textbf{第一类错误（弃真错误）：}}
+\begin{itemize}
+	\item \textbf{定义}：当\textbf{原假设 $H_0$ 事实上是正确的}，但我们却根据样本数据\textbf{拒绝了 $H_0$}。
+	\item \textbf{概率}：犯第一类错误的概率用 $\alpha$ 表示，即\textbf{显著性水平}（Significance Level）：
+	\begin{equation}
+		P(\text{Type I Error}) = P(\text{拒绝 } H_0 \mid H_0 \text{ 为真}) = \alpha
+		\label{eq:假设检验:第一类错误}
+	\end{equation}
+	\item \textbf{意义}：错误地断定存在效应、差异或关联，而实际上它们并不存在（"错报"或"伪阳性"）。
+	\item \textbf{控制}：$\alpha$ 是研究者在检验开始前预先设定的（例如 $\alpha = 0.05$ 或 $0.01$），因此\textbf{第一类错误的概率是直接可控的}。
+\end{itemize}
+
+\textcolor{red}{\textbf{第二类错误（取伪错误）：}}
+\begin{itemize}
+	\item \textbf{定义}：当\textbf{原假设 $H_0$ 事实上是错误的}（即备择假设 $H_A$ 为真），但我们却根据样本数据\textbf{不拒绝 $H_0$}。
+	\item \textbf{概率}：犯第二类错误的概率用 $\beta$ 表示：
+	\begin{equation}
+		P(\text{Type II Error}) = P(\text{不拒绝 } H_0 \mid H_0 \text{ 为假}) = \beta
+		\label{eq:假设检验:第二类错误}
+	\end{equation}
+	\item \textbf{意义}：错误地断定没有发现效应或差异，而实际上它们是存在的（"漏报"或"伪阴性"）。
+	\item \textbf{控制}：$\beta$ 的计算通常较为复杂，且依赖于 $H_A$ 成立的真实参数值。我们通常通过\textbf{统计功效}（Power）来衡量减少第二类错误的程度。
+\end{itemize}
+
+\subsection{\textcolor{red}{显著性检验的基本步骤}}
+\begin{enumerate}
+	\item 根据实际问题作出假设 $\boldsymbol{H}_0$ 与 $\boldsymbol{H}_1$；
+	\item 构造统计量，在 $\boldsymbol{H}_0$ 真时其分布已知；
+	\item 给定显著性水平 $\alpha$ 的值，参考 $\boldsymbol{H}_1$，令
+	\begin{equation}
+		P(\text{拒绝 } H_0 \mid H_0 \text{ 为真}) = \alpha
+		\label{eq:假设检验:拒绝域}
+	\end{equation}
+	求出拒绝域 $\boldsymbol{W}$；
+	\item 计算统计量的值，若统计量 $\in \boldsymbol{W}$，则拒绝 $\boldsymbol{H}_0$，否则接受 $\boldsymbol{H}_0$。
+\end{enumerate}
+
+\section{单个正态总体的假设检验}
+\subsection{单个正态总体均值的假设检验}
+\textbf{1. $\sigma^2$ 已知的情形 --- U 检验}：对于假设 $H_0: \mu = \mu_0;\quad H_1: \mu \neq \mu_0$，构造 $U$ 统计量。$H_0$ 真时：
+\begin{equation}
+	U = \frac{\overline{X} - \mu_0}{\sigma/\sqrt{n}} \sim N(0, 1)
+	\label{eq:假设检验:U}
+\end{equation}
+由 $P\{|U| \ge U(\frac{\alpha}{2})\} = \alpha$，可得拒绝域为 $|U| \ge U(\frac{\alpha}{2})$。
+
+\textbf{2. $\sigma^2$ 未知的情形 --- t 检验}：$H_0: \mu = \mu_0;\quad H_1: \mu \neq \mu_0$。$H_0$ 真时：
+\begin{equation}
+	T = \frac{\overline{X} - \mu_0}{S/\sqrt{n}} \sim t(n-1)
+	\label{eq:假设检验:T}
+\end{equation}
+由 $P\{|T| \ge t_{\alpha/2}(n-1)\} = \alpha$，得水平为 $\alpha$ 的拒绝域为 $|T| \ge t_{\alpha/2}(n-1)$。
+
+\subsection{单个总体方差的假设检验}
+给定检验水平 $\alpha$，由观测值 $x_1, \dots, x_n$ 检验假设：
+\begin{equation}
+	H_0: \sigma^2 = \sigma_0^2; \quad H_1: \sigma^2 \neq \sigma_0^2
+	\label{eq:假设检验:方差假设}
+\end{equation}
+假设 $\mu$ 未知 --- $\chi^2$ 检验法。$H_0$ 下：
+\begin{equation}
+	\chi^2 = \frac{(n-1)S^2}{\sigma_0^2} \sim \chi^2(n-1)
+	\label{eq:假设检验:卡方}
+\end{equation}
+得水平为 $\alpha$ 的拒绝域为：
+\begin{equation}
+	\chi^2 \le \chi^2_{1-\alpha/2}(n-1) \quad \text{或} \quad \chi^2 \ge \chi^2_{\alpha/2}(n-1)
+	\label{eq:假设检验:卡方拒绝域}
+\end{equation}
+
+\section{双正态总体均值与方差比的假设检验}
+设 $X_1, \dots, X_{n_1} \sim N(\mu_1, \sigma_1^2);\quad Y_1, \dots, Y_{n_2} \sim N(\mu_2, \sigma_2^2)$，两样本独立，给定检验水平 $\alpha$，由观测值 $x_1, \dots, x_{n_1};\quad y_1, \dots, y_{n_2}$ 检验假设。
+
+\subsection{均值差的假设检验}
+检验假设 $H_0: \mu_1 = \mu_2;\quad H_1: \mu_1 \neq \mu_2$。假定 $\sigma_1^2 = \sigma_2^2 = \sigma^2$ --- t 检验法。$H_0$ 下：
+\begin{equation}
+	T = \frac{\overline{X} - \overline{Y}}{S_w \sqrt{1/n_1 + 1/n_2}} \sim t(n_1 + n_2 - 2)
+	\label{eq:假设检验:双总体T}
+\end{equation}
+其中 $S_w$ 是联合样本方差的平方根。由 $P\{|T| \ge t_{\alpha/2}(n_1 + n_2 - 2)\} = \alpha$，即得拒绝域 $|T| \ge t_{\alpha/2}(n_1 + n_2 - 2)$。
+
+\subsection{方差比的假设检验}
+检验假设 $H_0: \sigma_1^2 = \sigma_2^2;\quad H_1: \sigma_1^2 \neq \sigma_2^2$。假定 $\mu_1, \mu_2$ 未知 --- F 检验法。$H_0$ 真时：
+\begin{equation}
+	F = \frac{S_1^2}{S_2^2} \sim F(n_1 - 1, n_2 - 1)
+	\label{eq:假设检验:F}
+\end{equation}
+由
+\begin{equation}
+	P\left\{F \le F_{1-\alpha/2}(n_1-1, n_2-1) \text{ 或 } F \ge F_{\alpha/2}(n_1-1, n_2-1)\right\} = \alpha
+	\label{eq:假设检验:F概率}
+\end{equation}
+得拒绝域：
+\begin{equation}
+	F \le F_{1-\alpha/2}(n_1-1, n_2-1) \quad \text{或} \quad F \ge F_{\alpha/2}(n_1-1, n_2-1)
+	\label{eq:假设检验:F拒绝域}
+\end{equation}

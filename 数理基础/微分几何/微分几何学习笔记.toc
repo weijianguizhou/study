@@ -2,11 +2,9 @@
 \contentsline {section}{\numberline {1.1}符号说明}{3}{section.1.1}%
 \contentsline {chapter}{\numberline {2}三维欧氏空间中的曲线论}{5}{chapter.2}%
 \contentsline {section}{\numberline {2.1}曲线 \ 曲线的切向量\ 弧长}{5}{section.2.1}%
+\contentsline {section}{\numberline {2.2}主法向量与从法向量 \ 曲率与挠率}{8}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Frenet标架 \ Frenet公式}{10}{section.2.3}%
 \ttl@change@i {\@ne }{chapter}{0em}{}{\large \fangsong {附录\ \thecontentslabel }}{}{\hfill \contentspage }\relax 
 \ttl@change@v {chapter}{}{}{}\relax 
-\contentsline {chapter}{\numberline {A}补充推导与证明}{9}{appendix.A}%
-\contentsline {section}{\numberline {A.1}曲线论基本定理的证明}{9}{section.A.1}%
-\contentsline {section}{\numberline {A.2}可展曲面的分类}{10}{section.A.2}%
-\contentsline {section}{\numberline {A.3}球面上的曲线}{10}{section.A.3}%
-\contentsline {section}{\numberline {A.4}任意参数下曲率公式的推导}{11}{section.A.4}%
+\contentsline {chapter}{\numberline {A}补充推导与证明}{15}{appendix.A}%
 \contentsfinish 

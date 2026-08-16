@@ -3,6 +3,10 @@
 \author{魏舟}
 \date{\today}
 
+% 封面元信息
+\newcommand{\notename}{工程数学}
+\newcommand{\noteauthor}{魏舟}
+
 % 中文字体支持（启用伪粗体消除警告）
 \usepackage{ctex}
 
@@ -26,6 +30,11 @@
 \definecolor{main}{rgb}{0.5,0,0}
 \definecolor{second}{RGB}{115,45,2}
 \definecolor{third}{RGB}{0,80,80}
+\definecolor{gold}{RGB}{212,175,55}
+
+% 封面绘图
+\usepackage{tikz}
+\usetikzlibrary{angles, quotes, arrows.meta, calc}
 
 % hyperref 加载（放在最后，但要在 pdfstringdef 之前）
 \usepackage[colorlinks,linkcolor=winered]{hyperref}
@@ -75,9 +84,9 @@
 
 % 设置章形式
 % ---------------------------------- %
-% \setlength{\parindent}{0pt}  	
+% \setlength{\parindent}{0pt}
 \usepackage{titlesec, titletoc}
-\linespread{1.2} 				
+\linespread{1.2}
 
 \usepackage{fancyhdr}
 \fancypagestyle{plain}{%
@@ -89,9 +98,9 @@
 \titlecontents{chapter}[0em]{}{\large \fangsong{第 \thecontentslabel 章\quad}}{}{\hfill\contentspage}
 \titlecontents{section}[2em]{}{\thecontentslabel\quad\textcolor{blue}}{}{\titlerule*{ .} \contentspage}
 
-\titleformat{\chapter}[display]{\Large}
+\titleformat{\chapter}[display]{\LARGE}
 {\color{structurecolor}\centering\small \color{structurecolor}第 \zhnumber{\arabic{chapter}} \ 章 }{0.5ex}
-{\color{structurecolor}{\titlerule[1pt]}\Large \kaishu \centering \bfseries}
+{\color{structurecolor}{\titlerule[1pt]}\huge \kaishu \centering \bfseries}
 
 \titleformat{\section}[frame]
 {\normalfont\color{structurecolor}}
@@ -109,15 +118,28 @@
 
 
 \begin{document}
-	
-	\maketitle
+
+	% 封面（样式见 cover.tex）
+	\input{cover}
+
+	\newpage
+
+	% ---- 第 2 页：格言页（居中，可删）----
+	\thispagestyle{empty}
+	\vspace*{\fill}
+	\begin{center}
+		{\kaishu\fontsize{18}{28}\selectfont "Nothing is final."}
+	\end{center}
+	\vfill
+	\newpage
+
 	想记录一下以后学习科研中会经常碰到的数学知识。
-	
+
 	就想着不那么严密了。因为我的数学分析学的不是很好。知道什么情况下能用就行。
 	\newpage
-	
+
 	\tableofcontents
-	
+
 	\setcounter{page}{0}
 	\thispagestyle{empty}
 	\newpage
@@ -132,5 +154,5 @@
 	\include{Laplace 变换}
 	\include{Z 变换}
 	\include{场论}
-	
+
 \end{document}

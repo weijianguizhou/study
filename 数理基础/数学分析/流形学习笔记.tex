@@ -4,26 +4,36 @@
 % ============================================================
 %	笔记元信息
 % ============================================================
-\newcommand{\notename}{装备系统动力学建模与仿真}   % 封面大标题
+\newcommand{\notename}{流形}   % 封面大标题
 \newcommand{\noteauthor}{魏舟} % 封面作者
+
+% ============================================================
+%	正文骨架：每章一个 .tex 文件，用 \input{} 引入
+% ============================================================
 \newcommand{\notebody}{
-	% 前言（留空）
+	% 前言（可留空或填一段课程介绍）
 	\chapter*{前言}
 	\input{前言}
 
-	% 绪论
+	% 绪论：含符号说明小节（可替换为课程自己的符号表）
 	\chapter{绪论}
 	\input{绪论}
-	\chapter{数学基础}
-	\input{数学基础}
-	\chapter{运动学基础}
-	\input{运动学基础}
-% 第二章 有限维广义变分原理
-	\chapter{有限维广义变分原理}
-	\input{有限维广义变分原理}
 
+	\chapter{第一章}
+	\input{第一章}
+	\chapter{第二章}
+	\input{第二章}
+	\chapter{第三章}
+	\input{第三章}
+	\chapter{第四章}
+	\input{第四章}
+	\chapter{第五章}
+	\input{第五章}
+
+	% ============================================================
+	% 附录（样式自动切换为“附录 x”格式）
+	% ============================================================
 	\appendix
-	% —— 附录专用样式（区别于正文）——
 	\titleformat{\chapter}[display]{\LARGE}
 	{\color{structurecolor}\centering\small \color{structurecolor}附录\ \thechapter}{0.5ex}
 	{\color{structurecolor}{\titlerule[1pt]}\huge \kaishu \centering \bfseries}
@@ -35,22 +45,22 @@
 	\titleformat{\subsubsection}[hang]{\normalsize\bfseries}
 	{\color{third}\thesubsubsection\enspace}{1pt}{\color{structurecolor}}
 
-	\chapter{代数基础定理与性质的证明}
-	\label{appendix:证明}
+	\chapter{附录}
+	\label{appendix:附录}
 	\input{附录}
-
 }
 
 \begin{document}
+	% 封面（样式见 cover.tex）
 	\input{cover}
 
 	\newpage
 
-	% ---- 第 2 页：格言页（居中）----
+	% ---- 第 2 页：格言页（居中，可删）----
 	\thispagestyle{empty}
 	\vspace*{\fill}
 	\begin{center}
-		{\kaishu\fontsize{18}{28}\selectfont "Nothing is final."}
+		{\kaishu\fontsize{18}{28}\selectfont 在这里写入你的格言}
 	\end{center}
 	\vfill
 	\newpage

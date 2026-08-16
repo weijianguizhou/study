@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2026.2.15)  16 AUG 2026 10:55
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2026.2.15)  16 AUG 2026 15:08
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1343,41 +1343,30 @@ Package fontspec Info:
 
 
 
-[7])
+[7]
 
 [8]
-附录 A.
-(./附录.tex
-
-LaTeX Font Warning: Font shape `TU/SimSun(1)/b/n' undefined
-(Font)              using `TU/SimSun(1)/m/n' instead on input line 27.
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
-[9
-
-]
-
-LaTeX Warning: Reference `eq:Frenet公式:方程组' on page 10 undefined on input line 9
-6.
-
-
+[9]
 
 [10]
 
-LaTeX Warning: Reference `eq:向量函数:链式法则' on page 11 undefined on input line 118.
+[11]
 
+[12])
 
+[13]
 
-LaTeX Warning: Reference `eq:曲率:定义' on page 11 undefined on input line 118.
+[14
 
+]
+附录 A.
+(./附录.tex)
 
-LaTeX Warning: Reference `eq:曲率:任意参数公式' on page 11 undefined on input line 140.
-
-
-)
-
-[11] (./微分几何学习笔记.aux)
+[15] (./微分几何学习笔记.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2022/08/05>
@@ -1387,18 +1376,18 @@ L3 programming layer <2022/08/05>
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 
-LaTeX Warning: There were undefined references.
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
 Package rerunfilecheck Info: File `微分几何学习笔记.out' has not changed.
-(rerunfilecheck)             Checksum: D1DEA2EFEB514F0BFB7236ECDFC6B14B;1034.
+(rerunfilecheck)             Checksum: 9854DAAE9CAC65112CE5AFD95F3625E2;878.
  ) 
 Here is how much of TeX's memory you used:
- 36211 strings out of 473832
- 791882 string characters out of 5735453
- 1562469 words of memory out of 5000000
- 58633 multiletter control sequences out of 15000+600000
- 570581 words of font info for 141 fonts, out of 8000000 for 9000
+ 36415 strings out of 473832
+ 794256 string characters out of 5735453
+ 1563251 words of memory out of 5000000
+ 58835 multiletter control sequences out of 15000+600000
+ 570589 words of font info for 142 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  107i,14n,114p,545b,904s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on 微分几何学习笔记.pdf (14 pages).
+Output written on 微分几何学习笔记.pdf (18 pages).

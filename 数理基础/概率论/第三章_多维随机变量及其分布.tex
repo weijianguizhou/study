@@ -1,0 +1,269 @@
+\section{二维随机变量的分布}
+\textbf{联合分布函数}：设 $(X, Y)$ 是二维随机变量，\textbf{联合分布函数} $F(x, y)$ 定义为：
+\begin{equation}
+	F(x, y) = P\{X \le x, Y \le y\}
+	\label{eq:第三章:联合分布函数}
+\end{equation}
+
+\textbf{矩形区域概率公式}：对于 $x_1 < x_2, y_1 < y_2$，矩形区域概率为：
+\begin{equation}
+	P\{x_1 < X \le x_2, y_1 < Y \le y_2\} = F(x_2, y_2) - F(x_1, y_2) - F(x_2, y_1) + F(x_1, y_1)
+	\label{eq:第三章:矩形区域概率}
+\end{equation}
+
+\textbf{性质}：
+\begin{enumerate}
+	\item 归一性：
+	\begin{equation}
+		F(+\infty, +\infty) = \lim_{\substack{x \to +\infty \\ y \to +\infty}} F(x, y) = 1
+		\label{eq:第三章:归一性1}
+	\end{equation}
+	\begin{equation}
+		F(-\infty, -\infty) = \lim_{\substack{x \to -\infty \\ y \to -\infty}} F(x, y) = 0
+		\label{eq:第三章:归一性2}
+	\end{equation}
+	\begin{equation}
+		F(-\infty, y) = \lim_{x \to -\infty} F(x, y) = 0, \qquad F(x, -\infty) = \lim_{y \to -\infty} F(x, y) = 0
+		\label{eq:第三章:归一性3}
+	\end{equation}
+	\item 单调不减性；
+	\item 右连续性；
+	\item \textbf{矩形不等式}：随机点 $(X, Y)$ 落在矩形区域 $x_1 < X \le x_2, y_1 < Y \le y_2$ 内的概率必须大于或等于 0。对于任意满足 $x_1 < x_2$ 且 $y_1 < y_2$ 的两点，有
+	\begin{equation}
+		F(x_2, y_2) - F(x_1, y_2) - F(x_2, y_1) + F(x_1, y_1) \ge 0
+		\label{eq:第三章:矩形不等式}
+	\end{equation}
+\end{enumerate}
+
+\subsection{二维离散型随机变量}
+如果二维随机变量 $(X, Y)$ 所有可能取到的值是\textbf{有限对}或者\textbf{可列无限多对}，我们就称它为二维离散型随机变量。
+
+\textbf{联合概率分布律}：
+\begin{equation}
+	P\{X = x_i, Y = y_j\} = p_{ij} \quad (i, j = 1, 2, \dots)
+	\label{eq:第三章:联合分布律}
+\end{equation}
+\textbf{性质}：
+\begin{itemize}
+	\item \textbf{非负性}：$p_{ij} \ge 0$。
+	\item \textbf{归一性}：$\sum_i \sum_j p_{ij} = 1$（所有可能取值的概率之和为 1）。
+\end{itemize}
+
+通常我们用\textbf{分布表格}来表示：
+\begin{table}[H]
+\centering
+\begin{tabular}{c|cccccc}
+\toprule
+$X \setminus Y$ & $y_1$ & $y_2$ & $\dots$ & $y_j$ & $\dots$ \\
+\midrule
+$x_1$ & $p_{11}$ & $p_{12}$ & $\dots$ & $p_{1j}$ & $\dots$ \\
+$x_2$ & $p_{21}$ & $p_{22}$ & $\dots$ & $p_{2j}$ & $\dots$ \\
+$\vdots$ & $\vdots$ & $\vdots$ & $\ddots$ & $\vdots$ & $\ddots$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{二维连续型随机变量}
+\textbf{联合概率密度函数（$f(x, y)$）定义}：若存在非负函数 $f(x, y)$ 使得
+\begin{equation}
+	F(x, y) = \int_{-\infty}^{y} \int_{-\infty}^{x} f(u, v)\,du\,dv
+	\label{eq:第三章:联合密度定义}
+\end{equation}
+则称 $f(x, y)$ 为联合概率密度函数。
+
+\textbf{性质（归一性）}：
+\begin{equation}
+	\int_{-\infty}^{+\infty} \int_{-\infty}^{+\infty} f(x, y)\,dx\,dy = 1
+	\label{eq:第三章:联合密度归一性}
+\end{equation}
+
+\textbf{关系}：
+\begin{equation}
+	f(x, y) = \frac{\partial^{2} F(x, y)}{\partial x \partial y}
+	\label{eq:第三章:密度与分布函数关系}
+\end{equation}
+对于任意平面区域 $G \subset \mathbb{R}^2$，
+\begin{equation}
+	P\{(X, Y) \in G\} = \iint_G f(x, y)\,dx\,dy
+	\label{eq:第三章:区域概率}
+\end{equation}
+
+\subsubsection{两个常用的二维连续型分布}
+\textbf{1. 二维均匀分布}：设 $D$ 是平面上的一个有界区域，其面积为 $S_D$。如果随机变量 $(X, Y)$ 的联合概率密度函数 $f(x, y)$ 为：
+\begin{equation}
+	f(x, y) = \begin{cases} \dfrac{1}{S_D}, & (x, y) \in D \\[1ex] 0, & (x, y) \notin D \end{cases}
+	\label{eq:第三章:二维均匀}
+\end{equation}
+那么称 $(X, Y)$ 在 $D$ 上服从均匀分布。
+
+\textbf{2. 二维正态分布}：一个二维随机变量 $(X, Y)$ 服从均值为 $(\mu_1, \mu_2)$、方差为 $(\sigma_1^2, \sigma_2^2)$、相关系数为 $\rho$ 的正态分布，记作 $(X, Y) \sim N(\mu_1, \mu_2, \sigma_1^2, \sigma_2^2, \rho)$。其联合概率密度函数如下：
+\begin{equation}
+	f(x, y) = \frac{1}{2\pi\sigma_1\sigma_2\sqrt{1-\rho^2}} \exp\left[ -\frac{1}{2(1-\rho^2)} \left( \frac{(x-\mu_1)^2}{\sigma_1^2} - \frac{2\rho(x-\mu_1)(y-\mu_2)}{\sigma_1\sigma_2} + \frac{(y-\mu_2)^2}{\sigma_2^2} \right) \right]
+	\label{eq:第三章:二维正态密度}
+\end{equation}
+其中：
+\begin{itemize}
+	\item $\mu_1, \mu_2$：分别是 $X$ 和 $Y$ 的数学期望，决定了分布中心的位置。
+	\item $\sigma_1, \sigma_2$：分别是 $X$ 和 $Y$ 的标准差，决定了分布在轴向上的"胖瘦"。
+	\item $\rho$：相关系数，反映了 $X$ 和 $Y$ 之间的线性相关程度（$-1 \le \rho \le 1$）。
+\end{itemize}
+
+\textbf{重要性质}：
+\begin{itemize}
+	\item \textbf{边缘分布依然是正态的}：$X$ 独立服从 $N(\mu_1, \sigma_1^2)$，$Y$ 独立服从 $N(\mu_2, \sigma_2^2)$。但反之不一定成立（即边缘分布为正态，联合分布未必是正态）。
+	\item \textbf{线性变换不变性}：$X$ 和 $Y$ 的线性组合（如 $aX + bY$）仍然服从一维正态分布。
+	\item \textbf{独立性与相关性的等价性}：对于一般的随机变量，独立一定不相关，但不相关不一定独立。但在二维正态分布中，独立与不相关（$\rho = 0$）是互为充要条件的。
+	\item \textbf{等高线是椭圆}：在 $x$-$y$ 平面上，概率密度相等的点轨迹是一个椭圆。椭圆的长短轴方向和倾斜度由 $\rho$ 和 $\sigma$ 决定。
+\end{itemize}
+
+\section{边缘分布}
+\subsection{边缘分布函数}
+无论是离散还是连续，从联合累积分布函数 $F(x, y) = P(X \le x, Y \le y)$ 获取边缘分布函数的方法是相同的：\textbf{让另一个变量趋于无穷大。}
+\begin{itemize}
+	\item $X$ 的边缘分布函数：
+	\begin{equation}
+		F_X(x) = P(X \le x) = F(x, +\infty) = \lim_{y \to +\infty} F(x, y)
+		\label{eq:第三章:X边缘分布函数}
+	\end{equation}
+	\item $Y$ 的边缘分布函数：
+	\begin{equation}
+		F_Y(y) = P(Y \le y) = F(+\infty, y) = \lim_{x \to +\infty} F(x, y)
+		\label{eq:第三章:Y边缘分布函数}
+	\end{equation}
+\end{itemize}
+
+\subsection{边缘分布律}
+\textbf{1. 离散型随机变量}：对于离散型随机变量 $(X, Y)$，其联合分布律为 $P(X=x_i, Y=y_j) = p_{ij}$。
+\begin{itemize}
+	\item $X$ 的边缘分布律：将 $Y$ 的所有可能取值求和：
+	\begin{equation}
+		P(X=x_i) = \sum_{j=1}^{\infty} p_{ij}
+		\label{eq:第三章:X边缘分布律}
+	\end{equation}
+	\item $Y$ 的边缘分布律：将 $X$ 的所有可能取值求和：
+	\begin{equation}
+		P(Y=y_j) = \sum_{i=1}^{\infty} p_{ij}
+		\label{eq:第三章:Y边缘分布律}
+	\end{equation}
+\end{itemize}
+
+\textbf{形象理解}：如果你把联合概率分布写成一个表格，$X$ 的边缘分布就是每一行的\textbf{行和}，$Y$ 的边缘分布就是每一列的\textbf{列和}。这也是为什么它被称为"边缘"的原因——它们写在表格的边框处。
+
+\textbf{2. 连续型随机变量}：对于连续型随机变量 $(X, Y)$，其联合概率密度函数为 $f(x, y)$。
+\begin{itemize}
+	\item $X$ 的边缘概率密度函数：对 $y$ 在整个定义域上进行积分，把 $y$ "积掉"：
+	\begin{equation}
+		f_X(x) = \int_{-\infty}^{\infty} f(x, y)\,dy
+		\label{eq:第三章:X边缘密度}
+	\end{equation}
+	\item $Y$ 的边缘概率密度函数：对 $x$ 在整个定义域上进行积分：
+	\begin{equation}
+		f_Y(y) = \int_{-\infty}^{\infty} f(x, y)\,dx
+		\label{eq:第三章:Y边缘密度}
+	\end{equation}
+\end{itemize}
+
+\subsection{边缘密度函数的几何理解}
+想象 $f(x, y)$ 是在 $x$-$y$ 平面上方起伏的一个三维曲面，曲面下方的总面积为 1。
+\begin{itemize}
+	\item \textbf{求 $f_X(x)$ 的过程}：相当于沿着 $y$ 轴的方向对这个三维物体进行"挤压"或"投影"，把所有的质量都堆积到 $x$ 轴上。
+	\item \textbf{物理意义}：如果你把这个分布想象成一团有质量的云雾，$f_X(x)$ 就是你从 $y$ 轴无穷远处观察这团云雾时，在 $x$ 轴上看到的投影密度。
+\end{itemize}
+
+\section{随机变量的独立性}
+\textbf{独立性（定义）}：$(X_1, \ldots, X_n)$ 和 $(Y_1, \ldots, Y_m)$ 相互独立，如果联合分布函数等于边缘分布函数的乘积：
+\begin{equation}
+	F(x_1, \ldots, x_n, y_1, \ldots, y_m) = F_X(x_1, \ldots, x_n)\,F_Y(y_1, \ldots, y_m)
+	\label{eq:第三章:独立性}
+\end{equation}
+\begin{itemize}
+	\item \textbf{二维连续型判定}：$X$ 与 $Y$ 相互独立 $\Leftrightarrow$ $f(x, y) = f_X(x)\,f_Y(y)$。
+	\item \textbf{二维离散型判定}：$P_{ij} = P\{X=x_i, Y=y_j\}\ (i,j=1,2,\dots)$，$X$ 与 $Y$ 相互独立 $\Leftrightarrow$ $P_{ij} = P_i\,P_j$。
+\end{itemize}
+
+\begin{myTheorem}{定理（二维正态分布）}
+	设 $(X, Y) \sim N(\mu_1, \mu_2, \sigma_1^2, \sigma_2^2, \rho)$，则 $X$ 与 $Y$ 相互独立 $\Leftrightarrow$ \textbf{常数 $\rho = 0$}。
+\end{myTheorem}
+
+\section{两个随机变量函数的分布}
+\subsection{二维离散型随机变量函数的分布律}
+求解二维离散型随机变量函数的分布律，核心思想是将\textbf{函数值的取值情况}映射回\textbf{原始变量的联合分布}中。假设二维离散型随机变量 $(X, Y)$ 的联合分布律为 $P(X=x_i, Y=y_j) = p_{ij}$，我们要讨论函数 $Z = g(X, Y)$ 的分布律。
+
+\textbf{求解步骤}：
+\begin{enumerate}
+	\item 确定 $Z$ 的所有可能取值：根据 $X$ 和 $Y$ 可能取值的组合 $(x_i, y_j)$，计算出所有对应的 $z_k = g(x_i, y_j)$。
+	\item 归并相同取值的概率：对于 $Z$ 的每一个可能取值 $z_k$，寻找所有满足 $g(x_i, y_j) = z_k$ 的样本点 $(x_i, y_j)$。
+	\item 求和计算概率：利用概率的可加性，计算 $P(Z=z_k)$：
+	\begin{equation}
+		P(Z=z_k) = \sum_{g(x_i, y_j) = z_k} P(X=x_i, Y=y_j)
+		\label{eq:第三章:函数分布律}
+	\end{equation}
+\end{enumerate}
+
+\subsubsection{常见函数类型的分布}
+\textbf{A. 和的分布：$Z = X + Y$}：这是最常见的情况。如果 $X$ 和 $Y$ 取值为整数，则：
+\begin{equation}
+	P(Z=z) = \sum_{i} P(X=x_i, Y=z-x_i)
+	\label{eq:第三章:和分布律}
+\end{equation}
+注意：如果 $X$ 和 $Y$ 相互独立，则该公式演变为\textbf{离散卷积公式}：$P(Z=z) = \sum_{i} P(X=x_i)\cdot P(Y=z-x_i)$。
+
+\textbf{B. 最值分布：$M = \max(X, Y)$ 与 $N = \min(X, Y)$}
+\begin{itemize}
+	\item \textbf{最大值 $M$}：$M \le z$ 等价于 $X \le z$ 且 $Y \le z$。
+	\item \textbf{最小值 $N$}：$N > z$ 等价于 $X > z$ 且 $Y > z$。
+\end{itemize}
+设 $X_1, \ldots, X_n$ 相互独立，分布函数分别为 $F_1(x_1), \ldots, F_n(x_n)$。
+\begin{itemize}
+	\item \textbf{最大值 $M = \max\{X_1, \ldots, X_n\}$ 的分布函数}：
+	\begin{equation}
+		F_M(z) = F_1(z) F_2(z) \cdots F_n(z)
+		\label{eq:第三章:最大值分布}
+	\end{equation}
+	\item \textbf{最小值 $N = \min\{X_1, \ldots, X_n\}$ 的分布函数}：
+	\begin{equation}
+		F_N(z) = 1 - [1 - F_1(z)][1 - F_2(z)] \cdots [1 - F_n(z)]
+		\label{eq:第三章:最小值分布}
+	\end{equation}
+\end{itemize}
+
+\subsection{多个连续型随机变量函数的密度函数}
+\textbf{1. 分布函数法（通用且最稳妥）}：设 $Z = g(X, Y)$，步骤如下：
+\begin{enumerate}
+	\item 先求累积分布函数（CDF）：
+	\begin{equation}
+		F_Z(z) = P(Z \le z) = P(g(X, Y) \le z) = \iint_{g(x,y) \le z} f(x, y)\,dx\,dy
+		\label{eq:第三章:CDF}
+	\end{equation}
+	这里的关键是确定积分区域 $D_z = \{ (x, y) \mid g(x, y) \le z \}$。
+	\item 求导得到概率密度（PDF）：
+	\begin{equation}
+		f_Z(z) = \frac{d}{dz} F_Z(z)
+		\label{eq:第三章:PDF}
+	\end{equation}
+\end{enumerate}
+
+\textbf{2. 变量代换法（雅可比矩阵法）}：当你需要求从 $(X, Y)$ 到 $(U, V)$ 的联合分布变换时，此法非常高效。假设有变换 $u = g_1(x, y)$ 和 $v = g_2(x, y)$，且其逆变换 $x = h_1(u, v), y = h_2(u, v)$ 存在且一、二阶偏导连续，则 $(U, V)$ 的联合密度函数为：
+\begin{equation}
+	f_{U,V}(u, v) = f_{X,Y}(h_1, h_2)\cdot |J|
+	\label{eq:第三章:变量代换}
+\end{equation}
+其中 $J$ 为雅可比行列式（Jacobian）：
+\begin{equation}
+	J = \det \begin{pmatrix} \frac{\partial x}{\partial u} & \frac{\partial x}{\partial v} \\[1ex] \frac{\partial y}{\partial u} & \frac{\partial y}{\partial v} \end{pmatrix}
+	\label{eq:第三章:雅可比}
+\end{equation}
+注意：最后通常需要对 $v$ 求边缘分布来得到 $U$ 的密度：$f_U(u) = \int_{-\infty}^{+\infty} f_{U,V}(u, v)\,dv$。
+
+\subsubsection{常见特定函数的结论}
+\textbf{A. 和的分布：$Z = X + Y$}：如果 $X, Y$ 独立，其密度函数为两者的卷积：
+\begin{equation}
+	f_Z(z) = \int_{-\infty}^{+\infty} f_X(x)\,f_Y(z-x)\,dx
+	\label{eq:第三章:卷积}
+\end{equation}
+
+\textbf{B. 商的分布：$Z = Y / X$}：若 $X, Y$ 独立且 $X > 0$，则：
+\begin{equation}
+	f_Z(z) = \int_{0}^{+\infty} x\,f_X(x)\,f_Y(zx)\,dx
+	\label{eq:第三章:商分布}
+\end{equation}

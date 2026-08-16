@@ -1,0 +1,93 @@
+\begin{titlepage}
+	\definecolor{forestgreen}{RGB}{34,92,56}   % 森林绿主题色
+	\begin{tikzpicture}[remember picture, overlay]
+		% ---- 1. 墨绿渐变铺满整个封面 ----
+		\shade[top color=forestgreen, middle color=forestgreen!90, bottom color=forestgreen!60!black]
+			(current page.south west) rectangle (current page.north east);
+
+		% ---- 2. 细点阵（模拟网格，微弱纹理）----
+		\foreach \x in {1,...,20} {
+			\foreach \y in {1,...,29} {
+				\fill[white, opacity=0.05] (\x,\y) circle[radius=0.018cm];
+			}
+		}
+
+		% ---- 3. 主标题后方的柔光晕 ----
+		\fill[white, opacity=0.05] ([yshift=-8.2cm]current page.north) circle[radius=7.0cm];
+		\fill[white, opacity=0.05] ([yshift=-8.2cm]current page.north) circle[radius=4.6cm];
+
+		% ---- 4. 右上：二项分布柱状图（近似钟形，附正态包络）----
+		\begin{scope}[shift={([xshift=-6.2cm,yshift=-4.7cm]current page.north east)}]
+			% 基线
+			\draw[white, opacity=0.7, line width=0.8pt] (0.3,0.45) -- (5.2,0.45);
+			% 柱状图
+			\foreach \i/\h in {1/0.35,2/0.75,3/1.35,4/1.85,5/1.35,6/0.75,7/0.35} {
+				\fill[white, opacity=0.85] (\i*0.65+0.10,0.45) rectangle (\i*0.65+0.50,0.45+\h);
+			}
+			% 正态包络（虚线）
+			\draw[white, dashed, opacity=0.6, line width=0.7pt, domain=0.6:5.0, samples=60, smooth]
+				plot (\x, {0.45 + 1.90*exp(-0.9*(\x-2.75)*(\x-2.75))});
+		\end{scope}
+
+		% ---- 5. 左下：正态曲线 + 阴影区间（概率 = 面积）----
+		\begin{scope}[shift={([xshift=0.9cm,yshift=0.9cm]current page.south west)}]
+			% 基线
+			\draw[white, opacity=0.75, line width=0.8pt] (0.2,0.35) -- (3.4,0.35);
+			% 正态密度
+			\draw[white, line width=1.2pt, opacity=0.95, domain=-2.2:2.2, samples=100, smooth]
+				plot ({1.8 + 0.62*\x}, {0.35 + 1.85*exp(-0.5*\x*\x)});
+			% 阴影区间 (a, b)
+			\fill[cyan!60!white, opacity=0.28]
+				({1.8+0.62*(-0.9)},0.35) -- plot[domain=-0.9:0.9,samples=40,smooth]
+				({1.8+0.62*\x},{0.35+1.85*exp(-0.5*\x*\x)}) -- ({1.8+0.62*0.9},0.35) -- cycle;
+			% 临界线 a, b
+			\draw[white, dashed, opacity=0.6, line width=0.6pt] (1.24,0.35) -- (1.24,1.58);
+			\draw[white, dashed, opacity=0.6, line width=0.6pt] (2.36,0.35) -- (2.36,1.58);
+			\node[anchor=north, text=white, opacity=0.85, font=\footnotesize\itshape] at (1.24,0.30) {$a$};
+			\node[anchor=north, text=white, opacity=0.85, font=\footnotesize\itshape] at (2.36,0.30) {$b$};
+			\node[anchor=south, text=cyan!60!white, font=\footnotesize\itshape] at (1.80,1.70) {$P\{a<X<b\}$};
+		\end{scope}
+
+		% ---- 6. 金色细边框 ----
+		\draw[gold, line width=0.7pt, opacity=0.55]
+			([shift={(0.85,0.85)}]current page.south west) rectangle
+			([shift={(-0.85,-0.85)}]current page.north east);
+
+		% ---- 7. 顶部眉题（英文小字 + 金色短线）----
+		\coordinate (T) at ([yshift=-3.5cm]current page.north);
+		\draw[gold, line width=1.0pt] (T) ++(-3.4cm,0) -- ++(1.0cm,0);
+		\draw[gold, line width=1.0pt] (T) ++(2.4cm,0) -- ++(1.0cm,0);
+		\node[anchor=north, text=white, opacity=0.85, align=center] at (T) {
+			{\sffamily\fontsize{13}{16}\selectfont
+				\uppercase{Probability \ Theory}}
+		};
+
+		% ---- 8. 主标题（居中，使用 \notename）----
+		\node[anchor=center, align=center, text=white] at ([yshift=-8.0cm]current page.north) {%
+			{\fontsize{40}{50}\sffamily\bfseries \notename}
+		};
+
+		% ---- 9. 金色双细线 + 小钟形曲线纹饰（分布曲线符号）----
+		\coordinate (C) at ([yshift=-11.4cm]current page.north);
+		\draw[gold, line width=1.1pt] (C) ++(-2.2cm,0) -- ++(1.55cm,0);
+		\draw[gold, line width=1.1pt] (C) ++(0.65cm,0) -- ++(1.55cm,0);
+		\draw[gold, line width=0.9pt, domain=-1:1, samples=40, smooth]
+			plot ({0.22*\x}, {0.04 + 0.24*exp(-2.5*\x*\x)});
+
+		% ---- 10. 副标题 ----
+		\node[anchor=north, text=white, opacity=0.9, align=center]
+			at ([yshift=-12.2cm]current page.north) {
+			{\fontsize{16}{20}\sffamily 学\ \ 习\ \ 笔\ \ 记}
+		};
+
+		% ---- 11. 底部作者、日期信息 ----
+		\coordinate (B) at ([yshift=3.4cm]current page.south);
+		\draw[gold, line width=0.8pt, opacity=0.7] (B) ++(-1.1cm,0.85cm) -- ++(2.2cm,0);
+		\node[anchor=south, text=white, align=center] at (B) {
+			\begin{tabular}{c}
+				{\fontsize{20}{24}\sffamily\bfseries \noteauthor} \\[0.4cm]
+				{\large \sffamily 2025年11月23日}
+			\end{tabular}
+		};
+	\end{tikzpicture}
+\end{titlepage}

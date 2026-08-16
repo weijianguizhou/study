@@ -1,0 +1,54 @@
+\documentclass[12pt,a4paper]{book}
+\input{preamble}
+
+% ============================================================
+%	笔记元信息
+% ============================================================
+\newcommand{\notename}{概率论}   % 封面大标题
+\newcommand{\noteauthor}{魏舟} % 封面作者
+
+% ============================================================
+%	正文骨架：每章一个 .tex 文件，用 \input{} 引入
+% ============================================================
+\newcommand{\notebody}{
+	% 前言（可留空或填一段课程介绍）
+	\chapter*{前言}
+	\input{前言}
+
+	\chapter{概率论的基础知识}
+	\input{第一章_概率论基础}
+	\chapter{随机变量及其分布}
+	\input{第二章_随机变量及其分布}
+	\chapter{多维随机变量及其分布}
+	\input{第三章_多维随机变量及其分布}
+	\chapter{随机变量的数字特征}
+	\input{第四章_随机变量的数字特征}
+	\chapter{大数定律与中心极限定理}
+	\input{第五章_大数定律与中心极限定理}
+}
+
+
+\begin{document}
+	% 封面（样式见 cover.tex）
+	\input{cover}
+
+	\newpage
+
+	% ---- 第 2 页：格言页（居中，可删）----
+	\thispagestyle{empty}
+	\vspace*{\fill}
+	\begin{center}
+		{\kaishu\fontsize{18}{28}\selectfont "Nothing is final."}
+	\end{center}
+	\vfill
+	\newpage
+
+	\setcounter{tocdepth}{3}
+
+	\tableofcontents
+
+	\setcounter{page}{0}
+	\thispagestyle{empty}
+	\newpage
+	\notebody
+\end{document}

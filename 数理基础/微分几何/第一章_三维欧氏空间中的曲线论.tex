@@ -185,3 +185,234 @@ $$s=s(t)=\int_{t_0}^{t}|\frac{d\mathbf{r}}{dt}|dt=\int_{t_0}^{t}dt=t-t_0$$
 	\end{equation}
 	命题得证。
 \end{proof}
+
+
+
+\section{主法向量与从法向量 \ 曲率与挠率}
+对曲线$\mathbf{r}=\mathbf{r}(s)$，用$\mathbf{T}(s)$表示单位切向量，即$$\mathbf{T}(s)=\mathbf{r}'(s)$$
+上节末定理表明，单位向量$\mathbf{a}(s)$的转动速度（即单位长度上方向转过的角度）等于$|\mathbf{a}'(s)|$。特别地，当$\mathbf{a}(s)$取为单位切向量$\mathbf{T}(s)=\mathbf{r}'(s)$时，它的转动快慢恰好刻画了曲线在一点附近"弯曲"的程度：转角越大，曲线弯得越厉害。
+
+\begin{mydefinition}{曲率}
+	设$C:\ \mathbf{r}=\mathbf{r}(s)$是以弧长$s$为参数的正则曲线，称
+	\begin{equation}
+		\label{eq:curvature}
+		\kappa(s)=|\mathbf{T}'(s)|=|\mathbf{r}''(s)|
+	\end{equation}
+	为曲线$C$在$s$点的\textbf{曲率}。由定理可知它亦等于单位切向量的转角对弧长的变化率：
+	\begin{equation}
+		\kappa(s)=\lim_{\Delta s\to 0}\left|\frac{\Delta\theta}{\Delta s}\right|
+	\end{equation}
+	其中$\Delta\theta$为切向量$\mathbf{T}(s)$转到$\mathbf{T}(s+\Delta s)$所转过的角度。
+\end{mydefinition}
+
+\begin{mydefinition}{曲率半径}
+	当曲率$\kappa(s)\neq 0$时，称其倒数
+	\begin{equation}
+		\label{eq:radius-of-curvature}
+		\rho(s)=\frac{1}{\kappa(s)}
+	\end{equation}
+	为曲线$C$在$s$点的\textbf{曲率半径}。它表示该点处密切圆的半径：曲率越大，曲率半径越小，曲线弯曲越剧烈；当曲线退化为直线时，$\kappa=0$，曲率半径趋于无穷大。
+\end{mydefinition}
+
+例如直线$\mathbf{r}(s)=\mathbf{r}(0)+\mathbf{v}\,s$（$|\mathbf{v}|=1$，$s$为弧长），其切向量为常向量
+$$\mathbf{T}(s)=\mathbf{r}'(s)=\mathbf{v},\qquad \mathbf{T}'(s)=\mathbf{0}$$
+故直线的曲率恒为零，$\kappa\equiv 0$，曲率半径$\rho=\frac{1}{\kappa}$趋于无穷大，这与"直线是弯曲程度最低的曲线"一致。
+
+例如圆的参数方程$\mathbf{r}(s)=(R\cos\frac{s}{R},\,R\sin\frac{s}{R})$（$s$为弧长）满足
+$$\mathbf{T}(s)=\mathbf{r}'(s)=\left(-\sin\frac{s}{R},\,\cos\frac{s}{R}\right),\qquad \kappa(s)=|\mathbf{T}'(s)|=\frac{1}{R}$$
+故圆在各点的曲率恒为$\frac{1}{R}$，曲率半径恒为$R$，这正说明圆处处以相同的程度弯曲。
+
+上节定理中取单位向量$\mathbf{a}(s)$为曲线的单位切向量$\mathbf{T}(s)=\mathbf{r}'(s)$，即可进一步建立曲线在一点处的活动标架。设$C:\ \mathbf{r}=\mathbf{r}(s)$是以弧长$s$为参数的正则曲线，且曲率$\kappa(s)=|\mathbf{T}'(s)|\neq 0$。
+
+\begin{mydefinition}{主法向量}
+	当$\kappa(s)\neq 0$时，称
+	\begin{equation}
+		\label{eq:principal-normal}
+		\mathbf{N}(s)=\frac{\mathbf{T}'(s)}{\kappa(s)}
+	\end{equation}
+	为曲线$C$在$s$点的\textbf{主法向量}。由$|\mathbf{T}(s)|=1$知$\mathbf{T}(s)\cdot\mathbf{T}'(s)=0$，故$\mathbf{N}(s)\perp\mathbf{T}(s)$；又由$\kappa(s)=|\mathbf{T}'(s)|$知$\mathbf{N}(s)$为单位向量，且指向曲线弯曲（$\mathbf{T}$转动）的方向，即曲线的凹侧。
+\end{mydefinition}
+
+\begin{mydefinition}{密切平面}
+	由$\mathbf{T}(s)$与$\mathbf{N}(s)$张成的平面称为曲线$C$在$s$点的\textbf{密切平面}（osculating plane）。它是经过$s$点的所有平面中与曲线"最贴近"的平面；等价地，它可由$s$点附近曲线上三点当三点都趋于$s$点时所确定的极限平面来定义。
+\end{mydefinition}
+
+\begin{mydefinition}{从法向量}
+	称
+	\begin{equation}
+		\label{eq:binormal}
+		\mathbf{B}(s)=\mathbf{T}(s)\times\mathbf{N}(s)
+	\end{equation}
+	为曲线$C$在$s$点的\textbf{从法向量}（副法向量）。它是垂直于密切平面的单位向量；$\{\mathbf{T}(s),\mathbf{N}(s),\mathbf{B}(s)\}$构成曲线在该点的右手单位正交活动标架，称为\textbf{Frenet标架}。
+\end{mydefinition}
+
+\begin{mydefinition}{从切平面}
+	由$\mathbf{T}(s)$与$\mathbf{B}(s)$张成的平面称为曲线$C$在$s$点的\textbf{从切平面}（rectifying plane）。
+\end{mydefinition}
+
+此外，由$\mathbf{N}(s)$与$\mathbf{B}(s)$张成的平面称为曲线在$s$点的\textbf{法平面}（normal plane），它垂直于切向量$\mathbf{T}(s)$。上述三个平面两两垂直，其两两交线恰为$\mathbf{T},\mathbf{N},\mathbf{B}$三条坐标轴，如图~\ref{fig:frenet-frame}所示。
+
+\begin{figure}[htbp]
+	\centering
+	\begin{tikzpicture}[
+		scale=1.6,
+		x={(0.87cm,0.5cm)},
+		y={(-0.87cm,0.5cm)},
+		z={(0cm,1cm)},
+		line cap=round,
+		line join=round
+	]
+		% 密切平面（T、N 张成，z=0）
+		\fill[red!6] (0,0,0) -- (2,0,0) -- (2,1.5,0) -- (0,1.5,0) -- cycle;
+		\draw[thin, gray!60] (0,0,0) -- (2,0,0) -- (2,1.5,0) -- (0,1.5,0) -- cycle;
+		% 从切平面（T、B 张成，y=0）
+		\fill[blue!6] (0,0,0) -- (2,0,0) -- (2,0,2) -- (0,0,2) -- cycle;
+		\draw[thin, gray!60] (0,0,0) -- (2,0,0) -- (2,0,2) -- (0,0,2) -- cycle;
+		% 法平面（N、B 张成，x=0）
+		\fill[green!6] (0,0,0) -- (0,1.5,0) -- (0,1.5,2) -- (0,0,2) -- cycle;
+		\draw[thin, gray!60] (0,0,0) -- (0,1.5,0) -- (0,1.5,2) -- (0,0,2) -- cycle;
+		% 曲线（位于密切平面内）
+		\draw[very thick, main] plot[domain=0:1.9, samples=120, smooth]
+			({\x}, {0.25*\x*\x}, 0);
+		% Frenet 标架
+		\draw[-{Stealth}, very thick, second] (0,0,0) -- (1.8,0,0)
+			node[right, fill=white, inner sep=1pt] {$\mathbf{T}$};
+		\draw[-{Stealth}, very thick, third] (0,0,0) -- (0,1.2,0)
+			node[left, fill=white, inner sep=1pt] {$\mathbf{N}$};
+		\draw[-{Stealth}, very thick, blue] (0,0,0) -- (0,0,1.6)
+			node[above, fill=white, inner sep=1pt] {$\mathbf{B}$};
+		% 平面标注
+		\node[fill=white, inner sep=1pt] at (1.0,0.75,0) {密切平面};
+		\node[fill=white, inner sep=1pt] at (1.0,0,1.5) {从切平面};
+		\node[fill=white, inner sep=1pt] at (0,0.75,1.5) {法平面};
+		\fill (0,0,0) circle (1.5pt);
+		\node[below left, fill=white, inner sep=1pt] at (0,0,0) {$P(s)$};
+	\end{tikzpicture}
+	\caption{曲线在一点处的Frenet标架与三个基本平面}
+	\label{fig:frenet-frame}
+\end{figure}
+
+\section{Frenet标架 \ Frenet公式}
+
+由前节的三个单位向量$\mathbf{T}(s)$、$\mathbf{N}(s)$、$\mathbf{B}(s)$组成的标架$\{\mathbf{T},\mathbf{N},\mathbf{B}\}$称为曲线$C$在$s$点的\textbf{Frenet标架}（活动标架）。由于$\mathbf{B}=\mathbf{T}\times\mathbf{N}$且三向量两两垂直，它构成曲线在该点的右手单位正交标架。
+
+\begin{mydefinition}{挠率}
+	先求$\mathbf{B}'(s)$的方向。因$\mathbf{B}=\mathbf{T}\times\mathbf{N}$，由$\mathbf{T}'=\kappa\mathbf{N}$得
+	\begin{equation}
+		\mathbf{B}'(s)\cdot\mathbf{T}(s)
+		=\bigl(\mathbf{T}'(s)\times\mathbf{N}(s)\bigr)\cdot\mathbf{T}(s)
+		=\kappa(s)\bigl(\mathbf{N}(s)\times\mathbf{N}(s)\bigr)\cdot\mathbf{T}(s)=0,
+		\label{eq:挠率:B垂直T}
+	\end{equation}
+	又$|\mathbf{B}|=1$，故$\mathbf{B}'\cdot\mathbf{B}=0$；于是$\mathbf{B}'(s)$垂直于$\mathbf{T}$和$\mathbf{B}$，必平行于$\mathbf{N}(s)$。因此存在实数$\tau(s)$使
+	\begin{equation}
+		\mathbf{B}'(s)=-\tau(s)\,\mathbf{N}(s)
+		\label{eq:挠率:定义}
+	\end{equation}
+	称$\tau(s)$为曲线$C$在$s$点的\textbf{挠率}。它刻画曲线偏离密切平面（即偏离平面曲线）的程度。
+\end{mydefinition}
+
+\begin{theorem}[Frenet--Serret公式]
+	设$C:\ \mathbf{r}=\mathbf{r}(s)$是以弧长$s$为参数的正则曲线，曲率$\kappa(s)>0$，挠率$\tau(s)$，则Frenet标架满足方程组
+	\begin{equation}
+		\mathbf{T}'=\kappa\mathbf{N},\qquad
+		\mathbf{N}'=-\kappa\mathbf{T}+\tau\mathbf{B},\qquad
+		\mathbf{B}'=-\tau\mathbf{N},
+		\label{eq:Frenet公式:方程组}
+	\end{equation}
+	称为\textbf{Frenet--Serret公式}。其矩阵形式为
+	\begin{equation}
+		\begin{pmatrix}
+			\mathbf{T}'\\ \mathbf{N}'\\ \mathbf{B}'
+		\end{pmatrix}
+		=
+		\begin{pmatrix}
+			0 & \kappa & 0\\
+			-\kappa & 0 & \tau\\
+			0 & -\tau & 0
+		\end{pmatrix}
+		\begin{pmatrix}
+			\mathbf{T}\\ \mathbf{N}\\ \mathbf{B}
+		\end{pmatrix},
+		\label{eq:Frenet公式:矩阵形式}
+	\end{equation}
+	系数矩阵是反对称矩阵。
+\end{theorem}
+
+\begin{proof}
+	第一式即主法向量的定义式~\eqref{eq:principal-normal}。为证第二式，计算$\mathbf{N}'(s)$在Frenet标架下的分量。由$\mathbf{N}\cdot\mathbf{T}=0$、$\mathbf{N}\cdot\mathbf{B}=0$分别求导：
+	\begin{equation}
+		\mathbf{N}'\cdot\mathbf{T}=-\mathbf{N}\cdot\mathbf{T}'=-\kappa,
+		\qquad
+		\mathbf{N}'\cdot\mathbf{B}=-\mathbf{N}\cdot\mathbf{B}'=\tau,
+	\end{equation}
+	又$\mathbf{N}'\cdot\mathbf{N}=0$。故$\mathbf{N}'$在$\{\mathbf{T},\mathbf{N},\mathbf{B}\}$下的分量为$(-\kappa,\,0,\,\tau)$，即$\mathbf{N}'=-\kappa\mathbf{T}+\tau\mathbf{B}$。第三式即挠率定义式~\eqref{eq:挠率:定义}。命题得证。
+\end{proof}
+
+挠率还可直接用位置向量的各阶导数表出。若曲线以弧长$s$为参数，由$\mathbf{T}'=\kappa\mathbf{N}$与式~\eqref{eq:Frenet公式:方程组}可得
+\begin{equation}
+	\mathbf{r}'=\mathbf{T},\qquad
+	\mathbf{r}''=\kappa\mathbf{N},\qquad
+	\mathbf{r}'''=\kappa'\mathbf{N}+\kappa(-\kappa\mathbf{T}+\tau\mathbf{B})
+	=-\kappa^{2}\mathbf{T}+\kappa'\mathbf{N}+\kappa\tau\mathbf{B}
+\end{equation}
+因而混合积
+\begin{equation}
+	(\mathbf{r}',\mathbf{r}'',\mathbf{r}''')
+	=\mathbf{r}'\cdot(\mathbf{r}''\times\mathbf{r}''')
+	=\kappa^{2}\tau
+	\label{eq:挠率:混合积}
+\end{equation}
+由此得到
+\begin{equation}
+	\kappa(s)=|\mathbf{r}''(s)|,\qquad
+	\tau(s)=\frac{(\mathbf{r}',\mathbf{r}'',\mathbf{r}''')}{|\mathbf{r}''|^{2}},
+	\label{eq:挠率:任意参数公式}
+\end{equation}
+对任意参数$t$，则挠率为
+\begin{equation}
+	\tau(t)=\frac{(\mathbf{r}'(t),\mathbf{r}''(t),\mathbf{r}'''(t))}{|\mathbf{r}'(t)\times\mathbf{r}''(t)|^{2}}.
+	\label{eq:挠率:一般参数公式}
+\end{equation}
+
+\begin{example}{圆柱螺旋线的曲率与挠率}
+	对螺旋线$\mathbf{r}(t)=(a\cos t,\,a\sin t,\,bt)$，令$c=\sqrt{a^{2}+b^{2}}$，弧长为$s=ct$，其弧长参数方程为
+	\begin{equation}
+		\mathbf{r}(s)=\left(a\cos\frac{s}{c},\,a\sin\frac{s}{c},\,\frac{b}{c}s\right)
+	\end{equation}
+	求导得
+	\begin{equation}
+		\mathbf{T}=\left(-\frac{a}{c}\sin\frac{s}{c},\,\frac{a}{c}\cos\frac{s}{c},\,\frac{b}{c}\right),\qquad
+		\mathbf{T}'=-\frac{a}{c^{2}}\left(\cos\frac{s}{c},\,\sin\frac{s}{c},\,0\right)
+	\end{equation}
+	于是曲率与主法向量为
+	\begin{equation}
+		\kappa=|\mathbf{T}'|=\frac{a}{c^{2}}=\frac{a}{a^{2}+b^{2}},\qquad
+		\mathbf{N}=\frac{\mathbf{T}'}{\kappa}=-\left(\cos\frac{s}{c},\,\sin\frac{s}{c},\,0\right)
+	\end{equation}
+	又由$\mathbf{B}=\mathbf{T}\times\mathbf{N}$得
+	\begin{equation}
+		\mathbf{B}=\left(\frac{b}{c}\sin\frac{s}{c},\,-\frac{b}{c}\cos\frac{s}{c},\,\frac{a}{c}\right),\qquad
+		\mathbf{B}'=-\frac{b}{c^{2}}\left(\cos\frac{s}{c},\,\sin\frac{s}{c},\,0\right)=-\frac{b}{c^{2}}\mathbf{N}
+	\end{equation}
+	故挠率为
+	\begin{equation}
+		\tau=\frac{b}{c^{2}}=\frac{b}{a^{2}+b^{2}}
+	\end{equation}
+	特别地，$\kappa$与$\tau$之比$\frac{\kappa}{\tau}=\frac{a}{b}$为常数，且当$b=0$时$\tau=0$，螺旋线退化为圆（平面曲线）；当$a=0$时$\kappa=0$，退化为直线。
+\end{example}
+
+由$\tau=0$恒成立即$\mathbf{B}$为常向量，可推出曲线是平面曲线的充要条件：
+
+\begin{proposition}{平面曲线的判别}
+	正则曲线$C$落在某平面内的充要条件是其挠率恒为零，即$\tau(s)\equiv 0$。
+\end{proposition}
+
+\begin{proof}
+	若曲线是平面曲线，则其所有密切平面都与该平面重合，法向量$\mathbf{B}$为常向量，故$\mathbf{B}'=\mathbf{0}$，$\tau=0$。反之若$\tau\equiv 0$，则$\mathbf{B}'=-\tau\mathbf{N}=\mathbf{0}$，$\mathbf{B}$为常向量$\mathbf{B}_{0}$。于是$\mathbf{r}(s)\cdot\mathbf{B}_{0}$的导数为
+	\begin{equation}
+		\frac{\mathrm{d}}{\mathrm{d}s}\bigl(\mathbf{r}(s)\cdot\mathbf{B}_{0}\bigr)
+		=\mathbf{T}(s)\cdot\mathbf{B}_{0}=0
+	\end{equation}
+	故$\mathbf{r}(s)\cdot\mathbf{B}_{0}$为常数，即曲线上所有点落在与$\mathbf{B}_{0}$垂直的平面内。命题得证。
+\end{proof}
