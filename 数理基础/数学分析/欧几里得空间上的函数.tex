@@ -1,0 +1,83 @@
+\section{范数与内积}
+
+\begin{mydefinition}{欧氏空间}
+    欧几里得(Euclid)$n$维空间(也简称欧氏空间)$\mathbb{R}^n$定义为一切实数$x_i$的$n$数组$(x_1,\cdots,x_n)$的集合(一个“$1$数组”就是一个数，而$\mathbb{R}^1=\mathbb{R}$则是一切实数的集).$\mathbb{R}^n$的元通常称为$\mathbb{R}^n$的点，而$\mathbb{R}^1,\mathbb{R}^2,\mathbb{R}^3$通常分别称为直线、平面和空间.如$\mathbf{x}$表示$\mathbb{R}^n$的一元素，则$\mathbf{x}$是一个$n$数组，其中第$i$个记作$x_i$，于是我们可以写成
+    $$\mathbf{x}=(x_1,\cdots,x_n).$$
+\end{mydefinition}
+
+$\mathbb{R}^n$中的点也常常称为$\mathbb{R}^n$中的向量，因为，按照
+$$\mathbf{x}+\mathbf{y}=(x_1+y_1,\cdots,x_n+y_n),\qquad a\mathbf{x}=(ax_1,\cdots,ax_n)$$
+作为运算，$\mathbb{R}^n$是一个向量空间(在实数域上，维数为$n$).
+
+\begin{mydefinition}{范数}
+    在这向量空间中，向量$\mathbf{x}$的长度概念，通常称为$\mathbf{x}$的范数$|\mathbf{x}|$，并定义为
+    $$|\mathbf{x}|=\sqrt{(x_1)^2+\cdots+(x_n)^2}.$$
+    如$n=1$，则$|\mathbf{x}|$就是通常的$\mathbf{x}$的绝对值.范数和$\mathbb{R}^n$的向量空间结构间的如下关系极为重要.
+\end{mydefinition}
+
+\begin{myTheorem}{范数的性质}
+    如$\mathbf{x},\mathbf{y}\in\mathbb{R}^n$且$a\in\mathbb{R}$，则
+    \begin{enumerate}
+        \item $|\mathbf{x}|\geqslant 0$，当且仅当$\mathbf{x}=0$时$|\mathbf{x}|=0$.
+        \item $\left|\sum_{i=1}^n x_i y_i\right|\leqslant|\mathbf{x}|\cdot|\mathbf{y}|$，当且仅当$\mathbf{x}$与$\mathbf{y}$线性相关时等式成立.
+        \item $|\mathbf{x}+\mathbf{y}|\leqslant|\mathbf{x}|+|\mathbf{y}|$.
+        \item $|a\mathbf{x}|=|a|\cdot|\mathbf{x}|$.
+    \end{enumerate}
+\end{myTheorem}
+
+\begin{proof}
+    (1) 留给读者.
+    (2) 如$\mathbf{x}$与$\mathbf{y}$线性相关，等式明显成立.如不是这样，则对一切$\lambda\in\mathbb{R}$，$\lambda\mathbf{y}-\mathbf{x}\neq 0$，因此
+    $$0<|\lambda\mathbf{y}-\mathbf{x}|^2=\sum_{i=1}^n(\lambda y_i-x_i)^2
+    =\lambda^2\sum_{i=1}^n y_i^2-2\lambda\sum_{i=1}^n x_i y_i+\sum_{i=1}^n x_i^2,$$
+    所以右方是关于$\lambda$的没有实根的二次式，其判别式必须为负.于是
+    $$4\left(\sum_{i=1}^n x_i y_i\right)^2-4\sum_{i=1}^n x_i^2\cdot\sum_{i=1}^n y_i^2<0.$$
+    (3) 由(2)，
+    $$|\mathbf{x}+\mathbf{y}|^2=\sum_{i=1}^n(x_i+y_i)^2
+    =\sum_{i=1}^n x_i^2+\sum_{i=1}^n y_i^2+2\sum_{i=1}^n x_i y_i
+    \leqslant|\mathbf{x}|^2+|\mathbf{y}|^2+2|\mathbf{x}|\cdot|\mathbf{y}|
+    =(|\mathbf{x}|+|\mathbf{y}|)^2.$$
+    (4)
+    $$|a\mathbf{x}|=\sqrt{\sum_{i=1}^n(a x_i)^2}
+    =\sqrt{a^2\sum_{i=1}^n x_i^2}=|a|\cdot|\mathbf{x}|.$$
+\end{proof}
+
+\begin{mydefinition}{内积}
+    在上一定理的(2)中出现的量$\sum_{i=1}^n x_i y_i$称为$\mathbf{x}$与$\mathbf{y}$的内积并记作$\langle\mathbf{x},\mathbf{y}\rangle$，即
+    $$\langle\mathbf{x},\mathbf{y}\rangle=\sum_{i=1}^n x_i y_i.$$
+    内积的一些最重要的性质如下所述.
+\end{mydefinition}
+
+\begin{myTheorem}{内积的性质}
+    如$\mathbf{x},\mathbf{x}_1,\mathbf{x}_2$与$\mathbf{y},\mathbf{y}_1,\mathbf{y}_2$是$\mathbb{R}^n$中的向量，且$a\in\mathbb{R}$，则
+    \begin{enumerate}
+        \item $\langle\mathbf{x},\mathbf{y}\rangle=\langle\mathbf{y},\mathbf{x}\rangle$（对称性）.
+        \item $\langle a\mathbf{x},\mathbf{y}\rangle=\langle\mathbf{x},a\mathbf{y}\rangle=a\langle\mathbf{x},\mathbf{y}\rangle$（双线性），且
+        \begin{align*}
+            \langle\mathbf{x}_1+\mathbf{x}_2,\mathbf{y}\rangle&=\langle\mathbf{x}_1,\mathbf{y}\rangle+\langle\mathbf{x}_2,\mathbf{y}\rangle,\\
+            \langle\mathbf{x},\mathbf{y}_1+\mathbf{y}_2\rangle&=\langle\mathbf{x},\mathbf{y}_1\rangle+\langle\mathbf{x},\mathbf{y}_2\rangle.
+        \end{align*}
+        \item $\langle\mathbf{x},\mathbf{x}\rangle\geqslant 0$，且$\langle\mathbf{x},\mathbf{x}\rangle=0$当且仅当$\mathbf{x}=0$（正定性）.
+        \item $|\mathbf{x}|=\sqrt{\langle\mathbf{x},\mathbf{x}\rangle}$.
+        \item $\langle\mathbf{x},\mathbf{y}\rangle=\frac{|\mathbf{x}+\mathbf{y}|^2-|\mathbf{x}-\mathbf{y}|^2}{4}$（极化等式）.
+    \end{enumerate}
+\end{myTheorem}
+
+\begin{proof}
+    (1) $\langle\mathbf{x},\mathbf{y}\rangle=\sum_{i=1}^n x_i y_i=\sum_{i=1}^n y_i x_i=\langle\mathbf{y},\mathbf{x}\rangle$.
+    (2) 由(1)只须证明
+    $$\langle a\mathbf{x},\mathbf{y}\rangle=a\langle\mathbf{x},\mathbf{y}\rangle,\qquad
+    \langle\mathbf{x}_1+\mathbf{x}_2,\mathbf{y}\rangle=\langle\mathbf{x}_1,\mathbf{y}\rangle+\langle\mathbf{x}_2,\mathbf{y}\rangle.$$
+    这些可由下列等式得出：
+    $$\langle a\mathbf{x},\mathbf{y}\rangle=\sum_{i=1}^n(a x_i)y_i=a\sum_{i=1}^n x_i y_i=a\langle\mathbf{x},\mathbf{y}\rangle,$$
+    $$\langle\mathbf{x}_1+\mathbf{x}_2,\mathbf{y}\rangle=\sum_{i=1}^n(x_{1,i}+x_{2,i})y_i
+    =\sum_{i=1}^n x_{1,i}y_i+\sum_{i=1}^n x_{2,i}y_i
+    =\langle\mathbf{x}_1,\mathbf{y}\rangle+\langle\mathbf{x}_2,\mathbf{y}\rangle.$$
+    (3) 和(4) 的证明留给读者.
+    (5)
+    $$\frac{|\mathbf{x}+\mathbf{y}|^2-|\mathbf{x}-\mathbf{y}|^2}{4}
+    =\frac{1}{4}\bigl[\langle\mathbf{x}+\mathbf{y},\mathbf{x}+\mathbf{y}\rangle-\langle\mathbf{x}-\mathbf{y},\mathbf{x}-\mathbf{y}\rangle\bigr]$$由(4)
+    $$=\frac{1}{4}\bigl[\langle\mathbf{x},\mathbf{x}\rangle+2\langle\mathbf{x},\mathbf{y}\rangle+\langle\mathbf{y},\mathbf{y}\rangle
+    -\bigl(\langle\mathbf{x},\mathbf{x}\rangle-2\langle\mathbf{x},\mathbf{y}\rangle+\langle\mathbf{y},\mathbf{y}\rangle\bigr)\bigr]
+    =\langle\mathbf{x},\mathbf{y}\rangle.$$
+\end{proof}

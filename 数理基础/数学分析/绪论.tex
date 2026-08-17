@@ -1,1 +1,36 @@
-% 绪论与符号说明（留空，待补充）
+\section{关于本书}
+
+本笔记依据 M.\ Spivak 的《流形上的微积分》(Calculus on Manifolds) 整理而成，内容以原书章节为纲，辅以必要的补充与排版整理，供复习与查阅之用.
+
+\section{符号说明}
+
+本节列出全书通用的记号与约定.
+
+\begin{itemize}
+    \item 零向量$(0,\cdots,0)$通常简记为$\mathbf{0}$.
+    \item $\mathbb{R}^n$的通常基底是$e_1,\cdots,e_n$，其中$e_i=(0,\cdots,1,\cdots,0)$在第$i$个位置上是$1$.
+    \item 如$T:\mathbb{R}^n\to\mathbb{R}^m$是一个线性变换，$T$关于$\mathbb{R}^n$与$\mathbb{R}^m$的通常基底的矩阵是$m\times n$矩阵$A=(a_{ij})$，其中$T(e_i)=\sum_{j=1}^m a_{ji}e_j$——$T(e_i)$的系数出现在矩阵的第$i$列.
+    \item 如$S:\mathbb{R}^m\to\mathbb{R}^p$有$p\times m$矩阵$B$，则$S\circ T$有$p\times n$矩阵$BA$[这里$S\circ T(\mathbf{x})=S(T(\mathbf{x}))$].绝大多数线性代数书籍把$S\circ T$简记为$ST$.
+    \item 如$\mathbf{x}\in\mathbb{R}^n$与$\mathbf{y}\in\mathbb{R}^m$，则$(\mathbf{x},\mathbf{y})$表示
+    $$(x_1,\cdots,x_n,y_1,\cdots,y_m)\in\mathbb{R}^{n+m}.$$
+\end{itemize}
+
+为找出$T(\mathbf{x})$，我们来计算$m\times 1$矩阵
+$$\begin{pmatrix}
+    y_1\\
+    \vdots\\
+    y_m
+\end{pmatrix}
+=
+\begin{pmatrix}
+    a_{11},\cdots,a_{1n}\\
+    \vdots\quad\ddots\quad\vdots\\
+    a_{m1},\cdots,a_{mn}
+\end{pmatrix}
+\cdot
+\begin{pmatrix}
+    x_1\\
+    \vdots\\
+    x_n
+\end{pmatrix},$$
+则$T(\mathbf{x})=(y_1,\cdots,y_m)$.
