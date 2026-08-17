@@ -1,179 +1,75 @@
-\documentclass[10pt,a4paper]{book}
+% ============================================================
+%  机械原理笔记 —— 基于《课程笔记模板》排版
+%
+%  编译方式: XeLaTeX（中文推荐），需编译 2~3 遍生成目录与交叉引用
+% ============================================================
+\documentclass[12pt,a4paper]{book}
+\input{preamble}            % 样式：字体、颜色、定理/定义/例题环境、章节格式
 
-\title{机械原理(Mechanisms and Machine Theory)}
-\author{魏舟}
-\date{\today}
+% ============================================================
+%	笔记元信息
+% ============================================================
+\newcommand{\notename}{机械原理}   % 封面大标题
+\newcommand{\noteauthor}{魏舟}     % 封面作者
 
-% ========== 基础宏包 ==========
-\usepackage[table]{xcolor}
-\usepackage{ctex}
-\usepackage{geometry,graphicx,xcolor,color}
-\usepackage{amssymb,amsmath,amsthm}
-\usepackage{siunitx}
-\usepackage{yhmath}
-\usepackage{newpxtext,mathpazo}
-\usepackage{newclude,ulem}
-\usepackage{subcaption}
-\usepackage{float}
-\usepackage{tikz}
-\usetikzlibrary{angles, quotes, arrows.meta}
-\usepackage{enumerate}
-\usepackage{enumitem}
-\usepackage{wallpaper}
-\usepackage{titlesec, titletoc}
-\usepackage{fancyhdr}
-\usepackage[colorlinks,linkcolor=winered]{hyperref}
-\usepackage{xparse}
+% 正文骨架
+\newcommand{\notebody}{
+	% 前言
+	\chapter*{前言}
+	\input{前言}
 
-% ========== 颜色定义 ==========
-\definecolor{winered}{rgb}{0.5,0,0}
-\definecolor{structurecolor}{RGB}{122,122,142}
-\definecolor{main}{rgb}{0.5,0,0}
-\definecolor{second}{RGB}{115,45,2}
-\definecolor{third}{RGB}{0,80,80}
+	% 绪论：含符号说明小节
+	\chapter{绪论}
+	\input{绪论}
 
-% ========== tcolorbox 设置 ==========
-\usepackage[skins, breakable, theorems, most]{tcolorbox}
-\tcbuselibrary{theorems, breakable, skins, most}
+	% 正文各章（每章一个 .tex 文件）
+	\input{导论}
+	\input{平面机构的结构分析}
+	\input{机构运动分析}
+	\input{连杆机构}
+	\input{凸轮机构}
+	\input{齿轮机构}
 
-\tcbset{
-  mybox/.style = {
-    enhanced, breakable,
-    colback = white,
-    colframe = #1!50!black,
-    coltitle = white,
-    fonttitle = \bfseries\kaishu,
-    attach boxed title to top left = {yshift = -2mm, xshift = 3mm},
-    boxed title style = {
-      empty,
-      boxrule = 0pt,
-      colback = #1,
-      rounded corners = north,
-    },
-    left = 3mm, right = 3mm, top = 3mm, bottom = 3mm,
-    before skip = 12pt, after skip = 12pt,
-    drop shadow,
-    sharp corners,
-  }
+	% ============================================================
+	% 附录（样式自动切换为“附录 x”格式）
+	% ============================================================
+	\appendix
+	\titleformat{\chapter}[display]{\LARGE}
+	{\color{structurecolor}\centering\small \color{structurecolor}附录\ \thechapter}{0.5ex}
+	{\color{structurecolor}{\titlerule[1pt]}\huge \kaishu \centering \bfseries}
+	\titlecontents{chapter}[0em]{}{\large \fangsong{附录\ \thecontentslabel}}{}{\hfill\contentspage}
+	\titleformat{\section}[block]{\normalfont\Large\bfseries\kaishu\color{second}}
+	{\color{main}附录\ \thesection\quad}{0pt}{}
+	\titleformat{\subsection}[hang]{\bfseries}
+	{\color{third}\thesubsection\enspace}{1pt}{\color{structurecolor}}
+	\titleformat{\subsubsection}[hang]{\normalsize\bfseries}
+	{\color{third}\thesubsubsection\enspace}{1pt}{\color{structurecolor}}
+
+	\chapter{附录}
+	\input{附录}
 }
-
-% ========== 重新定义 definition 环境（仿照手动示例） ==========
-% 不带编号，标题为“定义：xxx”，蓝色直角盒子，浅蓝背景，支持跨页
-\NewDocumentEnvironment{definition}{o}
-  {%
-    \IfNoValueTF{#1}
-      {\begin{tcolorbox}[
-          title=定义,
-          colframe=blue!50!black,
-          colback=blue!5!white,
-          sharp corners,
-          breakable,
-          fonttitle=\bfseries\kaishu,
-          before skip=12pt,
-          after skip=12pt
-        ]}
-      {\begin{tcolorbox}[
-          title=定义：#1,
-          colframe=blue!50!black,
-          colback=blue!5!white,
-          sharp corners,
-          breakable,
-          fonttitle=\bfseries\kaishu,
-          before skip=12pt,
-          after skip=12pt
-        ]}
-  }
-  {%
-    \end{tcolorbox}
-  }
-
-% ========== 其他定理环境（使用 amsthm + tcolorboxenvironment） ==========
-\newtheoremstyle{thmstyle}{3pt}{3pt}{\kaishu}{-3pt}{
-  \bfseries\color{second}}{}{0.5em}{\indent【\thmname{#1} \thmnumber{#2}】 \thmnote{(#3)}}
-\newtheoremstyle{prostyle}{3pt}{3pt}{\kaishu}{-3pt}{
-  \bfseries\color{third}}{}{0.5em}{\indent【\thmname{#1} \thmnumber{#2}】 \thmnote{(#3)}}
-
-\theoremstyle{thmstyle}
-\newtheorem{theorem}{定理}[chapter]
-\newtheorem{lemma}[theorem]{引理}
-\newtheorem{corollary}[theorem]{推论}
-\theoremstyle{prostyle}
-\newtheorem{proposition}[theorem]{命题}
-\newtheorem{example}[theorem]{例题}
-
-% 为这些环境添加普通盒子（标题在内容区）
-\tcolorboxenvironment{theorem}{mybox={second}}
-\tcolorboxenvironment{lemma}{mybox={second}}
-\tcolorboxenvironment{corollary}{mybox={second}}
-\tcolorboxenvironment{proposition}{mybox={third}}
-\tcolorboxenvironment{example}{mybox={structurecolor}}
-
-% ========== 证明、解、注环境 ==========
-\renewenvironment{proof}[1][证明]{\par{\kaishu \uline{\textbf{#1.}}} \;\fangsong}{\qed\par}
-\newenvironment{solution}{\par\underline{\textbf{解.}} \;\kaishu}{\par}
-\newenvironment{remark}{\par\underline{\textbf{注.}} \;\fangsong}{\par}
-\newcommand{\intro}[1]{\rightline{\parbox[t]{5cm}{\footnotesize \fangsong\quad\quad #1 }}}
-
-% ========== 其他样式 ==========
-\setlist[enumerate,1]{label=\color{structurecolor}\arabic*.}
-\setlist[enumerate,2]{label=\color{structurecolor}(\arabic*).}
-\setlist[enumerate,3]{label=\color{structurecolor}\Roman*.}
-\setlist[enumerate,4]{label=\color{structurecolor}\Alph*.}
-
-\linespread{1.2}
-\fancypagestyle{plain}{%
-  \fancyhf{}
-  \renewcommand{\headrulewidth}{0pt}
-  \renewcommand{\footrulewidth}{0pt}
-}
-
-\titlecontents{chapter}[0em]{}{\large \fangsong{第 \thecontentslabel 章\quad}}{}{\hfill\contentspage}
-\titlecontents{section}[2em]{}{\thecontentslabel\quad\textcolor{blue}}{}{\titlerule*{ .} \contentspage}
-
-\titleformat{\chapter}[display]{\Large}
-{\color{structurecolor}\centering\small \color{structurecolor}第 \zhnumber{\arabic{chapter}} \ 章 }{0.5ex}
-{\color{structurecolor}{\titlerule[1pt]}\Large \kaishu \centering \bfseries}
-
-\titleformat{\section}[frame]
-{\normalfont\color{structurecolor}}
-{\footnotesize \enspace \large \textcolor{structurecolor}{\S \,\thesection}\enspace}{6pt}
-{\Large\filcenter \bf \kaishu }
-\titlespacing*{\section}{1pc}{*7}{*2.3}[1pc]
-
-\titleformat{\subsection}[hang]{\bfseries}{
-  \large\bfseries\color{structurecolor}\thesubsection\enspace}{1pt}{%
-  \color{structurecolor}\large\bfseries\filright}
-\titleformat{\subsubsection}[hang]{\bfseries}{
-  \large\bfseries\color{structurecolor}\thesubsubsection\enspace}{1pt}{%
-  \color{structurecolor}\large\bfseries\filright}
-
-\tikzset{
-  joint/.style={circle, fill=black, minimum size=4pt, inner sep=0pt},
-  link/.style={thick},
-  fixed/.style={thick, double},
-  arrow/.style={-{Stealth[scale=0.8]}}
-}
-
-% 可选：解决中文字体粗体缺失警告（使用 XeLaTeX）
-% \setCJKmainfont{KaiTi}[AutoFakeBold=3]
 
 \begin{document}
-	
-	\maketitle
-	刚上大学，我的专业是机械工程学院的兵器类。在机械工程学院的一个月，我认识了很多很好的朋友。
-	
-	所以，我整理了一下机械原理课上的笔记，分享给我的同学，分享给我的热爱。
+	% 封面（样式见 cover.tex）
+	\input{cover}
+
 	\newpage
-	
+
+	% 第 2 页：格言页（居中，可删）
+	\thispagestyle{empty}
+	\vspace*{\fill}
+	\begin{center}
+		{\kaishu\fontsize{18}{28}\selectfont 凡筒井皆用机械，利之所在，人无不知。}
+	\end{center}
+	\vfill
+	\newpage
+
+	\setcounter{tocdepth}{3}
+
 	\tableofcontents
-	
+
 	\setcounter{page}{0}
 	\thispagestyle{empty}
 	\newpage
-	\include{导论}
-	\include{平面机构的结构分析}
-	\include{机构运动分析}
-	\include{连杆机构}
-	\include{凸轮机构}
-	\include{齿轮机构}
+	\notebody
 \end{document}

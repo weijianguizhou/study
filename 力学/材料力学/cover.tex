@@ -1,0 +1,86 @@
+\begin{titlepage}
+	\begin{tikzpicture}[remember picture, overlay]
+		% ---- 1. 深蓝渐变铺满整个封面 ----
+		\shade[top color=DarkBlue, middle color=DarkBlue!90, bottom color=DarkBlue!65!black]
+			(current page.south west) rectangle (current page.north east);
+
+		% ---- 2. 细点阵（模拟网格，微弱纹理）----
+		\foreach \x in {1,...,20} {
+			\foreach \y in {1,...,29} {
+				\fill[white, opacity=0.05] (\x,\y) circle[radius=0.018cm];
+			}
+		}
+
+		% ---- 3. 主标题后方的柔光晕 ----
+		\fill[white, opacity=0.05] ([yshift=-8.2cm]current page.north) circle[radius=7.0cm];
+		\fill[white, opacity=0.05] ([yshift=-8.2cm]current page.north) circle[radius=4.6cm];
+
+		% ---- 4. 右上：二阶系统欠阻尼响应曲线（衰减振荡）----
+		\begin{scope}[shift={([xshift=-6.0cm,yshift=-4.6cm]current page.north east)}]
+			\draw[white, dashed, opacity=0.28, line width=0.7pt, domain=0:6.6, samples=120, smooth]
+				plot (\x, {1.7*exp(-0.24*\x)});
+			\draw[white, dashed, opacity=0.28, line width=0.7pt, domain=0:6.6, samples=120, smooth]
+				plot (\x, {-1.7*exp(-0.24*\x)});
+			\draw[white, line width=1.0pt, opacity=0.85, domain=0:6.6, samples=200, smooth]
+				plot (\x, {1.7*exp(-0.24*\x)*sin(deg(3.4*\x))});
+			\node[anchor=south east, text=white, opacity=0.7, font=\footnotesize\itshape] at (0.15,0.1) {$x(t)$};
+		\end{scope}
+
+		% ---- 5. 左下：一阶系统阶跃响应曲线 + 坐标轴 ----
+		\begin{scope}[shift={([xshift=0.9cm,yshift=0.9cm]current page.south west)}]
+			\draw[white, opacity=0.55, line width=0.8pt, -{Stealth}] (0,0) -- (0,4.2);
+			\draw[white, opacity=0.55, line width=0.8pt, -{Stealth}] (0,0) -- (5.4,0);
+			\draw[cyan!65!white, dashed, opacity=0.30, line width=0.7pt] (0,2.2) -- (5.0,2.2);
+			\draw[cyan!65!white, line width=0.95pt, opacity=0.85, domain=0:4.8, samples=120, smooth]
+				plot (\x, {2.2*(1-exp(-0.85*\x))});
+			\foreach \i in {0.8,1.6,...,4.0} {
+				\draw[white, opacity=0.3, line width=0.5pt] (\i,-0.08) -- (\i,0.08);
+				\draw[white, opacity=0.3, line width=0.5pt] (-0.08,\i) -- (0.08,\i);
+			}
+			\node[anchor=north, text=white, opacity=0.7, font=\footnotesize\itshape] at (5.4,-0.28) {$t$};
+			\node[anchor=south east, text=white, opacity=0.7, font=\footnotesize\itshape] at (-0.18,4.2) {$y(t)$};
+			\node[anchor=north east, text=white, opacity=0.7, font=\footnotesize\itshape] at (-0.1,-0.15) {$O$};
+		\end{scope}
+
+		% ---- 6. 金色细边框 ----
+		\draw[gold, line width=0.7pt, opacity=0.55]
+			([shift={(0.85,0.85)}]current page.south west) rectangle
+			([shift={(-0.85,-0.85)}]current page.north east);
+
+		% ---- 7. 顶部眉题（英文小字 + 金色短线）----
+		\coordinate (T) at ([yshift=-3.5cm]current page.north);
+		\draw[gold, line width=1.0pt] (T) ++(-3.4cm,0) -- ++(1.0cm,0);
+		\draw[gold, line width=1.0pt] (T) ++(2.4cm,0) -- ++(1.0cm,0);
+		\node[anchor=north, text=white, opacity=0.85, align=center] at (T) {
+			{\sffamily\fontsize{13}{16}\selectfont
+				\uppercase{Course \ Notes}}
+		};
+
+		% ---- 8. 主标题（居中，使用 \notename）----
+		\node[anchor=center, align=center, text=white] at ([yshift=-8.0cm]current page.north) {%
+			{\fontsize{40}{50}\sffamily\bfseries \notename}
+		};
+
+		% ---- 9. 金色菱形 + 双细线 ----
+		\coordinate (C) at ([yshift=-11.4cm]current page.north);
+		\draw[gold, line width=1.1pt] (C) ++(-2.2cm,0) -- ++(1.55cm,0);
+		\draw[gold, line width=1.1pt] (C) ++(0.65cm,0) -- ++(1.55cm,0);
+		\node[fill=gold, minimum size=0.24cm, inner sep=0pt, rotate=45] at (C) {};
+
+		% ---- 10. 副标题 ----
+		\node[anchor=north, text=white, opacity=0.9, align=center]
+			at ([yshift=-12.2cm]current page.north) {
+			{\fontsize{16}{20}\sffamily 学\ \ 习\ \ 笔\ \ 记}
+		};
+
+		% ---- 11. 底部作者、日期信息 ----
+		\coordinate (B) at ([yshift=3.4cm]current page.south);
+		\draw[gold, line width=0.8pt, opacity=0.7] (B) ++(-1.1cm,0.85cm) -- ++(2.2cm,0);
+		\node[anchor=south, text=white, align=center] at (B) {
+			\begin{tabular}{c}
+				{\fontsize{20}{24}\sffamily\bfseries \noteauthor} \\[0.4cm]
+				{\large \sffamily \today}
+			\end{tabular}
+		};
+	\end{tikzpicture}
+\end{titlepage}

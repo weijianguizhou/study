@@ -1,0 +1,231 @@
+\usepackage{ctex}
+\usepackage[table]{xcolor}   % \rowcolor 等表格着色（机械原理章节依赖）
+\usepackage{geometry,graphicx,color,subcaption}
+\geometry{a4paper, top=2.5cm, bottom=2.5cm, left=2.8cm, right=2.8cm}
+\usepackage{amssymb,amsmath,amsthm}                             % 数学字体
+\usepackage{cancel}                                             % 数学划线（\cancel）
+\usepackage{booktabs}   % 提供 \toprule, \midrule, \bottomrule    % 采用 Palatino 风格字体
+\usepackage{multirow}   % 表格合并行（\multirow）
+\usepackage{newclude,ulem}
+\definecolor{winered}{rgb}{0.5,0,0}
+\definecolor{structurecolor}{RGB}{122,122,142}
+\definecolor{main}{rgb}{0.5,0,0}
+\definecolor{second}{RGB}{115,45,2}
+\definecolor{third}{RGB}{0,80,80}
+\usepackage[colorlinks,linkcolor = winered]{hyperref}           % 定义引用的颜色
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{listings}
+\usepackage{xcolor}
+\lstdefinestyle{pythonstyle}{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{green!50!black}\itshape,
+    stringstyle=\color{red},
+    numberstyle=\tiny\color{gray},
+    numbers=left,
+    numbersep=8pt,
+    frame=single,
+    rulecolor=\color{black!30},
+    breaklines=true,
+    showstringspaces=false,
+    tabsize=4,
+    captionpos=b,
+    xleftmargin=2em,
+    framexleftmargin=1.5em
+}
+\lstset{style=pythonstyle}
+
+
+% ------------------------------------------------------------%
+% 定义定理环境
+\usepackage{amsthm}
+\newtheoremstyle{defstyle}{3pt}{3pt}{\kaishu}{-3pt}{
+	\bfseries\color{main}}{}{0.5em}{\indent 【\thmname{#1} \thmnumber{#2}】 \thmnote{(#3)}}
+\newtheoremstyle{thmstyle}{3pt}{3pt}{\kaishu}{-3pt}{
+	\bfseries\color{second}}{}{0.5em}{\indent【\thmname{#1} \thmnumber{#2}】 \thmnote{(#3)}}
+\newtheoremstyle{prostyle}{3pt}{3pt}{\kaishu}{-3pt}{
+	\bfseries\color{third}}{}{0.5em}{\indent【\thmname{#1} \thmnumber{#2}】 \thmnote{(#3)}}
+
+\theoremstyle{thmstyle} %theorem style
+\newtheorem{theorem}{定理}[chapter]
+\theoremstyle{defstyle} % definition style
+% 机械原理使用自定义的无编号 definition 环境（见文件末尾 NewDocumentEnvironment 定义），
+% 故此处不再用 amsthm 定义带编号的 definition，避免命令冲突。
+% \newtheorem{definition}[theorem]{定义}
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{corollary}[theorem]{推论}
+\theoremstyle{prostyle} % proposition style
+\newtheorem{proposition}[theorem]{命题}
+\newtheorem{example}[theorem]{例题}
+
+\renewenvironment{proof}[1][Derivations]{\par{\heiti \textbf{#1：}} \;\songti}{\qed\par}
+\newenvironment{solution}{\par\underline{\textbf{解.}} \;\kaishu}{\par}
+\newenvironment{remark}{\par\underline{\textbf{注.}} \;\fangsong}{\par}
+\newcommand{\intro}[1]{\rightline{\parbox[t]{5cm}{\footnotesize \fangsong\quad\quad #1 }}}
+% ------------------------------------------------------------%
+
+\usepackage{enumerate}
+\usepackage{enumitem}
+\setlist[enumerate,1]{label=\color{structurecolor}\arabic*.}
+\setlist[enumerate,2]{label=\color{structurecolor}(\arabic*).}
+\setlist[enumerate,3]{label=\color{structurecolor}\Roman*.}
+\setlist[enumerate,4]{label=\color{structurecolor}\Alph*.}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{angles, quotes, arrows.meta, calc}
+% 设置章形式
+% ---------------------------------- %
+% \setlength{\parindent}{0pt}
+\usepackage{titlesec, titletoc}
+\linespread{1.5}
+
+\usepackage{fancyhdr}
+\fancypagestyle{plain}{%
+	\fancyhf{} % clear all header and footer fields
+	\renewcommand{\headrulewidth}{0pt}
+	\renewcommand{\footrulewidth}{0pt}
+}
+
+\titlecontents{chapter}[0em]{}{\large \fangsong{第 \thecontentslabel 章\quad}}{}{\hfill\contentspage}
+\titlecontents{section}[2em]{}{\thecontentslabel\quad\textcolor{blue}}{}{\titlerule*{ .} \contentspage}
+
+\titleformat{\chapter}[display]{\LARGE}
+{\color{structurecolor}\centering\small \color{structurecolor}第 \zhnumber{\arabic{chapter}} \ 章 }{0.5ex}
+{\color{structurecolor}{\titlerule[1pt]}\huge \kaishu \centering \bfseries}
+
+\titleformat{\section}[frame]
+{\normalfont\color{structurecolor}}
+{\footnotesize \enspace \large \textcolor{structurecolor}{\S \,\thesection}\enspace}{6pt}
+{\Large\filcenter \bf \kaishu }
+
+\titlespacing*{\section}{1pc}{*7}{*2.3}[1pc]
+\titleformat{\subsection}[hang]{\bfseries}{
+	\large\bfseries\color{structurecolor}\thesubsection\enspace}{1pt}{%
+	\color{structurecolor}\large\bfseries\filright}
+\titleformat{\subsubsection}[hang]{\bfseries}{
+	\normalsize\bfseries\color{structurecolor}\thesubsubsection\enspace}{1pt}{%
+	\color{structurecolor}\normalsize\bfseries\filright}
+
+% 导言区定义格式
+\newtcolorbox{myTheorem}[1]{
+    colframe=blue!50!black,
+    colback=blue!5!white,
+    title=#1,                      % 标题由用户输入
+    fonttitle=\bfseries,
+    boxrule=0.5mm,
+    before skip=10pt,
+    after skip=10pt,
+    % 保持内部 \tcbline 的分隔样式与边框一致
+    segmentation style={blue!50!black, line width=0.5mm},
+}
+\newtcolorbox{myhypothesis}[1]{
+    colframe=green!50!black,      % 边框：绿色50% + 黑色50%
+    colback=green!5!white,        % 背景：绿色5% + 白色95%
+    title=#1,
+    fonttitle=\bfseries,
+    boxrule=0.5mm,
+    before skip=10pt,
+    after skip=10pt,
+    segmentation style={green!50!black, line width=0.5mm},  % 分割线与边框同色
+}
+\newtcolorbox{mydefinition}[1]{
+    colframe=red!50!black,      % 边框：红色50% + 黑色50%
+    colback=red!5!white,        % 背景：红色5% + 白色95%
+    title=#1,
+    fonttitle=\bfseries,
+    boxrule=0.5mm,
+    before skip=10pt,
+    after skip=10pt,
+    segmentation style={red!50!black, line width=0.5mm},  % 分割线与边框同色
+}
+
+% 导言区添加（需要 \usepackage{tcolorbox}）
+% 导言区改为：
+\tcbuselibrary{skins, breakable, theorems}
+\newtcolorbox{myformula}[1][]{
+    colframe=brown!50!black,
+    colback=brown!5!white,
+    boxrule=0.5mm,
+    before skip=10pt,
+    after skip=10pt,
+    halign=center,
+    valign=center,
+    sharp corners,
+    #1
+}
+\definecolor{DarkBlue}{RGB}{0,0,139}
+\definecolor{gold}{RGB}{212,175,55}
+
+% ============================================================
+%  机械原理特有设置（保留原主文件中的自定义样式）
+% ============================================================
+\usepackage{siunitx}
+\usepackage{yhmath}
+\usepackage{wallpaper}
+\usepackage{xparse}
+
+\tcbset{
+  mybox/.style = {
+    enhanced, breakable,
+    colback = white,
+    colframe = #1!50!black,
+    coltitle = white,
+    fonttitle = \bfseries\kaishu,
+    attach boxed title to top left = {yshift = -2mm, xshift = 3mm},
+    boxed title style = {
+      empty,
+      boxrule = 0pt,
+      colback = #1,
+      rounded corners = north,
+    },
+    left = 3mm, right = 3mm, top = 3mm, bottom = 3mm,
+    before skip = 12pt, after skip = 12pt,
+    drop shadow,
+    sharp corners,
+  }
+}
+
+% 自定义无编号 definition 环境（可选参数为标题，蓝色盒子，支持跨页）
+\NewDocumentEnvironment{definition}{o}
+  {%
+    \IfNoValueTF{#1}
+      {\begin{tcolorbox}[
+          title=定义,
+          colframe=blue!50!black,
+          colback=blue!5!white,
+          sharp corners,
+          breakable,
+          fonttitle=\bfseries\kaishu,
+          before skip=12pt,
+          after skip=12pt
+        ]}
+      {\begin{tcolorbox}[
+          title=定义：#1,
+          colframe=blue!50!black,
+          colback=blue!5!white,
+          sharp corners,
+          breakable,
+          fonttitle=\bfseries\kaishu,
+          before skip=12pt,
+          after skip=12pt
+        ]}
+  }
+  {%
+    \end{tcolorbox}
+  }
+
+% 为 amsthm 定理环境添加盒子外观
+\tcolorboxenvironment{theorem}{mybox={second}}
+\tcolorboxenvironment{lemma}{mybox={second}}
+\tcolorboxenvironment{corollary}{mybox={second}}
+\tcolorboxenvironment{proposition}{mybox={third}}
+\tcolorboxenvironment{example}{mybox={structurecolor}}
+
+\tikzset{
+  joint/.style={circle, fill=black, minimum size=4pt, inner sep=0pt},
+  link/.style={thick},
+  fixed/.style={thick, double},
+  arrow/.style={-{Stealth[scale=0.8]}}
+}
