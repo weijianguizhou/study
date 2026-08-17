@@ -1303,19 +1303,17 @@ $$
         \label{fig:螺旋运动}
 \end{figure}
 
+\begin{myTheorem}{螺旋运动定理}
 刚体 $B$ 在参考系 $A$ 中的任意位移，都可以通过螺旋运动来实现。换句话说，总能找到一个基点，其位移矢量与 $B$ 在 $A$ 中位移所对应的简单旋转的罗德里格斯矢量平行。事实上，存在无限多个这样的基点，它们都位于一条与罗德里格斯矢量平行的直线上，这条直线称为螺杆轴；而所有位于螺杆轴上的 $B$ 点的位移矢量都相等，因此可以用一个向量（即螺杆平移矢量）来表示。此外，螺杆平移矢量的模长不小于任何不在螺杆轴上的基点的位移矢量的模长。若 $\boldsymbol{\delta}$ 是任意基点 $P$ 的位移矢量，$\boldsymbol{\rho}$ 是在 $A$ 中对 $B$ 进行位移所对应的旋转变换的罗德里格斯矢量，且 $P^*$ 是位于螺杆轴上的 $B$ 点（见图~\ref{fig:螺旋运动}），则在 $B$ 在 $A$ 中发生位移前，$P^*$ 相对于 $P$ 的位置矢量 $\boldsymbol{a}^*$ 满足以下方程：
-
 \begin{equation}
     \label{eq:螺旋运动:a_star公式}
     \boldsymbol{a}^* = \frac{\boldsymbol{\rho} \times \boldsymbol{\delta} + (\boldsymbol{\rho} \times \boldsymbol{\delta}) \times \boldsymbol{\rho}}{2\boldsymbol{\rho}^2} + \mu \boldsymbol{\rho}
 \end{equation}
-
-
-
 其中 $\mu$ 取决于 $P^*$ 的选择；而螺杆平移矢量 $\boldsymbol{\delta}^*$ 由以下公式给出：
 $$
 \boldsymbol{\delta}^* = \frac{\boldsymbol{\rho} \cdot \boldsymbol{\delta}}{\boldsymbol{\rho}^2} \boldsymbol{\rho}
 $$
+\end{myTheorem}
 \par\vspace{1em}
 \noindent\rule{\textwidth}{0.4pt}
 \vspace{1em}\par
@@ -1382,6 +1380,7 @@ $$
     \end{bmatrix}
     \label{eq:角速度矩阵:微分定义}
 \end{equation}
+\begin{myTheorem}{角速度矩阵的性质}
 $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵的乘积，该反对称矩阵称为 $B$ 在 $A$ 中的角速度矩阵，定义为
 \begin{equation}
     \boldsymbol{\tilde{\omega}}\triangleq\boldsymbol{A}^{\mathrm{T}}\dot{\boldsymbol{A}}
@@ -1392,6 +1391,7 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
     \dot{\boldsymbol{A}}=\boldsymbol{A}\,\boldsymbol{\tilde{\omega}}
     \label{eq:角速度矩阵:基本关系}
 \end{equation}
+\end{myTheorem}
 
 若按照叉乘矩阵的记号约定（见式~\eqref{eq:矩阵:叉乘矩阵}）引入三个时间函数 $\omega_1(t),\omega_2(t),\omega_3(t)$，把 $\boldsymbol{\tilde{\omega}}$ 表示为
 \begin{equation}
@@ -1528,6 +1528,7 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
 \end{equation}
 其中 $\theta$ 和 $\boldsymbol{\lambda}$ 的含义与简单转动一节相同。
 
+\begin{myTheorem}{角速度的导数关系}
 涉及角速度的最有用的关系之一是向量 $\boldsymbol{v}$ 在两个参考系 $A$ 与 $B$ 中的一阶时间导数之间的关系。若这两个导数分别记为 $\dfrac{\mathrm{d}\boldsymbol{v}}{\mathrm{d}t}\Big|_A$ 和 $\dfrac{\mathrm{d}\boldsymbol{v}}{\mathrm{d}t}\Big|_B$，即
 \begin{equation}
     \frac{\mathrm{d}\boldsymbol{v}}{\mathrm{d}t}\Big|_A \triangleq \mathbf{a}_i\frac{\mathrm{d}}{\mathrm{d}t}(\boldsymbol{v}\cdot\mathbf{a}_i)
@@ -1548,6 +1549,7 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
     \frac{\mathrm{d}\boldsymbol{\beta}}{\mathrm{d}t}\Big|_A = \boldsymbol{\omega}_{B|A}\times\boldsymbol{\beta}
 \end{equation}
 由此结果可以看出，可以把 $B$ 在 $A$ 中的角速度视为一个"算子"：\textcolor{red}{它作用于 $B$ 中任意固定向量时，便产生该向量在 $A$ 中的时间导数。}
+\end{myTheorem}
 \par\vspace{1em}
 \noindent\rule{\textwidth}{0.4pt}
 \vspace{1em}\par
@@ -1715,11 +1717,8 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
 \end{example}
 
 \section{角速度分量}
-式~\eqref{eq:角速度矢量:定义} 给出的 $\boldsymbol{\omega}$ 表达式包含三个分量，每个分量都平行于一个固定在 $B$ 中的单位向量。有时需要以其他方式表达 $\boldsymbol{\omega}$，例如将其分解为平行于固定在 $A$ 中的单位向量的分量。无论采用哪种分解方式，都可能需要了解 $\boldsymbol{\omega}$ 任一分量的物理意义。
-
-在某些情况下，可以通过为每个分量指定两个参考系来赋予角速度分量以物理意义：使得其中一个参考系相对于另一个参考系的角速度恰等于该分量。正如后文将看到的，例如当 $B$ 在 $A$ 中的角速度以特定形式表达时即是如此。但一般来说，找出所需的参考系并非易事。例如，第 1.11 节例题中角速度的分量 $\lambda\dot{s}\,\mathbf{b}_1$ 和 $(\dot{s}/\rho)\,\mathbf{b}_3$ 就不容易找出这样的参考系。
-
-通过引入三个角的一阶时间导数的某种空间平均值，可以对式~\eqref{eq:角速度矢量:定义} 中出现的 $\omega_1,\omega_2,\omega_3$（从而对 $\boldsymbol{\omega}$ 的分量 $\omega_i\mathbf{b}_i$，$i=1,2,3$）给出本质上几何性的解释。具体来说，设 $\boldsymbol{\alpha}$ 为固定在参考系 $A$ 中的某个单位向量，$\boldsymbol{\beta}_i$ 为 $\boldsymbol{\alpha}$ 在垂直于 $\mathbf{b}_i$ 的平面上的正交投影（$i=1,2,3$），$\theta_1$ 为 $\boldsymbol{\beta}_1$ 与 $\boldsymbol{\beta}_3$ 之间的夹角，$\theta_2$ 为 $\boldsymbol{\beta}_2$ 与 $\boldsymbol{\beta}_1$ 之间的夹角，$\theta_3$ 为 $\boldsymbol{\beta}_3$ 与 $\boldsymbol{\beta}_2$ 之间的夹角，如图 1.12.1 所示。再令 $S$ 为以点 $O$ 为球心的单位球面，并令 $P$ 为 $S$ 上相对 $O$ 的位矢平行于 $\boldsymbol{\alpha}$ 的点（见图 1.12.2），把 $\dot{\theta}_i$ 的值与 $P$ 联系起来，并定义 $\overline{\dot{\theta}}_i$ 为
+\begin{myTheorem}{角速度分量的几何解释}
+式~\eqref{eq:角速度矢量:定义} 中的角速度分量 $\omega_i\mathbf{b}_i$ 可赋予几何意义。一般难以通过指定两个参考系来给出 $\omega_i$ 的物理解释（如第 1.11 节例题中 $\lambda\dot{s}\,\mathbf{b}_1$、$(\dot{s}/\rho)\,\mathbf{b}_3$ 所示），但 $\omega_1,\omega_2,\omega_3$ 可理解为三个角的一阶时间导数的空间平均值：设 $\boldsymbol{\alpha}$ 为固定在 $A$ 中的单位向量，$\boldsymbol{\beta}_i$ 为 $\boldsymbol{\alpha}$ 在垂直于 $\mathbf{b}_i$ 的平面上的正交投影，$\theta_1$、$\theta_2$、$\theta_3$ 分别为 $\boldsymbol{\beta}_1$ 与 $\boldsymbol{\beta}_3$、$\boldsymbol{\beta}_2$ 与 $\boldsymbol{\beta}_1$、$\boldsymbol{\beta}_3$ 与 $\boldsymbol{\beta}_2$ 的夹角。令 $S$ 为以 $O$ 为球心的单位球面，$P$ 为 $S$ 上位矢平行于 $\boldsymbol{\alpha}$ 的点，则 $\dot{\theta}_i$ 是 $P$ 的函数，定义其球面平均为
 \begin{equation}
     \overline{\dot{\theta}}_i \triangleq \frac{1}{4\pi}\int \dot{\theta}_i\,\mathrm{d}\sigma \quad (i=1,2,3)
     \label{eq:角速度分量:平均导数定义}
@@ -1729,6 +1728,8 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
     \omega_i = \overline{\dot{\theta}}_i \quad (i=1,2,3)
     \label{eq:角速度分量:主要结论}
 \end{equation}
+\end{myTheorem}
+\input{Figure/角速度分量图解}
 
 \par\vspace{1em}
 \noindent\rule{\textwidth}{0.4pt}
@@ -1885,6 +1886,7 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
     \end{equation}
 \end{example}
 \section{角速度与欧拉参数}
+\begin{myTheorem}{角速度与欧拉参数的关系}
 若 $\mathbf{a}_1,\mathbf{a}_2,\mathbf{a}_3$ 与 $\mathbf{b}_1,\mathbf{b}_2,\mathbf{b}_3$ 分别为固定在相互运动的参考系或刚体 $A$ 与 $B$ 中的两组成右手正交单位向量，则可以利用式~\eqref{eq:欧拉参数转方向余弦} 在每个时刻确定欧拉参数 $\epsilon_1,\dots,\epsilon_4$，并按式~\eqref{eq:欧拉参数定义} 构成欧拉向量 $\boldsymbol{\epsilon}$。用 $\boldsymbol{\epsilon}$ 和 $\epsilon_4$ 表示时，$B$ 在 $A$ 中的角速度（见角速度矢量一节）可以写成
 \begin{equation}
     \boldsymbol{\omega} = 2\left(\epsilon_4\frac{\mathrm{d}\boldsymbol{\epsilon}}{\mathrm{d}t}\Big|_{B} - \dot{\epsilon}_4\boldsymbol{\epsilon} - \boldsymbol{\epsilon}\times\frac{\mathrm{d}\boldsymbol{\epsilon}}{\mathrm{d}t}\Big|_{B}\right)
@@ -1901,6 +1903,7 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
     \label{eq:角速度欧拉:epsilon4导数}
 \end{equation}
 得到。
+\end{myTheorem}
 
 与式~\eqref{eq:角速度欧拉:基本关系}--\eqref{eq:角速度欧拉:epsilon4导数} 等价的方程可以用增广列阵 $\bar{\boldsymbol{\omega}}$、$\bar{\boldsymbol{\epsilon}}$ 和矩阵 $E$ 表述。定义
 \begin{equation}
@@ -2104,12 +2107,14 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
 \end{example}
 
 \section{辅助参考系}
+\begin{myTheorem}{角速度加法定理}
 刚体 $B$ 在参考系 $A$ 中的角速度（见角速度矢量一节）可以用涉及 $n$ 个辅助参考系 $A_1,\dots,A_n$ 的如下形式表达：
 \begin{equation}
     \boldsymbol{\omega}_{B|A} = \boldsymbol{\omega}_{A_1|A} + \boldsymbol{\omega}_{A_2|A_1} + \cdots + \boldsymbol{\omega}_{A_n|A_{n-1}} + \boldsymbol{\omega}_{B|A_n}
     \label{eq:辅助参考系:角速度加法定理}
 \end{equation}
 这个关系称为角速度加法定理，当右端每一项都表示一个作简单转动（见简单转动一节）的物体的角速度（从而可按式~\eqref{eq:角速度矢量:基本关系} 表达）时特别有用。
+\end{myTheorem}
 
 \par\vspace{1em}
 \noindent\rule{\textwidth}{0.4pt}
@@ -2167,6 +2172,7 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
 \end{example}
 
 \section{角速度与方向角}
+\begin{myTheorem}{角速度与方向角的关系}
 当刚体 $B$ 在参考系 $A$ 中的姿态用方向角 $\theta_1,\theta_2,\theta_3$（见方向角一节）的时间依赖关系描述时，$B$ 在 $A$ 中的角速度（见角速度矢量一节）可以通过如下关系求出：
 \begin{equation}
     \begin{bmatrix}\omega_1 & \omega_2 & \omega_3\end{bmatrix}
@@ -2180,6 +2186,7 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
     \label{eq:方向角角速度:逆关系}
 \end{equation}
 求得。
+\end{myTheorem}
 
 对于空间三转角（space-three angles），矩阵 $\boldsymbol{M}$ 与 $\boldsymbol{M}^{-1}$ 为
 \begin{equation}
@@ -2374,6 +2381,7 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
 \end{example}
 
 \section{缓慢小转动}
+\begin{myTheorem}{缓慢小转动的简化关系}
 若 $\mathbf{a}_1,\mathbf{a}_2,\mathbf{a}_3$ 与 $\mathbf{b}_1,\mathbf{b}_2,\mathbf{b}_3$ 分别为固定在相互运动的参考系或刚体 $A$ 与 $B$ 中的两组成右手正交单位向量，则可利用式~\eqref{eq:欧拉参数转方向余弦} 在每个时刻确定一个角度 $\theta$。当 $\theta$ 与 $\dot{\theta}$ 的二次及二次以上各项在运动分析中所起的作用可以忽略时，称该运动为缓慢小转动（slow, small rotational motion）。在这种情况下，前述许多关系可以换成更简单的形式。具体地，式~\eqref{eq:角速度欧拉:基本关系} 和式~\eqref{eq:角速度欧拉:epsilon4导数} 可分别换成
 \begin{equation}
     \boldsymbol{\omega} = 2\frac{\mathrm{d}\boldsymbol{\epsilon}}{\mathrm{d}t}\Big|_{B}
@@ -2396,6 +2404,7 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
     \label{eq:缓慢小转动:方向角}
 \end{equation}
 这说明在缓慢小转动中，使用空间三转角还是体三转角并无区别。
+\end{myTheorem}
 
 \par\vspace{1em}
 \noindent\rule{\textwidth}{0.4pt}
@@ -2495,6 +2504,7 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
 \end{example}
 
 \section{瞬时轴}
+\begin{myTheorem}{瞬时轴的性质}
 在刚体 $B$ 在参考系 $A$ 中的角速度 $\boldsymbol{\omega}$ 为零的瞬时，$B$ 上各点在 $A$ 中的速度彼此相等。只要 $\boldsymbol{\omega}$ 不为零，就存在无穷多个 $B$ 上的点，其在 $A$ 中的速度平行于 $\boldsymbol{\omega}$ 或等于零。这些点在 $A$ 中具有相同的速度 $\mathbf{v}^*$，它们构成一条平行于 $\boldsymbol{\omega}$ 的直线，称为 $B$ 在 $A$ 中的瞬时轴（instantaneous axis）。$\mathbf{v}^*$ 的模长小于 $B$ 上不在瞬时轴上的任意点在 $A$ 中速度的模长。
 
 若 $\mathbf{v}^Q$ 是 $B$ 上任意选取的基点 $Q$ 在 $A$ 中的速度，$P^*$ 是瞬时轴上的点，则 $P^*$ 相对 $Q$ 的位矢 $\mathbf{r}^*$ 可以表示为
@@ -2507,6 +2517,7 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
     \mathbf{v}^* = \frac{\boldsymbol{\omega}\cdot\mathbf{v}^Q}{\boldsymbol{\omega}^2}\,\boldsymbol{\omega}
     \label{eq:瞬时轴:v星}
 \end{equation}
+\end{myTheorem}
 
 \par\vspace{1em}
 \noindent\rule{\textwidth}{0.4pt}
@@ -2609,6 +2620,7 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
 \end{example}
 
 \section{角加速度}
+\begin{myTheorem}{角加速度及其分量关系}
 刚体 $B$ 在参考系 $A$ 中的角加速度 $\boldsymbol{\alpha}$ 定义为 $B$ 在 $A$ 中的角速度 $\boldsymbol{\omega}$（见角速度矢量一节）在 $A$ 中的一阶时间导数：
 \begin{equation}
     \boldsymbol{\alpha} \triangleq \frac{\mathrm{d}\boldsymbol{\omega}}{\mathrm{d}t}\Big|_{A}
@@ -2630,6 +2642,7 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
     \label{eq:角加速度:分量关系}
 \end{equation}
 其中 $\boldsymbol{\Omega}$ 是 $C$ 在 $A$ 中的角速度。换言之，$\alpha_{i|C}$ 是否等于 $\dot{\omega}_{i|C}$，取决于 $C$ 在 $A$ 中的运动。
+\end{myTheorem}
 
 \par\vspace{1em}
 \noindent\rule{\textwidth}{0.4pt}
@@ -2730,6 +2743,7 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
 \end{example}
 
 \section{偏角速度与偏速度}
+\begin{myTheorem}{偏角速度与偏速度的唯一表示}
 出于后文将说明的原因，当所研究的系统 $S$ 在参考系 $A$ 中的位形用 $n$ 个广义坐标 $q_1,\dots,q_n$ 表征时，往往宜引入 $n$ 个量 $u_1,\dots,u_n$，称为 $S$ 在 $A$ 中的广义速率（generalized speeds），它们是 $\dot{q}_1,\dots,\dot{q}_n$ 的线性组合，形如
 \begin{equation}
     u_r \triangleq \sum_{s=1}^{n}Y_{rs}\,\dot{q}_s + Z_r \quad (r=1,\dots,n)
@@ -2746,6 +2760,7 @@ $\dot{\boldsymbol{A}}$ 可以表示为 $\boldsymbol{A}$ 与某个反对称矩阵
     \label{eq:偏速度:速度}
 \end{equation}
 其中 $\boldsymbol{\omega}_r,\mathbf{v}_r$（$r=1,\dots,n$）、$\boldsymbol{\omega}_t$ 与 $\mathbf{v}_t$ 都是 $q_1,\dots,q_n$ 和 $t$ 的函数。向量 $\boldsymbol{\omega}_r$ 称为 $B$ 在 $A$ 中的第 $r$ 个偏角速度（partial angular velocity），向量 $\mathbf{v}_r$ 称为 $P$ 在 $A$ 中的第 $r$ 个偏速度（partial velocity），它们可以通过观察式~\eqref{eq:偏角速度:角速度}、\eqref{eq:偏速度:速度} 右端形式直接写出，而不必按式~\eqref{eq:偏角速度:广义速率} 的形式正式引入 $u_1,\dots,u_n$。处理具体问题时，选取广义速率以使系统各刚体角速度与各点速度的表达式尽可能简单，常常不必先显式指定广义坐标。有时也宜对部分或全部 $r$ 取 $u_r=\dot{q}_r$。
+\end{myTheorem}
 
 正如第 4 章将看到的，利用广义速率、偏角速度与偏速度可以特别有效地列写广义力的表达式，并能以最少的工作量构造出尽可能简单的运动方程。
 

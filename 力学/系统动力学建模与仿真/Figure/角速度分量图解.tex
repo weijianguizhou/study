@@ -1,0 +1,81 @@
+% 角速度分量的几何解释（ω_i = 平均 θ̇_i）
+% 用法：在正文中 \input{Figure/角速度分量图解}
+% 依赖：preamble.tex 已加载 tikz 及库 {angles, quotes, arrows.meta}
+% 说明：屏幕投影取 b1 指向右下、b2 指向左下、b3 竖直向上；
+%       β_i 为 α 在垂直于 b_i 的平面（b1b2/b1b3/b2b3 面）上的正交投影。
+%       所有文字标签均加白底，避免与线段、圆弧相互叠压。
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[
+        >=Stealth,
+        scale=0.95,
+        axis/.style={thick, ->},
+        shadow/.style={dashed, line width=0.8pt},
+        lbl/.style={fill=white, inner sep=1.5pt},
+        every node/.style={font=\small}
+    ]
+        \coordinate (O)  at (0,0);
+        \coordinate (B1) at (2.208,-0.912);
+        \coordinate (B2) at (-2.208,-0.912);
+        \coordinate (B3) at (0,2.4);
+        \coordinate (P)  at (-0.199,0.650);
+        \coordinate (P1) at (-1.259,1.088);
+        \coordinate (P2) at (1.060,1.170);
+        \coordinate (P3) at (-0.199,-0.958);
+
+        % 三个坐标平面（⊥ b3 / ⊥ b2 / ⊥ b1）
+        \fill[gray!12]  (O) -- (B1) -- (B2) -- cycle;
+        \fill[blue!7]   (O) -- (B1) -- (B3) -- cycle;
+        \fill[green!7]  (O) -- (B2) -- (B3) -- cycle;
+
+        % 单位球面 S
+        \fill[blue!4] (O) circle (2.4);
+        \draw (O) circle (2.4);
+
+        % 投影关系：β_i 是 α 在相应平面上的正交投影（虚点线）
+        \draw[dotted, gray] (P) -- (P1);
+        \draw[dotted, gray] (P) -- (P2);
+        \draw[dotted, gray] (P) -- (P3);
+
+        % 投影向量 β_1, β_2, β_3
+        \draw[shadow, orange]  (O) -- (P1);
+        \draw[shadow, blue!60] (O) -- (P2);
+        \draw[shadow, red!60]  (O) -- (P3);
+        \fill[orange]  (P1) circle (1.6pt);
+        \fill[blue!60] (P2) circle (1.6pt);
+        \fill[red!60]  (P3) circle (1.6pt);
+
+        % 轴 b_1, b_2, b_3
+        \draw[axis] (O) -- (B1);
+        \draw[axis] (O) -- (B2);
+        \draw[axis] (O) -- (B3);
+
+        % 向量 α 及球面上的点 P
+        \draw[thick, ->] (O) -- (P);
+        \fill (P) circle (2pt);
+
+        % 夹角 θ_1, θ_2, θ_3（仅画弧，标签单独放置避免叠压）
+        \pic[draw, orange,  angle radius=0.75cm] {angle = P1--O--P3};
+        \pic[draw, blue!60, angle radius=0.6cm]  {angle = P2--O--P1};
+        \pic[draw, red!60,  angle radius=0.6cm]  {angle = P3--O--P2};
+
+        % ---- 文字标签（白底，位置经校核无重叠）----
+        \node[lbl, below right]            at (B1) {$\mathbf{b}_1$};
+        \node[lbl, below left]             at (B2) {$\mathbf{b}_2$};
+        \node[lbl, above]                  at (B3) {$\mathbf{b}_3$};
+        \node[lbl, above left,  orange]    at (P1) {$\boldsymbol{\beta}_1$};
+        \node[lbl, above right, blue!60]   at (P2) {$\boldsymbol{\beta}_2$};
+        \node[lbl, below,       red!60]    at (P3) {$\boldsymbol{\beta}_3$};
+        \node[lbl] at (-0.5,0.28)   {$\boldsymbol{\alpha}$};
+        \node[lbl] at (0.10,0.46)   {$P$};
+        \node[lbl] at (-0.30,-0.18) {$O$};
+        \node[lbl, orange]  at (-1.20,-0.38) {$\theta_1$};
+        \node[lbl, blue!60] at (-0.08,1.02)  {$\theta_2$};
+        \node[lbl, red!60]  at (0.98,-0.62)  {$\theta_3$};
+
+        % 结论标注
+        \node[lbl, anchor=north east] at (2.1,2.0) {$\omega_i=\overline{\dot{\theta}}_i$};
+    \end{tikzpicture}
+    \caption{角速度分量的几何解释：$\omega_i$ 等于夹角 $\theta_i$ 的时间导数在单位球面上的空间平均值，即 $\omega_i=\overline{\dot{\theta}}_i$（$i=1,2,3$）。图中 $\boldsymbol{\beta}_i$ 为固定在 $A$ 中的单位向量 $\boldsymbol{\alpha}$ 在垂直于 $\mathbf{b}_i$ 的平面上的正交投影。}
+    \label{fig:角速度分量几何解释}
+\end{figure}
