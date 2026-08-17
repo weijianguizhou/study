@@ -1,6 +1,6 @@
 \begin{titlepage}
 	\begin{tikzpicture}[remember picture, overlay]
-		% ---- 1. 深蓝渐变铺满整个封面 ----
+		% ---- 1. 灰色渐变铺满整个封面（金属灰 → 深灰黑）----
 		\shade[top color=DarkBlue, middle color=DarkBlue!90, bottom color=DarkBlue!65!black]
 			(current page.south west) rectangle (current page.north east);
 
@@ -15,39 +15,58 @@
 		\fill[white, opacity=0.05] ([yshift=-8.2cm]current page.north) circle[radius=7.0cm];
 		\fill[white, opacity=0.05] ([yshift=-8.2cm]current page.north) circle[radius=4.6cm];
 
-		% ---- 4. 右上：二阶系统欠阻尼响应曲线（衰减振荡）----
-		\begin{scope}[shift={([xshift=-6.0cm,yshift=-4.6cm]current page.north east)}]
-			\draw[white, dashed, opacity=0.28, line width=0.7pt, domain=0:6.6, samples=120, smooth]
-				plot (\x, {1.7*exp(-0.24*\x)});
-			\draw[white, dashed, opacity=0.28, line width=0.7pt, domain=0:6.6, samples=120, smooth]
-				plot (\x, {-1.7*exp(-0.24*\x)});
-			\draw[white, line width=1.0pt, opacity=0.85, domain=0:6.6, samples=200, smooth]
-				plot (\x, {1.7*exp(-0.24*\x)*sin(deg(3.4*\x))});
-			\node[anchor=south east, text=white, opacity=0.7, font=\footnotesize\itshape] at (0.15,0.1) {$x(t)$};
-		\end{scope}
-
-		% ---- 5. 左下：一阶系统阶跃响应曲线 + 坐标轴 ----
-		\begin{scope}[shift={([xshift=0.9cm,yshift=0.9cm]current page.south west)}]
-			\draw[white, opacity=0.55, line width=0.8pt, -{Stealth}] (0,0) -- (0,4.2);
-			\draw[white, opacity=0.55, line width=0.8pt, -{Stealth}] (0,0) -- (5.4,0);
-			\draw[cyan!65!white, dashed, opacity=0.30, line width=0.7pt] (0,2.2) -- (5.0,2.2);
-			\draw[cyan!65!white, line width=0.95pt, opacity=0.85, domain=0:4.8, samples=120, smooth]
-				plot (\x, {2.2*(1-exp(-0.85*\x))});
-			\foreach \i in {0.8,1.6,...,4.0} {
+		% ---- 4. 右上：材料拉伸应力—应变曲线（σ-ε 曲线）----
+		\begin{scope}[shift={([xshift=-6.2cm,yshift=-6.2cm]current page.north east)}]
+			% 坐标轴
+			\draw[white, opacity=0.55, line width=0.8pt, -{Stealth}] (0,0) -- (0,5.4);
+			\draw[white, opacity=0.55, line width=0.8pt, -{Stealth}] (0,0) -- (6.2,0);
+			% 曲线：线弹性段 + 屈服平台 + 强化段
+			\draw[white, line width=1.1pt, opacity=0.9, domain=0:2.0, samples=60, smooth]
+				plot (\x, {2.1*\x});
+			\draw[white, line width=1.1pt, opacity=0.9] (2.0,4.2) -- (2.7,4.2);
+			\draw[white, line width=1.1pt, opacity=0.9, domain=2.7:5.4, samples=80, smooth]
+				plot (\x, {4.2 + 1.0*(1-exp(-0.8*(\x-2.7)))});
+			% 屈服点辅助虚线
+			\draw[white, dashed, opacity=0.4, line width=0.7pt] (2.0,0) -- (2.0,4.2);
+			\draw[white, dashed, opacity=0.4, line width=0.7pt] (0,4.2) -- (2.0,4.2);
+			% 横轴刻度
+			\foreach \i in {1.0,2.0,3.0,4.0,5.0,6.0} {
 				\draw[white, opacity=0.3, line width=0.5pt] (\i,-0.08) -- (\i,0.08);
-				\draw[white, opacity=0.3, line width=0.5pt] (-0.08,\i) -- (0.08,\i);
 			}
-			\node[anchor=north, text=white, opacity=0.7, font=\footnotesize\itshape] at (5.4,-0.28) {$t$};
-			\node[anchor=south east, text=white, opacity=0.7, font=\footnotesize\itshape] at (-0.18,4.2) {$y(t)$};
-			\node[anchor=north east, text=white, opacity=0.7, font=\footnotesize\itshape] at (-0.1,-0.15) {$O$};
+			\node[anchor=north, text=white, opacity=0.7, font=\small\itshape] at (6.2,-0.3) {$\varepsilon$};
+			\node[anchor=south east, text=white, opacity=0.7, font=\small\itshape] at (-0.15,5.4) {$\sigma$};
+			\node[anchor=south east, text=white, opacity=0.8, font=\small\itshape] at (6.0,-3.6) {应力—应变曲线};
 		\end{scope}
 
-		% ---- 6. 金色细边框 ----
+		% ---- 5. 左下：简支梁弯曲变形（集中力 + 挠曲线）----
+		\begin{scope}[shift={([xshift=1.0cm,yshift=1.1cm]current page.south west)}, scale=1.25]
+			% 梁
+			\draw[white, opacity=0.95, line width=1.6pt] (0.5,0.9) -- (5.5,0.9);
+			% 左端固定铰支座（V 形 + 地面剖面线）
+			\draw[white, line width=1.2pt, opacity=0.9] (0.5,0.9) -- (0.78,0.62) -- (1.06,0.9);
+			\draw[white, line width=1.4pt, opacity=0.85] (0.2,0.62) -- (1.36,0.62);
+			\foreach \x in {0.2,0.45,...,1.2} {
+				\draw[white, opacity=0.4, line width=0.7pt] (\x,0.62) -- (\x-0.15,0.34);
+			}
+			% 右端滚动支座（三角形滚轮）
+			\draw[white, line width=1.2pt, opacity=0.9] (5.5,0.9) -- (5.78,0.62) -- (5.22,0.62) -- cycle;
+			\draw[white, line width=1.4pt, opacity=0.85] (4.9,0.62) -- (6.1,0.62);
+			% 集中力
+			\draw[white, line width=1.4pt, opacity=0.9, -{Stealth}] (3.0,3.3) -- (3.0,1.25);
+			\node[anchor=south, text=white, opacity=0.8, font=\small\itshape] at (3.0,3.4) {$F$};
+			% 挠曲线（虚线）
+			\draw[white, dashed, opacity=0.7, line width=1.0pt, domain=0.5:5.5, samples=80, smooth]
+				plot (\x, {0.9 - 0.55*sin(deg(pi*(\x-0.5)/5))});
+			% 标签
+			\node[anchor=north west, text=white, opacity=0.8, font=\small\itshape] at (0,3.9) {简支梁弯曲变形};
+		\end{scope}
+
+		% ---- 6. 银色细边框 ----
 		\draw[gold, line width=0.7pt, opacity=0.55]
 			([shift={(0.85,0.85)}]current page.south west) rectangle
 			([shift={(-0.85,-0.85)}]current page.north east);
 
-		% ---- 7. 顶部眉题（英文小字 + 金色短线）----
+		% ---- 7. 顶部眉题（英文小字 + 银色短线）----
 		\coordinate (T) at ([yshift=-3.5cm]current page.north);
 		\draw[gold, line width=1.0pt] (T) ++(-3.4cm,0) -- ++(1.0cm,0);
 		\draw[gold, line width=1.0pt] (T) ++(2.4cm,0) -- ++(1.0cm,0);
@@ -61,7 +80,7 @@
 			{\fontsize{40}{50}\sffamily\bfseries \notename}
 		};
 
-		% ---- 9. 金色菱形 + 双细线 ----
+		% ---- 9. 银色菱形 + 双细线 ----
 		\coordinate (C) at ([yshift=-11.4cm]current page.north);
 		\draw[gold, line width=1.1pt] (C) ++(-2.2cm,0) -- ++(1.55cm,0);
 		\draw[gold, line width=1.1pt] (C) ++(0.65cm,0) -- ++(1.55cm,0);
