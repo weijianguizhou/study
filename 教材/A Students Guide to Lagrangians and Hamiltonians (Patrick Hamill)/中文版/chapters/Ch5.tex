@@ -12,167 +12,167 @@
 \section*{5.2 正则变换}
 
 我们已经看到，把笛卡尔坐标变换到广义坐标的变换方程具有如下形式
-\[
+$$
 \xi = \xi(q_1, q_2, \dots, q_n; t), \qquad i = 1, \dots, n.
-\]
+$$
 由于这样的变换把一个点的坐标从一组坐标变换到另一组坐标，它被称为“点变换”。（参见 3.8 节。）点变换可以被认为是在构形空间中进行的。换句话说，点变换把我们从一个构形空间坐标系（$\xi$）带到一组新的构形空间坐标（$q_i$）。一个点变换产生一组新的构形空间坐标轴。
 
 我们也研究了勒让德变换，它使我们能够从拉格朗日量（$q, \dot{q}, t$ 的函数）变换到哈密顿量（$q, p, t$ 的函数）。
 
 现在我们考虑一类特别重要的坐标变换，称为正则变换。这些是相空间变换，它把我们从一组坐标 $(p_i, q_i)$ 带到一组新的坐标 $(P_i, Q_i)$，其方式使得哈密顿方程的形式保持不变。回忆一下，坐标 $(p_i, q_i)$ 描述一个具有哈密顿量 $H(p_i, q_i, t)$ 的系统，并且满足
-\[
-\dot{q}_i = \frac{\partial H}{\partial p_i}, \tag{5.1}
-\]
+$$
+\dot{q}_i = \frac{\partial H}{\partial p_i}, \eqno\hbox{(5.1)}
+$$
 和
-\[
-\dot{p}_i = -\frac{\partial H}{\partial q_i}. \tag{5.2}
-\]
+$$
+\dot{p}_i = -\frac{\partial H}{\partial q_i}. \eqno\hbox{(5.2)}
+$$
 “新的”坐标 $P_i$ 和 $Q_i$ 也可以用来描述系统的哈密顿量。用 $P$ 和 $Q$ 表示的哈密顿量一般将具有与用 $p$ 和 $q$ 表示时不同的函数形式。因此，我们把它记为 $K(P_i, Q_i, t)$。正则变换是这样一种变换，它把我们从 $p_i, q_i$ 带到一组坐标 $P_i$ 和 $Q_i$，使得
-\[
-\dot{Q}_i = \frac{\partial K}{\partial P_i}, \tag{5.3}
-\]
+$$
+\dot{Q}_i = \frac{\partial K}{\partial P_i}, \eqno\hbox{(5.3)}
+$$
 和
-\[
-\dot{P}_i = -\frac{\partial K}{\partial Q_i}. \tag{5.4}
-\]
+$$
+\dot{P}_i = -\frac{\partial K}{\partial Q_i}. \eqno\hbox{(5.4)}
+$$
 注意，用 $p_i, q_i$ 表示的哈密顿方程（式 (5.1) 和 (5.2)）与用 $P_i, Q_i$ 表示的哈密顿方程（式 (5.3) 和 (5.4)）具有完全相同的形式。
 
 产生正则变换的技术基于推导哈密顿方程时所使用的方法。回忆一下，哈密顿方程是从变分原理导出的，具体地说，是从修正的哈密顿原理（式 (4.20)）导出的，即
-\[
-\delta \int_{t_1}^{t_2} \bigl( p_i \dot{q}_i - H(q_i, p_i, t) \bigr)\, dt = 0. \tag{5.5}
-\]
+$$
+\delta \int_{t_1}^{t_2} \bigl( p_i \dot{q}_i - H(q_i, p_i, t) \bigr)\, dt = 0. \eqno\hbox{(5.5)}
+$$
 如果用新坐标表示，我们令
-\[
-\delta \int_{t_1}^{t_2} \bigl( P_i \dot{Q}_i - K(Q_i, P_i, t) \bigr)\, dt = 0, \tag{5.6}
-\]
+$$
+\delta \int_{t_1}^{t_2} \bigl( P_i \dot{Q}_i - K(Q_i, P_i, t) \bigr)\, dt = 0, \eqno\hbox{(5.6)}
+$$
 则哈密顿方程当然会被满足。然而，这是不必要的限制。例如，如果 $F$ 是坐标和时间的任意函数，那么在上一个表达式的被积函数中加上一个形如 $dF/dt$ 的项不会改变任何东西。这一点很容易理解，如下所述：考虑表达式
-\[
-\delta \int_{t_1}^{t_2} \left( P_i \dot{Q}_i - K(Q_i, P_i, t) + \frac{dF}{dt} \right)\, dt. \tag{5.7}
-\]
+$$
+\delta \int_{t_1}^{t_2} \left( P_i \dot{Q}_i - K(Q_i, P_i, t) + \frac{dF}{dt} \right)\, dt. \eqno\hbox{(5.7)}
+$$
 由于
-\[
+$$
 \delta \int_{t_1}^{t_2} \frac{dF}{dt}\, dt = \delta \bigl( F(t_2) - F(t_1) \bigr),
-\]
+$$
 且由于要求端点的变分为零，我们看到我们只是在修正的哈密顿原理中加上了一个等于零的项。因此，什么都不会改变，哈密顿原理仍然成立，但新的形式（式 (5.7)）使我们能够生成一个新的哈密顿量 $K(Q_i, P_i, t)$，以及一组到新坐标 $P_i$ 和 $Q_i$ 的变换方程。
 
 我们知道由式 (5.5) 表示的变分是正确的。如果两个被积函数相等，即如果
-\[
-p \dot{q} - H = P \dot{Q} - K + \frac{dF}{dt}, \tag{5.8}
-\]
+$$
+p \dot{q} - H = P \dot{Q} - K + \frac{dF}{dt}, \eqno\hbox{(5.8)}
+$$
 则式 (5.7) 表示的变分当然成立。（为简洁起见，我们省去了求和号和下标。）
 
 为了看出式 (5.8) 如何导致从 $p, q$ 到 $P, Q$ 的变换方程，方便的做法是假设 $F$ 依赖于新旧坐标的某种特定组合。因此，让我们暂时假设
-\[
-F = F_1(q, Q, t). \tag{5.9}
-\]
+$$
+F = F_1(q, Q, t). \eqno\hbox{(5.9)}
+$$
 （这实际上意味着 $F = F_1(q_i, Q_i, t)$，$i = 1, \dots, n$。）注意，$F$ 的函数形式仍然是任意的。我们所做的一切只是假设 $F$ 是新坐标 $Q_i$、旧坐标 $q_i$ 和时间的某个函数。
 
 于是式 (5.8) 可以写成
-\[
+$$
 p \dot{q} - H = P \dot{Q} - K + \frac{\partial F_1}{\partial q}\dot{q} + \frac{\partial F_1}{\partial Q}\dot{Q} + \frac{\partial F_1}{\partial t}.
-\]
+$$
 重新整理，
-\[
+$$
 \left( p - \frac{\partial F_1}{\partial q} \right) \dot{q} - \left( P + \frac{\partial F_1}{\partial Q} \right) \dot{Q} = H - K + \frac{\partial F_1}{\partial t}.
-\]
+$$
 如果满足下列条件，这个方程将成立：
-\[
-p = \frac{\partial F_1}{\partial q}, \tag{5.10}
-\]
-\[
-P = -\frac{\partial F_1}{\partial Q}, \tag{5.11}
-\]
+$$
+p = \frac{\partial F_1}{\partial q}, \eqno\hbox{(5.10)}
+$$
+$$
+P = -\frac{\partial F_1}{\partial Q}, \eqno\hbox{(5.11)}
+$$
 和
-\[
-K = H + \frac{\partial F_1}{\partial t}. \tag{5.12}
-\]
+$$
+K = H + \frac{\partial F_1}{\partial t}. \eqno\hbox{(5.12)}
+$$
 在这个阶段，看起来我们似乎只是在陈述显而易见的事实，但实际上我们已经解决了所要解决的问题：我们现在有了一个新哈密顿量的方程（式 (5.12)）。此外，由于 $F_1$ 是 $q$ 和 $Q$ 的函数，$\partial F_1/\partial q$ 也将是 $q$ 和 $Q$ 的函数。所以式 (5.10) 给了我们一个如下形式的表达式
-\[
+$$
 p = p(q, Q, t).
-\]
+$$
 这可以反演，给出
-\[
+$$
 Q = Q(p, q, t).
-\]
+$$
 式 (5.11) 给出
-\[
+$$
 P = P(q, Q, t),
-\]
+$$
 但既然我们知道 $Q = Q(p, q, t)$，我们可以得到
-\[
+$$
 P = P(p, q, t).
-\]
+$$
 我们所用的过程保证式 (5.1) 和 (5.2) 被满足，所以该变换是正则的。
 
 由于这个过程有点抽象，让我们对生成函数 $F_1(q, Q, t)$ 的一个特定选择进行这样的变换。为简单起见，我们考虑一个仅由两个坐标描述的系统，即 $p$ 和 $q$。假设
-\[
+$$
 F_1(q, Q, t) = qQ.
-\]
+$$
 由式 (5.12) 我们看到，新哈密顿量 $K$ 等于旧哈密顿量 $H$。由式 (5.11) 我们看到，新坐标 $P$ 为
-\[
+$$
 P = -\frac{\partial F_1}{\partial Q} = -q.
-\]
+$$
 最后，式 (5.10) 给出
-\[
+$$
 p = \frac{\partial F_1}{\partial q} = Q.
-\]
+$$
 因此，我们看到这个特定的正则变换导致一组新的坐标
-\[
+$$
 P = -q, \qquad Q = p.
-\]
+$$
 换句话说，这个变换把动量变成坐标，把坐标变成动量！这是哈密顿表述模糊了动量与坐标之间区别的一个很好的例子，这就是为什么我把它们都简单地称为“坐标”。
 
 我们进行的分析假设生成函数 $F$ 是 $q_i$ 和 $Q_i$ 的函数，我们把它称为 $F_1$。正如你可能预料的那样，有用的生成函数是同时涉及旧变量和新变量的混合表达式。需要考虑四类生成函数，它们是：
-\[
-F = F_1(q_i, Q_i, t), \tag{5.13}
-\]
-\[
+$$
+F = F_1(q_i, Q_i, t), \eqno\hbox{(5.13)}
+$$
+$$
 F = F_2(q_i, P_i, t),
-\]
-\[
+$$
+$$
 F = F_3(p_i, Q_i, t),
-\]
-\[
+$$
+$$
 F = F_4(p_i, P_i, t).
-\]
+$$
 对于后三类生成函数，与式 (5.10)、(5.11) 和 (5.12) 类似的关系是：
-\[
-p_i = \frac{\partial F_2}{\partial q_i}, \tag{5.14}
-\]
-\[
+$$
+p_i = \frac{\partial F_2}{\partial q_i}, \eqno\hbox{(5.14)}
+$$
+$$
 Q_i = \frac{\partial F_2}{\partial P_i},
-\]
-\[
+$$
+$$
 K = H + \frac{\partial F_2}{\partial t},
-\]
+$$
 和
-\[
-q_i = -\frac{\partial F_3}{\partial p_i}, \tag{5.15}
-\]
-\[
+$$
+q_i = -\frac{\partial F_3}{\partial p_i}, \eqno\hbox{(5.15)}
+$$
+$$
 P_i = -\frac{\partial F_3}{\partial Q_i},
-\]
-\[
+$$
+$$
 K = H + \frac{\partial F_3}{\partial t},
-\]
+$$
 和
-\[
-q_i = -\frac{\partial F_4}{\partial p_i}, \tag{5.16}
-\]
-\[
+$$
+q_i = -\frac{\partial F_4}{\partial p_i}, \eqno\hbox{(5.16)}
+$$
+$$
 Q_i = \frac{\partial F_4}{\partial P_i},
-\]
-\[
+$$
+$$
 K = H + \frac{\partial F_4}{\partial t}.
-\]
+$$
 第二类生成函数的一个有趣例子是
-\[
-F_2 = \sum_i q_i P_i. \tag{5.17}
-\]
+$$
+F_2 = \sum_i q_i P_i. \eqno\hbox{(5.17)}
+$$
 在这种情况下，正如你很容易证明的，新坐标与旧坐标的关系为
-\[
-Q_i = q_i, \qquad P_i = p_i. \tag{5.18}
-\]
+$$
+Q_i = q_i, \qquad P_i = p_i. \eqno\hbox{(5.18)}
+$$
 因此，这是恒等变换。
 
 \begin{exercise}
@@ -191,56 +191,56 @@ Q_i = q_i, \qquad P_i = p_i. \tag{5.18}
 用正则变换求解谐振子问题。
 
 解答：谐振子的哈密顿量为
-\[
+$$
 H = \frac{1}{2m} p^2 + \frac{k}{2} q^2.
-\]
+$$
 利用谐振子的角频率为 $\omega = \sqrt{k/m}$ 这一事实，我们可以把哈密顿量写成更方便的形式
-\[
-H = \frac{1}{2m}\left( p^2 + m^2\omega^2 q^2 \right). \tag{5.19}
-\]
+$$
+H = \frac{1}{2m}\left( p^2 + m^2\omega^2 q^2 \right). \eqno\hbox{(5.19)}
+$$
 我们可以通过正则变换到一个新的哈密顿量 $K(P, Q)$ 来求解此问题，在这个新哈密顿量中坐标 $Q$ 是可遗的。合适的生成函数是
-\[
+$$
 F = F_1(q, Q) = \frac{m\omega}{2} q^2 \cot Q.
-\]
+$$
 （我还没有说明如何得到合适的生成函数，所以你只能先相信这一点。）利用式 (5.10)、(5.11) 和 (5.12)，我们得到
-\[
+$$
 p = m\omega q \cot Q, \qquad
 P = \frac{m\omega q^2}{2\sin^2 Q}, \qquad
 K(P, Q) = H(p, q).
-\]
+$$
 一点代数运算可得
-\[
+$$
 q^2 = \frac{2P}{m\omega}\sin^2 Q,
-\]
+$$
 和
-\[
+$$
 p^2 = 2m\omega P \cos^2 Q.
-\]
+$$
 最后这两个方程用 $P$ 和 $Q$ 表示 $p$ 和 $q$。方程 $K = H$ 意味着新哈密顿量与旧哈密顿量具有完全相同的形式，只是 $p$ 和 $q$ 由上述变换方程用 $P$ 和 $Q$ 表示。因此，
-\[
+$$
 K(P, Q) = \frac{2m\omega P\cos^2 Q}{2m} + \frac{m^2\omega^2}{2m}\cdot\frac{2P\sin^2 Q}{m\omega}
 = \omega P(\cos^2 Q + \sin^2 Q) = \omega P.
-\]
+$$
 这样我们就得到了一个对 $Q$ 是可遗的哈密顿量，正如我们预期的那样。但如果哈密顿量对 $Q$ 是可遗的，那么 $P$ 就是常数。在这种情况下，哈密顿量就是总能量 $E$，所以我们可以写
-\[
+$$
 P = \frac{E}{\omega}.
-\]
+$$
 关于 $Q$ 的哈密顿方程是
-\[
+$$
 \dot{Q} = \frac{\partial K}{\partial P} = \omega.
-\]
+$$
 这可以立即积分，给出
-\[
+$$
 Q = \omega t + \beta,
-\]
+$$
 其中 $\beta$ 是积分常数。变换回我们原来的坐标，
-\[
+$$
 q = \sqrt{\frac{2P}{m\omega}}\sin Q,
-\]
+$$
 所以
-\[
+$$
 q = \sqrt{\frac{2E}{m\omega^2}}\sin(\omega t + \beta),
-\]
+$$
 问题得到解决。
 
 这个用于求解简单问题的方法被比作用大锤砸花生。\footnote{Herbert Goldstein, Classical Mechanics, Addison-Wesley Pub. Co., Reading MA, USA, 1950, 第 247 页。}然而，它强调了在力学中哈密顿量是一种理论工具而非实用工具。（当然，在量子力学中情况并非如此，在那里使用哈密顿量是求解许多问题的唯一合理途径。）
@@ -255,35 +255,35 @@ q = \sqrt{\frac{2E}{m\omega^2}}\sin(\omega t + \beta),
 我们现在引入泊松括号。所用的记号起初可能有点令人困惑，但你可能很快就会体会到泊松括号在哈密顿动力学发展中的用处。它们还为把经典动力学变换为量子力学铺平了道路。在实用层面上，泊松括号给了我们一种简便的方法来判断从一个变量组到另一个变量组的变换是否为正则变换。
 
 设 $p$ 和 $q$ 是正则变量，设 $u$ 和 $v$ 是 $p$ 和 $q$ 的函数。$u$ 和 $v$ 的泊松括号定义为
-\[
-[u, v]_{p,q} \equiv \frac{\partial u}{\partial q}\frac{\partial v}{\partial p} - \frac{\partial u}{\partial p}\frac{\partial v}{\partial q}. \tag{5.20}
-\]
+$$
+[u, v]_{p,q} \equiv \frac{\partial u}{\partial q}\frac{\partial v}{\partial p} - \frac{\partial u}{\partial p}\frac{\partial v}{\partial q}. \eqno\hbox{(5.20)}
+$$
 推广到具有 $n$ 个自由度的系统，我们有
-\[
+$$
 [u, v] = \sum_{i=1}^{n}\left( \frac{\partial u}{\partial q_i}\frac{\partial v}{\partial p_i} - \frac{\partial u}{\partial p_i}\frac{\partial v}{\partial q_i} \right).
-\]
+$$
 利用爱因斯坦求和约定，这写作
-\[
-[u, v] = \frac{\partial u}{\partial q_i}\frac{\partial v}{\partial p_i} - \frac{\partial u}{\partial p_i}\frac{\partial v}{\partial q_i}. \tag{5.21}
-\]
+$$
+[u, v] = \frac{\partial u}{\partial q_i}\frac{\partial v}{\partial p_i} - \frac{\partial u}{\partial p_i}\frac{\partial v}{\partial q_i}. \eqno\hbox{(5.21)}
+$$
 由泊松括号的定义，显然有
-\[
-[q_i, q_j] = [p_i, p_j] = 0, \tag{5.22}
-\]
+$$
+[q_i, q_j] = [p_i, p_j] = 0, \eqno\hbox{(5.22)}
+$$
 以及
-\[
-[q_i, p_j] = -[p_i, q_j] = \delta_{ij}. \tag{5.23}
-\]
+$$
+[q_i, p_j] = -[p_i, q_j] = \delta_{ij}. \eqno\hbox{(5.23)}
+$$
 有趣的是，涉及泊松括号的关系式可以转化为量子力学关系式，只需按照简单的法则把泊松括号替换为量子力学对易子，即
-\[
-[u, v] \to \frac{1}{i\hbar}(\hat{u}\hat{v} - \hat{v}\hat{u}), \tag{5.24}
-\]
+$$
+[u, v] \to \frac{1}{i\hbar}(\hat{u}\hat{v} - \hat{v}\hat{u}), \eqno\hbox{(5.24)}
+$$
 其中 $u, v$ 是经典函数，$\hat{u}, \hat{v}$ 是相应的量子力学算符。
 
 泊松括号在正则变量的变换下不变。也就是说，
-\[
+$$
 [u, v]_{p,q} = [u, v]_{P,Q}.
-\]
+$$
 换句话说，泊松括号是正则不变量。这个关系给了我们一种简便的方法来判断一组变量是否为正则的。
 
 \section*{5.4 用泊松括号表示的运动方程}
@@ -291,22 +291,22 @@ q = \sqrt{\frac{2E}{m\omega^2}}\sin(\omega t + \beta),
 \subsection*{操纵泊松括号的规则}
 
 有少数几条涉及泊松括号的简单规则（大部分）可以立即通过写出泊松括号的定义来证明。这些规则实质上定义了泊松括号的算术。它们是：
-\[
-[u, u] = 0 \tag{5.25}
-\]
-\[
-[u, v] = -[v, u] \tag{5.26}
-\]
-\[
-[au + bv, w] = a[u, w] + b[v, w] \tag{5.27}
-\]
-\[
-[uv, w] = [u, w]v + u[v, w]. \tag{5.28}
-\]
+$$
+[u, u] = 0 \eqno\hbox{(5.25)}
+$$
+$$
+[u, v] = -[v, u] \eqno\hbox{(5.26)}
+$$
+$$
+[au + bv, w] = a[u, w] + b[v, w] \eqno\hbox{(5.27)}
+$$
+$$
+[uv, w] = [u, w]v + u[v, w]. \eqno\hbox{(5.28)}
+$$
 一个有用但较难证明的关系称为雅可比恒等式。它是：
-\[
-[u, [v, w]] + [v, [w, u]] + [w, [u, v]] = 0. \tag{5.29}
-\]
+$$
+[u, [v, w]] + [v, [w, u]] + [w, [u, v]] = 0. \eqno\hbox{(5.29)}
+$$
 
 \begin{exercise}
 证明式 (5.22) 和 (5.23)。
@@ -325,151 +325,151 @@ q = \sqrt{\frac{2E}{m\omega^2}}\sin(\omega t + \beta),
 回忆一下，哈密顿方程是一组关于 $\dot{q}_i$ 和 $\dot{p}_i$ 的 $2n$ 个一阶方程，也就是关于变量一阶导数的方程。（这不同于拉格朗日方程或牛顿定律，后者是关于 $\ddot{q}_i$ 的 $n$ 个二阶方程。）
 
 如果 $u$ 是 $q_i, p_i, t$ 的函数，我们可以写
-\[
+$$
 \frac{du}{dt} = \frac{\partial u}{\partial q_i}\dot{q}_i + \frac{\partial u}{\partial p_i}\dot{p}_i + \frac{\partial u}{\partial t}.
-\]
+$$
 但是 $\dot{q}_i$ 和 $\dot{p}_i$ 可以用哈密顿方程表示，所以我们得到
-\[
+$$
 \frac{du}{dt} = \frac{\partial u}{\partial q_i}\frac{\partial H}{\partial p_i} - \frac{\partial u}{\partial p_i}\frac{\partial H}{\partial q_i} + \frac{\partial u}{\partial t}
-= [u, H] + \frac{\partial u}{\partial t}. \tag{5.30}
-\]
+= [u, H] + \frac{\partial u}{\partial t}. \eqno\hbox{(5.30)}
+$$
 如果 $u = $ 常数，则 $du/dt = 0$ 且 $[u, H] = -\partial u/\partial t$。因此，如果 $u$ 不显式依赖于 $t$，那么 $[u, H] = 0$。\footnote{用量子力学术语来说，我们会说 $\hat{u}$ 与 $\hat{H}$ 对易。参见式 (5.24)。你可能还记得在量子力学课程中学过，守恒量与哈密顿量对易。}
 
 现在假设 $u = q$。我们有
-\[
-\dot{q} = [q, H]. \tag{5.31}
-\]
+$$
+\dot{q} = [q, H]. \eqno\hbox{(5.31)}
+$$
 类似地，
-\[
-\dot{p} = [p, H]. \tag{5.32}
-\]
+$$
+\dot{p} = [p, H]. \eqno\hbox{(5.32)}
+$$
 这样我们就把哈密顿运动方程用泊松括号写出来了。此外，如果我们令 $u = H$，我们有
-\[
+$$
 \frac{dH}{dt} = [H, H] + \frac{\partial H}{\partial t},
-\]
+$$
 或
-\[
-\frac{dH}{dt} = \frac{\partial H}{\partial t}, \tag{5.33}
-\]
+$$
+\frac{dH}{dt} = \frac{\partial H}{\partial t}, \eqno\hbox{(5.33)}
+$$
 正如我们已经看到的（式 (4.19)）。
 
 用辛记号表示，其中列矩阵 $\eta$ 的分量为 $q_1, \dots, p_n$，我们可以把式 (5.31) 和 (5.32) 合并成一个，即
-\[
-\dot{\eta} = [\eta, H], \tag{5.34}
-\]
+$$
+\dot{\eta} = [\eta, H], \eqno\hbox{(5.34)}
+$$
 这是一个方案，用于在已知 $q_1, \dots, p_n$ 在时刻 $t$ 的值时，生成它们在稍后时刻的值，因为
-\[
+$$
 \eta(t + dt) = \eta(t) + \dot{\eta}\, dt.
-\]
+$$
 
 \subsection*{5.4.1 无穷小正则变换}
 
 在无穷小正则变换中，新坐标与旧坐标只相差一个无穷小量。因此，从 $p_i, q_i$ 到 $P_i, Q_i$ 的变换方程将具有如下形式
-\[
+$$
 Q_i = q_i + \delta q_i, \qquad P_i = p_i + \delta p_i.
-\]
+$$
 （关于记号的一个说明。这里的 $\delta q_i$ 和 $\delta p_i$ 是 $q_i$ 和 $p_i$ 的无穷小变化，不是虚位移。）
 
 对于恒等变换，我们写
-\[
+$$
 p_i = \frac{\partial F_2}{\partial q_i}, \qquad Q_i = \frac{\partial F_2}{\partial P_i},
-\]
+$$
 其中 $F_2 = \sum_i q_i P_i$。（参见式 (5.14)。）因此，与恒等变换只相差无穷小量的无穷小正则变换，其“生成函数”为
-\[
+$$
 F_2(q, P, t) = \sum_i q_i P_i + \epsilon G(q, P, t),
-\]
+$$
 其中 $\epsilon$ 是无穷小量，$G$ 是任意函数。然后，根据 $F_2$ 变换的规则（式 (5.14)），我们看到
-\[
+$$
 p_j = \frac{\partial F_2}{\partial q_j} = P_j + \epsilon\frac{\partial G}{\partial q_j},
-\]
-\[
+$$
+$$
 Q_j = \frac{\partial F_2}{\partial P_j} = q_j + \epsilon\frac{\partial G}{\partial P_j}.
-\]
+$$
 现在，
-\[
+$$
 \delta q_j = Q_j - q_j = \epsilon\frac{\partial G}{\partial P_j},
-\]
+$$
 到 $\epsilon$ 的一阶，我们可以写
-\[
-\delta q_j = \epsilon\frac{\partial G}{\partial p_j}. \tag{5.35}
-\]
+$$
+\delta q_j = \epsilon\frac{\partial G}{\partial p_j}. \eqno\hbox{(5.35)}
+$$
 类似地，$\delta p_j = P_j - p_j$，所以
-\[
-\delta p_j = -\epsilon\frac{\partial G}{\partial q_j}. \tag{5.36}
-\]
+$$
+\delta p_j = -\epsilon\frac{\partial G}{\partial q_j}. \eqno\hbox{(5.36)}
+$$
 用辛记号，式 (5.35) 和 (5.36) 表示为
-\[
-\delta \eta = \epsilon[\eta, G]. \tag{5.37}
-\]
+$$
+\delta \eta = \epsilon[\eta, G]. \eqno\hbox{(5.37)}
+$$
 由于 $F_2$ 保证生成一个正则变换，我们认识到 (5.37) 确实是一个无穷小正则变换。
 
 一般来说，
-\[
-\zeta = \eta + \delta\eta, \tag{5.38}
-\]
+$$
+\zeta = \eta + \delta\eta, \eqno\hbox{(5.38)}
+$$
 是从 $q_1, \dots, p_n$ 到相空间中邻近点 $q_1 + \delta q_1, \dots, p_n + \delta p_n$ 的变换。但如果量 $G$ 取为哈密顿量 $H$，那么该变换就是从 $q_1(t), \dots, p_n(t)$ 到 $q_1(t + dt), \dots, p_n(t + dt)$ 的时间位移。（这种时间上的正则变换有时被称为“切触”变换。）因此，哈密顿量是系统在时间中运动的生成元；它生成稍后时刻的正则变量。
 
 我们现在考虑一个函数 $u = u(q, p)$ 在正则变换下的变化。注意，有两种方式来解释一个正则变换。一方面，它把一个系统的描述从一组旧的正则变量 $q, p$ 改变为一组新的正则变量 $Q, P$。在这样的变换下，函数 $u$ 可能具有不同的形式，但它仍然具有相同的值。因此，如果 $q_1(t), \dots, p_n(t)$ 记为 $A$，而 $Q_1(t), \dots, P_n(t)$ 记为 $A'$，则变换后的函数 $u(A')$ 与原来的函数 $u(A)$ 具有相同的值：
-\[
+$$
 u(A') = u(A).
-\]
+$$
 （转动体的总角动量的值与用来计算它所用的坐标系无关。）当然，$u(A')$ 一般比 $u(A)$ 具有不同的数学形式。（在笛卡尔坐标中，作圆周运动的质量点的角动量是 $m(x\dot{y} - y\dot{x})$，而在极坐标中则是 $mr^2\dot{\theta}$。）
 
 另一方面，如果我们考虑一个生成时间平移的无穷小切触变换，其解释就完全不同了。现在这个变换把我们从 $A$（表示 $q_1(t), \dots, p_n(t)$ 的值）带到 $B$（表示 $q_1(t + dt), \dots, p_n(t + dt)$），在同一个相空间中（具有同一组相空间坐标轴），但在较晚的时刻。由于我们在同一个相空间中并使用同一组坐标，$u$ 的形式被保持，但它的值会改变。让我们用
-\[
+$$
 \delta u = u(B) - u(A)
-\]
+$$
 来表示函数 $u$ 的这种变化。但由于 $u = u(q, p)$，我们写
-\[
+$$
 \delta u = \frac{\partial u}{\partial q_i}\delta q_i + \frac{\partial u}{\partial p_i}\delta p_i
 = \frac{\partial u}{\partial q_i}\cdot\epsilon\cdot\frac{\partial G}{\partial p_i} + \frac{\partial u}{\partial p_i}\left(-\epsilon\frac{\partial G}{\partial q_i}\right)
 = \epsilon\left( \frac{\partial u}{\partial q_i}\frac{\partial G}{\partial p_i} - \frac{\partial u}{\partial p_i}\frac{\partial G}{\partial q_i} \right),
-\]
+$$
 或
-\[
-\delta u = \epsilon[u, G]. \tag{5.39}
-\]
+$$
+\delta u = \epsilon[u, G]. \eqno\hbox{(5.39)}
+$$
 现在让我们考虑哈密顿量在切触变换下的变化。哈密顿量与普通函数 $u$ 的区别如下。在正则变换下 $u(A) \to u(A')$ 时，$u$ 的值保持不变，但对于哈密顿量，从 $A$ 到 $A'$ 的正则变换可能产生一个具有不同值的函数。事实上，变换后的哈密顿量通常将是一个完全不同的函数。这是因为哈密顿量不是一个具有特定值的函数，而是一个定义正则运动方程的函数。因此，我们必须写
-\[
+$$
 H(A) \to K(A').
-\]
+$$
 我们知道，
-\[
+$$
 K = H + \frac{\partial F}{\partial t}.
-\]
+$$
 但对于无穷小正则变换，我们希望 $K$ 与 $H$ 只相差一个无穷小量，所以 $F$ 近似等于恒等变换。和前面一样，我们写
-\[
+$$
 F_2 = \sum_i q_i P_i + \epsilon G(q, P, t).
-\]
+$$
 那么，
-\[
+$$
 K(A') = H(A) + \frac{\partial}{\partial t}\left( \sum_i q_i P_i + \epsilon G(q, P, t) \right)
 = H(A) + \epsilon\frac{\partial G}{\partial t},
-\]
+$$
 且
-\[
+$$
 \delta H = H(B) - K(A') = H(B) - H(A) - \epsilon\frac{\partial G}{\partial t}.
-\]
+$$
 但是
-\[
+$$
 H(B) - H(A) = \epsilon[H, G],
-\]
+$$
 所以
-\[
+$$
 \delta H = \epsilon[H, G] - \epsilon\frac{\partial G}{\partial t}.
-\]
+$$
 现在由式 (5.30)，
-\[
+$$
 \frac{dG}{dt} = [G, H] + \frac{\partial G}{\partial t}.
-\]
+$$
 因此
-\[
+$$
 \epsilon\frac{\partial G}{\partial t} = \epsilon\frac{dG}{dt} - \epsilon[G, H],
-\]
+$$
 且
-\[
-\delta H = \epsilon[H, G] - \epsilon\frac{\partial G}{\partial t} + \epsilon[G, H] = -\epsilon\frac{\partial G}{\partial t}. \tag{5.40}
-\]
+$$
+\delta H = \epsilon[H, G] - \epsilon\frac{\partial G}{\partial t} + \epsilon[G, H] = -\epsilon\frac{\partial G}{\partial t}. \eqno\hbox{(5.40)}
+$$
 如果 $G$ 是运动常数，则 $dG/dt = 0$ 且 $\delta H = 0$。也就是说，如果生成函数是运动常数，则哈密顿量不变。这与对称性和运动常数之间的关系密切相关。回忆一下，在涉及可遗坐标的平移下，哈密顿量不变，共轭广义动量是常数。但如果哈密顿量不变，那么无穷小正则变换的生成元 $G$ 必然是运动常数（因为那样的话 $dG/dt = 0$）。也就是说，对称性（其中一个坐标的可遗性）蕴含着一个运动常数（$G$）。
 
 \subsection*{5.4.2 正则不变量}
@@ -477,74 +477,74 @@ H(B) - H(A) = \epsilon[H, G],
 到目前为止，我们已经考虑了两种正则不变量，即在变量从 $p, q$ 经受正则变换到 $P, Q$ 时不会改变的量。这类正则不变量中的第一组当然是哈密顿方程。第二个是泊松括号。任何用泊松括号表达的方程在变量的正则变换下都将是不变的。人们实际上可以发展出一套基于泊松括号的力学体系，其中所有方程对任何一组正则变量都是相同的。
 
 可以证明是正则不变量的第三个量是相空间中的体积元。换句话说，如果用变量 $q_i, p_i$ 表示的体积元是
-\[
+$$
 d\eta = dq_1\, dq_2 \cdots dq_n\, dp_1\, dp_2 \cdots dp_n,
-\]
+$$
 而用正则变量 $Q_i, P_i$ 表示的体积元是
-\[
+$$
 d\zeta = dQ_1\, dQ_2 \cdots dQ_n\, dP_1\, dP_2 \cdots dP_n,
-\]
+$$
 那么
-\[
-d\eta = d\zeta. \tag{5.41}
-\]
+$$
+d\eta = d\zeta. \eqno\hbox{(5.41)}
+$$
 让我们考虑这一论断的证明。证明基于这样的事实：从一个变量组 $(x_1, x_2, \dots, x_n)$ 变换到另一个变量组 $(q_1, q_2, \dots, q_m)$ 时，无穷小体积元的变换由下式给出
-\[
+$$
 dx_1\, dx_2 \cdots dx_n = D\, dq_1\, dq_2 \cdots dq_m,
-\]
+$$
 其中 $D$ 是由下式定义的雅可比行列式
-\[
+$$
 D = \frac{\partial(q_1, \dots, q_m)}{\partial(x_1, \dots, x_n)}
 = \begin{vmatrix}
 \frac{\partial q_1}{\partial x_1} & \frac{\partial q_1}{\partial x_2} & \cdots & \frac{\partial q_1}{\partial x_n} \\
 \vdots & \vdots & \ddots & \vdots \\
 \frac{\partial q_m}{\partial x_1} & \frac{\partial q_m}{\partial x_2} & \cdots & \frac{\partial q_m}{\partial x_n}
 \end{vmatrix}.
-\]
+$$
 用两组正则变量 $(q_1, \dots, p_n)$ 和 $(Q_1, \dots, P_n)$ 表示的相空间中某个区域的体积是
-\[
+$$
 \int\cdots\int dQ_1\, dQ_2 \cdots dP_n = \int\cdots\int D\, dq_1\, dq_2 \cdots dp_n.
-\]
+$$
 当且仅当 $D = 1$ 时体积不变。因此，证明体积在正则变换下的不变性就归结为证明雅可比行列式等于 1。
 
 注意
-\[
+$$
 D = \frac{\partial(Q_1, \dots, P_n)}{\partial(q_1, \dots, p_n)}
 = \begin{vmatrix}
 \frac{\partial Q_1}{\partial q_1} & \frac{\partial Q_1}{\partial q_2} & \cdots & \frac{\partial Q_1}{\partial p_n} \\
 \vdots & \vdots & \ddots & \vdots \\
 \frac{\partial P_n}{\partial q_1} & \frac{\partial P_n}{\partial q_2} & \cdots & \frac{\partial P_n}{\partial p_n}
 \end{vmatrix}.
-\]
+$$
 现在，雅可比行列式可以有点像分数那样处理，如果我们上下都除以 $\partial(q_1, \dots, q_n, P_1, \dots, P_n)$，$D$ 的值不变，于是
-\[
+$$
 D = \frac{\partial(Q_1, \dots, P_n)}{\partial(q_1, \dots, p_n)}
 = \frac{\frac{\partial(Q_1,\dots,P_n)}{\partial(q_1,\dots,q_n,P_1,\dots,P_n)}}{\frac{\partial(q_1,\dots,p_n)}{\partial(q_1,\dots,q_n,P_1,\dots,P_n)}}.
-\]
+$$
 雅可比行列式的另一个性质（由行列式的性质推出）是，如果分子和分母中出现相同的量，它们可以消去，得到一个更低阶的雅可比行列式。\footnote{例如，参见 K. F. Riley, M. P. Hobson and S. J. Bence, Mathematical Methods for Physics and Engineering, 2nd Edn, Cambridge University Press, 2002, 第 6.4.4 节。}因此我们可以写
-\[
+$$
 D = \frac{\partial(Q_1, \dots, Q_n)/\partial(q_1, \dots, q_n)}{\partial(p_1, \dots, p_n)/\partial(P_1, \dots, P_n)} = \frac{|n|}{|d|},
-\]
+$$
 其中我们消去了分子中的 $P$ 和分母中的 $q$。（量 $|n|$ 表示分子的行列式，$|d|$ 表示分母的行列式。）分子行列式的第 $ik$ 个元素是
-\[
+$$
 n_{ik} = \frac{\partial Q_i}{\partial q_k},
-\]
+$$
 分母的第 $ki$ 个元素是
-\[
+$$
 d_{ki} = \frac{\partial p_k}{\partial P_i}.
-\]
+$$
 如果正则变换的生成函数具有形式 $F = F_2(q_i, P_i, t)$，那么由式 (5.14)
-\[
+$$
 p_i = \frac{\partial F}{\partial q_i}, \qquad Q_i = \frac{\partial F}{\partial P_i},
-\]
+$$
 因而分子行列式的第 $ik$ 个元素是
-\[
+$$
 n_{ik} = \frac{\partial}{\partial q_k}\frac{\partial F}{\partial P_i} = \frac{\partial^2 F}{\partial q_k \partial P_i},
-\]
+$$
 分母行列式的第 $ki$ 个元素是
-\[
+$$
 d_{ki} = \frac{\partial}{\partial P_i}\frac{\partial F}{\partial q_k} = \frac{\partial^2 F}{\partial q_k \partial P_i},
-\]
+$$
 所以这两个行列式的唯一区别在于行和列互换。这不会影响行列式的值，所以我们得出结论 $D = 1$，论断得证。
 
 \begin{exercise}
@@ -553,13 +553,13 @@ d_{ki} = \frac{\partial}{\partial P_i}\frac{\partial F}{\partial q_k} = \frac{\p
 
 \begin{exercise}
 考虑从 $(q, p)$ 到 $(Q, P)$ 的正则变换。（这里 $n = 1$。）(a) 证明
-\[
+$$
 \frac{\partial(Q, P)}{\partial(q, p)} = \frac{\partial(Q, P)/\partial(q, P)}{\partial(q, p)/\partial(q, P)}.
-\]
+$$
 (b) 证明
-\[
+$$
 \frac{\partial(Q, P)}{\partial(q, P)} = \frac{\partial Q}{\partial q}.
-\]
+$$
 \end{exercise}
 
 \subsection*{5.4.3 刘维尔定理}
@@ -567,29 +567,29 @@ d_{ki} = \frac{\partial}{\partial P_i}\frac{\partial F}{\partial q_k} = \frac{\p
 回顾一下相流体与真实流体之间的类比，并考虑有些流体是不可压缩的。（水是不可压缩流体的一个相当好的例子。）从流体动力学可知，如果流体是不可压缩的，那么速度场 $v = v(x, y, z)$ 的散度为零：$\nabla\cdot v = 0$。
 
 相流体的行为类似于 $2n$ 维的不可压缩流体。这种流体的“速度”分量是 $\dot{q}_i$ 和 $\dot{p}_i$。因此，不可压缩的条件是
-\[
-\sum_{i=1}^{n}\left( \frac{\partial \dot{q}_i}{\partial q_i} + \frac{\partial \dot{p}_i}{\partial p_i} \right) = 0. \tag{5.42}
-\]
+$$
+\sum_{i=1}^{n}\left( \frac{\partial \dot{q}_i}{\partial q_i} + \frac{\partial \dot{p}_i}{\partial p_i} \right) = 0. \eqno\hbox{(5.42)}
+$$
 把散度定理应用于不可压缩流体的速度，我们发现流体穿过任何闭合曲面的通量为零。类似地，相流体在相空间中任何闭合曲面上的通量为零。这一事实由刘维尔发现，被称为“刘维尔定理”。由于系统在时间中的演化可以被看作一个正则变换，这只是说明相流体某区域的体积随时间保持不变的另一种说法，而我们已经证明了这是正则变换的一个性质。
 
 刘维尔定理在统计力学中特别有用。例如，在考虑气体时，系统可能包含大约 $10^{26}$ 个分子。显然不可能跟踪每个单独粒子的运动。在统计力学中，这类问题是通过设想这样的系统的一个系综，并计算所关注参数的系综平均来处理。例如，系综可以由大量相同的气体分子系统组成，它们只在其初始条件上有所不同。在相空间中，系综的每个成员用一个点表示，整个系综用大量点表示。刘维尔定理指出，这些点的密度随时间保持恒定。注意，如果相流体不可压缩，它具有恒定的密度。所谓相流体密度恒定，我们是指给定体积中的点数不变。每个点代表一个系统。随时间推移，体积中的点沿其相路径移动，包围它们的曲面将被扭曲，但它将具有与以前相同的体积。现在，相空间某个区域的体积由
-\[
+$$
 \tau = \int dq_1 \cdots dq_n\, dp_1 \cdots dp_n
-\]
+$$
 给出。刘维尔定理给了我们一个额外的运动常数，即
-\[
+$$
 \tau = \text{常数}.
-\]
+$$
 另一种观点是考虑相空间中包含若干系统的一个无穷小区域。密度就是系统数除以体积。在较晚时刻，这些系统将已经移动到相空间的一个不同区域。包围这些点的区域将改变形状，但将具有与以前相同的体积，因为相空间中的体积元是正则不变量。但如果系统数是常数且体积是常数，那么密度就是常数，定理得证。
 
 有趣的是，如果密度记为 $\rho$，那么一般来说，
-\[
+$$
 \frac{d\rho}{dt} = [\rho, H] + \frac{\partial \rho}{\partial t}.
-\]
+$$
 但由于 $d\rho/dt = 0$，我们有
-\[
+$$
 \frac{\partial \rho}{\partial t} = -[\rho, H].
-\]
+$$
 
 \begin{exercise}
 证明：如果 $\nabla\cdot v = 0$，那么没有净物质流穿过给定体积的边界。（提示：使用散度定理。）
@@ -602,89 +602,89 @@ d_{ki} = \frac{\partial}{\partial P_i}\frac{\partial F}{\partial q_k} = \frac{\p
 \subsection*{5.4.4 角动量}
 
 无穷小正则变换的另一个应用涉及系统的角动量。如果系统关于某个旋转对称，那么旋转角（比如 $\theta$）是可遗的，共轭广义动量（角动量 $L$）将是常数。\footnote{不要把矢量角动量 $L$ 与拉格朗日量混淆。}反之，如果取生成函数为角动量，那么该变换就是系统的刚体旋转。这可如下证明。设
-\[
+$$
 G = L_z = \sum_i (r_i \times p_i)_z = \sum_i (x_i p_{yi} - y_i p_{xi}).
-\]
+$$
 （为简单起见，我们选取角动量的 $z$ 分量；这并不表示失去一般性。）如果我们绕 $z$ 轴进行一个无穷小旋转 $d\theta$，很容易证明
-\[
+$$
 \delta x_i = -y_i d\theta, \qquad \delta y_i = x_i d\theta, \qquad \delta z_i = 0,
-\]
+$$
 以及
-\[
+$$
 \delta p_{xi} = -p_{yi} d\theta, \qquad \delta p_{yi} = p_{xi} d\theta, \qquad \delta p_{zi} = 0.
-\]
+$$
 我们已经看到 $\delta q_j = \epsilon \partial G/\partial p_j$（式 (5.35)）和 $\delta p_j = -\epsilon \partial G/\partial q_j$（式 (5.36)），所以如果我们用 $d\theta$ 作为无穷小参数 $\epsilon$，
-\[
+$$
 \delta x_i = \epsilon\frac{\partial G}{\partial p_{xi}}
 = \epsilon\frac{\partial}{\partial p_{xi}}\sum_j (x_j p_{yj} - y_j p_{xj})
 = \epsilon(-y_i) = -y_i d\theta,
-\]
+$$
 与预期一致。其他关系类似地成立。
 
 \section*{5.5 用泊松括号表示的角动量}
 
 我们已经看到，无穷小正则变换产生函数 $u$ 的一个变化，由下式给出
-\[
+$$
 \delta u = \epsilon[u, G].
-\]
+$$
 在“主动”解释中，我们把这个无穷小正则变换看作一个变换，由于系统参数的某些变化而产生函数的（新）值。特别地，如果 $G$ 是哈密顿量，那么我们令 $\epsilon = dt$，$\delta u$ 就是参数时间从 $t$ 到 $t + dt$ 时函数 $u$ 的变化。如果 $G$ 是某个其他函数，那么 $\delta u$ 表示 $u$ 的另一种不同的变化。
 
 如果 $u$ 是矢量 $F$ 的某个特定分量，比如 $F_i$，那么由无穷小正则变换引起的 $F_i$ 的变化是
-\[
+$$
 \delta F_i = \epsilon[F_i, G].
-\]
+$$
 如果 $G$ 是角动量的一个分量（$G = \hat{n}\cdot L$），且 $\epsilon$ 取为 $d\theta$，那么该无穷小正则变换给出 $F_i$ 因系统绕 $\hat{n}$ 旋转角度 $d\theta$ 而产生的变化：
-\[
+$$
 \delta F_i = d\theta[F_i, \hat{n}\cdot L].
-\]
+$$
 注意，这个无穷小正则变换给出的是沿空间中某个固定方向、即沿一根固定轴的分量 $F_i$ 的变化。例如，$F_i$ 可能是 $F\cdot\hat{k}$，其中笛卡尔单位矢量 $\hat{\imath}, \hat{\jmath}, \hat{k}$ 被认为是固定在空间中，不受旋转的影响。显然，某些矢量的分量受旋转影响，而另一些则不受影响。固定在物体上的轴随物体一起旋转；固定在空间中的轴不旋转。外矢量，例如重力，显然不受物体旋转的影响。另一方面，系统的角动量的一个分量一般会受这种旋转的影响。“系统矢量”是这样一种矢量，其分量依赖于物体的取向，并且受系统旋转的影响。
 
 根据矢量分析，系统矢量因绕某个轴 $\hat{n}$ 的无穷小旋转 $d\theta$ 而产生的变化是
-\[
+$$
 dF = \hat{n}\, d\theta \times F,
-\]
+$$
 而泊松括号表述给出
-\[
+$$
 \delta F = d\theta[F, \hat{n}\cdot L].
-\]
+$$
 两种表述必定等价，所以
-\[
-[F, \hat{n}\cdot L] = \hat{n} \times F. \tag{5.43}
-\]
+$$
+[F, \hat{n}\cdot L] = \hat{n} \times F. \eqno\hbox{(5.43)}
+$$
 这个方程特别有趣和有用，因为对旋转的所有引用都被删除了，而且它对所有系统矢量都成立。它给出了系统矢量与角动量分量的泊松括号 $[F, \hat{n}\cdot L]$ 与沿角动量分量方向的单位矢量和系统矢量的叉积 $\hat{n} \times F$ 之间的关系。有时这个最后的关系用分量表示更容易使用，这时它读作
-\[
-[F_i, L_j] = \epsilon_{ijk} F_k, \tag{5.44}
-\]
+$$
+[F_i, L_j] = \epsilon_{ijk} F_k, \eqno\hbox{(5.44)}
+$$
 其中 $\epsilon_{ijk}$ 是列维-奇维塔密度。\footnote{列维-奇维塔密度 $\epsilon_{ijk}$ 的定义为：若任意两个指标相等则为零；若 $ijk$ 是 $123$ 的偶排列则为 $+1$；若 $ijk$ 是 $123$ 的奇排列则为 $-1$。}
 
 另一个有用的关系涉及两个系统矢量（比如 $F$ 和 $V$）的点积与 $L$ 的分量的泊松括号。利用 (5.43)：
-\[
-[F \cdot V, \hat{n} \cdot L] = F \cdot [V, \hat{n} \cdot L] + V \cdot [F, \hat{n} \cdot L] \tag{5.45}
-\]
-\[
+$$
+[F \cdot V, \hat{n} \cdot L] = F \cdot [V, \hat{n} \cdot L] + V \cdot [F, \hat{n} \cdot L] \eqno\hbox{(5.45)}
+$$
+$$
 = F \cdot (\hat{n} \times V) + V \cdot (\hat{n} \times F)
-\]
-\[
+$$
+$$
 = (F \times \hat{n}) \cdot V + V \cdot (\hat{n} \times F) = 0,
-\]
+$$
 其中我们在第一项中交换了点积和叉积。现在，如果 $F$ 和 $V$ 都取为 $L$，式 (5.44) 给出角动量分量之间的如下关系
-\[
-[L_i, L_j] = \epsilon_{ijk} L_k, \tag{5.46}
-\]
+$$
+[L_i, L_j] = \epsilon_{ijk} L_k, \eqno\hbox{(5.46)}
+$$
 而式 (5.45) 给出
-\[
-[L^2, \hat{n} \cdot L] = 0. \tag{5.47}
-\]
+$$
+[L^2, \hat{n} \cdot L] = 0. \eqno\hbox{(5.47)}
+$$
 不难证明，任何两个运动常数的泊松括号也是一个运动常数。（这被称为泊松定理。）因此，如果 $L_x$ 和 $L_y$ 是运动常数，那么由 (5.46)，$L_z$ 也是运动常数。回忆一下，根据式 (5.22)，任何两个正则动量分量的泊松括号为零。但 $[L_i, L_j] = \epsilon_{ijk} L_k$，所以 $L_i$ 和 $L_j$ 不能是正则变量。更一般地，$L$ 的任何两个分量不能同时成为正则变量。另一方面，关系 $[L^2, \hat{n} \cdot L] = 0$ 表明 $L$ 的大小（或 $L^2$）和 $L$ 的一个分量可以同时成为正则变量。\footnote{这一论断也延续到量子力学中：我们发现 $L$ 的任何两个分量不能同时具有本征值，但例如 $L_z$ 和 $L^2$ 可以一起被量子化。}
 
 此外，如果 $p$ 是系统的线动量且 $p_z$ 是常数，那么 $p_x$ 和 $p_y$ 也是常数。这很容易证明，因为由式 (5.44)
-\[
+$$
 [p_z, L_x] = p_y,
-\]
+$$
 且根据泊松定理，如果 $p_z$ 和 $L_x$ 是常数，那么 $p_y$ 也是常数。类似地，
-\[
+$$
 [p_z, L_y] = -p_x,
-\]
+$$
 所以 $p_x$ 也是常数。因此，如果 $L_x$、$L_y$ 和 $p_z$ 是常数，那么 $L$ 和 $p$ 都是守恒的。
 
 所有这些关系你可能从量子力学的研究中已经很熟悉了。
@@ -692,28 +692,28 @@ dF = \hat{n}\, d\theta \times F,
 \section*{5.6 习题}
 
 5.1 (a) 证明变换
-\[
+$$
 Q = p/\tan q, \qquad P = \log(\sin q/p),
-\]
+$$
 是正则的。(b) 求此变换的生成函数 $F_1(q, Q)$。
 
 5.2 设 $H(q_1, q_2, p_1, p_2) = q_1 p_1 - q_2 p_2 - aq_1^2 + bq_2^2$，其中 $a$ 和 $b$ 是常数。证明 $q_1 q_2$ 的时间导数为零。（用泊松括号。）
 
 5.3 在什么条件下下列变换不是正则的？
-\[
+$$
 Q = q + ip, \qquad P = Q^{*}.
-\]
+$$
 
 5.4 考虑生成函数
-\[
+$$
 F_2(q, P) = (q + P)^2.
-\]
+$$
 求变换方程。
 
 5.5 落体的哈密顿量为
-\[
+$$
 H = \frac{p^2}{2m} + mgz,
-\]
+$$
 其中 $g$ 是重力加速度。若 $K = P$，确定生成函数 $F_4(p, P)$。
 
 5.6 $F_1(q, Q) = q^2 + Q^4$ 是否生成一个正则变换？
@@ -725,10 +725,10 @@ H = \frac{p^2}{2m} + mgz,
 5.9 考虑形如 $F_3(p_i, Q_i, t)$ 的生成函数。(a) 推导 $q_i$、$P_i$ 和 $K$ 的表达式，如式 (5.15) 所示。(b) 若 $F_3 = pQ$，确定 $q$、$P$ 和 $K$。
 
 5.10 设 $q$ 和 $p$ 是正则的。证明如果 $Q$ 和 $P$ 是正则的，那么下列条件成立
-\[
+$$
 \frac{\partial Q}{\partial q} = \frac{\partial p}{\partial P}, \qquad
 \frac{\partial Q}{\partial p} = -\frac{\partial q}{\partial P}, \qquad
 \frac{\partial P}{\partial q} = -\frac{\partial p}{\partial Q}, \qquad
 \frac{\partial P}{\partial p} = \frac{\partial q}{\partial Q}.
-\]
+$$
 直接证明并用泊松括号证明。
