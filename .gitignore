@@ -1,3 +1,31 @@
 
 # Mathematical modeling data files
-ÊıÀí»ù´¡/ÊıÑ§½¨Ä£½Ì³Ì/»ñ½±ÂÛÎÄºÍÈüÌâ/2024zjhychn/EÌâ/¸½¼ş2.csv
+æ•°ç†åŸºç¡€/æ•°å­¦å»ºæ¨¡æ•™ç¨‹/è·å¥–è®ºæ–‡å’Œèµ›é¢˜/2024zjhychn/Eé¢˜/é™„ä»¶2.csv
+
+# LaTeX ç¼–è¯‘è¾…åŠ©æ–‡ä»¶
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.synctex
+*.bbl
+*.blg
+*.nav
+*.snm
+*.vrb
+*.fls
+*.fdb_latexmk
+*.lof
+*.lot
+*.loe
+*.xdv
+*.pdfsync
+
+# å°é¢é¢„è§ˆç­‰ä¸´æ—¶æ–‡ä»¶
+*å°é¢é¢„è§ˆ*.png
+
+# ç³»ç»Ÿä¸ç¼–è¾‘å™¨ä¸´æ—¶æ–‡ä»¶
+.DS_Store
+Thumbs.db
+*.swp
