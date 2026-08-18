@@ -1,0 +1,436 @@
+\textbf{本章重点}：
+\begin{itemize}
+    \item 线性微分方程的基本理论
+    \item 常系数方程的解法
+    \item 某些高阶微分方程的降阶方法
+    \item 二阶线性方程的幂级数解法
+\end{itemize}
+
+\section{线性微分方程的一般理论}
+
+\subsection{基本概念}
+
+\begin{mydefinition}{定义}
+未知函数及其各阶导数均为一次的 $n$ 阶微分方程称为 $n$ 阶线性微分方程，一般形式为
+\begin{equation}\frac{d^n x}{dt^n} + a_1(t)\frac{d^{n-1}x}{dt^{n-1}} + \cdots + a_{n-1}(t)\frac{dx}{dt} + a_n(t)x = f(t) \tag{4.1}\end{equation}
+其中 $a_i(t)\ (i = 1, 2, \ldots, n)$ 及 $f(t)$ 都是 $a \le t \le b$ 上的连续函数。
+\end{mydefinition}
+
+\begin{itemize}
+    \item 若 $f(t) \equiv 0$，得 $n$ 阶\textbf{齐次}线性方程
+    \begin{equation}\frac{d^n x}{dt^n} + a_1(t)\frac{d^{n-1}x}{dt^{n-1}} + \cdots + a_{n-1}(t)\frac{dx}{dt} + a_n(t)x = 0 \tag{4.2}\end{equation}
+\end{itemize}
+
+\textbf{解的存在唯一性定理}：如果 $a_i(t)\ (i=1,\ldots,n)$ 及 $f(t)$ 都是区间 $[a,b]$ 上的连续函数，则对任一 $t_0 \in [a,b]$ 及任意 $x_0, x'_0, \ldots, x_0^{(n-1)}$，方程 (4.1) 存在唯一解 $x = \varphi(t)$（$a \le t \le b$）满足初始条件 $x(t_0) = x_0, x'(t_0) = x'_0, \ldots, x^{(n-1)}(t_0) = x_0^{(n-1)}$。
+
+\subsection{齐线性方程的解的性质和结构}
+
+\begin{myTheorem}{叠加原理}
+如果 $x_1(t), x_2(t), \ldots, x_k(t)$ 是方程 (4.2) 的 $k$ 个解，则它们的线性组合
+$$x(t) = c_1x_1(t) + c_2x_2(t) + \cdots + c_kx_k(t)$$
+也是方程 (4.2) 的解，这里 $c_1, c_2, \ldots, c_k$ 是任常数。
+\end{myTheorem}
+
+\begin{example}
+验证 $\cos t, \sin t$ 是方程 $x'' + x = 0$ 的解（$\cos'' t = -\cos t$ 等直接代入）。
+\end{example}
+
+\textbf{问题}：在什么条件下，$n$ 个解能够成为 $n$ 阶齐次线性微分方程的通解？$\rightarrow$ 需要\textbf{线性无关}。
+
+\begin{mydefinition}{Wronsky 行列式}
+定义在 $[a,b]$ 上的 $k$ 个可微 $k-1$ 次的函数 $x_1(t), x_2(t), \ldots, x_k(t)$ 所作成的行列式
+$$W[x_1(t), x_2(t), \ldots, x_k(t)] = \begin{vmatrix} x_1(t) & x_2(t) & \cdots & x_k(t) \\ x'_1(t) & x'_2(t) & \cdots & x'_k(t) \\ \vdots & \vdots & & \vdots \\ x_1^{(k-1)}(t) & x_2^{(k-1)}(t) & \cdots & x_k^{(k-1)}(t) \end{vmatrix}$$
+称为函数 $x_1, x_2, \ldots, x_k$ 的 Wronsky 行列式。
+\end{mydefinition}
+
+\begin{myTheorem}{定理}
+若函数 $x_1(t), x_2(t), \ldots, x_n(t)$ 在区间 $[a,b]$ 上\textbf{线性相关}，则它们在 $[a,b]$ 上的 Wronsky 行列式 $W(t) \equiv 0$。
+\end{myTheorem}
+
+\begin{proof}
+存在不全为零的常数 $c_1, \ldots, c_n$ 使 $\sum c_i x_i(t) \equiv 0$，依次微分得齐次方程组，其系数行列式即 $W(t)$；由线性代数知存在非零解 $\Rightarrow$ 系数行列式必为零。
+\end{proof}
+
+\begin{remark}
+定理 2 的逆不成立。如 $x_1(t) = \begin{cases} t^2 & t \ge 0 \\ 0 & t < 0 \end{cases}$，$x_2(t) = \begin{cases} 0 & t \ge 0 \\ t^2 & t < 0 \end{cases}$，$W(t) \equiv 0$ 但它们在 $(-\infty, +\infty)$ 上线性无关。
+\end{remark}
+
+\textbf{推论}：若函数组 $x_1(t), \ldots, x_n(t)$ 的 Wronsky 行列式在区间 $[a,b]$ 上某点 $t_0$ 处不等于零，则该函数组在 $[a,b]$ 上线性无关。
+
+\begin{myTheorem}{定理}
+如果方程 (4.2) 的解 $x_1(t), x_2(t), \ldots, x_n(t)$ 在区间 $[a,b]$ 上线性无关，则它们的 Wronsky 行列式在 $[a,b]$ 上任何点都不等于零。
+\end{myTheorem}
+
+\begin{proof}
+反证：若存在 $t_0$ 使 $W(t_0) = 0$，则齐次方程组有非零解 $c_1, \ldots, c_n$，构造 $x(t) = \sum c_i x_i(t)$，它是 (4.2) 的解且满足零初始条件，由唯一性定理 $x(t) \equiv 0$，与线性无关矛盾。
+\end{proof}
+
+\textbf{推论 1}：设 $x_1(t), \ldots, x_n(t)$ 是方程 (4.2) 在区间 $[a,b]$ 上的 $n$ 个解，如果存在 $t_0 \in [a,b]$ 使 $W(t_0) = 0$，则该组解在 $[a,b]$ 上线性相关。
+
+\textbf{推论 2}：方程 (4.2) 的 $n$ 个解 $x_1(t), \ldots, x_n(t)$ 在区间 $[a,b]$ 上线性无关的充要条件是存在 $t_0 \in [a,b]$ 使 $W(t_0) \neq 0$。
+
+\begin{remark}
+$n$ 阶齐次线性微分方程 (4.2) 的 $n$ 个解构成的 Wronsky 行列式\textbf{或者恒等于零}，\textbf{或者在方程的系数为连续的区间内处处不等于零}。
+\end{remark}
+
+\begin{myTheorem}{定理}
+$n$ 阶齐线性方程 (4.2) 一定存在 $n$ 个线性无关的解。
+\end{myTheorem}
+
+\begin{proof}
+由存在唯一性定理，取满足 $n$ 组特殊初始条件（第 $i$ 组仅 $x^{(i-1)}(t_0) = 1$，其余为 0）的解，其 Wronsky 行列式 $W(t_0) = 1 \neq 0$，故线性无关。
+\end{proof}
+
+\begin{myTheorem}{通解结构}
+如果 $x_1(t), x_2(t), \ldots, x_n(t)$ 是方程 (4.2) 的 $n$ 个线性无关解，则方程 (4.2) 的通解可表为
+\begin{equation}x(t) = c_1x_1(t) + c_2x_2(t) + \cdots + c_nx_n(t) \tag{4.11}\end{equation}
+其中 $c_1, \ldots, c_n$ 是任常数，且通解包含了方程 (4.2) 的所有解。
+\end{myTheorem}
+
+\textbf{推论}：方程 (4.2) 线性无关解的最大个数等于 $n$；$n$ 阶齐线性方程的所有解构成一个 $n$ 维线性空间。
+
+\textbf{基本解组}：方程 (4.2) 的一组 $n$ 个线性无关的解称为方程的一个基本解组。注：基本解组不是唯一的。
+
+\subsection{非齐次线性方程与常数变易法}
+
+\textbf{性质 1}：如果 $\bar{x}(t)$ 是方程 (4.2) 的解，$x^*(t)$ 是方程 (4.1) 的解，则 $\bar{x}(t) + x^*(t)$ 也是方程 (4.1) 的解。
+
+\textbf{性质 2}：方程 (4.1) 的任两解之差必为方程 (4.2) 的解。
+
+\begin{myTheorem}{通解结构}
+设 $x_1(t), \ldots, x_n(t)$ 为方程 (4.2) 的基本解组，$\bar{x}(t)$ 是方程 (4.1) 的某一解，则方程 (4.1) 的通解可表为
+\begin{equation}x(t) = c_1x_1(t) + c_2x_2(t) + \cdots + c_nx_n(t) + \bar{x}(t) \tag{4.14}\end{equation}
+其中 $c_1, \ldots, c_n$ 是任常数，且 (4.14) 包含了方程 (4.1) 的所有解。
+\end{myTheorem}
+
+\textbf{常数变易法}（求非齐次方程特解）：
+
+设 $x_1(t), \ldots, x_n(t)$ 为方程 (4.2) 的基本解组，将 (4.2) 通解中的常数变为待定函数：
+\begin{equation}x(t) = c_1(t)x_1(t) + c_2(t)x_2(t) + \cdots + c_n(t)x_n(t) \tag{4.16}\end{equation}
+对 $c'_i(t)$ 附加 $n-1$ 个条件（为运算方便）：
+$$c'_1(t)x_1(t) + c'_2(t)x_2(t) + \cdots + c'_n(t)x_n(t) = 0$$
+$$c'_1(t)x'_1(t) + c'_2(t)x'_2(t) + \cdots + c'_n(t)x'_n(t) = 0$$
+$$\vdots$$
+$$c'_1(t)x_1^{(n-2)}(t) + \cdots + c'_n(t)x_n^{(n-2)}(t) = 0$$
+第 $n$ 个方程由代入 (4.1) 得：
+$$c'_1(t)x_1^{(n-1)}(t) + \cdots + c'_n(t)x_n^{(n-1)}(t) = f(t)$$
+方程组系数行列式为 $W[x_1, \ldots, x_n](t) \neq 0$，故 $c'_i(t) = \varphi_i(t)$ 可唯一确定，积分得 $c_i(t) = \int \varphi_i(t)\,dt + \gamma_i$，代入 (4.16) 得通解：
+$$x(t) = \sum_{i=1}^{n} \gamma_i x_i(t) + \sum_{i=1}^{n} x_i(t)\int \varphi_i(t)\,dt$$
+取 $\gamma_i = 0$ 即得一特解 $\tilde{x}(t) = \sum_{i=1}^{n} x_i(t)\int \varphi_i(t)\,dt$。
+
+\begin{example}
+已知 $\cos t, \sin t$ 是对应齐次方程的基本解组，求 $x'' + x = \dfrac{1}{\cos t}$ 的通解。
+\end{example}
+
+\begin{solution}
+令 $x = c_1(t)\cos t + c_2(t)\sin t$，得方程组
+$$\begin{cases} c'_1\cos t + c'_2\sin t = 0 \\ -c'_1\sin t + c'_2\cos t = \dfrac{1}{\cos t} \end{cases}$$
+解得 $c'_1 = -\tan t, c'_2 = 1$，积分得 $c_1 = \ln|\cos t| + \gamma_1, c_2 = t + \gamma_2$，故通解
+$$x(t) = \gamma_1\cos t + \gamma_2\sin t + \cos t\ln|\cos t| + t\sin t$$
+\end{solution}
+
+\begin{example}
+求方程 $t^2x'' - tx' + x = t$ 于域 $t \neq 0$ 上的所有解。
+\end{example}
+
+\begin{solution}
+对应齐次方程 $t^2x'' - tx' + x = 0$，改写为 $x'' - \dfrac{1}{t}x' + \dfrac{1}{t^2}x = 0$。验证 $x = t$ 与 $x = 1$ 是解（$x'' = 0, x' = 1$ 代入得 $0 - t\cdot 1 + t = 0$），故基本解组为 $\{1, t\}$ $[?]$。常数变易，令 $x = c_1(t) + c_2(t)t$，得方程组 $\begin{cases} c'_1 + c'_2t = 0 \\ c'_2 = \dfrac{1}{t} \end{cases}$，解得 $c'_1 = -1, c'_2 = \dfrac{1}{t}$，积分 $c_1 = -t + \gamma_1, c_2 = \ln|t| + \gamma_2$，通解
+$$x(t) = \gamma_1 + \gamma_2 t + t\ln|t| - t$$
+\end{solution}
+
+\textbf{练习}：
+\begin{enumerate}
+    \item 验证 $e^t, e^{-t}$ 是 $x'' - x = 0$ 的基本解组，并求 $x'' - x = \cos 2t$ 的通解
+    \item 求 $x'' + 4x = 2\sin t$ 的通解（对应齐次方程基本解组 $\cos 2t, \sin 2t$）
+\end{enumerate}
+
+\textbf{思考题}：常数变易法中待定函数的条件如何选择？
+
+\textbf{作业（4.1）}：p82：2、3.（2、5）、5、6、7
+
+\section{常系数线性方程的解法}
+
+\subsection{复值函数与复值解}
+
+\textbf{复值函数}：$z(t) = \varphi(t) + i\psi(t)$（$\varphi, \psi$ 为实函数）。可微时 $z'(t) = \varphi'(t) + i\psi'(t)$，复函数求导法则与实函数相同。
+
+\textbf{复指数函数}：$e^{(\alpha + i\beta)t} = e^{\alpha t}(\cos\beta t + i\sin\beta t)$。欧拉公式：
+$$\cos\beta t = \frac{e^{i\beta t} + e^{-i\beta t}}{2}, \qquad \sin\beta t = \frac{e^{i\beta t} - e^{-i\beta t}}{2i}$$
+
+\textbf{性质}：$e^{kt} \neq 0$；$e^{k_1t}e^{k_2t} = e^{(k_1+k_2)t}$；$\dfrac{d}{dt}e^{kt} = ke^{kt}$；$\dfrac{d^n}{dt^n}e^{kt} = k^n e^{kt}$。
+
+\textbf{命题 1}：若方程 (4.2) 的所有系数都是实值函数，且 $z(t) = \varphi(t) + i\psi(t)$ 是方程的复值解，则 $z(t)$ 的实部 $\varphi(t)$ 和虚部 $\psi(t)$ 也都是方程 (4.2) 的解。
+
+\textbf{命题 2}：若方程 $L[x] = u(t) + iv(t)$ 有复值解 $x = U(t) + iV(t)$，则 $U(t)$ 和 $V(t)$ 分别是 $L[x] = u(t)$ 与 $L[x] = v(t)$ 的解。
+
+\subsection{常系数齐线性方程和欧拉方程}
+
+\subsubsection{常系数齐线性方程的求解方法（Euler 待定系数法）}
+
+考虑 $n$ 阶常系数齐线性方程
+\begin{equation}L[x] = \frac{d^n x}{dt^n} + a_1\frac{d^{n-1}x}{dt^{n-1}} + \cdots + a_{n-1}\frac{dx}{dt} + a_n x = 0 \tag{4.19}\end{equation}
+受一阶方程 $x' + ax = 0$ 有解 $x = ce^{-at}$ 启发，尝试指数函数形式的解 $x = e^{\lambda t}$。代入得
+\begin{equation}x = e^{\lambda t} \text{ 是解 } \iff F(\lambda) = \lambda^n + a_1\lambda^{n-1} + \cdots + a_{n-1}\lambda + a_n = 0 \tag{4.21}\end{equation}
+方程 (4.21) 称为方程 (4.19) 的\textbf{特征方程}，其根称为\textbf{特征根}。
+
+\subsubsection{(1) 特征根是单根的情形}
+
+设 $n$ 个彼此不相等的特征根 $\lambda_1, \lambda_2, \ldots, \lambda_n$，则 (4.19) 有 $n$ 个解
+\begin{equation}e^{\lambda_1 t}, e^{\lambda_2 t}, \ldots, e^{\lambda_n t} \tag{4.22}\end{equation}
+其 Wronsky 行列式 $W = e^{(\lambda_1+\cdots+\lambda_n)t}\prod_{i<j}(\lambda_j - \lambda_i) \neq 0$，故线性无关，构成基本解组。
+
+\begin{itemize}
+    \item 若所有 $\lambda_i$ 均为实数：通解 $x(t) = c_1e^{\lambda_1 t} + \cdots + c_ne^{\lambda_n t}$
+    \item 若有复数特征根（系数为实常数，复根成对共轭出现）：设 $\lambda = \alpha + i\beta$ 与 $\bar{\lambda} = \alpha - i\beta$ 是特征根，则对应两个复值解 $e^{(\alpha+i\beta)t}, e^{(\alpha-i\beta)t}$，由命题 1 其实部虚部也是解，得两个\textbf{实值解}：
+    $$e^{\alpha t}\cos\beta t, \qquad e^{\alpha t}\sin\beta t$$
+\end{itemize}
+
+\subsubsection{(2) 特征根是重根的情形}
+
+设 $\lambda_1$ 是特征方程的 $k$ 重根（$F(\lambda_1) = \cdots = F^{(k-1)}(\lambda_1) = 0, F^{(k)}(\lambda_1) \neq 0$）：
+
+\begin{itemize}
+    \item \textbf{(a)} $\lambda_1 = 0$：特征方程有因子 $\lambda^k$，对应方程 (4.19) 有 $k$ 个线性无关的解 $1, t, t^2, \ldots, t^{k-1}$
+    \item \textbf{(b)} $\lambda_1 \neq 0$：作变换 $x = e^{\lambda_1 t}y$，方程化为以 0 为 $k$ 重根的方程 (4.23)，故 (4.19) 有 $k$ 个线性无关的解
+    \begin{equation}e^{\lambda_1 t}, \; te^{\lambda_1 t}, \; t^2e^{\lambda_1 t}, \; \ldots, \; t^{k-1}e^{\lambda_1 t} \tag{4.25}\end{equation}
+\end{itemize}
+
+一般地，若特征根 $\lambda_1, \ldots, \lambda_m$ 的重数分别为 $k_1, \ldots, k_m$（$\sum k_i = n$），则基本解组为
+\begin{equation}e^{\lambda_i t}, \; te^{\lambda_i t}, \; \ldots, \; t^{k_i - 1}e^{\lambda_i t}, \quad i = 1, 2, \ldots, m \tag{4.26}\end{equation}
+（线性无关性可用反证法：假设线性相关 $\Rightarrow$ 多项式恒等式 $\Rightarrow$ 逐次除以 $e^{\lambda t}$ 并微分约化 $\Rightarrow$ 最终矛盾。）
+
+\textbf{复根重复的情形}：若 $\lambda = \alpha + i\beta$ 是 $k$ 重复根，则 $\bar{\lambda} = \alpha - i\beta$ 也是 $k$ 重复根，可把 $2k$ 个复值解换成 $2k$ 个实值解：
+$$e^{\alpha t}\cos\beta t, \; te^{\alpha t}\cos\beta t, \; \ldots, \; t^{k-1}e^{\alpha t}\cos\beta t$$
+$$e^{\alpha t}\sin\beta t, \; te^{\alpha t}\sin\beta t, \; \ldots, \; t^{k-1}e^{\alpha t}\sin\beta t$$
+
+\subsubsection{(3) 求方程 (4.19) 通解的步骤}
+
+\textbf{第一步}：求特征方程 $F(\lambda) = 0$ 的特征根
+
+\textbf{第二步}：对每个特征根写出相应解：
+\begin{itemize}
+    \item[(a)] 实单根 $\lambda$：有解 $e^{\lambda t}$
+    \item[(b)] 实 $m$ 重根 $\lambda$（$m > 1$）：有 $m$ 个解 $e^{\lambda t}, te^{\lambda t}, \ldots, t^{m-1}e^{\lambda t}$
+    \item[(c)] 重数为一的共轭复根 $\alpha \pm i\beta$：有两个解 $e^{\alpha t}\cos\beta t, e^{\alpha t}\sin\beta t$
+    \item[(d)] 重数是 $m$ 的共轭复根 $\alpha \pm i\beta$（$m > 1$）：有 $2m$ 个解
+    $$e^{\alpha t}\cos\beta t, \ldots, t^{m-1}e^{\alpha t}\cos\beta t; \quad e^{\alpha t}\sin\beta t, \ldots, t^{m-1}e^{\alpha t}\sin\beta t$$
+\end{itemize}
+
+\textbf{第三步}：写出基本解组及通解。
+
+\begin{example}
+求 $x''' - 3x'' + 4x = 0$ 的通解。
+\end{example}
+
+\begin{solution}
+特征方程 $\lambda^3 - 3\lambda^2 + 4 = (\lambda + 1)(\lambda - 2)^2 = 0$，根 $\lambda_1 = -1$（单根），$\lambda_{2,3} = 2$（二重根）。故通解
+$$x(t) = c_1e^{-t} + (c_2 + c_3t)e^{2t}$$
+\end{solution}
+
+\begin{example}
+求 $x^{(4)} - x = 0$ 的通解。
+\end{example}
+
+\begin{solution}
+特征方程 $\lambda^4 - 1 = 0$，根 $\lambda = 1, -1, i, -i$。故通解
+$$x(t) = c_1e^t + c_2e^{-t} + c_3\cos t + c_4\sin t$$
+\end{solution}
+
+\begin{example}
+求 $x^{(4)} - 3x''' + 3x'' - x' = 0$ 的通解。
+\end{example}
+
+\begin{solution}
+特征方程 $\lambda^4 - 3\lambda^3 + 3\lambda^2 - \lambda = \lambda(\lambda - 1)^3 = 0$，根 $\lambda_1 = 0$（单根），$\lambda = 1$（三重根）。故通解
+$$x(t) = c_1 + (c_2 + c_3t + c_4t^2)e^t$$
+\end{solution}
+
+\begin{example}
+求 $x^{(4)} + 2x'' + x = 0$ 的通解。
+\end{example}
+
+\begin{solution}
+特征方程 $\lambda^4 + 2\lambda^2 + 1 = (\lambda^2 + 1)^2 = 0$，根 $\lambda = \pm i$ 均为二重根。故通解
+$$x(t) = (c_1 + c_2t)\cos t + (c_3 + c_4t)\sin t$$
+\end{solution}
+
+\subsection{非齐次线性方程与比较系数法}
+
+\subsubsection{类型 I：$f(t)$ 为指数乘多项式型}
+
+\textbf{结论 1}：当 $f(t)$ 为以上类型时，方程 (4.29) 有一特解为以下形式
+$$\tilde{x}(t) = t^k e^{\lambda t}(B_0t^m + B_1t^{m-1} + \cdots + B_{m-1}t + B_m)$$
+其中 $B_0, \ldots, B_m$ 为待定系数；$k$ 由特征方程 $F(\lambda) = 0$ 决定：$\lambda$ 是特征根时 $k$ 为 $\lambda$ 的重数，$\lambda$ 不是特征根时 $k = 0$。
+
+\begin{example}
+求 $x'' - 2x' - 3x = t + 1$ 的通解。
+\end{example}
+
+\begin{solution}
+特征方程 $\lambda^2 - 2\lambda - 3 = 0$，根 $\lambda = 3, -1$，齐次通解 $c_1e^{3t} + c_2e^{-t}$。$\lambda = 0$ 不是特征根，设特解 $\tilde{x} = At + B$，代入得 $A = -\frac{1}{3}, B = -\frac{1}{3}$ $[?]$，通解
+$$x = c_1e^{3t} + c_2e^{-t} - \frac{1}{3}t - \frac{1}{3}$$
+\end{solution}
+
+\begin{example}
+求 $x'' - 2x' - 3x = e^{-t}$ 的通解。
+\end{example}
+
+\begin{solution}
+$-1$ 是单特征根，设特解 $\tilde{x} = Ate^{-t}$，代入得 $A = -\frac{1}{4}$，通解
+$$x = c_1e^{3t} + c_2e^{-t} - \frac{1}{4}te^{-t}$$
+\end{solution}
+
+\begin{example}
+求 $x''' + 3x'' + 3x' + x = e^{-t}(t+5)$ 的通解。
+\end{example}
+
+\begin{solution}
+特征方程 $(\lambda+1)^3 = 0$，$\lambda = -1$ 为三重根，齐次通解 $(c_1 + c_2t + c_3t^2)e^{-t}$。设特解 $\tilde{x} = t^3e^{-t}(At + B)$，代入得 $A = \frac{1}{24}, B = -\frac{5}{6}$ $[?]$，通解
+$$x = (c_1 + c_2t + c_3t^2)e^{-t} + \frac{t^3}{24}(t - 20)e^{-t}$$
+\end{solution}
+
+\textbf{叠加原理}：若 $L[x] = f_1(t)$ 有特解 $\tilde{x}_1$，$L[x] = f_2(t)$ 有特解 $\tilde{x}_2$，则 $L[x] = f_1(t) + f_2(t)$ 有特解 $\tilde{x}_1 + \tilde{x}_2$。
+
+\textbf{练习}：求 $x'' - 2x' - 3x = e^t + t^2 + 1$ 的通解 $\rightarrow$ 通解 $c_1e^{3t} + c_2e^{-t} - \frac{1}{4}e^t - \frac{1}{3}t^2 + \frac{4}{9}t - \frac{13}{27}$ $[?]$
+
+\subsubsection{类型 II：$f(t)$ 为指数乘三角多项式型}
+
+其中 $\alpha, \beta$ 为实数，$A(t), B(t)$ 是次数不高于 $m$ 的实系数多项式（$m = \max(\deg A, \deg B)$）。
+
+\textbf{结论 2}：方程 (4.29) 有特解
+$$\tilde{x}(t) = t^k e^{\alpha t}[P(t)\cos\beta t + Q(t)\sin\beta t]$$
+其中 $P(t), Q(t)$ 是次数不高于 $m$ 的多项式；当 $\alpha + i\beta$ 是特征方程的 $k$ 重根时 $k$ 为重数，不是特征根时 $k = 0$。
+
+\begin{remark}
+推导思路：利用欧拉公式把 $f(t)$ 分解为 $f_1(t) + f_2(t)$（分别对应 $e^{(\alpha+i\beta)t}$ 与 $e^{(\alpha-i\beta)t}$ 的复组合），分别求复特解 $\tilde{x}_1 = t^kD(t)e^{(\alpha+i\beta)t}$，$\tilde{x}_2 = t^k\bar{D}(t)e^{(\alpha-i\beta)t}$，相加取实部即得。
+\end{remark}
+
+\begin{example}
+求 $x'' + 4x' + 4x = \cos 2t$ 的通解。
+\end{example}
+
+\begin{solution}
+特征方程 $\lambda^2 + 4\lambda + 4 = (\lambda+2)^2 = 0$，$\lambda = -2$ 为二重根，齐次通解 $(c_1 + c_2t)e^{-2t}$。$2i$ 不是特征根，设特解 $\tilde{x} = A\cos 2t + B\sin 2t$，代入得 $A = 0, B = \frac{1}{8}$，通解
+$$x = (c_1 + c_2t)e^{-2t} + \frac{1}{8}\sin 2t$$
+\end{solution}
+
+\textbf{练习}：求 $x'' + 4x' + 4x = \cos 2t + 2\sin 2t$ 的通解（利用叠加原理分别求特解）。
+
+\textbf{作业（4.2）}：p96-97：1、2.（1、2、3、5、7、8、9、11、15、19、20）、3.（1、2）、4、5
+
+\section{高阶方程的降阶法和幂级数解法}
+
+\subsection{可降阶的方程的类型}
+
+\subsubsection{1) 方程不显含未知函数 $x$ 及其直到 $k-1$ 阶导数}
+
+$$F(t, x^{(k)}, x^{(k+1)}, \ldots, x^{(n)}) = 0 \quad (1 \le k \le n)$$令 $y = x^{(k)}$，则方程降为 $n - k$ 阶的方程
+\begin{equation}F(t, y, y', \ldots, y^{(n-k)}) = 0 \tag{4.51}\end{equation}
+若可求得其通解 $y = \varphi(t, c_1, \ldots, c_{n-k})$，则 $x^{(k)} = \varphi$，逐次积分 $k$ 次可得原方程的通解。
+
+\begin{example}
+求 $t\dfrac{d^5x}{dt^5} - \dfrac{d^4x}{dt^4} = 0$ 的通解。
+\end{example}
+
+\begin{solution}
+令 $y = \dfrac{d^4x}{dt^4}$，方程化为 $ty' - y = 0$，解得 $y = c_1t$。于是 $x^{(4)} = c_1t$，逐次积分 4 次得通解
+$$x = c_1\frac{t^5}{120} + c_2\frac{t^4}{24} + c_3\frac{t^3}{6} + c_4\frac{t^2}{2} + c_5t + c_6$$
+\end{solution}
+
+\subsubsection{2) 不显含自变量 $t$ 的方程}
+
+\begin{equation}F(x, x', x'', \ldots, x^{(n)}) = 0 \tag{4.52}\end{equation}
+令 $y = x'$，并把 $y$ 看作 $x$ 的函数，利用链式法则：
+$$x'' = \frac{dy}{dt} = \frac{dy}{dx}\frac{dx}{dt} = y\frac{dy}{dx}, \qquad x''' = y\frac{d}{dx}\left(y\frac{dy}{dx}\right) = y\left(\frac{dy}{dx}\right)^2 + y^2\frac{d^2y}{dx^2}, \ldots$$
+方程化为关于 $y$ 与 $x$ 的 $n-1$ 阶方程（降低一阶），求出 $y = \varphi(x, c_1, \ldots, c_{n-1})$ 后，由 $x' = y$ 分离变量得原方程的解。
+
+\begin{example}
+求解方程 $xx'' + (x')^2 = 0$。
+\end{example}
+
+\begin{solution}
+令 $y = x'$，则 $x'' = y\dfrac{dy}{dx}$，代入得 $xy\dfrac{dy}{dx} + y^2 = 0$，即 $y(x\dfrac{dy}{dx} + y) = 0$。
+\begin{itemize}
+    \item $y = 0$：$x' = 0$，$x = c$
+    \item $x\dfrac{dy}{dx} + y = 0$：分离变量 $\dfrac{dy}{y} = -\dfrac{dx}{x}$，得 $y = \dfrac{c_1}{x}$，即 $x' = \dfrac{c_1}{x}$，积分得 $x^2 = c_1 t + c_2$，即 $x = \pm\sqrt{2c_1t + c_2}$
+\end{itemize}
+故通解 $x = \sqrt{c_1 t + c_2}$（$c_1 = 2c_1'$，含 $x = c$ 情形）。
+\end{solution}
+
+\subsubsection{3) 已知部分特解的齐次线性方程}
+
+\textbf{结论}：已知方程 (4.2) 的 $k$ 个线性无关的特解，则 (4.2) 可降低 $k$ 阶，得到 $n-k$ 阶的齐次线性方程。特别地，如果已知 (4.2) 的 $n-1$ 个线性无关的解，则基本解组可以求得。
+
+\textbf{方法}：设 $x_1, \ldots, x_k$ 是 (4.2) 的 $k$ 个线性无关解，令 $x = x_k\int z\,dt$，则 $z$ 满足 $n-k$ 阶线性方程；类似地令 $u = \dfrac{z'}{z_{k-1}}$ 继续降阶。
+
+\textbf{特别地，二阶齐次线性方程}：$x'' + p(t)x' + q(t)x = 0$，若知其一非零解 $x_1 \neq 0$，令 $x = x_1\int y\,dt$（即令 $x = x_1 v$），可求得通解：
+$$x(t) = x_1(t)\left[c_1 + c_2\int \frac{e^{-\int p(t)\,dt}}{x_1^2(t)}\,dt\right]$$
+即基本解组为 $x_1$ 与 $x_1\int\dfrac{e^{-\int p\,dt}}{x_1^2}\,dt$。
+
+\begin{example}
+已知 $x = \dfrac{\sin t}{t}$ 是方程 $x'' + \dfrac{2}{t}x' + x = 0$ 的解，求方程的通解。
+\end{example}
+
+\begin{solution}
+$p(t) = \dfrac{2}{t}$，$e^{-\int p\,dt} = e^{-2\ln t} = \dfrac{1}{t^2}$。由公式：
+$$x(t) = \frac{\sin t}{t}\left[c_1 + c_2\int \frac{1}{t^2}\cdot\frac{t^2}{\sin^2 t}\,dt\right] = \frac{\sin t}{t}\left[c_1 + c_2\int\csc^2 t\,dt\right] = \frac{\sin t}{t}(c_1 - c_2\cot t)$$
+故通解 $x = c_1\dfrac{\sin t}{t} - c_2\dfrac{\cos t}{t}$。
+\end{solution}
+
+\subsection{二阶线性方程的幂级数解法（求特解）}
+
+\begin{example}
+求方程 $y' - y = -x$ 满足 $y(0) = 0$ 的解。
+\end{example}
+
+\begin{solution}
+设 $y = a_0 + a_1x + a_2x^2 + \cdots + a_nx^n + \cdots$，由 $y(0) = 0$ 得 $a_0 = 0$。代入方程比较系数得 $a_1 = 0, a_2 = -\frac{1}{2}, a_3 = -\frac{1}{3!}, \ldots, a_n = -\frac{1}{n!}$，故
+$$y = -\left(\frac{x^2}{2!} + \frac{x^3}{3!} + \cdots + \frac{x^n}{n!} + \cdots\right) = 1 - e^x + x$$
+（也可用常数变易法验证：$y = ce^x + x + 1$，由 $y(0)=0$ 得 $c = -1$。）
+\end{solution}
+
+\begin{example}
+求方程 $y'' - xy' - 4x^2y = 0$ 满足 $y(0) = 0, y'(0) = 1$ 的解。
+\end{example}
+
+\begin{solution}
+设级数解 $y = \sum a_n x^n$，由初始条件 $a_0 = 0, a_1 = 1$。代入方程比较系数得递推关系：偶数项 $a_{2k} = 0$，奇数项 $a_{2k+1} = \dfrac{1}{(2k+1)!!}$ $[?]$，故
+$$y = x + \frac{x^3}{3} + \frac{x^5}{3\cdot 5} + \cdots + \frac{x^{2k+1}}{(2k+1)!!} + \cdots$$
+\end{solution}
+
+\begin{example}
+求初值问题 $x\dfrac{dy}{dx} = y - x$，$y(0) = 0$ 的解。
+\end{example}
+
+\begin{solution}
+设 $y = \sum_{n\ge 1} a_n x^n$，代入得递推 $a_{n+1} = na_n$，$a_n = (n-1)!a_1$，故 $y = a_1\sum_{n\ge1}(n-1)!x^n$，对任意 $x \neq 0$ 级数发散，因此\textbf{不存在幂级数形式的解}。
+\end{solution}
+
+\begin{remark}
+这说明幂级数解法并非总适用，其适用性由下述定理保证。
+\end{remark}
+
+\begin{myTheorem}{定理}
+若方程 $y'' + p(x)y' + q(x)y = 0$ 中系数 $p(x), q(x)$ 都能展成 $x$ 的幂级数，且收敛区间为 $|x| < R$，则方程有形如 $y = \sum_{n=0}^{\infty} a_n x^n$ 的特解，也以 $|x| < R$ 为收敛区间。
+\end{myTheorem}
+
+\begin{myTheorem}{定理}
+若方程中 $xp(x)$ 与 $x^2q(x)$ 都能展成 $x$ 的幂级数且收敛区间为 $|x| < R$，则方程有形如 $y = x^\alpha\sum_{n=0}^{\infty} a_n x^n$（$a_0 \neq 0$，$\alpha$ 为待定常数）的特解。例如 \textbf{Bessel 方程}：
+$$x^2\frac{d^2y}{dx^2} + x\frac{dy}{dx} + (x^2 - n^2)y = 0$$
+其中 $n$ 为非负常数（不一定是正整数）。
+\end{myTheorem}
+
+\textbf{练习}：
+\begin{enumerate}
+    \item 求解方程 $x'' - (1 + x^2) = 0$ $[?]$
+    \item 用幂级数方法，求方程 $x'' + tx' + x = 0$ 满足 $x(0) = 1, x'(0) = 0$ 的特解
+    \item 若方程 $x'' + p(t)x' + q(t)x = 0$ 有一特解为 $x = t$，则方程系数满足什么关系？若方程有形如 $x = e^{mt}$ 的解，则 $m$ 满足什么关系？
+\end{enumerate}
+
+\textbf{思考}：
+\begin{enumerate}
+    \item 求解方程 $y'' - f(x)y' + [f(x) - 1]y = 0$ $[?]$
+    \item 若两方程 $x'' + p(t)x' + q(t)x = 0$ 有一个公共解，试求出此解，并分别求两个方程的通解
+\end{enumerate}
+
+\textbf{作业（4.3）}：p107-108：1.（2、5、6）、2.（2）、4、5、6、7

@@ -4,23 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "dad22983ad7649ce",
+        "id": "423d9e0a04048522",
         "type": "tabs",
         "children": [
           {
-            "id": "fcd23e5c9ff5e34a",
+            "id": "f848d194cdb27b5c",
             "type": "leaf",
             "state": {
-              "type": "pdf",
+              "type": "markdown",
               "state": {
-                "file": "教材/Spacecraft_Dynamics/Spacecraft_Dynamics.pdf",
-                "page": 2,
-                "left": 87,
-                "top": 490,
-                "zoom": 2.161016949152543
+                "file": "数理基础/常微分方程/第二章 一阶微分方程的初等积分法.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-file-text",
-              "title": "Spacecraft_Dynamics"
+              "icon": "lucide-file",
+              "title": "第二章 一阶微分方程的初等积分法"
             }
           }
         ]
@@ -181,13 +179,12 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
       "markdown-importer:打开 Markdown 格式转换器": false,
-      "opencode:Opencode terminal": false,
-      "opencode:Opencode conversations": false,
       "switcher:打开快速切换": false,
       "graph:查看关系图谱": false,
       "canvas:新建白板": false,
@@ -196,34 +193,43 @@
       "command-palette:打开命令面板": false,
       "bases:新建数据库": false,
       "obsidian-git:Open Git source control": false,
+      "opencode:Opencode terminal": false,
+      "opencode:Opencode conversations": false,
       "pdf-plus:PDF++: Toggle auto-copy": false,
       "pdf-plus:PDF++: Toggle auto-focus": false,
       "pdf-plus:PDF++: Toggle auto-paste": false
     }
   },
-  "active": "fcd23e5c9ff5e34a",
+  "active": "f848d194cdb27b5c",
   "lastOpenFiles": [
+    "数理基础/常微分方程/第六章 非线性微分方程.md",
+    "数理基础/常微分方程/第三章 一阶微分方程解的存在定理.md",
+    "数理基础/常微分方程/第四章 高阶微分方程.md",
+    "数理基础/常微分方程/第五章 线性微分方程组.md",
+    "数理基础/常微分方程/第一章 绪论.md",
+    "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/学习笔记.md",
+    "数理基础/常微分方程/_提取文本/函数项级数_p6.png",
+    "数理基础/常微分方程/_提取文本/函数项级数_p5.png",
+    "数理基础/常微分方程/_提取文本/函数项级数_p4.png",
+    "数理基础/常微分方程/_提取文本/函数项级数_p3.png",
+    "数理基础/常微分方程/_提取文本/函数项级数_p2.png",
+    "数理基础/常微分方程/_提取文本/函数项级数_p1.png",
+    "数理基础/常微分方程/_提取文本/函数项级数.txt",
+    "数理基础/常微分方程/_提取文本/第一章 绪论1.txt",
+    "数理基础/常微分方程/_提取文本/第五章-3.txt",
+    "数理基础/常微分方程/_提取文本/第五章-2.txt",
+    "数理基础/常微分方程/_提取文本/第三章 3.1pdf.txt",
+    "数理基础/常微分方程/_提取文本/第六章-2.txt",
+    "数理基础/常微分方程/_提取文本/第六章-1.txt",
+    "数理基础/常微分方程/_提取文本/第二章2.2.txt",
+    "数理基础/常微分方程/_提取文本/第二章 一阶微分方程的初等解法2.1.txt",
+    "数理基础/常微分方程/_提取文本/第二章 2.4.txt",
+    "数理基础/常微分方程/第二章 一阶微分方程的初等积分法.md",
     "conflict-files-obsidian-git.md",
-    "教材/Spacecraft_Dynamics/Spacecraft_Dynamics.pdf",
-    "数学建模/数学建模教程/获奖论文和赛题/2024zjhychn/A题/附件/result2.xlsx",
-    "数学建模/数学建模教程/获奖论文和赛题/2024zjhychn/C题/附件3/result2.xlsx",
-    "数学建模/数学建模教程/获奖论文和赛题/2024zjhychn/A题/附件/result1.xlsx",
-    "数学建模/数学建模教程/获奖论文和赛题/2024zjhychn/A题/附件/result4.xlsx",
-    "数学建模/数学建模教程/获奖论文和赛题/2024zjhychn/C题/附件3/result1_2.xlsx",
-    "数学建模/数学建模教程/获奖论文和赛题/2024zjhychn/C题/附件3/result1_1.xlsx",
     "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/纵摇运动受力分析示意图.png",
     "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/重心位置的确定.png",
     "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/符号表.png",
     "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/波浪能装置示意图.png",
-    "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/大地坐标系和固体坐标系示意图.png",
-    "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/平行移轴和垂直轴定理.png",
-    "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/垂荡运动受力分析示意图.png",
-    "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/fig_sim_08.png",
-    "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/fig_sim_09.png",
-    "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/fig_sim_07.png",
-    "数学建模/数学建模教程/获奖论文和赛题/2024zjhychn/C题/附件3",
-    "数学建模/数学建模教程/获奖论文和赛题/2024zjhychn/C题/附件2.xlsx",
-    "数学建模/数学建模教程/获奖论文和赛题/2024zjhychn/C题/附件1.xlsx",
     "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/8.1汇报讲稿.md",
     "数学建模/数学建模教程/12-论文写作/05-常见问题与避坑.md",
     "数学建模/数学建模教程/12-论文写作/03-图表制作与美化.md",
@@ -240,13 +246,6 @@
     "数学建模/数学建模教程/11-数据分析/01-数据清洗与预处理.md",
     "数学建模/数学建模教程/09-微分方程模型/05-传染病网络模型.md",
     "数学建模/数学建模教程/09-微分方程模型/03-捕食者猎物模型.md",
-    "数学建模/数学建模教程/09-微分方程模型/04-竞争排斥模型.md",
-    "数学建模/数学建模教程/09-微分方程模型/02-传染病模型.md",
-    "数学建模/数学建模教程/09-微分方程模型/01-人口模型.md",
-    "数学建模/数学建模教程/08-智能算法/10-算法选择指南.md",
-    "数学建模/数学建模教程/08-智能算法/08-人工蜂群算法.md",
-    "数学建模/数学建模教程/08-智能算法/09-布谷鸟搜索.md",
-    "数学建模/数学建模教程/08-智能算法/07-差分进化.md",
-    "数学建模/数学建模教程/08-智能算法/06-变邻域搜索.md"
+    "数学建模/数学建模教程/09-微分方程模型/04-竞争排斥模型.md"
   ]
 }

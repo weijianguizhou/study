@@ -1,0 +1,51 @@
+\documentclass[12pt,a4paper]{book}
+\input{preamble}
+
+% ============================================================
+%	笔记元信息
+% ============================================================
+\newcommand{\notename}{常微分方程}   % 封面大标题
+\newcommand{\noteauthor}{魏舟} % 封面作者
+\newcommand{\notebody}{
+	% 前言（课程介绍）
+	\chapter*{前言}
+	\input{前言}
+
+	% 正文各章
+	\chapter{绪论}
+	\input{第一章 绪论}
+	\chapter{一阶微分方程的初等积分法}
+	\input{第二章 一阶微分方程的初等积分法}
+	\chapter{一阶微分方程解的存在定理}
+	\input{第三章 一阶微分方程解的存在定理}
+	\chapter{高阶微分方程}
+	\input{第四章 高阶微分方程}
+	\chapter{线性微分方程组}
+	\input{第五章 线性微分方程组}
+	\chapter{非线性微分方程}
+	\input{第六章 非线性微分方程}
+}
+
+\begin{document}
+	\input{cover}
+
+	\newpage
+
+	% ---- 第 2 页：格言页（居中）----
+	\thispagestyle{empty}
+	\vspace*{\fill}
+	\begin{center}
+		{\kaishu\fontsize{18}{28}\selectfont "微分方程是自然规律的数学语言。"}
+	\end{center}
+	\vfill
+	\newpage
+
+	\setcounter{tocdepth}{3}
+
+	\tableofcontents
+
+	\setcounter{page}{0}
+	\thispagestyle{empty}
+	\newpage
+	\notebody
+\end{document}
