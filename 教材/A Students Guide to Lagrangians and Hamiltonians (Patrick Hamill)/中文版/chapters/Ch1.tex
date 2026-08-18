@@ -113,34 +113,34 @@ $$
 
 \section*{1.3  广义速度}
 
-如前所述，质点在空间中某个特定点的位置，既可以用笛卡尔坐标 $\xi$ 表示，也可以用广义坐标 $q_i$ 表示。它们通过变换方程彼此联系：
+如前所述，质点在空间中某个特定点的位置，既可以用笛卡尔坐标 $x$ 表示，也可以用广义坐标 $q_i$ 表示。它们通过变换方程彼此联系：
 $$
-\xi = \xi(q_1, q_2, q_3, t).
+x = x(q_1, q_2, q_3, t).
 $$
-注意，$\xi$ 是某个特定质点的三个笛卡尔坐标之一，（一般）依赖于所有的广义坐标。
+注意，$x$ 是某个特定质点的三个笛卡尔坐标之一，（一般）依赖于所有的广义坐标。
 
-现在我们用广义坐标来确定速度的分量。质点在 $\xi$ 方向上的速度为 $v_i$，按定义
+现在我们用广义坐标来确定速度的分量。质点在 $x$ 方向上的速度为 $v_i$，按定义
 $$
-v_i \equiv \frac{d\xi_i}{dt}.
+v_i \equiv \frac{dx_i}{dt}.
 $$
-但 $\xi$ 是各 $q$ 的函数，所以利用微分的链式法则，有
+但 $x$ 是各 $q$ 的函数，所以利用微分的链式法则，有
 $$
-v_i = \sum_{k=1}^{n}\frac{\partial \xi}{\partial q_k}\frac{dq_k}{dt} + \frac{\partial \xi}{\partial t} = \sum_{k}\frac{\partial \xi}{\partial q_k}\dot{q}_k + \frac{\partial \xi}{\partial t}. \eqno\hbox{(1.6)}
+v_i = \sum_{k=1}^{n}\frac{\partial x}{\partial q_k}\frac{dq_k}{dt} + \frac{\partial x}{\partial t} = \sum_{k}\frac{\partial x}{\partial q_k}\dot{q}_k + \frac{\partial x}{\partial t}. \eqno\hbox{(1.6)}
 $$
 现在我们来求一个非常有用的关系式，它涉及 $v_i$ 对 $\dot{q}_j$ 的偏导数。由于二阶混合偏导数不依赖于求导的次序，我们可以写出
 $$
-\frac{\partial}{\partial \dot{q}_j}\frac{\partial \xi}{\partial t} = \frac{\partial}{\partial t}\frac{\partial \xi}{\partial \dot{q}_j}.
+\frac{\partial}{\partial \dot{q}_j}\frac{\partial x}{\partial t} = \frac{\partial}{\partial t}\frac{\partial x}{\partial \dot{q}_j}.
 $$
-但 $\partial\xi/\partial\dot{q}_j = 0$，因为 $x$ 不依赖于广义速度 $\dot{q}$。让我们用方程（1.6）求 $v_i$ 对 $\dot{q}_j$ 的偏导数。这给出
+但 $\partial x/\partial\dot{q}_j = 0$，因为 $x$ 不依赖于广义速度 $\dot{q}$。让我们用方程（1.6）求 $v_i$ 对 $\dot{q}_j$ 的偏导数。这给出
 $$
-\frac{\partial v_i}{\partial \dot{q}_j} = \frac{\partial}{\partial \dot{q}_j}\sum_{k}\frac{\partial \xi}{\partial q_k}\dot{q}_k + \frac{\partial}{\partial \dot{q}_j}\frac{\partial \xi}{\partial t} = \frac{\partial}{\partial \dot{q}_j}\sum_{k}\frac{\partial \xi}{\partial q_k}\dot{q}_k + 0
+\frac{\partial v_i}{\partial \dot{q}_j} = \frac{\partial}{\partial \dot{q}_j}\sum_{k}\frac{\partial x}{\partial q_k}\dot{q}_k + \frac{\partial}{\partial \dot{q}_j}\frac{\partial x}{\partial t} = \frac{\partial}{\partial \dot{q}_j}\sum_{k}\frac{\partial x}{\partial q_k}\dot{q}_k + 0
 $$
 $$
-= \sum_{k}\frac{\partial}{\partial \dot{q}_j}\left(\frac{\partial \xi}{\partial q_k}\right)\dot{q}_k + \sum_{k}\frac{\partial \xi}{\partial q_k}\frac{\partial \dot{q}_k}{\partial \dot{q}_j} = 0 + \sum_{k}\frac{\partial \xi}{\partial q_k}\delta_{ij} = \frac{\partial \xi}{\partial q_j}.
+= \sum_{k}\frac{\partial}{\partial \dot{q}_j}\left(\frac{\partial x}{\partial q_k}\right)\dot{q}_k + \sum_{k}\frac{\partial x}{\partial q_k}\frac{\partial \dot{q}_k}{\partial \dot{q}_j} = 0 + \sum_{k}\frac{\partial x}{\partial q_k}\delta_{ij} = \frac{\partial x}{\partial q_j}.
 $$
 于是，我们得出结论
 $$
-\frac{\partial v_i}{\partial \dot{q}_j} = \frac{\partial \xi}{\partial q_j}. \eqno\hbox{(1.7)}
+\frac{\partial v_i}{\partial \dot{q}_j} = \frac{\partial x}{\partial q_j}. \eqno\hbox{(1.7)}
 $$
 这个简单的关系式在许多涉及广义坐标的推导中非常有用。幸运的是，它很容易记忆，因为它说明：笛卡尔速度与广义速度的关系，与笛卡尔坐标与广义坐标的关系相同。
 
@@ -190,38 +190,38 @@ $$
 
 \section*{1.5  虚位移}
 
-虚位移 $\delta\xi$ 定义为坐标 $\xi$ 的无穷小瞬时位移，且与作用在系统上的任何约束相容。
+虚位移 $\delta x$ 定义为坐标 $x$ 的无穷小瞬时位移，且与作用在系统上的任何约束相容。
 
-为了理解普通位移 $dx_i$ 与虚位移 $\delta\xi$ 之间的差别，考虑变换方程
+为了理解普通位移 $dx_i$ 与虚位移 $\delta x$ 之间的差别，考虑变换方程
 $$
-\xi = \xi(q_1, q_2, \ldots, q_n, t), \qquad i = 1, 2, \ldots, 3N.
+x = x(q_1, q_2, \ldots, q_n, t), \qquad i = 1, 2, \ldots, 3N.
 $$
 对变换方程取微分，我们得到
 $$
-dx_i = \frac{\partial \xi}{\partial q_1}dq_1 + \frac{\partial \xi}{\partial q_2}dq_2 + \cdots + \frac{\partial \xi}{\partial q_n}dq_n + \frac{\partial \xi}{\partial t}dt = \sum_{\alpha=1}^{n}\frac{\partial \xi}{\partial q_\alpha}dq_\alpha + \frac{\partial \xi}{\partial t}dt.
+dx_i = \frac{\partial x}{\partial q_1}dq_1 + \frac{\partial x}{\partial q_2}dq_2 + \cdots + \frac{\partial x}{\partial q_n}dq_n + \frac{\partial x}{\partial t}dt = \sum_{\alpha=1}^{n}\frac{\partial x}{\partial q_\alpha}dq_\alpha + \frac{\partial x}{\partial t}dt.
 $$
-但对于虚位移 $\delta\xi$，时间是冻结的，所以
+但对于虚位移 $\delta x$，时间是冻结的，所以
 $$
-\delta\xi = \sum_{\alpha=1}^{n}\frac{\partial \xi}{\partial q_\alpha}\delta q_\alpha. \eqno\hbox{(1.9)}
+\delta x = \sum_{\alpha=1}^{n}\frac{\partial x}{\partial q_\alpha}\delta q_\alpha. \eqno\hbox{(1.9)}
 $$
 
 \section*{1.6  虚功与广义力}
 
-假设一个系统受到若干主动力的作用。设 $F_i$ 是沿 $\xi$ 方向的力分量。（于是，对两质点系统，$F_5$ 将是作用在质点 2 上沿 $y$ 方向的力。）让所有笛卡尔坐标经历虚位移 $\delta\xi$，则主动力所做的虚功为
+假设一个系统受到若干主动力的作用。设 $F_i$ 是沿 $x$ 方向的力分量。（于是，对两质点系统，$F_5$ 将是作用在质点 2 上沿 $y$ 方向的力。）让所有笛卡尔坐标经历虚位移 $\delta x$，则主动力所做的虚功为
 $$
-\delta W = \sum_{i=1}^{3N}F_i\,\delta\xi.
+\delta W = \sum_{i=1}^{3N}F_i\,\delta x.
 $$
-把方程（1.9）中的 $\delta\xi$ 代入，
+把方程（1.9）中的 $\delta x$ 代入，
 $$
-\delta W = \sum_{i=1}^{3N}F_i\sum_{\alpha=1}^{3N}\frac{\partial \xi}{\partial q_\alpha}\delta q_\alpha.
+\delta W = \sum_{i=1}^{3N}F_i\sum_{\alpha=1}^{3N}\frac{\partial x}{\partial q_\alpha}\delta q_\alpha.
 $$
 交换求和次序，
 $$
-\delta W = \sum_{\alpha=1}^{3N}\left(\sum_{i=1}^{3N}F_i\frac{\partial \xi}{\partial q_\alpha}\right)\delta q_\alpha.
+\delta W = \sum_{\alpha=1}^{3N}\left(\sum_{i=1}^{3N}F_i\frac{\partial x}{\partial q_\alpha}\right)\delta q_\alpha.
 $$
 回想"功等于力乘以距离"这一基本概念，我们定义广义力为
 $$
-Q_\alpha = \sum_{i=1}^{3N}F_i\frac{\partial \xi}{\partial q_\alpha}. \eqno\hbox{(1.10)}
+Q_\alpha = \sum_{i=1}^{3N}F_i\frac{\partial x}{\partial q_\alpha}. \eqno\hbox{(1.10)}
 $$
 于是虚功可以表示为
 $$
@@ -298,7 +298,7 @@ $$
 
 \section*{1.8  相空间}
 
-用质点的位置和动量来描述质点系统往往很方便。系统的"状态"用某一时刻所有质点的位置和动量的值来描述。例如，我们可以用笛卡尔坐标 $\xi$、$i = 1, 2, 3$ 来表示质点的位置。类似地，质点的动量可以用 $p_i$、$i = 1, 2, 3$ 表示。想象画一个 $2n$ 维坐标系，其轴标为 $x_1, \ldots, x_n$；$p_1, \ldots, p_n$。由这组轴所描述的空间称为相空间。所有质点的位置以及所有质点的动量，由相空间中的单个点来表示。随着时间推进，每个质点的位置和动量都发生变化。这些变化是连续的，所以相空间中的点在 $2n$ 维坐标系中连续运动。也就是说，系统的时间演化可以用相空间中的一条轨迹来表示。这条轨迹称为"相路径"，在某些文献中也称为"世界线"。\footnote{相空间的概念在混沌系统的研究中非常重要，在那里，通过分析系统轨迹与相空间中某个特定平面的交集（即所谓的"截面"），可以确定是否正在发生混沌运动。此外，在统计力学中，刘维尔的一个基本定理表明：如果画出系统系综的相空间轨迹，那么在给定系统附近的相空间点的密度将随时间保持不变。}
+用质点的位置和动量来描述质点系统往往很方便。系统的"状态"用某一时刻所有质点的位置和动量的值来描述。例如，我们可以用笛卡尔坐标 $x$、$i = 1, 2, 3$ 来表示质点的位置。类似地，质点的动量可以用 $p_i$、$i = 1, 2, 3$ 表示。想象画一个 $2n$ 维坐标系，其轴标为 $x_1, \ldots, x_n$；$p_1, \ldots, p_n$。由这组轴所描述的空间称为相空间。所有质点的位置以及所有质点的动量，由相空间中的单个点来表示。随着时间推进，每个质点的位置和动量都发生变化。这些变化是连续的，所以相空间中的点在 $2n$ 维坐标系中连续运动。也就是说，系统的时间演化可以用相空间中的一条轨迹来表示。这条轨迹称为"相路径"，在某些文献中也称为"世界线"。\footnote{相空间的概念在混沌系统的研究中非常重要，在那里，通过分析系统轨迹与相空间中某个特定平面的交集（即所谓的"截面"），可以确定是否正在发生混沌运动。此外，在统计力学中，刘维尔的一个基本定理表明：如果画出系统系综的相空间轨迹，那么在给定系统附近的相空间点的密度将随时间保持不变。}
 
 我们很快就会定义"广义动量"，然后相空间将用广义坐标 $(q_1, \ldots, q_n)$ 和广义动量 $(p_1, \ldots, p_n)$ 来描述。
 
@@ -949,7 +949,7 @@ $$
 $$
 T = T_0 + T_1 + T_2,
 $$
-其中 $T_0$ 不依赖于速度，$T_1$ 是速度的一次齐次函数，$T_2$ 是速度的二次齐次函数。\footnote{这可以从笛卡尔坐标中的动能出发，利用变换方程 $\xi = \xi(q_1, q_2, \ldots, q_n, t)$ 以及 $\dot{x}_i = \sum_j\frac{\partial \xi}{\partial q_j}\dot{q}_j + \frac{\partial \xi}{\partial t}$ 来证明。参见章末习题 1.12。}（在笛卡尔坐标中，$T_0$ 和 $T_1$ 都为零，$T_2$ 不仅对速度是二次的，而且实际上是速度的二次型，即它包含 $\dot{x}^2$ 而不包含 $\dot{x}\dot{y}$。）
+其中 $T_0$ 不依赖于速度，$T_1$ 是速度的一次齐次函数，$T_2$ 是速度的二次齐次函数。\footnote{这可以从笛卡尔坐标中的动能出发，利用变换方程 $x = x(q_1, q_2, \ldots, q_n, t)$ 以及 $\dot{x}_i = \sum_j\frac{\partial x}{\partial q_j}\dot{q}_j + \frac{\partial x}{\partial t}$ 来证明。参见章末习题 1.12。}（在笛卡尔坐标中，$T_0$ 和 $T_1$ 都为零，$T_2$ 不仅对速度是二次的，而且实际上是速度的二次型，即它包含 $\dot{x}^2$ 而不包含 $\dot{x}\dot{y}$。）
 
 回忆函数 $f(x_1, \ldots, x_n)$ 若满足
 $$
@@ -1131,11 +1131,11 @@ T = \sum_{j=1}^{3N}\sum_{k=1}^{3N}\frac{1}{2}A_{jk}\dot{q}_j\dot{q}_k + \sum_{j=
 $$
 其中
 $$
-A_{jk} = \sum_{i=1}^{N}m_i\left(\frac{\partial \xi_i}{\partial q_j}\frac{\partial \xi_i}{\partial q_k} + \frac{\partial y_i}{\partial q_j}\frac{\partial y_i}{\partial q_k} + \frac{\partial z_i}{\partial q_j}\frac{\partial z_i}{\partial q_k}\right),
+A_{jk} = \sum_{i=1}^{N}m_i\left(\frac{\partial x_i}{\partial q_j}\frac{\partial x_i}{\partial q_k} + \frac{\partial y_i}{\partial q_j}\frac{\partial y_i}{\partial q_k} + \frac{\partial z_i}{\partial q_j}\frac{\partial z_i}{\partial q_k}\right),
 $$
 $$
-B_j = \sum_{i=1}^{N}m_i\left(\frac{\partial \xi_i}{\partial q_j}\frac{\partial \xi_i}{\partial t} + \frac{\partial y_i}{\partial q_j}\frac{\partial y_i}{\partial t} + \frac{\partial z_i}{\partial q_j}\frac{\partial z_i}{\partial t}\right),
+B_j = \sum_{i=1}^{N}m_i\left(\frac{\partial x_i}{\partial q_j}\frac{\partial x_i}{\partial t} + \frac{\partial y_i}{\partial q_j}\frac{\partial y_i}{\partial t} + \frac{\partial z_i}{\partial q_j}\frac{\partial z_i}{\partial t}\right),
 $$
 $$
-T_0 = \frac{1}{2}\sum_{i=1}^{N}m_i\left[\left(\frac{\partial \xi_i}{\partial t}\right)^2 + \left(\frac{\partial y_i}{\partial t}\right)^2 + \left(\frac{\partial z_i}{\partial t}\right)^2\right].
+T_0 = \frac{1}{2}\sum_{i=1}^{N}m_i\left[\left(\frac{\partial x_i}{\partial t}\right)^2 + \left(\frac{\partial y_i}{\partial t}\right)^2 + \left(\frac{\partial z_i}{\partial t}\right)^2\right].
 $$

@@ -205,11 +205,11 @@ $$
 $$
 于是拉格朗日方程为
 $$
-\frac{\partial}{\partial t}\left(\frac{\partial\mathcal{L}}{\partial(\partial w/\partial t)}\right) + \sum_{i=1}^{3}\frac{\partial}{\partial\xi_i}\left(\frac{\partial\mathcal{L}}{\partial(\partial w/\partial\xi_i)}\right) - \frac{\partial\mathcal{L}}{\partial w} = 0, \eqno\hbox{(7.5)}
+\frac{\partial}{\partial t}\left(\frac{\partial\mathcal{L}}{\partial(\partial w/\partial t)}\right) + \sum_{i=1}^{3}\frac{\partial}{\partial x_i}\left(\frac{\partial\mathcal{L}}{\partial(\partial w/\partial x_i)}\right) - \frac{\partial\mathcal{L}}{\partial w} = 0, \eqno\hbox{(7.5)}
 $$
 或更紧凑地写成
 $$
-\frac{\partial}{\partial t}\left(\frac{\partial\mathcal{L}}{\partial\dot{w}}\right) + \frac{\partial}{\partial\xi_i}\left(\frac{\partial\mathcal{L}}{\partial(\nabla_i w)}\right) - \frac{\partial\mathcal{L}}{\partial w} = 0, \eqno\hbox{(7.6)}
+\frac{\partial}{\partial t}\left(\frac{\partial\mathcal{L}}{\partial\dot{w}}\right) + \frac{\partial}{\partial x_i}\left(\frac{\partial\mathcal{L}}{\partial(\nabla_i w)}\right) - \frac{\partial\mathcal{L}}{\partial w} = 0, \eqno\hbox{(7.6)}
 $$
 其中中间一项的求和已由求和约定所取代。
 
@@ -355,20 +355,20 @@ $$
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.55\linewidth]{../Figures/fig_7_2.png}
-\caption{图 7.2　质量为 $m$ 的珠子穿在一根细而硬的金属丝上，由劲度系数为 $k$ 的弹簧相连。平衡间距为 $a$。下图显示了两颗珠子偏离平衡的距离分别为 $\xi_i$ 和 $\xi_{i+1}$。}
+\caption{图 7.2　质量为 $m$ 的珠子穿在一根细而硬的金属丝上，由劲度系数为 $k$ 的弹簧相连。平衡间距为 $a$。下图显示了两颗珠子偏离平衡的距离分别为 $x_i$ 和 $x_{i+1}$。}
 \end{figure}
 
 为了更好地理解这类系统的物理，从由排成一条直线的粒子组成的一维系统入手是方便的。我们的"玩具模型"可以想象为穿在一根细而硬的金属丝上并由无质量弹簧连接起来的珠子（见图 7.2）。
 
-设每颗珠子的质量为 $m$，每个弹簧的劲度系数为 $k$。设珠子的平衡间距为 $a$。若第 $i$ 颗珠子在平衡时的位置为 $x_i = ia$，则它偏离平衡后的位置可以表示为 $ia + \xi_i$，其中 $\xi_i$ 是第 $i$ 颗珠子偏离平衡位置的位移。粒子 $i$ 与粒子 $i+1$ 之间的距离为 $a + \xi_{i+1} - \xi_i$。弹簧的自然长度为 $a$，所以弹簧的伸长量为 $\xi_{i+1} - \xi_i$，与弹簧相关的势能为 $\frac{1}{2}k(\xi_{i+1} - \xi_i)^2$。粒子 $i$ 相对于其平衡位置（假定处于静止）的速度就是 $\dot{\xi}_i$。利用这些概念，我们可以把拉格朗日量按通常的形式写成
+设每颗珠子的质量为 $m$，每个弹簧的劲度系数为 $k$。设珠子的平衡间距为 $a$。若第 $i$ 颗珠子在平衡时的位置为 $x_i = ia$，则它偏离平衡后的位置可以表示为 $ia + x_i$，其中 $x_i$ 是第 $i$ 颗珠子偏离平衡位置的位移。粒子 $i$ 与粒子 $i+1$ 之间的距离为 $a + x_{i+1} - x_i$。弹簧的自然长度为 $a$，所以弹簧的伸长量为 $x_{i+1} - x_i$，与弹簧相关的势能为 $\frac{1}{2}k(x_{i+1} - x_i)^2$。粒子 $i$ 相对于其平衡位置（假定处于静止）的速度就是 $\dot{x}_i$。利用这些概念，我们可以把拉格朗日量按通常的形式写成
 $$
-L = T - V = \sum_i\left[\frac{m}{2}\dot{\xi}_i^2 - \frac{k}{2}(\xi_{i+1} - \xi_i)^2\right]. \eqno\hbox{(7.9)}
+L = T - V = \sum_i\left[\frac{m}{2}\dot{x}_i^2 - \frac{k}{2}(x_{i+1} - x_i)^2\right]. \eqno\hbox{(7.9)}
 $$
 
 \begin{exercise}
 利用方程（7.9）给出的拉格朗日量，证明这一离散粒子系统的运动方程为
 $$
-m\ddot{\xi}_i - k(\xi_{i+1} - \xi_i) + k(\xi_i - \xi_{i-1}) = 0.
+m\ddot{x}_i - k(x_{i+1} - x_i) + k(x_i - x_{i-1}) = 0.
 $$
 \end{exercise}
 
@@ -376,23 +376,23 @@ $$
 
 现在我们把这个珠子系统表示成连续系统。我们先把方程（7.9）乘以并除以 $a$，即：
 $$
-L = \sum_i a\left[\frac{m}{2a}\dot{\xi}_i^2 - \frac{ka}{2}\left(\frac{\xi_{i+1} - \xi_i}{a}\right)^2\right].
+L = \sum_i a\left[\frac{m}{2a}\dot{x}_i^2 - \frac{ka}{2}\left(\frac{x_{i+1} - x_i}{a}\right)^2\right].
 $$
-当 $a \to 0$ 时，$m/a \to \lambda(x)$，即单位长度的质量，也就是杆在位置 $x$ 处的线质量密度。项 $(\xi_{i+1} - \xi_i)/a$ 也可以写成连续函数。令 $\xi_i = \xi(x)$，$\xi_{i+1} = \xi(x + a)$。为方便起见，我们用 $\Delta x$ 表示 $a$。于是
+当 $a \to 0$ 时，$m/a \to \lambda(x)$，即单位长度的质量，也就是杆在位置 $x$ 处的线质量密度。项 $(x_{i+1} - x_i)/a$ 也可以写成连续函数。令 $x_i = x(x)$，$x_{i+1} = x(x + a)$。为方便起见，我们用 $\Delta x$ 表示 $a$。于是
 $$
-\frac{\xi_{i+1} - \xi_i}{a} \to \frac{\xi(x + \Delta x) - \xi(x)}{\Delta x},
+\frac{x_{i+1} - x_i}{a} \to \frac{x(x + \Delta x) - x(x)}{\Delta x},
 $$
 在极限 $a \to 0$ 下，
 $$
-\frac{\xi_{i+1} - \xi_i}{a} \to \frac{d\xi}{dx},
+\frac{x_{i+1} - x_i}{a} \to \frac{dx}{dx},
 $$
 并且
 $$
-ka\left(\frac{\xi_{i+1} - \xi_i}{a}\right)^2 \to K\left(\frac{\partial\xi}{\partial x}\right)^2.
+ka\left(\frac{x_{i+1} - x_i}{a}\right)^2 \to K\left(\frac{\partial x}{\partial x}\right)^2.
 $$
 求和变成对 $x$ 的积分，而
 $$
-L = \frac{1}{2}\int\left[\lambda(x)\left(\frac{\partial\xi}{\partial t}\right)^2 - K\left(\frac{\partial\xi}{\partial x}\right)^2\right]dx. \eqno\hbox{(7.10)}
+L = \frac{1}{2}\int\left[\lambda(x)\left(\frac{\partial x}{\partial t}\right)^2 - K\left(\frac{\partial x}{\partial x}\right)^2\right]dx. \eqno\hbox{(7.10)}
 $$
 
 \begin{exercise}
@@ -407,15 +407,15 @@ $$
 $$
 \delta\int_{t_1}^{t_2}\int_{x_1}^{x_2}\mathcal{L}\,dx\,dt = 0,
 $$
-其中 $\mathcal{L} = \mathcal{L}(\xi, \dot{\xi}, \xi')$。对于手头的问题，被变分的量是 $\xi$，而不是 $x$ 或 $t$。因此，$\xi$ 在端点处的变分为零，这里端点不仅是 $t_1$ 和 $t_2$，而且还有 $x_1$ 和 $x_2$。
+其中 $\mathcal{L} = \mathcal{L}(x, \dot{x}, x')$。对于手头的问题，被变分的量是 $x$，而不是 $x$ 或 $t$。因此，$x$ 在端点处的变分为零，这里端点不仅是 $t_1$ 和 $t_2$，而且还有 $x_1$ 和 $x_2$。
 
-当我们把 $\xi$ 表示为连续变量时，它被解释为杆中一个无穷小段偏离平衡位置的位移。（这很难直观想象，所以也许在脑海中把 $\xi$ 想象为代表诸如密度之类的其他变量会有所帮助。）
+当我们把 $x$ 表示为连续变量时，它被解释为杆中一个无穷小段偏离平衡位置的位移。（这很难直观想象，所以也许在脑海中把 $x$ 想象为代表诸如密度之类的其他变量会有所帮助。）
 
-为了应用变分方法，我们需要设想一个变分量 $\xi(x, t, \epsilon)$，它与"真实"量 $\xi(x, t, 0)$ 相差一个无穷小量。也就是说，我们定义
+为了应用变分方法，我们需要设想一个变分量 $x(x, t, \epsilon)$，它与"真实"量 $x(x, t, 0)$ 相差一个无穷小量。也就是说，我们定义
 $$
-\xi(x, t, \epsilon) = \xi(x, t, 0) + \epsilon\eta(x, t),
+x(x, t, \epsilon) = x(x, t, 0) + \epsilon\eta(x, t),
 $$
-其中 $\xi(x, t, 0)$ 是"真实"路径，$\epsilon$ 是一个小参数，$\eta(x, t)$ 是在端点处为零的任意函数。即
+其中 $x(x, t, 0)$ 是"真实"路径，$\epsilon$ 是一个小参数，$\eta(x, t)$ 是在端点处为零的任意函数。即
 $$
 \eta(x_1, t_1) = 0,
 $$
@@ -425,23 +425,23 @@ $$
 $$
 按照通常的做法，我们写出
 $$
-\frac{dI}{d\epsilon} = \int_{t_1}^{t_2}dt\int_{x_1}^{x_2}dx\left[\frac{\partial\mathcal{L}}{\partial\xi}\frac{\partial\xi}{\partial\epsilon} + \frac{\partial\mathcal{L}}{\partial\dot{\xi}}\frac{\partial\dot{\xi}}{\partial\epsilon} + \frac{\partial\mathcal{L}}{\partial\xi'}\frac{\partial\xi'}{\partial\epsilon}\right] = 0.
+\frac{dI}{d\epsilon} = \int_{t_1}^{t_2}dt\int_{x_1}^{x_2}dx\left[\frac{\partial\mathcal{L}}{\partial x}\frac{\partial x}{\partial\epsilon} + \frac{\partial\mathcal{L}}{\partial\dot{x}}\frac{\partial\dot{x}}{\partial\epsilon} + \frac{\partial\mathcal{L}}{\partial x'}\frac{\partial x'}{\partial\epsilon}\right] = 0.
 $$
 对第二项和第三项分部积分，我们得到
 $$
-\int_{t_1}^{t_2}\frac{\partial\mathcal{L}}{\partial\dot{\xi}}\frac{\partial\dot{\xi}}{\partial\epsilon}dt = -\int_{t_1}^{t_2}\frac{\partial}{\partial t}\left(\frac{\partial\mathcal{L}}{\partial\dot{\xi}}\right)\frac{\partial\xi}{\partial\epsilon}dt,
+\int_{t_1}^{t_2}\frac{\partial\mathcal{L}}{\partial\dot{x}}\frac{\partial\dot{x}}{\partial\epsilon}dt = -\int_{t_1}^{t_2}\frac{\partial}{\partial t}\left(\frac{\partial\mathcal{L}}{\partial\dot{x}}\right)\frac{\partial x}{\partial\epsilon}dt,
 $$
 以及
 $$
-\int_{x_1}^{x_2}\frac{\partial\mathcal{L}}{\partial\xi'}\frac{\partial\xi'}{\partial\epsilon}dx = -\int_{x_1}^{x_2}\frac{\partial}{\partial x}\left(\frac{\partial\mathcal{L}}{\partial\xi'}\right)\frac{\partial\xi}{\partial\epsilon}dx,
+\int_{x_1}^{x_2}\frac{\partial\mathcal{L}}{\partial x'}\frac{\partial x'}{\partial\epsilon}dx = -\int_{x_1}^{x_2}\frac{\partial}{\partial x}\left(\frac{\partial\mathcal{L}}{\partial x'}\right)\frac{\partial x}{\partial\epsilon}dx,
 $$
 从而有
 $$
-0 = \left.\frac{dI}{d\epsilon}\right|_{\epsilon=0} = \int_{t_1}^{t_2}dt\int_{x_1}^{x_2}dx\left[\frac{\partial\mathcal{L}}{\partial\xi} - \frac{\partial}{\partial t}\left(\frac{\partial\mathcal{L}}{\partial\dot{\xi}}\right) - \frac{\partial}{\partial x}\left(\frac{\partial\mathcal{L}}{\partial\xi'}\right)\right]\left.\frac{\partial\xi}{\partial\epsilon}\right|_{\epsilon=0}.
+0 = \left.\frac{dI}{d\epsilon}\right|_{\epsilon=0} = \int_{t_1}^{t_2}dt\int_{x_1}^{x_2}dx\left[\frac{\partial\mathcal{L}}{\partial x} - \frac{\partial}{\partial t}\left(\frac{\partial\mathcal{L}}{\partial\dot{x}}\right) - \frac{\partial}{\partial x}\left(\frac{\partial\mathcal{L}}{\partial x'}\right)\right]\left.\frac{\partial x}{\partial\epsilon}\right|_{\epsilon=0}.
 $$
 因此，拉格朗日方程为
 $$
-\frac{\partial}{\partial t}\left(\frac{\partial\mathcal{L}}{\partial\dot{\xi}}\right) + \frac{\partial}{\partial x}\left(\frac{\partial\mathcal{L}}{\partial\xi'}\right) - \frac{\partial\mathcal{L}}{\partial\xi} = 0, \eqno\hbox{(7.11)}
+\frac{\partial}{\partial t}\left(\frac{\partial\mathcal{L}}{\partial\dot{x}}\right) + \frac{\partial}{\partial x}\left(\frac{\partial\mathcal{L}}{\partial x'}\right) - \frac{\partial\mathcal{L}}{\partial x} = 0, \eqno\hbox{(7.11)}
 $$
 正如前面得到的（见方程（7.4））。
 
@@ -453,21 +453,21 @@ $$
 
 \subsection*{推广到三维}
 
-正如前面所指出的，我们可以容易地把上面导出的关系推广到三维。这需要把标量位移 $\xi$ 换成矢量位移 $\boldsymbol{\xi}$，其分量为 $\xi_i$，其中 $i = (1, 2, 3)$ 或 $(x, y, z)$。量 $\xi$ 表示在空间某个区域的每一点都有定义的物理量，所以它满足场的定义。事实上，我们可以让 $\xi$ 表示诸如压强、速度或电磁场等其他物理量。
+正如前面所指出的，我们可以容易地把上面导出的关系推广到三维。这需要把标量位移 $x$ 换成矢量位移 $\boldsymbol{x}$，其分量为 $x_i$，其中 $i = (1, 2, 3)$ 或 $(x, y, z)$。量 $x$ 表示在空间某个区域的每一点都有定义的物理量，所以它满足场的定义。事实上，我们可以让 $x$ 表示诸如压强、速度或电磁场等其他物理量。
 
-场 $\xi$ 因此在每一点和每一时刻都有定义，所以 $\xi = \xi(x, y, z, t)$，拉格朗日方程为
+场 $x$ 因此在每一点和每一时刻都有定义，所以 $x = x(x, y, z, t)$，拉格朗日方程为
 $$
-\frac{\partial}{\partial t}\left(\frac{\partial\mathcal{L}}{\partial\dot{\xi}}\right) + \frac{\partial}{\partial x}\left(\frac{\partial\mathcal{L}}{\partial(\partial\xi/\partial x)}\right) + \frac{\partial}{\partial y}\left(\frac{\partial\mathcal{L}}{\partial(\partial\xi/\partial y)}\right) + \frac{\partial}{\partial z}\left(\frac{\partial\mathcal{L}}{\partial(\partial\xi/\partial z)}\right) - \frac{\partial\mathcal{L}}{\partial\xi} = 0.
+\frac{\partial}{\partial t}\left(\frac{\partial\mathcal{L}}{\partial\dot{x}}\right) + \frac{\partial}{\partial x}\left(\frac{\partial\mathcal{L}}{\partial(\partial x/\partial x)}\right) + \frac{\partial}{\partial y}\left(\frac{\partial\mathcal{L}}{\partial(\partial x/\partial y)}\right) + \frac{\partial}{\partial z}\left(\frac{\partial\mathcal{L}}{\partial(\partial x/\partial z)}\right) - \frac{\partial\mathcal{L}}{\partial x} = 0.
 $$
 该方程的第 $i$ 个分量为
 $$
-\frac{\partial}{\partial t}\left(\frac{\partial\mathcal{L}}{\partial(\partial\xi_i/\partial t)}\right) + \sum_{k=1}^{3}\frac{\partial}{\partial x_k}\left(\frac{\partial\mathcal{L}}{\partial(\partial\xi_i/\partial x_k)}\right) - \frac{\partial\mathcal{L}}{\partial\xi_i} = 0, \eqno\hbox{(7.12)}
+\frac{\partial}{\partial t}\left(\frac{\partial\mathcal{L}}{\partial(\partial x_i/\partial t)}\right) + \sum_{k=1}^{3}\frac{\partial}{\partial x_k}\left(\frac{\partial\mathcal{L}}{\partial(\partial x_i/\partial x_k)}\right) - \frac{\partial\mathcal{L}}{\partial x_i} = 0, \eqno\hbox{(7.12)}
 $$
-其中 $x_k = x, y, z$。可以注意到，$\partial/\partial t$ 和 $\partial/\partial x_k$ 有时写成全导数 $d/dt$ 和 $d/dx_k$，以表明在求导过程中还必须包含 $\xi_i$ 对 $x_k$ 或 $t$ 的隐式依赖。
+其中 $x_k = x, y, z$。可以注意到，$\partial/\partial t$ 和 $\partial/\partial x_k$ 有时写成全导数 $d/dt$ 和 $d/dx_k$，以表明在求导过程中还必须包含 $x_i$ 对 $x_k$ 或 $t$ 的隐式依赖。
 
-使用更简单的记号可能会有所帮助，例如用 $\dot{\xi}_i$ 表示 $\partial\xi_i/\partial t$，用 $\xi'_{ik}$ 表示 $\partial\xi_i/\partial x_k$。于是方程（7.12）写成
+使用更简单的记号可能会有所帮助，例如用 $\dot{x}_i$ 表示 $\partial x_i/\partial t$，用 $x'_{ik}$ 表示 $\partial x_i/\partial x_k$。于是方程（7.12）写成
 $$
-\frac{\partial}{\partial t}\left(\frac{\partial\mathcal{L}}{\partial\dot{\xi}_i}\right) + \sum_{k=1}^{3}\frac{\partial}{\partial x_k}\left(\frac{\partial\mathcal{L}}{\partial\xi'_{ik}}\right) - \frac{\partial\mathcal{L}}{\partial\xi_i} = 0. \eqno\hbox{(7.13)}
+\frac{\partial}{\partial t}\left(\frac{\partial\mathcal{L}}{\partial\dot{x}_i}\right) + \sum_{k=1}^{3}\frac{\partial}{\partial x_k}\left(\frac{\partial\mathcal{L}}{\partial x'_{ik}}\right) - \frac{\partial\mathcal{L}}{\partial x_i} = 0. \eqno\hbox{(7.13)}
 $$
 
 \subsection*{利用泛函导数的简化记号}
@@ -478,21 +478,21 @@ $$
 $$
 为了我们的目的，我们把它写成
 $$
-\frac{\delta\mathcal{L}}{\delta\xi_i} = \frac{\partial\mathcal{L}}{\partial\xi_i} - \sum_{k=1}^{3}\frac{d}{dx_k}\frac{\partial\mathcal{L}}{\partial\nabla\xi_i},
+\frac{\delta\mathcal{L}}{\delta x_i} = \frac{\partial\mathcal{L}}{\partial x_i} - \sum_{k=1}^{3}\frac{d}{dx_k}\frac{\partial\mathcal{L}}{\partial\nabla x_i},
 $$
 或
 $$
-\frac{\delta\mathcal{L}}{\delta\xi} = \frac{\partial\mathcal{L}}{\partial\xi} - \nabla\cdot\frac{\partial\mathcal{L}}{\partial\nabla\xi}.
+\frac{\delta\mathcal{L}}{\delta x} = \frac{\partial\mathcal{L}}{\partial x} - \nabla\cdot\frac{\partial\mathcal{L}}{\partial\nabla x}.
 $$
 因此，用泛函导数表示，哈密顿原理
 $$
-0 = \delta L = \int\left[\frac{\partial\mathcal{L}}{\partial\xi_i}\delta\xi_i - \sum_{k=1}^{3}\frac{d}{dx_k}\frac{\partial\mathcal{L}}{\partial(\partial\xi_i/\partial x_k)} + \frac{\partial\mathcal{L}}{\partial\dot{\xi}_i}\delta\dot{\xi}_i\right]d^3x
+0 = \delta L = \int\left[\frac{\partial\mathcal{L}}{\partial x_i}\delta x_i - \sum_{k=1}^{3}\frac{d}{dx_k}\frac{\partial\mathcal{L}}{\partial(\partial x_i/\partial x_k)} + \frac{\partial\mathcal{L}}{\partial\dot{x}_i}\delta\dot{x}_i\right]d^3x
 $$
 可以表示为
 $$
-\delta L = \int\left[\frac{\delta\mathcal{L}}{\delta\xi_i}\delta\xi_i + \frac{\partial\mathcal{L}}{\partial\dot{\xi}_i}\delta\dot{\xi}_i\right]d^3x.
+\delta L = \int\left[\frac{\delta\mathcal{L}}{\delta x_i}\delta x_i + \frac{\partial\mathcal{L}}{\partial\dot{x}_i}\delta\dot{x}_i\right]d^3x.
 $$
-为简单起见，并为了使上述内容更易懂，让我们回到一维系统和标量变量，把 $\xi$ 换成 $Q$。此外，让我们按通常的方式定义广义动量密度：
+为简单起见，并为了使上述内容更易懂，让我们回到一维系统和标量变量，把 $x$ 换成 $Q$。此外，让我们按通常的方式定义广义动量密度：
 $$
 P = \frac{\partial\mathcal{L}}{\partial\dot{Q}}.
 $$
@@ -504,7 +504,7 @@ $$
 $$
 d\mathcal{L} = \frac{\partial\mathcal{L}}{\partial Q}dQ + \frac{\partial\mathcal{L}}{\partial\dot{Q}}d\dot{Q} + \frac{\partial\mathcal{L}}{\partial Q'}dQ' + \frac{\partial\mathcal{L}}{\partial t}dt.
 $$
-拉格朗日方程（方程（7.11））可以写成（把 $\xi$ 换成 $Q$）
+拉格朗日方程（方程（7.11））可以写成（把 $x$ 换成 $Q$）
 $$
 \frac{\partial}{\partial t}\left(\frac{\partial\mathcal{L}}{\partial\dot{Q}}\right) + \frac{\partial}{\partial x}\left(\frac{\partial\mathcal{L}}{\partial Q'}\right) - \frac{\partial\mathcal{L}}{\partial Q} = 0.
 $$
@@ -540,7 +540,7 @@ $$
 \end{exercise}
 
 \begin{exercise}
-证明 $\dfrac{\delta\mathcal{L}}{\delta\dot{\xi}} = \dfrac{\partial\mathcal{L}}{\partial\dot{\xi}}$。
+证明 $\dfrac{\delta\mathcal{L}}{\delta\dot{x}} = \dfrac{\partial\mathcal{L}}{\partial\dot{x}}$。
 \end{exercise}
 
 \subsection*{7.4.2　连续哈密顿量与正则场方程}

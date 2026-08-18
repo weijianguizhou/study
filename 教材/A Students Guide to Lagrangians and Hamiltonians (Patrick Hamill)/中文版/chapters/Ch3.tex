@@ -7,7 +7,7 @@
 
 我们从用笛卡尔坐标表示达朗贝尔原理入手，然后变换到广义坐标。对于 $N$ 个质点，有 $n = 3N$ 个笛卡尔坐标，我们可以把达朗贝尔原理写成如下的标量形式：
 $$
-\sum_{i=1}^{n}\left(F_i^{\mathrm{ext}} - \dot{p}_i\right)\delta\xi_i = 0.
+\sum_{i=1}^{n}\left(F_i^{\mathrm{ext}} - \dot{p}_i\right)\delta x_i = 0.
 \eqno\hbox{(3.3)}
 $$
 如果有 $n$ 个笛卡尔坐标和 $k$ 个约束，我们（原则上）可以用 $n - k$ 个广义坐标来表述这个问题。变换方程为
@@ -19,37 +19,37 @@ x_2 &= x_2(q_1, q_2, \ldots, q_{n-k}, t),\\
 x_n &= x_n(q_1, q_2, \ldots, q_{n-k}, t).
 \end{aligned}
 $$
-注意，尽管有 $n$ 个笛卡尔坐标 $\xi_i$，却只有 $n - k$ 个广义坐标，因为每个约束都会使自由度数减少一个，从而也减少广义坐标的数目。
+注意，尽管有 $n$ 个笛卡尔坐标 $x_i$，却只有 $n - k$ 个广义坐标，因为每个约束都会使自由度数减少一个，从而也减少广义坐标的数目。
 
-式(3.2)中的量 $\delta r_i$ 或式(3.3)中的 $\delta\xi_i$ 是虚位移。根据方程(1.9)，
+式(3.2)中的量 $\delta r_i$ 或式(3.3)中的 $\delta x_i$ 是虚位移。根据方程(1.9)，
 $$
-\delta\xi_i = \sum_{j=1}^{n-k}\frac{\partial\xi_i}{\partial q_j}\delta q_j.
+\delta x_i = \sum_{j=1}^{n-k}\frac{\partial x_i}{\partial q_j}\delta q_j.
 $$
 因此，达朗贝尔原理中的第一项可以写成
 $$
-\sum_i F_i^{\mathrm{ext}}\delta\xi_i = \sum_i F_i^{\mathrm{ext}}\left(\sum_j\frac{\partial\xi_i}{\partial q_j}\delta q_j\right) = \sum_{i,j}F_i^{\mathrm{ext}}\frac{\partial\xi_i}{\partial q_j}\delta q_j = \sum_j Q_j\delta q_j.
+\sum_i F_i^{\mathrm{ext}}\delta x_i = \sum_i F_i^{\mathrm{ext}}\left(\sum_j\frac{\partial x_i}{\partial q_j}\delta q_j\right) = \sum_{i,j}F_i^{\mathrm{ext}}\frac{\partial x_i}{\partial q_j}\delta q_j = \sum_j Q_j\delta q_j.
 $$
 最后一个量就是"虚功"。（它是在虚位移过程中所做的功。参见第 1.6 节。）
 
-接下来考虑达朗贝尔原理中的另一项，即 $\dot{p}_i\delta\xi_i$：
+接下来考虑达朗贝尔原理中的另一项，即 $\dot{p}_i\delta x_i$：
 $$
-\sum_i\dot{p}_i\delta\xi_i = \sum_i\dot{p}_i\sum_j\frac{\partial\xi_i}{\partial q_j}\delta q_j = \sum_i m_i\ddot{x}_i\sum_j\frac{\partial\xi_i}{\partial q_j}\delta q_j,
+\sum_i\dot{p}_i\delta x_i = \sum_i\dot{p}_i\sum_j\frac{\partial x_i}{\partial q_j}\delta q_j = \sum_i m_i\ddot{x}_i\sum_j\frac{\partial x_i}{\partial q_j}\delta q_j,
 $$
 其中我们假定质点的质量恒定不变。但是，
 $$
-\frac{d}{dt}\left(m_i\dot{x}_i\frac{\partial\xi_i}{\partial q_j}\right) = m_i\ddot{x}_i\frac{\partial\xi_i}{\partial q_j} + m_i\dot{x}_i\frac{d}{dt}\left(\frac{\partial\xi_i}{\partial q_j}\right).
+\frac{d}{dt}\left(m_i\dot{x}_i\frac{\partial x_i}{\partial q_j}\right) = m_i\ddot{x}_i\frac{\partial x_i}{\partial q_j} + m_i\dot{x}_i\frac{d}{dt}\left(\frac{\partial x_i}{\partial q_j}\right).
 $$
 回想方程(1.7)：
 $$
-\frac{\partial\xi_i}{\partial q_j} = \frac{\partial\dot{x}_i}{\partial\dot{q}_j},
+\frac{\partial x_i}{\partial q_j} = \frac{\partial\dot{x}_i}{\partial\dot{q}_j},
 $$
 并进一步注意到前一方程的最后一项涉及如下表达式：
 $$
-\frac{d}{dt}\frac{\partial\xi_i}{\partial q_j} = \frac{\partial v_i}{\partial q_j} = \frac{\partial\dot{x}_i}{\partial q_j}.
+\frac{d}{dt}\frac{\partial x_i}{\partial q_j} = \frac{\partial v_i}{\partial q_j} = \frac{\partial\dot{x}_i}{\partial q_j}.
 $$
 因此，
 $$
-\sum_i\dot{p}_i\delta\xi_i = \sum_{i,j}\left[\frac{d}{dt}\left(m_i\dot{x}_i\frac{\partial\dot{x}_i}{\partial\dot{q}_j}\right) - m_i\dot{x}_i\frac{\partial\dot{x}_i}{\partial q_j}\right]\delta q_j.
+\sum_i\dot{p}_i\delta x_i = \sum_{i,j}\left[\frac{d}{dt}\left(m_i\dot{x}_i\frac{\partial\dot{x}_i}{\partial\dot{q}_j}\right) - m_i\dot{x}_i\frac{\partial\dot{x}_i}{\partial q_j}\right]\delta q_j.
 $$
 但是
 $$
@@ -61,11 +61,11 @@ $$
 $$
 于是最终得到
 $$
-\sum_i\dot{p}_i\delta\xi_i = \sum_j\left[\frac{d}{dt}\frac{\partial T}{\partial\dot{q}_j} - \frac{\partial T}{\partial q_j}\right]\delta q_j,
+\sum_i\dot{p}_i\delta x_i = \sum_j\left[\frac{d}{dt}\frac{\partial T}{\partial\dot{q}_j} - \frac{\partial T}{\partial q_j}\right]\delta q_j,
 $$
 而达朗贝尔原理表述为
 $$
-\sum_{i=1}^{n}\left(F_i^{\mathrm{ext}} - \dot{p}_i\right)\delta\xi_i = \sum_j Q_j\delta q_j - \sum_j\left[\frac{d}{dt}\frac{\partial T}{\partial\dot{q}_j} - \frac{\partial T}{\partial q_j}\right]\delta q_j = 0,
+\sum_{i=1}^{n}\left(F_i^{\mathrm{ext}} - \dot{p}_i\right)\delta x_i = \sum_j Q_j\delta q_j - \sum_j\left[\frac{d}{dt}\frac{\partial T}{\partial\dot{q}_j} - \frac{\partial T}{\partial q_j}\right]\delta q_j = 0,
 $$
 $$
 0 = \sum_j\left[Q_j - \frac{d}{dt}\frac{\partial T}{\partial\dot{q}_j} + \frac{\partial T}{\partial q_j}\right]\delta q_j.
@@ -476,13 +476,13 @@ $$
 $$
 \delta(V + \lambda f) = 0.
 $$
-如果我们允许广义坐标有任意变分（而不只是那些满足约束的变分），那么反作用力就会作用在系统上。因此，$\lambda f$ 这一项可以解释为与约束力相关的势能。于是，反作用力的第 $\xi$ 个分量为
+如果我们允许广义坐标有任意变分（而不只是那些满足约束的变分），那么反作用力就会作用在系统上。因此，$\lambda f$ 这一项可以解释为与约束力相关的势能。于是，反作用力的第 $x$ 个分量为
 $$
-F_i = -\frac{\partial(\lambda f)}{\partial\xi_i} = -\lambda\frac{\partial f}{\partial\xi_i} - \frac{\partial\lambda}{\partial\xi_i}f.
+F_i = -\frac{\partial(\lambda f)}{\partial x_i} = -\lambda\frac{\partial f}{\partial x_i} - \frac{\partial\lambda}{\partial x_i}f.
 $$
 但 $f = 0$，所以
 $$
-F_i = -\lambda\frac{\partial f}{\partial\xi_i}.
+F_i = -\lambda\frac{\partial f}{\partial x_i}.
 $$
 我们得出结论：完整约束由可由一个标量函数导出的力来维持。
 
