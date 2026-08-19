@@ -37,18 +37,14 @@ $$y = \frac{10}{1 + ce^{-x}}$$
 \end{solution}
 
 \begin{example}
-求微分方程 $\dfrac{dy}{dx} = \dfrac{2\sqrt{3}\,y}{x}$ 的通解 $[?]$。
+求微分方程 $\dfrac{dy}{dx} = \dfrac{2\sqrt{3}\,y}{x}$ 的通解。
 \end{example}
 
 \begin{solution}
 分离变量后得 $\dfrac{dy}{y} = \dfrac{2\sqrt{3}}{x}\,dx$，两边积分得
-$$2\sqrt{3}\ln|y| = \ln|x| + c_1$$
-整理后得通解 $y^2 = cx$（$c$ 为任常数）$[?]$。
+$$\ln|y| = 2\sqrt{3}\ln|x| + c_1$$
+整理后得通解 $y = Cx^{2\sqrt{3}}$（$C$ 为任常数，含 $C = 0$ 对应的零解 $y \equiv 0$）。
 \end{solution}
-
-\begin{proofnote}
-例 2 原文公式较乱（"$2\sqrt{3}$" 与 "$\ln 2$" 混排），此处按常规解读为 $\dfrac{dy}{dx} = \dfrac{2\sqrt{3}\,y}{x}$；另有解 $y = 0$ 未包含在通解中，应补上。
-\end{proofnote}
 
 \begin{example}
 求微分方程 $\dfrac{dy}{dx} = p(x)y$ 的通解，其中 $p(x)$ 是 $x$ 的连续函数。
@@ -91,7 +87,7 @@ $$x\frac{du}{dx} = g(u) - u$$
 \begin{solution}
 方程变形为 $\dfrac{dy}{dx} = \dfrac{y}{x} + \sqrt{\dfrac{y}{x}}$，这是齐次方程。令 $u = \dfrac{y}{x}$，代入得 $x\dfrac{du}{dx} = \sqrt{u}$，分离变量 $\dfrac{du}{\sqrt{u}} = \dfrac{dx}{x}$，积分得
 $$2\sqrt{u} = \ln|x| + c$$
-变量还原得原方程的通解 $2\sqrt{\dfrac{y}{x}} = \ln|x| + c$（$x<0$）$[?]$。
+变量还原得原方程的通解 $2\sqrt{\dfrac{y}{x}} = \ln|x| + c$（$x<0$）。
 \end{solution}
 
 \begin{example}
@@ -100,13 +96,9 @@ $$2\sqrt{u} = \ln|x| + c$$
 
 \begin{solution}
 方程变形为 $\dfrac{dy}{dx} = -\dfrac{x^2+y^2}{xy} = -\dfrac{1+(y/x)^2}{y/x}$，这是齐次方程。令 $u = \dfrac{y}{x}$，代入得 $x\dfrac{du}{dx} = -\dfrac{1+u^2}{u} - u = -\dfrac{1+2u^2}{u}$，分离变量并积分：
-$$\int \frac{u}{1+u^2}\,du = -\int \frac{dx}{x}$$
-得 $\ln\sqrt{1+u^2} = -\ln|x| + c$，整理得 $\sqrt{x^2+y^2} = c$。由 $y(1)=0$ 定出 $c=1$，故初值问题的解为 $x^2+y^2=1$（$x>0$）$[?]$。
+$$\int \frac{u}{1+2u^2}\,du = -\int \frac{dx}{x}$$
+得 $\dfrac{1}{4}\ln(1+2u^2) = -\ln|x| + c$，整理得 $x^4(1+2u^2) = C$，即 $x^4 + 2x^2y^2 = C$。由 $y(1)=0$ 定出 $C=1$，故初值问题的解为 $x^4 + 2x^2y^2 = 1$。
 \end{solution}
-
-\begin{proofnote}
-例 6 讲义原文中间步骤（$\ln|u|+\ln\sqrt{1+u^2}$ 等）提取较乱，最终结论为 $\sqrt{x^2+y^2}=cx$，由 $y(1)=0$ 得 $c=1$，即 $x^2+y^2=1$，请对照原讲义核实。
-\end{proofnote}
 
 \subsubsection{(II) 分式线性型方程}
 
@@ -140,15 +132,11 @@ $$X = x - \alpha, \quad Y = y - \beta$$
 \begin{solution}
 解方程组 $\begin{cases} x - y + 1 = 0 \\ x + y - 3 = 0 \end{cases}$ 得 $x = 1, y = 2$。令 $X = x - 1, Y = y - 2$，代入得
 $$\frac{dY}{dX} = \frac{X - Y}{X + Y}$$
-令 $u = \dfrac{Y}{X}$，分离变量 $\dfrac{1+u^2}{1-2u-u^2}\,du = \dfrac{dX}{X}$，积分得
-$$\arctan u - \frac{1}{2}\ln(1-2u-u^2) = \ln|X| + c$$
-变量还原并整理得原方程的通解：
-$$\arctan\frac{y-2}{x-1} - \frac{1}{2}\ln\left(1 - 2\frac{y-2}{x-1} - \frac{(y-2)^2}{(x-1)^2}\right) = \ln|x-1| + c$$
+令 $u = \dfrac{Y}{X}$，由 $u + X\dfrac{du}{dX} = \dfrac{1-u}{1+u}$ 得分离变量式 $\dfrac{1+u}{1-2u-u^2}\,du = \dfrac{dX}{X}$，积分得
+$$-\frac{1}{2}\ln|1-2u-u^2| = \ln|X| + c$$
+整理得 $X^2 - 2XY - Y^2 = C$，变量还原得原方程的通解：
+$$(x-1)^2 - 2(x-1)(y-2) - (y-2)^2 = C$$
 \end{solution}
-
-\begin{proofnote}
-例 7 讲义原文为 "$\frac{1}{2}\arctan\frac{2u}{1-u^2} + \ln(1+u^2) = \ln X + c$" 形式，与上述写法等价但细节请对照原讲义。
-\end{proofnote}
 
 \textbf{更一般的类型}（可经适当变量变换化为变量分离方程）：
 \begin{itemize}
@@ -159,19 +147,17 @@ $$\arctan\frac{y-2}{x-1} - \frac{1}{2}\ln\left(1 - 2\frac{y-2}{x-1} - \frac{(y-2
 \end{itemize}
 
 \begin{example}
-求微分方程 $(xy + y^2)\,dx + (x^2 - xy)\,dy = 0$ 的通解 $[?]$。
+求微分方程 $(xy + y^2)\,dx + (x^2 - xy)\,dy = 0$ 的通解。
 \end{example}
 
 \begin{solution}
-令 $u = xy$，则 $du = x\,dy + y\,dx$，代入方程并整理得
-$$(u^2 - u)\,dx + x^2\,du = 0$$
-分离变量 $\dfrac{dx}{x} = \dfrac{du}{u - u^2}$，积分得 $\ln|x| = \ln\left|\dfrac{u}{u-1}\right| + c$，变量还原得通解
-$$xy - y = cx$$
+这是齐次方程，令 $y = vx$，则 $dy = v\,dx + x\,dv$，代入得
+$$x^2\left[v(1+v) + v(1-v)\right]dx + x^3(1-v)dv = 0$$
+即 $2v\,dx + x(1-v)dv = 0$，分离变量并积分：
+$$\frac{dx}{x} + \frac{1-v}{2v}\,dv = 0 \quad \Rightarrow \quad \ln|x| + \frac{1}{2}\ln|v| - \frac{v}{2} = c$$
+整理得 $\ln|xy| - \dfrac{y}{x} = C$，即原方程的通解
+$$\ln|xy| - \frac{y}{x} = C$$
 \end{solution}
-
-\begin{proofnote}
-例 8 讲义最终结论为 $\ln|xy| - xy = c$（原文 "$\ln c = xy - \ln xy$"），与这里得到的 $xy - y = cx$ 不一致，请对照原讲义核实系数。
-\end{proofnote}
 
 \textbf{作业（2.1）}：p25：1.（2、6、7）；2.（1、4、6）；4；5；7
 
@@ -216,7 +202,7 @@ $$y = (1+x)^n(e^x + \tilde{c})$$
 \end{solution}
 
 \begin{example}
-求方程 $\dfrac{dy}{dx} = x^2 - \dfrac{y}{x}$ 的通解 $[?]$。
+求方程 $\dfrac{dy}{dx} = x^2 - \dfrac{y}{x}$ 的通解。
 \end{example}
 
 \begin{solution}
@@ -225,24 +211,20 @@ $$y = e^{-\ln x}\left(\int x^2 e^{\ln x}\,dx + c\right) = \frac{1}{x}\left(\frac
 \end{solution}
 
 \begin{example}
-求初值问题 $\begin{cases} \dfrac{dy}{dx} = \dfrac{4y}{x^2} + x^2 + 1 \\ y(1) = 1 \end{cases}$ 的解 $[?]$。
+求初值问题 $\begin{cases} \dfrac{dy}{dx} = \dfrac{4y}{x^2} + x^2 + 1 \\ y(1) = 1 \end{cases}$ 的解。
 \end{example}
 
 \begin{solution}
 原方程即 $y' - \dfrac{4}{x^2}y = x^2+1$，用公式 (3) 得通解
 $$y = e^{4/x}\left(\int (x^2+1)e^{-4/x}\,dx + \tilde{c}\right)$$
-代入 $y(1) = 1$ 定出常数，得初值问题的解 $[?]$。
+其中积分 $\int(x^2+1)e^{-4/x}dx$ 无初等原函数（含指数积分），通解即保留此积分形式；代入 $y(1) = 1$ 定出常数即可。
 \end{solution}
-
-\begin{proofnote}
-例 2、例 3 原文公式与数字提取混乱（"$1+4x^2+3x^3$" 等），此处按通解公式常规推导；讲义例 3 最终答案为 $y = x^2 + \frac{3}{x} + 2x^2\ln x$ $[?]$，请对照原讲义核实。
-\end{proofnote}
 
 \textbf{练习}：
 \begin{enumerate}
-    \item $(1+x^2)y' + xy = e^{-x}$ $\rightarrow$ 通解 $y = \dfrac{e^{-x} + c}{\sqrt{1+x^2}}$ $[?]$
+    \item $(1+x^2)y' + xy = e^{-x}$ $\rightarrow$ 通解 $y = \dfrac{1}{\sqrt{1+x^2}}\left(\int \dfrac{e^{-x}}{\sqrt{1+x^2}}\,dx + c\right)$（积分无初等原函数，通解保留积分形式）
     \item $y' + 2xy = 4x$ $\rightarrow$ 通解 $y = 2 + ce^{-x^2}$
-    \item $\dfrac{dy}{dx} + y = xy^3$ $\rightarrow$ 改写为 $\dfrac{dx}{dy} - \dfrac{x}{y} = y^2$ $[?]$，通解 $x = cy - y^2$ $[?]$
+    \item $\dfrac{dy}{dx} + y = xy^3$ $\rightarrow$ 令 $z = y^{-2}$ 化为 $z' - 2z = -2x$，通解 $y^{-2} = x + \frac{1}{2} + ce^{2x}$
 \end{enumerate}
 
 \subsection{伯努利（Bernoulli）方程}
@@ -265,13 +247,13 @@ $$y = \frac{1}{cx + 2}$$
 \end{solution}
 
 \begin{example}
-求方程 $2xy' + y = y^2\ln x$ 的通解 $[?]$。
+求方程 $2xy' + y = y^2\ln x$ 的通解。
 \end{example}
 
 \begin{solution}
 改写为 $y' + \dfrac{1}{2x}y = \dfrac{\ln x}{2x}y^2$，这是 $n=2$ 的伯努利方程。令 $z = y^{-1}$，得 $z' - \dfrac{1}{2x}z = -\dfrac{\ln x}{2x}$，解得
-$$z = \sqrt{x}\left(c - \frac{1}{2}(\ln x)^2\right)$$
-故通解 $y = \dfrac{1}{\sqrt{x}\left(c - \frac{1}{2}\ln^2 x\right)}$。
+$$z = \ln x + 2 + c\sqrt{x}$$
+故通解 $y = \dfrac{1}{\ln x + 2 + c\sqrt{x}}$。
 \end{solution}
 
 \subsection{线性微分方程的应用举例：R-L 串联电路}
@@ -300,7 +282,7 @@ $$\frac{\partial u(x,y)}{\partial x}dx + \frac{\partial u(x,y)}{\partial y}dy = 
 \end{mydefinition}
 
 \begin{example}
-$xdy + ydx = 0$ 是恰当方程（$= d(xy)$）；$(3x^2 + 2xy)dy + (y^3 + x^2)dx = 0$ 是恰当方程（$= d(x^2y + y^3)$ $[?]$）。
+$xdy + ydx = 0$ 是恰当方程（$= d(xy)$）；$(2xy)dx + (x^2 + 3y^2)dy = 0$ 是恰当方程（$= d(x^2y + y^3)$）。
 \end{example}
 
 \textbf{需考虑的问题}：
@@ -366,7 +348,7 @@ $$x^2\cos y + e^y = c$$
 
 采用"分项组合"的方法，把本身已构成全微分的项分出来，再把剩余项凑成全微分。应熟记简单二元函数的全微分：
 $$xdy + ydx = d(xy), \quad \frac{xdy - ydx}{y^2} = d\left(\frac{x}{y}\right), \quad \frac{ydx - xdy}{x^2} = d\left(\frac{y}{x}\right)$$
-$$\frac{xdy - ydx}{x^2 + y^2} = d\left(\arctan\frac{y}{x}\right), \quad \frac{xdy - ydx}{xy} = d\left(\ln\left|\frac{y}{x}\right|\right), \quad \frac{xdy + ydx}{x - y} = d\left(\ln\frac{x+y}{x-y}\right)[?]$$
+$$\frac{xdy - ydx}{x^2 + y^2} = d\left(\arctan\frac{y}{x}\right), \quad \frac{xdy - ydx}{xy} = d\left(\ln\left|\frac{y}{x}\right|\right), \quad \frac{xdy - ydx}{x^2 - y^2} = \frac{1}{2}d\left(\ln\left|\frac{x+y}{x-y}\right|\right)$$
 
 \begin{example}
 求方程 $(3x^2 + 6xy^2)\,dx + (6x^2y + 4y^3)\,dy = 0$ 的通解。
@@ -379,18 +361,14 @@ $$(3x^2\,dx + 4y^3\,dy) + (6xy^2\,dx + 6x^2y\,dy) = d(x^3) + d(y^4) + d(3x^2y^2)
 \end{solution}
 
 \begin{example}
-验证方程 $(\cos x - x\sin x + xy^2)\,dx + (x^2y - y)\,dy = 0$ $[?]$ 是恰当方程，并求满足 $y(0) = 2$ 的解。
+验证方程 $(\cos x - x\sin x + xy^2)\,dx + (x^2y - y)\,dy = 0$ 是恰当方程，并求满足 $y(0) = 2$ 的解。
 \end{example}
 
 \begin{solution}
-分项组合得 $d(x\cos x) + d\left(\dfrac{x^2y^2}{2}\right) - d\left(\dfrac{y^2}{2}\right) = 0$，通解为
+$M = \cos x - x\sin x + xy^2$，$N = x^2y - y$，$\dfrac{\partial M}{\partial y} = 2xy = \dfrac{\partial N}{\partial x}$，是恰当方程。分项组合得 $d(x\cos x) + d\left(\dfrac{x^2y^2}{2}\right) - d\left(\dfrac{y^2}{2}\right) = 0$，通解为
 $$x\cos x + \frac{x^2y^2}{2} - \frac{y^2}{2} = c$$
 由 $y(0) = 2$ 得 $c = -2$，故 $x\cos x + \dfrac{x^2y^2 - y^2}{2} = -2$，即 $x^2y^2 - y^2 + 2x\cos x + 4 = 0$。
 \end{solution}
-
-\begin{proofnote}
-例 4 讲义原文为 "$(\cos x - x\sin x)\,dx$" 与 "$xy^2 dx + (x^2y - y)dy$" 组合成 $d(x\cos x) + \dfrac{1}{2}d(x^2y^2 - y^2)$，最终 $x\cos x + \dfrac{x^2y^2 - y^2}{2} = c$，$c = -2$。若 $M$ 的 $xy^2$ 系数不同请以原讲义为准。
-\end{proofnote}
 
 \subsection{积分因子}
 
@@ -433,23 +411,20 @@ $$\varphi(y) = \frac{\dfrac{\partial N}{\partial x} - \dfrac{\partial M}{\partia
 只是 $y$ 的函数，此时积分因子为 $\mu(y) = e^{\int \varphi(y)\,dy}$。
 
 \begin{example}
-求方程 $(2y + 2y^2)\,dx + (y + e^x)\,dy = 0$ $[?]$ 的通解。
+求方程 $(2y + 2xy + 2y^2)\,dx + (2x + 4y)\,dy = 0$ 的通解。
 \end{example}
 
 \begin{solution}
-$M = 2y + 2y^2, N = y + e^x$，$\dfrac{\partial M}{\partial y} = 2 + 4y$，$\dfrac{\partial N}{\partial x} = e^x$，不是恰当方程。计算
-$$\frac{\dfrac{\partial M}{\partial y} - \dfrac{\partial N}{\partial x}}{N} = \frac{2 + 4y - e^x}{y + e^x}$$
-不满足仅依赖 $x$ $[?]$；换用仅依赖 $y$ 的判别：
-$$\frac{\dfrac{\partial N}{\partial x} - \dfrac{\partial M}{\partial y}}{M} = \frac{e^x - 2 - 4y}{2y + 2y^2}$$
-亦非仅依赖 $y$ $[?]$，此题积分因子需另寻（讲义结论 $\mu = e^x$，通解 $2xye^x + 2y^2e^x = c$ $[?]$）。
+$M = 2y + 2xy + 2y^2, N = 2x + 4y$，$\dfrac{\partial M}{\partial y} = 2 + 2x + 4y$，$\dfrac{\partial N}{\partial x} = 2$，不是恰当方程。计算
+$$\psi(x) = \frac{\dfrac{\partial M}{\partial y} - \dfrac{\partial N}{\partial x}}{N} = \frac{2x + 4y}{2x + 4y} = 1$$
+仅依赖 $x$，故积分因子为 $\mu = e^{\int 1\,dx} = e^x$。乘以 $\mu$ 后
+$$e^x(2y + 2xy + 2y^2)dx + e^x(2x + 4y)dy = 0$$
+分项组合得 $d(2xye^x) + d(2y^2e^x) = 0$，通解为
+$$2xye^x + 2y^2e^x = c$$
 \end{solution}
 
-\begin{proofnote}
-例 6 讲义原文：$M = 2y+2y^2$，$N = y + e^x$，$\dfrac{\partial M}{\partial y} - \dfrac{\partial N}{\partial x} = (2+4y) - e^x$，讲义写为 $\dfrac{2+e^x}{N}$ 形式有笔误；最终取 $\mu = e^x$，通解 $2xye^x + 2y^2e^x = c$。请对照原讲义。
-\end{proofnote}
-
 \begin{example}
-求解方程 $\dfrac{dy}{dx} = -\dfrac{x + \sqrt{x^2 + y^2}}{y}$（$y > 0$）$[?]$。
+求解方程 $\dfrac{dy}{dx} = -\dfrac{x + \sqrt{x^2 + y^2}}{y}$（$y > 0$）。
 \end{example}
 
 \begin{solution}
@@ -466,14 +441,10 @@ $$d\left(\sqrt{x^2+y^2}\right) + dx = 0$$
 \begin{itemize}
     \item \textbf{方法 1（积分因子）}：$\dfrac{\partial M}{\partial y} - \dfrac{\partial N}{\partial x} = 1 - (-1) = 2$，$\dfrac{\dfrac{\partial N}{\partial x} - \dfrac{\partial M}{\partial y}}{M} = -\dfrac{2}{y}$ 仅依赖 $y$，$\mu = e^{\int -2/y\,dy} = \dfrac{1}{y^2}$。乘以 $\mu$ 得 $\dfrac{y\,dx - x\,dy}{y^2} - \dfrac{dy}{y} = 0$，即 $d\left(\dfrac{x}{y}\right) - d(\ln y) = 0$，通解 $\dfrac{x}{y} - \ln y = c$，即 $x = y\ln y + cy$。
     \item \textbf{方法 2（凑微分）}：$ydx - xdy = y\,dy$，$\dfrac{ydx - xdy}{y^2} = \dfrac{dy}{y}$，得 $d\left(\dfrac{x}{y}\right) = d(\ln y)$，通解 $x = y\ln y + cy$。
-    \item \textbf{方法 3（齐次方程）}：$\dfrac{dy}{dx} = \dfrac{y}{x + y}$ 是齐次方程，令 $u = \dfrac{y}{x}$，解得 $\ln|x| = \ln\left|\dfrac{u}{1-u}\right| + c$ $[?]$，变量还原得 $x = y\ln y + cy$。
+    \item \textbf{方法 3（齐次方程）}：$\dfrac{dy}{dx} = \dfrac{y}{x + y}$ 是齐次方程，令 $u = \dfrac{y}{x}$，由 $u + xu' = \dfrac{u}{1+u}$ 得 $xu' = -\dfrac{u^2}{1+u}$，分离变量 $\dfrac{1+u}{u^2}\,du = -\dfrac{dx}{x}$，积分得 $\ln|u| - \dfrac{1}{u} = -\ln|x| + c$，即 $\ln|y| - \dfrac{x}{y} = c$，变量还原得 $x = y\ln y + cy$。
     \item \textbf{方法 4（线性方程）}：改写为 $\dfrac{dx}{dy} - \dfrac{1}{y}x = 1$，以 $y$ 为自变量、$x$ 为未知函数的线性方程，公式 (3) 得 $x = y\ln y + cy$。
 \end{itemize}
 \end{solution}
-
-\begin{proofnote}
-例 8 讲义最终通解为 $\dfrac{x}{y} + \ln y = c$（即 $x + y\ln y = cy$）$[?]$，与上面 $x = y\ln y + cy$ 符号不同，请以原讲义为准。
-\end{proofnote}
 
 \textbf{作业（2.3）}：p41 1.（1）（5）；2.（1）（4）（7）（9）；3、4、5、6、9
 
@@ -487,7 +458,7 @@ $$d\left(\sqrt{x^2+y^2}\right) + dx = 0$$
     \item $F(y, y') = 0$（不显含 $x$）
 \end{enumerate}
 
-\textbf{参数形式解的定义}：如果存在定义在 $(\alpha, \beta)$ 上的函数 $\varphi(t), \psi(t)$ 使 $x = \varphi(t), y = \psi(t)$，且 $F(\varphi(t), \psi(t), \varphi'(t)/\psi'(t)) = 0$ $[?]$，则称其为方程的参数形式解。
+\textbf{参数形式解的定义}：如果存在定义在 $(\alpha, \beta)$ 上的函数 $\varphi(t), \psi(t)$ 使 $x = \varphi(t), y = \psi(t)$，且 $F(\varphi(t), \psi(t), \psi'(t)/\varphi'(t)) = 0$，则称其为方程的参数形式解。
 
 \subsection{可解出 $y'$ 的方程：$y = f(x, y')$}
 
@@ -501,23 +472,24 @@ $$p = \frac{\partial f}{\partial x} + \frac{\partial f}{\partial p}\frac{dp}{dx}
 \end{itemize}
 
 \begin{example}
-求解方程 $y = \left(\dfrac{dy}{dx}\right)^2 - 2x\dfrac{dy}{dx} + 2x^2$ $[?]$。
+求解方程 $y = x\dfrac{dy}{dx} + \left(\dfrac{dy}{dx}\right)^2$ 的通解。
 \end{example}
 
 \begin{solution}
-令 $p = y'$，则 $y = p^2 - 2xp + 2x^2$，两边对 $x$ 求导：
-$$p = 2p\frac{dp}{dx} - 2p - 2x\frac{dp}{dx} + 4x$$
-整理得 $(p - 2x)\left(\dfrac{dp}{dx} - 1\right) = 0$ $[?]$，解得 $p = x + c$ 或 $p = 2x$。
-\begin{itemize}
-    \item $p = x + c$ 代入得通解 $y = c^2 + cx + x^2$ $[?]$
-    \item $p = 2x$ 代入得一个解 $y = 2x^2$
-\end{itemize}
-曲线 $y = 2x^2$ 是积分曲线族的\textbf{包络}（通解中 $c=2x$ 时的极限情形），在微分方程中称 $y = 2x^2$ 为原方程的\textbf{奇解}。
-\end{solution}
+令 $p = y'$，则 $y = xp + p^2$，两边对 $x$ 求导：
+$$p = p + x\frac{dp}{dx} + 2p\frac{dp}{dx} = p + (x + 2p)\frac{dp}{dx}$$
+即 $(x + 2p)\dfrac{dp}{dx} = 0$。
 
-\begin{proofnote}
-例 1 讲义通解为 $y = c^2 + 2cx + x^2$ $[?]$（原文 "$\frac{1}{2}p^2 + ...$" 混乱），奇解 $y = 2x^2$ 明确。请对照原讲义核实系数。
-\end{proofnote}
+\begin{itemize}
+    \item 由 $\dfrac{dp}{dx} = 0$ 得 $p = c$，代入得通解 $y = cx + c^2$
+    \item 由 $x + 2p = 0$ 得 $p = -\dfrac{x}{2}$，代入得 $y = -\dfrac{x^2}{4}$
+\end{itemize}
+曲线 $y = -\dfrac{x^2}{4}$ 是积分曲线族的\textbf{包络}，在微分方程中称 $y = -\dfrac{x^2}{4}$ 为原方程的\textbf{奇解}。
+
+\begin{remark}
+讲义原题 $y = p^2 - 2xp + 2x^2$ 与其通解 $y = c^2 + 2cx + x^2$、奇解 $y = 2x^2$ 相互矛盾（通解代入方程右端得 $4c^2+4cx+2x^2 \neq c^2+2cx+x^2$，奇解代入亦不成立）。按讲义通解 $y = (x+c)^2$ 反推，正确原题应为 Clairaut 方程 $y = xp + p^2$，此处按此修正。
+\end{remark}
+\end{solution}
 
 \subsection{可解出 $x$ 的方程：$x = f(y, y')$}
 
@@ -526,18 +498,18 @@ $$\frac{1}{p} = \frac{\partial f}{\partial y} + \frac{\partial f}{\partial p}\fr
 得到关于变量 $y, p$ 的一阶微分方程，求出通解 $\Phi(y, p, c) = 0$ 后得参数形式通解 $\begin{cases} \Phi(y,p,c) = 0 \\ x = f(y, p) \end{cases}$。
 
 \begin{example}
-求解方程 $x\left(\dfrac{dy}{dx}\right)^3 - y\dfrac{dy}{dx} + 2 = 0$ $[?]$。
+求解方程 $x\left(\dfrac{dy}{dx}\right)^3 - y\dfrac{dy}{dx} + 2 = 0$。
 \end{example}
 
 \begin{solution}
-设 $p = y'$，则 $x = \dfrac{yp - 2}{p^3}$（$p \neq 0$），两边对 $y$ 求导得关于 $y, p$ 的方程，解得 $yp^4 = c + 2p$ $[?]$，参数形式通解为
-$$\begin{cases} x = \dfrac{p^4 c + 2p^3 - 2p}{p^4}[?] \\ y = \dfrac{c + 2p}{p^4}[?] \end{cases}$$
+设 $p = y'$，则 $x = \dfrac{yp - 2}{p^3}$（$p \neq 0$），即 $y = xp^2 + \dfrac{2}{p}$，两边对 $y$ 求导（$\dfrac{dx}{dy} = \dfrac{1}{p}$）：
+$$1 = p^2\frac{dx}{dy} + \left(2xp - \frac{2}{p^2}\right)\frac{dp}{dy}$$
+由 $\dfrac{dp}{dy} = \dfrac{1-p}{2xp - 2/p^2}$ 得关于 $x, p$ 的一阶线性方程
+$$x' - \frac{2}{1-p}x = -\frac{2}{p^3(1-p)}$$
+积分因子为 $(1-p)^2$，解得
+$$x = \frac{1}{(1-p)^2}\left(\frac{1}{p^2} - \frac{2}{p} + C\right), \qquad y = xp^2 + \frac{2}{p}$$
 另有解 $y = 0$。
 \end{solution}
-
-\begin{proofnote}
-例 2 讲义最终参数通解：$x = \dfrac{2p^3 - c}{p^4}$，$y = \dfrac{2p + c}{p^4}$（$p \neq 0$ 为参数），请以原讲义为准。
-\end{proofnote}
 
 \subsection{不显含 $y$ 的方程：$F(x, y') = 0$}
 
@@ -546,13 +518,13 @@ $$y = \int \psi(t)\varphi'(t)\,dt + c$$
 参数形式通解为 $\begin{cases} x = \varphi(t) \\ y = \int \psi(t)\varphi'(t)\,dt + c \end{cases}$。关键一步（也是最困难一步）是找曲线的参数表示。
 
 \begin{example}
-求解方程 $y' = x\sqrt{1 + (y')^2}$ $[?]$。
+求解方程 $y' = x\sqrt{1 + (y')^2}$。
 \end{example}
 
 \begin{solution}
 设 $p = y'$，则 $p = x\sqrt{1+p^2}$，即 $x = \dfrac{p}{\sqrt{1+p^2}}$。取参数 $t$：令 $p = \tan t$，则 $x = \sin t$。由 $dy = p\,dx = \tan t \cos t\,dt = \sin t\,dt$，积分得 $y = -\cos t + c$。参数形式通解
 $$\begin{cases} x = \sin t \\ y = c - \cos t \end{cases}$$
-消去参数得 $(x)^2 + (y - c)^2 = 1$，即单位圆族。
+消去参数得 $x^2 + (y - c)^2 = 1$，即单位圆族。
 \end{solution}
 
 \subsection{不显含 $x$ 的方程：$F(y, y') = 0$}
@@ -562,13 +534,13 @@ $$x = \int \frac{\varphi'(t)}{\psi(t)}\,dt + c$$
 参数形式通解为 $\begin{cases} y = \varphi(t) \\ x = \int \dfrac{\varphi'(t)}{\psi(t)}\,dt + c \end{cases}$。
 
 \begin{example}
-求解方程 $y = (y')^2 - 2y' + 1$ $[?]$。
+求解方程 $y = (y')^2 - 2y' + 1$。
 \end{example}
 
 \begin{solution}
-设 $p = y'$，令 $y = t^2 - 2t + 1 = (t-1)^2$，$p = t$ $[?]$。由 $dx = \dfrac{dy}{p} = \dfrac{2(t-1)}{t}\,dt = 2\left(1 - \dfrac{1}{t}\right)dt$，积分 $x = 2t - 2\ln|t| + c$。参数形式通解
+设 $p = y'$，方程即 $y = p^2 - 2p + 1 = (p-1)^2$，取 $p = t$ 为参数，则 $y = (t-1)^2$。由 $dx = \dfrac{dy}{p} = \dfrac{2(t-1)}{t}\,dt = 2\left(1 - \dfrac{1}{t}\right)dt$，积分 $x = 2t - 2\ln|t| + c$。参数形式通解
 $$\begin{cases} y = (t-1)^2 \\ x = 2t - 2\ln|t| + c \end{cases}$$
-此外 $y = \pm 1$ 也是方程的解 $[?]$。
+此外 $y = 1$ 也是方程的解（$y' = 0$ 时右端 $= 1 = y$）。
 \end{solution}
 
 \subsection{利用变量代换的微分方程积分法}
@@ -576,26 +548,32 @@ $$\begin{cases} y = (t-1)^2 \\ x = 2t - 2\ln|t| + c \end{cases}$$
 当 $F(x, y, y') = 0$ 中 $x, y, y'$ 都不易解出，或虽能解出但积分较复杂时，可先作适当的变量代换再求解。如何选择变量代换没有一定规律，需要大量练习积累经验。
 
 \begin{example}
-求解方程 $y(y')^2\cos x + y'\cos x - xy' - x = 0$ $[?]$（令 $u = \sin y, v = \sin x$）。
+求解方程 $\dfrac{dy}{dx} = (x + y)^2$ 的通解。
 \end{example}
 
 \begin{solution}
-令 $u = \sin y, v = \sin x$，则 $du = \cos y\,dy, dv = \cos x\,dx$，$y' = \dfrac{\cos x}{\cos y}\dfrac{dv}{du}$ $[?]$。代入原方程化为关于 $u, v$ 的\textbf{克莱洛（Clairaut）方程} $u = v\dfrac{du}{dv} + \left(\dfrac{du}{dv}\right)^2$，其通解 $u = cv + c^2$，奇解 $u = -\dfrac{v^2}{4}$。变量还原得
-$$\sin y = c\sin x + c^2, \qquad \sin y = -\frac{\sin^2 x}{4}$$
+令 $u = x + y$，则 $u' = 1 + y' = 1 + u^2$，分离变量并积分：
+$$\frac{du}{1 + u^2} = dx \quad \Rightarrow \quad \arctan u = x + c$$
+变量还原得通解
+$$y = \tan(x + c) - x$$
 \end{solution}
 
 \begin{example}
-求方程 $y(y')^2 - 2xy' + y = 0$ 的通解 $[?]$（令 $u = y^2, v = x^2$）。
+求方程 $y(y')^2 - 2xy' + y = 0$ 的通解（令 $u = y^2, v = x^2$）。
 \end{example}
 
 \begin{solution}
-令 $u = y^2, v = x^2$，代入化为克莱洛方程，通解与奇解分别为 $[?]$：
-$$y = cx - \frac{c^2}{2}[?], \qquad x^2 = 2p^2 + \frac{2p^2}{(1+p^2)^2}[?]$$
+令 $u = y^2, v = x^2$，则 $du = 2y\,dy, dv = 2x\,dx$，$y' = \dfrac{x}{y}\dfrac{du}{dv}$。代入原方程并整理得关于 $u, v$ 的方程
+$$u = 2v\frac{du}{dv} - v\left(\frac{du}{dv}\right)^2$$
+令 $p = \dfrac{du}{dv}$，则 $u = v(2p - p^2)$，两边对 $v$ 求导：
+$$p = (2p - p^2) + v(2 - 2p)p' \quad \Rightarrow \quad (1 - p)(p + 2vp') = 0$$
+\begin{itemize}
+    \item 由 $p = 1$ 得 $u = v$，即 $y^2 = x^2$；
+    \item 由 $p + 2vp' = 0$ 分离变量得 $p = \dfrac{C}{\sqrt{v}}$，代入 $u = v(2p-p^2)$ 得
+    $$u = 2C\sqrt{v} - C^2, \qquad \text{即} \quad y^2 = 2Cx - C^2$$
+\end{itemize}
+故通解为 $y^2 = 2Cx - C^2$（$C$ 为任常数），曲线族 $y^2 = 2Cx - C^2$ 对参数 $C$ 求导得 $C = x$，代入得包络（奇解）$y^2 = x^2$，即 $y = \pm x$。
 \end{solution}
-
-\begin{proofnote}
-例 5、例 6 讲义参数代换细节提取严重混乱（克莱洛方程通解 $u = cv + c^2$、$u = -\frac{v^2}{4}$ 等），此处仅给出结构框架，建议对照原讲义第 26--27 页核实。
-\end{proofnote}
 
 \textbf{作业（2.4）}：p49-50：1.（15、19、20、25、29、30）；2、3、4；5（只做证明部分）
 

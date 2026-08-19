@@ -159,11 +159,12 @@ $M = 1 + b^2$，$h = \min\{a, \frac{b}{1+b^2}\}$。$\dfrac{b}{1+b^2}$ 在 $b = 1
 \end{example}
 
 \begin{solution}
-通解 $y = \dfrac{1 + ce^{-x}}{1 - ce^{-x}}$ $[?]$。
+分离变量 $\dfrac{2dy}{y^2-1} = dx$，积分得通解
+$$y = \frac{1 + ce^x}{1 - ce^x}$$
 
 \begin{itemize}
-    \item 通过点 $(0,0)$ 的解为 $y = \dfrac{1 - e^{-x}}{1 + e^{-x}}$，存在区间为 $(-\infty, +\infty)$
-    \item 通过点 $(\ln 2, -3)$ 的解为 $y = \dfrac{1 + e^{-x}}{1 - e^{-x}}$，向右可延拓到 $+\infty$，向左只能延拓到 $0$（因为当 $x \to 0^+$ 时 $y \to -\infty$，无界），这对应推论中 (2) 的第一种情况
+    \item 通过点 $(0,0)$ 的解为 $y = \dfrac{1 - e^x}{1 + e^x}$，存在区间为 $(-\infty, +\infty)$
+    \item 通过点 $(\ln 2, -3)$ 的解为 $y = \dfrac{1 + e^x}{1 - e^x}$，向右可延拓到 $+\infty$，向左只能延拓到 $0$（因为当 $x \to 0^+$ 时 $y \to -\infty$，无界），这对应推论中 (2) 的第一种情况
 \end{itemize}
 \end{solution}
 
@@ -265,12 +266,8 @@ $$\begin{cases} \Phi(x, y, C) = 0 \\ \Phi_C(x, y, C) = 0 \end{cases}$$
 \end{example}
 
 \begin{solution}
-对参数 $c$ 求导 $-2(y-c) = -3(x-c)^2$，联立消去 $c$ 得两条曲线 $y = x$ 与 $y = x - \frac{2}{9}$ $[?]$，经检验 $y = x - \frac{2}{9}$ $[?]$ 是所求包络线。
+对参数 $c$ 求导 $-2(y-c) = -3(x-c)^2$，即 $y-c = \dfrac{3}{2}(x-c)^2$，代入原式消去 $c$ 得 $(x-c)^3\left(\dfrac{9}{4}(x-c)-1\right) = 0$，故得两条 C-判别曲线 $y = x$ 与 $y = x - \frac{4}{27}$，经检验 $y = x - \frac{4}{27}$ 是所求包络线。
 \end{solution}
-
-\begin{proofnote}
-例 2 讲义结论为 "$y = x$" 与 "$y = x - \frac{4}{27}$" 两条 C-判别曲线，其中 $y = x - \frac{4}{27}$ $[?]$ 是包络。原文 "$\frac{9}{2}$" 与 "$\frac{2}{9}$" 混排，请对照原讲义核实常数。
-\end{proofnote}
 
 \subsubsection{2. P-判别曲线法}
 
@@ -325,11 +322,78 @@ $$\begin{cases} F(x, y, p) = 0 \\ F_p(x, y, p) = 0 \end{cases}$$
 \begin{solution}
 设曲线为 $y = y(x)$，过点 $(x,y)$ 的切线方程 $Y = y + y'(X - x)$，与坐标轴交点为 $(x - \dfrac{y}{y'}, 0)$ 和 $(0, y - xy')$。三角形面积
 $$\frac{1}{2}\left|(x - \frac{y}{y'})(y - xy')\right| = 2$$
-化简得 $y = xp \pm \dfrac{2}{p}$ $[?]$，这是克莱罗方程，通解 $y = cx \pm \dfrac{2}{c}$，消去 $c$ 得奇解 $xy = 1$（等腰双曲线），即为满足要求的曲线。
+设 $p = y'$，令 $y = xp + f(p)$（克莱罗方程），则 $y - xp = f(p)$，$x - \dfrac{y}{p} = -\dfrac{f(p)}{p}$，代入面积条件得 $\dfrac{f(p)^2}{2|p|} = 2$，即 $f(p) = \pm 2\sqrt{|p|}$，故为克莱罗方程
+$$y = xp \pm 2\sqrt{|p|}$$
+通解 $y = cx \pm 2\sqrt{|c|}$。由 $x + f'(p) = 0$ 消去参数得奇解 $xy = \pm 1$（等腰双曲线），取 $xy = 1$ 即为满足要求的曲线。
 \end{solution}
 
-\begin{proofnote}
-例 6 讲义推导为 $y = xp \pm \dfrac{2}{p}$ 型克莱罗方程，通解 $y = cx \pm \dfrac{2}{c}$，奇解 $xy = \pm 1$ $[?]$，最终取 $xy = 1$。请对照原讲义核实符号。
-\end{proofnote}
-
 \textbf{作业（3.3）}：p68-69：1（3、6、9）、2（1、4）、3、4
+
+\section{数值解}
+
+许多初值问题虽然解存在且唯一，但其通解无法用初等函数显式表示。此时需借助数值方法在区间 $[x_0, b]$ 上求解的近似值：将区间离散为节点 $x_n = x_0 + nh$（$n = 0, 1, \ldots, N$，步长 $h$），从初值 $y_0 = y(x_0)$ 出发逐步递推 $y_n \approx y(x_n)$。解的存在唯一性定理保证了这一过程的合理性。
+
+\subsection{欧拉法与梯形法}
+
+\textbf{欧拉法}（一阶方法）用前向差商近似导数：
+\begin{equation}
+y_{n+1} = y_n + h f(x_n, y_n) \tag{3.20}
+\end{equation}
+其局部截断误差为 $O(h^2)$，整体误差为 $O(h)$，精度较低。
+
+\textbf{梯形法}（隐式格式）取两端斜率的平均：
+\begin{equation}
+y_{n+1} = y_n + \frac{h}{2}\left[f(x_n, y_n) + f(x_{n+1}, y_{n+1})\right] \tag{3.21}
+\end{equation}
+整体误差为 $O(h^2)$，但 $y_{n+1}$ 隐式出现，需迭代求解。
+
+\subsection{二阶 Runge--Kutta 方法（中点法）}
+
+\textbf{基本思想}：用区间 $[x_n, x_{n+1}]$ 上若干点的斜率加权平均代替单一斜率，以兼顾精度与显式计算的便利。二阶 Runge--Kutta 法（又称中点法）为
+\begin{equation}
+y_{n+1} = y_n + h\,f\left(x_n + \frac{h}{2},\, y_n + \frac{h}{2}f(x_n, y_n)\right) \tag{3.22}
+\end{equation}
+其局部截断误差为 $O(h^3)$，整体误差为 $O(h^2)$，较欧拉法提高一阶。
+
+\subsection{经典四阶 Runge--Kutta 方法}
+
+\textbf{经典四阶 Runge--Kutta 法}（简称 RK4）是最常用的常微分方程数值解法，在节点 $x_n$ 处依次计算四个斜率：
+\begin{equation}
+\begin{aligned}
+k_1 &= f(x_n, y_n), \\
+k_2 &= f\left(x_n + \frac{h}{2}, y_n + \frac{h}{2}k_1\right), \\
+k_3 &= f\left(x_n + \frac{h}{2}, y_n + \frac{h}{2}k_2\right), \\
+k_4 &= f(x_n + h, y_n + h k_3),
+\end{aligned} \tag{3.23}
+\end{equation}
+然后按加权平均递推：
+\begin{equation}
+y_{n+1} = y_n + \frac{h}{6}\left(k_1 + 2k_2 + 2k_3 + k_4\right) \tag{3.24}
+\end{equation}
+
+\begin{remark}
+RK4 的局部截断误差为 $O(h^5)$，整体误差为 $O(h^4)$。四个斜率 $k_1, k_2, k_3, k_4$ 分别对应区间起点、两个中点处及终点的斜率估计，其系数 $(1, 2, 2, 1)/6$ 与 Simpson 数值积分公式一致——这是 RK4 高精度的重要原因。RK4 为显式方法，每步只需计算四次 $f$ 值，精度与稳定性俱佳，是工程与科学计算中求解初值问题的首选格式。
+\end{remark}
+
+\begin{example}
+用步长 $h = 0.2$ 的四阶 Runge--Kutta 法求初值问题 $\begin{cases} y' = x + y \\ y(0) = 1 \end{cases}$ 在 $x = 0.2$ 处的近似值，并与之精确解比较。
+\end{example}
+
+\begin{solution}
+取 $x_0 = 0, y_0 = 1, h = 0.2$，代入 RK4 公式 (3.23)--(3.24)：
+$$\begin{aligned} k_1 &= f(0, 1) = 0 + 1 = 1, \\ k_2 &= f(0.1,\, 1 + 0.1) = 0.1 + 1.1 = 1.2, \\ k_3 &= f(0.1,\, 1 + 0.1\times 1.2) = 0.1 + 1.12 = 1.22, \\ k_4 &= f(0.2,\, 1 + 0.2\times 1.22) = 0.2 + 1.244 = 1.444. \end{aligned}$$
+故
+$$y(0.2) \approx y_1 = 1 + \frac{0.2}{6}(1 + 2\times 1.2 + 2\times 1.22 + 1.444) = 1 + \frac{0.2}{6}\times 7.284 = 1.2428$$
+
+为比较精度，求精确解。这是线性方程 $y' - y = x$，通解
+$$y = e^{\int 1\,dx}\left(\int x e^{-\int 1\,dx}\,dx + c\right) = e^x\left(\int x e^{-x}\,dx + c\right) = -x - 1 + ce^x$$
+由 $y(0) = 1$ 得 $c = 2$，精确解 $y = 2e^x - x - 1$。代入 $x = 0.2$：
+$$y(0.2) = 2e^{0.2} - 1.2 \approx 2\times 1.22140 - 1.2 = 1.2428$$
+与 RK4 结果完全一致。
+\end{solution}
+
+\begin{remark}
+本例中 RK4 几乎给出精确值，体现了四阶方法的精度。作为对照，欧拉法（3.20）仅得 $y_1 = 1 + 0.2\times 1 = 1.2$，与精确值 $1.2428$ 相比明显粗糙。实际应用中步长 $h$ 越小精度越高，但步数增多、舍入误差累积，需权衡选取。
+\end{remark}
+
+\textbf{作业（3.4）}：p72：1、2、3

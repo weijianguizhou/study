@@ -134,8 +134,8 @@ $$x(t) = \gamma_1\cos t + \gamma_2\sin t + \cos t\ln|\cos t| + t\sin t$$
 \end{example}
 
 \begin{solution}
-对应齐次方程 $t^2x'' - tx' + x = 0$，改写为 $x'' - \dfrac{1}{t}x' + \dfrac{1}{t^2}x = 0$。验证 $x = t$ 与 $x = 1$ 是解（$x'' = 0, x' = 1$ 代入得 $0 - t\cdot 1 + t = 0$），故基本解组为 $\{1, t\}$ $[?]$。常数变易，令 $x = c_1(t) + c_2(t)t$，得方程组 $\begin{cases} c'_1 + c'_2t = 0 \\ c'_2 = \dfrac{1}{t} \end{cases}$，解得 $c'_1 = -1, c'_2 = \dfrac{1}{t}$，积分 $c_1 = -t + \gamma_1, c_2 = \ln|t| + \gamma_2$，通解
-$$x(t) = \gamma_1 + \gamma_2 t + t\ln|t| - t$$
+对应齐次方程 $t^2x'' - tx' + x = 0$ 是 Euler 方程，令 $x = t^m$ 得特征方程 $m(m-1) - m + 1 = (m-1)^2 = 0$，$m = 1$ 为二重根，故基本解组为 $\{t,\ t\ln|t|\}$。常数变易，令 $x = c_1(t)t + c_2(t)t\ln|t|$，得方程组 $\begin{cases} c'_1t + c'_2t\ln|t| = 0 \\ c'_1 + c'_2(\ln|t| + 1) = \dfrac{1}{t} \end{cases}$，解得 $c'_1 = -\dfrac{\ln|t|}{t}, c'_2 = \dfrac{1}{t}$，积分 $c_1 = -\dfrac{1}{2}\ln^2|t| + \gamma_1, c_2 = \ln|t| + \gamma_2$，通解
+$$x(t) = \gamma_1 t + \gamma_2 t\ln|t| + \frac{t}{2}\ln^2|t|$$
 \end{solution}
 
 \textbf{练习}：
@@ -267,8 +267,8 @@ $$\tilde{x}(t) = t^k e^{\lambda t}(B_0t^m + B_1t^{m-1} + \cdots + B_{m-1}t + B_m
 \end{example}
 
 \begin{solution}
-特征方程 $\lambda^2 - 2\lambda - 3 = 0$，根 $\lambda = 3, -1$，齐次通解 $c_1e^{3t} + c_2e^{-t}$。$\lambda = 0$ 不是特征根，设特解 $\tilde{x} = At + B$，代入得 $A = -\frac{1}{3}, B = -\frac{1}{3}$ $[?]$，通解
-$$x = c_1e^{3t} + c_2e^{-t} - \frac{1}{3}t - \frac{1}{3}$$
+特征方程 $\lambda^2 - 2\lambda - 3 = 0$，根 $\lambda = 3, -1$，齐次通解 $c_1e^{3t} + c_2e^{-t}$。$\lambda = 0$ 不是特征根，设特解 $\tilde{x} = At + B$，代入得 $A = -\frac{1}{3}, B = -\frac{1}{9}$，通解
+$$x = c_1e^{3t} + c_2e^{-t} - \frac{1}{3}t - \frac{1}{9}$$
 \end{solution}
 
 \begin{example}
@@ -285,13 +285,13 @@ $$x = c_1e^{3t} + c_2e^{-t} - \frac{1}{4}te^{-t}$$
 \end{example}
 
 \begin{solution}
-特征方程 $(\lambda+1)^3 = 0$，$\lambda = -1$ 为三重根，齐次通解 $(c_1 + c_2t + c_3t^2)e^{-t}$。设特解 $\tilde{x} = t^3e^{-t}(At + B)$，代入得 $A = \frac{1}{24}, B = -\frac{5}{6}$ $[?]$，通解
-$$x = (c_1 + c_2t + c_3t^2)e^{-t} + \frac{t^3}{24}(t - 20)e^{-t}$$
+特征方程 $(\lambda+1)^3 = 0$，$\lambda = -1$ 为三重根，齐次通解 $(c_1 + c_2t + c_3t^2)e^{-t}$。设特解 $\tilde{x} = t^3e^{-t}(At + B)$，由 $(D+1)^3\tilde{x} = e^{-t}(24At + 6B) = e^{-t}(t+5)$ 得 $A = \frac{1}{24}, B = \frac{5}{6}$，通解
+$$x = (c_1 + c_2t + c_3t^2)e^{-t} + \frac{t^3}{24}(t + 20)e^{-t}$$
 \end{solution}
 
 \textbf{叠加原理}：若 $L[x] = f_1(t)$ 有特解 $\tilde{x}_1$，$L[x] = f_2(t)$ 有特解 $\tilde{x}_2$，则 $L[x] = f_1(t) + f_2(t)$ 有特解 $\tilde{x}_1 + \tilde{x}_2$。
 
-\textbf{练习}：求 $x'' - 2x' - 3x = e^t + t^2 + 1$ 的通解 $\rightarrow$ 通解 $c_1e^{3t} + c_2e^{-t} - \frac{1}{4}e^t - \frac{1}{3}t^2 + \frac{4}{9}t - \frac{13}{27}$ $[?]$
+\textbf{练习}：求 $x'' - 2x' - 3x = e^t + t^2 + 1$ 的通解 $\rightarrow$ 通解 $c_1e^{3t} + c_2e^{-t} - \frac{1}{4}e^t - \frac{1}{3}t^2 + \frac{4}{9}t - \frac{23}{27}$（分别设特解 $\tilde{x}_1 = Ae^t$ 与 $\tilde{x}_2 = At^2 + Bt + C$ 求得）
 
 \subsubsection{类型 II：$f(t)$ 为指数乘三角多项式型}
 
@@ -394,8 +394,8 @@ $$y = -\left(\frac{x^2}{2!} + \frac{x^3}{3!} + \cdots + \frac{x^n}{n!} + \cdots\
 \end{example}
 
 \begin{solution}
-设级数解 $y = \sum a_n x^n$，由初始条件 $a_0 = 0, a_1 = 1$。代入方程比较系数得递推关系：偶数项 $a_{2k} = 0$，奇数项 $a_{2k+1} = \dfrac{1}{(2k+1)!!}$ $[?]$，故
-$$y = x + \frac{x^3}{3} + \frac{x^5}{3\cdot 5} + \cdots + \frac{x^{2k+1}}{(2k+1)!!} + \cdots$$
+设级数解 $y = \sum a_n x^n$，由初始条件 $a_0 = 0, a_1 = 1$。代入方程比较系数得递推关系 $a_{n+2} = \dfrac{n a_n + 4a_{n-2}}{(n+2)(n+1)}$：偶数项 $a_{2k} = 0$，奇数项 $a_3 = \dfrac{1}{6}, a_5 = \dfrac{9}{40}, \ldots$，故
+$$y = x + \frac{x^3}{6} + \frac{9x^5}{40} + \cdots$$
 \end{solution}
 
 \begin{example}
@@ -422,15 +422,20 @@ $$x^2\frac{d^2y}{dx^2} + x\frac{dy}{dx} + (x^2 - n^2)y = 0$$
 
 \textbf{练习}：
 \begin{enumerate}
-    \item 求解方程 $x'' - (1 + x^2) = 0$ $[?]$
+    \item 求解方程 $x'' - (1 + x^2) = 0$（不显含自变量 $t$，令 $p = x'$，由 $p\dfrac{dp}{dx} = 1+x^2$ 得 $\dfrac{p^2}{2} = x + \dfrac{x^3}{3} + c_1$，即 $\dfrac{dx}{dt} = \pm\sqrt{2x + \dfrac{2x^3}{3} + 2c_1}$，再分离变量积分）
     \item 用幂级数方法，求方程 $x'' + tx' + x = 0$ 满足 $x(0) = 1, x'(0) = 0$ 的特解
     \item 若方程 $x'' + p(t)x' + q(t)x = 0$ 有一特解为 $x = t$，则方程系数满足什么关系？若方程有形如 $x = e^{mt}$ 的解，则 $m$ 满足什么关系？
 \end{enumerate}
 
 \textbf{思考}：
 \begin{enumerate}
-    \item 求解方程 $y'' - f(x)y' + [f(x) - 1]y = 0$ $[?]$
+    \item 求解方程 $y'' - f(x)y' + [f(x) - 1]y = 0$
     \item 若两方程 $x'' + p(t)x' + q(t)x = 0$ 有一个公共解，试求出此解，并分别求两个方程的通解
 \end{enumerate}
+
+\begin{remark}
+思考题 1 有解 $y = e^x$（验证：$y' = y, y'' = y$ 代入得 $y - fy + (f-1)y = 0$），由已知一特解降阶可得通解
+$$y = e^x\left(c_1 + c_2\int e^{\int f(x)\,dx - 2x}\,dx\right)$$
+\end{remark}
 
 \textbf{作业（4.3）}：p107-108：1.（2、5、6）、2.（2）、4、5、6、7

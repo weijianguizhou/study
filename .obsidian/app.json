@@ -1,5 +1,5 @@
 {
-  "readableLineLength": false,
+  "readableLineLength": true,
   "promptDelete": false,
   "alwaysUpdateLinks": true,
   "pdfExportSettings": {
@@ -7,5 +7,6 @@
     "landscape": false,
     "margin": "0",
     "downscalePercent": 100
-  }
+  },
+  "strictLineBreaks": true
 }

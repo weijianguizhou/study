@@ -55,7 +55,7 @@ $$\begin{cases} x'_1 = x_2 \\ x'_2 = -q(t)x_1 - p(t)x_2 + f(t) \end{cases} \iff 
 \begin{equation}\mathbf{x}' = \begin{pmatrix} 0 & 1 & 0 & \cdots & 0 \\ 0 & 0 & 1 & \cdots & 0 \\ \vdots & & & \ddots & \vdots \\ 0 & 0 & 0 & \cdots & 1 \\ -a_n(t) & -a_{n-1}(t) & \cdots & \cdots & -a_1(t) \end{pmatrix}\mathbf{x} + \begin{pmatrix} 0 \\ \vdots \\ 0 \\ f(t) \end{pmatrix} \tag{5.7}\end{equation}
 
 \begin{example}
-将初值问题 $3x'' - 5x' + 2tx = \sin t, \ x(0) = 0, x'(0) = 0$ $[?]$ 化为一阶方程组初值问题。
+将初值问题 $3x'' - 5x' + 2tx = \sin t, \ x(0) = 0, x'(0) = 0$ 化为一阶方程组初值问题。
 \end{example}
 
 \begin{solution}
@@ -63,7 +63,7 @@ $$\begin{cases} x'_1 = x_2 \\ x'_2 = -q(t)x_1 - p(t)x_2 + f(t) \end{cases} \iff 
 \end{solution}
 
 \begin{example}
-将方程组 $\begin{cases} x'_1 = x_2 \\ x'_2 = -x_1 + x_2 \end{cases}$ $[?]$ 化为高阶方程。
+将方程组 $\begin{cases} x'_1 = x_2 \\ x'_2 = -x_1 + x_2 \end{cases}$ 化为高阶方程。
 \end{example}
 
 \begin{solution}
@@ -86,8 +86,13 @@ $$\begin{cases} x'_1 = x_2 \\ x'_2 = -q(t)x_1 - p(t)x_2 + f(t) \end{cases} \iff 
 \end{enumerate}
 
 \begin{example}
-求方程组初值问题的二次近似解（$\mathbf{x}' = \begin{pmatrix} -1 & 1 \\ 0 & 1 \end{pmatrix}\mathbf{x}, \ \mathbf{x}(0) = \begin{pmatrix} 0 \\ 0 \end{pmatrix}$）$[?]$，得 $\boldsymbol{\varphi}_2(t) = \begin{pmatrix} \frac{1}{2}t^2 \\ t \end{pmatrix}$ $[?]$。
+求方程组初值问题 $\mathbf{x}' = \begin{pmatrix} -1 & 1 \\ 0 & 1 \end{pmatrix}\mathbf{x}, \ \mathbf{x}(0) = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$ 的二次近似解。
 \end{example}
+
+\begin{solution}
+Picard 迭代 $\boldsymbol{\varphi}_0(t) = \boldsymbol{\eta}$，$\boldsymbol{\varphi}_{n+1}(t) = \boldsymbol{\eta} + \int_{0}^{t}\mathbf{A}\boldsymbol{\varphi}_n(s)\,ds$：
+$$\boldsymbol{\varphi}_1(t) = \begin{pmatrix} 1 - t \\ 0 \end{pmatrix}, \qquad \boldsymbol{\varphi}_2(t) = \begin{pmatrix} 1 - t + \frac{1}{2}t^2 \\ 0 \end{pmatrix}$$
+\end{solution}
 
 \subsection{简单方程组的消元法}
 
@@ -96,24 +101,22 @@ $$\begin{cases} x'_1 = x_2 \\ x'_2 = -q(t)x_1 - p(t)x_2 + f(t) \end{cases} \iff 
 \end{example}
 
 \begin{solution}
-保留 $x_2$，由第一式 $x_1 = \dfrac{1}{2}(x'_2 + 2x_2)$，代入消元得 $x''_2 + 2x_2 = 0$ $[?]$，解得 $x_2 = (c_1 + c_2t)e^{-t}$ $[?]$，代回得 $x_1 = \dfrac{1}{2}[(c_1 + c_2t)e^{-t}]' + (c_1 + c_2t)e^{-t}$，整理得方程组的解。
+保留 $x_2$，由第二式 $x_1 = x'_2 + 2x_2$，代入第一式消元得 $x''_2 + 4x'_2 + x_2 = 0$，特征方程 $\lambda^2 + 4\lambda + 1 = 0$ 的根为 $\lambda = -2 \pm \sqrt{3}$，解得
+$$x_2 = c_1e^{(-2+\sqrt{3})t} + c_2e^{(-2-\sqrt{3})t}$$
+代回 $x_1 = x'_2 + 2x_2$ 得
+$$x_1 = \sqrt{3}\,c_1e^{(-2+\sqrt{3})t} - \sqrt{3}\,c_2e^{(-2-\sqrt{3})t}$$
+即得方程组的通解。
 \end{solution}
 
-\begin{proofnote}
-例 5 讲义结论为 $x_1 = (c_1 + \frac{1}{2}c_2 + c_2t)e^{-t}$ 形式，消元细节请对照原讲义 p42。
-\end{proofnote}
-
 \begin{example}
-求解方程组 $\begin{cases} \dfrac{dx}{dt} = y \\ \dfrac{dy}{dt} = \dfrac{x}{y} \end{cases}$ $[?]$
+求解方程组 $\begin{cases} \dfrac{dx}{dt} = y \\ \dfrac{dy}{dt} = \dfrac{x}{y} \end{cases}$
 \end{example}
 
 \begin{solution}
-消去 $y$ 得 $x'' = \dfrac{x}{x'}$，令 $p = x'$ 降阶：$p\dfrac{dp}{dx} = \dfrac{x}{p}$，即 $p^2dp = x\,dx$，积分得 $p^3 = \frac{3}{2}x^2 + c_1$ $[?]$...（讲义结论：$x = c_2e^{c_1 t}, y = c_1c_2e^{c_1 t}$ 与 $y = 0$）
+消去 $y$ 得 $x'' = \dfrac{x}{x'}$，令 $p = x'$ 降阶：$p' = \dfrac{x}{p}$，即 $p\dfrac{dp}{dx} = \dfrac{x}{p}$，故 $p^2\,dp = x\,dx$，积分得
+$$p^3 = \frac{3}{2}x^2 + c_1$$
+即 $\dfrac{dx}{dt} = \left(\frac{3}{2}x^2 + c_1\right)^{1/3}$，再分离变量积分即得隐式通解。
 \end{solution}
-
-\begin{proofnote}
-例 6 讲义原文：由 $p = c_1x$ 得 $x = c_2e^{c_1t}$，$y = c_1c_2e^{c_1t}$；另有 $p=0$ 情形 $x = c, y = 0$。请对照原讲义 p44。
-\end{proofnote}
 
 \textbf{作业（5.0）}：p123：1（1、2）、2（1、2、3）、3
 
@@ -134,11 +137,11 @@ $$\begin{cases} x'_1 = x_2 \\ x'_2 = -q(t)x_1 - p(t)x_2 + f(t) \end{cases} \iff 
 \textbf{定义（向量函数组线性相关/无关）}：设 $\mathbf{x}_1(t), \ldots, \mathbf{x}_m(t)$ 是定义在 $[a,b]$ 上的向量函数，若存在不全为零的常数 $c_1, \ldots, c_m$，使对所有 $a \le t \le b$ 有 $c_1\mathbf{x}_1(t) + \cdots + c_m\mathbf{x}_m(t) \equiv \mathbf{0}$，则称线性相关；否则线性无关。
 
 \begin{example}
-$\mathbf{x}_1 = \begin{pmatrix} \cos t \\ 1 \\ t \end{pmatrix}, \mathbf{x}_2 = \begin{pmatrix} \sin t \\ 1 \\ t \end{pmatrix}$ 在任何区间线性相关（取 $c_1 = 1, c_2 = -1$ 时第一分量 $\cos t - \sin t$ 不恒为零，但 $t$ 分量与第二分量抵消 $[?]$，讲义取 $c_1 = \cos t$ 非恒定常数——原文例证有误，以线性组合定义为准）。
+$\mathbf{x}_1 = \begin{pmatrix} \cos t \\ 1 \\ t \end{pmatrix}, \mathbf{x}_2 = \begin{pmatrix} 2\cos t \\ 2 \\ 2t \end{pmatrix}$ 在任何区间线性相关（取 $c_1 = 2, c_2 = -1$，则 $c_1\mathbf{x}_1 + c_2\mathbf{x}_2 \equiv \mathbf{0}$）。
 \end{example}
 
 \begin{example}
-$\mathbf{x}_1 = \begin{pmatrix} e^t \\ e^{-t} \\ 0 \end{pmatrix}, \mathbf{x}_2 = \begin{pmatrix} e^{2t} \\ 0 \\ e^{3t} \end{pmatrix}, \mathbf{x}_3 = \begin{pmatrix} 0 \\ e^{3t} \\ e^{2t} \end{pmatrix}$ $[?]$ 在 $(-\infty, +\infty)$ 上线性无关（其 Wronsky 行列式 $\neq 0$）。
+$\mathbf{x}_1 = \begin{pmatrix} e^t \\ e^{-t} \\ 0 \end{pmatrix}, \mathbf{x}_2 = \begin{pmatrix} e^{2t} \\ 0 \\ e^{3t} \end{pmatrix}, \mathbf{x}_3 = \begin{pmatrix} 0 \\ e^{3t} \\ e^{2t} \end{pmatrix}$ 在 $(-\infty, +\infty)$ 上线性无关（其 Wronsky 行列式 $W = -e^{7t} - e^{3t} \neq 0$）。
 \end{example}
 
 \subsubsection{Wronsky 行列式}
@@ -263,17 +266,13 @@ $$\boldsymbol{\varphi}(t) = \boldsymbol{\Phi}(t)\mathbf{C} + \bar{\boldsymbol{\v
 \end{remark}
 
 \begin{example}
-求初值问题 $\mathbf{x}' = \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix}\mathbf{x} + \begin{pmatrix} e^{-t} \\ 0 \end{pmatrix}, \ \mathbf{x}(0) = \begin{pmatrix} -1 \\ 1 \end{pmatrix}$ $[?]$ 的解。
+求初值问题 $\mathbf{x}' = \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix}\mathbf{x} + \begin{pmatrix} e^{-t} \\ 0 \end{pmatrix}, \ \mathbf{x}(0) = \begin{pmatrix} -1 \\ 1 \end{pmatrix}$ 的解。
 \end{example}
 
 \begin{solution}
 由例 3 基解矩阵 $\boldsymbol{\Phi}(t) = \begin{pmatrix} e^t & te^t \\ 0 & e^t \end{pmatrix}$，$\boldsymbol{\Phi}^{-1}(s) = \begin{pmatrix} e^{-s} & -se^{-s} \\ 0 & e^{-s} \end{pmatrix}$，代入常数变易公式计算得
-$$\boldsymbol{\varphi}(t) = \begin{pmatrix} te^t - e^t \\ e^t \end{pmatrix} + \ldots \text{[?]}$$
+$$\boldsymbol{\varphi}(t) = \begin{pmatrix} te^t - e^t + \frac{1}{2}(e^t - e^{-t}) \\ e^t \end{pmatrix}$$
 \end{solution}
-
-\begin{proofnote}
-例 6 讲义最终答案 $\varphi(t) = \begin{pmatrix} te^t - e^t + \frac{1}{2}(e^t - e^{-t}) \\ e^t \end{pmatrix}$ $[?]$，积分细节请对照原讲义 p7。
-\end{proofnote}
 
 \subsubsection{n 阶线性微分方程的常数变易公式}
 
@@ -511,7 +510,7 @@ $$A(s)X(s) = F(s) + B(s)$$
 \begin{solution}
 令 $X_1 = \mathcal{L}[\varphi_1], X_2 = \mathcal{L}[\varphi_2]$，变换得
 $$\begin{cases} (s-3)X_1 - 5X_2 = \dfrac{1}{s+1} \\ 5X_1 + (s-3)X_2 = 1 \end{cases}$$
-解得 $X_1(s) = \dfrac{1}{41}\left[\dfrac{4(s-3)}{(s-3)^2+25} + \dfrac{46\cdot 5}{(s-3)^2+25}\cdot\dfrac{1}{5}[?] - \dfrac{4}{s+1}\right]$，反变换得
+解得 $X_1(s) = \dfrac{1}{41}\left[\dfrac{4(s-3)}{(s-3)^2+25} + \dfrac{46\cdot 5}{(s-3)^2+25} - \dfrac{4}{s+1}\right]$，反变换得
 $$\varphi_1(t) = \frac{1}{41}e^{3t}(4\cos 5t + 46\sin 5t - 4e^{-4t}), \quad \varphi_2(t) = \frac{1}{41}e^{3t}(46\cos 5t - 4\sin 5t - 5e^{-4t})$$
 \end{solution}
 

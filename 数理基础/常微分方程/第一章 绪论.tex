@@ -8,32 +8,86 @@
 
 \subsection{RL / RLC 电路}
 
-基尔霍夫（Kirchhoff）第二定律：闭合回路中所有支路电压的代数和为零。
+基尔霍夫（Kirchhoff）第二定律：闭合回路中所有支路电压的代数和为零。RL 串联电路满足 $L\dfrac{dI}{dt} + RI = E$，其电流按指数规律趋近稳态值 $\dfrac{E}{R}$；RLC 串联电路满足 $L\dfrac{d^2q}{dt^2} + R\dfrac{dq}{dt} + \dfrac{q}{C} = 0$，在欠阻尼情形下电荷呈衰减振荡。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.92\textwidth]{Figures/RL_RLC电路.png}
+    \caption{RL 串联电路电流响应与 RLC 放电（欠阻尼）曲线。MATLAB 代码见 \texttt{MATLAB代码/RL\_RLC电路.m}。}
+    \label{fig:RL_RLC}
+\end{figure}
 
 \subsection{数学摆}
 
-略。
+数学摆（单摆）满足 $\dfrac{d^2\theta}{dt^2} + \dfrac{g}{l}\sin\theta = 0$，其运动可用 MATLAB 数值求解；当摆角较小时可作小角度近似 $\sin\theta \approx \theta$，解为 $\theta(t) = \theta_0\cos\omega t$。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\textwidth]{Figures/数学摆.png}
+    \caption{数学摆大摆角数值解与小角度近似的对比。MATLAB 代码见 \texttt{MATLAB代码/数学摆.m}。}
+    \label{fig:pendulum}
+\end{figure}
 
 \subsection{人口模型（Malthus）}
 
-假设：人口自然增长中，净相对增加率（单位时间净增长数 $/$ 人口总数）为常数 $r$。
+假设：人口自然增长中，净相对增加率（单位时间净增长数 $/$ 人口总数）为常数 $r$。此时 $\dfrac{dN}{dt} = rN$，解为指数增长 $N(t) = N_0e^{rt}$。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.65\textwidth]{Figures/Malthus人口模型.png}
+    \caption{Malthus 人口模型的指数增长曲线。MATLAB 代码见 \texttt{MATLAB代码/Malthus人口模型.m}。}
+    \label{fig:malthus}
+\end{figure}
 
 \subsection{人口模型的改进：logistic 模型（Verhulst）}
 
 引入环境最大容纳量 $N_m$，假设净相对增长率为
 $$r\left(1 - \frac{N(t)}{N_m}\right)$$
+即 $\dfrac{dN}{dt} = rN\left(1 - \dfrac{N}{N_m}\right)$，其解为 S 形增长曲线，当 $t\to\infty$ 时 $N(t)\to N_m$。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.65\textwidth]{Figures/Logistic模型.png}
+    \caption{logistic 模型的 S 形增长曲线。MATLAB 代码见 \texttt{MATLAB代码/Logistic模型.m}。}
+    \label{fig:logistic}
+\end{figure}
 
 \subsection{SI 传染病模型}
 
-易感染者（Susceptible）与已感染者（Infective）两类。
+易感染者（Susceptible）与已感染者（Infective）两类，总人口 $N = S + I$ 恒定。设感染率为 $\beta$，则
+$$\frac{dS}{dt} = -\beta SI, \qquad \frac{dI}{dt} = \beta SI$$
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.65\textwidth]{Figures/SI传染病模型.png}
+    \caption{SI 传染病模型中易感者与感染者人数随时间的变化。MATLAB 代码见 \texttt{MATLAB代码/SI传染病模型.m}。}
+    \label{fig:SI}
+\end{figure}
 
 \subsection{Volterra 被捕食--捕食模型}
 
-时刻 $t$ 被食鱼总数 $x(t)$，捕食鱼总数 $y(t)$；单位时间相遇次数 $bxy$；捕食鱼自然减少率与 $y$ 成正比。另有两种群竞争模型。
+时刻 $t$ 被食鱼总数 $x(t)$，捕食鱼总数 $y(t)$；单位时间相遇次数 $bxy$；捕食鱼自然减少率与 $y$ 成正比。模型为
+$$\frac{dx}{dt} = ax - bxy, \qquad \frac{dy}{dt} = -cy + dxy$$
+其解呈周期振荡，相图为闭合轨线。另有两种群竞争模型。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.92\textwidth]{Figures/Volterra捕食被捕食模型.png}
+    \caption{Volterra 被捕食-捕食模型的时间历程与相图。MATLAB 代码见 \texttt{MATLAB代码/Volterra捕食被捕食模型.m}。}
+    \label{fig:volterra}
+\end{figure}
 
 \subsection{Lorenz 方程（蝴蝶效应）}
 
-Edward Lorenz（1963，MIT）给出第一个混沌现象——蝴蝶效应，为大气流体动力学模型的简化常微分方程组。
+Edward Lorenz（1963，MIT）给出第一个混沌现象——蝴蝶效应，为大气流体动力学模型的简化常微分方程组：
+$$\frac{dx}{dt} = \sigma(y - x), \qquad \frac{dy}{dt} = x(\rho - z) - y, \qquad \frac{dz}{dt} = xy - \beta z$$
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Figures/Lorenz方程.png}
+    \caption{Lorenz 方程的混沌吸引子（$\sigma=10,\ \rho=28,\ \beta=8/3$）。MATLAB 代码见 \texttt{MATLAB代码/Lorenz方程.m}。}
+    \label{fig:lorenz}
+\end{figure}
 
 \subsection{建模总结}
 
@@ -149,17 +203,14 @@ $$y = \varphi(x, c_1, c_2, \ldots, c_n)$$
 \end{itemize}
 
 \begin{example}
-验证 $y = c_1 e^x + c_2 e^{-4x}$ 是 $y'' + 5y' + 4y = 0$ 的通解，并求满足 $y(0) = 2, y'(0) = 1$ 的特解。
+验证 $y = c_1 e^{-x} + c_2 e^{-4x}$ 是 $y'' + 5y' + 4y = 0$ 的通解，并求满足 $y(0) = 2, y'(0) = 1$ 的特解。
 \end{example}
 
 \begin{solution}
-由初始条件得方程组
-$$\begin{cases} c_1 + c_2 = 2 \\ c_1 - 4c_2 = 1 \end{cases} \Rightarrow c_1 = \frac{9}{5}, \; c_2 = \frac{1}{5}[?]$$
+特征方程 $\lambda^2 + 5\lambda + 4 = 0$ 的根为 $\lambda = -1, -4$，故 $e^{-x}, e^{-4x}$ 是对应齐次方程的两个线性无关解，$y = c_1 e^{-x} + c_2 e^{-4x}$ 确为其通解。由初始条件得方程组
+$$\begin{cases} c_1 + c_2 = 2 \\ -c_1 - 4c_2 = 1 \end{cases} \Rightarrow c_1 = 3, \; c_2 = -1$$
+故所求特解为 $y = 3e^{-x} - e^{-4x}$。
 \end{solution}
-
-\begin{proofnote}
-讲义原文解出 $c_1 = 3,\ c_2 = -1$，代回 $y'(0) = 3 - 4(-1) = 7 \neq 1$，与初始条件矛盾；按 $y(0)=2, y'(0)=1$ 应得 $c_1 = 9/5, c_2 = 1/5$。
-\end{proofnote}
 
 \subsection{积分曲线与方向场}
 
