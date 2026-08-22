@@ -40,9 +40,9 @@ a_k = 0 \quad (k = 1, 2, \cdots, n).
 
 \subsection{不含冗余约束的有限维非独立变分}
 
-\begin{theorem}[不含冗余约束的有限维非独立变分原理]
+\begin{myTheorem}{不含冗余约束的有限维非独立变分原理}
 对于 $n$ 维实数列阵 $\boldsymbol{a} \in \mathbb{R}^n$ 和 $\boldsymbol{q} \in \mathbb{R}^n$，以及 $m \times n$ 维行满秩矩阵 $\Phi \in \mathbb{R}^{m \times n}$，在满足约束方程 $\Phi\,\delta\boldsymbol{q} = \boldsymbol{0}$ 的前提下，如果 $\boldsymbol{q}$ 的任意微小变更 $\delta\boldsymbol{q}$ 与 $\boldsymbol{a}$ 的内积均为零，即 $\delta\boldsymbol{q}^{\mathrm{T}} \boldsymbol{a} = 0$，则存在 $m$ 维拉格朗日乘子 $\boldsymbol{\lambda} \in \mathbb{R}^m$ 使得 $\boldsymbol{a}$ 与 $\Phi^{\mathrm{T}} \boldsymbol{\lambda}$ 的和为零。
-\end{theorem}
+\end{myTheorem}
 
 \noindent 简记形式：$\boldsymbol{a} \in \mathbb{R}^n$，$\boldsymbol{q} \in \mathbb{R}^n$，$\Phi \in \mathbb{R}^{m \times n}$，$\operatorname{rank}(\Phi) = m$，
 \begin{equation}\label{eq:1.24}
@@ -167,9 +167,9 @@ m \leq n.
 
 \subsection{含冗余约束的有限维非独立变分原理}
 
-\begin{theorem}[含冗余约束的有限维非独立变分原理]
+\begin{myTheorem}{含冗余约束的有限维非独立变分原理}
 对于 $n$ 维实数列阵 $\boldsymbol{a} \in \mathbb{R}^n$ 和 $\boldsymbol{q} \in \mathbb{R}^n$，以及 $m \times n$ 维矩阵 $\Phi \in \mathbb{R}^{m \times n}$，在满足约束方程 $\Phi\,\delta\boldsymbol{q} = \boldsymbol{0}$ 的前提下，如果 $\boldsymbol{q}$ 的任意微小变更 $\delta\boldsymbol{q}$ 与 $\boldsymbol{a}$ 的内积均为零，即 $\delta\boldsymbol{q}^{\mathrm{T}} \boldsymbol{a} = 0$，则存在 $m$ 维拉格朗日乘子 $\boldsymbol{\lambda} \in \mathbb{R}^m$ 使得 $\boldsymbol{a}$ 与 $\Phi^{\mathrm{T}} \boldsymbol{\lambda}$ 的和为零。
-\end{theorem}
+\end{myTheorem}
 
 \noindent 简记形式：$\boldsymbol{a} \in \mathbb{R}^n$，$\boldsymbol{q} \in \mathbb{R}^n$，$\Phi \in \mathbb{R}^{m \times n}$，
 \begin{equation}\label{eq:1.50}
@@ -238,7 +238,7 @@ R^{\mathrm{T}} \!\begin{bmatrix} \bar{\boldsymbol{\lambda}} \\ \hat{\boldsymbol{
 \end{equation}
 \end{proof}
 
-由证明过程可知当约束方程系数矩阵 $\Phi$ 为非行满秩矩阵时，拉格朗日乘子 $\boldsymbol{\lambda}$ 不唯一。
+由证明过程可知当约束方程系数矩阵 $\Phi$ 为非行满秩矩阵时，拉格朗日乘子 $\boldsymbol{\lambda}$ 不唯一。因为式~\ref{eq:1.59}的引入具有随意性。
 
 \section{非独立变分原理在多元函数条件极值问题的应用}
 
@@ -288,7 +288,7 @@ f_x(\bar{\boldsymbol{x}})\,\delta\boldsymbol{x} = 0.
 
 由前述推导过程可得，在满足约束方程 $\boldsymbol{0} = \boldsymbol{c}(\boldsymbol{x})$ 的前提下，多元函数 $y = f(\boldsymbol{x})$ 在 $\bar{\boldsymbol{x}}$ 处取极小值的必要条件为
 \begin{equation*}
-f_x(\bar{\boldsymbol{x}})\,\delta\boldsymbol{x} = 0, \quad \forall\, \delta\boldsymbol{x} : \boldsymbol{0} = c_x(\bar{\boldsymbol{x}})\,\delta\boldsymbol{x}.
+f_x(\bar{\boldsymbol{x}})\,\delta\boldsymbol{x} = 0, \quad \forall\, \delta\boldsymbol{x} \text{使得} \boldsymbol{0} = c_x(\bar{\boldsymbol{x}})\,\delta\boldsymbol{x}.
 \end{equation*}
 即对于任意的满足约束方程 $\boldsymbol{0} = c_x(\bar{\boldsymbol{x}})\,\delta\boldsymbol{x}$ 的自变量 $\boldsymbol{x}$ 的微小变更 $\delta\boldsymbol{x}$，都能使表达式 $f_x(\bar{\boldsymbol{x}})\,\delta\boldsymbol{x} = 0$ 成立。如何根据此必要条件列写极小值点 $\bar{\boldsymbol{x}}$ 应满足的等式方程可由本节后续内容介绍的广义变分原理给出。
 
@@ -306,34 +306,75 @@ f_x^{\mathrm{T}}(\bar{\boldsymbol{x}}) + c_x^{\mathrm{T}}(\bar{\boldsymbol{x}})\
 \right.
 \end{equation}
 
-\section*{习题}
-
-\begin{figure}[htbp]
-\centering
-\begin{tikzpicture}[scale=0.8]
-% 坐标轴
-\draw[->, thick] (0,0) -- (5.5,0) node[right] {$X$};
-\draw[->, thick] (0,0) -- (0,4) node[above] {$Y$};
-\node[below left] at (0,0) {$O$};
-% 四连杆机构
-% O=(0,0), A=(4,0), B=(0.5,0.87), C=(2,2.2)
-\coordinate (O) at (0,0);
-\coordinate (A) at (4,0);
-\coordinate (B) at (0.5,0.87);
-\coordinate (C) at (2,2.2);
-% 杆
-\draw[thick] (O) -- (B) node[midway, left] {$l_1$};
-\draw[thick] (B) -- (C) node[midway, above] {$l_2$};
-\draw[thick] (C) -- (A) node[midway, right] {$l_3$};
-\draw[thick, double] (O) -- (A) node[midway, below] {$l_4$};
-% 质点
-\filldraw (B) circle (3pt) node[left=2pt] {$m_1$};
-\filldraw (C) circle (3pt) node[above=2pt] {$m_2$};
-% 坐标标注
-\node[above right] at (B) {$(x_1, y_1)$};
-\node[above right] at (C) {$(x_2, y_2)$};
-\end{tikzpicture}
-\caption{平面四连杆机构}
+\begin{example}
+    \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Figure/有限维广义变分原理_习题.png}
 \end{figure}
 
 上图所示为一平面四连杆机构。$OXY$ 为固定参考坐标系；四根杆的长度分别记为 $l_1$、$l_2$、$l_3$ 和 $l_4$；杆 4 固定且与 $X$ 轴共线；不计四根杆的质量，两质点的质量分别记为 $m_1$ 和 $m_2$；重力加速度与 $Y$ 轴同向，沿 $Y$ 轴正向的投影记为 $g$。列写四连杆机构处于重力势能极小值点时两质点坐标 $(x_1, y_1)$ 和 $(x_2, y_2)$ 满足的等式方程。
+\end{example}
+\begin{solution}
+    取两质点的坐标列阵为自变量，即 $\boldsymbol{x} = \begin{bmatrix} x_1 & y_1 & x_2 & y_2 \end{bmatrix}^{\mathrm{T}} \in \mathbb{R}^4$。
+
+    第一步：列写约束方程。由连杆长度不变的几何关系可得 $m = 3$ 个约束方程
+    \begin{equation*}
+        \boldsymbol{c}(\boldsymbol{x}) = \begin{bmatrix}
+            c_1(\boldsymbol{x}) \\ c_2(\boldsymbol{x}) \\ c_3(\boldsymbol{x})
+        \end{bmatrix} =
+        \begin{bmatrix}
+            x_1^2 + y_1^2 - l_1^2 \\
+            (x_2 - l_4)^2 + y_2^2 - l_3^2 \\
+            (x_2 - x_1)^2 + (y_2 - y_1)^2 - l_2^2
+        \end{bmatrix} = \boldsymbol{0}.
+    \end{equation*}
+
+    第二步：写出目标函数。由于重力加速度沿 $Y$ 轴正向，两质点所受重力分别为 $m_1 g$ 和 $m_2 g$（沿 $Y$ 轴正向），故系统的重力势能为
+    \begin{equation*}
+        f(\boldsymbol{x}) = -g \left( m_1 y_1 + m_2 y_2 \right).
+    \end{equation*}
+
+    第三步：计算目标函数的梯度与约束方程的雅可比矩阵
+    \begin{equation*}
+        f_x(\boldsymbol{x}) = \frac{\partial f}{\partial \boldsymbol{x}} =
+        \begin{bmatrix} 0 & -m_1 g & 0 & -m_2 g \end{bmatrix},
+    \end{equation*}
+    \begin{equation*}
+        c_x(\boldsymbol{x}) = \frac{\partial \boldsymbol{c}}{\partial \boldsymbol{x}} =
+        \begin{bmatrix}
+            2x_1 & 2y_1 & 0 & 0 \\
+            0 & 0 & 2(x_2 - l_4) & 2y_2 \\
+            -2(x_2 - x_1) & -2(y_2 - y_1) & 2(x_2 - x_1) & 2(y_2 - y_1)
+        \end{bmatrix}.
+    \end{equation*}
+
+    第四步：代入条件极值的必要条件~(\ref{eq:lagrange_cond})，即存在拉格朗日乘子 $\boldsymbol{\lambda} = \begin{bmatrix} \lambda_1 & \lambda_2 & \lambda_3 \end{bmatrix}^{\mathrm{T}} \in \mathbb{R}^3$ 使得 $f_x^{\mathrm{T}} + c_x^{\mathrm{T}}\,\boldsymbol{\lambda} = \boldsymbol{0}$。将第三步的结果代入并整理，可得如下四个方程
+    \begin{equation*}
+        \left\{
+        \begin{aligned}
+            &2x_1 \lambda_1 - 2(x_2 - x_1)\lambda_3 = 0, \\
+            &- m_1 g + 2y_1 \lambda_1 - 2(y_2 - y_1)\lambda_3 = 0, \\
+            &2(x_2 - l_4)\lambda_2 + 2(x_2 - x_1)\lambda_3 = 0, \\
+            &- m_2 g + 2y_2 \lambda_2 + 2(y_2 - y_1)\lambda_3 = 0.
+        \end{aligned}
+        \right.
+    \end{equation*}
+
+    综上，四连杆机构处于重力势能极小值点时，两质点坐标 $(x_1, y_1)$ 和 $(x_2, y_2)$ 与拉格朗日乘子 $\boldsymbol{\lambda}$ 共同满足如下 $4 + 3 = 7$ 个等式方程
+    \begin{equation}\label{eq:fourbar_cond}
+        \left\{
+        \begin{aligned}
+            &x_1^2 + y_1^2 = l_1^2, \\
+            &(x_2 - l_4)^2 + y_2^2 = l_3^2, \\
+            &(x_2 - x_1)^2 + (y_2 - y_1)^2 = l_2^2, \\
+            &x_1 \lambda_1 - (x_2 - x_1)\lambda_3 = 0, \\
+            &y_1 \lambda_1 - (y_2 - y_1)\lambda_3 = \tfrac{1}{2} m_1 g, \\
+            &(x_2 - l_4)\lambda_2 + (x_2 - x_1)\lambda_3 = 0, \\
+            &y_2 \lambda_2 + (y_2 - y_1)\lambda_3 = \tfrac{1}{2} m_2 g,
+        \end{aligned}
+        \right.
+    \end{equation}
+    其中最后四个方程两端已约去公因子 $2$。
+
+    从力学角度看，拉格朗日乘子 $\boldsymbol{\lambda}$ 对应三根活动杆的内力（两力杆的拉压轴力），上述后四个方程正是两质点在重力与杆内力作用下的静力平衡条件沿坐标方向的投影。
+\end{solution}

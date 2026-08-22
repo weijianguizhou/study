@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "423d9e0a04048522",
+        "id": "e8cf5a65e67758c6",
         "type": "tabs",
         "children": [
           {
-            "id": "f848d194cdb27b5c",
+            "id": "63c958a43a4df96c",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/学习笔记.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "学习笔记"
+              "title": "新标签页"
             }
           }
         ]
@@ -201,8 +197,9 @@
       "pdf-plus:PDF++: Toggle auto-paste": false
     }
   },
-  "active": "f848d194cdb27b5c",
+  "active": "63c958a43a4df96c",
   "lastOpenFiles": [
+    "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/学习笔记.md",
     "力学/系统动力学建模与仿真/系统动力学建模与仿真笔记.synctex(busy)",
     "力学/系统动力学建模与仿真/系统动力学建模与仿真笔记.synctex.gz",
     "力学/系统动力学建模与仿真/xelatex50568.fls",
@@ -216,7 +213,6 @@
     "力学/系统动力学建模与仿真/main_ascii.log",
     "力学/系统动力学建模与仿真/main_ascii.fls",
     "力学/系统动力学建模与仿真/pdflatex39480.fls",
-    "力学/系统动力学建模与仿真/main_ascii.fdb_latexmk",
     "数理基础/常微分方程/_verify/pg-16.png",
     "数理基础/常微分方程/_verify/pg-15.png",
     "数理基础/常微分方程/_verify/pg-14.png",
@@ -232,7 +228,6 @@
     "数理基础/常微分方程/第四章 高阶微分方程.md",
     "数理基础/常微分方程/第五章 线性微分方程组.md",
     "数理基础/常微分方程/第一章 绪论.md",
-    "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/学习笔记.md",
     "conflict-files-obsidian-git.md",
     "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/8.1汇报讲稿.md",
     "数学建模/数学建模教程/12-论文写作/05-常见问题与避坑.md",
