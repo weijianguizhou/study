@@ -1,0 +1,121 @@
+% ============================================================
+%  课程笔记封面 —— 「印象·日出」风格（仿 impression 文档类封面）
+%  与 cover.tex 同构的 titlepage 片段，直接 \input{} 复用：
+%      \input{cover_Impression风}
+%
+%  配色定义在统一导言区 preamble.tex（imSky / imSun / imSea 等前缀 im*），
+%  改色只需改 preamble，无需动本文件。
+%
+%  可用字段（在主文件导言区用 \newcommand 预定义即可覆盖缺省值）：
+%      \notename     主标题（必填，主模板已定义）
+%      \noteauthor   作者（必填，主模板已定义）
+%      \notenumber   眉题编号，如 01（缺省 01）
+%      \notesubtitle 副标题（缺省「学习笔记」）
+%      \noteextra    底部附加信息，如 2026 秋季学期（缺省不显示）
+% ============================================================
+
+% ---- 缺省字段（主文件已定义的同名命令不会被覆盖） ----
+\providecommand{\notenumber}{01}
+\providecommand{\notesubtitle}{学\ 习\ 笔\ 记}
+\providecommand{\noteextra}{}
+
+\begin{titlepage}
+	\begin{tikzpicture}[remember picture, overlay]
+		% ---- 1. 晨空底色（整页米白，向下渐入雾灰） ----
+		\shade[top color=imSky, bottom color=imMist!55!imSky]
+			(current page.south west) rectangle (current page.north east);
+
+		% ---- 2. 初升的太阳（右侧低垂于海面上方：三层光晕 + 橙红圆盘） ----
+		\coordinate (SUN) at ([xshift=-6.2cm, yshift=-16.5cm]current page.north east);
+		\fill[imSunGlow, opacity=0.16] (SUN) circle[radius=3.4cm];
+		\fill[imSunGlow, opacity=0.26] (SUN) circle[radius=2.4cm];
+		\fill[imSunGlow, opacity=0.42] (SUN) circle[radius=1.9cm];
+		\fill[imSun] (SUN) circle[radius=1.35cm];
+
+		% ---- 3. 海面（下部整幅青灰蓝，两层波浪色带叠出远近） ----
+		\fill[imSea]
+			(current page.south west) rectangle ([yshift=10.5cm]current page.south east);
+		\fill[imSeaLight, opacity=0.30]
+			plot[domain=0:21, samples=90, smooth] (\x, {9.4 + 0.24*sin(deg(2.1*\x)+50)})
+			-- (21,7.3) -- (0,7.3) -- cycle;
+		\fill[imSeaDark, opacity=0.32]
+			plot[domain=0:21, samples=90, smooth] (\x, {7.7 + 0.26*sin(deg(1.6*\x))})
+			-- (21,0) -- (0,0) -- cycle;
+
+		% ---- 4. 波纹短笔触（左右两组错落的亮/暗横线，模拟莫奈笔触） ----
+		\foreach \x/\y/\w/\o in {
+				1.1/1.7/3.2/0.50, 1.8/2.6/2.4/0.40, 0.9/3.5/3.8/0.50,
+				1.5/4.4/2.0/0.35, 1.0/5.4/2.8/0.45, 1.7/6.3/3.4/0.40,
+				1.2/7.4/2.2/0.35, 0.8/8.5/3.0/0.40, 1.4/9.6/2.6/0.45}{
+			\draw[imSeaLight, opacity=\o, line width=1.6pt, line cap=round]
+				(\x,\y) -- ++(\w,0);
+		}
+		\foreach \x/\y/\w/\o in {
+				16.8/2.1/2.6/0.45, 17.5/3.2/3.2/0.50, 16.5/4.3/2.2/0.40,
+				17.2/5.3/3.6/0.45, 16.6/6.4/2.4/0.35, 17.4/7.5/3.0/0.40,
+				16.8/8.6/2.2/0.40, 17.6/9.7/2.8/0.45}{
+			\draw[imSeaDark, opacity=\o, line width=1.6pt, line cap=round]
+				(\x,\y) -- ++(\w,0);
+		}
+
+		% ---- 5. 太阳倒影（橙红短线自海平面向下渐弱） ----
+		\foreach \i [evaluate=\i as \yy using 9.9-\i*0.92,
+		             evaluate=\i as \ww using 1.6-0.10*\i,
+		             evaluate=\i as \oo using 0.85-0.075*\i] in {0,...,8}{
+			\draw[imSun, opacity=\oo, line width=2.2pt, line cap=round]
+				({14.8-\ww/2},\yy) -- ({14.8+\ww/2},\yy);
+		}
+
+		% ---- 6. 小船剪影（呼应原画港景，一近一远） ----
+		\fill[imSeaDark!90!black]
+			(4.4,8.95) .. controls (4.9,8.45) and (6.3,8.45) .. (6.8,8.95)
+			-- (6.5,8.98) .. controls (6.2,8.74) and (5.0,8.74) .. (4.7,8.98) -- cycle;
+		\draw[imSeaDark!90!black, line width=1.1pt] (5.65,8.9) -- (5.65,9.95);
+		\fill[imSeaDark!70!black, opacity=0.85]
+			(9.0,9.35) .. controls (9.3,9.05) and (10.2,9.05) .. (10.5,9.35)
+			-- (10.3,9.37) .. controls (10.1,9.22) and (9.4,9.22) .. (9.2,9.37) -- cycle;
+
+		% ---- 7. 金色细边框（与 cover.tex 同款） ----
+		\draw[gold, line width=0.7pt, opacity=0.6]
+			([shift={(0.85,0.85)}]current page.south west) rectangle
+			([shift={(-0.85,-0.85)}]current page.north east);
+
+		% ---- 8. 顶部眉题（英文小字 + 编号 + 金色短线） ----
+		\coordinate (T) at ([yshift=-3.4cm]current page.north);
+		\draw[gold, line width=1.0pt] (T) ++(-3.8cm,0) -- ++(1.1cm,0);
+		\draw[gold, line width=1.0pt] (T) ++(2.7cm,0) -- ++(1.1cm,0);
+		\node[anchor=north, text=structurecolor!85, align=center] at (T) {%
+			{\sffamily\fontsize{12}{15}\selectfont
+				\uppercase{Course Notes}~\ ·~\ 第 \notenumber\ 讲}
+		};
+
+		% ---- 9. 主标题（居中，使用 \notename）----
+		\node[anchor=center, align=center, text=structurecolor]
+			at ([yshift=-8.3cm]current page.north) {%
+			{\fontsize{38}{48}\sffamily\bfseries \notename}
+		};
+
+		% ---- 10. 金色菱形 + 双细线（与 cover.tex 同款饰线） ----
+		\coordinate (C) at ([yshift=-11.6cm]current page.north);
+		\draw[gold, line width=1.1pt] (C) ++(-2.2cm,0) -- ++(1.55cm,0);
+		\draw[gold, line width=1.1pt] (C) ++(0.65cm,0) -- ++(1.55cm,0);
+		\node[fill=gold, minimum size=0.24cm, inner sep=0pt, rotate=45] at (C) {};
+
+		% ---- 11. 副标题（使用 \notesubtitle）----
+		\node[anchor=north, text=structurecolor!75, align=center]
+			at ([yshift=-12.4cm]current page.north) {
+			{\fontsize{15}{20}\sffamily \notesubtitle}
+		};
+
+		% ---- 12. 底部作者、日期、附加信息（白字置于海面之上） ----
+		\coordinate (B) at ([yshift=2.7cm]current page.south);
+		\draw[gold, line width=0.8pt, opacity=0.85] (B) ++(-1.1cm,0.95cm) -- ++(2.2cm,0);
+		\node[anchor=south, text=white, align=center] at (B) {
+			\begin{tabular}{c}
+				{\fontsize{19}{24}\sffamily\bfseries \noteauthor} \\[0.35cm]
+				{\large \sffamily \today}
+				\ifstrempty{\noteextra}{}{\\[0.3cm]{\normalsize\sffamily \noteextra}}
+			\end{tabular}
+		};
+	\end{tikzpicture}
+\end{titlepage}

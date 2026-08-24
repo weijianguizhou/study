@@ -1,7 +1,7 @@
 \usepackage{ctex}
 \usepackage{geometry,graphicx,xcolor,color,subcaption}
 \geometry{a4paper, top=2.5cm, bottom=2.5cm, left=2.8cm, right=2.8cm, headheight=14.5pt}
-\usepackage{amssymb,amsmath,amsthm}                             % 数学字体
+\usepackage{amssymb,amsmath,amsthm,bm}                             % 数学字体
 \usepackage{cancel}                                             % 数学划线（\cancel）
 \usepackage{booktabs}   % 提供 \toprule, \midrule, \bottomrule    % 采用 Palatino 风格字体
 \usepackage{multirow}   % 表格合并行（\multirow）
@@ -122,6 +122,7 @@
 \newenvironment{remark}{\par\vspace{0.4em}\noindent\underline{{\heiti 注.}} \;\fangsong}{\par\vspace{0.4em}}
 \newenvironment{note}{\par\vspace{0.4em}\noindent{\heiti\color{proColor}注：}\;}{\par\vspace{0.4em}}
 \newcommand{\intro}[1]{\rightline{\parbox[t]{5cm}{\footnotesize \fangsong\quad\quad #1 }}}
+\newcommand{\blocksep}{\vspace{1em}}
 % ------------------------------------------------------------%
 
 \usepackage{enumerate}
@@ -211,17 +212,11 @@
 }
 \definecolor{DarkBlue}{RGB}{0,0,139}
 
-% ============================================================
-%  系统动力学本地定制（保留原 preamble 中的内容）
-% ============================================================
-\usepackage{bm}   % 粗体数学符号
-
-% 小结内 结论／证明／例题 之间的分隔横线
-\newcommand{\blocksep}{\par\vspace{0.8em}\noindent\rule{\linewidth}{0.4pt}\vspace{0.8em}\par}
-\renewenvironment{proof}[1][推导]{\blocksep\noindent{\heiti\color{structurecolor}#1：}\;\songti}{\hfill\textcolor{gold}{\rule{0.55em}{0.55em}}\par\vspace{0.3em}}
-\renewenvironment{solution}{\blocksep\noindent\underline{{\heiti 解.}} \;\kaishu}{\par\vspace{0.4em}}
-
-% 不编号的段落级小标题（用于替代过细的 subsection/subsubsection）
-\titleformat{\paragraph}[hang]{\bfseries}{}{0pt}{%
-	\color{structurecolor}\normalsize\bfseries}
-\titlespacing*{\paragraph}{0pt}{2ex plus .5ex}{0.8em}
+% --- 「印象·日出」封面配色（cover_Impression风.tex 使用，莫奈《日出·印象》取色） ---
+\definecolor{imSky}{RGB}{247,242,232}       % 晨空米白（画面基底）
+\definecolor{imMist}{RGB}{210,203,192}      % 远景晨雾灰
+\definecolor{imSun}{RGB}{224,110,84}        % 日出橙红（太阳主体）
+\definecolor{imSunGlow}{RGB}{238,160,120}   % 太阳柔光晕
+\definecolor{imSea}{RGB}{74,104,128}        % 海面青灰蓝（水面主色）
+\definecolor{imSeaDark}{RGB}{52,78,100}     % 海面深蓝灰（波纹暗部/剪影）
+\definecolor{imSeaLight}{RGB}{142,168,186}  % 海面浅蓝灰（波纹亮部）
