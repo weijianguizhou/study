@@ -1,0 +1,140 @@
+% !TeX root = 系统动力学建模与仿真笔记.tex
+\section{多刚体系统体元件广义坐标}
+
+多刚体系统体元件广义坐标 $\bm{q}$ 由系统中所有体元件连体坐标系相对于全局惯性坐标系的广义坐标构成，可记为
+\begin{equation}
+    \bm{q} = \begin{bmatrix} \bm{q}_{\text{B}_1}^\text{T} & \bm{q}_{\text{B}_2}^\text{T} & \cdots & \bm{q}_{\text{B}_n}^\text{T} \end{bmatrix}^\text{T},
+\end{equation}
+式中 $n$ 表示系统包含的体元件个数；$\bm{q}_{\text{B}_i}$ $(i = 1, 2, \cdots, n)$ 表示体元件 $i$ 连体坐标系相对于全局惯性坐标系的广义坐标，可表示为
+\begin{equation}
+    \bm{q}_{\text{B}_i} = \begin{bmatrix} \bm{r}_{\text{O}_0\text{O}_i|0}^\text{T} & \bm{\theta}_{0,i}^\text{T} \end{bmatrix}^\text{T},
+\end{equation}
+式中 $\bm{r}_{\text{O}_0\text{O}_i|0}$ 表示从全局惯性坐标系（0 系）原点 $\text{O}_0$ 到体元件 $i$ 连体坐标系（$i$ 系）原点 $\text{O}_i$ 的位置矢量在 0 系中的投影列阵；$\bm{\theta}_{0,i}$ 表示 $i$ 相对于 0 系的相对转动广义坐标，可取为欧拉四元数或三轴角形式。
+
+\section{系统约束方程}
+
+多刚体系统体元件广义坐标往往并不独立，需满足相应的约束方程，包括铰元件约束方程
+\begin{equation}
+    \bm{c}_{\text{J}} = \begin{bmatrix} \bm{c}_{\text{J}_1}^\text{T} & \bm{c}_{\text{J}_2}^\text{T} & \cdots & \bm{c}_{\text{J}_m}^\text{T} \end{bmatrix}^\text{T},
+\end{equation}
+以及体元件自身广义坐标不独立所对应的约束方程
+\begin{equation}
+    \bm{c}_{\text{B}} = \begin{bmatrix} \bm{c}_{\text{B}_1}^\text{T} & \bm{c}_{\text{B}_2}^\text{T} & \cdots & \bm{c}_{\text{B}_n}^\text{T} \end{bmatrix}^\text{T},
+\end{equation}
+式中 $m$ 表示系统包含的铰元件个数；$\bm{c}_{\text{J}_i}$ $(i = 1, 2, \cdots, m)$ 表示铰元件 $i$ 引起的约束方程；$\bm{c}_{\text{B}_i}$ $(i = 1, 2, \cdots, n)$ 表示体元件 $i$ 自身广义坐标不独立所对应的约束方程. 当体元件自身广义坐标独立时，$\bm{c}_{\text{B}}$ 为空集. 系统约束方程可记为
+\begin{equation}
+    \bm{c} = \begin{bmatrix} \bm{c}_{\text{J}}^\text{T} & \bm{c}_{\text{B}}^\text{T} \end{bmatrix}^\text{T}.
+\end{equation}
+
+\paragraph{铰元件约束方程}
+
+设铰元件 $\text{J}_j$ 为转动铰元件，并关联了体元件 $\text{B}_{\text{b}(j)}$ 上的点 $\text{B}_j$ 以及体元件 $\text{B}_{\text{m}(j)}$ 上的点 $\underline{\text{M}}_j$，其位置级约束方程可表示为
+\begin{equation}
+    \bm{0} = \bm{c}_{\text{J}_j} = \begin{bmatrix} \bm{r}_{\text{O}_0\underline{\text{M}}_j|0} - \bm{r}_{\text{O}_0\text{B}_j|0} \\ \bm{T}_{\text{J}_j}^\text{T} \bm{A}_{0,\text{b}(j)}^\text{T} \bm{A}_{0,\text{m}(j)} \bm{n}_{\text{J}_j} \end{bmatrix},
+\end{equation}
+式中
+\begin{align}
+    \bm{r}_{\text{O}_0\underline{\text{M}}_j|0} &= \bm{r}_{\text{O}_0\text{O}_{\text{m}(j)}|0} + \bm{A}_{0,\text{m}(j)} \bm{r}_{\text{O}_{\text{m}(j)}\underline{\text{M}}_j|\text{m}(j)}, \\
+    \bm{r}_{\text{O}_0\text{B}_j|0} &= \bm{r}_{\text{O}_0\text{O}_{\text{b}(j)}|0} + \bm{A}_{0,\text{b}(j)} \bm{r}_{\text{O}_{\text{b}(j)}\text{B}_j|\text{b}(j)},
+\end{align}
+三维列阵 $\bm{n}_{\text{J}_j}$ 为在 $\text{b}(j)$ 系和 $\text{m}(j)$ 系中表示的铰元件转轴方向的单位矢量. $\bm{T}_{\text{J}_j} = \begin{bmatrix} \bm{\tau}_{\text{J}_{j},1} & \bm{\tau}_{\text{J}_{j},2} \end{bmatrix}$，$\bm{\tau}_{\text{J}_{j},1}$ 和 $\bm{\tau}_{\text{J}_{j},2}$ 为建模时预先定义好的一对模为 1 的定常三维列阵；$\bm{\tau}_{\text{J}_{j},1}$、$\bm{\tau}_{\text{J}_{j},2}$ 与 $\bm{n}_{\text{J}_j}$ 两两正交.
+
+\paragraph{铰元件约束方程雅可比矩阵}
+
+对于转动铰元件 $\text{J}_j$，其约束方程对体元件 $\text{B}_{\text{b}(j)}$ 的广义坐标 $\bm{q}_{\text{B}_{\text{b}(j)}}$ 的偏导数满足
+\begin{align}
+    \frac{\partial}{\partial \bm{q}_{\text{B}_{\text{b}(j)}}} \bm{c}_{\text{J}_j}
+    &= \frac{\partial}{\partial \bm{q}_{\text{B}_{\text{b}(j)}}} \begin{bmatrix} \bm{r}_{\text{O}_0\underline{\text{M}}_j|0} - \bm{r}_{\text{O}_0\text{B}_j|0} \\ \bm{T}_{\text{J}_j}^\text{T} \bm{A}_{0,\text{b}(j)}^\text{T} \bm{A}_{0,\text{m}(j)} \bm{n}_{\text{J}_j} \end{bmatrix} \notag \\
+    &= \frac{\partial}{\partial \bm{q}_{\text{B}_{\text{b}(j)}}} \begin{bmatrix} -\bm{r}_{\text{O}_0\text{O}_{\text{b}(j)}|0} - \bm{A}_{0,\text{b}(j)} \bm{r}_{\text{O}_{\text{b}(j)}\text{B}_j|\text{b}(j)} \\ \bm{T}_{\text{J}_j}^\text{T} \bm{A}_{0,\text{b}(j)}^\text{T} \bm{A}_{0,\text{m}(j)} \bm{n}_{\text{J}_j} \end{bmatrix} \notag \\
+    &= -\begin{bmatrix} \bm{I}_3 & \bm{A}_{0,\text{b}(j)} \tilde{\bm{r}}_{\text{O}_{\text{b}(j)}\text{B}_j|\text{b}(j)} \bm{H}_\star(\bm{\theta}_{0,\text{b}(j)}) \\ \bm{O}_{2\times 3} & \bm{T}_{\text{J}_j}^\text{T} [\bm{A}_{0,\text{b}(j)}^\text{T} \bm{A}_{0,\text{m}(j)} \bm{n}_{\text{J}_j}]_\times^\text{T} \bm{H}_\star(\bm{\theta}_{0,\text{b}(j)}) \end{bmatrix}.
+\end{align}
+
+对于转动铰元件 $\text{J}_j$，其约束方程对体元件 $\text{B}_{\text{m}(j)}$ 的广义坐标 $\bm{q}_{\text{B}_{\text{m}(j)}}$ 的偏导数满足
+\begin{align}
+    \frac{\partial}{\partial \bm{q}_{\text{B}_{\text{m}(j)}}} \bm{c}_{\text{J}_j}
+    &= \frac{\partial}{\partial \bm{q}_{\text{B}_{\text{m}(j)}}} \begin{bmatrix} \bm{r}_{\text{O}_0\underline{\text{M}}_j|0} - \bm{r}_{\text{O}_0\text{B}_j|0} \\ \bm{T}_{\text{J}_j}^\text{T} \bm{A}_{0,\text{b}(j)}^\text{T} \bm{A}_{0,\text{m}(j)} \bm{n}_{\text{J}_j} \end{bmatrix} \notag \\
+    &= \frac{\partial}{\partial \bm{q}_{\text{B}_{\text{m}(j)}}} \begin{bmatrix} \bm{r}_{\text{O}_0\text{O}_{\text{m}(j)}|0} + \bm{A}_{0,\text{m}(j)} \bm{r}_{\text{O}_{\text{m}(j)}\underline{\text{M}}_j|\text{m}(j)} \\ \bm{T}_{\text{J}_j}^\text{T} \bm{A}_{0,\text{b}(j)}^\text{T} \bm{A}_{0,\text{m}(j)} \bm{n}_{\text{J}_j} \end{bmatrix} \notag \\
+    &= \begin{bmatrix} \bm{I}_3 & \bm{A}_{0,\text{m}(j)} \tilde{\bm{r}}_{\text{O}_{\text{m}(j)}\underline{\text{M}}_j|\text{m}(j)} \bm{H}_\star(\bm{\theta}_{0,\text{m}(j)}) \\ \bm{O}_{2\times 3} & \bm{T}_{\text{J}_j}^\text{T} \bm{A}_{0,\text{b}(j)}^\text{T} \bm{A}_{0,\text{m}(j)} \tilde{\bm{n}}_{\text{J}_j}^\text{T} \bm{H}_\star(\bm{\theta}_{0,\text{m}(j)}) \end{bmatrix}.
+\end{align}
+
+\section{系统动能及其对广义坐标的偏导数}
+
+\paragraph{体元件的动能}
+
+多刚体系统的动能可由系统中所有体元件的动能求和得到，即
+\begin{equation}
+    T = \sum_{i=1}^{n} T_{\text{B}_i},
+\end{equation}
+式中体元件 $i$ 的动能 $T_{\text{B}_i}$ 又可表示为
+\begin{equation}
+    T_{\text{B}_i} = \frac{1}{2} \bm{v}_i^\text{T} \bm{M}_{\text{O}_i} \bm{v}_i,
+\end{equation}
+式中
+\begin{equation}
+    \bm{v}_i = \begin{bmatrix} \bm{A}_{0,i}^\text{T} \dot{\bm{r}}_{\text{O}_0\text{O}_i|0} \\ \bm{\omega}_{0,i|i} \end{bmatrix}, \quad
+    \bm{M}_{\text{O}_i} = \begin{bmatrix} \bm{I}_3 m_{\text{B}_i} & m \tilde{\bm{r}}_{\text{O}_i\text{C}_i|i} \\ m \tilde{\bm{r}}_{\text{O}_i\text{C}_i|i}^\text{T} & \bm{J}_{\text{O}_i|i} \end{bmatrix},
+\end{equation}
+$\bm{A}_{0,i}$ 表示从 $i$ 系到 0 系的坐标变换矩阵；$m_{\text{B}_i}$ 表示体元件的质量；$\bm{r}_{\text{O}_i\text{C}_i|i}$ 表示从 $i$ 系原点 $\text{O}_i$ 到体元件 $i$ 质心 $\text{C}_i$ 的位置矢量在 $i$ 系中的坐标列阵；$\bm{J}_{\text{O}_i|i}$ 表示体元件 $i$ 相对于 $\text{O}_i$ 的转动惯量张量在 $i$ 系中的投影矩阵.
+
+\paragraph{体元件的速度列阵}
+
+体元件连体坐标系的六维速度列阵可表示为
+\begin{align}
+    \bm{v}_i &= \begin{bmatrix} \bm{A}_{0,i}^\text{T} \dot{\bm{r}}_{\text{O}_0\text{O}_i|0} \\ \bm{\omega}_{0,i|i} \end{bmatrix} \notag \\
+    &= \begin{bmatrix} \bm{A}_{0,i}^\text{T} \dot{\bm{r}}_{\text{O}_0\text{O}_i|0} \\ \bm{H}_\star(\bm{\theta}_{0,i}) \dot{\bm{\theta}}_{0,i} \end{bmatrix} \notag \\
+    &= \begin{bmatrix} \bm{A}_{0,i}^\text{T} & \bm{O} \\ \bm{O} & \bm{H}_\star(\bm{\theta}_{0,i}) \end{bmatrix} \begin{bmatrix} \dot{\bm{r}}_{\text{O}_0\text{O}_i|0} \\ \dot{\bm{\theta}}_{0,i} \end{bmatrix} \notag \\
+    &=: \bm{\Phi}_{\text{B}_i} \dot{\bm{q}}_{\text{B}_i},
+\end{align}
+式中 $\bm{A}_{0,i}$、$\bm{H}_\star$ 和 $\bm{\Phi}_{\text{B}_i}$ 均为体元件 $i$ 广义坐标 $\bm{q}_{\text{B}_i}$ 的表达式.
+
+\paragraph{系统的动能}
+
+由此，多刚体系统的动能可表示为
+\begin{align}
+    T &= \sum_{i=1}^{n} T_{\text{B}_i} \notag \\
+    &= \sum_{i=1}^{n} \frac{1}{2} \bm{v}_i^\text{T} \bm{M}_{\text{O}_i} \bm{v}_i \notag \\
+    &= \frac{1}{2} \sum_{i=1}^{n} \dot{\bm{q}}_{\text{B}_i}^\text{T} \bm{\Phi}_{\text{B}_i}^\text{T} \bm{M}_{\text{O}_i} \bm{\Phi}_{\text{B}_i} \dot{\bm{q}}_{\text{B}_i} \notag \\
+    &=: \frac{1}{2} \dot{\bm{q}}^\text{T} \bm{M} \dot{\bm{q}},
+\end{align}
+式中系统广义质量矩阵 $\bm{M}$ 为分块对角矩阵，可表示为
+\begin{equation}
+    \bm{M} = \text{diag} \left( \bm{\Phi}_{\text{B}_1}^\text{T} \bm{M}_{\text{O}_1} \bm{\Phi}_{\text{B}_1}, \; \bm{\Phi}_{\text{B}_2}^\text{T} \bm{M}_{\text{O}_2} \bm{\Phi}_{\text{B}_2}, \; \cdots, \; \bm{\Phi}_{\text{B}_n}^\text{T} \bm{M}_{\text{O}_n} \bm{\Phi}_{\text{B}_n} \right).
+\end{equation}
+
+\paragraph{系统动能对广义坐标的偏导数}
+
+多刚体系统的动能对体元件 $i$ 广义坐标的偏导数满足
+\begin{align}
+    \frac{\partial}{\partial \bm{q}_{\text{B}_i}} T &= \frac{\partial}{\partial \bm{q}_{\text{B}_i}} \sum_{i=1}^{n} T_{\text{B}_i} \notag \\
+    &= \frac{\partial}{\partial \bm{q}_{\text{B}_i}} T_{\text{B}_i} \notag \\
+    &= \frac{\partial}{\partial \bm{q}_{\text{B}_i}} \left\{ \frac{1}{2} \bm{v}_i^\text{T} \bm{M}_{\text{O}_i} \bm{v}_i \right\} \notag \\
+    &= \bm{v}_i^\text{T} \bm{M}_{\text{O}_i} \frac{\partial \bm{v}_i}{\partial \bm{q}_{\text{B}_i}}.
+\end{align}
+
+\paragraph{体元件连体坐标系速度对体元件广义坐标的偏导数}
+
+体元件连体坐标系速度对体元件广义坐标的偏导数满足
+\begin{align}
+    \frac{\partial \bm{v}_i}{\partial \bm{q}_{\text{B}_i}}
+    &= \frac{\partial}{\partial \bm{q}_{\text{B}_i}} \begin{bmatrix} \bm{A}_{0,i}^\text{T} \dot{\bm{r}}_{\text{O}_0\text{O}_i|0} \\ \bm{\omega}_{0,i|i} \end{bmatrix} \notag \\
+    &= \frac{\partial}{\partial \bm{q}_{\text{B}_i}} \begin{bmatrix} \bm{A}_{0,i}^\text{T} \dot{\bm{r}}_{\text{O}_0\text{O}_i|0} \\ \bm{\omega}_{0,i|i} \end{bmatrix} \notag \\
+    &= \begin{bmatrix} \frac{\partial}{\partial \bm{r}_{\text{O}_0\text{O}_i|0}} \begin{bmatrix} \bm{A}_{0,i}^\text{T} \dot{\bm{r}}_{\text{O}_0\text{O}_i|0} \\ \bm{\omega}_{0,i|i} \end{bmatrix} & \frac{\partial}{\partial \bm{\theta}_{0,i}} \begin{bmatrix} \bm{A}_{0,i}^\text{T} \dot{\bm{r}}_{\text{O}_0\text{O}_i|0} \\ \bm{\omega}_{0,i|i} \end{bmatrix} \end{bmatrix} \notag \\
+    &= \begin{bmatrix} \bm{O}_{3\times 3} & [\bm{A}_{0,i}^\text{T} \dot{\bm{r}}_{\text{O}_0\text{O}_i|0}]_\times \bm{H}_\star(\bm{\theta}_{0,i}) \\ \bm{O}_{3\times 3} & \partial \bm{\omega}_{0,i|i} / \partial \bm{\theta}_{0,i} \end{bmatrix}.
+\end{align}
+
+\section{重力势能及其对广义坐标的偏导数}
+
+体元件 $i$ 的重力势能可表示为
+\begin{equation}
+    V_{\text{gravity},\text{B}_i} = -m_{\text{B}_i} \bm{g}^\text{T} (\bm{r}_{\text{O}_0\text{O}_i|i} + \bm{A}_{0,i} \bm{r}_{\text{O}_i\text{C}_i|i}).
+\end{equation}
+系统的重力势能可由各体元件重力势能累加得到，即
+\begin{equation}
+    V_{\text{gravity}} = \sum_{i}^{n} V_{\text{gravity},\text{B}_i}.
+\end{equation}
+系统重力势能对体元件 $i$ 广义坐标 $\bm{q}_{\text{B}_i}$ 的偏导数满足
+\begin{align}
+    \frac{\partial}{\partial \bm{q}_{\text{B}_i}} V_{\text{gravity}}
+    &= \frac{\partial}{\partial \bm{q}_{\text{B}_i}} V_{\text{gravity},\text{B}_i} \notag \\
+    &= -m_{\text{B}_i} \bm{g}^\text{T} \begin{bmatrix} \bm{I}_3 & \bm{A}_{0,i} \tilde{\bm{r}}_{\text{O}_i\text{C}_i|i}^\text{T} \bm{H}_\star \end{bmatrix}.
+\end{align}

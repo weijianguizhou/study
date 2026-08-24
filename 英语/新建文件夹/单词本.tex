@@ -1,0 +1,32 @@
+\documentclass{ctexart}
+\usepackage[a4paper,left=2cm,right=2cm,top=2.25cm,bottom=2.25cm]{geometry}
+\usepackage{pgfkeys}
+\usepackage{tipa}
+\usepackage[comparestr]{arraysort}
+\title{简单的生词本}
+\begin{document}
+\maketitle
+
+\input{my-new-words-env.tex}
+
+% ==========================================================
+%  在下面的环境里添加生词，每条以 \e 结束：
+%
+%    格式一：  \i 单词\w 音标\s 释义\e
+%    格式二：  \i 单词\w 释义\e
+%    格式三：  \i 单词\w\e
+%
+%  音标按 tipa 简写方式书写（自动放入 \textipa），如
+%    ""ben@"dikS@n 、 "\ae mik@b@l 、 @"kO:d
+%
+%  环境选项 [sort=true] 可按单词的 ASCII 编码排序
+%  （大写字母排在小写字母前面）；不写该选项则保持书写顺序。
+%  释义里可以正常使用 itemize、enumerate、emph 等。
+% ==========================================================
+
+\parindent=0pt
+
+\begin{MyNewWords}[sort=true]
+\end{MyNewWords}
+
+\end{document}

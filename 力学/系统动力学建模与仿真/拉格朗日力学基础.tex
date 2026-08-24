@@ -1,3 +1,4 @@
+% !TeX root = 系统动力学建模与仿真笔记.tex
 众所周知，艾萨克·牛顿和戈特弗里德·莱布尼茨各自独立地发明了微积分。不太为人所知的是，他们对质点系统的时间演化有不同的看法。牛顿第二定律给出了作用在质点上的力与其加速度之间的矢量关系。（对于由 $N$ 个质点组成的系统，我们有 $N$ 个矢量关系，对应 $3N$ 个标量二阶微分方程。这些方程通常是耦合的，因为所有 $N$ 个质点的位置都可能出现在 $3N$ 个运动方程中的每一个里面。要确定运动，我们必须同时求解所有这些耦合方程。）
 
 另一方面，莱布尼茨认为，通过考察质点的"活力"（vis-viva），或者用我们今天的话说，它们的动能，可以更好地分析质点的运动。
@@ -21,7 +22,7 @@
 下面我们需要思考广义坐标和Cartesian坐标之间的关系。我们知道，广义坐标是最少参数的集合，而Cartesian坐标是描述系统位形所需要的参数集合。
 因为描述的是同一个系统，所以广义坐标和Cartesian坐标之间是有关系的。我们可以用一个函数来描述这种关系：
 \begin{equation}\label{eq:1.1}
-\boldsymbol{q} = \boldsymbol{q}(\boldsymbol{x},t)
+\bm{q} = \bm{q}(\bm{x},t)
 \end{equation}
 展开来看就是：
     \begin{equation}\label{eq:1.2}
@@ -29,13 +30,13 @@
 \end{equation}
 那么就有逆关系，也称为\textbf{变换方程(transformations equation)}：
 \begin{equation}\label{eq:1.3}
-\boldsymbol{x} = \boldsymbol{x}(\boldsymbol{q},t)
+\bm{x} = \bm{x}(\bm{q},t)
 \end{equation}
 展开来看就是：
 \begin{equation}\label{eq:1.4}
 \begin{bmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \end{bmatrix} = \begin{bmatrix} x_1(q_1,q_2,\cdots,q_n,t) \\ x_2(q_1,q_2,\cdots,q_n,t) \\ \vdots \\ x_n(q_1,q_2,\cdots,q_n,t) \end{bmatrix}
 \end{equation}
-式中，$\boldsymbol{q}$是广义坐标，$\boldsymbol{x}$是Cartesian坐标。
+式中，$\bm{q}$是广义坐标，$\bm{x}$是Cartesian坐标。
 
 但变换方程不一定存在，需满足Jacobian矩阵的条件。
 \begin{equation}\label{eq:1.5}
@@ -70,7 +71,7 @@
 
 一般说来，由 $N$ 个自由质点组成的力学系统有 $3N$ 个自由度。约束的作用是减少描述运动所需的坐标数目，即减少独立坐标个数；一个约束减少系统的一个自由度。如果由 $N$ 个质点组成的系统受到 $k$ 个约束的作用，那么描述运动所需的广义坐标数目为 $3N - k$。
 
-由此可知约束本质上是坐标之间的关系。
+由此可知约束本质上是坐标之间的关系。存在约束的坐标之间不相互独立。换句话说，相互独立的坐标间不存在约束。
 
 \begin{mydefinition}{完整约束}
 如果约束方程可以表示成
@@ -90,16 +91,20 @@ $$f(q_1, q_2, \ldots, q_n, t) = 0$$
 
 \begin{example}[珠子在运动导线上滑动]
 一颗珠子在一根以复杂方式在空间中运动的导线上滑动。这个约束是完整的吗？它是定常的吗？
+\end{example}
 
-\textbf{解.} 珠子被限制在导线上，意味着珠子在任何时刻都必须位于导线的几何位置上。设导线的空间曲线方程在时刻 $t$ 可以表示为 $F(x, y, z, t) = 0$，则约束方程即为 $F(x, y, z, t) = 0$。该方程只涉及坐标和时间，不包含速度，因此它是\textbf{完整约束}。广义坐标可简化为沿导线的弧长 $s$，不改变其完整性的本质。
+\begin{solution}
+珠子被限制在导线上，意味着珠子在任何时刻都必须位于导线的几何位置上。设导线的空间曲线方程在时刻 $t$ 可以表示为 $F(x, y, z, t) = 0$，则约束方程即为 $F(x, y, z, t) = 0$。该方程只涉及坐标和时间，不包含速度，因此它是\textbf{完整约束}。广义坐标可简化为沿导线的弧长 $s$，不改变其完整性的本质。
 
 判断约束是否定常，核心标准是约束方程中是否显含时间 $t$。题目指出导线以复杂方式在空间中运动，意味着导线的空间曲线方程随时间改变，$\dfrac{\partial F}{\partial t}\neq 0$，因此该约束是\textbf{非定常约束（rheonomic constraint）}。
-\end{example}
+\end{solution}
 
 \begin{example}[双原子分子的自由度]
 考虑一个双原子分子。假设原子是质点。分子可以转动，也可以沿连接两原子的直线振动。它有几个转动轴？分子有多少个自由度？
+\end{example}
 
-\textbf{解.} 连接两原子的直线称为分子轴。绕分子轴旋转时，两个质点的空间位置没有任何变化，终态与初态无法区分，因此不算有效的转动轴。垂直于分子轴的轴方向有无数条，但它们在物理上线性相关，只需 2 个独立的角度（如极角 $\theta$ 和方位角 $\phi$）就能描述所有转动状态，故有 \textbf{2 个转动轴}。
+\begin{solution}
+连接两原子的直线称为分子轴。绕分子轴旋转时，两个质点的空间位置没有任何变化，终态与初态无法区分，因此不算有效的转动轴。垂直于分子轴的轴方向有无数条，但它们在物理上线性相关，只需 2 个独立的角度（如极角 $\theta$ 和方位角 $\phi$）就能描述所有转动状态，故有 \textbf{2 个转动轴}。
 
 对于 $N=2$ 的质点系统，总机械自由度为 $3\times2=6$，分解为：
 \begin{itemize}
@@ -108,11 +113,11 @@ $$f(q_1, q_2, \ldots, q_n, t) = 0$$
     \item \textbf{振动自由度（1 个）}：沿分子轴方向，原子间相对距离的变化（键长 $r$ 的伸缩）
 \end{itemize}
 共 \textbf{6 个自由度}。
-\end{example}
+\end{solution}
 \section{广义速度}
 坐标有广义坐标，速度自然有广义速度。
 \begin{mydefinition}{广义速度}
-广义速度是广义坐标的导数。即$$\dot{\boldsymbol{q}} = \frac{d\boldsymbol{q}}{dt}$$
+广义速度是广义坐标的导数。即$$\dot{\bm{q}} = \frac{d\bm{q}}{dt}$$
 \end{mydefinition}
 
 广义坐标与笛卡尔坐标通过变换方程~(\ref{eq:1.3})~彼此联系。对于某个笛卡尔坐标分量 $x_i = x_i(q_1, q_2, \cdots, q_n, t)$，它（一般）依赖于所有的广义坐标。利用微分的链式法则，笛卡尔速度分量 $v_i$ 可表示为
@@ -120,7 +125,9 @@ $$f(q_1, q_2, \ldots, q_n, t) = 0$$
 v_i \equiv \frac{dx_i}{dt} = \sum_{k=1}^{n}\frac{\partial x_i}{\partial q_k}\frac{dq_k}{dt} + \frac{\partial x_i}{\partial t} = \sum_{k=1}^{n}\frac{\partial x_i}{\partial q_k}\dot{q}_k + \frac{\partial x_i}{\partial t}.
 \end{equation}
 
-由上式可以导出一个在后续推导中非常常用的关系式。由于 $x_i$ 不依赖于广义速度 $\dot{q}$，即 $\dfrac{\partial x_i}{\partial \dot{q}_j} = 0$，利用式~(\ref{eq:1.6})~求 $v_i$ 对 $\dot{q}_j$ 的偏导数，可得
+由上式可以导出一个在后续推导中非常常用的关系式。
+\begin{proof}[推导]
+由于 $x_i$ 不依赖于广义速度 $\dot{q}$，即 $\dfrac{\partial x_i}{\partial \dot{q}_j} = 0$，利用式~(\ref{eq:1.6})~求 $v_i$ 对 $\dot{q}_j$ 的偏导数，可得
 \begin{equation}\label{eq:1.7}
 \frac{\partial v_i}{\partial \dot{q}_j} = \frac{\partial}{\partial \dot{q}_j}\sum_{k=1}^{n}\frac{\partial x_i}{\partial q_k}\dot{q}_k = \sum_{k=1}^{n}\frac{\partial x_i}{\partial q_k}\frac{\partial \dot{q}_k}{\partial \dot{q}_j} = \sum_{k=1}^{n}\frac{\partial x_i}{\partial q_k}\delta_{kj} = \frac{\partial x_i}{\partial q_j}.
 \end{equation}
@@ -128,6 +135,7 @@ v_i \equiv \frac{dx_i}{dt} = \sum_{k=1}^{n}\frac{\partial x_i}{\partial q_k}\fra
 \begin{equation}\label{eq:1.8}
 \frac{\partial v_i}{\partial \dot{q}_j} = \frac{\partial x_i}{\partial q_j}.
 \end{equation}
+\end{proof}
 这个简单的关系式在许多涉及广义坐标的推导中非常有用，它说明：笛卡尔速度与广义速度的关系，与笛卡尔坐标与广义坐标的关系相同。
 
 \section{虚位移}
@@ -161,21 +169,23 @@ Q_\alpha = \sum_{i=1}^{3N}F_i\frac{\partial x_i}{\partial q_\alpha}.
 
 \begin{example}[虚功原理蕴含合力矩为零]
 证明虚功原理（平衡时 $\delta W = 0$）蕴含着作用在物体上的力矩之和必须为零。
+\end{example}
 
-\textbf{解.} 选一个沿任意方向的转轴。设物体绕该轴转过一个无穷小角度 $\epsilon$。位于 $\mathbf{R}_i$ 处的点 $P_i$ 相对于轴的虚位移由下式给出
+\begin{solution}
+选一个沿任意方向的转轴。设物体绕该轴转过一个无穷小角度 $\epsilon$。位于 $\mathbf{R}_i$ 处的点 $P_i$ 相对于轴的虚位移由下式给出
 \begin{equation*}
-\delta\mathbf{R}_i = \boldsymbol{\epsilon}\times\mathbf{R}_i.
+\delta\mathbf{R}_i = \bm{\epsilon}\times\mathbf{R}_i.
 \end{equation*}
 作用在 $P_i$ 上的力 $\mathbf{F}_i$ 所做的虚功为
 \begin{equation*}
-\delta W_i = \mathbf{F}_i\cdot\delta\mathbf{R}_i = \mathbf{F}_i\cdot(\boldsymbol{\epsilon}\times\mathbf{R}_i) = \boldsymbol{\epsilon}\cdot(\mathbf{R}_i\times\mathbf{F}_i) = \boldsymbol{\epsilon}\cdot\mathbf{N}_i,
+\delta W_i = \mathbf{F}_i\cdot\delta\mathbf{R}_i = \mathbf{F}_i\cdot(\bm{\epsilon}\times\mathbf{R}_i) = \bm{\epsilon}\cdot(\mathbf{R}_i\times\mathbf{F}_i) = \bm{\epsilon}\cdot\mathbf{N}_i,
 \end{equation*}
 其中 $\mathbf{N}_i$ 是绕轴作用在 $P_i$ 上的力矩。总的虚功为
 \begin{equation*}
-\delta W = \sum_i \boldsymbol{\epsilon}\cdot\mathbf{N}_i = \boldsymbol{\epsilon}\cdot\sum_i\mathbf{N}_i = \boldsymbol{\epsilon}\cdot\mathbf{N}_{\mathrm{tot}}.
+\delta W = \sum_i \bm{\epsilon}\cdot\mathbf{N}_i = \bm{\epsilon}\cdot\sum_i\mathbf{N}_i = \bm{\epsilon}\cdot\mathbf{N}_{\mathrm{tot}}.
 \end{equation*}
-对不转动的物体，$\boldsymbol{\epsilon}$ 的方向是任意的，所以由虚功原理 $\delta W = 0$ 可得 $\mathbf{N}_{\mathrm{tot}} = 0$，即作用在物体上的力矩之和必须为零。
-\end{example}
+对不转动的物体，$\bm{\epsilon}$ 的方向是任意的，所以由虚功原理 $\delta W = 0$ 可得 $\mathbf{N}_{\mathrm{tot}} = 0$，即作用在物体上的力矩之和必须为零。
+\end{solution}
 
 \section{求运动方程}
 由牛顿三大定律给出的运动方程通常具有如下形式
@@ -190,7 +200,7 @@ Q_\alpha = \sum_{i=1}^{3N}F_i\frac{\partial x_i}{\partial q_\alpha}.
 \end{equation}
 如果我们知道质点的加速度（$\ddot{q}_i$），那么我们（原则上）就能确定随后某一时刻的位置和速度。因此，知道了运动方程，我们就能预言系统的时间演化。
 
-\subsection{牛顿力学中的运动方程}
+\paragraph{牛顿力学中的运动方程}
 如果质量恒定，求运动方程的一种初等方法是使用如下形式的牛顿第二定律：
 \begin{equation}\label{eq:1.newton}
 \ddot{\mathbf{r}} = \mathbf{F}/m
@@ -203,7 +213,7 @@ m\ddot{x} + kx = 0.
 \end{equation}
 重要的是要注意，第二定律只适用于惯性坐标系。牛顿意识到了这个问题，他说第二定律是一个在相对于固定恒星静止的坐标系中成立的关系。
 
-\subsection{拉格朗日力学中的运动方程}
+\paragraph{拉格朗日力学中的运动方程}
 运动方程的另一种方法是使用拉格朗日法。当处理质点或可以当作质点处理的刚体时，拉格朗日量可以定义为动能与势能之差。
 \begin{equation}\label{eq:1.LTV}
 L = T - V
@@ -237,8 +247,8 @@ L = L(q_i, \dot{q}_i, t), \qquad i = 1, \ldots, n.
 
 一个力学系统完全由其拉格朗日量来描述。如果拉格朗日量不显含某个特定坐标 $q_i$，那么 $q_i$ 的改变不会影响系统。我们就说该系统对 $q_i$ 的改变是对称的。
 
-\subsection{广义动量和循环坐标}
-\subsubsection{广义动量}
+\paragraph{广义动量和循环坐标}
+\paragraph{广义动量}
 自由质点由拉格朗日量描述
 \begin{equation}\label{eq:1.Lfree}
 L = \frac{1}{2}m(\dot{x}^2 + \dot{y}^2 + \dot{z}^2)
@@ -274,7 +284,7 @@ p_i = \frac{\partial L}{\partial \dot{q}_i}.
 广义动量 $p_i$ 与广义坐标 $q_i$ 相联系，有时称为\textbf{共轭动量}。于是，我们已经看到，线性动量 $p_x$ 与线坐标 $x$ 共轭，角动量 $I\dot{\theta}$ 与角坐标 $\theta$ 共轭。
 \end{mydefinition}
 
-\subsubsection{循环坐标}
+\paragraph{循环坐标}
 如果某个特定坐标不出现在拉格朗日量中，就称它为"循环的"或"可遗的"。例如，引力场中质点的拉格朗日量为
 \begin{equation}\label{eq:1.Lgrav}
 L = \frac{1}{2}m(\dot{x}^2 + \dot{y}^2 + \dot{z}^2) - mgz.
@@ -295,7 +305,7 @@ L = \frac{1}{2}m(\dot{x}^2 + \dot{y}^2 + \dot{z}^2) - mgz.
 \end{equation}
 也就是说，与循环坐标共轭的广义动量是常数。
 
-\subsection{线性动量守恒}
+\paragraph{线性动量守恒}
 在本节中，我们将研究线性动量守恒定律的理论基础。不过，在开始之前，请注意有好几种不同的途径可以得到这个守恒定律。
 
 例如，在初级物理课程中，你通过如下形式的牛顿第二定律学习线性动量守恒定律
@@ -324,7 +334,8 @@ L = \frac{1}{2}m(\dot{x}^2 + \dot{y}^2 + \dot{z}^2) - mgz.
 
 现在我们证明，线性动量守恒是空间均匀性的结果，也就是说，我们将证明：在性质处处相同的空间区域中，力学系统的总线性动量是常数。我们的论证不仅保证了线性动量的守恒，而且导出了牛顿第二定律和第三定律，我们现在就来演示。
 
-考虑一个由位于 $\mathbf{r}_\alpha$（$\alpha = 1, \ldots, N$）处的 $N$ 个质点组成的系统。（为了换个角度，这里的论证用矢量表述。）如果每个质点都位移同样的无穷小距离 $\boldsymbol{\epsilon}$，所有质点的位置将按 $\mathbf{r}_\alpha \to \mathbf{r}_\alpha + \boldsymbol{\epsilon}$ 变化。我们假定 $\boldsymbol{\epsilon}$ 是一个虚位移，其中所有质点都被无穷小地位移，但速度不变，时间冻结。回忆若 $f = f(q_i, \dot{q}_i, t)$，那么根据微积分法则，$f$ 的微分为
+\begin{proof}[证明]
+考虑一个由位于 $\mathbf{r}_\alpha$（$\alpha = 1, \ldots, N$）处的 $N$ 个质点组成的系统。（为了换个角度，这里的论证用矢量表述。）如果每个质点都位移同样的无穷小距离 $\bm{\epsilon}$，所有质点的位置将按 $\mathbf{r}_\alpha \to \mathbf{r}_\alpha + \bm{\epsilon}$ 变化。我们假定 $\bm{\epsilon}$ 是一个虚位移，其中所有质点都被无穷小地位移，但速度不变，时间冻结。回忆若 $f = f(q_i, \dot{q}_i, t)$，那么根据微积分法则，$f$ 的微分为
 \begin{equation}\label{eq:1.df}
 df = \sum_{i=1}^{n}\frac{\partial f}{\partial q_i}dq_i + \sum_{i=1}^{n}\frac{\partial f}{\partial \dot{q}_i}d\dot{q}_i + \frac{\partial f}{\partial t}dt.
 \end{equation}
@@ -336,11 +347,11 @@ df = \sum_{i=1}^{n}\frac{\partial f}{\partial q_i}dq_i + \sum_{i=1}^{n}\frac{\pa
 $\dfrac{\partial F}{\partial \mathbf{r}} \equiv \hat{\mathbf{i}}\dfrac{\partial F}{\partial x} + \hat{\mathbf{j}}\dfrac{\partial F}{\partial y} + \hat{\mathbf{k}}\dfrac{\partial F}{\partial z}$。
 因此，标量对矢量的导数定义为这样一个矢量：其分量是标量对矢量各分量的导数。注意 $\dfrac{\partial F}{\partial \mathbf{r}} = \nabla F$。}
 
-因此，由虚位移 $\boldsymbol{\epsilon}$ 引起的拉格朗日量的变化为
+因此，由虚位移 $\bm{\epsilon}$ 引起的拉格朗日量的变化为
 \begin{equation}\label{eq:1.dL}
-\delta L = \sum_{\alpha}\frac{\partial L}{\partial \mathbf{r}_\alpha}\cdot\delta\mathbf{r}_\alpha = \sum_{\alpha}\frac{\partial L}{\partial \mathbf{r}_\alpha}\cdot\boldsymbol{\epsilon} = \boldsymbol{\epsilon}\cdot\sum_{\alpha}\frac{\partial L}{\partial \mathbf{r}_\alpha},
+\delta L = \sum_{\alpha}\frac{\partial L}{\partial \mathbf{r}_\alpha}\cdot\delta\mathbf{r}_\alpha = \sum_{\alpha}\frac{\partial L}{\partial \mathbf{r}_\alpha}\cdot\bm{\epsilon} = \bm{\epsilon}\cdot\sum_{\alpha}\frac{\partial L}{\partial \mathbf{r}_\alpha},
 \end{equation}
-其中我们利用了 $\delta\mathbf{r}_\alpha = \boldsymbol{\epsilon}$ 这一事实，即所有质点位移相同的量。注意我们是对质点求和（$\alpha = 1, \ldots, N$），而不是对分量求和（$i = 1, \ldots, 3N$）。
+其中我们利用了 $\delta\mathbf{r}_\alpha = \bm{\epsilon}$ 这一事实，即所有质点位移相同的量。注意我们是对质点求和（$\alpha = 1, \ldots, N$），而不是对分量求和（$i = 1, \ldots, 3N$）。
 
 如果空间是均匀的，拉格朗日量不变，$\delta L = 0$。因此，
 \begin{equation}\label{eq:1.mom1}
@@ -359,6 +370,7 @@ $\dfrac{\partial F}{\partial \mathbf{r}} \equiv \hat{\mathbf{i}}\dfrac{\partial 
 \mathbf{P}_{\mathrm{tot}} = \text{常数},
 \end{equation}
 正如所料。
+\end{proof}
 
 我们没有使用任何特定的坐标组，因为我们一直在用矢量表述问题。动能的矢量定义为 $T = \frac{1}{2}m\mathbf{v}\cdot\mathbf{v}$。只要我们用矢量表述我们的关系，\footnote{这在笛卡尔坐标中也成立，其中 $T = \frac{1}{2}m\left(\dot{x}^2 + \dot{y}^2 + \dot{z}^2\right)$。但在大多数其他坐标系中，动能既依赖于坐标也依赖于速度。例如，在球坐标中 $T = \frac{1}{2}m(\dot{r}^2 + r^2\dot{\theta}^2 + r^2\sin^2\theta\,\dot{\phi}^2)$。}动能就只依赖于速度的平方而不依赖于坐标，我们可以写
 \begin{equation}\label{eq:1.Fa}
@@ -378,7 +390,7 @@ $\dfrac{\partial F}{\partial \mathbf{r}} \equiv \hat{\mathbf{i}}\dfrac{\partial 
 \end{equation}
 我们还得到了牛顿第二定律。
 
-\subsection{角动量守恒}
+\paragraph{角动量守恒}
 我们接下来的任务是证明角动量守恒是空间各向同性的结果。但在着手处理那个问题之前，让我们先从初等的角度，然后从中等的角度来考察这个守恒定律。
 
 对角动量守恒定律的初等讨论，通常从质点角动量的定义开始：
@@ -423,7 +435,7 @@ p_\theta = \frac{\partial L}{\partial \dot{\theta}} = \frac{\partial}{\partial \
 \end{equation}
 我们认出这就是质点的角动量。注意 $\theta$ 是可遗坐标，所以角动量 $mr^2\dot{\theta}$ 是常数。
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=0.55\linewidth]{Figure/fig_1_10.png}
 \caption{图 1.10}
@@ -431,7 +443,10 @@ p_\theta = \frac{\partial L}{\partial \dot{\theta}} = \frac{\partial}{\partial \
 
 系统的转动使每个质点的位置改变 $\delta\mathbf{r}_\alpha$，每个质点的速度改变 $\delta\mathbf{v}_\alpha$。
 
-我们现在以更高级的方式处理这个问题，证明角动量守恒是空间各向同性的结果。考虑一个绕某个轴转过虚角度 $\delta\phi$ 的力学系统。设 $\delta\boldsymbol{\phi}$ 是沿转轴方向、大小为 $\delta\phi$ 的矢量。把坐标原点放在转轴上。由于转动，系统中的每个质点都位移某个距离 $\delta\mathbf{r}_\alpha$，如果质点具有速度 $\mathbf{v}_\alpha$，速度矢量的方向将改变 $\delta\mathbf{v}_\alpha$。
+我们现在以更高级的方式处理这个问题，证明角动量守恒是空间各向同性的结果。
+
+\begin{proof}[证明]
+考虑一个绕某个轴转过虚角度 $\delta\phi$ 的力学系统。设 $\delta\bm{\phi}$ 是沿转轴方向、大小为 $\delta\phi$ 的矢量。把坐标原点放在转轴上。由于转动，系统中的每个质点都位移某个距离 $\delta\mathbf{r}_\alpha$，如果质点具有速度 $\mathbf{v}_\alpha$，速度矢量的方向将改变 $\delta\mathbf{v}_\alpha$。
 
 如果空间是各向同性的，转动对拉格朗日量没有影响，所以 $\delta L = 0$，即
 \begin{equation}\label{eq:1.dL2}
@@ -443,25 +458,26 @@ p_\theta = \frac{\partial L}{\partial \dot{\theta}} = \frac{\partial}{\partial \
 \begin{equation}\label{eq:1.ang1}
 \sum_{\alpha}\left(\dot{\mathbf{p}}_\alpha\cdot\delta\mathbf{r}_\alpha + \mathbf{p}_\alpha\cdot\delta\mathbf{v}_\alpha\right) = 0.
 \end{equation}
-从图中，$|\delta\mathbf{r}| = r\sin\theta\,\delta\phi$。但由于 $\delta\mathbf{r}$ 同时垂直于 $\mathbf{r}$ 和 $\delta\boldsymbol{\phi}$，我们可以写 $\delta\mathbf{r} = \delta\boldsymbol{\phi}\times\mathbf{r}$。类似地，$\delta\mathbf{v} = \delta\boldsymbol{\phi}\times\mathbf{v}$。因此，
+从图中，$|\delta\mathbf{r}| = r\sin\theta\,\delta\phi$。但由于 $\delta\mathbf{r}$ 同时垂直于 $\mathbf{r}$ 和 $\delta\bm{\phi}$，我们可以写 $\delta\mathbf{r} = \delta\bm{\phi}\times\mathbf{r}$。类似地，$\delta\mathbf{v} = \delta\bm{\phi}\times\mathbf{v}$。因此，
 \begin{equation}\label{eq:1.ang2}
-\sum_{\alpha}\left(\dot{\mathbf{p}}_\alpha\cdot(\delta\boldsymbol{\phi}\times\mathbf{r}_\alpha) + \mathbf{p}_\alpha\cdot(\delta\boldsymbol{\phi}\times\mathbf{v}_\alpha)\right) = 0.
+\sum_{\alpha}\left(\dot{\mathbf{p}}_\alpha\cdot(\delta\bm{\phi}\times\mathbf{r}_\alpha) + \mathbf{p}_\alpha\cdot(\delta\bm{\phi}\times\mathbf{v}_\alpha)\right) = 0.
 \end{equation}
 交换点乘和叉乘的次序，我们得到
 \begin{equation}\label{eq:1.ang3}
-\sum_{\alpha}\delta\boldsymbol{\phi}\cdot\left(\mathbf{r}_\alpha\times\dot{\mathbf{p}}_\alpha + \dot{\mathbf{r}}_\alpha\times\mathbf{p}_\alpha\right) = \delta\boldsymbol{\phi}\cdot\sum_{\alpha}\frac{d}{dt}\left(\mathbf{r}_\alpha\times\mathbf{p}_\alpha\right) = 0.
+\sum_{\alpha}\delta\bm{\phi}\cdot\left(\mathbf{r}_\alpha\times\dot{\mathbf{p}}_\alpha + \dot{\mathbf{r}}_\alpha\times\mathbf{p}_\alpha\right) = \delta\bm{\phi}\cdot\sum_{\alpha}\frac{d}{dt}\left(\mathbf{r}_\alpha\times\mathbf{p}_\alpha\right) = 0.
 \end{equation}
-因此，由于 $\delta\boldsymbol{\phi} \neq 0$，
+因此，由于 $\delta\bm{\phi} \neq 0$，
 \begin{equation}\label{eq:1.ang4}
 \sum_{\alpha}\frac{d}{dt}(\mathbf{r}_\alpha\times\mathbf{p}_\alpha) = \frac{d}{dt}\sum_{\alpha}\mathbf{r}_\alpha\times\mathbf{p}_\alpha = \frac{d\mathbf{L}}{dt} = 0,
 \end{equation}
 其中 $\mathbf{L}$ 是总角动量。也就是说，空间各向同性导致角动量守恒。（注意不要把总矢量角动量 $\mathbf{L}$ 与拉格朗日量 $L$ 混淆。）
+\end{proof}
 
 \begin{example}[用初等力学证明角动量守恒]
 用初等力学方法证明：如果没有净外力矩作用在系统上，质点系统的角动量就是常数。注意你必须援引强形式的牛顿第三定律。
 \end{example}
 
-\subsection{能量守恒与功函数}
+\paragraph{能量守恒与功函数}
 考虑单个质点的动能。在初级物理中，我们学过功--能定理，它表明：外力对质点所做的净功，将导致质点动能的等量增加。按定义，功为
 \begin{equation}\label{eq:1.W}
 W = \int \mathbf{F}\cdot d\mathbf{s}.
@@ -496,6 +512,7 @@ T_2 + V_2 = T_1 + V_1.
 
 以上关于能量守恒的讨论相当初等。我们现在从高级的角度考察能量，并证明能量守恒来自时间的均匀性。
 
+\begin{proof}[证明]
 一般来说，拉格朗日量 $L = L(q, \dot{q}, t)$ 对时间的导数为
 \begin{equation}\label{eq:1.dLdt}
 \frac{dL}{dt} = \sum_i\frac{\partial L}{\partial q_i}\frac{dq_i}{dt} + \sum_i\frac{\partial L}{\partial \dot{q}_i}\frac{d\dot{q}_i}{dt} + \frac{\partial L}{\partial t}.
@@ -567,6 +584,7 @@ f(\alpha x_1, \alpha x_2, \ldots, \alpha x_n) = \alpha^k f(x_1, \ldots, x_n),
 h = T + V = E.
 \end{equation}
 只要这些条件得到满足，能量函数就等于总能量，总能量就守恒。
+\end{proof}
 
 如果我们把 $\dfrac{\partial L}{\partial \dot{q}_i}$ 替换为 $p_i$，能量函数就变换为哈密顿量，它是广义坐标和广义动量的函数：
 \begin{equation}\label{eq:1.H}
@@ -599,9 +617,10 @@ H = H(q, p, t) = \sum_i\dot{q}_ip_i - L.
 $$\sum_i\dot{q}_i\frac{\partial L_2}{\partial \dot{q}_i} = 2L_2.$$
 \end{example}
 
-\subsection{位力定理}
+\paragraph{位力定理}
 位力定理指出：对有界的保守系统（如绕恒星运行的行星），动能的平均值与势能的平均值成正比。（对行星/恒星系统，我们发现 $\langle T\rangle = -\frac{1}{2}\langle V\rangle$。）我们现在来证明这个定理。
 
+\begin{proof}[证明]
 在笛卡尔坐标中，动能是只依赖于速度的齐次二次函数，所以欧拉定理给出
 \begin{equation}\label{eq:1.vir1}
 \sum_{\alpha}\mathbf{v}_\alpha\cdot\frac{\partial T}{\partial \mathbf{v}_\alpha} = 2T.
@@ -660,6 +679,7 @@ V = -\frac{GMm}{r},
 \begin{equation}\label{eq:1.virial.g}
 2\langle T\rangle = -\langle V\rangle.
 \end{equation}
+\end{proof}
 由于 $E = T + V$，我们看到 $\langle E\rangle = -\langle T\rangle$，这表明总能量为负，且平均动能的量值是平均势能量值的一半。
 
 再举一个例子，考虑弹簧上的质量。势能为 $V = \frac{1}{2}Kx^2$，所以 $k = 2$，且 $2\langle T\rangle = 2\langle V\rangle$，即 $\langle T\rangle = \langle V\rangle$。

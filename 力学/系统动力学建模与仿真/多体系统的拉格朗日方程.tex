@@ -1,18 +1,19 @@
+% !TeX root = 系统动力学建模与仿真笔记.tex
 前面讨论了拉格朗日方程相关的一些概念，下面看看如何推导出多体系统的拉格朗日方程。
 \section{虚功原理与完整系统拉格朗日方程}
 
 \begin{myTheorem}{多体系统拉格朗日方程（含约束）}
-设系统由$N$个质点组成，质点$k$的位矢用广义坐标描述为$\boldsymbol{r}_k = \boldsymbol{r}_k(\boldsymbol{q})$，系统动能为
+设系统由$N$个质点组成，质点$k$的位矢用广义坐标描述为$\bm{r}_k = \bm{r}_k(\bm{q})$，系统动能为
 \begin{equation*}
-    T \triangleq \sum_{k=1}^{N}\frac{1}{2}m_k\dot{\boldsymbol{r}}_k^{\mathrm{T}}\dot{\boldsymbol{r}}_k,
+    T \triangleq \sum_{k=1}^{N}\frac{1}{2}m_k\dot{\bm{r}}_k^{\mathrm{T}}\dot{\bm{r}}_k,
 \end{equation*}
-非约束力$\boldsymbol{f}_{\text{NonConstraint},k}$对应的系统广义力为
+非约束力$\bm{f}_{\text{NonConstraint},k}$对应的系统广义力为
 \begin{equation*}
-    Q_j \triangleq \sum_{k=1}^{N}\frac{\partial \boldsymbol{r}_k^{\mathrm{T}}}{\partial q_j}\boldsymbol{f}_{\text{NonConstraint},k},
+    Q_j \triangleq \sum_{k=1}^{N}\frac{\partial \bm{r}_k^{\mathrm{T}}}{\partial q_j}\bm{f}_{\text{NonConstraint},k},
 \end{equation*}
-系统约束对虚位移的限制记为$\boldsymbol{0} = \boldsymbol{c}_q(\boldsymbol{q},t)\,\delta\boldsymbol{q}$。若约束为理想约束，则存在拉格朗日乘子$\boldsymbol{\lambda}\in\mathbb{R}^m$，使得系统的运动满足如下完整系统拉格朗日方程
+系统约束对虚位移的限制记为$\bm{0} = \bm{\Phi}(\bm{q},t)\,\delta\bm{q}$。若约束为理想约束，则存在拉格朗日乘子$\bm{\lambda}\in\mathbb{R}^m$，使得系统的运动满足如下完整系统拉格朗日方程
 \begin{equation}\label{eq:lagrange_multibody}
-    \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial T}{\partial \dot{\boldsymbol{q}}}\right)^{\mathrm{T}} - \left(\frac{\partial T}{\partial \boldsymbol{q}}\right)^{\mathrm{T}} + \boldsymbol{c}_q^{\mathrm{T}}\boldsymbol{\lambda} = \boldsymbol{Q}.
+    \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial T}{\partial \dot{\bm{q}}}\right)^{\mathrm{T}} - \left(\frac{\partial T}{\partial \bm{q}}\right)^{\mathrm{T}} + \bm{\Phi}^{\mathrm{T}}\bm{\lambda} = \bm{Q}.
 \end{equation}
 \end{myTheorem}
 
@@ -24,140 +25,140 @@
 \begin{proof}[推导]
 \textbf{第一步：质点的运动微分方程。}牛顿第二定律可以表示为：
 \begin{equation}
-    \boldsymbol{f}=\frac{\mathrm{d}}{\mathrm{~d} t}(m \boldsymbol{v})=\frac{\mathrm{d}}{\mathrm{~d} t}\left(m \frac{\mathrm{~d} \boldsymbol{r}}{\mathrm{~d} t}\right)=\frac{\mathrm{d} m}{\mathrm{~d} t} \frac{\mathrm{~d} \boldsymbol{r}}{\mathrm{~d} t}+m \frac{\mathrm{~d}^{2} \boldsymbol{r}}{\mathrm{~d} t^{2}} .
+    \bm{f}=\frac{\mathrm{d}}{\mathrm{~d} t}(m \bm{v})=\frac{\mathrm{d}}{\mathrm{~d} t}\left(m \frac{\mathrm{~d} \bm{r}}{\mathrm{~d} t}\right)=\frac{\mathrm{d} m}{\mathrm{~d} t} \frac{\mathrm{~d} \bm{r}}{\mathrm{~d} t}+m \frac{\mathrm{~d}^{2} \bm{r}}{\mathrm{~d} t^{2}} .
 \end{equation}
-而我们的兵器系统，低速情况下不考虑相对论效应。于是质点的质量是定常的，可以简化为：
+而我们的装备系统，低速情况下不考虑相对论效应。于是质点的质量是定常的，可以简化为：
 \begin{equation}
-    \boldsymbol{f}=m\frac{\mathrm{~d}^{2} \boldsymbol{r}}{\mathrm{~d} t^{2}}=:m\ddot{\boldsymbol{r}}=:m\mathbf{a}
+    \bm{f}=m\frac{\mathrm{~d}^{2} \bm{r}}{\mathrm{~d} t^{2}}=:m\ddot{\bm{r}}=:m\mathbf{a}
 \end{equation}
-引入惯性力$-m\ddot{\boldsymbol{r}}$,可得如下力系平衡方程：
+引入惯性力$-m\ddot{\bm{r}}$，可得如下力系平衡方程：
 \begin{equation}
-    -m\ddot{\boldsymbol{r}}+\boldsymbol{f}=\boldsymbol{0}
+    -m\ddot{\bm{r}}+\bm{f}=\bm{0}
 \end{equation}
-对于多体系统中的质点$k$,有：
+对于多体系统中的质点$k$，有：
 \begin{equation}
     \label{eq:质点k的动力学方程}
-    -m_k\ddot{\boldsymbol{r}}_k+\boldsymbol{f}_k=\boldsymbol{0}
+    -m_k\ddot{\bm{r}}_k+\bm{f}_k=\bm{0}
 \end{equation}
 
-\textbf{第二步：质点与质点系的虚功方程。}用质点$k$的虚位移$\delta\boldsymbol{r}_k$的转置$\delta\boldsymbol{r}_k^\mathrm{T}$左乘质点$k$的动力学方程（式~\ref{eq:质点k的动力学方程}），可得质点$k$的虚功方程，即
-$$-m_k\delta\boldsymbol{r}_k^\mathrm{T}\ddot{\boldsymbol{r}}_k+\delta\boldsymbol{r}_k^\mathrm{T}\boldsymbol{f}_k=0.$$
+\textbf{第二步：质点与质点系的虚功方程。}用质点$k$的虚位移$\delta\bm{r}_k$的转置$\delta\bm{r}_k^\mathrm{T}$左乘质点$k$的动力学方程（式~\ref{eq:质点k的动力学方程}），可得质点$k$的虚功方程，即
+$$-m_k\delta\bm{r}_k^\mathrm{T}\ddot{\bm{r}}_k+\delta\bm{r}_k^\mathrm{T}\bm{f}_k=0.$$
 对系统中所有质点的虚功方程求和可得系统的虚功方程，即
-$$-\sum_{k=1}^Nm_k\delta\boldsymbol{r}_k^\mathrm{T}\ddot{\boldsymbol{r}}_k+\sum_{k=1}^N\delta\boldsymbol{r}_k^\mathrm{T}\boldsymbol{f}_k=0.$$
+$$-\sum_{k=1}^Nm_k\delta\bm{r}_k^\mathrm{T}\ddot{\bm{r}}_k+\sum_{k=1}^N\delta\bm{r}_k^\mathrm{T}\bm{f}_k=0.$$
 
-由质点$k$位矢的广义坐标描述$\boldsymbol{r}_k = \boldsymbol{r}_k(\boldsymbol{q})$可知，质点$k$的虚位移可表示为广义虚位移的线性组合，即
+由质点$k$位矢的广义坐标描述$\bm{r}_k = \bm{r}_k(\bm{q})$可知，质点$k$的虚位移可表示为广义虚位移的线性组合，即
 \begin{equation*}
-    \delta\boldsymbol{r}_k = \sum_{j=1}^{n}\frac{\partial \boldsymbol{r}_k}{\partial q_j}\delta q_j.
+    \delta\bm{r}_k = \sum_{j=1}^{n}\frac{\partial \bm{r}_k}{\partial q_j}\delta q_j.
 \end{equation*}
 
 \textbf{第三步：系统惯性力虚功的化简。}系统惯性力的虚功可以分步化简，每一步的依据如下。
 
 第一步，代入虚位移关系并写出加速度：将上文质点$k$虚位移表达式的转置
 \begin{equation*}
-\delta\boldsymbol{r}_k^{\mathrm{T}} = \sum_{j=1}^{n} \delta q_j \frac{\partial \boldsymbol{r}_k^{\mathrm{T}}}{\partial q_j}
+\delta\bm{r}_k^{\mathrm{T}} = \sum_{j=1}^{n} \delta q_j \frac{\partial \bm{r}_k^{\mathrm{T}}}{\partial q_j}
 \end{equation*}
-代入惯性力虚功，同时将$\ddot{\boldsymbol{r}}_k$写成$\dot{\boldsymbol{r}}_k$对时间的导数，得
+代入惯性力虚功，同时将$\ddot{\bm{r}}_k$写成$\dot{\bm{r}}_k$对时间的导数，得
 \begin{equation*}
--\sum_{k=1}^{N} m_k \delta\boldsymbol{r}_k^{\mathrm{T}}\ddot{\boldsymbol{r}}_k
-    = -\sum_{k=1}^{N}\sum_{j=1}^{n} m_k \delta q_j \frac{\partial \boldsymbol{r}_k^{\mathrm{T}}}{\partial q_j} \frac{\mathrm{d}}{\mathrm{d}t}\left(\dot{\boldsymbol{r}}_k\right).
+-\sum_{k=1}^{N} m_k \delta\bm{r}_k^{\mathrm{T}}\ddot{\bm{r}}_k
+    = -\sum_{k=1}^{N}\sum_{j=1}^{n} m_k \delta q_j \frac{\partial \bm{r}_k^{\mathrm{T}}}{\partial q_j} \frac{\mathrm{d}}{\mathrm{d}t}\left(\dot{\bm{r}}_k\right).
 \end{equation*}
 
 第二步，交换求和次序：两重求和均为有限项相加，求和次序可以互换，将原来的二重和改写为先对$k$后对$j$，得
 \begin{equation*}
-    = -\sum_{j=1}^{n}\sum_{k=1}^{N} m_k \delta q_j \frac{\partial \boldsymbol{r}_k^{\mathrm{T}}}{\partial q_j} \frac{\mathrm{d}}{\mathrm{d}t}\left(\dot{\boldsymbol{r}}_k\right).
+    = -\sum_{j=1}^{n}\sum_{k=1}^{N} m_k \delta q_j \frac{\partial \bm{r}_k^{\mathrm{T}}}{\partial q_j} \frac{\mathrm{d}}{\mathrm{d}t}\left(\dot{\bm{r}}_k\right).
 \end{equation*}
 
 第三步，提取公因子：$\delta q_j$与质点编号$k$无关，$m_k$与广义坐标分量编号$j$无关，因此可把$\delta q_j$移到内层求和之外、把$m_k$留在内层，得
 \begin{equation*}
-    = -\sum_{j=1}^{n} \delta q_j \sum_{k=1}^{N} m_k \left[ \frac{\partial \boldsymbol{r}_k^{\mathrm{T}}}{\partial q_j} \frac{\mathrm{d}}{\mathrm{d}t}\left(\dot{\boldsymbol{r}}_k\right) \right].
+    = -\sum_{j=1}^{n} \delta q_j \sum_{k=1}^{N} m_k \left[ \frac{\partial \bm{r}_k^{\mathrm{T}}}{\partial q_j} \frac{\mathrm{d}}{\mathrm{d}t}\left(\dot{\bm{r}}_k\right) \right].
 \end{equation*}
 
 第四步，逆用乘积求导法则：标量函数乘积的导数满足
 \begin{equation*}
-\frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial \boldsymbol{r}_k^{\mathrm{T}}}{\partial q_j}\dot{\boldsymbol{r}}_k\right)
-    = \frac{\partial \boldsymbol{r}_k^{\mathrm{T}}}{\partial q_j}\frac{\mathrm{d}}{\mathrm{d}t}\left(\dot{\boldsymbol{r}}_k\right) + \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial \boldsymbol{r}_k^{\mathrm{T}}}{\partial q_j}\right)\dot{\boldsymbol{r}}_k,
+\frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial \bm{r}_k^{\mathrm{T}}}{\partial q_j}\dot{\bm{r}}_k\right)
+    = \frac{\partial \bm{r}_k^{\mathrm{T}}}{\partial q_j}\frac{\mathrm{d}}{\mathrm{d}t}\left(\dot{\bm{r}}_k\right) + \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial \bm{r}_k^{\mathrm{T}}}{\partial q_j}\right)\dot{\bm{r}}_k,
 \end{equation*}
 移项并把等式右端第一项代入，得
 \begin{equation*}
-    = -\sum_{j=1}^{n} \delta q_j \sum_{k=1}^{N} m_k \left[ \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial \boldsymbol{r}_k^{\mathrm{T}}}{\partial q_j}\dot{\boldsymbol{r}}_k\right) - \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial \boldsymbol{r}_k^{\mathrm{T}}}{\partial q_j}\right)\dot{\boldsymbol{r}}_k \right].
+    = -\sum_{j=1}^{n} \delta q_j \sum_{k=1}^{N} m_k \left[ \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial \bm{r}_k^{\mathrm{T}}}{\partial q_j}\dot{\bm{r}}_k\right) - \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial \bm{r}_k^{\mathrm{T}}}{\partial q_j}\right)\dot{\bm{r}}_k \right].
 \end{equation*}
 
 第五步，把定常质量移入时间导数：系统的质量$m_k$不随时间变化，$m_k$可以移到时间导数$\frac{\mathrm{d}}{\mathrm{d}t}$之内，得
 \begin{equation*}
-    = -\sum_{j=1}^{n} \delta q_j \left[ \sum_{k=1}^{N} \frac{\mathrm{d}}{\mathrm{d}t}\left(m_k \frac{\partial \boldsymbol{r}_k^{\mathrm{T}}}{\partial q_j}\dot{\boldsymbol{r}}_k\right) - \sum_{k=1}^{N} m_k \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial \boldsymbol{r}_k^{\mathrm{T}}}{\partial q_j}\right)\dot{\boldsymbol{r}}_k \right].
+    = -\sum_{j=1}^{n} \delta q_j \left[ \sum_{k=1}^{N} \frac{\mathrm{d}}{\mathrm{d}t}\left(m_k \frac{\partial \bm{r}_k^{\mathrm{T}}}{\partial q_j}\dot{\bm{r}}_k\right) - \sum_{k=1}^{N} m_k \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial \bm{r}_k^{\mathrm{T}}}{\partial q_j}\right)\dot{\bm{r}}_k \right].
 \end{equation*}
 
 第六步，时间导数与有限求和互换：$\frac{\mathrm{d}}{\mathrm{d}t}$是线性算子，对有限项求和可以逐项求导后再相加，故可将第一项的时间导数提到对$k$的求和之外，得
 \begin{equation*}
-    = -\sum_{j=1}^{n} \delta q_j \left[ \frac{\mathrm{d}}{\mathrm{d}t}\left(\sum_{k=1}^{N} m_k \frac{\partial \boldsymbol{r}_k^{\mathrm{T}}}{\partial q_j}\dot{\boldsymbol{r}}_k\right) - \sum_{k=1}^{N} m_k \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial \boldsymbol{r}_k^{\mathrm{T}}}{\partial q_j}\right)\dot{\boldsymbol{r}}_k \right].
+    = -\sum_{j=1}^{n} \delta q_j \left[ \frac{\mathrm{d}}{\mathrm{d}t}\left(\sum_{k=1}^{N} m_k \frac{\partial \bm{r}_k^{\mathrm{T}}}{\partial q_j}\dot{\bm{r}}_k\right) - \sum_{k=1}^{N} m_k \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial \bm{r}_k^{\mathrm{T}}}{\partial q_j}\right)\dot{\bm{r}}_k \right].
 \end{equation*}
 
 下面把化简结果中的两项分别与系统动能联系起来。注意到
 \begin{equation*}
-    \frac{\partial \dot{\boldsymbol{r}}_k}{\partial \dot{q}_j} = \frac{\partial \boldsymbol{r}_k}{\partial q_j},
+    \frac{\partial \dot{\bm{r}}_k}{\partial \dot{q}_j} = \frac{\partial \bm{r}_k}{\partial q_j},
     \qquad
-    \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial \boldsymbol{r}_k}{\partial q_j}\right) = \frac{\partial \dot{\boldsymbol{r}}_k}{\partial q_j}.
+    \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial \bm{r}_k}{\partial q_j}\right) = \frac{\partial \dot{\bm{r}}_k}{\partial q_j}.
 \end{equation*}
 
 证明思路：
 \begin{align*}
-    \dot{\boldsymbol{r}}_k &= \frac{\mathrm{d}}{\mathrm{d}t}\boldsymbol{r}_k\left(\boldsymbol{q}(t)\right) = \sum_{i=1}^{n} \frac{\partial \boldsymbol{r}_k}{\partial q_i}\frac{\mathrm{d}q_i}{\mathrm{d}t} = \sum_{i=1}^{n} \frac{\partial \boldsymbol{r}_k}{\partial q_i}\dot{q}_i, \\
-    \frac{\partial \dot{\boldsymbol{r}}_k}{\partial \dot{q}_j} &= \sum_{i=1}^{n} \frac{\partial \boldsymbol{r}_k}{\partial q_i}\frac{\partial \dot{q}_i}{\partial \dot{q}_j} = \frac{\partial \boldsymbol{r}_k}{\partial q_j}, \\
-    \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial \boldsymbol{r}_k}{\partial q_j}\right) &= \sum_{i=1}^{n} \frac{\partial}{\partial q_i}\left(\frac{\partial \boldsymbol{r}_k}{\partial q_j}\right)\dot{q}_i = \sum_{i=1}^{n} \frac{\partial^2 \boldsymbol{r}_k}{\partial q_i\,\partial q_j}\dot{q}_i \\
-    &= \frac{\partial}{\partial q_j}\left(\sum_{i=1}^{n} \frac{\partial \boldsymbol{r}_k}{\partial q_i}\dot{q}_i\right) = \frac{\partial \dot{\boldsymbol{r}}_k}{\partial q_j}.
+    \dot{\bm{r}}_k &= \frac{\mathrm{d}}{\mathrm{d}t}\bm{r}_k\left(\bm{q}(t)\right) = \sum_{i=1}^{n} \frac{\partial \bm{r}_k}{\partial q_i}\frac{\mathrm{d}q_i}{\mathrm{d}t} = \sum_{i=1}^{n} \frac{\partial \bm{r}_k}{\partial q_i}\dot{q}_i, \\
+    \frac{\partial \dot{\bm{r}}_k}{\partial \dot{q}_j} &= \sum_{i=1}^{n} \frac{\partial \bm{r}_k}{\partial q_i}\frac{\partial \dot{q}_i}{\partial \dot{q}_j} = \frac{\partial \bm{r}_k}{\partial q_j}, \\
+    \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial \bm{r}_k}{\partial q_j}\right) &= \sum_{i=1}^{n} \frac{\partial}{\partial q_i}\left(\frac{\partial \bm{r}_k}{\partial q_j}\right)\dot{q}_i = \sum_{i=1}^{n} \frac{\partial^2 \bm{r}_k}{\partial q_i\,\partial q_j}\dot{q}_i \\
+    &= \frac{\partial}{\partial q_j}\left(\sum_{i=1}^{n} \frac{\partial \bm{r}_k}{\partial q_i}\dot{q}_i\right) = \frac{\partial \dot{\bm{r}}_k}{\partial q_j}.
 \end{align*}
 
 系统惯性力的虚功中的第一项：
 \begin{align*}
-\sum_{k=1}^{N} m_k \frac{\partial \boldsymbol{r}_k^{\mathrm{T}}}{\partial q_j}\dot{\boldsymbol{r}}_k
-    &= \sum_{k=1}^{N} m_k \frac{\partial \dot{\boldsymbol{r}}_k^{\mathrm{T}}}{\partial \dot{q}_j}\dot{\boldsymbol{r}}_k \\
-    &= \sum_{k=1}^{N} m_k \frac{\partial}{\partial \dot{q}_j}\left(\frac{1}{2}\dot{\boldsymbol{r}}_k^{\mathrm{T}}\dot{\boldsymbol{r}}_k\right) \\
-    &= \frac{\partial}{\partial \dot{q}_j}\left(\sum_{k=1}^{N}\frac{1}{2}m_k\dot{\boldsymbol{r}}_k^{\mathrm{T}}\dot{\boldsymbol{r}}_k\right) \\
-    &=: \frac{\partial}{\partial \dot{q}_j}T\left(\boldsymbol{q}(t),\dot{\boldsymbol{q}}(t)\right).
+\sum_{k=1}^{N} m_k \frac{\partial \bm{r}_k^{\mathrm{T}}}{\partial q_j}\dot{\bm{r}}_k
+    &= \sum_{k=1}^{N} m_k \frac{\partial \dot{\bm{r}}_k^{\mathrm{T}}}{\partial \dot{q}_j}\dot{\bm{r}}_k \\
+    &= \sum_{k=1}^{N} m_k \frac{\partial}{\partial \dot{q}_j}\left(\frac{1}{2}\dot{\bm{r}}_k^{\mathrm{T}}\dot{\bm{r}}_k\right) \\
+    &= \frac{\partial}{\partial \dot{q}_j}\left(\sum_{k=1}^{N}\frac{1}{2}m_k\dot{\bm{r}}_k^{\mathrm{T}}\dot{\bm{r}}_k\right) \\
+    &=: \frac{\partial}{\partial \dot{q}_j}T\left(\bm{q}(t),\dot{\bm{q}}(t)\right).
 \end{align*}
 
 系统惯性力的虚功中的第二项：
 \begin{align*}
-\sum_{k=1}^{N} m_k \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial \boldsymbol{r}_k^{\mathrm{T}}}{\partial q_j}\right)\dot{\boldsymbol{r}}_k
-    &= \sum_{k=1}^{N} m_k \frac{\partial \dot{\boldsymbol{r}}_k^{\mathrm{T}}}{\partial q_j}\dot{\boldsymbol{r}}_k \\
-    &= \sum_{k=1}^{N} m_k \frac{\partial}{\partial q_j}\left(\frac{1}{2}\dot{\boldsymbol{r}}_k^{\mathrm{T}}\dot{\boldsymbol{r}}_k\right) \\
-    &= \frac{\partial}{\partial q_j}\left(\sum_{k=1}^{N}\frac{1}{2}m_k\dot{\boldsymbol{r}}_k^{\mathrm{T}}\dot{\boldsymbol{r}}_k\right) \\
+\sum_{k=1}^{N} m_k \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial \bm{r}_k^{\mathrm{T}}}{\partial q_j}\right)\dot{\bm{r}}_k
+    &= \sum_{k=1}^{N} m_k \frac{\partial \dot{\bm{r}}_k^{\mathrm{T}}}{\partial q_j}\dot{\bm{r}}_k \\
+    &= \sum_{k=1}^{N} m_k \frac{\partial}{\partial q_j}\left(\frac{1}{2}\dot{\bm{r}}_k^{\mathrm{T}}\dot{\bm{r}}_k\right) \\
+    &= \frac{\partial}{\partial q_j}\left(\sum_{k=1}^{N}\frac{1}{2}m_k\dot{\bm{r}}_k^{\mathrm{T}}\dot{\bm{r}}_k\right) \\
     &= \frac{\partial T}{\partial q_j}.
 \end{align*}
 
 于是系统惯性力的虚功最终可化简为
 \begin{align*}
--\sum_{k=1}^{N} m_k \delta\boldsymbol{r}_k^{\mathrm{T}}\ddot{\boldsymbol{r}}_k
+-\sum_{k=1}^{N} m_k \delta\bm{r}_k^{\mathrm{T}}\ddot{\bm{r}}_k
     &= -\sum_{j=1}^{n}\delta q_j\left[\frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial T}{\partial \dot{q}_j}\right) - \frac{\partial T}{\partial q_j}\right] \\
     &= \sum_{j=1}^{n}\delta q_j\left[-\frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial T}{\partial \dot{q}_j}\right) + \frac{\partial T}{\partial q_j}\right].
 \end{align*}
 式中
 \begin{equation*}
-    T \triangleq \sum_{k=1}^{N}\frac{1}{2}m_k\dot{\boldsymbol{r}}_k^{\mathrm{T}}\dot{\boldsymbol{r}}_k
+    T \triangleq \sum_{k=1}^{N}\frac{1}{2}m_k\dot{\bm{r}}_k^{\mathrm{T}}\dot{\bm{r}}_k
 \end{equation*}
 为系统的动能。
 
-\textbf{第四步：系统非约束力的虚功。}作用在质点$k$上的合力$\boldsymbol{f}_k$可表示为
+\textbf{第四步：系统非约束力的虚功。}作用在质点$k$上的合力$\bm{f}_k$可表示为
 \begin{equation*}
-    \boldsymbol{f}_k = \boldsymbol{f}_{\text{Constraint},k} + \boldsymbol{f}_{\text{NonConstraint},k},
+    \bm{f}_k = \bm{f}_{\text{Constraint},k} + \bm{f}_{\text{NonConstraint},k},
 \end{equation*}
-式中$\boldsymbol{f}_{\text{Constraint},k}$表示作用在质点$k$上的约束力；$\boldsymbol{f}_{\text{NonConstraint},k}$表示作用在质点$k$上的非约束力，包括重力、弹性恢复力、阻尼力、摩擦力以及其他外部作用力等。
+式中$\bm{f}_{\text{Constraint},k}$表示作用在质点$k$上的约束力；$\bm{f}_{\text{NonConstraint},k}$表示作用在质点$k$上的非约束力，包括重力、弹性恢复力、阻尼力、摩擦力以及其他外部作用力等。
 
 考虑到理想约束下约束力虚功之和为零（光滑接触面约束力垂直于虚位移、刚性约束内力虚功相消等），即
 \begin{equation*}
-    \sum_{k=1}^{N}\delta\boldsymbol{r}_k^{\mathrm{T}}\boldsymbol{f}_{\text{Constraint},k} = 0,
+    \sum_{k=1}^{N}\delta\bm{r}_k^{\mathrm{T}}\bm{f}_{\text{Constraint},k} = 0,
 \end{equation*}
 则有
 \begin{equation*}
-    \sum_{k=1}^{N}\delta\boldsymbol{r}_k^{\mathrm{T}}\boldsymbol{f}_k = \sum_{k=1}^{N}\delta\boldsymbol{r}_k^{\mathrm{T}}\boldsymbol{f}_{\text{NonConstraint},k}.
+    \sum_{k=1}^{N}\delta\bm{r}_k^{\mathrm{T}}\bm{f}_k = \sum_{k=1}^{N}\delta\bm{r}_k^{\mathrm{T}}\bm{f}_{\text{NonConstraint},k}.
 \end{equation*}
 
 系统非约束力的虚功：
 \begin{align*}
-\sum_{k=1}^{N}\delta\boldsymbol{r}_k^{\mathrm{T}}\boldsymbol{f}_k
-    &= \sum_{k=1}^{N}\delta\boldsymbol{r}_k^{\mathrm{T}}\boldsymbol{f}_{\text{NonConstraint},k} \\
-    &= \sum_{k=1}^{N}\sum_{j=1}^{n}\delta q_j \frac{\partial \boldsymbol{r}_k^{\mathrm{T}}}{\partial q_j}\boldsymbol{f}_{\text{NonConstraint},k} \\
-    &= \sum_{j=1}^{n}\delta q_j \sum_{k=1}^{N}\frac{\partial \boldsymbol{r}_k^{\mathrm{T}}}{\partial q_j}\boldsymbol{f}_{\text{NonConstraint},k} \\
+\sum_{k=1}^{N}\delta\bm{r}_k^{\mathrm{T}}\bm{f}_k
+    &= \sum_{k=1}^{N}\delta\bm{r}_k^{\mathrm{T}}\bm{f}_{\text{NonConstraint},k} \\
+    &= \sum_{k=1}^{N}\sum_{j=1}^{n}\delta q_j \frac{\partial \bm{r}_k^{\mathrm{T}}}{\partial q_j}\bm{f}_{\text{NonConstraint},k} \\
+    &= \sum_{j=1}^{n}\delta q_j \sum_{k=1}^{N}\frac{\partial \bm{r}_k^{\mathrm{T}}}{\partial q_j}\bm{f}_{\text{NonConstraint},k} \\
     &=: \sum_{j=1}^{n}\delta q_j Q_j.
 \end{align*}
 
@@ -167,20 +168,20 @@ $$-\sum_{k=1}^Nm_k\delta\boldsymbol{r}_k^\mathrm{T}\ddot{\boldsymbol{r}}_k+\sum_
 \end{equation}
 亦可记为如下矩阵形式
 \begin{equation}
-    \boldsymbol{0} = \delta\boldsymbol{q}^{\mathrm{T}}\left[-\frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial T}{\partial \dot{\boldsymbol{q}}}\right)^{\mathrm{T}} + \left(\frac{\partial T}{\partial \boldsymbol{q}}\right)^{\mathrm{T}} + \boldsymbol{Q}\right].
+    \bm{0} = \delta\bm{q}^{\mathrm{T}}\left[-\frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial T}{\partial \dot{\bm{q}}}\right)^{\mathrm{T}} + \left(\frac{\partial T}{\partial \bm{q}}\right)^{\mathrm{T}} + \bm{Q}\right].
 \end{equation}
 
 该虚功方程对满足约束方程
 \begin{equation}
-    \boldsymbol{0} = \boldsymbol{c}_q(\boldsymbol{q},t)\,\delta\boldsymbol{q}
+    \bm{0} = \bm{\Phi}(\bm{q},t)\,\delta\bm{q}
 \end{equation}
-的任意虚位移$\delta\boldsymbol{q}$均成立。由广义变分原理可知：存在拉格朗日乘子$\boldsymbol{\lambda}\in\mathbb{R}^m$使得
+的任意虚位移$\delta\bm{q}$均成立。由广义变分原理可知：存在拉格朗日乘子$\bm{\lambda}\in\mathbb{R}^m$使得
 \begin{equation}
-    -\frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial T}{\partial \dot{\boldsymbol{q}}}\right)^{\mathrm{T}} + \left(\frac{\partial T}{\partial \boldsymbol{q}}\right)^{\mathrm{T}} + \boldsymbol{Q} - \boldsymbol{c}_q^{\mathrm{T}}\boldsymbol{\lambda} = \boldsymbol{0}
+    -\frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial T}{\partial \dot{\bm{q}}}\right)^{\mathrm{T}} + \left(\frac{\partial T}{\partial \bm{q}}\right)^{\mathrm{T}} + \bm{Q} - \bm{\Phi}^{\mathrm{T}}\bm{\lambda} = \bm{0}
 \end{equation}
 成立，该表达式又可改写为如下列阵方程的形式，即
 \begin{equation*}
-    \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial T}{\partial \dot{\boldsymbol{q}}}\right)^{\mathrm{T}} - \left(\frac{\partial T}{\partial \boldsymbol{q}}\right)^{\mathrm{T}} + \boldsymbol{c}_q^{\mathrm{T}}\boldsymbol{\lambda} = \boldsymbol{Q}.
+    \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial T}{\partial \dot{\bm{q}}}\right)^{\mathrm{T}} - \left(\frac{\partial T}{\partial \bm{q}}\right)^{\mathrm{T}} + \bm{\Phi}^{\mathrm{T}}\bm{\lambda} = \bm{Q}.
 \end{equation*}
 这就是定理所述的多体系统拉格朗日方程~\eqref{eq:lagrange_multibody}，定理得证。
 \end{proof}
@@ -188,45 +189,45 @@ $$-\sum_{k=1}^Nm_k\delta\boldsymbol{r}_k^\mathrm{T}\ddot{\boldsymbol{r}}_k+\sum_
 \section{有势力及其广义力}
 
 \begin{myTheorem}{势能与有势力的关系}
-设系统非约束力中有一部分有势力$\boldsymbol{f}_{\text{Potential},k}(\boldsymbol{q})$仅与系统位形相关，其广义力记为
+设系统非约束力中有一部分有势力$\bm{f}_{\text{Potential},k}(\bm{q})$仅与系统位形相关，其广义力记为
 \begin{equation*}
-    Q_{\text{Potential},j}(\boldsymbol{q}) \triangleq \sum_{k=1}^{N}\frac{\partial \boldsymbol{r}_k^{\mathrm{T}}}{\partial q_j}\boldsymbol{f}_{\text{Potential},k}(\boldsymbol{q}).
+    Q_{\text{Potential},j}(\bm{q}) \triangleq \sum_{k=1}^{N}\frac{\partial \bm{r}_k^{\mathrm{T}}}{\partial q_j}\bm{f}_{\text{Potential},k}(\bm{q}).
 \end{equation*}
-若存在标量函数$V(\boldsymbol{q})$使有势力的虚功之和满足
+若存在标量函数$V(\bm{q})$使有势力的虚功之和满足
 \begin{equation*}
-    \sum_{j=1}^{n}\delta q_j Q_{\text{Potential},j}(\boldsymbol{q}) =: -\delta V(\boldsymbol{q}) = -\sum_{j=1}^{n}\delta q_j\frac{\partial}{\partial q_j}V(\boldsymbol{q}),
+    \sum_{j=1}^{n}\delta q_j Q_{\text{Potential},j}(\bm{q}) =: -\delta V(\bm{q}) = -\sum_{j=1}^{n}\delta q_j\frac{\partial}{\partial q_j}V(\bm{q}),
 \end{equation*}
-则$V(\boldsymbol{q})$称为系统有势力的势能，且下式成立：
+则$V(\bm{q})$称为系统有势力的势能，且下式成立：
 \begin{equation*}
-    Q_{\text{Potential},j}(\boldsymbol{q}) = -\frac{\partial V(\boldsymbol{q})}{\partial q_j}.
+    Q_{\text{Potential},j}(\bm{q}) = -\frac{\partial V(\bm{q})}{\partial q_j}.
 \end{equation*}
 多体系统中的有势力包括重力、弹簧/扭簧/弹性体的弹性恢复力等。
 \end{myTheorem}
 
 \begin{proof}[推导]
-系统广义力$\boldsymbol{Q} = \begin{bmatrix}Q_1 & Q_2 & \cdots & Q_n\end{bmatrix}^{\mathrm{T}}$是在推导系统非约束力的虚功时引入的量，即
+系统广义力$\bm{Q} = \begin{bmatrix}Q_1 & Q_2 & \cdots & Q_n\end{bmatrix}^{\mathrm{T}}$是在推导系统非约束力的虚功时引入的量，即
 \begin{equation*}
-    \sum_{j=1}^{n}\delta q_j\sum_{k=1}^{N}\frac{\partial \boldsymbol{r}_k^{\mathrm{T}}}{\partial q_j}\boldsymbol{f}_{\text{NonConstraint},k} =: \sum_{j=1}^{n}\delta q_j Q_j.
+    \sum_{j=1}^{n}\delta q_j\sum_{k=1}^{N}\frac{\partial \bm{r}_k^{\mathrm{T}}}{\partial q_j}\bm{f}_{\text{NonConstraint},k} =: \sum_{j=1}^{n}\delta q_j Q_j.
 \end{equation*}
 
-在计算这些广义力时，有一部分作用力可记为系统广义坐标$\boldsymbol{q}$的显式表达式，也就是说这些力仅与系统的位形相关，又称为有势力，记为$\boldsymbol{f}_{\text{Potential},k}$。这些力对应的系统广义力可表示为
+在计算这些广义力时，有一部分作用力可记为系统广义坐标$\bm{q}$的显式表达式，也就是说这些力仅与系统的位形相关，又称为有势力，记为$\bm{f}_{\text{Potential},k}$。这些力对应的系统广义力可表示为
 \begin{equation*}
-    \sum_{k=1}^{N}\frac{\partial \boldsymbol{r}_k^{\mathrm{T}}}{\partial q_j}\boldsymbol{f}_{\text{Potential},k}(\boldsymbol{q}) =: Q_{\text{Potential},j}(\boldsymbol{q}).
+    \sum_{k=1}^{N}\frac{\partial \bm{r}_k^{\mathrm{T}}}{\partial q_j}\bm{f}_{\text{Potential},k}(\bm{q}) =: Q_{\text{Potential},j}(\bm{q}).
 \end{equation*}
 
 有势力的虚功之和
 \begin{equation*}
-    \sum_{j=1}^{n}\delta q_j\sum_{k=1}^{N}\frac{\partial \boldsymbol{r}_k^{\mathrm{T}}}{\partial q_j}\boldsymbol{f}_{\text{Potential},k} = \sum_{j=1}^{n}\delta q_j Q_{\text{Potential},j}(\boldsymbol{q})
+    \sum_{j=1}^{n}\delta q_j\sum_{k=1}^{N}\frac{\partial \bm{r}_k^{\mathrm{T}}}{\partial q_j}\bm{f}_{\text{Potential},k} = \sum_{j=1}^{n}\delta q_j Q_{\text{Potential},j}(\bm{q})
 \end{equation*}
-又可记为一个标量函数$V(\boldsymbol{q})$的变分形式，即
+又可记为一个标量函数$V(\bm{q})$的变分形式，即
 \begin{equation*}
-    \sum_{j=1}^{n}\delta q_j Q_{\text{Potential},j}(\boldsymbol{q}) =: -\delta V(\boldsymbol{q}) = -\sum_{j=1}^{n}\delta q_j\frac{\partial}{\partial q_j}V(\boldsymbol{q}),
+    \sum_{j=1}^{n}\delta q_j Q_{\text{Potential},j}(\bm{q}) =: -\delta V(\bm{q}) = -\sum_{j=1}^{n}\delta q_j\frac{\partial}{\partial q_j}V(\bm{q}),
 \end{equation*}
-式中$V(\boldsymbol{q})$称为系统有势力的势能。
+式中$V(\bm{q})$称为系统有势力的势能。
 
 比较上式两端$\delta q_j$的系数，由于各$\delta q_j$相互独立，可得
 \begin{equation*}
-    Q_{\text{Potential},j}(\boldsymbol{q}) = -\frac{\partial V(\boldsymbol{q})}{\partial q_j},
+    Q_{\text{Potential},j}(\bm{q}) = -\frac{\partial V(\bm{q})}{\partial q_j},
 \end{equation*}
 这就是定理所述的势能与有势力的关系，定理得证。
 \end{proof}
@@ -234,42 +235,42 @@ $$-\sum_{k=1}^Nm_k\delta\boldsymbol{r}_k^\mathrm{T}\ddot{\boldsymbol{r}}_k+\sum_
 \section{第二类拉格朗日方程}
 
 \begin{myTheorem}{第二类拉格朗日方程}
-当系统受到的所有非约束内力均为有势力且选定的系统广义坐标$\boldsymbol{q}$完全独立时，引入拉格朗日函数
+当系统受到的所有非约束内力均为有势力且选定的系统广义坐标$\bm{q}$完全独立时，引入拉格朗日函数
 \begin{equation*}
-    L(\boldsymbol{q},\dot{\boldsymbol{q}}) = T(\boldsymbol{q},\dot{\boldsymbol{q}}) - V(\boldsymbol{q}),
+    L(\bm{q},\dot{\bm{q}}) = T(\bm{q},\dot{\bm{q}}) - V(\bm{q}),
 \end{equation*}
 系统的运动满足如下第二类拉格朗日方程
 \begin{equation}\label{eq:lagrange_2nd_form}
-    \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial L}{\partial \dot{\boldsymbol{q}}}\right) - \frac{\partial L}{\partial \boldsymbol{q}} = \boldsymbol{0}.
+    \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial L}{\partial \dot{\bm{q}}}\right) - \frac{\partial L}{\partial \bm{q}} = \bm{0}.
 \end{equation}
 \end{myTheorem}
 
 \begin{proof}[推导]
-当系统受到的所有非约束内力均为有势力且选定的系统广义坐标$\boldsymbol{q}$完全独立时，其拉格朗日方程~\eqref{eq:lagrange_multibody}可简化为
+当系统受到的所有非约束内力均为有势力且选定的系统广义坐标$\bm{q}$完全独立，即没有约束时，其拉格朗日方程~\eqref{eq:lagrange_multibody}可简化为
 \begin{equation}
-    \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial T}{\partial \dot{\boldsymbol{q}}}\right)^{\mathrm{T}} - \left(\frac{\partial T}{\partial \boldsymbol{q}}\right)^{\mathrm{T}} = -\left(\frac{\partial V}{\partial \boldsymbol{q}}\right)^{\mathrm{T}}.
+    \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial T}{\partial \dot{\bm{q}}}\right)^{\mathrm{T}} - \left(\frac{\partial T}{\partial \bm{q}}\right)^{\mathrm{T}} = -\left(\frac{\partial V}{\partial \bm{q}}\right)^{\mathrm{T}}.
 \end{equation}
 上式可进一步简记为
 \begin{equation}\label{eq:lagrange_2nd}
-    \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial T}{\partial \dot{\boldsymbol{q}}}\right) - \frac{\partial T}{\partial \boldsymbol{q}} = -\frac{\partial V}{\partial \boldsymbol{q}}.
+    \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial T}{\partial \dot{\bm{q}}}\right) - \frac{\partial T}{\partial \bm{q}} = -\frac{\partial V}{\partial \bm{q}}.
 \end{equation}
 
 移项可得
 \begin{equation}
-    \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial T}{\partial \dot{\boldsymbol{q}}}\right) - \frac{\partial(T-V)}{\partial \boldsymbol{q}} = 0.
+    \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial T}{\partial \dot{\bm{q}}}\right) - \frac{\partial(T-V)}{\partial \bm{q}} = 0.
 \end{equation}
-考虑到系统势能$V$的表达式仅与系统广义坐标$\boldsymbol{q}$相关，与系统的广义速度$\dot{\boldsymbol{q}}$无关，上式可进一步改写为
+考虑到系统势能$V$的表达式仅与系统广义坐标$\bm{q}$相关，与系统的广义速度$\dot{\bm{q}}$无关，上式可进一步改写为
 \begin{equation}
-    \frac{\mathrm{d}}{\mathrm{d}t}\left[\frac{\partial(T-V)}{\partial \dot{\boldsymbol{q}}}\right] - \frac{\partial(T-V)}{\partial \boldsymbol{q}} = 0.
+    \frac{\mathrm{d}}{\mathrm{d}t}\left[\frac{\partial(T-V)}{\partial \dot{\bm{q}}}\right] - \frac{\partial(T-V)}{\partial \bm{q}} = 0.
 \end{equation}
 
 通过引入拉格朗日函数
 \begin{equation*}
-    L(\boldsymbol{q},\dot{\boldsymbol{q}}) = T(\boldsymbol{q},\dot{\boldsymbol{q}}) - V(\boldsymbol{q}),
+    L(\bm{q},\dot{\bm{q}}) = T(\bm{q},\dot{\bm{q}}) - V(\bm{q}),
 \end{equation*}
 上述方程可进一步表示为第二类拉格朗日方程的形式，即
 \begin{equation*}
-    \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial L}{\partial \dot{\boldsymbol{q}}}\right) - \frac{\partial L}{\partial \boldsymbol{q}} = \boldsymbol{0},
+    \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial L}{\partial \dot{\bm{q}}}\right) - \frac{\partial L}{\partial \bm{q}} = \bm{0},
 \end{equation*}
 这就是定理所述的第二类拉格朗日方程~\eqref{eq:lagrange_2nd_form}，定理得证。
 \end{proof}
@@ -277,11 +278,11 @@ $$-\sum_{k=1}^Nm_k\delta\boldsymbol{r}_k^\mathrm{T}\ddot{\boldsymbol{r}}_k+\sum_
 \section{保守系统机械能守恒}
 
 \begin{myTheorem}{保守系统机械能守恒}
-设系统满足第二类拉格朗日方程的条件，即系统受到的所有非约束内力均为有势力且选定的系统广义坐标$\boldsymbol{q}$完全独立。定义系统广义能量
+设系统满足第二类拉格朗日方程的条件，即系统受到的所有非约束内力均为有势力且选定的系统广义坐标$\bm{q}$完全独立。定义系统广义能量
 \begin{equation*}
-    H \triangleq \frac{\partial L}{\partial \dot{\boldsymbol{q}}}\dot{\boldsymbol{q}} - L,
+    H \triangleq \frac{\partial L}{\partial \dot{\bm{q}}}\dot{\bm{q}} - L,
 \end{equation*}
-则系统广义能量$H$是守恒的。进一步地，系统动能可写为广义速度的二次型形式$T = \frac{1}{2}\dot{\boldsymbol{q}}^{\mathrm{T}}\boldsymbol{M}(\boldsymbol{q})\dot{\boldsymbol{q}}$，此时有
+则系统广义能量$H$是守恒的。进一步地，系统动能可写为广义速度的二次型形式$T = \frac{1}{2}\dot{\bm{q}}^{\mathrm{T}}\bm{M}(\bm{q})\dot{\bm{q}}$，此时有
 \begin{equation*}
     H = T + V =: E,
 \end{equation*}
@@ -289,46 +290,46 @@ $$-\sum_{k=1}^Nm_k\delta\boldsymbol{r}_k^\mathrm{T}\ddot{\boldsymbol{r}}_k+\sum_
 \end{myTheorem}
 
 \begin{proof}[推导]
-\textbf{第一步：系统广义能量及其守恒。}在第二类拉格朗日方程两端同时右乘$\dot{\boldsymbol{q}}$可得
+\textbf{第一步：系统广义能量及其守恒。}在第二类拉格朗日方程两端同时右乘$\dot{\bm{q}}$可得
 \begin{align*}
-0 &= \left[\frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial L}{\partial \dot{\boldsymbol{q}}}\right) - \frac{\partial L}{\partial \boldsymbol{q}}\right]\dot{\boldsymbol{q}} \\
-    &= \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial L}{\partial \dot{\boldsymbol{q}}}\right)\dot{\boldsymbol{q}} + \frac{\partial L}{\partial \dot{\boldsymbol{q}}}\ddot{\boldsymbol{q}} - \frac{\partial L}{\partial \boldsymbol{q}}\dot{\boldsymbol{q}} - \frac{\partial L}{\partial \dot{\boldsymbol{q}}}\ddot{\boldsymbol{q}} \\
-    &= \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial L}{\partial \dot{\boldsymbol{q}}}\dot{\boldsymbol{q}}\right) - \frac{\mathrm{d}}{\mathrm{d}t}L \\
-    &= \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial L}{\partial \dot{\boldsymbol{q}}}\dot{\boldsymbol{q}} - L\right) =: \frac{\mathrm{d}}{\mathrm{d}t}H.
+0 &= \left[\frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial L}{\partial \dot{\bm{q}}}\right) - \frac{\partial L}{\partial \bm{q}}\right]\dot{\bm{q}} \\
+    &= \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial L}{\partial \dot{\bm{q}}}\right)\dot{\bm{q}} + \frac{\partial L}{\partial \dot{\bm{q}}}\ddot{\bm{q}} - \frac{\partial L}{\partial \bm{q}}\dot{\bm{q}} - \frac{\partial L}{\partial \dot{\bm{q}}}\ddot{\bm{q}} \\
+    &= \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial L}{\partial \dot{\bm{q}}}\dot{\bm{q}}\right) - \frac{\mathrm{d}}{\mathrm{d}t}L \\
+    &= \frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{\partial L}{\partial \dot{\bm{q}}}\dot{\bm{q}} - L\right) =: \frac{\mathrm{d}}{\mathrm{d}t}H.
 \end{align*}
 由此可知$\dfrac{\mathrm{d}H}{\mathrm{d}t} = 0$，即系统广义能量$H$是守恒的。
 
 \textbf{第二步：系统动能关于系统广义速度的二次型形式。}系统动能的定义式为
 \begin{equation}\label{eq:T_def}
-    T = \sum_{k=1}^{N}\frac{1}{2}m_k\dot{\boldsymbol{r}}_k^{\mathrm{T}}\dot{\boldsymbol{r}}_k,
+    T = \sum_{k=1}^{N}\frac{1}{2}m_k\dot{\bm{r}}_k^{\mathrm{T}}\dot{\bm{r}}_k,
 \end{equation}
 式中
 \begin{equation}\label{eq:rkq}
-    \dot{\boldsymbol{r}}_k = \frac{\mathrm{d}}{\mathrm{d}t}\boldsymbol{r}_k(\boldsymbol{q}(t)) = \sum_{i=1}^{n}\frac{\partial \boldsymbol{r}_k}{\partial q_i}\frac{\mathrm{d}q_i}{\mathrm{d}t} = \sum_{i=1}^{n}\frac{\partial \boldsymbol{r}_k}{\partial q_i}\dot{q}_i =: \boldsymbol{r}_{k,\boldsymbol{q}}\dot{\boldsymbol{q}}.
+    \dot{\bm{r}}_k = \frac{\mathrm{d}}{\mathrm{d}t}\bm{r}_k(\bm{q}(t)) = \sum_{i=1}^{n}\frac{\partial \bm{r}_k}{\partial q_i}\frac{\mathrm{d}q_i}{\mathrm{d}t} = \sum_{i=1}^{n}\frac{\partial \bm{r}_k}{\partial q_i}\dot{q}_i =: \bm{r}_{k,\bm{q}}\dot{\bm{q}}.
 \end{equation}
 
 将式~\eqref{eq:rkq}代入式~\eqref{eq:T_def}，整理可得系统动能关于系统广义速度的二次型形式，即
 \begin{align*}
-T &= \sum_{k=1}^{N}\frac{1}{2}m_k\left(\boldsymbol{r}_{k,\boldsymbol{q}}\dot{\boldsymbol{q}}\right)^{\mathrm{T}}\left(\boldsymbol{r}_{k,\boldsymbol{q}}\dot{\boldsymbol{q}}\right) \\
-    &= \frac{1}{2}\dot{\boldsymbol{q}}^{\mathrm{T}}\left(\sum_{k=1}^{N}m_k\boldsymbol{r}_{k,\boldsymbol{q}}^{\mathrm{T}}\boldsymbol{r}_{k,\boldsymbol{q}}\right)\dot{\boldsymbol{q}}.
+T &= \sum_{k=1}^{N}\frac{1}{2}m_k\left(\bm{r}_{k,\bm{q}}\dot{\bm{q}}\right)^{\mathrm{T}}\left(\bm{r}_{k,\bm{q}}\dot{\bm{q}}\right) \\
+    &= \frac{1}{2}\dot{\bm{q}}^{\mathrm{T}}\left(\sum_{k=1}^{N}m_k\bm{r}_{k,\bm{q}}^{\mathrm{T}}\bm{r}_{k,\bm{q}}\right)\dot{\bm{q}}.
 \end{align*}
 该二次型形式可进一步简记为
 \begin{equation}\label{eq:T_quad}
-    T = \frac{1}{2}\dot{\boldsymbol{q}}^{\mathrm{T}}\left(\sum_{k=1}^{N}m_k\boldsymbol{r}_{k,\boldsymbol{q}}^{\mathrm{T}}\boldsymbol{r}_{k,\boldsymbol{q}}\right)\dot{\boldsymbol{q}} =: \frac{1}{2}\dot{\boldsymbol{q}}^{\mathrm{T}}\boldsymbol{M}(\boldsymbol{q})\dot{\boldsymbol{q}},
+    T = \frac{1}{2}\dot{\bm{q}}^{\mathrm{T}}\left(\sum_{k=1}^{N}m_k\bm{r}_{k,\bm{q}}^{\mathrm{T}}\bm{r}_{k,\bm{q}}\right)\dot{\bm{q}} =: \frac{1}{2}\dot{\bm{q}}^{\mathrm{T}}\bm{M}(\bm{q})\dot{\bm{q}},
 \end{equation}
 式中
 \begin{equation*}
-    \boldsymbol{M} = \sum_{k=1}^{N}m_k\boldsymbol{r}_{k,\boldsymbol{q}}^{\mathrm{T}}\boldsymbol{r}_{k,\boldsymbol{q}} = \boldsymbol{M}^{\mathrm{T}}
+    \bm{M} = \sum_{k=1}^{N}m_k\bm{r}_{k,\bm{q}}^{\mathrm{T}}\bm{r}_{k,\bm{q}} = \bm{M}^{\mathrm{T}}
 \end{equation*}
-为关于系统广义坐标$\boldsymbol{q}$的对称矩阵，称为系统的广义质量矩阵。系统动能$T$对系统广义速度$\dot{\boldsymbol{q}}$的偏导数满足
+为关于系统广义坐标$\bm{q}$的对称矩阵，称为系统的广义质量矩阵。系统动能$T$对系统广义速度$\dot{\bm{q}}$的偏导数满足
 \begin{equation}\label{eq:dT_dqd}
-    \frac{\partial T}{\partial \dot{\boldsymbol{q}}} = \frac{\partial}{\partial \dot{\boldsymbol{q}}}\left[\frac{1}{2}\dot{\boldsymbol{q}}^{\mathrm{T}}\boldsymbol{M}(\boldsymbol{q})\dot{\boldsymbol{q}}\right] = \dot{\boldsymbol{q}}^{\mathrm{T}}\boldsymbol{M}.
+    \frac{\partial T}{\partial \dot{\bm{q}}} = \frac{\partial}{\partial \dot{\bm{q}}}\left[\frac{1}{2}\dot{\bm{q}}^{\mathrm{T}}\bm{M}(\bm{q})\dot{\bm{q}}\right] = \dot{\bm{q}}^{\mathrm{T}}\bm{M}.
 \end{equation}
 
 \textbf{第三步：系统广义能量即系统机械能。}系统广义能量$H$可进一步改写为
 \begin{align*}
-H &= \frac{\partial L}{\partial \dot{\boldsymbol{q}}}\dot{\boldsymbol{q}} - L = \frac{\partial T}{\partial \dot{\boldsymbol{q}}}\dot{\boldsymbol{q}} - L \\
-    &= \dot{\boldsymbol{q}}^{\mathrm{T}}\boldsymbol{M}\dot{\boldsymbol{q}} - L = 2T - (T - V) = T + V =: E.
+H &= \frac{\partial L}{\partial \dot{\bm{q}}}\dot{\bm{q}} - L = \frac{\partial T}{\partial \dot{\bm{q}}}\dot{\bm{q}} - L \\
+    &= \dot{\bm{q}}^{\mathrm{T}}\bm{M}\dot{\bm{q}} - L = 2T - (T - V) = T + V =: E.
 \end{align*}
 由此可知：系统广义能量$H$守恒意味着系统机械能$E$守恒，定理得证。
 \end{proof}
@@ -337,34 +338,34 @@ H &= \frac{\partial L}{\partial \dot{\boldsymbol{q}}}\dot{\boldsymbol{q}} - L = 
 
 设微元$i$与微元$j$之间连接一个拉压刚度为常数$k$、原长为$l$的弹簧，则弹簧弹性恢复力的虚功可表示为
 \begin{equation*}
-    \delta W_{\text{spring}} = \delta\boldsymbol{r}_i^{\mathrm{T}}\boldsymbol{f}_{i,j} + \delta\boldsymbol{r}_j^{\mathrm{T}}\boldsymbol{f}_{j,i},
+    \delta W_{\text{spring}} = \delta\bm{r}_i^{\mathrm{T}}\bm{f}_{i,j} + \delta\bm{r}_j^{\mathrm{T}}\bm{f}_{j,i},
 \end{equation*}
 式中
 \begin{equation*}
-    \boldsymbol{f}_{i,j} = k\left(|\boldsymbol{r}_j - \boldsymbol{r}_i| - l\right)\boldsymbol{n}_{i,j},
+    \bm{f}_{i,j} = k\left(|\bm{r}_j - \bm{r}_i| - l\right)\bm{n}_{i,j},
     \quad
-    \boldsymbol{n}_{i,j} = \frac{\boldsymbol{r}_j - \boldsymbol{r}_i}{|\boldsymbol{r}_j - \boldsymbol{r}_i|},
+    \bm{n}_{i,j} = \frac{\bm{r}_j - \bm{r}_i}{|\bm{r}_j - \bm{r}_i|},
     \quad
-    \boldsymbol{f}_{j,i} = -\boldsymbol{f}_{i,j}.
+    \bm{f}_{j,i} = -\bm{f}_{i,j}.
 \end{equation*}
 试证明
 \begin{equation*}
-    \delta W_{\text{spring}} = \delta\left[-\frac{1}{2}k\left(|\boldsymbol{r}_j - \boldsymbol{r}_i| - l\right)^2\right].
+    \delta W_{\text{spring}} = \delta\left[-\frac{1}{2}k\left(|\bm{r}_j - \bm{r}_i| - l\right)^2\right].
 \end{equation*}
 
 \begin{solution}
-注意到弹簧长度$L_{i,j} = |\boldsymbol{r}_j - \boldsymbol{r}_i|$的变分为
+注意到弹簧长度$L_{i,j} = |\bm{r}_j - \bm{r}_i|$的变分为
 \begin{equation*}
-    \delta L_{i,j} = \frac{(\boldsymbol{r}_j - \boldsymbol{r}_i)^{\mathrm{T}}}{|\boldsymbol{r}_j - \boldsymbol{r}_i|}\,\delta(\boldsymbol{r}_j - \boldsymbol{r}_i) = \boldsymbol{n}_{i,j}^{\mathrm{T}}\left(\delta\boldsymbol{r}_j - \delta\boldsymbol{r}_i\right).
+    \delta L_{i,j} = \frac{(\bm{r}_j - \bm{r}_i)^{\mathrm{T}}}{|\bm{r}_j - \bm{r}_i|}\,\delta(\bm{r}_j - \bm{r}_i) = \bm{n}_{i,j}^{\mathrm{T}}\left(\delta\bm{r}_j - \delta\bm{r}_i\right).
 \end{equation*}
 于是弹簧弹性恢复力的虚功为
 \begin{align*}
 \delta W_{\text{spring}}
-    &= \delta\boldsymbol{r}_i^{\mathrm{T}}\boldsymbol{f}_{i,j} + \delta\boldsymbol{r}_j^{\mathrm{T}}\boldsymbol{f}_{j,i} \\
-    &= k\left(L_{i,j} - l\right)\left(\delta\boldsymbol{r}_i^{\mathrm{T}}\boldsymbol{n}_{i,j} - \delta\boldsymbol{r}_j^{\mathrm{T}}\boldsymbol{n}_{i,j}\right) \\
-    &= -k\left(L_{i,j} - l\right)\boldsymbol{n}_{i,j}^{\mathrm{T}}\left(\delta\boldsymbol{r}_j - \delta\boldsymbol{r}_i\right) \\
+    &= \delta\bm{r}_i^{\mathrm{T}}\bm{f}_{i,j} + \delta\bm{r}_j^{\mathrm{T}}\bm{f}_{j,i} \\
+    &= k\left(L_{i,j} - l\right)\left(\delta\bm{r}_i^{\mathrm{T}}\bm{n}_{i,j} - \delta\bm{r}_j^{\mathrm{T}}\bm{n}_{i,j}\right) \\
+    &= -k\left(L_{i,j} - l\right)\bm{n}_{i,j}^{\mathrm{T}}\left(\delta\bm{r}_j - \delta\bm{r}_i\right) \\
     &= -k\left(L_{i,j} - l\right)\delta L_{i,j} \\
     &= \delta\left[-\frac{1}{2}k\left(L_{i,j} - l\right)^2\right] \\
-    &= \delta\left[-\frac{1}{2}k\left(|\boldsymbol{r}_j - \boldsymbol{r}_i| - l\right)^2\right].
+    &= \delta\left[-\frac{1}{2}k\left(|\bm{r}_j - \bm{r}_i| - l\right)^2\right].
 \end{align*}
 \end{solution}

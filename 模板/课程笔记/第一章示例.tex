@@ -15,40 +15,63 @@
 	\end{enumerate}
 \end{myTheorem}
 
-\section{基本假设}
-为了研究方便，我们引入一些基本假设来简化模型：
-\begin{myhypothesis}{基本假设}
-
-\begin{enumerate}
-	\item 连续性假设: 认为组成固体的物质不留间隙地充满了固体的体积。
-	\item 均匀性假设: 认为固体内处处有相同的力学性能。\\
-	\item 各向同性假设: 认为固体的力学性能与方向无关。\\
-	\item 小变形假设: 认为变形的尺寸远小于原尺寸。
-\end{enumerate}
-\end{myhypothesis}
+\begin{tipbox}[如何使用这些盒子]
+左侧彩色标题签的颜色标识内容类型：藏青为定理类、赭石为定义类、青色为命题类、钢蓝为例题练习类，金色为重点公式。全部环境名见 \texttt{preamble.tex}。
+\end{tipbox}
 
 \section{定理与例题}
-\begin{theorem}[定理标题]
-	这里是定理内容，例如 $a^2 + b^2 = c^2$。
-\end{theorem}
-\begin{proof}
-	这里是证明过程。向量用 $\boldsymbol{a}$，矩阵用 $\boldsymbol{A}$，标量分量用 $a_i$。
-\end{proof}
-
-\begin{definition}
-	这里是定义内容。
+\begin{definition}[正交矩阵]
+若实方阵 $\boldsymbol{A}$ 满足 $\boldsymbol{A}^{\mathrm{T}}\boldsymbol{A}=\boldsymbol{I}$，则称 $\boldsymbol{A}$ 为\textbf{正交矩阵}。
 \end{definition}
 
-\begin{example}
-	这里是例题内容。
-\end{example}
-\begin{solution}
-	这里是解题过程。
-\end{solution}
+\begin{theorem}[正交矩阵的性质]
+设 $\boldsymbol{A}$ 为正交矩阵，则 $|\boldsymbol{A}|=\pm1$，且 $\boldsymbol{A}$ 的列向量组构成 $\mathbb{R}^{n}$ 的一组标准正交基。
+\end{theorem}
+\begin{proof}
+由 $\boldsymbol{A}^{\mathrm{T}}\boldsymbol{A}=\boldsymbol{I}$ 两边取行列式得 $|\boldsymbol{A}|^{2}=1$，故 $|\boldsymbol{A}|=\pm1$。列向量的标准正交性直接由乘积矩阵的对角元与非对角元读出。
+\end{proof}
+
+\begin{proposition}
+两个正交矩阵的乘积仍是正交矩阵。
+\end{proposition}
 
 \begin{remark}
-	这里是注释内容。
+正交变换保持内积与长度不变，这是刚体运动数学描述的核心事实。
 \end{remark}
+
+\begin{example}[求正交化验证]
+验证矩阵 $\boldsymbol{A}=\dfrac{1}{\sqrt{2}}\begin{pmatrix}1 & 1\\ -1 & 1\end{pmatrix}$ 是正交矩阵。
+\end{example}
+\begin{solution}
+计算
+\[
+	\boldsymbol{A}^{\mathrm{T}}\boldsymbol{A}
+	=\frac12\begin{pmatrix}1 & -1\\ 1 & 1\end{pmatrix}
+	\begin{pmatrix}1 & 1\\ -1 & 1\end{pmatrix}
+	=\begin{pmatrix}1 & 0\\ 0 & 1\end{pmatrix}.
+\]
+故 $\boldsymbol{A}$ 为正交矩阵。
+\end{solution}
+
+\begin{note}
+保号性一类"注"可用 \texttt{note} 环境排版；跨页的长例题请改用 \texttt{longexample} 环境。
+\end{note}
+
+\section{重点与提示}
+\begin{keybox}[必记结论]
+行间重要公式放入 \texttt{keybox}，例如
+\[
+	e^{\mathrm{i}\theta}=\cos\theta+\mathrm{i}\sin\theta .
+\]
+\end{keybox}
+
+\begin{tipbox}
+先写清数学递推关系，再动笔推导或编程实现。
+\end{tipbox}
+
+\begin{warnbox}
+主定理不适用于 $f(n)$ 非多项式的情形（如 $f(n)=2^{n}$），使用前务必核对条件。
+\end{warnbox}
 
 \section{公式写法规范}
 行间公式一律使用 \texttt{equation} 环境并加 \texttt{\textbackslash label}，禁止裸 \texttt{\$\$} 与手写编号：

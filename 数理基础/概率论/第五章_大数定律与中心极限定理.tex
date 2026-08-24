@@ -1,46 +1,48 @@
 \section{大数定律}
-\textbf{一、依概率收敛（定义）}：设 $\{X_n\}$ 为随机变量序列，$X$ 为随机变量，若任给 $\epsilon > 0$，使得
+\begin{definition}[依概率收敛]
+设 $\{X_n\}$ 为随机变量序列，$X$ 为随机变量，若任给 $\epsilon > 0$，使得
 \begin{equation}
 	\lim_{n \to \infty} P\{|X_n - X| < \epsilon\} = 1
 	\label{eq:第五章:依概率收敛}
 \end{equation}
 则称 $\{X_n\}$ 依概率收敛于 $X$，记为 $X_n \xrightarrow{P} X$。
+\end{definition}
 
-\textbf{二、常用的大数定律}：
-\begin{enumerate}
-	\item \textbf{切比雪夫大数定律}：设 $\{X_k\}$ 为独立的随机变量序列，且有相同的期望 $E(X_k) = \mu$ 和方差 $\sigma^2 > 0$，则\textbf{样本均值} $\frac{1}{n}\sum_{k=1}^{n} X_k$ 依概率收敛于 $\mu$：
-	\begin{equation}
-		\lim_{n \to \infty} P\left\{\left|\frac{1}{n}\sum_{k=1}^{n} X_k - \mu\right| < \epsilon\right\} = 1
-		\label{eq:第五章:切比雪夫大数定律}
-	\end{equation}
-	\item \textbf{伯努利大数定律}：设 $\mu_n$ 是 $n$ 次伯努利试验中事件 $A$ 发生的次数，$p$ 是 $A$ 发生的概率，则\textbf{频率} $\frac{\mu_n}{n}$ 依概率收敛于\textbf{概率} $p$：
-	\begin{equation}
-		\lim_{n \to \infty} P\left\{\left|\frac{\mu_n}{n} - p\right| < \epsilon\right\} = 1
-		\label{eq:第五章:伯努利大数定律}
-	\end{equation}
-\end{enumerate}
+\begin{theorem}[切比雪夫大数定律]
+设 $\{X_k\}$ 为独立的随机变量序列，且有相同的期望 $E(X_k) = \mu$ 和方差 $\sigma^2 > 0$，则\textbf{样本均值} $\frac{1}{n}\sum_{k=1}^{n} X_k$ 依概率收敛于 $\mu$：
+\begin{equation}
+	\lim_{n \to \infty} P\left\{\left|\frac{1}{n}\sum_{k=1}^{n} X_k - \mu\right| < \epsilon\right\} = 1
+	\label{eq:第五章:切比雪夫大数定律}
+\end{equation}
+\end{theorem}
+
+\begin{theorem}[伯努利大数定律]
+设 $\mu_n$ 是 $n$ 次伯努利试验中事件 $A$ 发生的次数，$p$ 是 $A$ 发生的概率，则\textbf{频率} $\frac{\mu_n}{n}$ 依概率收敛于\textbf{概率} $p$：
+\begin{equation}
+	\lim_{n \to \infty} P\left\{\left|\frac{\mu_n}{n} - p\right| < \epsilon\right\} = 1
+	\label{eq:第五章:伯努利大数定律}
+\end{equation}
+\end{theorem}
 
 \section{中心极限定理}
-\textbf{林德伯格-列维定理（独立同分布）}：
-\begin{itemize}
-	\item 设 $X_1, X_2, \ldots, X_n$ 相互独立，服从同一分布，且 $E(X_i) = \mu$，$D(X_i) = \sigma^2 > 0$。
-	\item 则当 $n$ 充分大时，\textbf{和的标准化变量}的分布函数趋于标准正态分布函数 $\Phi(y)$：
-	\begin{equation}
-		\lim_{n \to \infty} P\left\{\frac{\sum_{i=1}^{n} X_i - n\mu}{\sqrt{n\sigma^{2}}} \le y\right\} = \Phi(y)
-		\label{eq:第五章:林德伯格}
-	\end{equation}
-\end{itemize}
+\begin{theorem}[林德伯格-列维定理（独立同分布）]
+设 $X_1, X_2, \ldots, X_n$ 相互独立，服从同一分布，且 $E(X_i) = \mu$，$D(X_i) = \sigma^2 > 0$。则当 $n$ 充分大时，\textbf{和的标准化变量}的分布函数趋于标准正态分布函数 $\Phi(y)$：
+\begin{equation}
+	\lim_{n \to \infty} P\left\{\frac{\sum_{i=1}^{n} X_i - n\mu}{\sqrt{n\sigma^{2}}} \le y\right\} = \Phi(y)
+	\label{eq:第五章:林德伯格}
+\end{equation}
+\end{theorem}
 
-\textbf{棣莫弗-拉普拉斯定理（二项分布）}：
-\begin{itemize}
-	\item 设 $\mu_n \sim B(n, p)$，则当 $n$ 充分大时，\textbf{频数的标准化变量}的分布函数趋于标准正态分布函数 $\Phi(x)$：
-	\begin{equation}
-		\lim_{n \to \infty} P\left\{\frac{\mu_n - n p}{\sqrt{n p (1-p)}} \le x\right\} = \Phi(x)
-		\label{eq:第五章:棣莫弗}
-	\end{equation}
-\end{itemize}
+\begin{theorem}[棣莫弗-拉普拉斯定理（二项分布）]
+设 $\mu_n \sim B(n, p)$，则当 $n$ 充分大时，\textbf{频数的标准化变量}的分布函数趋于标准正态分布函数 $\Phi(x)$：
+\begin{equation}
+	\lim_{n \to \infty} P\left\{\frac{\mu_n - n p}{\sqrt{n p (1-p)}} \le x\right\} = \Phi(x)
+	\label{eq:第五章:棣莫弗}
+\end{equation}
+\end{theorem}
 
-\textcolor{blue}{例}（保险公司亏本概率）：设 $X$ 表示一年内死亡人数，$X \sim B(n, p)$，$n = 10000, p = 0.006$。保险公司利润 $Y = 10000 \times 12 - 1000 X$。
+\begin{example}[保险公司亏本概率]
+设 $X$ 表示一年内死亡人数，$X \sim B(n, p)$，$n = 10000, p = 0.006$。保险公司利润 $Y = 10000 \times 12 - 1000 X$。
 \begin{itemize}
 	\item \textbf{计算参数}：$E(X) = n p = 60$，$D(X) = n p (1-p) = 59.64$，$\sqrt{D(X)} \approx 7.7227$。
 	\item \textbf{(1) 保险公司亏本的概率 $P\{Y < 0\}$}：
@@ -62,3 +64,4 @@
 		\label{eq:第五章:例4}
 	\end{equation}
 \end{itemize}
+\end{example}

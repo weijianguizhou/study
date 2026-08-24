@@ -6,15 +6,43 @@
       {
         "id": "e8cf5a65e67758c6",
         "type": "tabs",
+        "dimension": 56.66311300639659,
         "children": [
           {
             "id": "63c958a43a4df96c",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "pdf",
+              "state": {
+                "file": "教材/SystemDynamicsModelingAndSimulation/SystemDynamicsModelingAndSimulation.pdf",
+                "page": 32,
+                "left": -12,
+                "top": 542,
+                "zoom": 1.2737703265690097
+              },
+              "icon": "lucide-file-text",
+              "title": "SystemDynamicsModelingAndSimulation"
+            }
+          }
+        ]
+      },
+      {
+        "id": "e3c5eff5555998fb",
+        "type": "tabs",
+        "dimension": 43.336886993603414,
+        "children": [
+          {
+            "id": "b126bec797f059bf",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "教材/SystemDynamicsModelingAndSimulation/存疑.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "新标签页"
+              "title": "存疑"
             }
           }
         ]
@@ -197,22 +225,24 @@
       "pdf-plus:PDF++: Toggle auto-paste": false
     }
   },
-  "active": "63c958a43a4df96c",
+  "active": "b126bec797f059bf",
   "lastOpenFiles": [
+    "数理基础/数理统计/数理统计学习笔记.synctex(busy)",
+    "数理基础/数理统计/数理统计学习笔记.synctex.gz",
+    "数理基础/概率论/概率论学习笔记.synctex(busy)",
+    "数理基础/概率论/概率论学习笔记.synctex.gz",
+    "模板/课程笔记/课程笔记模板.synctex(busy)",
+    "机械/机械原理/机械原理.toc",
+    "机械/机械原理/机械原理.out",
+    "机械/机械原理/机械原理.aux",
+    "机械/机械原理/机械原理.log",
+    "数理基础/工程数学/工程数学.toc",
+    "数理基础/工程数学/工程数学.out",
+    "教材/SystemDynamicsModelingAndSimulation/存疑.md",
     "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/学习笔记.md",
-    "力学/系统动力学建模与仿真/系统动力学建模与仿真笔记.synctex(busy)",
-    "力学/系统动力学建模与仿真/系统动力学建模与仿真笔记.synctex.gz",
-    "力学/系统动力学建模与仿真/xelatex50568.fls",
     "力学/系统动力学建模与仿真/Figure/fig_1_12.png",
     "力学/系统动力学建模与仿真/Figure/fig_1_11.png",
     "力学/系统动力学建模与仿真/Figure/fig_1_10.png",
-    "力学/系统动力学建模与仿真/拉格朗日力学基础.tex",
-    "力学/系统动力学建模与仿真/main_ascii.toc",
-    "力学/系统动力学建模与仿真/main_ascii.pdf",
-    "力学/系统动力学建模与仿真/main_ascii.out",
-    "力学/系统动力学建模与仿真/main_ascii.log",
-    "力学/系统动力学建模与仿真/main_ascii.fls",
-    "力学/系统动力学建模与仿真/pdflatex39480.fls",
     "数理基础/常微分方程/_verify/pg-16.png",
     "数理基础/常微分方程/_verify/pg-15.png",
     "数理基础/常微分方程/_verify/pg-14.png",
@@ -242,7 +272,6 @@
     "数学建模/数学建模教程/09-微分方程模型/07-生态动力学模型.md",
     "数学建模/数学建模教程/11-数据分析/02-降维方法.md",
     "数学建模/数学建模教程/09-微分方程模型/06-反应扩散方程.md",
-    "数学建模/数学建模教程/11-数据分析/01-数据清洗与预处理.md",
-    "数学建模/数学建模教程/09-微分方程模型/05-传染病网络模型.md"
+    "数学建模/数学建模教程/11-数据分析/01-数据清洗与预处理.md"
   ]
 }

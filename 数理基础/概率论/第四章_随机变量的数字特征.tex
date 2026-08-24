@@ -1,4 +1,5 @@
 \section{随机变量的数学期望（均值）}
+\begin{definition}[数学期望]
 \textbf{离散型 r.v. 的期望}：
 \begin{equation}
 	E(X) = \sum_{k=1}^{\infty} x_k p_k \quad \left(\text{要求 } \sum_{k=1}^{\infty} |x_k|\,p_k < \infty\right)
@@ -14,16 +15,16 @@
 	\item \textbf{一维}：$E[g(X)] = \int_{-\infty}^{\infty} g(x) f(x)\,dx$（连续型）
 	\item \textbf{二维}：$E[g(X, Y)] = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} g(x, y) f(x, y)\,dx\,dy$
 \end{itemize}
+\end{definition}
 
 \subsection{期望的性质}
-\textbf{1. 常数的期望}：如果 $C$ 是一个常数，那么它的期望就是它本身。
+\begin{property}[常数与线性性质]
+\textbf{1. 常数的期望}：如果 $C$ 是一个常数，那么它的期望就是它本身（常数没有波动，其平均值自然就是它自己）：
 \begin{equation}
 	E(C) = C
 	\label{eq:第四章:常数期望}
 \end{equation}
-理解：常数没有波动，其平均值自然就是它自己。
-
-\textbf{2. 线性性质（Linearity of Expectation）}：这是期望最核心、最常用的性质，分为两部分：
+\textbf{2. 线性性质（Linearity of Expectation）}：这是期望最核心、最常用的性质：
 \begin{itemize}
 	\item 倍数关系：随机变量乘以常数 $a$，期望也扩大 $a$ 倍：
 	\begin{equation}
@@ -42,26 +43,36 @@
 	E(aX + bY + c) = aE(X) + bE(Y) + c
 	\label{eq:第四章:线性组合}
 \end{equation}
+\end{property}
 
-\textbf{3. 独立随机变量的乘积}：如果随机变量 $X$ 和 $Y$ 是相互独立的，那么它们乘积的期望等于各自期望的乘积：
+\begin{theorem}[独立随机变量的乘积期望]
+如果随机变量 $X$ 和 $Y$ 是相互独立的，那么它们乘积的期望等于各自期望的乘积：
 \begin{equation}
 	E(XY) = E(X)E(Y)
 	\label{eq:第四章:乘积期望}
 \end{equation}
-警示：如果 $X$ 和 $Y$ 不独立，这个等式通常不成立。
+\end{theorem}
 
-\textbf{4. 函数的期望（EUE 定理）}：若 $Y$ 是 $X$ 的函数，即 $Y = g(X)$，我们不需要求出 $Y$ 的分布，可以直接利用 $X$ 的概率密度或分布律求期望：
+\begin{warnbox}[警示]
+如果 $X$ 和 $Y$ 不独立，$E(XY) = E(X)E(Y)$ 通常不成立。
+\end{warnbox}
+
+\begin{theorem}[函数的期望（EUE 定理）]
+若 $Y$ 是 $X$ 的函数，即 $Y = g(X)$，我们不需要求出 $Y$ 的分布，可以直接利用 $X$ 的概率密度或分布律求期望：
 \begin{itemize}
 	\item \textbf{离散型}：$E[g(X)] = \sum_{i} g(x_i)\,P(X = x_i)$
 	\item \textbf{连续型}：$E[g(X)] = \int_{-\infty}^{+\infty} g(x) f(x)\,dx$
 \end{itemize}
+\end{theorem}
 
-\textbf{5. 单调性}：如果对于所有的取值，都有 $X \le Y$，那么它们的期望也满足：
+\begin{property}[期望的单调性]
+如果对于所有的取值，都有 $X \le Y$，那么它们的期望也满足：
 \begin{equation}
 	E(X) \le E(Y)
 	\label{eq:第四章:单调性}
 \end{equation}
 由此推论：如果 $X \ge 0$，则 $E(X) \ge 0$。
+\end{property}
 
 \subsubsection{常见随机变量的期望参考表}
 \begin{table}[H]
@@ -81,7 +92,7 @@
 \end{table}
 
 \section{方差}
-\textbf{定义}：
+\begin{definition}[方差]
 \begin{equation}
 	D(X) = E\big[(X - E(X))^{2}\big]
 	\label{eq:第四章:方差定义}
@@ -91,22 +102,28 @@
 	D(X) = E(X^{2}) - [E(X)]^{2}
 	\label{eq:第四章:方差计算}
 \end{equation}
-\textbf{性质}：
+\end{definition}
+
+\begin{property}[方差的性质]
 \begin{enumerate}
 	\item $D(c) = 0$；若 $D(X) = 0$，则 $P\{X = c\} = 1$。
 	\item $D(aX + b) = a^{2} D(X)$。
 	\item 若 $X, Y$ 独立，则 $D(X + Y) = D(X) + D(Y)$。
 \end{enumerate}
-\textbf{重要 r.v. 的方差}：
+\end{property}
+
+\begin{keybox}[重要 r.v. 的方差]
 \begin{enumerate}
 	\item \textbf{二项分布 $b(n, p)$}：$D(X) = n p (1-p)$
 	\item \textbf{指数分布 $E(\lambda)$}：$D(X) = \frac{1}{\lambda^{2}}$
 	\item \textbf{均匀分布 $U(a, b)$}：$D(X) = \frac{(b-a)^2}{12}$
 	\item \textbf{泊松分布 $P(\lambda)$}：$D(X) = \lambda$
 \end{enumerate}
+\end{keybox}
 
 \subsection{切比雪夫不等式}
-\textbf{切比雪夫不等式（Chebyshev's Inequality）}是概率论中一个非常强大的工具，它描述了随机变量偏离其数学期望的可能性。它的魅力在于：\textbf{无论随机变量服从什么分布}（只要方差存在），它都成立。
+\begin{theorem}[切比雪夫不等式（Chebyshev's Inequality）]
+切比雪夫不等式是概率论中一个非常强大的工具，它描述了随机变量偏离其数学期望的可能性。它的魅力在于：\textbf{无论随机变量服从什么分布}（只要方差存在），它都成立。
 
 设随机变量 $X$ 具有数学期望 $E(X) = \mu$ 和方差 $D(X) = \sigma^2$。对于任意正数 $\epsilon$，有
 \begin{equation}
@@ -118,10 +135,14 @@
 	P\big(|X - \mu| \ge k\sigma\big) \le \frac{1}{k^2}
 	\label{eq:第四章:切比雪夫等价}
 \end{equation}
-通俗理解：随机变量 $X$ 落在期望 $\mu$ 的 $k$ 倍标准差范围之外的概率，不会超过 $1/k^2$。
+\end{theorem}
+
+\begin{tipbox}[通俗理解]
+随机变量 $X$ 落在期望 $\mu$ 的 $k$ 倍标准差范围之外的概率，不会超过 $1/k^2$。
+\end{tipbox}
 
 \section{协方差与相关系数}
-\textbf{协方差（定义）}：
+\begin{definition}[协方差]
 \begin{equation}
 	Cov(X, Y) = E\big[(X - E(X))(Y - E(Y))\big]
 	\label{eq:第四章:协方差}
@@ -132,14 +153,18 @@
 	\label{eq:第四章:协方差计算}
 \end{equation}
 \textbf{不相关}：若 $Cov(X, Y) = 0$，则称 $X$ 与 $Y$ 不相关。
-\begin{itemize}
-	\item \textbf{性质}：若 $X, Y$ 相互独立，则 $Cov(X, Y) = 0$。
-\end{itemize}
-\textbf{相关系数（定义）}：
+
+\textbf{性质}：若 $X, Y$ 相互独立，则 $Cov(X, Y) = 0$。
+\end{definition}
+
+\begin{definition}[相关系数]
 \begin{equation}
 	\rho_{XY} = \frac{Cov(X, Y)}{\sqrt{D(X)\,D(Y)}}
 	\label{eq:第四章:相关系数}
 \end{equation}
 \textbf{性质}：$-1 \le \rho_{XY} \le 1$。
+\end{definition}
 
-\textbf{$n$ 维正态分布的特性}：服从 $n$ 维正态分布的随机变量的两两不相关性与相互独立性是\textbf{等价的}。
+\begin{keybox}[$n$ 维正态分布的特性]
+服从 $n$ 维正态分布的随机变量的两两不相关性与相互独立性是\textbf{等价的}。
+\end{keybox}

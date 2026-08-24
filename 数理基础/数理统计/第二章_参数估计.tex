@@ -1,5 +1,6 @@
 \section{参数估计的概念}
-设 $X_{1}, \ldots, X_{n}$ 是总体 $X$ 的一个样本，其分布函数为 $F(x;\theta)$，其中 $\theta \in \Theta$ 为未知参数，$\Theta$ 为参数空间。若统计量 $g(X_{1}, \cdots, X_{n})$ 可作为 $\theta$ 的一个估计，则称其为 $\theta$ 的\textcolor{red}{估计量}，记为 $\hat{\theta}$。
+\begin{definition}[估计量与点估计]
+设 $X_{1}, \ldots, X_{n}$ 是总体 $X$ 的一个样本，其分布函数为 $F(x;\theta)$，其中 $\theta \in \Theta$ 为未知参数，$\Theta$ 为参数空间。若统计量 $g(X_{1}, \cdots, X_{n})$ 可作为 $\theta$ 的一个估计，则称其为 $\theta$ 的\textbf{估计量}，记为 $\hat{\theta}$。
 \begin{itemize}
 	\item \textbf{公式}：$\hat{\theta}=g(X_{1}, \cdots, X_{n})$。
 	\item \textbf{注}：$F(x;\theta)$ 也可用分布律或密度函数代替。
@@ -7,26 +8,30 @@
 	\item \textbf{点估计}：由于 $\hat{\theta}$ 的估计值是一个实数域上的点，故称这种估计为\textbf{点估计}。
 	\item \textbf{经典方法}：点估计的经典方法是\textbf{矩估计法}与\textbf{极大似然估计法}。
 \end{itemize}
+\end{definition}
 
-\section{矩估计法（简称"矩法"）}
-\textbf{关键点}：
+\section{矩估计法（简称“矩法”）}
+\begin{theorem}[矩估计法]
 \begin{enumerate}
-	\item 用样本矩作为\textcolor{red}{总体同阶矩}的估计：
+	\item 用样本矩作为\textbf{总体同阶矩}的估计：
 	\begin{equation}
 		\hat{E(X^{k})} = \frac{1}{n}\sum_{i=1}^{n}X_{i}^{k}
 		\label{eq:矩法:样本矩}
 	\end{equation}
 	\item 若 $\hat{\theta}$ 是 $\theta$ 的矩估计，则 $g(\theta)$ 的矩估计为 $g(\hat{\theta})$。
 \end{enumerate}
+\end{theorem}
 
-\textcolor{blue}{例1}（二项分布 $B(m,p)$）：求 $p$ 的矩估计。
+\begin{example}[二项分布 $B(m,p)$：求 $p$ 的矩估计]
 \begin{itemize}
 	\item $E(X)=mp \Rightarrow p=\frac{1}{m}E(X)$
 	\item $\hat{E(X)}=\overline{X}$
 	\item \textbf{矩估计}：$\hat{p}=\frac{1}{m}\overline{X}$
 \end{itemize}
+\end{example}
 
-\textcolor{blue}{例2}（拉普拉斯分布）：密度函数 $f(x)=\frac{1}{2\sigma}e^{-\frac{|x|}{\sigma}}$，求 $\sigma$ 的矩估计。
+\begin{example}[拉普拉斯分布：求 $\sigma$ 的矩估计]
+密度函数 $f(x)=\frac{1}{2\sigma}e^{-\frac{|x|}{\sigma}}$。
 \begin{itemize}
 	\item $E(X)=\int_{-\infty}^{\infty}\frac{x}{2\sigma}e^{-\frac{|x|}{\sigma}}dx=0$
 	\item $E(X^{2})=\int_{-\infty}^{\infty}\frac{x^{2}}{2\sigma}e^{-\frac{|x|}{\sigma}}dx=\frac{1}{\sigma}\int_{0}^{\infty}x^{2}e^{-\frac{x}{\sigma}}dx$
@@ -38,8 +43,9 @@
 	\item $\hat{E(X^{k})} = \frac{1}{n}\sum_{i=1}^{n}X_{i}^{k}$
 	\item \textbf{矩估计}：$\hat{\sigma}=\sqrt{\dfrac{\sum_{i=1}^{n}X_{i}^{2}}{2n}}$
 \end{itemize}
+\end{example}
 
-\textcolor{blue}{例3}（均匀分布 $U(a, b)$）：求 $a$ 和 $b$ 的矩估计。
+\begin{example}[均匀分布 $U(a, b)$：求 $a$ 和 $b$ 的矩估计]
 \begin{itemize}
 	\item $E(X)=\frac{a+b}{2}$，$D(X)=\frac{1}{12}(b-a)^{2}$
 	\item 参数与矩的关系：
@@ -53,40 +59,45 @@
 		\item $\hat{b}=\overline{X}+\sqrt{\dfrac{3}{n}\sum_{i=1}^{n}(X_{i}-\overline{X})^{2}}$
 	\end{itemize}
 \end{itemize}
+\end{example}
 
 \section{极大似然估计法}
-\textbf{极大似然思想}：如果事件 $A$ 发生了，那么未知参数 $\theta$ 的值应该是在 $\Theta$ 中使事件 $A$ 发生的概率 $P(A|\theta)$ 达到最大的那个值。
+\begin{tipbox}[极大似然思想]
+如果事件 $A$ 发生了，那么未知参数 $\theta$ 的值应该是在 $\Theta$ 中使事件 $A$ 发生的概率 $P(A|\theta)$ 达到最大的那个值。
+\end{tipbox}
 
-\textbf{似然函数 $L(\theta)$}：
+\begin{definition}[似然函数 $L(\theta)$]
 \begin{itemize}
 	\item 设 $X_1, \ldots, X_n$ 是总体 $X$ 的 i.i.d. 样本，密度（或分布律）为 $f(x;\theta)$
 	\item \textbf{定义}：$L(\theta)=L(x_{1}, \ldots, x_{n};\theta)=\prod_{i=1}^{n}f(x_{i};\theta)$ 称为似然函数
 	\item \textbf{离散型}：似然函数为样本联合分布律 $\prod_{i=1}^{n}P_{\theta}\{x_{i}\}$
 	\item \textbf{连续型}：似然函数为样本联合密度
 \end{itemize}
+\end{definition}
 
-\textbf{极大似然估计（MLE）$\hat{\theta}_{MLE}$}：
-\begin{itemize}
-	\item \textbf{定义}：若有 $\hat{\theta} \in \Theta$ 使得 $\sup_{\theta \in \Theta} L(\theta) = L(\hat{\theta})$，则称 $\hat{\theta}$ 为 $\theta$ 的极大似然估计，记为 $\hat{\theta}_{MLE}$
-\end{itemize}
+\begin{definition}[极大似然估计（MLE）]
+若有 $\hat{\theta} \in \Theta$ 使得 $\sup_{\theta \in \Theta} L(\theta) = L(\hat{\theta})$，则称 $\hat{\theta}$ 为 $\theta$ 的极大似然估计，记为 $\hat{\theta}_{MLE}$。
+\end{definition}
 
-\textcolor{red}{\textbf{求 MLE 的步骤}}：
+\begin{property}[求 MLE 的步骤]
 \begin{enumerate}
 	\item 做似然函数：$L(\theta)=\prod_{i=1}^{n}f(x_{i};\theta)$
 	\item 做对数似然函数：$\ln L(\theta)=\sum_{i=1}^{n}\ln f(x_{i};\theta)$
 	\item 列似然方程：令 $\dfrac{d}{d\theta}[\ln L(\theta)]=0$
 	\item 若方程有解，其解即为 $\hat{\theta}_{MLE}$
 \end{enumerate}
+\end{property}
 
-\textcolor{blue}{例5}（泊松分布 $P(\lambda)$）：求 $\lambda$ 的 MLE。
+\begin{example}[泊松分布 $P(\lambda)$：求 $\lambda$ 的 MLE]
 \begin{itemize}
 	\item $L(\lambda)=\prod_{i=1}^{n}P\{X_i=x_i\}=\prod_{i=1}^{n}\frac{\lambda^{x_{i}}}{x_{i}!}e^{-\lambda} = \frac{\lambda^{\sum_{i=1}^{n}x_{i}} e^{-n\lambda}}{\prod_{i=1}^{n}x_{i}!}$
 	\item $\ln L(\lambda) = \left(\sum_{i=1}^{n}x_{i}\right)\ln \lambda - n\lambda - \sum_{i=1}^{n}\ln(x_{i}!)$
 	\item 似然方程：$\frac{d}{d\lambda}[\ln L(\lambda)] = \frac{\sum_{i=1}^{n}x_{i}}{\lambda} - n = 0$
 	\item \textbf{MLE}：$\hat{\lambda}_{MLE} = \frac{1}{n}\sum_{i=1}^{n}X_{i} = \overline{X}$
 \end{itemize}
+\end{example}
 
-\textcolor{blue}{例6}（正态分布 $N(\mu, \sigma^2)$）：求 $\mu, \sigma^2$ 的 MLE。
+\begin{example}[正态分布 $N(\mu, \sigma^2)$：求 $\mu, \sigma^2$ 的 MLE]
 \begin{itemize}
 	\item $\ln L(\mu, \sigma^2) = -\frac{n}{2}\ln(2\pi) - \frac{n}{2}\ln(\sigma^{2}) - \frac{1}{2\sigma^{2}}\sum_{i=1}^{n}(x_{i}-\mu)^{2}$
 	\item 似然方程组：
@@ -96,72 +107,95 @@
 	\end{itemize}
 	\item \textbf{MLE}：$\hat{\mu}_{MLE} = \overline{X}$，$\hat{\sigma}^{2}_{MLE} = \frac{1}{n}\sum_{i=1}^{n}(X_{i}-\overline{X})^{2}$
 \end{itemize}
+\end{example}
 
-\textcolor{red}{注1}：若概率函数中含有多个未知参数，则可解方程组：
+\begin{note}
+若概率函数中含有多个未知参数，则可解方程组：
 \begin{equation}
 	\frac{\partial \boldsymbol{L}}{\partial \theta_j}=0 \quad \text{或} \quad \frac{\partial \ln \boldsymbol{L}}{\partial \theta_j}=0
 	\label{eq:MLE:方程组}
 \end{equation}
+\end{note}
 
-\textcolor{red}{注2（不变性）}：若 $\hat{\theta}$ 是 $\theta$ 的 MLE，$u(\theta)$ 是 $\theta$ 的严格单调函数，则 $u(\theta)$ 的 MLE 为 $u(\hat{\theta})$。
+\begin{theorem}[MLE 的不变性]
+若 $\hat{\theta}$ 是 $\theta$ 的 MLE，$u(\theta)$ 是 $\theta$ 的严格单调函数，则 $u(\theta)$ 的 MLE 为 $u(\hat{\theta})$。
+\end{theorem}
 
-\textcolor{red}{注3}：由似然方程解不出 $\theta$ 的似然估计时，可由定义通过分析直接推求。事实上 $\hat{\theta}_{MLE}$ 满足
+\begin{note}
+由似然方程解不出 $\theta$ 的似然估计时，可由定义通过分析直接推求。事实上 $\hat{\theta}_{MLE}$ 满足
 \begin{equation}
 	\boldsymbol{L}(\hat{\theta}_{MLE})=\max_{\theta \in \Theta}\boldsymbol{L}(\theta)
 	\label{eq:MLE:直接推求}
 \end{equation}
+\end{note}
 
-\textcolor{blue}{例7}（指数分布 $E(\lambda)$）：求 $p=P\{X<a\}$ 的 MLE。
+\begin{example}[指数分布 $E(\lambda)$：求 $p=P\{X<a\}$ 的 MLE]
 \begin{itemize}
 	\item $p = P\{X<a\} = 1 - e^{-\lambda a}$
 	\item $\lambda$ 的似然方程：$\frac{d}{d\lambda}[\ln L(\lambda)] = \frac{n}{\lambda} - \sum_{i=1}^{n}x_{i} = 0$
 	\item $\hat{\lambda}_{MLE} = \frac{1}{\overline{X}}$
 	\item \textbf{MLE}：$\hat{p}_{MLE} = 1 - e^{-\hat{\lambda}a} = 1 - e^{-\frac{a}{\overline{X}}}$
 \end{itemize}
+\end{example}
 
-\textcolor{blue}{例8}（均匀分布 $U(0, \theta)$）：求 $\theta$ 的 MLE。
+\begin{example}[均匀分布 $U(0, \theta)$：求 $\theta$ 的 MLE]
 \begin{itemize}
 	\item $L(\theta) = \begin{cases} 1/\theta^n & 0 < x_i < \theta \text{ 对所有 } i \\ 0 & \text{其他} \end{cases}$
 	\item 似然方程 $\frac{d}{d\theta}[\ln L(\theta)] = -\frac{n}{\theta} = 0$ \textbf{无解}
 	\item 通过分析 $L(\theta)$ 发现，为使 $L(\theta) \neq 0$，需 $\theta \in (\max(x_i), \infty)$。在此区间 $L(\theta)=1/\theta^n$ 单调递减，故当 $\theta$ 取最小值 $\max(x_i)$ 时，$L(\theta)$ 最大
 	\item \textbf{MLE}：$\hat{\theta}_{MLE} = \max(X_i)$
 \end{itemize}
+\end{example}
 
 \section{估计量的评选标准}
-\subsection{\textcolor{red}{无偏性}}
-\textbf{定义}：若 $\theta$ 的估计量 $\hat{\theta}$ 满足 $E(\hat{\theta}) = \theta$，则称 $\hat{\theta}$ 是 $\theta$ 的\textbf{无偏估计量}。
+\subsection{无偏性}
+\begin{definition}[无偏性]
+若 $\theta$ 的估计量 $\hat{\theta}$ 满足 $E(\hat{\theta}) = \theta$，则称 $\hat{\theta}$ 是 $\theta$ 的\textbf{无偏估计量}。
+\end{definition}
 
-\textcolor{blue}{例1}（均匀分布 $U(0, \theta)$）：$\hat{\theta}_M = 2\overline{X}$ 和 $\hat{\theta}_{MLE} = \max(X_i)$。
+\begin{example}[均匀分布 $U(0, \theta)$]
+$\hat{\theta}_M = 2\overline{X}$ 和 $\hat{\theta}_{MLE} = \max(X_i)$。
 \begin{itemize}
 	\item \textbf{$\hat{\theta}_M = 2\overline{X}$}：$E(\hat{\theta}_M) = 2E(X) = 2 \cdot \frac{\theta}{2} = \theta$，\textbf{无偏}
 	\item \textbf{$\hat{\theta}_{MLE} = \max(X_i)$}：$E(\hat{\theta}_{MLE}) = \frac{n}{n+1}\theta \neq \theta$，\textbf{非无偏}
 	\item \textbf{无偏性修正}：取 $\theta^* = \frac{n+1}{n}\hat{\theta}_{MLE}$，则 $\theta^*$ 是 $\theta$ 的无偏估计
 \end{itemize}
+\end{example}
 
-\subsection{\textcolor{red}{有效性}}
-\textbf{定义}：设 $\hat{\theta}_1$ 和 $\hat{\theta}_2$ 是 $\theta$ 的两个无偏估计量。若 $D(\hat{\theta}_1) < D(\hat{\theta}_2)$，则称 $\hat{\theta}_1$ \textbf{比 $\hat{\theta}_2$ 更有效}。
+\subsection{有效性}
+\begin{definition}[有效性]
+设 $\hat{\theta}_1$ 和 $\hat{\theta}_2$ 是 $\theta$ 的两个无偏估计量。若 $D(\hat{\theta}_1) < D(\hat{\theta}_2)$，则称 $\hat{\theta}_1$ \textbf{比 $\hat{\theta}_2$ 更有效}。
+\end{definition}
 
-\textcolor{blue}{例}（均匀分布 $U(0, \theta)$）：比较 $\hat{\theta}_M = 2\overline{X}$ 和修正后的 $\hat{\theta}_{MLE}^* = \frac{n+1}{n}\hat{\theta}_{MLE}$。
+\begin{example}[均匀分布 $U(0, \theta)$：有效性比较]
+比较 $\hat{\theta}_M = 2\overline{X}$ 和修正后的 $\hat{\theta}_{MLE}^* = \frac{n+1}{n}\hat{\theta}_{MLE}$。
 \begin{itemize}
 	\item $D(\hat{\theta}_M) = \frac{\theta^2}{3n}$
 	\item $D(\hat{\theta}_{MLE}^*) = \frac{\theta^2}{n(n+2)}$
 	\item 比较方差比：$\frac{D(\hat{\theta}_M)}{D(\hat{\theta}_{MLE}^*)} = \frac{n+2}{3} \ge 1$
 	\item 结论：修正后的极大似然估计 $\hat{\theta}_{MLE}^*$ \textbf{更有效}
 \end{itemize}
+\end{example}
 
-\subsection{\textcolor{red}{一致性}}
-\textbf{定义}：设 $\hat{\theta}_n$ 是 $\theta$ 的估计量。若 $\hat{\theta}_n \xrightarrow{P} \theta$（依概率收敛于 $\theta$），则称 $\hat{\theta}_n$ 是 $\theta$ 的\textbf{一致估计量}。
+\subsection{一致性}
+\begin{definition}[一致性]
+设 $\hat{\theta}_n$ 是 $\theta$ 的估计量。若 $\hat{\theta}_n \xrightarrow{P} \theta$（依概率收敛于 $\theta$），则称 $\hat{\theta}_n$ 是 $\theta$ 的\textbf{一致估计量}。
+\end{definition}
 
-\textcolor{blue}{例2}（二项分布 $B(m,p)$）：讨论 $p$ 的 MLE $\hat{p}_{MLE}$ 的一致性。
+\begin{example}[二项分布 $B(m,p)$：讨论 $p$ 的 MLE $\hat{p}_{MLE}$ 的一致性]
 \begin{itemize}
 	\item $\hat{p}_{MLE} = \frac{\overline{X}}{m}$
 	\item 由辛钦大数定理，$\overline{X} \xrightarrow{P} E(X) = mp$
 	\item $\hat{p}_{MLE} = \frac{\overline{X}}{m} \xrightarrow{P} \frac{mp}{m} = p$
 	\item 结论：$\hat{p}_{MLE}$ 是\textbf{一致估计量}
 \end{itemize}
+\end{example}
 
 \subsection{附加例题（最优无偏估计）}
-\textbf{问题}：$\overline{X}_1, \overline{X}_2$ 为来自总体 $X$ 的两个样本均值，$a>0, b>0, a+b=1$。证明 $\hat{\mu} = a\overline{X}_1 + b\overline{X}_2$ 是 $E(X)$ 的无偏估计，并求使 $\hat{\mu}$ 最有效的 $a, b$。
+\begin{example}[最优无偏估计]
+$\overline{X}_1, \overline{X}_2$ 为来自总体 $X$ 的两个样本均值，$a>0, b>0, a+b=1$。证明 $\hat{\mu} = a\overline{X}_1 + b\overline{X}_2$ 是 $E(X)$ 的无偏估计，并求使 $\hat{\mu}$ 最有效的 $a, b$。
+\end{example}
+\begin{solution}
 \begin{itemize}
 	\item \textbf{无偏性}：$E(a\overline{X}_1 + b\overline{X}_2) = aE(\overline{X}_1) + bE(\overline{X}_2) = (a+b)E(X) = E(X)$
 	\item \textbf{有效性（最小化方差）}：设 $D(X)=\sigma^2$。
@@ -172,17 +206,21 @@
 		\item \textbf{最有效的 $a, b$}：$a = \frac{n_1}{n_1 + n_2}$，$b = \frac{n_2}{n_1 + n_2}$
 	\end{itemize}
 \end{itemize}
+\end{solution}
 
 \section{区间估计}
 \subsection{概念}
+\begin{definition}[置信区间]
 设总体 $X$ 的分布函数 $F(x;\theta)$ 含有未知参数 $\theta$。对于给定置信度 $1-\alpha$（$0 < \alpha < 1$），若由样本确定的两个统计量 $\underline{\theta}, \overline{\theta}$ 使
 \begin{equation}
 	P\{\underline{\theta} < \theta < \overline{\theta}\} = 1-\alpha
 	\label{eq:区间估计:定义}
 \end{equation}
 则称随机区间 $(\underline{\theta}, \overline{\theta})$ 为 $\theta$ 的\textbf{置信度为 $1-\alpha$ 的置信区间}。$\underline{\theta}$ 和 $\overline{\theta}$ 分别称为置信下限和置信上限。
+\end{definition}
 
 \subsection{正态总体的抽样分布定理（枢轴量）}
+\begin{property}[正态总体的抽样分布（枢轴量）]
 \begin{enumerate}
 	\item $\dfrac{\overline{X} - \mu}{\sigma/\sqrt{n}} \sim N(0, 1)$（$\sigma^2$ 已知）
 	\item $\chi^2 = \dfrac{(n-1)S^2}{\sigma^2} \sim \chi^2(n-1)$（$\overline{X}$ 和 $S^2$ 相互独立）
@@ -190,6 +228,7 @@
 	\item 两个样本（$\sigma_1^2 = \sigma_2^2 = \sigma^2$ 假定）：$T = \dfrac{(\overline{X}-\overline{Y}) - (\mu_1 - \mu_2)}{S_w \sqrt{1/n_1 + 1/n_2}} \sim t(n_1+n_2-2)$，其中 $S_w$ 是混合样本方差的方根
 	\item 方差比：$F = \dfrac{S_1^2/\sigma_1^2}{S_2^2/\sigma_2^2} \sim F(n_1-1, n_2-1)$
 \end{enumerate}
+\end{property}
 
 \subsection{正态总体参数的区间估计}
 \begin{table}[H]

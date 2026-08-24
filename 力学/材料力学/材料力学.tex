@@ -40,16 +40,24 @@
 	% 附录（样式自动切换为“附录 x”格式）
 	% ============================================================
 	\appendix
-	\titleformat{\chapter}[display]{\LARGE}
-	{\color{structurecolor}\centering\small \color{structurecolor}附录\ \thechapter}{0.5ex}
-	{\color{structurecolor}{\titlerule[1pt]}\huge \kaishu \centering \bfseries}
-	\titlecontents{chapter}[0em]{}{\large \fangsong{附录\ \thecontentslabel}}{}{\hfill\contentspage}
-	\titleformat{\section}[block]{\normalfont\Large\bfseries\kaishu\color{second}}
-	{\color{main}附录\ \thesection\quad}{0pt}{}
-	\titleformat{\subsection}[hang]{\bfseries}
-	{\color{third}\thesubsection\enspace}{1pt}{\color{structurecolor}}
-	\titleformat{\subsubsection}[hang]{\normalsize\bfseries}
-	{\color{third}\thesubsubsection\enspace}{1pt}{\color{structurecolor}}
+	\titleformat{\chapter}[display]
+	{\normalfont}
+	{\centering{\color{gold}\rule[-0.5ex]{2.2em}{1.6pt}}\hspace{1.2em}{\color{structurecolor}\large\kaishu 附录 \thechapter}\hspace{1.2em}{\color{gold}\rule[-0.5ex]{2.2em}{1.6pt}}}
+	{1.6ex}
+	{\color{structurecolor}\centering\Huge\heiti}
+	[{\vspace{1.2ex}{\color{gold}\titlerule[1.2pt]}\vspace{-3.6pt}{\color{structurecolor!45}\titlerule[0.4pt]}}]
+	\titlecontents{chapter}[0em]{\addvspace{0.8em}}
+	{\color{structurecolor}\large\heiti 附录\ \thecontentslabel\quad}{}{\hfill\color{structurecolor}\contentspage}
+	\titleformat{\section}[hang]
+	{\normalfont\Large\heiti\color{structurecolor}}
+	{{\color{gold}\Large\S}\,\thesection\hspace{1em}}{0pt}{}
+	[{\vspace{0.4ex}{\color{gold!85!black}\titlerule[0.9pt]}\vspace{-2.8pt}{\color{structurecolor!35}\titlerule[0.4pt]}}]
+	\titleformat{\subsection}[hang]
+	{\normalfont\large\heiti\color{structurecolor}}
+	{{\color{gold}\rule[-0.3ex]{0.85em}{2.2pt}}\hspace{0.6em}\thesubsection\hspace{0.6em}}{0pt}{}
+	\titleformat{\subsubsection}[hang]
+	{\normalfont\normalsize\heiti\color{structurecolor!90}}
+	{{\color{gold}\small$\blacksquare$}\hspace{0.5em}\thesubsubsection\hspace{0.6em}}{0pt}{}
 
 	\chapter{附录}
 	\input{附录}
