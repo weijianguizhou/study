@@ -5,7 +5,7 @@
 
 \section{相邻体元件运动学量递推关系}
 
-\paragraph{相邻体元件位置级运动学量递推关系}
+\parahead{相邻体元件位置级运动学量递推关系}
 
 以 $O_i$ 为原点的体元件连体坐标系简称为 $i$ 系. 将大地元件连体坐标系, 即 0 系, 视为全局惯性坐标系, 则 $i(i = 1, 2, \ldots, n)$ 系在全局惯性坐标系中的位置和方位可通过递推的方式表示为
 
@@ -26,7 +26,7 @@ r_{O_{p(i)} O_i | p(i)} = r_{O_{p(i)} R_i | p(i)} + r_{R_i O_i | p(i)}.
 
 对于体元件 $i$, $r_{O_{p(i)} R_i | p(i)}$ 为定常矩阵, 其时间导数为零. 以上等式中 $r_{R_i O_i | p(i)}$ 和 $\bm{A}_{p(i), i}$ 均可表示为铰元件 $\mathrm{J}_i$ 广义坐标 $q_{\mathrm{J}_i}$ 的表达式.
 
-\paragraph{相邻体元件速度级运动学量递推关系}
+\parahead{相邻体元件速度级运动学量递推关系}
 
 将 $j$ 系相对于 $i$ 系的相对平动速度和相对转动速度在 $j$ 系中的六维投影列阵记为 $v_{i, j | j}$, 即
 
@@ -50,7 +50,7 @@ v_{0, i | i} = \bm{C}_{i, p(i)} v_{0, p(i) | p(i)} + \bm{\Phi}_{\mathrm{J}_i} \d
 \begin{equation}
 \bm{C}_{i, p(i)} \triangleq \begin{bmatrix}
     \bm{A}_{p(i), i}^T & \bm{A}_{p(i), i}^T \tilde{r}_{O_{p(i)} O_i | p(i)} \\
-    m{O}_3 & \bm{A}_{p(i), i}^T
+    \bm{O}_3 & \bm{A}_{p(i), i}^T
 \end{bmatrix}.
 \label{eq:10.7}
 \end{equation}
@@ -64,7 +64,7 @@ v_{0, i | i} = \bm{C}_{i, p(i)} v_{0, p(i) | p(i)} + \bm{\Phi}_{\mathrm{J}_i} \d
     \label{fig:chapter10_92}
 \end{figure}
 
-\paragraph{相邻体元件加速度运动学量递推关系}
+\parahead{相邻体元件加速度运动学量递推关系}
 
 将 $j$ 系相对于 $i$ 系的相对平动加速度和相对转动加速度在 $j$ 系中的六维投影列阵记为 $a_{i, j | j}$, 即
 
@@ -97,7 +97,7 @@ a_{0, i | i} = \bm{C}_{i, p(i)} a_{0, p(i) | p(i)} + \bm{\Phi}_{\mathrm{J}_i} \d
 
 \section{主铰元件相对运动学方程}
 
-\paragraph{虚拟铰元件}
+\parahead{虚拟铰元件}
 
 对于虚拟铰元件 $i$, 位置级相对运动学方程可表示为
 
@@ -150,8 +150,8 @@ v_{p(i), i | i} = \begin{bmatrix}
     \omega_{p(i), i | i}
 \end{bmatrix}
 = \begin{bmatrix}
-    \bm{A}_{p(i), i}^T & m{O}_3 \\
-    m{O}_3 & \bm{H}_{B321}(\theta_{J_i})
+    \bm{A}_{p(i), i}^T & \bm{O}_3 \\
+    \bm{O}_3 & \bm{H}_{B321}(\theta_{J_i})
 \end{bmatrix}
 \begin{bmatrix}
     \dot{l}_{J_i} \\
@@ -182,15 +182,15 @@ a_{p(i), i | i} = \begin{bmatrix}
     \dot{\omega}_{p(i), i | i}
 \end{bmatrix}
 = \begin{bmatrix}
-    \bm{A}_{p(i), i}^T & m{O}_3 \\
-    m{O}_3 & \bm{H}_{B321}(\theta_{J_i})
+    \bm{A}_{p(i), i}^T & \bm{O}_3 \\
+    \bm{O}_3 & \bm{H}_{B321}(\theta_{J_i})
 \end{bmatrix}
 \begin{bmatrix}
     \ddot{l}_{J_i} \\
     \ddot{\theta}_{J_i}
 \end{bmatrix}
 + \begin{bmatrix}
-    m{O}_3 \\
+    \bm{O}_3 \\
     \dot{H}_{B321}(\theta_{J_i}, \dot{\theta}_{J_i}) \dot{\theta}_{J_i}
 \end{bmatrix}
 =: \bm{\Phi}_{\mathrm{J}_i} \ddot{q}_{\mathrm{J}_i} + \xi_{\mathrm{J}_i}.
@@ -214,7 +214,7 @@ a_{p(i), i | i} = \begin{bmatrix}
 
 式中 $c_2 = \cos(\theta_2)$, $s_2 = \sin(\theta_2)$, $c_3 = \cos(\theta_3)$, $s_3 = \sin(\theta_3)$.
 
-\paragraph{转动铰元件}
+\parahead{转动铰元件}
 
 对于转动铰元件 $i$, 位置级相对运动学方程可表示为
 
@@ -287,7 +287,7 @@ a_{p(i), i | i} = \begin{bmatrix}
 \label{eq:10.20}
 \end{equation}
 
-\paragraph{棱柱铰元件}
+\parahead{棱柱铰元件}
 
 对于棱柱铰元件 $i$, 位置级相对运动学方程可表示为
 
@@ -359,7 +359,7 @@ a_{p(i), i | i} = \begin{bmatrix}
 \label{eq:10.25}
 \end{equation}
 
-\paragraph{固结铰元件}
+\parahead{固结铰元件}
 
 对于固结铰元件 $i$, 位置级相对运动学方程可表示为
 
@@ -427,7 +427,7 @@ a_{p(i), i | i} = \begin{bmatrix}
 \label{eq:10.30}
 \end{equation}
 
-\paragraph{球铰元件}
+\parahead{球铰元件}
 
 对于球铰元件 $i$, 位置级相对运动学方程可表示为
 
@@ -469,11 +469,6 @@ v_{p(i), i | i} = \begin{bmatrix}
 \label{eq:10.33}
 \end{equation}
 
-\begin{equation}
-=: \bm{\Phi}_{\mathrm{J}_i} \dot{q}_{\mathrm{J}_i}.
-\label{eq:10.34}
-\end{equation}
-
 加速度相对运动学方程可表示为
 
 \begin{equation}
@@ -508,11 +503,11 @@ a_{p(i), i | i} = \begin{bmatrix}
 
 上述等式中 $\bm{H}_{B321}$ 和 $\dot{H}_{B321}$ 的具体表达式详见 10.3.1 小节.
 
-\paragraph{万向节}
+\parahead{万向节}
 
-\paragraph{圆柱铰}
+\parahead{圆柱铰}
 
-\paragraph{螺旋铰}
+\parahead{螺旋铰}
 
 \section{体元件速度关于系统广义速度的线性表达式}
 
@@ -528,7 +523,7 @@ v_{0, i | i} = \sum_{k \in \bar{p}[i]} \bm{C}_{i, k} \bm{\Phi}_{\mathrm{J}_k} \d
 \begin{equation}
 \bm{C}_{i, k} = \begin{bmatrix}
     \bm{A}_{k, i}^T & \bm{A}_{k, i}^T \tilde{r}_{O_k O_i | k} \\
-    m{O}_3 & \bm{A}_{k, i}^T
+    \bm{O}_3 & \bm{A}_{k, i}^T
 \end{bmatrix}, \quad k \in \bar{p}[i],
 \label{eq:10.38}
 \end{equation}
@@ -538,7 +533,7 @@ v_{0, i | i} = \sum_{k \in \bar{p}[i]} \bm{C}_{i, k} \bm{\Phi}_{\mathrm{J}_k} \d
 \begin{equation}
 \bm{C}_{i, p(i)} = \begin{bmatrix}
     \bm{A}_{p(i), i}^T & \bm{A}_{p(i), i}^T \tilde{r}_{O_{p(i)} O_i | p(i)} \\
-    m{O}_3 & \bm{A}_{p(i), i}^T
+    \bm{O}_3 & \bm{A}_{p(i), i}^T
 \end{bmatrix},
 \label{eq:10.39}
 \end{equation}
@@ -548,10 +543,10 @@ v_{0, i | i} = \sum_{k \in \bar{p}[i]} \bm{C}_{i, k} \bm{\Phi}_{\mathrm{J}_k} \d
 \begin{equation}
 \bm{C}_{i, i} = \begin{bmatrix}
     \bm{A}_{i, i}^T & \bm{A}_{i, i}^T \tilde{r}_{O_i O_i | i} \\
-    m{O}_3 & \bm{A}_{i, i}^T
+    \bm{O}_3 & \bm{A}_{i, i}^T
 \end{bmatrix} = \begin{bmatrix}
-    \bm{I_3} & m{O}_3 \\
-    m{O}_3 & \bm{I_3}
+    \bm{I_3} & \bm{O}_3 \\
+    \bm{O}_3 & \bm{I_3}
 \end{bmatrix} = \bm{I_6}.
 \label{eq:10.40}
 \end{equation}
@@ -577,7 +572,7 @@ v_{0, i | i} = \sum_{k \in \bar{p}[i]} \bm{C}_{i, k} \bm{\Phi}_{\mathrm{J}_k} \d
 
 系统闭环切断铰元件相对运动学量并未作为系统广义坐标的一部分, 需借助当前时刻的系统广义坐标来确定, 计算过程中有时也要综合考虑该切断铰上一时刻的相对运动学量, 以防计算结果发生突变.
 
-\paragraph{转动铰元件}
+\parahead{转动铰元件}
 
 当 $L_j$ 为转动铰时, 动系到基系的坐标转换矩阵可表示为
 
@@ -661,17 +656,17 @@ N_{L_i}^+ = \begin{cases}
 \label{eq:10.51}
 \end{equation}
 
-\paragraph{棱柱铰元件}
+\parahead{棱柱铰元件}
 
-\paragraph{固结铰元件}
+\parahead{固结铰元件}
 
-\paragraph{球铰元件}
+\parahead{球铰元件}
 
-\paragraph{万向节}
+\parahead{万向节}
 
 \section{闭环切断铰元件约束方程}
 
-\paragraph{转动铰元件}
+\parahead{转动铰元件}
 
 当闭环 $L_j$ 切断铰为转动铰元件时, 其位置级约束方程可表示为
 
@@ -764,10 +759,10 @@ r_{O_{\underline{f}(j)} B_j | \underline{f}(j)} = r_{O_{\underline{f}(j)} O_{\un
 \label{eq:10.58}
 \end{equation}
 
-\paragraph{棱柱铰元件}
+\parahead{棱柱铰元件}
 
-\paragraph{固结铰元件}
+\parahead{固结铰元件}
 
-\paragraph{球铰元件}
+\parahead{球铰元件}
 
-\paragraph{万向节}
+\parahead{万向节}

@@ -200,7 +200,7 @@ Q_\alpha = \sum_{i=1}^{3N}F_i\frac{\partial x_i}{\partial q_\alpha}.
 \end{equation}
 如果我们知道质点的加速度（$\ddot{q}_i$），那么我们（原则上）就能确定随后某一时刻的位置和速度。因此，知道了运动方程，我们就能预言系统的时间演化。
 
-\paragraph{牛顿力学中的运动方程}
+\parahead{牛顿力学中的运动方程}
 如果质量恒定，求运动方程的一种初等方法是使用如下形式的牛顿第二定律：
 \begin{equation}\label{eq:1.newton}
 \ddot{\mathbf{r}} = \mathbf{F}/m
@@ -213,7 +213,7 @@ m\ddot{x} + kx = 0.
 \end{equation}
 重要的是要注意，第二定律只适用于惯性坐标系。牛顿意识到了这个问题，他说第二定律是一个在相对于固定恒星静止的坐标系中成立的关系。
 
-\paragraph{拉格朗日力学中的运动方程}
+\parahead{拉格朗日力学中的运动方程}
 运动方程的另一种方法是使用拉格朗日法。当处理质点或可以当作质点处理的刚体时，拉格朗日量可以定义为动能与势能之差。
 \begin{equation}\label{eq:1.LTV}
 L = T - V
@@ -247,8 +247,8 @@ L = L(q_i, \dot{q}_i, t), \qquad i = 1, \ldots, n.
 
 一个力学系统完全由其拉格朗日量来描述。如果拉格朗日量不显含某个特定坐标 $q_i$，那么 $q_i$ 的改变不会影响系统。我们就说该系统对 $q_i$ 的改变是对称的。
 
-\paragraph{广义动量和循环坐标}
-\paragraph{广义动量}
+\parahead{广义动量和循环坐标}
+\parahead{广义动量}
 自由质点由拉格朗日量描述
 \begin{equation}\label{eq:1.Lfree}
 L = \frac{1}{2}m(\dot{x}^2 + \dot{y}^2 + \dot{z}^2)
@@ -284,7 +284,7 @@ p_i = \frac{\partial L}{\partial \dot{q}_i}.
 广义动量 $p_i$ 与广义坐标 $q_i$ 相联系，有时称为\textbf{共轭动量}。于是，我们已经看到，线性动量 $p_x$ 与线坐标 $x$ 共轭，角动量 $I\dot{\theta}$ 与角坐标 $\theta$ 共轭。
 \end{mydefinition}
 
-\paragraph{循环坐标}
+\parahead{循环坐标}
 如果某个特定坐标不出现在拉格朗日量中，就称它为"循环的"或"可遗的"。例如，引力场中质点的拉格朗日量为
 \begin{equation}\label{eq:1.Lgrav}
 L = \frac{1}{2}m(\dot{x}^2 + \dot{y}^2 + \dot{z}^2) - mgz.
@@ -305,7 +305,7 @@ L = \frac{1}{2}m(\dot{x}^2 + \dot{y}^2 + \dot{z}^2) - mgz.
 \end{equation}
 也就是说，与循环坐标共轭的广义动量是常数。
 
-\paragraph{线性动量守恒}
+\parahead{线性动量守恒}
 在本节中，我们将研究线性动量守恒定律的理论基础。不过，在开始之前，请注意有好几种不同的途径可以得到这个守恒定律。
 
 例如，在初级物理课程中，你通过如下形式的牛顿第二定律学习线性动量守恒定律
@@ -390,7 +390,7 @@ $\dfrac{\partial F}{\partial \mathbf{r}} \equiv \hat{\mathbf{i}}\dfrac{\partial 
 \end{equation}
 我们还得到了牛顿第二定律。
 
-\paragraph{角动量守恒}
+\parahead{角动量守恒}
 我们接下来的任务是证明角动量守恒是空间各向同性的结果。但在着手处理那个问题之前，让我们先从初等的角度，然后从中等的角度来考察这个守恒定律。
 
 对角动量守恒定律的初等讨论，通常从质点角动量的定义开始：
@@ -477,7 +477,7 @@ p_\theta = \frac{\partial L}{\partial \dot{\theta}} = \frac{\partial}{\partial \
 用初等力学方法证明：如果没有净外力矩作用在系统上，质点系统的角动量就是常数。注意你必须援引强形式的牛顿第三定律。
 \end{example}
 
-\paragraph{能量守恒与功函数}
+\parahead{能量守恒与功函数}
 考虑单个质点的动能。在初级物理中，我们学过功--能定理，它表明：外力对质点所做的净功，将导致质点动能的等量增加。按定义，功为
 \begin{equation}\label{eq:1.W}
 W = \int \mathbf{F}\cdot d\mathbf{s}.
@@ -617,7 +617,7 @@ H = H(q, p, t) = \sum_i\dot{q}_ip_i - L.
 $$\sum_i\dot{q}_i\frac{\partial L_2}{\partial \dot{q}_i} = 2L_2.$$
 \end{example}
 
-\paragraph{位力定理}
+\parahead{位力定理}
 位力定理指出：对有界的保守系统（如绕恒星运行的行星），动能的平均值与势能的平均值成正比。（对行星/恒星系统，我们发现 $\langle T\rangle = -\frac{1}{2}\langle V\rangle$。）我们现在来证明这个定理。
 
 \begin{proof}[证明]

@@ -1,4 +1,60 @@
 % !TeX root = 系统动力学建模与仿真笔记.tex
+\section{多刚体系统的元件组成}
+
+多刚体系统传递矩阵法采用元件化思想进行描述：系统由大地元件、$n$ 个体元件以及 $m$ 个铰元件组成，各元件统一编号，各自携带描述自身属性的参数与广义坐标，系统的总体方程由各元件的贡献按拓扑连接关系组装得到. 其中，体元件对应“物质”，承载系统的惯性属性；铰元件对应“连接”，规定相邻体元件之间允许的相对运动.
+
+体元件是刚体的理想化模型，承载系统的质量、质心位置与转动惯量等惯性属性，其位形由连体坐标系相对于全局惯性坐标系的广义坐标描述；大地元件可视为编号为 0 的特殊体元件，其连体坐标系即全局惯性坐标系（0 系）. 体元件与大地元件之间同样通过铰元件相连，如图~\ref{fig:与大地关联的体元件}~所示.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Figure/与大地关联的体元件.png}
+    \caption{与大地关联的体元件}
+    \label{fig:与大地关联的体元件}
+\end{figure}
+
+铰元件是体元件之间运动副连接的理想化数学抽象：将轴承、销轴、导轨、万向节等物理连接零件忽略质量，并理想化为无间隙、无摩擦、无弹性，即得到相应的铰元件模型. 铰元件本身不计质量、不占几何体积，仅承担两项职责：限制被连两体元件之间的相对运动，以及作为相对运动的载体传递相邻体元件之间的运动学量. 一个铰元件 $\text{J}_j$ 由三方面要素完全确定：
+\begin{enumerate}
+    \item 关联的两个体元件，即 $\text{b}(j)$ 体上的点 $\text{B}_j$ 与 $\text{m}(j)$ 体上的点 $\underline{\text{M}}_j$，该体对编号承载系统的拓扑连接信息；
+    \item 几何锚点，即两个铰点在各连体坐标系中的定常位置矢量；
+    \item 允许的相对运动形式，如转动铰元件的转轴方向单位矢量 $\bm{n}_{\text{J}_j}$.
+\end{enumerate}
+如图所示：
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Figure/非切断铰及其关联的体元件.png}
+    \caption{示意图}
+    \label{fig:非切断铰及其关联的体元件}
+\end{figure}
+
+图~\ref{fig:非切断铰及其关联的体元件}~为未切断铰元件时系统作为整体连接的情形；与之对照，将各铰元件切断，系统即分解为若干通过切口相互关联的体元件，如图~\ref{fig:切断铰及其关联的体元件}~所示. 这种“切断—组装”的处理是按元件列写方程、再按拓扑连接关系组装系统总体方程的基础.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Figure/切断铰及其关联的体元件.png}
+    \caption{切断铰及其关联的体元件}
+    \label{fig:切断铰及其关联的体元件}
+\end{figure}
+
+按允许的相对运动形式，常见铰元件及其位置级约束方程条数如下表所示：
+
+\begin{center}
+\begin{tabular}{ccc}
+    \hline
+    铰元件类型 & 允许的相对运动 & 位置级约束方程条数 \\
+    \hline
+    固接元件 & 无 & $6$ \\
+    转动铰元件 & $1$ 个相对转动 & $5$ \\
+    滑移铰元件 & $1$ 个相对平移 & $5$ \\
+    万向节元件 & $2$ 个相对转动 & $4$ \\
+    圆柱铰元件 & $1$ 个相对转动与 $1$ 个相对平移 & $4$ \\
+    球铰元件 & $3$ 个相对转动 & $3$ \\
+    \hline
+\end{tabular}
+\end{center}
+
+表中约束方程条数等于 $6$ 减去允许的相对自由度个数，即每个铰元件削去相应个数的系统自由度. 铰元件在后续章节中承担三种角色：在本章系统约束方程中作为跨体耦合约束的来源，提供约束方程族 $\bm{c}_{\text{J}}$；在树形多刚体系统递推建模中，每个铰元件关联一组相对广义坐标 $\bm{q}_{\text{J}_i}$，使铰约束被坐标选取自动满足；在系统动力学方程中，铰元件约束反力以拉格朗日乘子的形式进入方程.
+
 \section{多刚体系统体元件广义坐标}
 
 多刚体系统体元件广义坐标 $\bm{q}$ 由系统中所有体元件连体坐标系相对于全局惯性坐标系的广义坐标构成，可记为
@@ -13,7 +69,7 @@
 
 \section{系统约束方程}
 
-多刚体系统体元件广义坐标往往并不独立，需满足相应的约束方程，包括铰元件约束方程
+考虑到实际情况，多刚体系统元件之间往往存在运动副链接，于是多刚体系统体元件广义坐标往往并不独立，需满足相应的约束方程，包括铰元件约束方程
 \begin{equation}
     \bm{c}_{\text{J}} = \begin{bmatrix} \bm{c}_{\text{J}_1}^\text{T} & \bm{c}_{\text{J}_2}^\text{T} & \cdots & \bm{c}_{\text{J}_m}^\text{T} \end{bmatrix}^\text{T},
 \end{equation}
@@ -26,12 +82,34 @@
     \bm{c} = \begin{bmatrix} \bm{c}_{\text{J}}^\text{T} & \bm{c}_{\text{B}}^\text{T} \end{bmatrix}^\text{T}.
 \end{equation}
 
-\paragraph{铰元件约束方程}
+\parahead{两类约束方程的辨析}
 
+$\bm{c}_{\text{J}}$ 与 $\bm{c}_{\text{B}}$ 虽同为系统广义坐标不独立的体现，但二者来源不同、互不包含，可按约束表达式中出现的体元件广义坐标块加以区分：仅依赖单个体元件自身广义坐标块 $\bm{q}_{\text{B}_i}$ 的约束归入 $\bm{c}_{\text{B}}$；同时依赖被同一铰元件相连的两个体元件广义坐标块 $\bm{q}_{\text{B}_{\text{b}(j)}}$ 与 $\bm{q}_{\text{B}_{\text{m}(j)}}$ 的约束归入 $\bm{c}_{\text{J}}$.
+
+体元件自身约束方程源于转动广义坐标的参数化冗余，与系统的拓扑连接无关. 空间刚体的姿态具有 3 个自由度，若 $\bm{\theta}_{0,i}$ 取为欧拉参数 $(\epsilon_{i,1}, \epsilon_{i,2}, \epsilon_{i,3}, \epsilon_{i,4})$，则以 4 个参数描述 3 个自由度，需补充归一化条件
+\begin{equation}
+    c_{\text{B}_i} = \epsilon_{i,1}^2 + \epsilon_{i,2}^2 + \epsilon_{i,3}^2 + \epsilon_{i,4}^2 - 1 = 0,
+\end{equation}
+该式仅含体元件 $i$ 自身的广义坐标；若 $\bm{\theta}_{0,i}$ 取为三轴角形式，各体元件自身广义坐标相互独立，$\bm{c}_{\text{B}}$ 即为空集. 相应地，$\partial \bm{c}_{\text{B}} / \partial \bm{q}$ 恒为分块对角矩阵.
+
+铰元件约束方程源于元件之间的运动副连接. 以上述转动铰元件为例，其约束方程中同时出现两体元件的位置矢量与姿态变换矩阵，无法表示为单个体元件自身坐标的函数；由后文雅可比矩阵可见，$\partial \bm{c}_{\text{J}_j} / \partial \bm{q}$ 恰在 $\text{b}(j)$、$\text{m}(j)$ 两体对应的列块处非零，非零块的分布由系统拓扑连接关系决定.
+
+两类约束可以独立地为空集：无铰元件的多刚体系统（各体元件均以欧拉参数描述姿态）满足 $\bm{c}_{\text{J}}$ 为空集而 $\bm{c}_{\text{B}}$ 不为空集；反之，各体元件均采用三轴角描述而有铰连接的系统满足 $\bm{c}_{\text{B}}$ 为空集而 $\bm{c}_{\text{J}}$ 不为空集. 故二者是按来源并列分类的两组约束，而非包含关系.
+
+从物理意义上看，$\bm{c}_{\text{J}}$ 剔除的是系统真实不可达的相对位形，削减系统的实际运动自由度；$\bm{c}_{\text{B}}$ 消除的是同一姿态被多组参数重复计数带来的描述冗余，不改变可达位形集合. 以 $n$ 个体元件均取欧拉参数、含 $m$ 个转动铰元件的系统为例，广义坐标总数为 $7n$，其中 $\bm{c}_{\text{B}}$ 提供 $n$ 条约束（每体元件 1 条），$\bm{c}_{\text{J}}$ 提供 $5m$ 条约束（每转动铰元件 5 条），系统自由度数为
+\begin{equation}
+    f = 7n - n - 5m = 6n - 5m,
+\end{equation}
+与每个自由刚体具有 6 个自由度、每个转动铰削去 5 个相对自由度的直观计数相符.
+
+
+\begin{theorem}[转动铰元件的位置级约束方程]
 设铰元件 $\text{J}_j$ 为转动铰元件，并关联了体元件 $\text{B}_{\text{b}(j)}$ 上的点 $\text{B}_j$ 以及体元件 $\text{B}_{\text{m}(j)}$ 上的点 $\underline{\text{M}}_j$，其位置级约束方程可表示为
 \begin{equation}
     \bm{0} = \bm{c}_{\text{J}_j} = \begin{bmatrix} \bm{r}_{\text{O}_0\underline{\text{M}}_j|0} - \bm{r}_{\text{O}_0\text{B}_j|0} \\ \bm{T}_{\text{J}_j}^\text{T} \bm{A}_{0,\text{b}(j)}^\text{T} \bm{A}_{0,\text{m}(j)} \bm{n}_{\text{J}_j} \end{bmatrix},
 \end{equation}
+\end{theorem}
+
 式中
 \begin{align}
     \bm{r}_{\text{O}_0\underline{\text{M}}_j|0} &= \bm{r}_{\text{O}_0\text{O}_{\text{m}(j)}|0} + \bm{A}_{0,\text{m}(j)} \bm{r}_{\text{O}_{\text{m}(j)}\underline{\text{M}}_j|\text{m}(j)}, \\
@@ -39,7 +117,7 @@
 \end{align}
 三维列阵 $\bm{n}_{\text{J}_j}$ 为在 $\text{b}(j)$ 系和 $\text{m}(j)$ 系中表示的铰元件转轴方向的单位矢量. $\bm{T}_{\text{J}_j} = \begin{bmatrix} \bm{\tau}_{\text{J}_{j},1} & \bm{\tau}_{\text{J}_{j},2} \end{bmatrix}$，$\bm{\tau}_{\text{J}_{j},1}$ 和 $\bm{\tau}_{\text{J}_{j},2}$ 为建模时预先定义好的一对模为 1 的定常三维列阵；$\bm{\tau}_{\text{J}_{j},1}$、$\bm{\tau}_{\text{J}_{j},2}$ 与 $\bm{n}_{\text{J}_j}$ 两两正交.
 
-\paragraph{铰元件约束方程雅可比矩阵}
+\parahead{铰元件约束方程雅可比矩阵}
 
 对于转动铰元件 $\text{J}_j$，其约束方程对体元件 $\text{B}_{\text{b}(j)}$ 的广义坐标 $\bm{q}_{\text{B}_{\text{b}(j)}}$ 的偏导数满足
 \begin{align}
@@ -59,7 +137,7 @@
 
 \section{系统动能及其对广义坐标的偏导数}
 
-\paragraph{体元件的动能}
+\parahead{体元件的动能}
 
 多刚体系统的动能可由系统中所有体元件的动能求和得到，即
 \begin{equation}
@@ -76,7 +154,7 @@
 \end{equation}
 $\bm{A}_{0,i}$ 表示从 $i$ 系到 0 系的坐标变换矩阵；$m_{\text{B}_i}$ 表示体元件的质量；$\bm{r}_{\text{O}_i\text{C}_i|i}$ 表示从 $i$ 系原点 $\text{O}_i$ 到体元件 $i$ 质心 $\text{C}_i$ 的位置矢量在 $i$ 系中的坐标列阵；$\bm{J}_{\text{O}_i|i}$ 表示体元件 $i$ 相对于 $\text{O}_i$ 的转动惯量张量在 $i$ 系中的投影矩阵.
 
-\paragraph{体元件的速度列阵}
+\parahead{体元件的速度列阵}
 
 体元件连体坐标系的六维速度列阵可表示为
 \begin{align}
@@ -87,7 +165,7 @@ $\bm{A}_{0,i}$ 表示从 $i$ 系到 0 系的坐标变换矩阵；$m_{\text{B}_i}
 \end{align}
 式中 $\bm{A}_{0,i}$、$\bm{H}_\star$ 和 $\bm{\Phi}_{\text{B}_i}$ 均为体元件 $i$ 广义坐标 $\bm{q}_{\text{B}_i}$ 的表达式.
 
-\paragraph{系统的动能}
+\parahead{系统的动能}
 
 由此，多刚体系统的动能可表示为
 \begin{align}
@@ -101,7 +179,7 @@ $\bm{A}_{0,i}$ 表示从 $i$ 系到 0 系的坐标变换矩阵；$m_{\text{B}_i}
     \bm{M} = \text{diag} \left( \bm{\Phi}_{\text{B}_1}^\text{T} \bm{M}_{\text{O}_1} \bm{\Phi}_{\text{B}_1}, \; \bm{\Phi}_{\text{B}_2}^\text{T} \bm{M}_{\text{O}_2} \bm{\Phi}_{\text{B}_2}, \; \cdots, \; \bm{\Phi}_{\text{B}_n}^\text{T} \bm{M}_{\text{O}_n} \bm{\Phi}_{\text{B}_n} \right).
 \end{equation}
 
-\paragraph{系统动能对广义坐标的偏导数}
+\parahead{系统动能对广义坐标的偏导数}
 
 多刚体系统的动能对体元件 $i$ 广义坐标的偏导数满足
 \begin{align}
@@ -111,7 +189,7 @@ $\bm{A}_{0,i}$ 表示从 $i$ 系到 0 系的坐标变换矩阵；$m_{\text{B}_i}
     &= \bm{v}_i^\text{T} \bm{M}_{\text{O}_i} \frac{\partial \bm{v}_i}{\partial \bm{q}_{\text{B}_i}}.
 \end{align}
 
-\paragraph{体元件连体坐标系速度对体元件广义坐标的偏导数}
+\parahead{体元件连体坐标系速度对体元件广义坐标的偏导数}
 
 体元件连体坐标系速度对体元件广义坐标的偏导数满足
 \begin{align}

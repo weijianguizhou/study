@@ -40,7 +40,7 @@ q_3 & 0 & -q_1 \\
 
 并矢（dyadic）是描述二阶线性变换的数学工具，刚体动力学中的转动算子与转动惯量张量均可表示为并矢。本节介绍并矢的定义、运算及其与矩阵的联系。
 
-\paragraph{并矢的定义}
+\parahead{并矢的定义}
 
 \begin{mydefinition}{并矢}
 设 $\bm{a}$、$\bm{b}$ 为两个向量，则按确定顺序并列而成的量 $\bm{a}\bm{b}$ 称为并矢（dyad）。有限个并矢之和
@@ -76,7 +76,7 @@ $$
 由 $\bm{v}$ 的任意性即知式~\eqref{eq:并矢:展开} 成立。
 \end{proof}
 
-\paragraph{并矢的运算}
+\parahead{并矢的运算}
 
 并矢式之间可进行加法与数乘运算，按并矢的线性性质逐项进行，并满足结合律与分配律。两个并矢式的点积定义为
 \begin{equation}\label{eq:并矢:并矢点积}
@@ -90,7 +90,7 @@ $$
 \end{equation}
 并矢式与向量的叉积仍是并矢式。旋转并矢（见本节末尾）正是借助并矢式与向量的叉积构造的。
 
-\paragraph{单位并矢}
+\parahead{单位并矢}
 
 \begin{mydefinition}{单位并矢}
 设 $\mathbf{e}_1,\mathbf{e}_2,\mathbf{e}_3$ 为一组右手正交单位向量，则
@@ -108,7 +108,7 @@ $$
 \item 对任意向量 $\bm{a}$、$\bm{b}$，$\bm{a}\cdot\bm{U}\cdot\bm{b} = \bm{a}\cdot\bm{b}$。
 \end{enumerate}
 
-\paragraph{并矢的转置}
+\parahead{并矢的转置}
 
 \begin{mydefinition}{并矢的转置}
 并矢 $\bm{a}\bm{b}$ 的转置定义为
@@ -126,7 +126,7 @@ $$
 \bm{\Phi} = \frac{\bm{\Phi}+\bm{\Phi}^{\mathrm{T}}}{2} + \frac{\bm{\Phi}-\bm{\Phi}^{\mathrm{T}}}{2}.
 \end{equation}
 
-\paragraph{并矢的矩阵表示}
+\parahead{并矢的矩阵表示}
 
 设 $\mathbf{e}_1,\mathbf{e}_2,\mathbf{e}_3$ 为一组右手正交单位向量，则并矢式 $\bm{\Phi}$ 可展开为
 \begin{equation}\label{eq:并矢:分量展开}
@@ -148,7 +148,7 @@ $$
 \end{equation}
 式中 $a_{ij}$ 即为方向余弦矩阵的元素（见第~\ref{chap:kinematics}~章第~\ref{sec:indirect-orientation}~节）。这体现了并矢是坐标无关的几何量，而矩阵只是并矢在某组基下的具体表示。
 
-\paragraph{旋转并矢}
+\parahead{旋转并矢}
 
 在简单转动（见第~\ref{chap:kinematics}~章）中，向量 $\bm{a}$ 绕单位向量 $\bm{\lambda}$ 旋转角 $\theta$ 得到向量 $\bm{b}$，二者满足 Rodrigues 公式
 \begin{equation}\label{eq:并矢:旋转公式}
@@ -182,9 +182,9 @@ $$
 
 并矢一节从几何对象的角度讨论了二阶线性变换，本节转入它的坐标基础：引入右手笛卡尔直角坐标系的单位矢量基，建立矢量及其点积、叉积、混合积等运算的坐标（矩阵）表示。这套形式记号是后续章节中方向余弦矩阵、角速度列阵与动能计算的公共工具。
 
-\paragraph{坐标系、坐标轴上的单位矢量与矢量基}
+\parahead{坐标系、坐标轴上的单位矢量与矢量基}
 
-\paragraph{右手笛卡尔直角坐标系及其坐标轴上的单位矢量}
+\parahead{右手笛卡尔直角坐标系及其坐标轴上的单位矢量}
 
 在右手笛卡尔直角坐标系中，沿三根坐标轴取单位矢量 $\mathbf{e}_1$、$\mathbf{e}_2$、$\mathbf{e}_3$，构成右手正交单位向量组。由正交归一性，任意两个单位矢量的点积为
 \begin{equation}\label{eq:笛卡尔张量:单位矢量点积}
@@ -207,7 +207,7 @@ $$
 \end{equation}
 $\varepsilon_{mnl}$ 称为置换符号。
 
-\paragraph{右手笛卡尔直角坐标系矢量基及其运算法则}
+\parahead{右手笛卡尔直角坐标系矢量基及其运算法则}
 
 将三个单位矢量按列、按行排成阵列，
 \begin{equation}\label{eq:笛卡尔张量:矢量基}
@@ -266,11 +266,11 @@ u_3 & 0 & -u_1 \\
 \tilde{\bm{u}}\,\tilde{\bm{v}} = \bm{v}\bm{u}^{\mathrm{T}} - \left(\bm{u}^{\mathrm{T}}\bm{v}\right)\bm{I}_3.
 \end{equation}
 
-\paragraph{矢量及矢量运算的坐标表示}
+\parahead{矢量及矢量运算的坐标表示}
 
 在不引起混淆的前提下，本小节用同一粗体字母表示矢量与其坐标列阵，由上下文区分。
 
-\paragraph{矢量的坐标表示}
+\parahead{矢量的坐标表示}
 
 任意矢量沿基矢量的分解可写成矩阵乘积（数乘）的形式：
 \begin{equation}\label{eq:笛卡尔张量:矢量分解}
@@ -279,7 +279,7 @@ u_3 & 0 & -u_1 \\
 \end{equation}
 式中 $\bm{u} = \begin{bmatrix} u_1 & u_2 & u_3 \end{bmatrix}^{\mathrm{T}}$ 称为矢量 $\bm{u}$ 的坐标列阵（投影列阵）。
 
-\paragraph{两矢量点积运算的坐标表示}
+\parahead{两矢量点积运算的坐标表示}
 
 利用式~\eqref{eq:笛卡尔张量:eeT}，两矢量的点积（内积）为
 \begin{equation}\label{eq:笛卡尔张量:点积}
@@ -297,7 +297,7 @@ u_3 & 0 & -u_1 \\
 \end{equation}
 \end{enumerate}
 
-\paragraph{两矢量叉积运算的坐标表示}
+\parahead{两矢量叉积运算的坐标表示}
 
 将叉积按基矢量展开并代入式~\eqref{eq:笛卡尔张量:单位矢量叉积}，得
 \begin{equation}\label{eq:笛卡尔张量:叉积}
@@ -315,7 +315,7 @@ u_3 & 0 & -u_1 \\
 \end{equation}
 \end{enumerate}
 
-\paragraph{三矢量混合积运算的坐标表示}
+\parahead{三矢量混合积运算的坐标表示}
 
 三矢量的混合积为
 \begin{equation}\label{eq:笛卡尔张量:混合积}
@@ -330,7 +330,7 @@ u_3 & 0 & -u_1 \\
 = \bm{w}^{\mathrm{T}}\tilde{\bm{u}}\,\bm{v} = \bm{w}\cdot\left(\bm{u}\times\bm{v}\right).
 \end{equation}
 
-\paragraph{三矢量叉积运算的坐标表示}
+\parahead{三矢量叉积运算的坐标表示}
 
 三矢量的叉积可写成两个叉乘矩阵的复合：
 \begin{equation}\label{eq:笛卡尔张量:三重叉积}
@@ -352,7 +352,7 @@ u_3 & 0 & -u_1 \\
 本节介绍常微分方程与微分代数方程初值问题的基本数值求解方法，是后续章节中系统运动微分方程（第~\ref{chap:eom}~章）数值仿真计算的基础；文中涉及的质量矩阵 $\bm{M}$、约束雅可比 $\bm{\Phi}$ 等记号亦见该章。
 
 
-\paragraph{常微分方程数值求解的计算精度与稳定性}
+\parahead{常微分方程数值求解的计算精度与稳定性}
 
 一阶线性齐次常系数常微分方程的初值问题可表示为
 \begin{equation*}
@@ -388,7 +388,7 @@ u_3 & 0 & -u_1 \\
     \label{eq:alpha_scheme}
 \end{equation}
 
-\paragraph{向前欧拉法（显式积分）}
+\parahead{向前欧拉法（显式积分）}
 
 如果令 $\alpha = 1$（向前欧拉，显式积分），则有
 \begin{align}
@@ -428,7 +428,7 @@ u_3 & 0 & -u_1 \\
     \label{fig:forward_euler_stability}
 \end{figure}
 
-\paragraph{向后欧拉法（隐式积分）}
+\parahead{向后欧拉法（隐式积分）}
 
 如果令 $\alpha = 0$（向后欧拉，隐式积分），则有
 \begin{equation}
@@ -468,7 +468,7 @@ u_3 & 0 & -u_1 \\
 \end{remark}
 
 
-\paragraph{将高阶常微分方程转化为一阶常微分方程组}
+\parahead{将高阶常微分方程转化为一阶常微分方程组}
 
 重力作用下单摆的运动微分方程可表示为
 \begin{equation*}
@@ -510,7 +510,7 @@ u_3 & 0 & -u_1 \\
 存在众多成熟的微分方程数值求解方法来进行数值计算。
 
 
-\paragraph{一阶常微分方程组初值问题的一般形式}
+\parahead{一阶常微分方程组初值问题的一般形式}
 
 一阶常微分方程组的初值问题的一般形式可记为
 \begin{equation}
@@ -529,7 +529,7 @@ u_3 & 0 & -u_1 \\
 分别为待求的状态变量列阵（解向量），已知的状态变化率函数（向量函数）和已知的状态变量列阵初值（初始向量）。
 
 
-\paragraph{一阶常微分方程组初值问题数值解法（一）——线性多步法}
+\parahead{一阶常微分方程组初值问题数值解法（一）——线性多步法}
 
 线性多步法 (Linear multistep method)：
 \begin{equation}
@@ -539,7 +539,7 @@ u_3 & 0 & -u_1 \\
 当 $\beta_0 = 0$ 时为显式公式，当 $\beta_0 \neq 0$ 为隐式公式。当 $k = 1$ 时退化为单步法。
 
 
-\paragraph{一阶常微分方程组初值问题数值解法（二）——预估校正法}
+\parahead{一阶常微分方程组初值问题数值解法（二）——预估校正法}
 
 预估校正法（predictor–corrector method）：
 \begin{align}
@@ -549,7 +549,7 @@ u_3 & 0 & -u_1 \\
 式~(\ref{eq:pc_predictor})为显式预估公式，式~(\ref{eq:pc_corrector})为隐式校正公式。
 
 
-\paragraph{一阶常微分方程组初值问题数值解法（三）——龙格-库塔法}
+\parahead{一阶常微分方程组初值问题数值解法（三）——龙格-库塔法}
 
 龙格-库塔法 (Runge-Kutta method)：
 \begin{align}
@@ -571,7 +571,7 @@ u_3 & 0 & -u_1 \\
 \end{align}
 
 
-\paragraph{微分代数方程初值问题数值求解}
+\parahead{微分代数方程初值问题数值求解}
 
 已知多体系统动力学微分代数方程组
 \begin{equation*}
@@ -590,7 +590,7 @@ u_3 & 0 & -u_1 \\
 如何对其动力学响应进行数值求解。
 
 
-\paragraph{位置级、速度级与加速度级系统约束方程}
+\parahead{位置级、速度级与加速度级系统约束方程}
 
 位置级约束方程
 \begin{equation}
@@ -613,7 +613,7 @@ u_3 & 0 & -u_1 \\
 \end{equation*}
 
 
-\paragraph{系统动力学方程}
+\parahead{系统动力学方程}
 
 多体系统运动微分方程：
 \begin{equation*}
@@ -635,7 +635,7 @@ u_3 & 0 & -u_1 \\
 \end{align*}
 
 
-\paragraph{二阶常微分方程组形式的系统动力学方程}
+\parahead{二阶常微分方程组形式的系统动力学方程}
 
 联立系统运动微分方程
 \begin{equation*}
@@ -669,7 +669,7 @@ u_3 & 0 & -u_1 \\
 \end{equation}
 
 
-\paragraph{一阶常微分方程组形式的系统动力学方程}
+\parahead{一阶常微分方程组形式的系统动力学方程}
 
 多体系统动力学二阶常微分方程组
 \begin{equation*}
@@ -699,7 +699,7 @@ u_3 & 0 & -u_1 \\
 \end{remark}
 
 
-\paragraph{违约与修正}
+\parahead{违约与修正}
 
 将微分方程数值解法求得的 $t_k$ 时刻的系统广义坐标记为 $\bm{q}_k$。若 $t_k$ 时刻位置级约束方程的违约量 $\bm{c}(\bm{q}_k,t_k)$ 超过了容许值时，则需要进行违约修正。
 

@@ -9,13 +9,13 @@
 %  可用字段（在主文件导言区用 \newcommand 预定义即可覆盖缺省值）：
 %      \notename     主标题（必填，主模板已定义）
 %      \noteauthor   作者（必填，主模板已定义）
-%      \notenumber   眉题编号，如 01（缺省 01）
+%      \notecourseen 眉题英文（缺省 Course Notes，可填课程英文名）
 %      \notesubtitle 副标题（缺省「学习笔记」）
 %      \noteextra    底部附加信息，如 2026 秋季学期（缺省不显示）
 % ============================================================
 
 % ---- 缺省字段（主文件已定义的同名命令不会被覆盖） ----
-\providecommand{\notenumber}{01}
+\providecommand{\notecourseen}{Course Notes}
 \providecommand{\notesubtitle}{学\ 习\ 笔\ 记}
 \providecommand{\noteextra}{}
 
@@ -80,14 +80,15 @@
 			([shift={(0.85,0.85)}]current page.south west) rectangle
 			([shift={(-0.85,-0.85)}]current page.north east);
 
-		% ---- 8. 顶部眉题（英文小字 + 编号 + 金色短线） ----
-		\coordinate (T) at ([yshift=-3.4cm]current page.north);
-		\draw[gold, line width=1.0pt] (T) ++(-3.8cm,0) -- ++(1.1cm,0);
-		\draw[gold, line width=1.0pt] (T) ++(2.7cm,0) -- ++(1.1cm,0);
-		\node[anchor=north, text=structurecolor!85, align=center] at (T) {%
-			{\sffamily\fontsize{12}{15}\selectfont
-				\uppercase{Course Notes}~\ ·~\ 第 \notenumber\ 讲}
+		% ---- 8. 顶部眉题（课程英文小字 + 随文字长度自适应的金色短线） ----
+		\node[anchor=north, text=structurecolor!85, align=center]
+			(imEyebrow) at ([yshift=-3.4cm]current page.north) {%
+			{\sffamily\fontsize{12}{15}\selectfont \uppercase{\notecourseen}}
 		};
+		\draw[gold, line width=1.0pt]
+			($(imEyebrow.west)+(-0.25cm,0)$) -- ++(-1.1cm,0);
+		\draw[gold, line width=1.0pt]
+			($(imEyebrow.east)+(0.25cm,0)$) -- ++(1.1cm,0);
 
 		% ---- 9. 主标题（居中，使用 \notename）----
 		\node[anchor=center, align=center, text=structurecolor]

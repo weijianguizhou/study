@@ -5,6 +5,8 @@
 \usepackage{cancel}                                             % 数学划线（\cancel）
 \usepackage{booktabs}   % 提供 \toprule, \midrule, \bottomrule    % 采用 Palatino 风格字体
 \usepackage{multirow}   % 表格合并行（\multirow）
+\usepackage{longtable}  % 可跨页断行的长表格（随文排版，不留浮动空白）
+\setlength{\LTleft}{\fill}\setlength{\LTright}{\fill}  % longtable 水平居中
 \usepackage{newclude,ulem}
 \definecolor{winered}{rgb}{0.5,0,0}
 \definecolor{structurecolor}{RGB}{24,44,82}     % 深藏青：章/节标题主色（与封面同系）
@@ -123,6 +125,8 @@
 \newenvironment{note}{\par\vspace{0.4em}\noindent{\heiti\color{proColor}注：}\;}{\par\vspace{0.4em}}
 \newcommand{\intro}[1]{\rightline{\parbox[t]{5cm}{\footnotesize \fangsong\quad\quad #1 }}}
 \newcommand{\blocksep}{\vspace{1em}}
+% 段落级小标题：替代默认 \paragraph 的行内样式（独立成行的黑体小标题）
+\newcommand{\parahead}[1]{\par\vspace{0.9em}\noindent{\heiti #1}\par\vspace{0.3em}}
 % ------------------------------------------------------------%
 
 \usepackage{enumerate}

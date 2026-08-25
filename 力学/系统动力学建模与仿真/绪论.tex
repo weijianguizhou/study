@@ -6,15 +6,18 @@
 
 本书采用如下字型约定：\textbf{向量与矩阵一律用粗体斜体（$\bm{}$）表示}，例如 $\bm{a}$、$\bm{A}$、$\bm{\omega}$；\textbf{标量、分量与矩阵元素不加粗}，例如 $a_i$、$a_{ij}$、$\omega_i$。单位向量组用 $\mathbf{}$（正粗体）表示，如 $\mathbf{a}_i$、$\mathbf{b}_i$。凡表示"在参考系 $x$ 中表达或取分量"的下标一律写成 $|x$，如 $\nu_{i|A}$、$\bm{\nu}_{|A}$。
 
-\paragraph{数学基础记号}
-\begin{table}[H]
-\centering
-\caption{数学基础记号}
-\label{tab:符号说明:数学记号}
-\begin{tabular}{ll}
+
+\begin{longtable}{ll}
+\caption{数学基础记号}\label{tab:符号说明:数学记号}\\
 \toprule
 符号 & 含义 \\
 \midrule
+\endfirsthead
+\multicolumn{2}{c}{\tablename~\thetable{}（续表）}\\
+\toprule
+符号 & 含义 \\
+\midrule
+\endhead
 $\mathbb{R}^{n}$ & $n$ 维实向量空间 \\
 $\bm{A}^{\mathrm{T}}$ & 矩阵 $\bm{A}$ 的转置 \\
 $\bm{u}\cdot\bm{v}$ & 向量 $\bm{u}$ 与 $\bm{v}$ 的点积 \\
@@ -27,18 +30,19 @@ $\det(\bm{A})$ & 矩阵 $\bm{A}$ 的行列式 \\
 $\left|\bm{v}\right|$ & 向量 $\bm{v}$ 的模长 \\
 $\dfrac{\mathrm{d}}{\mathrm{d}t}$ & 对时间 $t$ 求导 \\
 \bottomrule
-\end{tabular}
-\end{table}
+\end{longtable}
 
-\paragraph{参考系与单位向量}
-\begin{table}[H]
-\centering
-\caption{参考系与单位向量记号}
-\label{tab:符号说明:参考系}
-\begin{tabular}{ll}
+\begin{longtable}{ll}
+\caption{参考系与单位向量记号}\label{tab:符号说明:参考系}\\
 \toprule
 符号 & 含义 \\
 \midrule
+\endfirsthead
+\multicolumn{2}{c}{\tablename~\thetable{}（续表）}\\
+\toprule
+符号 & 含义 \\
+\midrule
+\endhead
 $A$,\, $B$ & 参考系（或刚体） \\
 $\mathbf{a}_1,\mathbf{a}_2,\mathbf{a}_3$ & 固定在 $A$ 中的右手正交单位向量组 \\
 $\mathbf{b}_1,\mathbf{b}_2,\mathbf{b}_3$ & 固定在 $B$ 中的右手正交单位向量组 \\
@@ -48,18 +52,19 @@ $\bm{\nu}_{|A}$ & 向量 $\bm{v}$ 在参考系 $A$ 中的分量行阵 \\
 $\nu_{i|A}$ & 分量 $\bm{\nu}_{|A}$ 的第 $i$ 个元素 \\
 $\dfrac{\mathrm{d}\bm{v}}{\mathrm{d}t}\Big|_{A}$ & 向量 $\bm{v}$ 在参考系 $A$ 中的时间导数 \\
 \bottomrule
-\end{tabular}
-\end{table}
+\end{longtable}
 
-\paragraph{转动描述}
-\begin{table}[H]
-\centering
-\caption{转动描述记号}
-\label{tab:符号说明:转动}
-\begin{tabular}{ll}
+\begin{longtable}{ll}
+\caption{转动描述记号}\label{tab:符号说明:转动}\\
 \toprule
 符号 & 含义 \\
 \midrule
+\endfirsthead
+\multicolumn{2}{c}{\tablename~\thetable{}（续表）}\\
+\toprule
+符号 & 含义 \\
+\midrule
+\endhead
 $\bm{\lambda}$ & 转轴方向的单位向量 \\
 $\theta$ & 转角 \\
 $\bm{A}$ & 方向余弦矩阵 \\
@@ -72,18 +77,19 @@ $\bm{\omega}$ & 角速度向量 \\
 $\omega_i$ & 角速度分量 $(i=1,2,3)$ \\
 $\bm{\tilde{\omega}}$ & 角速度矩阵，$\bm{\tilde{\omega}}=\bm{A}^{\mathrm{T}}\dot{\bm{A}}$ \\
 \bottomrule
-\end{tabular}
-\end{table}
+\end{longtable}
 
-\paragraph{相对转动量（右下标约定）}
-\begin{table}[H]
-\centering
-\caption{相对转动量记号}
-\label{tab:符号说明:相对量}
-\begin{tabular}{ll}
+\begin{longtable}{ll}
+\caption{相对转动量记号}\label{tab:符号说明:相对量}\\
 \toprule
 符号 & 含义 \\
 \midrule
+\endfirsthead
+\multicolumn{2}{c}{\tablename~\thetable{}（续表）}\\
+\toprule
+符号 & 含义 \\
+\midrule
+\endhead
 $\bm{\omega}_{B|A}$ & $B$ 在 $A$ 中的角速度（竖线前为物体，竖线后为参考系） \\
 $\bm{\omega}_{A|B}$ & $A$ 在 $B$ 中的角速度 \\
 $\bm{\omega}_{B|A}$ & 反对称性：$\bm{\omega}_{B|A}=-\bm{\omega}_{A|B}$ \\
@@ -91,18 +97,19 @@ $\bm{\rho}_{AB}$ & $B$ 相对 $A$ 的罗德里格斯向量 \\
 $\rho_{AB,i}$ & 罗德里格斯向量 $\bm{\rho}_{AB}$ 的第 $i$ 个分量 \\
 $\bm{\sigma}$ & 单位并矢 \\
 \bottomrule
-\end{tabular}
-\end{table}
+\end{longtable}
 
-\paragraph{运动学与动力学量}
-\begin{table}[H]
-\centering
-\caption{运动学与动力学量记号}
-\label{tab:符号说明:运动学}
-\begin{tabular}{ll}
+\begin{longtable}{ll}
+\caption{运动学与动力学量记号}\label{tab:符号说明:运动学}\\
 \toprule
 符号 & 含义 \\
 \midrule
+\endfirsthead
+\multicolumn{2}{c}{\tablename~\thetable{}（续表）}\\
+\toprule
+符号 & 含义 \\
+\midrule
+\endhead
 $\mathbf{p}$ & 位置向量 \\
 $\bm{\delta}$ & 位移矢量 \\
 $\bm{\delta}^{*}$ & 螺杆平移矢量 \\
@@ -111,10 +118,8 @@ $\rho$ & 主曲率半径 \\
 $\lambda$ & 空间曲线的挠率 \\
 $\bm{I}_{ij|A}$ & 惯性并矢 $\bm{I}$ 在参考系 $A$ 中的分量 \\
 \bottomrule
-\end{tabular}
-\end{table}
+\end{longtable}
 
-\paragraph{爱因斯坦求和约定}
 \begin{mydefinition}{爱因斯坦求和约定}
     在同一项中，若某一角标出现两次，则隐含对该角标在约定范围内求和，本书中求和范围默认为 $i,j,k,\dots=1,2,3$。出现两次的角标称为\emph{哑指标}（dummy index），求和后该指标消失；只出现一次的角标称为\emph{自由指标}（free index），它代表其取值范围内的任一值，等式两端自由指标必须一致。
 \end{mydefinition}
