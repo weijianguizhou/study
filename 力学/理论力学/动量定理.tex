@@ -1,0 +1,132 @@
+% 来源：《理论力学》课堂笔记手写扫描件 第62页下半部分、第63页、第64页（第十章 动量定理）
+\section{动量定理}
+
+\subsection{动量}
+
+\begin{definition}[动量]
+质点的质量与速度的矢量积称为质点的动量：
+\begin{equation}\label{eq:11-momentum-particle}
+  \vec{p}=m\vec{v}.
+\end{equation}
+\end{definition}
+
+质点系内各质点动量的矢量和称为质点系的动量：
+% 待核对：原稿中间一项作 \sum m_i \vec{r}_i'，按上下文应为时间导数记号 \sum m_i \dot{\vec{r}}_i。
+\begin{equation}\label{eq:11-momentum-system}
+  \vec{p}=\sum m_i\vec{v}_i=\sum m_i\dot{\vec{r}}_i=\frac{d}{dt}\sum m_i\vec{r}_i.
+\end{equation}
+
+记质点系总质量为
+\begin{equation}\label{eq:11-mass-total}
+  m=\sum m_i,
+\end{equation}
+定义质心矢径
+\begin{equation}\label{eq:11-radius-center}
+  \vec{r}_c=\frac{\sum m_i\vec{r}_i}{m},
+\end{equation}
+则有
+\begin{equation}\label{eq:11-momentum-center}
+  \vec{p}=\frac{d}{dt}\sum m_i\vec{r}_i=\frac{d}{dt}\left(m\,\vec{r}_c\right).
+\end{equation}
+% 待核对：原稿作「即质点的动量」，依上下文疑为「质点系」，此处取「质点系」。
+即质点系的动量等于质心速度与其全部质量的乘积。
+
+\subsection{冲量}
+
+\begin{definition}[冲量]
+如果作用力是常量，我们用力与作用时间的乘积来衡量力在这段时间内的累积作用效果。作用力与作用时间的乘积称为常力的冲量：
+\begin{equation}\label{eq:11-impulse-constant}
+  \vec{I}=\vec{F}\,t.
+\end{equation}
+若作用力 $\vec{F}$ 是变矢量，在微小时间间隔 $dt$ 内，$\vec{F}$ 的冲量称为元冲量：
+\begin{equation}\label{eq:11-impulse-element}
+  d\vec{I}=\vec{F}\,dt,
+\end{equation}
+于是力 $\vec{F}$ 在由 $t_1$ 到 $t_2$ 的时间间隔内的冲量为
+\begin{equation}\label{eq:11-impulse-integral}
+  \vec{I}=\int_{t_1}^{t_2}\vec{F}\,dt.
+\end{equation}
+\end{definition}
+
+\subsection{动量定理}
+
+由牛顿第二定律，$\dfrac{d}{dt}\left(m\vec{v}\right)=\vec{F}$，两边积分，则有
+% 待核对：原稿作「积变则有」，疑为「积分，则有」，此处取「积分，则有」。
+\begin{equation}\label{eq:11-momentum-theorem-integral}
+  m\vec{v}_2-m\vec{v}_1=\int_{t_1}^{t_2}\vec{F}\,dt=\vec{I}.
+\end{equation}
+其微分形式为
+\begin{equation}\label{eq:11-momentum-theorem-diff}
+\begin{aligned}
+  d\left(m\vec{v}\right)&=\vec{F}\,dt,\\
+  m\,d\vec{v}&=\vec{F}\,dt.
+\end{aligned}
+\end{equation}
+
+\subsection{质点系动量定理}
+
+对于质点系，分析其中的一个质点 $i$，设其上作用有外力 $\vec{F}_i^{(e)}$ 与内力 $\vec{F}_i^{(i)}$，则
+\begin{equation}\label{eq:11-sys-particle}
+  d\left(m_i\vec{v}_i\right)
+    =\left(\vec{F}_i^{(e)}+\vec{F}_i^{(i)}\right)dt
+    =\vec{F}_i^{(e)}dt+\vec{F}_i^{(i)}dt.
+\end{equation}
+共 $n$ 个质点，将各式求和，得
+\begin{equation}\label{eq:11-sys-sum}
+  \sum d\left(m_i\vec{v}_i\right)=\sum\vec{F}_i^{(e)}dt+\sum\vec{F}_i^{(i)}dt.
+\end{equation}
+由牛顿第三定律，内力成对出现且等值反向，故 $\sum\vec{F}_i^{(i)}dt=\vec{0}$，于是
+\begin{equation}\label{eq:11-sys-dp}
+  d\vec{p}=\sum\vec{F}_i^{(e)}dt=\sum d\vec{I}_i^{(e)}.
+\end{equation}
+亦可写作
+\begin{equation}\label{eq:11-sys-rate}
+  \frac{d\vec{p}}{dt}=\sum\vec{F}_i^{(e)},
+\end{equation}
+或
+\begin{equation}\label{eq:11-sys-diff}
+  d\vec{p}=\sum\vec{F}_i^{(e)}dt.
+\end{equation}
+积分形式为
+\begin{equation}\label{eq:11-sys-integral}
+  \vec{p}_2-\vec{p}_1=\sum\vec{I}^{(e)}.
+\end{equation}
+
+\subsection{质点系动量守恒定律}
+
+如果作用于质点系的外力的主矢恒等于零，根据上述论述，质点系的动量保持不变，为常矢量，即
+\begin{equation}\label{eq:11-conservation}
+  \vec{p}_2=\vec{p}_1.
+\end{equation}
+将矢量向坐标轴投影，即得质点系的动量在该坐标轴上的分量保持不变，即
+% 待核对：原稿角标较模糊（似 p_x=p_x），依上下文取 p_{x2}=p_{x1}。
+\begin{equation}\label{eq:11-conservation-x}
+  p_{x2}=p_{x1}.
+\end{equation}
+
+\subsection{质心运动定理}
+
+由前文的质心矢径定义（式 \eqref{eq:11-radius-center}），将其向各直角坐标轴投影，得
+\begin{equation}\label{eq:11-cm-coordinate}
+\begin{aligned}
+  x_c &= \frac{\sum m_i x_i}{\sum m_i}=\frac{\sum m_i x_i}{m},\\
+  y_c &= \frac{\sum m_i y_i}{\sum m_i}=\frac{\sum m_i y_i}{m},\\
+  z_c &= \frac{\sum m_i z_i}{\sum m_i}=\frac{\sum m_i z_i}{m},
+\end{aligned}
+\end{equation}
+即建立了质心的运动方程。
+
+又由前文
+\begin{equation}\label{eq:11-cm-dt}
+  \frac{d}{dt}\left(m\,\vec{r}_c\right)=\sum\vec{F}_i^{(e)},
+\end{equation}
+对于质量不变的质点系，上式又可改写为
+\begin{equation}\label{eq:11-cm-v}
+  m\frac{d\vec{v}_c}{dt}=\sum\vec{F}_i^{(e)},
+\end{equation}
+即
+\begin{equation}\label{eq:11-cm-a}
+  m\,\vec{a}_c=\sum\vec{F}_i^{(e)}.
+\end{equation}
+
+由此，一个质点系的运动我们可以看作一个质点的运动，且只有外力的作用才能改变质点的运动状态。将质心加速度和外力向各轴上投影，即得质心运动微分方程。

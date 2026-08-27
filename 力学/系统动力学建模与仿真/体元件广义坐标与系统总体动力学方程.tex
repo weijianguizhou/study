@@ -117,6 +117,10 @@ $\bm{c}_{\text{J}}$ 与 $\bm{c}_{\text{B}}$ 虽同为系统广义坐标不独立
 \end{align}
 三维列阵 $\bm{n}_{\text{J}_j}$ 为在 $\text{b}(j)$ 系和 $\text{m}(j)$ 系中表示的铰元件转轴方向的单位矢量. $\bm{T}_{\text{J}_j} = \begin{bmatrix} \bm{\tau}_{\text{J}_{j},1} & \bm{\tau}_{\text{J}_{j},2} \end{bmatrix}$，$\bm{\tau}_{\text{J}_{j},1}$ 和 $\bm{\tau}_{\text{J}_{j},2}$ 为建模时预先定义好的一对模为 1 的定常三维列阵；$\bm{\tau}_{\text{J}_{j},1}$、$\bm{\tau}_{\text{J}_{j},2}$ 与 $\bm{n}_{\text{J}_j}$ 两两正交.
 
+上述约束方程的两块分别对应转动铰元件的两条物理要求. 第一块对应铰点重合：铰元件装配后，点 $\text{B}_j$ 与点 $\underline{\text{M}}_j$ 在运动全程必须是同一空间点，将两点位置矢量在同一坐标系（0 系）中表达后相减为零，即给出 3 条标量约束. 第二块对应转轴共线：$\bm{A}_{0,\text{b}(j)}^\text{T} \bm{A}_{0,\text{m}(j)} \bm{n}_{\text{J}_j}$ 将 $\text{m}(j)$ 系中表达的轴向单位矢量转入 $\text{b}(j)$ 系，若两体轴线共线，该矢量应与 $\bm{n}_{\text{J}_j}$ 平行，在与轴垂直的方向上没有分量；$\bm{T}_{\text{J}_j}^\text{T}$ 恰好取出这两个垂直方向的分量，令其为零即为轴线共线的代数条件. 由于轴是双向矢量，绕自身旋转不构成位形差异，轴线“共线”仅含 2 个独立标量条件——$\bm{T}_{\text{J}_j}^\text{T}$ 的投影运算自动丢弃沿轴分量，不多不少给出 2 条约束，避免过约束. 两块合计 $3+2=5$ 条，与前文“每个转动铰削去 5 个相对自由度”的计数一致.
+
+整条约束以方向余弦矩阵乘积的形式而非角度形式列写，是因为体元件的姿态信息仅通过 $\bm{A}_{0,i}(\bm{\theta}_{0,i})$ 进入广义坐标：如此 $\bm{c}_{\text{J}_j}$ 即成为体元件广义坐标的纯代数函数，同时依赖 $\bm{q}_{\text{B}_{\text{b}(j)}}$ 与 $\bm{q}_{\text{B}_{\text{m}(j)}}$ 两个坐标块——这正是它归入 $\bm{c}_{\text{J}}$ 而非 $\bm{c}_{\text{B}}$ 的依据——也便于直接计算后文的雅可比矩阵并进行动力学方程的约化.
+
 \parahead{铰元件约束方程雅可比矩阵}
 
 对于转动铰元件 $\text{J}_j$，其约束方程对体元件 $\text{B}_{\text{b}(j)}$ 的广义坐标 $\bm{q}_{\text{B}_{\text{b}(j)}}$ 的偏导数满足
@@ -134,6 +138,10 @@ $\bm{c}_{\text{J}}$ 与 $\bm{c}_{\text{B}}$ 虽同为系统广义坐标不独立
     &= \frac{\partial}{\partial \bm{q}_{\text{B}_{\text{m}(j)}}} \begin{bmatrix} \bm{r}_{\text{O}_0\text{O}_{\text{m}(j)}|0} + \bm{A}_{0,\text{m}(j)} \bm{r}_{\text{O}_{\text{m}(j)}\underline{\text{M}}_j|\text{m}(j)} \\ \bm{T}_{\text{J}_j}^\text{T} \bm{A}_{0,\text{b}(j)}^\text{T} \bm{A}_{0,\text{m}(j)} \bm{n}_{\text{J}_j} \end{bmatrix} \notag \\
     &= \begin{bmatrix} \bm{I}_3 & \bm{A}_{0,\text{m}(j)} \tilde{\bm{r}}_{\text{O}_{\text{m}(j)}\underline{\text{M}}_j|\text{m}(j)} \bm{H}_\star(\bm{\theta}_{0,\text{m}(j)}) \\ \bm{O}_{2\times 3} & \bm{T}_{\text{J}_j}^\text{T} \bm{A}_{0,\text{b}(j)}^\text{T} \bm{A}_{0,\text{m}(j)} \tilde{\bm{n}}_{\text{J}_j}^\text{T} \bm{H}_\star(\bm{\theta}_{0,\text{m}(j)}) \end{bmatrix}.
 \end{align}
+
+两块雅可比矩阵的结构具有明确的规律. 每个分块的列按广义坐标的两个部分划分：位置列块与姿态列块；姿态列块中的 $\bm{H}_\star(\bm{\theta}_{0,i})$ 为姿态参数化映射矩阵，满足 $\bm{\omega}_{0,i|i} = \bm{H}_\star(\bm{\theta}_{0,i}) \dot{\bm{\theta}}_{0,i}$（见前文角速度一节），叉乘矩阵 $[\cdot]_\times$ 则源于对方向余弦矩阵关于姿态参数的微分. $\text{b}(j)$ 体对应的分块带整体负号、$\text{m}(j)$ 体对应的分块为正，来源于约束方程第一块中两点矢量相减的先后次序；两体的位置列块分别为 $\pm\bm{I}_3$，是因为原点平移直接、等量地带动各自的铰点.
+
+更重要的是非零块的分布：$\partial \bm{c}_{\text{J}_j} / \partial \bm{q}$ 仅在 $\text{b}(j)$、$\text{m}(j)$ 两体对应的列块处非零，其余列块恒为零，因此整体雅可比 $\partial \bm{c}_{\text{J}} / \partial \bm{q}$ 是按各铰元件的关联体对填充的稀疏分块矩阵，其非零元格局完全由系统的拓扑连接关系决定. 这种稀疏性使约束方程的装配与求解可以按元件逐个进行，第十章的递推算法正是对这一结构的系统利用.
 
 \section{系统动能及其对广义坐标的偏导数}
 
@@ -154,6 +162,8 @@ $\bm{c}_{\text{J}}$ 与 $\bm{c}_{\text{B}}$ 虽同为系统广义坐标不独立
 \end{equation}
 $\bm{A}_{0,i}$ 表示从 $i$ 系到 0 系的坐标变换矩阵；$m_{\text{B}_i}$ 表示体元件的质量；$\bm{r}_{\text{O}_i\text{C}_i|i}$ 表示从 $i$ 系原点 $\text{O}_i$ 到体元件 $i$ 质心 $\text{C}_i$ 的位置矢量在 $i$ 系中的坐标列阵；$\bm{J}_{\text{O}_i|i}$ 表示体元件 $i$ 相对于 $\text{O}_i$ 的转动惯量张量在 $i$ 系中的投影矩阵.
 
+该式将体元件动能写为六维速度列阵的二次型：$\bm{v}_i$ 的上半部分是连体系原点速度在 $i$ 系中的分量列阵，下半部分是角速度在 $i$ 系中的分量列阵. 采用连体系分量表达的原因在于，$\bm{M}_{\text{O}_i}$ 的全部元素——质量、质心偏置与转动惯量——都是固结于刚体的定常量，只有在连体系中观察才不随时间变化，动能表达式中的系数因而与时间和位形无关. 质量矩阵的非对角块 $m \tilde{\bm{r}}_{\text{O}_i\text{C}_i|i}$ 刻画原点 $\text{O}_i$ 与质心 $\text{C}_i$ 不重合带来的平移—转动耦合；当坐标原点取在质心时该块为零矩阵，动能即分解为平动与转动两个独立部分.
+
 \parahead{体元件的速度列阵}
 
 体元件连体坐标系的六维速度列阵可表示为
@@ -164,6 +174,8 @@ $\bm{A}_{0,i}$ 表示从 $i$ 系到 0 系的坐标变换矩阵；$m_{\text{B}_i}
     &=: \bm{\Phi}_{\text{B}_i} \dot{\bm{q}}_{\text{B}_i},
 \end{align}
 式中 $\bm{A}_{0,i}$、$\bm{H}_\star$ 和 $\bm{\Phi}_{\text{B}_i}$ 均为体元件 $i$ 广义坐标 $\bm{q}_{\text{B}_i}$ 的表达式.
+
+$\bm{\Phi}_{\text{B}_i}$ 是由广义速度 $\dot{\bm{q}}_{\text{B}_i}$ 到六维速度列阵 $\bm{v}_i$ 的线性映射矩阵，其元素只依赖广义坐标 $\bm{q}_{\text{B}_i}$ 本身而不依赖 $\dot{\bm{q}}_{\text{B}_i}$——六维速度对广义速度的这种线性依赖关系，正是后文能够将动能整理成广义速度二次型的基础.
 
 \parahead{系统的动能}
 
@@ -179,6 +191,8 @@ $\bm{A}_{0,i}$ 表示从 $i$ 系到 0 系的坐标变换矩阵；$m_{\text{B}_i}
     \bm{M} = \text{diag} \left( \bm{\Phi}_{\text{B}_1}^\text{T} \bm{M}_{\text{O}_1} \bm{\Phi}_{\text{B}_1}, \; \bm{\Phi}_{\text{B}_2}^\text{T} \bm{M}_{\text{O}_2} \bm{\Phi}_{\text{B}_2}, \; \cdots, \; \bm{\Phi}_{\text{B}_n}^\text{T} \bm{M}_{\text{O}_n} \bm{\Phi}_{\text{B}_n} \right).
 \end{equation}
 
+$\bm{M}$ 对称且正定：各 $\bm{M}_{\text{O}_i}$ 的对称正定性由动能恒正保证，合同变换 $\bm{\Phi}_{\text{B}_i}^\text{T} \bm{M}_{\text{O}_i} \bm{\Phi}_{\text{B}_i}$ 保持这两条性质. 值得注意的是，$\bm{M}$ 为分块对角矩阵——每个体元件的动能只含自身的广义速度，体元件之间不存在惯性耦合；多刚体系统中体与体之间的动力学耦合完全经由铰元件的约束（及相应的约束反力）实现. 这是元件化建模的显著特点，也是后续需要引入拉格朗日乘子处理约束的动因.
+
 \parahead{系统动能对广义坐标的偏导数}
 
 多刚体系统的动能对体元件 $i$ 广义坐标的偏导数满足
@@ -189,16 +203,19 @@ $\bm{A}_{0,i}$ 表示从 $i$ 系到 0 系的坐标变换矩阵；$m_{\text{B}_i}
     &= \bm{v}_i^\text{T} \bm{M}_{\text{O}_i} \frac{\partial \bm{v}_i}{\partial \bm{q}_{\text{B}_i}}.
 \end{align}
 
+推导用到两点：其一，由 $\bm{M}$ 的分块对角性，求和项中仅 $T_{\text{B}_i}$ 含有 $\bm{q}_{\text{B}_i}$；其二，$\bm{M}_{\text{O}_i}$ 为连体系中的定常矩阵，对 $\bm{q}_{\text{B}_i}$ 求偏导时可视为常量，偏导数全部落在 $\bm{v}_i$ 上. 此式与动能对广义速度的偏导数 $\partial T / \partial \dot{\bm{q}}$ 相配合，共同进入第二类拉格朗日方程.
+
 \parahead{体元件连体坐标系速度对体元件广义坐标的偏导数}
 
 体元件连体坐标系速度对体元件广义坐标的偏导数满足
 \begin{align}
     \frac{\partial \bm{v}_i}{\partial \bm{q}_{\text{B}_i}}
     &= \frac{\partial}{\partial \bm{q}_{\text{B}_i}} \begin{bmatrix} \bm{A}_{0,i}^\text{T} \dot{\bm{r}}_{\text{O}_0\text{O}_i|0} \\ \bm{\omega}_{0,i|i} \end{bmatrix} \notag \\
-    &= \frac{\partial}{\partial \bm{q}_{\text{B}_i}} \begin{bmatrix} \bm{A}_{0,i}^\text{T} \dot{\bm{r}}_{\text{O}_0\text{O}_i|0} \\ \bm{\omega}_{0,i|i} \end{bmatrix} \notag \\
     &= \begin{bmatrix} \frac{\partial}{\partial \bm{r}_{\text{O}_0\text{O}_i|0}} \begin{bmatrix} \bm{A}_{0,i}^\text{T} \dot{\bm{r}}_{\text{O}_0\text{O}_i|0} \\ \bm{\omega}_{0,i|i} \end{bmatrix} & \frac{\partial}{\partial \bm{\theta}_{0,i}} \begin{bmatrix} \bm{A}_{0,i}^\text{T} \dot{\bm{r}}_{\text{O}_0\text{O}_i|0} \\ \bm{\omega}_{0,i|i} \end{bmatrix} \end{bmatrix} \notag \\
     &= \begin{bmatrix} \bm{O}_{3\times 3} & [\bm{A}_{0,i}^\text{T} \dot{\bm{r}}_{\text{O}_0\text{O}_i|0}]_\times \bm{H}_\star(\bm{\theta}_{0,i}) \\ \bm{O}_{3\times 3} & \partial \bm{\omega}_{0,i|i} / \partial \bm{\theta}_{0,i} \end{bmatrix}.
 \end{align}
+
+求偏导时按广义坐标的两个部分分块进行. 位置坐标块 $\bm{r}_{\text{O}_0\text{O}_i|0}$ 仅出现在原点速度分量中，且 $\bm{A}_{0,i}$、$\bm{H}_\star$ 与其无关，故位置列块为零矩阵；姿态坐标块 $\bm{\theta}_{0,i}$ 同时进入 $\bm{A}_{0,i}(\bm{\theta})$ 与 $\bm{H}_\star(\bm{\theta})$，右列上块的叉乘矩阵源于方向余弦矩阵对姿态参数的微分公式，右列下块即角速度对姿态参数的偏导数. 该结果代回上一节，即得系统动能对广义坐标的完整偏导数.
 
 \section{重力势能及其对广义坐标的偏导数}
 
@@ -216,3 +233,7 @@ $\bm{A}_{0,i}$ 表示从 $i$ 系到 0 系的坐标变换矩阵；$m_{\text{B}_i}
     &= \frac{\partial}{\partial \bm{q}_{\text{B}_i}} V_{\text{gravity},\text{B}_i} \notag \\
     &= -m_{\text{B}_i} \bm{g}^\text{T} \begin{bmatrix} \bm{I}_3 & \bm{A}_{0,i} \tilde{\bm{r}}_{\text{O}_i\text{C}_i|i}^\text{T} \bm{H}_\star \end{bmatrix}.
 \end{align}
+
+式中 $\bm{g}$ 表示重力加速度矢量在 0 系中的投影列阵；质心位置以“原点位置加连体质心偏置经旋转变换”的形式给出，负号来自势能与重力做功之间的定义关系. 重力势能只通过质心位置依赖广义坐标，故其对广义坐标的偏导数仅涉及位置与质心偏置，所得行向量即广义重力力在体元件 $i$ 广义坐标上的分量.
+
+至此，本章给出了组装多刚体系统动力学方程所需的全部元件级要素：系统广义坐标 $\bm{q}$、约束方程及其雅可比矩阵 $\partial \bm{c} / \partial \bm{q}$、广义质量矩阵 $\bm{M}$、动能与重力势能对广义坐标的偏导数. 后续章节在这些量的基础上引入拉格朗日乘子处理铰元件约束，即可得到多刚体系统的总体动力学方程及其递推形式.

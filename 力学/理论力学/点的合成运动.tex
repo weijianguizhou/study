@@ -1,0 +1,630 @@
+% ============================================================
+% 《理论力学》笔记 · 点的合成运动
+% 转写自手写扫描件第 44–49 页（源稿 .tmp/tljm_md/page-44.md ~ page-49.md）
+% 本文件只含 \section 及以下层级，由主文件《理论力学笔记.tex》引入
+% ============================================================
+
+本章研究\textbf{点的合成运动}：同一个点在不同参考系中观察到的运动不同，
+利用「一点、二系、三运动」的框架，可以把复杂运动分解为简单运动的合成。
+核心工具是速度合成定理与（含科氏加速度的）加速度合成定理。
+
+\section{合成运动的概念}
+
+\subsection{运动的描述依赖于参考系}
+
+运动的描述依赖于参考系：同一动点，在不同的参考系中观察，轨迹、速度可以完全不同。
+例如半径为 $R$ 的圆盘沿水平 $x$ 轴作纯滚动，圆周上一点 $M$ 在定系中画出摆线（旋轮线）；
+而以随圆滚动的坐标系观察，$M$ 只是在作圆周运动。摆线的参数方程为
+
+\begin{equation}\label{eq:8-cycloid}
+\begin{aligned}
+  &x = R(\varphi - \sin\varphi),\qquad y = R(1 - \cos\varphi);\\
+  &x'^2 + y'^2 = R^2 .
+\end{aligned}
+\end{equation}
+
+第一行是定系中 $M$ 的绝对轨迹（摆线）参数方程；第二行表明在随圆滚动的动系中，
+$M$ 相对轮心的轨迹是半径为 $R$ 的圆——同一个点，两套参考系，两种轨迹。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  % 定系坐标轴与地面
+  \draw[->] (-0.6,0) -- (7.4,0) node[below] {$x$};
+  \draw[->] (0,-0.05) -- (0,2.9) node[left] {$y$};
+  % 摆线轨迹（R = 1，一个拱）
+  \draw[thick, domain=0:6.2832, samples=200, smooth] plot ({\x - sin(\x r)}, {1 - cos(\x r)});
+  % 滚动圆取 phi = pi/3 位置，圆心 C
+  \coordinate (C) at (1.047,1);
+  \draw[thick] (C) circle (1);
+  \fill (C) circle (1.1pt) node[above right] {$O'$};
+  \coordinate (T) at ($(C)+(0,-1)$);
+  \draw[densely dashed] (C) -- (T);
+  % 动点 M（在圆周上）与随体动系
+  \coordinate (M) at ($(C)+(-0.866,-0.5)$);
+  \fill (M) circle (1.6pt) node[below left] {$M$};
+  \draw[->] (C) -- ++(1.15,0) node[right] {$x'$};
+  \draw[->] (C) -- ++(-1.01,-0.58) node[below left] {$y'$};
+\end{tikzpicture}
+\end{center}
+
+\subsection{一点、二系、三运动}
+
+\begin{definition}[一点、二系、三运动]\label{def:8-123}
+\begin{itemize}
+  \item \textbf{一点}：动点（被研究的点）；
+  \item \textbf{二系}：
+        \begin{itemize}
+          \item \textbf{动系}：相对某定系\textbf{运动}的坐标系；
+          \item \textbf{定系}：\textbf{固定不动}的坐标系；
+        \end{itemize}
+  \item \textbf{三运动}：
+        \begin{itemize}
+          \item \textbf{绝对运动}：动点相对于\emph{定系}的运动；
+          \item \textbf{相对运动}：动点相对于\emph{动系}的运动；
+          \item \textbf{牵连运动}：\emph{动系}相对于定系的运动。
+        \end{itemize}
+\end{itemize}
+\end{definition}
+
+\subsection{运动的合成与分解}
+
+合成运动的基本思想：把\textbf{复杂运动分解为简单运动的合成}。
+动点的绝对运动可视为牵连运动与相对运动的合成；反之，也可把复杂运动按此途径分解处理。
+
+\section{绝对运动速度和相对运动速度的关系}
+
+\subsection{矢量法}
+
+设定系原点为 $O$，动系原点为 $O'$。动点 $M$ 的绝对矢径 $\vec r$、动系原点的矢径
+$\vec r_O$ 与相对矢径 $\vec r'$ 构成矢量三角形：
+
+\begin{equation}\label{eq:8-r-decomp}
+  \vec r = \vec r_O + \vec r' .
+\end{equation}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \coordinate (O)  at (0,0);
+  \coordinate (Op) at (2.7,1.25);
+  \coordinate (M)  at (3.6,2.75);
+  \draw[->] (-0.2,0) -- (4.9,0) node[below] {$x$};
+  \draw[->] (0,-0.2) -- (0,3.3) node[left] {$y$};
+  \node[below left] at (O) {$O$};
+  % 动系（转过一角）
+  \draw[->] (Op) -- ++(2.15,0.85) node[right] {$x'$};
+  \draw[->] (Op) -- ++(-0.72,2.0) node[above] {$y'$};
+  \node[below right=1pt] at (Op) {$O'$};
+  \fill (Op) circle (1.2pt);
+  % 三个矢径构成三角形
+  \draw[->,thick] (O) -- (Op) node[midway,below left] {$\vec r_O$};
+  \draw[->,thick] (Op) -- (M) node[pos=0.55,right] {$\vec r'$};
+  \draw[->,very thick] (O) -- (M) node[pos=0.32,above] {$\vec r$};
+  \fill (M) circle (1.6pt) node[above] {$M$};
+\end{tikzpicture}
+\end{center}
+
+\subsection{直角坐标法}
+
+引入基矢量行阵与坐标列阵的记号：$\vec e = (\vec e_x\ \ \vec e_y\ \ \vec e_z)$，
+$\vec X = (x,\ y,\ z)^{\mathrm T}$；动基相应记为 $\vec e'$、$\vec X'$。
+于是位置矢量可写为矩阵形式：
+
+\begin{equation}\label{eq:8-pos-matrix}
+\begin{aligned}
+  \vec r   &= x\vec e_x + y\vec e_y + z\vec e_z
+            = (\vec e_x\ \ \vec e_y\ \ \vec e_z)\begin{pmatrix}x\\y\\z\end{pmatrix}
+            = \vec e\,\vec X,\\
+  \vec r_O &= (\vec e_x\ \ \vec e_y\ \ \vec e_z)\begin{pmatrix}x_O\\y_O\\z_O\end{pmatrix}
+            = \vec e\,\vec X_O,\\
+  \vec r'  &= x'\vec e_x' + y'\vec e_y' + z'\vec e_z' = \vec e'\,\vec X' .
+\end{aligned}
+\end{equation}
+
+动基各轴用定基表出（轴间方向余弦 $c_{ij}$，使用查表的方法）：
+
+\begin{equation}\label{eq:8-dir-cos}
+\begin{aligned}
+  \vec e_x' &= c_{11}\vec e_x + c_{21}\vec e_y + c_{31}\vec e_z,\\
+  \vec e_y' &= c_{12}\vec e_x + c_{22}\vec e_y + c_{32}\vec e_z,\\
+  \vec e_z' &= c_{13}\vec e_x + c_{23}\vec e_y + c_{33}\vec e_z,
+\end{aligned}
+\end{equation}
+
+可概括为 $\vec e_j' = \sum_i c_{ij}\,\vec e_i$。写成矩阵（基矢量行阵不变换、
+坐标列阵用方向余弦矩阵 $C$ 变换）：
+
+\begin{equation}\label{eq:8-basis-transform}
+  (\vec e_x'\ \ \vec e_y'\ \ \vec e_z') = (\vec e_x\ \ \vec e_y\ \ \vec e_z)\,C,
+  \qquad\text{即}\qquad \vec e' = \vec e\,C .
+\end{equation}
+
+把 \eqref{eq:8-r-decomp} 代入 \eqref{eq:8-pos-matrix} 并利用 \eqref{eq:8-basis-transform}，
+得坐标变换关系（含动系原点平移与坐标旋转两部分）：
+
+\begin{equation}\label{eq:8-coord-transform}
+  \vec X = \vec X_O + C\,\vec X' .
+\end{equation}
+% 待核对：原稿此处的中间推导行未能完全辨认（疑为 $\vec e\vec X = \vec e'\vec X‘ + \vec e\vec X_O$ 之类，笔迹含时间导数/点号），最终结果按最可能的 $\vec X = \vec X_O + C\vec X’$ 转写。
+
+\section{速度合成定理}
+
+\subsection{绝对导数、相对导数及其关系}
+
+对同一位置矢量 $\vec r = \vec e\,\vec X$，有两种求导：对定基的\textbf{绝对导数}
+$\frac{d}{dt}$，与对动基的\textbf{相对导数} $\frac{\widetilde{d}}{dt}$（求导时视动基不变）：
+
+\begin{equation}\label{eq:8-deriv-defs}
+  \frac{d\vec r}{dt} = \vec e\,\dot{\vec X},
+  \qquad\qquad
+  \frac{\widetilde{d\vec r}}{dt}
+  = (\vec e_x'\ \ \vec e_y'\ \ \vec e_z')\begin{pmatrix}\dot x'\\\dot y'\\\dot z'\end{pmatrix}
+  = \vec e'\,\dot{\vec X}' .
+\end{equation}
+
+\begin{proposition}[绝对导数与相对导数的关系]\label{prop:8-deriv}
+设动系以角速度 $\vec\omega$ 转动，则任一矢量的绝对导数等于相对导数加上转动带来的修正项：
+\begin{equation}\label{eq:8-deriv-rel}
+  \boxed{\ \frac{d\vec r}{dt} = \frac{\widetilde{d\vec r}}{dt} + \vec\omega\times\vec r\ }
+\end{equation}
+\end{proposition}
+
+\subsection{绝对速度、相对速度和牵连速度}
+
+\begin{definition}[牵连速度]\label{def:8-ve}
+在某瞬时，动系上\textbf{与动点相重合的那一点}的速度，称为该瞬时动点的牵连速度，记作 $\vec v_e$。
+\end{definition}
+
+对 $\vec r = \vec r_O + \vec r'$ 求绝对导数并用 \eqref{eq:8-deriv-rel}，得绝对速度的拆分：
+
+\begin{equation}\label{eq:8-va-split}
+  \vec v_a = \frac{d\vec r}{dt}
+           = \underbrace{\frac{d\vec r_O}{dt} + \vec\omega\times\vec r}_{\textstyle \vec v_e\ (\text{牵连速度})}
+           + \underbrace{\frac{\widetilde{d\vec r}}{dt}}_{\textstyle \vec v_r\ (\text{相对速度})}
+\end{equation}
+
+其中 $\vec v_a = \frac{d\vec r}{dt}$ 为绝对速度，$\vec v_r = \frac{\widetilde{d\vec r}}{dt}$ 为相对速度。
+
+\subsection{速度合成定理的证明（几何法）}
+
+\begin{theorem}[速度合成定理]\label{thm:8-vsum}
+动点在某瞬时的绝对速度，等于同一瞬时它的牵连速度与相对速度的矢量和：
+\begin{equation}\label{eq:8-vsum}
+  \boxed{\ \vec v_a = \vec v_e + \vec v_r\ }
+\end{equation}
+\end{theorem}
+
+\begin{proof}[几何法证明]
+设瞬时 $t$ 动点位于 $M$。经过时间间隔 $\Delta t$：若无相对运动，动点随动系到达 $M'$
+（走过牵连位移）；在此基础上动系中再观察，动点从 $M'$ 到达 $M''$（走过相对位移）。
+绝对位移等于牵连位移与相对位移之和，
+
+\begin{equation}\label{eq:8-disp-sum}
+  \Delta\vec r_a = \Delta\vec r_e + \Delta\vec r_r ,
+\end{equation}
+
+两边同除以 $\Delta t$，取 $\Delta t \to 0$ 的极限，即得
+$\vec v_a = \vec v_e + \vec v_r$。
+\end{proof}
+% 待核对：原稿此步写作 \vec r = \vec r_{OM} + \vec r_{MM'}，下标具体记法未能完全辨认（也可能为 \vec r_{O'} + \vec r‘ 之类的矢量和），此处按「绝对位移＝牵连位移＋相对位移」的最可能形式转写。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \coordinate (M)   at (0,0);
+  \coordinate (Mp)  at (2.7,0.45);
+  \coordinate (Mpp) at (3.5,2.3);
+  \draw[->,very thick] (M)   -- (Mpp) node[pos=0.5,left=2pt]  {$\vec v_a$};
+  \draw[->,very thick] (M)   -- (Mp)  node[pos=0.5,below]     {$\vec v_e$};
+  \draw[->,very thick] (Mp)  -- (Mpp) node[pos=0.5,right=2pt] {$\vec v_r$};
+  \fill (M)   circle (1.6pt) node[below] {$M$};
+  \fill (Mp)  circle (1.6pt) node[below] {$M'$};
+  \fill (Mpp) circle (1.6pt) node[right] {$M''$};
+\end{tikzpicture}
+\end{center}
+
+\subsection{几个说明}
+
+\begin{enumerate}
+  \item 无论动系作何种运动（平动、转动或更一般的运动），定理均成立；
+  \item 作图时按平行四边形／三角形法则作出 $\vec v_a = \vec v_e + \vec v_r$；
+  \item 一个矢量方程共涉及六个量（三个速度各自的大小与方向），
+        必须已知其中四个才可求解；解题时可采用几何法或解析法。
+\end{enumerate}
+
+\subsection{动点选择的原则}
+
+\begin{enumerate}
+  \item 动点应相对于动参考系运动，动点不能选在与动系固连的某一物体上；
+  \item 相对轨迹要尽量简单（清晰、易画出）。
+\end{enumerate}
+
+\begin{longexample}[速度合成定理的应用：求 AB 杆运动的速度]
+杆 $AB$ 的 $A$ 端沿半径为 $R$ 的半圆轨道滑动，杆处于图示位置（$A$ 处杆与半径的夹角为
+$\varphi$），求 $AB$ 杆运动的速度。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  % 半圆轨道与地面
+  \draw (-2.5,0) -- (2.5,0);
+  \draw[thick] (-2,0) arc[start angle=180, end angle=0, radius=2];
+  \coordinate (Oc) at (0,0);
+  \fill (Oc) circle (1.2pt) node[below] {$O_c$};
+  % 动点 A 在圆弧上，竖直杆 AB
+  \coordinate (A) at (130:2);
+  \coordinate (B) at ($(A)+(0,2.0)$);
+  \draw[line width=1.1pt] (A) -- (B) node[above] {$B$};
+  \fill (A) circle (1.7pt);
+  \node[below left] at (A) {$A$};
+  % 半径线
+  \draw[densely dashed] (Oc) -- (A);
+  % A 处速度：绝对速度沿圆弧切向，相对速度沿杆
+  \draw[->,thick] (A) -- ++(40:1.1) node[right] {$\vec v_A$};
+  \draw[->,thick,densely dashed] ($(A)+(0.14,0)$) -- ($(A)+(0.14,1.0)$)
+        node[above] {$\vec v_A'$};
+  % B 处速度
+  \draw[->,thick] (B) -- ++(0.95,0) node[right] {$\vec v_B$};
+  % 杆的转动角速度（左下）
+  \draw[->] (-3.2,-0.55) arc[start angle=140, end angle=20, radius=0.45];
+  \node at (-2.78,-0.12) {$\omega$};
+  % 角 varphi：半径与杆的夹角
+  \pic [draw, "$\varphi$", angle eccentricity=1.45, angle radius=0.6cm, font=\small]
+        {angle = Oc--A--B};
+\end{tikzpicture}
+\end{center}
+
+\begin{solution}
+以 $A$ 为动点，动系与半圆（轨道）固连。设 $\varphi$ 为杆与基准方向的夹角，
+由速度平行四边形（$A$ 的绝对速度 $\vec v_a$ 沿轨道切线方向）得
+
+\begin{equation}\label{eq:8-ab-ratio}
+  \frac{v_a}{v_e} = \tan\varphi
+  \qquad\bigl(v_a\cos\varphi = v_e\sin\varphi\bigr),
+  \qquad\text{故}\qquad v_a = v_e\tan\varphi .
+\end{equation}
+
+用解析法（取水平 $x$、竖直 $y$ 投影）验证：$\vec v_a = \vec v_e + \vec v_r$，
+
+\begin{equation}\label{eq:8-ab-proj}
+  x:\ 0 = v_e - v_r\cos\varphi,
+  \qquad
+  y:\ v_a = v_r\sin\varphi .
+\end{equation}
+
+两式联立同样给出 $v_a = v_e\tan\varphi$。此外，$A$ 点被约束在半径 $R$ 的圆弧轨道上，
+其坐标满足约束方程
+
+\begin{equation}\label{eq:8-ab-constraint}
+  (x' - R\sin\varphi)^2 + (y' - R\cos\varphi)^2 = R^2 .
+\end{equation}
+% 待核对：原稿 x'、y‘ 两行出现自相减的写法（如 x' = R\sin\varphi - R\sin\varphi），疑为笔误、未能完全确定；仅末行圆弧约束方程清晰，按约束方程转写（A 点沿半径 R 的圆弧运动）。
+\end{solution}
+\end{longexample}
+
+\section{加速度合成}
+
+\subsection{动系作平动时的加速度合成定理}
+
+\begin{theorem}[动系平动时的加速度合成定理]\label{thm:8-atrans}
+动系作平动时，动点的绝对加速度等于牵连加速度与相对加速度的矢量和：
+
+\begin{equation}\label{eq:8-atrans}
+\begin{aligned}
+  &\vec a_a = \vec a_e + \vec a_r ;\\
+  &\vec a_a^{\tau} + \vec a_a^{n}
+    = \vec a_e^{\tau} + \vec a_e^{n} + \vec a_r^{\tau} + \vec a_r^{n} .
+\end{aligned}
+\end{equation}
+\end{theorem}
+
+\parahead{推导要点（两边求绝对导数）}
+①先用速度合成定理求出 $v_a$、$v_e$、$v_r$，从而各法向加速度为
+
+\begin{equation}\label{eq:8-anorm}
+  a_a^{n} = \frac{v_a^2}{\rho_a},
+  \qquad\qquad
+  a_e^{n} = \frac{v_e^2}{\rho_e} ;
+\end{equation}
+
+②再用解析法求解：对速度合成定理两边求绝对导数，
+
+\begin{equation}\label{eq:8-a-chain}
+\begin{aligned}
+  \vec a_a &= \frac{d\vec v_a}{dt}
+            = \frac{d\vec v_e}{dt} + \frac{d\vec v_r}{dt}\\
+           &= \frac{d\vec v_e}{dt}
+            + \Bigl(\frac{d\vec v_r}{dt} + \vec\omega\times\vec v_r\Bigr) .
+\end{aligned}
+\end{equation}
+
+动系平动时 $\vec\omega \equiv 0$，括号中的修正项消失，且平动动系各轴方向恒定，
+$\frac{d\vec v_e}{dt} = \vec a_e$、$\frac{d\vec v_r}{dt} = \vec a_r$，
+故得 $\vec a_a = \vec a_e + \vec a_r$。（一般情形下多出的 $\vec\omega\times\vec v_r$
+一项正是科氏加速度的来源，见下文。）
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \coordinate (O)  at (0,0);
+  \coordinate (Op) at (3.0,1.5);
+  \coordinate (M)  at (4.1,2.6);
+  \draw[->] (-0.2,0) -- (6.2,0) node[below] {$x$};
+  \draw[->] (0,-0.2) -- (0,3.4) node[left] {$y$};
+  \node[below left] at (O) {$O$};
+  % 平移动系：各轴与定系平行
+  \draw[->] (Op) -- ++(2.4,0) node[below] {$x'$};
+  \draw[->] (Op) -- ++(0,1.7) node[left] {$y'$};
+  \node[below right=1pt] at (Op) {$O'$};
+  \fill (Op) circle (1.2pt);
+  % 动点与速度三角形
+  \fill (M) circle (1.6pt) node[above] {$M$};
+  \coordinate (E) at ($(M)+(-1.05,-0.55)$);
+  \coordinate (W) at ($(E)+(0.45,1.15)$);
+  \draw[->,very thick] (M) -- (W) node[right] {$\vec v_a$};
+  \draw[->,thick] (M) -- (E) node[below] {$\vec v_e$};
+  \draw[->,thick] (E) -- (W) node[right] {$\vec v_r$};
+\end{tikzpicture}
+\end{center}
+
+\subsection{动系作转动时的加速度合成定理}
+
+\parahead{1. 一个特例说明}
+先看一个例子：$\vec a_a = \vec a_e + \vec a_r$ 在转动情形下不再成立，
+需要附加科氏项（见后面的推导）。设轮子绕固定中心 $O$ 以角速度 $\omega$ 转动、半径为 $r$，
+取轮缘上的点 $M$ 为动点、轮子为动系：
+
+\begin{equation}\label{eq:8-wheel}
+\begin{aligned}
+  &a_O = 0,\\
+  &\vec a_P^{\,e} = (\omega^2 r)(-\vec i),\\
+  &\vec a_r = \vec a_r^{\tau} + \vec a_r^{n}
+            = \vec a_r^{\tau} + (\omega^2 r)(-\vec i) .
+\end{aligned}
+\end{equation}
+
+因为圆心 $O$ 固定，$a_O = 0$；轮上与 $M$ 重合的点 $P$ 的牵连加速度为向心加速度
+$a_P^e = \omega^2 r$，方向指向圆心（图中记作 $-\vec i$ 方向）；相对加速度分解为切向分量
+$\vec a_r^{\tau}$ 与法向分量 $\vec a_r^n = \omega^2 r(-\vec i)$。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \draw[thick] (0,0) circle (1.4);
+  \coordinate (Oc) at (0,0);
+  \fill (Oc) circle (1.2pt) node[below left] {$O$};
+  \draw[->] (0,0) -- (2.9,0) node[below] {$x$};
+  % 轮缘动点 M
+  \coordinate (P) at (35:1.4);
+  \fill (P) circle (1.7pt) node[above right] {$M$};
+  \draw (Oc) -- (P);
+  % 牵连加速度（重合点 P）：指向圆心
+  \draw[->,very thick] (P) -- ++(215:1.15) node[near end,below left] {$\vec a_P^{\,e}$};
+  % 相对加速度切向分量
+  \draw[->,thick] (P) -- ++(125:0.85) node[above] {$\vec a_r^{\,\tau}$};
+  % 轮子转动方向
+  \draw[->] (115:1.85) arc[start angle=115, end angle=45, radius=1.85];
+  \node at (82:2.18) {$\omega$};
+\end{tikzpicture}
+\end{center}
+
+\parahead{2. 由速度合成定理取极限的特例推导（转动动系）}
+设经过 $\Delta t$ 后各速度分别变为 $\vec v_a'$、$\vec v_e'$、$\vec v_r'$：
+
+\begin{equation}\label{eq:8-lim-vsum}
+  \vec v_a = \vec v_e + \vec v_r,
+  \qquad\qquad
+  \vec v_a' = \vec v_e' + \vec v_r' .
+\end{equation}
+
+对绝对速度取极限求绝对加速度，并把增量拆分为牵连部分与相对部分：
+
+\begin{equation}\label{eq:8-lim-split}
+  \vec a_a = \lim_{\Delta t \to 0}\frac{\vec v_a' - \vec v_a}{\Delta t}
+           = \underbrace{\lim_{\Delta t \to 0}\frac{\vec v_e' - \vec v_e}{\Delta t}}_{\text{牵连部分}}
+           + \underbrace{\lim_{\Delta t \to 0}\frac{\vec v_r' - \vec v_r}{\Delta t}}_{\text{相对部分}} .
+\end{equation}
+
+牵连部分：由于动系在转动，除了牵连加速度本身，还必须叠加「速度方向随动系偏转」带来的分量，
+
+\begin{equation}\label{eq:8-ae-extra}
+  \lim_{\Delta t \to 0}\frac{\vec v_e' - \vec v_e}{\Delta t}
+  = \vec a_e + \vec\omega\times\vec v_r ,
+\end{equation}
+% 待核对：原稿此推导行有涂改与重复记写、分项未能完全确定，最终落为 \vec a_e + \vec\omega\times\vec v_r，此处按最可能形式转写。
+
+其中方向偏转部分来自位移方向的转动（把牵连速度写成 $\vec\omega\times\vec r$ 再求极限）：
+
+\begin{equation}\label{eq:8-rot-term}
+  \lim_{\Delta t \to 0}\frac{\vec\omega\times\vec r' - \vec\omega\times\vec r}{\Delta t}
+  = \lim_{\Delta t \to 0}\,\vec\omega\times\frac{\vec r' - \vec r}{\Delta t}
+  = \vec\omega\times\vec v_r .
+\end{equation}
+
+相对部分即相对加速度：
+
+\begin{equation}\label{eq:8-ar-def}
+  \vec a_r = \lim_{\Delta t \to 0}\frac{\vec v_r' - \vec v_r}{\Delta t} .
+\end{equation}
+
+代回 \eqref{eq:8-lim-split}：
+
+\begin{equation}\label{eq:8-lim-final}
+  \vec a_a = \lim_{\Delta t \to 0}\frac{\vec v_a' - \vec v_a}{\Delta t}
+           = \vec a_r + \lim_{\Delta t \to 0}\frac{\vec v_e' - \vec v_e}{\Delta t}
+           = \vec a_r + \vec a_e + 2\,\vec\omega\times\vec v_r .
+\end{equation}
+
+\begin{theorem}[加速度合成定理]\label{thm:8-acor}
+
+\begin{equation}\label{eq:8-acor-thm}
+  \boxed{\ \vec a_a = \vec a_e + \vec a_r + 2\,\vec\omega\times\vec v_r\ }
+\end{equation}
+\end{theorem}
+
+\begin{definition}[科氏加速度]\label{def:8-cor}
+\eqref{eq:8-acor-thm} 中的 $2\vec\omega\times\vec v_r$ 称为\textbf{科氏加速度}
+（科里奥利加速度），用 $\vec a_c$ 表示：$\vec a_c = 2\vec\omega\times\vec v_r$。
+\end{definition}
+
+物理图像：由于动系以 $\vec\omega$ 转动，速度矢量的方向随之偏转，求导时额外贡献一个
+$\vec\omega\times\vec v_r$；相对位移的方向在转动系中也在变化，又贡献一个
+$\vec\omega\times\vec v_r$——两项合计即科氏项 $2\vec\omega\times\vec v_r$。
+% 图待补：原稿此处有一幅转动动系中 M、M'、M'' 各位置及 v_a/v_e/v_r 经 Δt 变化的极限分解图，几何较复杂，暂留待补。
+
+\subsection{加速度合成定理的严格数学证明}
+
+下面用与全书一致的记号给出严格推导。设动点为 $M$，动系上与动点重合的牵连点为 $M'$，
+动系角速度为 $\vec\omega$、角加速度为 $\vec\alpha$。记绝对、牵连、相对速度分别为
+$\vec v_a$、$\vec v_e$、$\vec v_r$，绝对、牵连、相对加速度分别为 $\vec a_a$、$\vec a_e$、$\vec a_r$。
+
+速度合成关系为
+
+\begin{equation}\label{eq:8-proof-vsum}
+  \vec v_a = \vec v_e + \vec v_r ,
+\end{equation}
+
+两边对时间求绝对导数：
+
+\begin{equation}\label{eq:8-proof-diff}
+  \vec a_a = \frac{d\vec v_a}{dt}
+          = \frac{d\vec v_e}{dt} + \frac{d\vec v_r}{dt} .
+\end{equation}
+
+第一项为牵连点（动系上该瞬时与动点重合的那一点 $M'$）的加速度，即牵连加速度：
+
+\begin{equation}\label{eq:8-proof-aop}
+  \frac{d\vec v_e}{dt} = \vec a_e .
+\end{equation}
+
+第二项对相对速度求绝对导数。由「绝对导数 $=$ 相对导数 $+$ 转动引起的项」：
+
+\begin{equation}\label{eq:8-proof-reldiff}
+  \frac{d\vec v_r}{dt}
+  = \frac{\widetilde{d\vec v_r}}{dt} + \vec\omega\times\vec v_r
+  = \vec a_r + \vec\omega\times\vec v_r ,
+\end{equation}
+
+其中 $\frac{\widetilde{d\vec v_r}}{dt}$ 是相对速度在动系中的相对导数（即相对加速度 $\vec a_r$）。
+
+对牵连速度的转动部分 $\vec\omega\times\vec r$（$\vec r$ 为动点相对动系原点的位置矢）求导：
+
+\begin{equation}\label{eq:8-proof-ve-omega}
+  \frac{d}{dt}\bigl(\vec\omega\times\vec r\bigr)
+  = \vec\alpha\times\vec r + \vec\omega\times\vec v_r ,
+\end{equation}
+
+代入并整理：
+
+\begin{equation}\label{eq:8-proof-expand}
+\begin{aligned}
+  \vec a_a
+  &= \vec a_e + \vec a_r + \vec\omega\times\vec v_r + \vec\omega\times\vec v_r\\
+  &= \vec a_e + \vec a_r + 2\,\vec\omega\times\vec v_r .
+\end{aligned}
+\end{equation}
+
+于是得加速度合成定理：
+
+\begin{equation}\label{eq:8-proof-final}
+  \therefore\ \vec a_a = \vec a_e + \vec a_r + \vec a_C ,
+  \qquad\qquad
+  \vec a_C = 2\,\vec\omega\times\vec v_r ,
+\end{equation}
+
+其中 $\vec a_C$ 即科里奥利加速度（哥氏加速度）；式中 $\vec\omega$
+是\textbf{动系（牵连运动）}转动的角速度。
+
+\begin{remark}[动力学解释]
+动系转动使速度矢量的方向不断改变：\eqref{eq:8-proof-final} 中的 $\vec\omega\times\vec v_r$
+一项正来自动系转动引起的相对速度方向改变，这就是科氏加速度的来源。
+原稿在此配有一幅小示意图：一个带角速度 $\vec\omega$ 的旋转参考系，一个与其半径垂直的
+速度矢量 $\vec V$ 及一段小圆弧，用来示意 $\frac{d\vec V}{dt}$ 的分解
+（转动带来的方向改变）。
+\end{remark}
+% 图待补：「动力学解释」小图（旋转参考系中矢量 V 随动系转动方向改变的示意）。
+
+\subsection{例题：牛头刨床机构}
+
+\begin{longexample}[牛头刨床机构（综合应用）]
+已知 $OA = 4r$，曲柄 $OA$ 的角速度为 $\omega$，求导杆（$CD$ 杆）的角速度和角加速度。
+% 待核对：题目条件「OA = 4r」中系数/单位字迹潦草；被求杆件原稿记作 CD 杆，图中导杆铰点亦可读作 O_1，具体对应需人工核对原图。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth, scale=1.05]
+  % 关键点
+  \coordinate (O)  at (0,0);
+  \coordinate (O1) at (3.4,-1.2);
+  \coordinate (A)  at (0.9,1.5);
+  \coordinate (B)  at ($(O1)!1.36!(A)$);
+  % 机架支座（固定铰 O 与 O1）
+  \draw ($(O)+(-0.28,-0.30)$) -- ($(O)+(0.28,-0.30)$);
+  \foreach \s in {-0.22,-0.07,0.08,0.23}
+    \draw ($(O)+(\s,-0.30)$) -- ($(O)+(\s-0.14,-0.46)$);
+  \draw ($(O1)+(-0.28,-0.30)$) -- ($(O1)+(0.28,-0.30)$);
+  \foreach \s in {-0.22,-0.07,0.08,0.23}
+    \draw ($(O1)+(\s,-0.30)$) -- ($(O1)+(\s-0.14,-0.46)$);
+  % 曲柄 OA 与导杆 O1B
+  \draw[line width=1.1pt] (O) -- (A);
+  \draw[line width=1.1pt] (O1) -- (B) node[above] {$B$};
+  % 滑块 A（沿导杆方向的小矩形）
+  \begin{scope}[shift={(A)}, rotate=133]
+    \draw[fill=white, line width=0.9pt] (-0.24,-0.17) rectangle (0.24,0.17);
+  \end{scope}
+  \fill (O) circle (1.3pt);
+  \fill (O1) circle (1.3pt);
+  \fill (A) circle (1.4pt);
+  \node[below left] at (O) {$O$};
+  \node[below right] at (O1) {$O_1$};
+  \node[above left] at (A) {$A$};
+  % 曲柄转向
+  \draw[->] (75:0.62) arc[start angle=75, end angle=-15, radius=0.62];
+  \node at (30:0.98) {$\omega$};
+  % 曲柄与导杆夹角示意
+  \pic [draw, angle eccentricity=1.4, angle radius=0.62cm, font=\small, "$\theta$"]
+        {angle = B--A--O};
+\end{tikzpicture}
+\end{center}
+
+\begin{solution}
+\parahead{速度分析}
+以 $A$ 为动点、导杆（$O_1B$ 所在转动杆）为动系。点 $A$ 的绝对速度沿曲柄切向，大小为
+
+\begin{equation}\label{eq:8-shaper-va}
+  v_a = OA\cdot\omega = 4r\,\omega ;
+\end{equation}
+
+牵连速度沿导杆的垂直方向、相对速度沿导杆方向，三者构成速度平行四边形：
+
+\begin{equation}\label{eq:8-shaper-par}
+  \tan 30^\circ = \frac{v_r}{v_e},\qquad
+  v_a\cos 30^\circ = v_e,\qquad
+  v_a\sin 30^\circ = v_r .
+\end{equation}
+% 待核对：原稿把分量记作 v_{a\cos30°}、v_{a\sin30°}，此处按分量 v_a\cos30°、v_a\sin30° 理解。
+
+于是牵连速度以及导杆角速度为
+
+\begin{equation}\label{eq:8-shaper-ve}
+  v_e = v_a\cos 30^\circ = 4r\,\omega\cdot\frac{\sqrt{3}}{2} = 2\sqrt{3}\,r\,\omega,
+  \qquad
+  \omega_{CD} = \frac{v_e}{O_1A} .
+\end{equation}
+% 待核对：原稿右栏另有 v_D = (√3/2)r\omega、v_e = (3/?)r\omega、\omega_{CD} = v_e/(O_1A) 等潦草关系，各分母（导杆长度）与具体系数需人工核对。
+
+\parahead{加速度分析}
+以 $B$ 为动点、$AB$（导杆）为动系，用含科氏加速度的加速度合成定理求 $CD$ 杆角加速度：
+
+\begin{equation}\label{eq:8-shaper-acc}
+\begin{aligned}
+  &a_e^{\,t} = a_a\cos 30^\circ - a_C, \qquad
+   a_e^{\,n} = a_a\cos 30^\circ,\\
+  &a_C = 2\,\omega_{CD}\,v_r, \qquad
+   a_{CD}^{\ \alpha} = \frac{a_e^{\,t}}{O_1A} .
+\end{aligned}
+\end{equation}
+% 待核对：原稿下半部各行符号潦草，如「a_{a\cos30°} = a_e^t + a_C」「a_e^n = (3/?)r\omega^2」、可能出现 \omega_{AB} 字样等，多处系数/符号需核对。
+
+\begin{remark}[动点、动系选择的注记]
+页底注记大致为「以 $B$ 为动点、$AB$ 为动系」「$C$ 为 $CD$ 杆上的动点」等；
+页底最末一行还写有简化形式 $\vec a_a=\vec a_e+\vec a_r$（即 $\vec a_a = \vec a_{O'} + \vec a_e$ 的旧记号），
+与上一节的加速度合成定理呼应（未写哥氏项的简化形式）。
+\end{remark}
+% 待核对：页底注记「V、B 在 AB 上，C 为 CD（动）点」字迹潦草，动点/动系的具体字母组合需人工核对。
+\end{solution}
+\end{longexample}

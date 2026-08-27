@@ -1,0 +1,368 @@
+% 来源：《理论力学》课堂笔记手写扫描件 第65—69页（页面标题作「第十一章 动量矩定理」；按全书章节序本章为第十二章，公式标签以 eq:12- 编号）
+\section{动量矩定理}
+
+本章描述质点系相对于定点或质心的运动状态及其变化规律。
+
+\subsection{动量矩}
+
+\parahead{质点对固定点（轴）的动量矩}
+
+\begin{definition}[质点对点的动量矩]
+质点 $Q$ 的动量对于点 $O$ 的矩，定义为质点对于点 $O$ 的动量矩：
+\begin{equation}\label{eq:12-mo-particle}
+  \vec{M}_O\left(m\vec{v}\right)=\vec{r}\times m\vec{v},
+\end{equation}
+其中 $\vec{r}$ 为质点相对于固定点 $O$ 的位置矢径。
+\end{definition}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,line cap=round]
+  \coordinate (O) at (0,0);
+  \coordinate (Q) at (3,1.1);
+  \coordinate (V) at ($(Q)+(1.6,-1.0)$);
+  \fill (O) circle (1.6pt) node[below left] {$O$（固定点）};
+  \draw[->,thick] (O) -- (Q) node[pos=0.45,below,sloped] {$\vec{r}$};
+  \fill (Q) circle (1.8pt) node[above] {$Q$};
+  \draw[->,thick,blue!60!black] (Q) -- (V) node[right] {$m\vec{v}$};
+  % 动量矩方向：垂直图面朝外
+  \draw (0.6,0.82) circle (2.2pt);
+  \fill (0.6,0.82) circle (0.6pt);
+  \node at (1.9,-0.85) {$\vec{L}_O=\vec{r}\times m\vec{v}$（垂直于图面朝外）};
+  % 矢径与动量的夹角
+  \pic[draw,angle radius=9mm,angle eccentricity=1.35,"$\varphi$"] {angle=O--Q--V};
+\end{tikzpicture}
+\caption{质点对固定点的动量矩}\label{fig:12-mo}
+\end{figure}
+
+质点 $Q$ 的动量对于轴的矩，为 $m\vec{v}$ 在 $Oxy$ 平面内的投影 $(m\vec{v})_{xy}$ 对于点 $O$ 的矩。动量对点的矩与其对轴的矩之间有关系（注）
+\begin{equation}\label{eq:12-mo-axis}
+  \left[\vec{M}_O(m\vec{v})\right]_z=M_z(m\vec{v}).
+\end{equation}
+即对点的动量矩在通过该点的轴上的投影，等于对该轴的动量矩。
+
+\parahead{质点系的动量矩}
+
+质点系中各质点动量对于点 $O$ 的矩的矢量和，称为质点系对于点 $O$ 的动量矩：
+\begin{equation}\label{eq:12-lo-system}
+  \vec{L}_O=\sum\vec{M}_O(m_i\vec{v}_i),
+\end{equation}
+向各轴投影，例如对 $z$ 轴有
+\begin{equation}\label{eq:12-lz-system}
+  L_z=\sum M_z(m_i\vec{v}_i).
+\end{equation}
+
+\parahead{绕定轴转动刚体的动量矩}
+
+对于绕定轴 $z$ 转动的刚体，
+\begin{equation}\label{eq:12-rigid-lz}
+  L_z=\sum M_z(m_i\vec{v}_i)=\sum m_iv_ir_i=\omega\sum m_ir_i^2.
+\end{equation}
+令
+\begin{equation}\label{eq:12-jz-def}
+  J_z=\sum m_ir_i^2,
+\end{equation}
+则
+\begin{equation}\label{eq:12-lz-jz}
+  L_z=\omega J_z.
+\end{equation}
+于是称 $J_z$ 为\textbf{转动惯量}。
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,line cap=round]
+  % 转轴与轴承
+  \draw[fill=gray!30] (-0.55,1.75) rectangle (0.55,2.1);
+  \draw[fill=gray!30] (-0.55,-2.1) rectangle (0.55,-1.75);
+  \draw[thick] (0,-2.3) -- (0,2.45) node[above] {$z$};
+  % 圆盘（刚体）
+  \draw (0,-0.18) ellipse (1.7 and 0.33);
+  \draw (-1.7,-0.18) -- (-1.7,0.28);
+  \draw (1.7,-0.18) -- (1.7,0.28);
+  \draw[fill=blue!10] (0,0.28) ellipse (1.7 and 0.33);
+  \draw[thick] (0,-0.6) -- (0,0.66);
+  % 角速度
+  \draw[->,semithick] (0.95,0.95) arc (20:320:0.95 and 0.24);
+  \node at (1.35,1.15) {$\omega$};
+  % 质点与转动半径
+  \draw[dashed] (0,0.28) -- (1.7,0.28) node[midway,above] {$r_i$};
+  \fill (1.7,0.28) circle (1.8pt) node[right] {$m_i$};
+\end{tikzpicture}
+\caption{绕定轴转动的刚体}\label{fig:12-fixedaxis}
+\end{figure}
+
+\subsection{动量矩定理与常用投影式}
+
+将动量矩对时间取一次导数：
+\begin{equation}\label{eq:12-theorem-expand}
+  \frac{d}{dt}\vec{M}_O(m\vec{v})
+  =\frac{d}{dt}\left(\vec{r}\times m\vec{v}\right)
+  =\frac{d\vec{r}}{dt}\times m\vec{v}+\vec{r}\times\frac{d}{dt}(m\vec{v}).
+\end{equation}
+由质点动量定理有 $\dfrac{d}{dt}(m\vec{v})=\vec{F}$，
+% 待核对：原稿「由质点动量定理有」后的表达式手写较草，疑为 \dfrac{d}{dt}(m\vec{v})=\vec{F}，此处按此转写。
+又 $O$ 为定点，$\dfrac{d\vec{r}}{dt}=\vec{v}$，且 $\vec{v}\times m\vec{v}=\vec{0}$，故上式化为
+
+\begin{theorem}[质点的动量矩定理]
+质点对任一固定点的动量矩对时间的导数，等于作用于该质点的力对同一点的矩：
+\begin{equation}\label{eq:12-theorem-particle}
+  \frac{d}{dt}\vec{M}_O(m\vec{v})=\vec{M}_O\left(\vec{F}\right).
+\end{equation}
+\end{theorem}
+
+常用的投影形式为
+\begin{equation}\label{eq:12-projections}
+  \frac{d}{dt}M_x(m\vec{v})=M_x(\vec{F}),\qquad
+  \frac{d}{dt}M_y(m\vec{v})=M_y(\vec{F}),\qquad
+  \frac{d}{dt}M_z(m\vec{v})=M_z(\vec{F}).
+\end{equation}
+
+\subsection{质点系动量矩定理与动量矩守恒定律}
+
+对于一个质点系呢？先分析第 $i$ 个质点（其上作用有内力 $\vec{F}_i^{(i)}$ 与外力 $\vec{F}_i^{(e)}$）：
+\begin{equation}\label{eq:12-sys-particle-i}
+  \frac{d}{dt}\vec{M}_O(m_i\vec{v}_i)
+  =\vec{M}_O\left(\vec{F}_i^{(i)}\right)+\vec{M}_O\left(\vec{F}_i^{(e)}\right).
+\end{equation}
+将各式两边相加：
+\begin{equation}\label{eq:12-sys-sum}
+  \sum\frac{d}{dt}\vec{M}_O(m_i\vec{v}_i)
+  =\sum\vec{M}_O\left(\vec{F}_i^{(i)}\right)+\sum\vec{M}_O\left(\vec{F}_i^{(e)}\right).
+\end{equation}
+由牛顿第三定律，内力成对出现且等值反向：
+\begin{equation}\label{eq:12-inner-zero}
+  \sum\vec{M}_O\left(\vec{F}_i^{(i)}\right)=\vec{0},
+\end{equation}
+又求和与求导可交换次序，
+\begin{equation}\label{eq:12-sum-diff}
+  \sum\frac{d}{dt}\vec{M}_O(m_i\vec{v}_i)
+  =\frac{d}{dt}\sum\vec{M}_O(m_i\vec{v}_i)
+  =\frac{d}{dt}\vec{L}_O,
+\end{equation}
+于是得到\textbf{质点系动量矩定理}：
+\begin{equation}\label{eq:12-sys-theorem}
+  \frac{d}{dt}\vec{L}_O=\sum\vec{M}_O\left(\vec{F}_i^{(e)}\right).
+\end{equation}
+
+\noindent\textbf{注：}上述动量矩定理仅限于固定点、固定轴。
+
+当 $\sum\vec{M}_O\left(\vec{F}_i^{(e)}\right)=\vec{0}$ 时，由式~\eqref{eq:12-sys-theorem} 即得
+
+\begin{corollary}[动量矩守恒定律]
+若质点系所受外力对固定点 $O$ 的矩的矢量和恒为零，则质点系对该点的动量矩保持不变：
+\begin{equation}\label{eq:12-conservation}
+  \vec{L}_O=\text{const.}
+\end{equation}
+\end{corollary}
+
+\subsection{面积速度定理}
+
+由此可导出面积速度定理。设点 $M$ 仅在有心力作用下绕点 $O$ 运动，
+% 待核对：原稿该处字迹较模糊，「有心力」疑为「中心力」。
+此时合力始终通过力心 $O$，有
+\begin{equation}\label{eq:12-area-cond}
+  \sum\vec{M}_O\left(\vec{F}^{(e)}\right)=\vec{0}.
+\end{equation}
+于是由动量矩守恒，
+\begin{equation}\label{eq:12-rxmv-const}
+  \vec{r}\times m\vec{v}=\text{const.},
+  \qquad
+  \vec{r}\times m\frac{d\vec{r}}{dt}=\text{const.}
+\end{equation}
+消去不变的因子 $m$，得
+\begin{equation}\label{eq:12-rxdr-const}
+  \vec{r}\times\frac{d\vec{r}}{dt}=\text{const.}
+\end{equation}
+% 待核对：原稿注称「\vec{r}\times d\vec{r} 为矢径扫过面积的两倍」，该处字迹较模糊，请核对。
+又 $\vec{r}\times d\vec{r}$ 为矢径扫过微元面积的两倍，故
+\begin{equation}\label{eq:12-area-speed}
+  \frac{dA}{dt}=\text{const.}
+\end{equation}
+即为\textbf{面积速度定理}：在有心力作用下，动点的矢径单位时间内扫过的面积（面积速度）保持不变。
+
+\subsection{刚体绕定轴的转动微分方程}
+
+对于绕定轴转动的刚体（默认转轴为 $z$），由动量矩定理，并将式~\eqref{eq:12-lz-jz} 向转轴投影：
+\begin{equation}\label{eq:12-fixedaxis-rate}
+  \frac{d}{dt}(J_z\omega)=\sum M_z(\vec{F}),
+  \qquad
+  J_z\frac{d\omega}{dt}=\sum M_z(\vec{F}),
+\end{equation}
+即
+\begin{equation}\label{eq:12-fixedaxis-eom}
+  J_z\alpha=\sum M_z(\vec{F})
+  \quad\text{或}\quad
+  J_z\frac{d^2\varphi}{dt^2}=\sum M_z(\vec{F}).
+\end{equation}
+上式称为刚体绕定轴的转动微分方程。
+
+\subsection{回转半径}
+
+\begin{definition}[回转半径]
+回转半径（或\textbf{惯性半径}）定义为
+\begin{equation}\label{eq:12-rho-def}
+  \rho_z=\sqrt{\frac{J_z}{m}}.
+\end{equation}
+\end{definition}
+
+对于几何形状相同的均质物体，其回转半径的公式相同。且有
+\begin{equation}\label{eq:12-jz-rho}
+  J_z=m\rho_z^2.
+\end{equation}
+
+\subsection{平行轴定理}
+
+\begin{theorem}[平行轴定理]
+刚体对任一轴 $z$ 的转动惯量，等于它对过质心 $C$ 且与 $z$ 平行的轴 $z_c$ 的转动惯量，加上刚体质量与两轴间垂直距离平方的乘积：
+\begin{equation}\label{eq:12-parallel-statement}
+  J_z=J_{zc}+md^2,
+\end{equation}
+其中 $z\parallel z_c$，且 $d$ 为两轴间的垂直距离。
+\end{theorem}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[>=Stealth,line cap=round]
+  % 刚体截面
+  \draw[fill=gray!15] plot[smooth cycle,tension=0.9]
+    coordinates {(0,0.4) (1.3,0.9) (2.4,0.3) (2.0,-0.9) (0.5,-1.0)};
+  \fill (1.2,-0.1) circle (1.6pt) node[below right] {$C$};
+  % 过质心的轴
+  \draw[dashed,thick] (1.2,1.5) -- (1.2,-1.7) node[below] {$z_c$};
+  % 平行轴
+  \draw[thick] (3.1,1.5) -- (3.1,-1.7) node[below] {$z$};
+  % 两轴间距
+  \draw[<->] (1.2,-1.35) -- (3.1,-1.35) node[midway,above] {$d$};
+\end{tikzpicture}
+\caption{平行轴定理：过质心的轴 $z_c$ 与平行轴 $z$}\label{fig:12-parallel}
+\end{figure}
+
+\begin{proof}
+取轴 $z_c$ 过质心 $C$，以其为原点建立直角坐标系，则
+\begin{equation}\label{eq:12-parallel-jzc}
+  J_{zc}=\sum m_i(x_i^2+y_i^2),
+\end{equation}
+而对与之相距 $d$ 的平行轴 $z$，
+\begin{equation}\label{eq:12-parallel-expand}
+\begin{aligned}
+  J_z&=\sum m_i\left[x_i^2+(y_i-d)^2\right]\\
+  &=\sum m_i(x_i^2+y_i^2)+\sum m_i d^2-2d\sum m_i y_i.
+\end{aligned}
+\end{equation}
+由质心坐标公式 $y_c\sum m_i=\sum m_i y_i$，注意坐标系原点取在质心上，$y_c=0$，即 $\sum m_i y_i=0$，
+% 待核对：原稿此步写作「又 y_c=d」，并据以得出 J_z=J_{zc}-md^2，与本节开头陈述的平行轴定理（加号）相矛盾；判为笔误或坐标取向记号混用，此处取标准结论 J_z=J_{zc}+md^2。
+于是
+\begin{equation}\label{eq:12-parallel-result}
+  J_z=J_{zc}+md^2.
+\end{equation}
+\end{proof}
+
+\subsection{质点系相对于质心的动量矩定理}
+
+以质心 $C$ 为原点，取一平移参考系 $Cx'y'z'$（即随质心平动的参考系）。则质点系对质心的动量矩为
+\begin{equation}\label{eq:12-lc-def}
+  \vec{L}_C=\sum\vec{M}_C(m_i\vec{v}_i')
+  =\sum\left(\vec{r}_i'\times m_i\vec{v}_i'\right),
+\end{equation}
+其中 $\vec{r}_i'$、$\vec{v}_i'$ 为第 $i$ 个质点在平移系中的位置矢径与相对速度。
+
+若 $m_i$ 为动点，则 $Cx'y'z'$ 为动参考系（即随质心平动）。则有
+\begin{equation}\label{eq:12-vi-decomp}
+  \vec{v}_i=\vec{v}_C+\vec{v}_i',
+\end{equation}
+按绝对速度计算动量矩，则
+\begin{equation}\label{eq:12-lc-split}
+\begin{aligned}
+  \vec{L}_C
+  &=\sum\left[m_i\vec{r}_i'\times\left(\vec{v}_C+\vec{v}_i'\right)\right]\\
+  &=\sum\left(m_i\vec{r}_i'\times\vec{v}_C\right)
+    +\sum\left(m_i\vec{r}_i'\times\vec{v}_i'\right).
+\end{aligned}
+\end{equation}
+又 $\vec{r}_C'=\vec{0}$（质心在质心系中的位置矢量为零），从而 $\sum m_i\vec{r}_i'=m\,\vec{r}_C'=\vec{0}$，第一项消失，故
+\begin{equation}\label{eq:12-lc-relative}
+  \vec{L}_C=\sum\vec{M}_C(m_i\vec{v}_i')=\sum\left(\vec{r}_i'\times m_i\vec{v}_i'\right).
+\end{equation}
+即：以质点的绝对速度和相对速度算出来的对质心的动量矩，结果相同。
+
+\subsection{对固定点取矩与动量矩的合成}
+
+若对一固定点 $O$ 取矩，
+\begin{equation}\label{eq:12-lo-fixed}
+  \vec{L}_O=\sum\vec{M}_O(m_i\vec{v}_i)=\sum\left(\vec{r}_i\times m_i\vec{v}_i\right),
+\end{equation}
+其中
+\begin{equation}\label{eq:12-ri-decomp}
+  \vec{r}_i=\vec{r}_C+\vec{r}_i'.
+\end{equation}
+于是
+\begin{equation}\label{eq:12-lo-expand}
+\begin{aligned}
+  \vec{L}_O
+  &=\sum\left[\left(\vec{r}_C+\vec{r}_i'\right)\times m_i\vec{v}_i\right]\\
+  &=\vec{r}_C\times\sum m_i\vec{v}_i+\sum\left(\vec{r}_i'\times m_i\vec{v}_i\right).
+\end{aligned}
+\end{equation}
+又 $\sum m_i\vec{v}_i=m\vec{v}_C$，因此质点系对于定点 $O$ 的动量矩可写为
+
+\begin{proposition}[对固定点与对质心动量矩的合成关系]
+\begin{equation}\label{eq:12-lo-compose}
+  \vec{L}_O=\vec{r}_C\times m\vec{v}_C+\vec{L}_C.
+\end{equation}
+\end{proposition}
+
+\parahead{对动量矩定理的继续推导}
+
+对上述式子对时间求导，并由质点系动量矩定理（式~\eqref{eq:12-sys-theorem}）：
+\begin{equation}\label{eq:12-dlo-total}
+  \frac{d\vec{L}_O}{dt}
+  =\frac{d}{dt}\left(\vec{r}_C\times m\vec{v}_C+\vec{L}_C\right)
+  =\sum\left(\vec{r}_i\times\vec{F}_i^{(e)}\right).
+\end{equation}
+又 $\vec{r}_i=\vec{r}_C+\vec{r}_i'$，两端分别展开：
+\begin{equation}\label{eq:12-dlo-expand}
+\begin{aligned}
+  &\frac{d\vec{r}_C}{dt}\times m\vec{v}_C
+   +\vec{r}_C\times\frac{d}{dt}(m\vec{v}_C)
+   +\frac{d\vec{L}_C}{dt}\\
+  &\qquad=\sum\left(\vec{r}_C\times\vec{F}_i^{(e)}\right)
+   +\sum\left(\vec{r}_i'\times\vec{F}_i^{(e)}\right).
+\end{aligned}
+\end{equation}
+又 $\dfrac{d\vec{r}_C}{dt}=\vec{v}_C$，$\vec{r}_C\times\vec{v}_C=\vec{0}$，且 $\dfrac{d}{dt}(m\vec{v}_C)=m\vec{a}_C=\sum\vec{F}_i^{(e)}$，两端首项相消，故上式可化为
+\begin{equation}\label{eq:12-dlc-step}
+  \frac{d\vec{L}_C}{dt}=\sum\left(\vec{r}_i'\times\vec{F}_i^{(e)}\right).
+\end{equation}
+即得\textbf{质点系相对于质心的动量矩定理}：
+
+\begin{theorem}[质点系相对于质心的动量矩定理]
+\begin{equation}\label{eq:12-centroid-theorem}
+  \frac{d\vec{L}_C}{dt}=\sum\vec{M}_C\left(\vec{F}_i^{(e)}\right).
+\end{equation}
+\end{theorem}
+
+\subsection{刚体的平面运动微分方程}
+
+在工程实际中，大部分平面运动刚体可以抽象为具有质量对称面、且平行于此对称面运动的力学模型。——《理论力学 I》（哈工大）
+
+刚体对质心轴的动量矩为 $\vec{L}_C=J_C\omega$，代入质心运动定理与相对于质心的动量矩定理，得
+\begin{equation}\label{eq:12-planar-vector}
+  m\vec{a}_C=\sum\vec{F}^{(e)},
+  \qquad
+  \frac{d}{dt}(J_C\omega)=J_C\alpha=\sum\vec{M}_C(\vec{F}^{(e)}).
+\end{equation}
+则上式可写作
+\begin{equation}\label{eq:12-planar-eom}
+  m\frac{d\vec{v}_C}{dt}=\sum\vec{F}^{(e)},
+  \qquad
+  J_C\frac{d^2\varphi}{dt^2}=\sum\vec{M}_C(\vec{F}^{(e)}).
+\end{equation}
+此即刚体平面运动的微分方程，其投影式为
+% 待核对：转写稿末尾该方程组重复出现两次且内容完全一致，已合并去重为一组。
+\begin{equation}\label{eq:12-planar-proj}
+\begin{cases}
+  ma_{Cx}=\sum F_x,\\
+  ma_{Cy}=\sum F_y,\\
+  J_C\alpha=\sum M_C(\vec{F}^{(e)}).
+\end{cases}
+\end{equation}

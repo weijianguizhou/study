@@ -1,0 +1,150 @@
+% ======================================================================
+% 《理论力学》课堂笔记 · 第 5 章 运动学基础（章首页 · 总纲）
+% 转写自手写扫描件第 35 页；仅含 \section 及以下层级，由主文件统一组装
+% ======================================================================
+
+前面各章讨论的是静力学问题。从本章起转入\textbf{运动学}：从几何的角度描述物体的机械运动。运动学包括两大板块——\textbf{点的运动学}与\textbf{刚体运动学}。本页为第五章的章首总纲，先明确运动学的任务及其与机构运动分析的关系，再给出所采用的力学模型与运动形式的分类。
+
+% ----------------------------------------------------------------------
+\section{运动学的任务}
+
+\begin{keybox}[运动学的任务]
+对恰当的运动，选择恰当的参数，建立描述运动的数学关系，提出解决运动学的一般分析方法。
+\end{keybox}
+
+\parahead{具体任务}
+
+\begin{enumerate}
+    \item 建立运动方程；
+    \item 计算表征运动的特征物理量；
+    \item 分析运动的合成。
+\end{enumerate}
+
+% ----------------------------------------------------------------------
+\section{运动学与机构运动分析}
+
+运动学的知识直接服务于机构的运动分析，笔记以一句话点明其联系：
+\begin{center}
+    {\heiti 结构}\;\;$\longrightarrow$\;\;{\heiti 机构}
+\end{center}
+即由固定的结构过渡到可传递运动的机构。下图为由多个刚体通过铰链、滑块连接而构成的机构简图。
+% 待核对：原图仅存文字描述（带阴影固定支座 + 连杆 + 斜向连杆（端部短横线表销/铰）
+%         + 底部虚线导轨上的滑块），下方 TikZ 为按描述的示意性转绘，细节与原页或有出入。
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[line cap=round, line join=round]
+        % ---- 固定铰支座（左上，地面斜线阴影） ----
+        \coordinate (A) at (0,0);
+        \draw[thick] (-0.42,-0.72) -- (A) -- (0.42,-0.72) -- cycle;
+        \draw[thick] (-0.62,-0.72) -- (0.62,-0.72);
+        \foreach \x in {-0.54,-0.36,...,0.54}
+            \draw[thick] (\x,-0.74) -- ++(0.17,-0.17);
+        \fill (A) circle (0.075);
+        % ---- 连杆（粗实线） ----
+        \coordinate (B) at (2.7,-0.7);
+        \draw[line width=1.6pt] (A) -- (B);
+        \fill (B) circle (0.075);
+        % ---- 斜向连杆，两端短横线表示销/铰 ----
+        \coordinate (C) at (4.1,-2.3);
+        \draw[line width=1.1pt] (B) -- (C);
+        \draw[line width=1pt] ($(B)+( 0.083,0.072)$) -- ($(B)-(0.083,0.072)$);
+        \draw[line width=1pt] ($(C)+( 0.083,0.072)$) -- ($(C)-(0.083,0.072)$);
+        \fill (C) circle (0.06);
+        % ---- 底部水平导轨（虚线）与滑块 ----
+        \draw[dashed] (3.0,-2.3) -- (5.5,-2.3);
+        \draw[thick, fill=black!10] (3.84,-2.06) rectangle (4.36,-2.54);
+    \end{tikzpicture}
+    \caption{多个刚体通过铰链、滑块连接构成的机构简图（示意）}
+    \label{fig:5-jigou}
+\end{figure}
+
+% ----------------------------------------------------------------------
+\section{运动学的模型和运动形式}
+
+\subsection{模型：点、刚体}
+
+运动学的研究对象抽象为两类力学模型：\textbf{点}与\textbf{刚体}。
+
+\subsection{运动形式}
+
+\subsubsection{点的运动形式}
+
+\begin{itemize}
+    \item 直线运动；
+    \item 曲线运动。
+\end{itemize}
+
+\subsubsection{刚体的运动形式}
+
+\begin{itemize}
+    \item 平行移动；
+    \item 定轴转动；
+    \item 平面运动；
+    \item 定点运动；
+    \item 一般运动。
+\end{itemize}
+
+% 待核对：转写稿中「基本运动（简单运动）」缩进注写于「定轴转动」条目之下，
+%         此处按惯例理解为对「平行移动＋定轴转动」两者的整体标注，请对照原页核实。
+其中，平行移动与定轴转动合称\textbf{基本运动}（又称简单运动）；其余为复杂运动形式。
+
+\begin{tipbox}[后继章节]
+本章为总纲。后续章节将循此展开：点的运动学 $\to$ 刚体的基本运动（平行移动、定轴转动）$\to$ 点的合成运动 $\to$ 刚体的平面运动。
+\end{tipbox}
+
+% ----------------------------------------------------------------------
+% （以下一节补自第 36 页上半部分：该节在手写笔记中位于第六章章名之前，属第五章内容）
+\section{矢量导数及动参考系}
+
+本节为运动学的矢量分析作准备：给出矢量对时间导数的定义与求导法则，并引入动参考系。
+
+\subsection{矢量导数}
+
+矢量 $\vec{A}$ 对时间的导数定义为
+\begin{equation}
+    \frac{d\vec{A}}{dt}=\lim_{\Delta t\to 0}\frac{\Delta\vec{A}}{\Delta t}
+    \label{eq:5-shiliang-daoshu-dingyi}
+\end{equation}
+其中 $\Delta\vec{A}$ 为矢量 $\vec{A}$ 在时间间隔 $\Delta t$ 内的变化量。
+
+\parahead{求导法则}
+
+\begin{equation}
+    \frac{d}{dt}\left(\alpha\vec{A}+\beta\vec{B}\right)
+    =\alpha\frac{d\vec{A}}{dt}+\beta\frac{d\vec{B}}{dt}
+    \label{eq:5-qiudao-xianxing-zuhe}
+\end{equation}
+
+\begin{equation}
+    \frac{d}{dt}\left(\vec{A}\times\vec{B}\right)
+    =\frac{d\vec{A}}{dt}\times\vec{B}+\vec{A}\times\frac{d\vec{B}}{dt}
+    \label{eq:5-qiudao-chaji}
+\end{equation}
+
+\subsection{动参考系}
+
+下图中，固定于动参考系的矢量 $\vec{A}$ 随参考系转动至 $\vec{A}'$，$\Delta\vec{A}$ 表示其变化量。
+% 待核对：原图仅存文字描述（坐标轴 x 水平向右、y 竖直向下，绕其旋转得 x'、y'；
+%         矢量 A、变化量 ΔA 与从原点出发的 A' 的几何关系），下方 TikZ 为按描述的示意性
+%         转绘，转角大小与各矢量方位均为示意，请对照原页核实。
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[>=Stealth, line cap=round, line join=round]
+        % ---- 动参考系原始方位 Oxy（x 向右、y 向下） ----
+        \coordinate (O) at (0,0);
+        \draw[->] (O) -- (3.1,0) node[below] {$x$};
+        \draw[->] (O) -- (0,-2.5) node[left] {$y$};
+        % ---- 绕 O 旋转后的 Ox'y' ----
+        \begin{scope}[rotate=-25]
+            \draw[->, structurecolor!70] (O) -- (3.1,0) node[right] {$x'$};
+            \draw[->, structurecolor!70] (O) -- (0,-2.5) node[below] {$y'$};
+        \end{scope}
+        % ---- 固定于动参考系的矢量 A 及转动后的 A'、变化量 ΔA ----
+        \draw[->, thick] (O) -- (1.6,-1.5) node[right] {$\vec{A}$};
+        \draw[->, thick, structurecolor] (O) -- (0.82,-2.04) node[below left] {$\vec{A}'$};
+        \draw[->, dashed] (1.6,-1.5) -- (0.82,-2.04) node[midway, above] {$\Delta\vec{A}$};
+        \node[structurecolor!70] at (1.7,0.75) {\small 动参考系};
+    \end{tikzpicture}
+    \caption{固定在动参考系上的矢量随参考系转动而变化（示意）}
+    \label{fig:5-dongcankaoxi}
+\end{figure}

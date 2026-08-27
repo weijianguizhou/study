@@ -1,0 +1,133 @@
+% ============================================================
+%  理论力学笔记 —— 依据课堂手写笔记扫描件整理
+%  样式：课程笔记模板（12pt book + preamble + notebody 骨架）
+%  编译方式: XeLaTeX，运行两遍以生成目录与交叉引用
+% ============================================================
+\documentclass[12pt,a4paper,oneside]{book}
+\input{preamble}
+
+% ============================================================
+%	笔记元信息
+% ============================================================
+\newcommand{\notename}{理论力学}   % 封面大标题
+\newcommand{\noteauthor}{魏舟} % 封面作者
+\newcommand{\noteextra}{南京理工大学} % 印象·日出封面底部附加信息
+\newcommand{\notecourseen}{Theoretical Mechanics} % 封面眉题英文课名
+
+% 正文骨架：每章一个 .tex 文件（子文件只含 \section 及以下）
+\newcommand{\notebody}{
+	% 绪论（不编号，保证正文从第一章起计）
+	\chapter*{绪论}
+	\addcontentsline{toc}{chapter}{绪论}
+	\input{绪论}
+
+	% ============ 三篇结构：静力学 · 运动学 · 动力学 ============
+	\renewcommand{\thepart}{\Roman{part}}
+	\titleformat{\part}[display]
+	{\centering\normalfont}
+	{\color{gold}\rule[-0.5ex]{2.2em}{1.6pt}\hspace{1.2em}{\color{structurecolor}\large\kaishu 第\ \thepart\ 篇}\hspace{1.2em}{\color{gold}\rule[-0.5ex]{2.2em}{1.6pt}}}
+	{2.2ex}
+	{\color{structurecolor}\centering\Huge\heiti}
+	[{\vspace{1.2ex}{\color{gold}\titlerule[1.2pt]}\vspace{-3.6pt}{\color{structurecolor!45}\titlerule[0.4pt]}}]
+	\titlecontents{part}[0em]{\addvspace{1em}}
+	{\color{structurecolor}\large\heiti 第\ \thecontentslabel\ 篇\quad}{}{\hfill\color{structurecolor}\contentspage}
+
+	% ============ 第一篇 静力学 ============
+	\part{静力学}
+
+	\chapter{静力学基本公理及受力分析}
+	\input{静力学基本公理及受力分析}
+
+	\chapter{平面力系}
+	\input{平面力系}
+
+	\chapter{空间力系}
+	\input{空间力系}
+
+	\chapter{摩擦}
+	\input{摩擦}
+
+	% ============ 第二篇 运动学 ============
+	\part{运动学}
+
+	\chapter{运动学基础}
+	\input{运动学基础}
+
+	\chapter{点的运动学}
+	\input{点的运动学}
+
+	\chapter{刚体的基本运动}
+	\input{刚体的基本运动}
+
+	\chapter{点的合成运动}
+	\input{点的合成运动}
+
+	\chapter{刚体的平面运动}
+	\input{刚体的平面运动}
+
+	% ============ 第三篇 动力学 ============
+	\part{动力学}
+
+	\chapter{质点动力学的基本方程}
+	\input{质点动力学基本方程}
+
+	\chapter{动量定理}
+	\input{动量定理}
+
+	\chapter{动量矩定理}
+	\input{动量矩定理}
+
+	\chapter{动能定理}
+	\input{动能定理}
+
+	\chapter{达朗贝尔原理}
+	\input{达朗贝尔原理}
+
+	% ============================================================
+	% 附录（样式自动切换为“附录 x”格式）
+	% ============================================================
+	\appendix
+	\titleformat{\chapter}[display]
+	{\normalfont}
+	{\centering{\color{gold}\rule[-0.5ex]{2.2em}{1.6pt}}\hspace{1.2em}{\color{structurecolor}\large\kaishu 附录 \thechapter}\hspace{1.2em}{\color{gold}\rule[-0.5ex]{2.2em}{1.6pt}}}
+	{1.6ex}
+	{\color{structurecolor}\centering\Huge\heiti}
+	[{\vspace{1.2ex}{\color{gold}\titlerule[1.2pt]}\vspace{-3.6pt}{\color{structurecolor!45}\titlerule[0.4pt]}}]
+	\titlecontents{chapter}[0em]{\addvspace{0.8em}}
+	{\color{structurecolor}\large\heiti 附录\ \thecontentslabel\quad}{}{\hfill\color{structurecolor}\contentspage}
+
+	\chapter{综合复习题（静力学·运动学）}
+	\input{综合复习题}
+}
+
+\begin{document}
+	% 封面：「印象·日出」风格
+	\input{cover_Impression风.tex}
+
+	\newpage
+
+	% ---- 第 2 页：格言页（居中）----
+	\thispagestyle{empty}
+	\vspace*{\fill}
+	\begin{center}
+		{\kaishu\fontsize{18}{28}\selectfont "Nothing is final."}
+	\end{center}
+	\vfill
+	\newpage
+
+	% 前言（置于目录之前，符合阅读顺序）
+	\chapter*{前言}
+	\input{前言}
+
+	% 正文页眉页脚样式
+	\pagestyle{mainstyle}
+
+	\setcounter{tocdepth}{3}
+
+	\tableofcontents
+
+	\setcounter{page}{0}
+	\thispagestyle{empty}
+	\newpage
+	\notebody
+\end{document}

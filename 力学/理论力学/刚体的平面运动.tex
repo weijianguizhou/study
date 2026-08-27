@@ -1,0 +1,963 @@
+% 来源：《理论力学》课堂笔记手写扫描件 第50—57页（第9章 刚体的平面运动）
+% 转写说明：原稿例题数字系数潦草较多，凡依上下文选取“最可能值”处均加 % 待核对 注释。
+\section{刚体的平面运动}
+
+本章讨论刚体的一种常见运动形态——平面运动：先介绍基本概念与运动的简化，再将平面运动分解为随基点的平动与绕基点的转动，随后依次给出求平面图形上各点速度（基点法、速度投影定理、速度瞬心法）与加速度（基点法）的方法，最后举例说明运动学综合问题的解法。
+
+\subsection{基本概念}
+
+\subsubsection{平面运动的定义}
+
+\begin{definition}[平面运动]
+刚体在运动过程中，其上任意一点到某一固定平面的距离始终保持不变，这种运动称为刚体的\textbf{平面运动}。
+\end{definition}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth, line cap=round, scale=0.92]
+  % 左图：圆柱在固定平面上
+  \begin{scope}
+    \draw (-1.8,0) -- (1.8,0);
+    \foreach \x in {-1.7,-1.4,...,1.7}{\draw (\x,0) -- ({\x-0.28},-0.28);}
+    \draw[fill=white] (0,0.75) circle (0.75);
+    \fill (0,0.75) circle (1.2pt) node[above right]{\small $C$};
+    \draw[->] (0.2,1.1) -- (1.15,1.42) node[above]{\small $\vec{v}$};
+    \node at (0,-0.78) {\small 固定平面};
+  \end{scope}
+  % 右图：杆状刚体搁在两个固定支点上
+  \begin{scope}[xshift=5.6cm]
+    \foreach \px/\py in {-1.1/0.35, 1.1/0.2}{
+      \fill (\px,\py) circle (1.5pt);
+      \draw (\px,\py) -- ++(-0.22,-0.34) -- ++(0.44,0) -- cycle;
+      \draw (\px-0.34,\py-0.34) -- ++(0.68,0);
+    }
+    \draw[thick] (-1.6,0.38) -- (1.6,0.18);
+    \node[above left] at (-1.45,0.37) {\small $A$};
+    \node[below right] at (1.45,0.19) {\small $B$};
+  \end{scope}
+\end{tikzpicture}
+\end{center}
+
+刚体运动时，其上各点到某一固定平面的距离保持不变，这类运动就是平面运动。
+
+\subsubsection{平面运动的简化}
+
+平面运动可以简化为\textbf{一个平面图形在其自身平面内的运动}：在刚体上任取一平面图形，该图形始终在其自身平面内运动；建立坐标系后，图形的位置由其基点的两个坐标与绕基点的转角共三个量确定。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \draw[->] (-0.4,0) -- (3.7,0) node[below]{$x$};
+  \draw[->] (0,-0.4) -- (0,3.5) node[left]{$y$};
+  \node[below left] at (0,0) {$O$};
+  \coordinate (A) at (2.1,1.9);
+  \draw[fill=gray!12] (A) -- ++(35:1.05) arc (35:-35:1.05) -- cycle;
+  \draw[->] (A) -- ++(0.95,0) node[below]{$x'$};
+  \draw[->] (A) -- ++(0,0.95) node[left]{$y'$};
+  \fill (A) circle (1.3pt);
+  \node[below left] at (A) {$A$};
+  \coordinate (Ap) at ($(A)+(0.95,0)$);
+  \coordinate (M) at ($(A)+(65:1.05)$);
+  \draw (A) -- (M) node[pos=0.65, above right]{\small $M$};
+  \draw pic[draw, ->, "$\varphi$", angle radius=16pt, angle eccentricity=1.4] {angle=Ap--A--M};
+  \draw[->] ([shift={(A)}]100:0.5) arc (100:225:0.5);
+  \node at ($(A)+(235:0.72)$) {\small $\omega$};
+\end{tikzpicture}
+\end{center}
+
+以 $A$ 为基点，平面图形的位置由基点坐标 $x_A,y_A$ 与绕基点的转角 $\varphi$ 确定：
+\begin{equation}\label{eq:9-plane-motion-pos}
+  \begin{cases}
+    x_A = x_A(t),\\
+    y_A = y_A(t),\\
+    \varphi = \varphi(t).
+  \end{cases}
+\end{equation}
+
+\begin{example}[平面运动的简化：运动方程]
+设平面运动构件为细杆 $AB$：$A$ 端受约束沿半径为 $r$ 的圆周以匀角速度 $\omega$ 运动，$B$ 端靠在水平地面上，杆与竖直方向成角 $\theta$，杆上有点 $P$（$AP=l_1$）。试：
+\begin{enumerate}
+  \item 写出 $AB$ 杆的运动方程；
+  \item 求 $P$ 点的速度和加速度。
+\end{enumerate}
+
+\begin{solution}
+以 $A$ 的运动为基点，建立运动方程。$A$ 点作圆周运动：
+\begin{equation}\label{eq:9-ex1-A}
+  \begin{cases}
+    x_A = r\cos\omega t,\\
+    y_A = r\sin\omega t.
+  \end{cases}
+\end{equation}
+% 待核对：原稿此处分母潦草（作 \arcsin\frac{l}{?}\sin\omega t），且另有一行 \sin\theta=\frac{?}{\sin\omega t} 亦难辨认；
+% 依后文 x_P 中 \sqrt{1-(l_1/l)^2\sin^2\omega t} 反推，取 \sin\theta=(l_1/l)\sin\omega t。
+杆相对竖直方向的转角 $\theta=\theta(t)$：
+\begin{equation}\label{eq:9-ex1-theta}
+  \begin{aligned}
+    \theta &= \arcsin\!\left(\frac{l_1}{l}\sin\omega t\right),\\
+    \sin\theta &= \frac{l_1}{l}\sin\omega t.
+  \end{aligned}
+\end{equation}
+杆上点 $P$ 的坐标（以 $A$ 为基点叠加相对转动）：
+\begin{equation}\label{eq:9-ex1-P}
+  \begin{aligned}
+    x_P &= r\cos\omega t + l\cos\theta,\\
+    y_P &= (l-l_1)\sin\theta.
+  \end{aligned}
+\end{equation}
+% 待核对：原稿旁注条件一句（形如“正中 l/l_1<l/?”）字迹潦草，无法确认所限比值，待核对。
+将式~\eqref{eq:9-ex1-theta} 代入 $x_P$：
+\begin{equation}\label{eq:9-ex1-Pexact}
+  x_P = r\cos\omega t + l\sqrt{1-\left(\frac{l_1}{l}\right)^{2}\sin^{2}\omega t}.
+\end{equation}
+对根号作级数展开：
+% 待核对：原稿第二项符号与系数模糊（作 +\frac{1}{?}），此处按二项式展开 (1-u)^{1/2}=1-\frac{u}{2}-\frac{u^2}{8}-\cdots 取 -\frac{1}{8}。
+\begin{equation}\label{eq:9-ex1-series}
+  \begin{aligned}
+    \sqrt{1-\left(\frac{l_1}{l}\right)^{2}\sin^{2}\omega t}
+      &= 1-\frac{1}{2}\left(\frac{l_1}{l}\right)^{2}\sin^{2}\omega t
+         -\frac{1}{8}\left(\frac{l_1}{l}\right)^{4}\sin^{4}\omega t-\cdots\\
+      &\approx 1-\frac{1}{2}\left(\frac{l_1}{l}\right)^{2}\sin^{2}\omega t,
+  \end{aligned}
+\end{equation}
+于是得近似表达式：
+\begin{equation}\label{eq:9-ex1-Papprox}
+  x_P \approx r\cos\omega t + l\left[1-\frac{1}{2}\left(\frac{l_1}{l}\right)^{2}\sin^{2}\omega t\right],
+  \qquad \sin^{2}\omega t=\frac{1-\cos 2\omega t}{2}.
+\end{equation}
+对 $x_P$、$y_P$ 关于 $t$ 求导，即得 $P$ 点的速度和加速度。
+\end{solution}
+\end{example}
+
+\subsection{平面运动分解为平动和转动}
+
+平面运动可分解为随某基点的\textbf{平动}与绕基点的\textbf{转动}两部分。
+
+\parahead{基点与平动参考系}
+
+取基点 $A$，建立平动参考系（平动坐标系）$Ax'y'$：该参考系随基点 $A$ 平动，刚体相对平动参考系只作绕 $A$ 的转动。
+
+\begin{keybox}
+不同的基点上具有不同的平动速度和加速度，但具有相同的角速度和角加速度。即：平动部分与基点的选取有关，转动部分与基点的选取无关。$\omega$ 与 $\alpha$ 是平面运动的\textbf{两个特征量}。
+\end{keybox}
+
+\begin{example}[圆盘纯滚动的运动方程]
+半径为 $R$ 的圆盘在水平地面上作纯滚动，圆心为 $C$，圆盘最高点为 $M$，接触点为地面上的 $O$（取为原点）。写出其运动方程。
+\end{example}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \draw (-2.0,0) -- (2.0,0);
+  \foreach \x in {-1.9,-1.6,...,1.9}{\draw (\x,0) -- ({\x-0.26},-0.26);}
+  \coordinate (C) at (0,0.85);
+  \draw[fill=white] (C) circle (0.85);
+  \fill (C) circle (1.2pt) node[right]{$C$};
+  \fill (0,0) circle (1.2pt);
+  \node[below left] at (0,0) {\small $O$};
+  \draw (0,0) -- (C) node[midway, right]{$R$};
+  \coordinate (Cv) at (0,1.8);
+  \coordinate (M) at (0.425,1.586);
+  \draw (C) -- (M) node[pos=0.6, above right]{\small $M$};
+  \draw pic[draw, "$\varphi$", angle radius=15pt, angle eccentricity=1.45] {angle=M--C--Cv};
+  \draw[->] (C) -- (0.95,0.85) node[below]{$\vec{v}$};
+  \draw[->] ([shift={(C)}]115:0.55) arc (115:240:0.55);
+  \node at ($(C)+(255:0.78)$) {\small $\omega$};
+\end{tikzpicture}
+\end{center}
+
+\begin{solution}
+圆心纵坐标恒为 $R$，转角 $\varphi=\varphi(t)$，运动方程为
+\begin{equation}\label{eq:9-rolling-eom}
+  \begin{cases}
+    x_0 = x_0(t),\\
+    y_0 = R,\\
+    \varphi = \varphi(t).
+  \end{cases}
+\end{equation}
+角速度与角加速度：
+\begin{equation}\label{eq:9-rolling-wa}
+  \omega=\dot{\varphi}=\frac{V}{R},
+  \qquad
+  \alpha=\ddot{\varphi}=\frac{a}{R},
+\end{equation}
+其中 $V$、$a$ 分别为圆心的速度与加速度的大小，$\dot{x}_0=V_0$。
+% 待核对：原稿下一行作 “x_0=y_0=R\dot{\varphi}”（或 \dot{x}_0 与之的组合），字迹潦草；
+% 依纯滚动条件取最可能形式 \dot{x}_0=R\dot{\varphi}。
+纯滚动条件联系圆心速度与角速度：
+\begin{equation}\label{eq:9-rolling-rollcond}
+  \dot{x}_0 = V_0,
+  \qquad
+  \dot{x}_0 = R\dot{\varphi}.
+\end{equation}
+\end{solution}
+
+\begin{example}[受约束杆的角速度与角加速度]
+细杆 $AB$ 长为 $l$：$A$ 端沿竖直导槽运动，$B$ 端沿水平地面滑动，杆与竖直方向成角 $\theta=\theta(t)$。已知 $B$ 端水平速度，求杆的角速度 $\omega_{AB}$ 与角加速度 $\alpha_{AB}$。
+\end{example}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \draw (-0.08,0.4) -- (-0.08,3.0);
+  \draw (0.08,0.4) -- (0.08,3.0);
+  \draw (-0.5,0) -- (2.6,0);
+  \foreach \x in {-0.4,-0.1,...,2.5}{\draw (\x,0) -- ({\x-0.26},-0.26);}
+  \draw[fill=white] (-0.17,2.12) rectangle (0.17,2.48);
+  \coordinate (A) at (0,2.3);
+  \coordinate (B) at (1.33,0);
+  \draw[thick] (A) -- (B);
+  \fill (A) circle (1.3pt) node[above left]{$A$};
+  \fill (B) circle (1.3pt) node[below right]{$B$};
+  \draw[->] (1.4,0) -- (2.25,0) node[above]{$u$};
+  \coordinate (Adown) at (0,1.35);
+  \draw pic[draw, "$\theta$", angle radius=22pt, angle eccentricity=1.35] {angle=Adown--A--B};
+  \node at ($(A)!0.55!(B)+(0.42,0)$) {\small $\omega_{AB}$};
+\end{tikzpicture}
+\end{center}
+
+\begin{solution}
+% 待核对：原稿图中 A、B 两端的约束画法与公式中坐标的对应关系字迹较乱，此处按公式转录：
+% B 端沿水平地面滑动（y_B=0，x_B 为其水平坐标），A 端沿竖直导槽运动。
+写运动方程：
+\begin{equation}\label{eq:9-rod2-eom}
+  x_B = l\sin\theta,
+  \qquad
+  y_B = 0,
+  \qquad
+  \theta=\theta(t).
+\end{equation}
+对时间求导，得角速度：
+\begin{equation}\label{eq:9-rod2-w}
+  \dot{x}_B = u = l\dot{\theta}\cos\theta
+  \quad\Longrightarrow\quad
+  \dot{\theta}=\omega_{AB}=\frac{u}{l\cos\theta}.
+\end{equation}
+再求导一次，得角加速度关系：
+% 待核对：原稿此行左端记作 \alpha，疑为笔误，按内容取 \ddot{x}_B（B 端水平加速度）。
+\begin{equation}\label{eq:9-rod2-a}
+  \ddot{x}_B = l\ddot{\theta}\cos\theta-l\dot{\theta}^{2}\sin\theta.
+\end{equation}
+由式~\eqref{eq:9-rod2-a} 解出 $\ddot{\theta}$ 即得 $\alpha_{AB}=\ddot{\theta}$。
+\end{solution}
+
+\subsection{求平面图形上各点的速度}
+
+求平面图形上各点速度有三种方法：
+\begin{enumerate}
+  \item 基点法（速度合成定理）；
+  \item 速度投影法（刚体的性质）；
+  \item 速度瞬心法（平面运动的本质）。
+\end{enumerate}
+
+\subsubsection{基点法（速度合成定理）}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \draw[rotate around={20:(1.6,1.15)}, fill=gray!10] (1.6,1.15) ellipse (1.55 and 0.8);
+  \coordinate (A) at (0.5,0.8);
+  \coordinate (B) at (2.7,1.6);
+  \fill (A) circle (1.3pt) node[below left]{$A$};
+  \fill (B) circle (1.3pt) node[below right]{$B$};
+  \draw (A) -- (B);
+  % 基点速度
+  \draw[->] (A) -- ++(1.0,0.2) node[pos=0.6, below]{$\vec{v}_A$};
+  % 相对速度（垂直于 AB）
+  \draw[->, dashed] (B) -- ++(-0.38,1.03) node[left]{$\vec{v}_{BA}$};
+  % 合成平行四边形辅助线
+  \draw[dashed, thin] (B) -- ++(1.0,0.2);
+  \draw[dashed, thin] ($(B)+(-0.38,1.03)$) -- ($(B)+(0.62,1.23)$);
+  \draw[dashed, thin] ($(B)+(1.0,0.2)$) -- ($(B)+(0.62,1.23)$);
+  % 绝对速度
+  \draw[->, thick] (B) -- ++(0.62,1.23) node[above]{$\vec{v}_B$};
+  \draw[->] ([shift={(1.6,1.15)}]115:0.5) arc (115:240:0.5);
+  \node at ($(1.6,1.15)+(255:0.75)$) {\small $\omega$};
+\end{tikzpicture}
+\end{center}
+
+以 $B$ 为动点、$A$ 为基点（动系），则 $B$ 的速度等于基点 $A$ 的速度与 $B$ 绕 $A$ 转动的速度之和（速度合成定理）：
+\begin{equation}\label{eq:9-base-point-v}
+  \vec{v}_B=\vec{v}_A+\vec{v}_{BA}.
+\end{equation}
+其中 $B$ 相对 $A$ 转动的速度（相对速度）由刚体角速度 $\vec{\omega}$ 与相对位矢 $\vec{AB}$ 的叉乘给出：
+\begin{equation}\label{eq:9-rel-v}
+  \vec{v}_{BA}=\vec{\omega}\times\vec{AB},
+  \qquad
+  v_{BA}=AB\cdot\omega,
+\end{equation}
+其方向垂直于 $AB$，指向与 $\omega$ 转向一致。
+% 待核对：原稿下标一处写作 v_{B'}，依上下文统一取 v_{BA}。
+
+\begin{example}[椭圆规]
+椭圆规机构中，直尺（细杆）$AB$ 的 $A$ 端在竖直导槽内滑动，$B$ 端在水平导槽内滑动，杆与竖直方向成角 $\varphi$。已知 $A$ 端速度 $\vec{v}_A$（沿导槽），求杆的角速度 $\omega_{AB}$。
+\end{example}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \draw (-0.08,0.3) -- (-0.08,3.1);
+  \draw (0.08,0.3) -- (0.08,3.1);
+  \draw (0.3,-0.08) -- (3.4,-0.08);
+  \draw (0.3,0.08) -- (3.4,0.08);
+  \draw[fill=white] (-0.17,1.62) rectangle (0.17,1.98);
+  \draw[fill=white] (1.82,-0.17) rectangle (2.18,0.17);
+  \coordinate (A) at (0,1.8);
+  \coordinate (B) at (2,0);
+  % 直尺穿过 A、B 并向两端略作延长：
+  \draw[very thick] ($(A)+(-0.26,0.234)$) -- ($(B)+(0.26,-0.234)$);
+  \fill (A) circle (1.3pt) node[above left]{$A$};
+  \fill (B) circle (1.3pt) node[below right]{$B$};
+  \fill (1.0,0.9) circle (1.1pt) node[above right]{\small $C$};
+  \draw[->] (0.2,1.98) -- (0.2,2.75) node[left]{$\vec{v}_A$};
+  \draw[->] (2.18,0) -- (3.05,0) node[above]{$\vec{v}_B$};
+  \coordinate (Adown) at (0,0.9);
+  \draw pic[draw, "$\varphi$", angle radius=20pt, angle eccentricity=1.4] {angle=Adown--A--B};
+\end{tikzpicture}
+\end{center}
+
+\begin{solution}
+由基点法，
+$\vec{v}_B=\vec{v}_A+\vec{v}_{BA}$
+（式~\eqref{eq:9-base-point-v}）。
+因 $\vec{v}_{BA}\perp AB$，它在 $AB$ 连线方向的投影为零，故由速度投影定理（见下文）得
+\begin{equation}\label{eq:9-ell-proj}
+  v_A\cos\varphi = v_B\sin\varphi
+  \quad\Longrightarrow\quad
+  v_B = v_A\cot\varphi .
+\end{equation}
+% 待核对：原稿另处一行作 \tan\varphi=\frac{v_B}{v_A}，与上式矛盾，疑为 \cot\varphi 之误（与最终结果 \omega_{AB}=\frac{v_A}{AB\sin\varphi} 相容者为本式）。
+而 $B$ 相对基点 $A$ 转动的速度大小为
+\begin{equation}\label{eq:9-ell-vba}
+  v_{BA}=\frac{v_A}{\sin\varphi},
+  \qquad
+  \omega_{AB}=\frac{v_{BA}}{AB}=\frac{v_A}{AB\,\sin\varphi}.
+\end{equation}
+\end{solution}
+
+\begin{example}[曲柄连杆机构]
+曲柄（圆盘）绕固定点 $O$ 以角速度 $\omega$ 转动，半径为 $R$；曲柄销经连杆连接滑块 $B$，滑块沿水平地面滑动。求连杆的角速度。
+% 待核对：原稿题干作“已知杆 AB 没有相对滑动，求?”，所求量字迹潦草，依右栏结果取为求连杆角速度 \omega_{AB}（及与 \omega 的关系）。
+\end{example}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \coordinate (O) at (0,0);
+  \coordinate (C) at (0.9,1.559);
+  \coordinate (B) at (3.5,0);
+  \draw (-0.22,-0.42) -- (0.22,-0.42) -- (O) -- cycle;
+  \draw (-0.3,-0.42) -- (0.3,-0.42);
+  \draw[thick] (O) -- (C) node[midway, above right]{$R$};
+  \draw[thick] ($(C)!-0.12!(B)$) -- ($(C)!1.08!(B)$);
+  \draw[fill=white] (3.3,-0.19) rectangle (3.7,0.19);
+  \draw (2.7,0) -- (4.6,0);
+  \foreach \x in {2.8,3.1,...,4.5}{\draw (\x,0) -- ({\x-0.26},-0.26);}
+  \fill (O) circle (1.3pt) node[above left]{$O$};
+  \fill (C) circle (1.3pt) node[above left]{$C$};
+  \fill (B) circle (1.3pt) node[below right]{$B$};
+  \draw[->] (C) -- ($(C)+(-0.70,0.40)$) node[above]{$\vec{v}_C$};
+  \draw[->] (3.7,0) -- (4.5,0) node[above]{$\vec{v}_B$};
+  \draw[->] ([shift={(O)}]80:0.5) arc (80:-30:0.5);
+  \node at ($(O)+(-40:0.75)$) {\small $\omega$};
+  \coordinate (Bleft) at (2.5,0);
+  \draw pic[draw, "$30^\circ$", angle radius=24pt, angle eccentricity=1.3] {angle=C--B--Bleft};
+\end{tikzpicture}
+\end{center}
+
+\begin{solution}
+曲柄销速度大小：
+% 待核对：销点字母原稿 A、C 混用，此处按原稿两行同时转录。
+\begin{equation}\label{eq:9-crank-pin}
+  v_C=R\omega,
+  \qquad
+  v_A=R\omega .
+\end{equation}
+以滑块 $B$ 为动点、曲柄销为基点，按基点法（式~\eqref{eq:9-base-point-v}）：
+\begin{equation}\label{eq:9-crank-vec}
+  \vec{v}_B=\vec{v}_A+\vec{v}_{BA}.
+\end{equation}
+% 待核对：原稿在 $x$ 方向列出的投影式即如下行，但其投影对象与符号存疑（左端似应为 \vec v_B 的投影），照原稿转录，待核对。
+沿 $x$ 方向列投影式：
+\begin{equation}\label{eq:9-crank-proj}
+  v_A\cos 30^\circ = v_B\cos 30^\circ + v_{BA}.
+\end{equation}
+% 待核对：原稿此行系数潦草（作 \frac{\sqrt{3}}{?}），取最可能的 \frac{\sqrt{3}}{2}（亦可能为 \frac{\sqrt{3}}{3}），待核对。
+整理得连杆角速度的相关关系：
+\begin{equation}\label{eq:9-crank-res}
+  AB\cdot\omega_{AB}=\frac{\sqrt{3}}{2}\,v,
+  \qquad
+  \omega_{AB}=\frac{v_A}{\sqrt{3}},
+\end{equation}
+% 待核对：原稿右栏又有 \omega_{AB}=\frac{v_A}{\sqrt{3}}，缺长度因子（疑漏除杆长 AB，或原稿已含于所用单位）；两处系数前后不一，具体数值待核对。
+其中 $v$ 为曲柄销速度。具体数值代入请对照原扫描件复核。
+\end{solution}
+
+\subsubsection{速度投影定理}
+
+\begin{theorem}[速度投影定理]
+刚体上任意两点，其速度在该两点连线上的投影相等。
+\end{theorem}
+
+\begin{proof}
+取刚体上两点 $A$、$B$，由基点法（式~\eqref{eq:9-base-point-v}）
+\begin{equation}\label{eq:9-proj-thm-vec}
+  \vec{v}_B=\vec{v}_A+\vec{\omega}\times\vec{AB}.
+\end{equation}
+将此式在 $AB$ 方向上投影：由于 $\vec{\omega}\times\vec{AB}$ 垂直于 $AB$，它在 $AB$ 方向上的投影为零，故
+\begin{equation}\label{eq:9-proj-thm}
+  \left[\vec{v}_B\right]_{AB}=\left[\vec{v}_A\right]_{AB}.
+\end{equation}
+\end{proof}
+
+\subsubsection{速度瞬心法}
+
+\parahead{一、速度瞬心}
+
+\begin{definition}[速度瞬心]
+平面图形上速度为零的点称为\textbf{瞬时速度中心}（简称\textbf{速度瞬心}）。
+\end{definition}
+
+\parahead{二、速度瞬心存在定理}
+
+\begin{theorem}[瞬心存在定理]
+在 $\omega\neq 0$ 的条件下，平面图形内存在唯一的速度瞬心。
+\end{theorem}
+
+\parahead{解析法证明}
+
+取基点为 $A$（其速度为 $\vec{v}_A$），图形上任意一点 $B$（相对 $A$ 的位矢为 $\vec{AB}$）的速度由式~\eqref{eq:9-proj-thm-vec} 给出。在 $x$--$y$ 平面内，设
+$\vec{v}_A=v_{Ax}\vec{i}+v_{Ay}\vec{j}$，
+$\vec{AB}=x\vec{i}+y\vec{j}$，
+$\vec{\omega}=\omega\vec{k}$，代入得
+\begin{equation}\label{eq:9-ic-comp}
+  \begin{aligned}
+    \vec{v}_B &= \vec{v}_A+\vec{\omega}\times\vec{AB}\\
+      &= v_{Ax}\vec{i}+v_{Ay}\vec{j}+(\omega\vec{k})\times(x\vec{i}+y\vec{j})\\
+      &= \left(v_{Ax}-\omega y\right)\vec{i}+\left(v_{Ay}+\omega x\right)\vec{j}.
+  \end{aligned}
+\end{equation}
+令 $\vec{v}_B=\vec{0}$（求速度为零的点）：
+\begin{equation}\label{eq:9-ic-zero}
+  \begin{cases}
+    v_{Ax}-\omega y = 0,\\
+    v_{Ay}+\omega x = 0.
+  \end{cases}
+\end{equation}
+解得瞬心坐标：
+\begin{equation}\label{eq:9-ic-sol}
+  x=-\frac{v_{Ay}}{\omega},
+  \qquad
+  y=\frac{v_{Ax}}{\omega}.
+\end{equation}
+当 $\omega\neq 0$ 时 $x$、$y$ 唯一确定，故速度瞬心存在且唯一。\qed
+
+\parahead{寻找法（几何作法）}
+
+过基点 $A$ 作垂直于 $\vec{v}_A$ 的垂线，在此垂线上取点 $P$，使
+\begin{equation}\label{eq:9-ic-geo-ap}
+  AP=\frac{v_A}{\omega},
+\end{equation}
+则 $P$ 为瞬心。验证：以 $P$ 为基点，$A$ 绕 $P$ 的转动速度恰好抵消 $A$ 的平动速度：
+\begin{equation}\label{eq:9-ic-geo-verify}
+  \begin{aligned}
+    \vec{v}_P &= \vec{v}_A+\vec{v}_{PA}=\vec{0},\\
+    v_P &= v_A-AP\cdot\omega = v_A-v_A = 0.
+  \end{aligned}
+\end{equation}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \draw[rounded corners, fill=gray!8] (0.2,0.6) rectangle (3.2,2.0);
+  \coordinate (A) at (0.9,1.2);
+  \coordinate (B) at (2.5,1.6);
+  \coordinate (P) at (0.59,2.08);
+  \fill (A) circle (1.3pt) node[below left]{$A$};
+  \fill (B) circle (1.3pt) node[below right]{$B$};
+  \draw[->] (A) -- ++(0.95,0.33) node[below]{$\vec{v}_A$};
+  \draw[->] (B) -- ++(0.25,0.95) node[right]{$\vec{v}_B$};
+  \draw[dashed] (A) -- (P);
+  \draw[dashed] (B) -- (P);
+  \fill (P) circle (1.5pt) node[above left]{$P$（瞬心）};
+  \draw[->] ([shift={(1.7,1.3)}]115:0.45) arc (115:240:0.45);
+  \node at ($(1.7,1.3)+(255:0.7)$) {\small $\omega$};
+\end{tikzpicture}
+\end{center}
+
+\begin{keybox}
+瞬心一定在垂直于速度的直线上（过基点垂直于该点速度的垂线上截取 $AP=v_A/\omega$ 即得瞬心）。
+\end{keybox}
+
+\parahead{三、速度瞬心的求法}
+
+确定速度瞬心的几种情形：
+\begin{enumerate}
+  \item \textbf{纯滚动的轮子}：接触点即为速度瞬心。
+  \item \textbf{已知两点速度的方向}（两点连线与速度不垂直）：分别过两点作速度方向的垂线，垂线的交点即为瞬心。
+  \item \textbf{已知两点速度方向相同且大小相等}：此时
+  \begin{equation}\label{eq:9-ic-omega-zero}
+    \omega = 0 ,
+  \end{equation}
+  刚体作\textbf{瞬时平动}，瞬心在无穷远，各点速度相同。
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth, scale=0.9]
+  % 左：瞬时平动
+  \draw[thick] (0,1.0) -- (2.4,1.0);
+  \draw[->] (0.4,1.35) -- (1.2,1.35) node[above]{$\vec{v}_A$};
+  \draw[->] (1.6,1.35) -- (2.4,1.35) node[above]{$\vec{v}_B$};
+  \draw[dashed] (1.2,0.9) -- (1.2,0.15);
+  \node[below] at (1.2,0.1) {\small $P$ 在无穷远};
+\end{tikzpicture}
+\end{center}
+
+\parahead{四、瞬心法的应用}
+
+\begin{example}[摇杆机构]
+% 图待补：三角摇杆机构原图（含瞬心 P、参考点 D、角 \theta、\varphi）较复杂，暂缺，待对照原件补绘。
+已知 $A$ 点速度 $v_A$，求杆 $AB$ 的角速度 $\omega_{AB}$ 与 $B$ 点速度 $v_B$。
+\end{example}
+
+\begin{solution}
+过 $A$、$B$ 分别作速度方向的垂线，交于瞬心 $P$，则图形上各点速度如绕 $P$ 作瞬时转动：
+\begin{equation}\label{eq:9-rocker-w}
+  \omega_{AB}=\frac{v_A}{AP}=\frac{v_B}{BP}.
+\end{equation}
+于是
+\begin{equation}\label{eq:9-rocker-vb}
+  v_B = BP\cdot\omega_{AB} = v_A\cdot\frac{BP}{AP} = v_A\cot\varphi .
+\end{equation}
+% 待核对：原稿末尾三角函数一读作 \cos\varphi、一读作 \cot\varphi，且另有一行 \tan\varphi=\frac{v_A}{v_B}；
+% \tan\varphi=v_A/v_B 与 \cot\varphi 结果相容，故取 v_B=v_A\cot\varphi，待核对。
+\end{solution}
+
+\begin{example}[纯滚动圆盘]
+圆盘沿水平地面纯滚动，接触点 $P$ 即速度瞬心（$v_P=0$）。求圆盘上各点的速度分布。
+\end{example}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \draw (-2.0,0) -- (2.2,0);
+  \foreach \x in {-1.9,-1.6,...,2.1}{\draw (\x,0) -- ({\x-0.26},-0.26);}
+  \coordinate (C) at (0,0.9);
+  \draw[fill=white] (C) circle (0.9);
+  \fill (C) circle (1.2pt) node[right]{$C$};
+  \fill (0,0) circle (1.3pt) node[below left]{\small $P$（瞬心）};
+  \draw (C) -- (0,0) node[midway, right]{$R$};
+  \coordinate (B) at (0,1.8);
+  \fill (B) circle (1.3pt) node[above left]{$B$};
+  \draw[->] (C) -- (0.85,0.9) node[below]{$v_C$};
+  \draw[->] (B) -- (1.7,1.8) node[above]{$2v_C$};
+\end{tikzpicture}
+\end{center}
+
+\begin{solution}
+接触点 $P$ 为速度瞬心，圆盘上各点速度的分布如同绕 $P$ 的瞬时转动：圆心速度为 $v_C$，圆盘顶点 $B$ 的速度方向与地面平行，大小为 $2v_C$。
+\end{solution}
+
+\parahead{五、速度瞬心的意义}
+
+\begin{keybox}
+速度瞬心的意义：
+\begin{enumerate}
+  \item 可以方便地求出各点的速度；
+  \item 能够给出整个图形的速度分布；
+  \item 揭示了平面运动的本质：平面运动是绕不同瞬心的转动。
+\end{enumerate}
+\end{keybox}
+
+\subsection{求平面图形上各点的加速度}
+
+\parahead{基点法（加速度合成定理的应用）}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \draw[rotate around={22.6:(1.8,1.2)}, fill=gray!10] (1.8,1.2) ellipse (1.45 and 0.6);
+  \coordinate (A) at (0.6,0.7);
+  \coordinate (B) at (3.0,1.7);
+  \fill (A) circle (1.3pt) node[below left]{$A$};
+  \fill (B) circle (1.3pt) node[below right]{$B$};
+  \draw (A) -- (B);
+  % 基点加速度
+  \draw[->] (A) -- ++(0.5,0.9) node[right]{$\vec{a}_A$};
+  % B 点各项
+  \draw[->, dashed] (B) -- ++(-1.108,-0.462) node[below left]{$\vec{a}_{BA}^{\,n}$};
+  \draw[->, dashed] (B) -- ++(-0.347,0.831) node[above]{$\vec{a}_{BA}^{\,\tau}$};
+  \draw[dashed, thin] ($(B)+(-1.108,-0.462)$) -- ($(B)+(-0.955,1.269)$);
+  \draw[dashed, thin] ($(B)+(-0.347,0.831)$) -- ($(B)+(-0.955,1.269)$);
+  \draw[->, thick] (B) -- ++(-0.955,1.269) node[left]{$\vec{a}_B$};
+  \draw[->] ([shift={(A)}]60:0.42) arc (60:175:0.42);
+  \node at ($(A)+(195:0.62)$) {\small $\omega,\alpha$};
+\end{tikzpicture}
+\end{center}
+
+以 $B$ 为动点，按加速度合成定理，牵连运动为随基点 $A$ 的平动、相对运动为绕基点 $A$ 的转动：
+\begin{equation}\label{eq:9-acc-base}
+  \vec{a}_B=\vec{a}_A+\vec{a}_{BA}.
+\end{equation}
+相对加速度 $\vec{a}_{BA}$ 按「平动／转动」分解为切向与法向两个分量，其中法向分量为
+% 待核对：原稿表格两栏（平动／转动）及下标较为潦草：法向式原稿作 \vec a_{BA}^n=\vec\omega\times\vec v_B
+% =\vec\omega\times(\vec\omega\times\vec r_B)，依定义取相对量 v_{BA} 与 \vec{AB}；切向式原稿未辨清，
+% 此处按惯例补全为 \vec a_{BA}^{\tau}=\vec\alpha\times\vec{AB}（大小 AB\cdot\alpha），一并待核对。
+\begin{equation}\label{eq:9-acc-rel}
+  \vec{a}_{BA}^{\,\tau}=\vec{\alpha}\times\vec{AB},
+  \qquad
+  \vec{a}_{BA}^{\,n}=\vec{\omega}\times\vec{v}_{BA}
+  =\vec{\omega}\times\left(\vec{\omega}\times\vec{AB}\right),
+\end{equation}
+$\vec{a}_{BA}^{\,n}$ 的方向由 $B$ 指向基点 $A$，大小为 $AB\cdot\omega^{2}$。
+
+\begin{example}[速度瞬心的加速度不等于零]
+半径为 $R$ 的圆盘在水平地面上纯滚动：圆心为 $O$，圆心距地面高度为 $R$，接触点（速度瞬心）记为 $C$。求轮上接触点的加速度。
+% 待核对：原稿题干「求轮 z 点的加速度」中 z 处字迹不清，依题意取接触点（瞬心）。
+\end{example}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \draw (-1.8,0) -- (1.9,0);
+  \foreach \x in {-1.7,-1.4,...,1.8}{\draw (\x,0) -- ({\x-0.26},-0.26);}
+  \coordinate (O) at (0,1.05);
+  \draw[fill=white] (O) circle (1.05);
+  \fill (O) circle (1.2pt) node[above right]{$O$};
+  \fill (0,0) circle (1.4pt) node[below right]{\small $C$（瞬心）};
+  \draw (0,0) -- (O) node[midway, left=1pt]{$R$};
+  \draw[->] (O) -- (0.9,1.05) node[above]{$\vec{a}_O$};
+  \draw[->] ([shift={(O)}]60:0.72) arc (60:120:0.72);
+  \node at ($(O)+(138:0.95)$) {\small $\omega$};
+  \draw[->] ([shift={(O)}]205:0.45) arc (205:250:0.45);
+  \node at ($(O)+(265:0.68)$) {\small $\alpha$};
+  \draw[->] (-0.22,0.02) -- (-0.22,0.98) node[left]{$\vec{a}_C=R\omega^{2}$};
+\end{tikzpicture}
+\end{center}
+
+\begin{solution}
+纯滚动的运动学关系：
+\begin{equation}\label{eq:9-rolling2-cond}
+  v_O=R\omega,
+  \qquad
+  a_O=\alpha R,
+  \qquad
+  \omega=\frac{v_O}{R},
+  \qquad
+  \alpha=\frac{a_O}{R}.
+\end{equation}
+以圆心 $O$ 为基点，由加速度合成定理求接触点 $C$ 的加速度：
+\begin{equation}\label{eq:9-ic-acc-decomp}
+  \vec{a}_{C}=\vec{a}_O+\vec{a}_{CO}^{\,\tau}+\vec{a}_{CO}^{\,n},
+\end{equation}
+其中相对加速度的切向、法向分量大小为
+\begin{equation}\label{eq:9-ic-acc-mag}
+  a_{CO}^{\,\tau}=R\alpha=a_O,
+  \qquad
+  a_{CO}^{\,n}=R\omega^{2}=\frac{v_O^{2}}{R}.
+\end{equation}
+$\vec{a}_{CO}^{\,\tau}$ 水平（与 $\vec{a}_O$ 等值反向）、$\vec{a}_{CO}^{\,n}$ 竖直向上指向圆心，合成后得接触点的加速度分量：
+% 待核对：原稿中间的分量式下标潦草（似有 a_{ox}=a_o+\cdots=2a_o、a_{oy}=-\frac{v_O^2}{R} 等字样），
+% 无法确认；此处按物理结论（瞬心速度为零而加速度不为零，方向指向圆心）取最可能结果，待核对。
+\begin{equation}\label{eq:9-ic-acc-result}
+  a_{Cx}=0,
+  \qquad
+  a_{Cy}=R\omega^{2}=\frac{v_O^{2}}{R}
+  \quad(\text{方向竖直向上，指向圆心}).
+\end{equation}
+即：速度瞬心的速度为零，但其加速度不等于零。
+\end{solution}
+
+\subsection{运动学综合问题举例}
+
+运动学问题的知识脉络：
+\begin{itemize}
+  \item \textbf{点的运动}：求速度、加速度；
+  \item \textbf{刚体的运动}：
+    \begin{itemize}
+      \item 运动方程法；
+      \item 矢量分析法：
+        \begin{itemize}
+          \item 合成运动；
+          \item 平面运动·基点法。
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+
+\begin{longexample}[例1 求B点的速度和加速度]
+杆 $AB$ 靠在墙角（竖直墙与水平地面）运动：杆长 $l$ 不变，$A$ 端沿地面以匀速 $u$ 运动（$x=ut$），$B$ 端沿竖直墙运动，杆上一点为 $P$。
+% 待核对：原稿图中杆上点的标注（P 或 B）及图左上角小字较潦草，待核对。
+求 $B$ 点的速度和加速度。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \draw (0,0) -- (0,2.7);
+  \foreach \y in {0.15,0.45,...,2.6}{\draw (0,\y) -- (-0.26,{\y+0.26});}
+  \draw (0,0) -- (3.0,0);
+  \foreach \x in {0.1,0.4,...,2.9}{\draw (\x,0) -- ({\x-0.26},-0.26);}
+  \coordinate (A) at (2.1,0);
+  \coordinate (B) at (0,1.5);
+  \draw[thick] (A) -- ($(A)!1.06!(B)$);
+  \fill (A) circle (1.3pt) node[below right]{$A$};
+  \fill (B) circle (1.3pt) node[above left]{$B$};
+  \draw[->] (2.2,0) -- (3.05,0) node[above]{$u$};
+  \draw[->] (0,1.42) -- (0,0.82) node[below]{$\vec{v}_B$};
+  \coordinate (P) at (1.155,0.675);
+  \fill (P) circle (1.3pt) node[below right]{\small $P$};
+  \node at ($(A)!0.55!(B)+(0.3,0.12)$) {\small $l$};
+  \coordinate (Aleft) at (1.2,0);
+  \draw pic[draw, "$\theta$", angle radius=20pt, angle eccentricity=1.4] {angle=B--A--Aleft};
+\end{tikzpicture}
+\end{center}
+
+几何关系：杆长不变，$x^{2}+y^{2}=l^{2}$，即
+\begin{equation}\label{eq:9-wall-geom}
+  y^{2}=l^{2}-u^{2}t^{2}.
+\end{equation}
+
+\parahead{方法1 运动方程法}
+
+对式~\eqref{eq:9-wall-geom} 求时间导数：
+\begin{equation}\label{eq:9-wall-v}
+  \begin{aligned}
+    2y\dot{y}&=-2u^{2}t
+    \quad\Longrightarrow\quad
+    y\dot{y}=-u^{2}t,\\
+    \dot{y}&=-\frac{u^{2}t}{y}.
+  \end{aligned}
+\end{equation}
+再对 $y\dot{y}=-u^{2}t$ 求导：
+\begin{equation}\label{eq:9-wall-a}
+  \begin{aligned}
+    \dot{y}^{2}+y\ddot{y}&=-u^{2}
+    \quad\Longrightarrow\quad
+    \ddot{y}=\frac{-u^{2}-\dot{y}^{2}}{y},\\
+    \ddot{y}&=\frac{-u^{2}-\dfrac{u^{4}t^{2}}{y^{2}}}{y}
+    =-\frac{u^{2}l^{2}}{y^{3}}.
+  \end{aligned}
+\end{equation}
+% 待核对：原稿中间整理项 \frac{u^4t^2}{y^2} 的书写顺序潦草，此处按逻辑排布，待核对。
+代入 $\sin\theta=\dfrac{ut}{l}$、$\cos\theta=\dfrac{y}{l}$，得
+\begin{equation}\label{eq:9-wall-trig}
+  \ddot{y}=-\frac{u^{2}}{l\cos^{3}\theta}.
+\end{equation}
+% 待核对：原稿页面下方另写有 -\frac{u^2}{l\cos^3\theta} 与 \frac{8u^2}{3\sqrt{3}l} 的整理结果，
+% 但未明示代入的具体瞬时位形；由结果反推取 \theta=30^\circ（\cos^3 30^\circ=\frac{3\sqrt{3}}{8}），待核对。
+当 $\theta=30^\circ$ 时：
+\begin{equation}\label{eq:9-wall-num}
+  \ddot{y}=-\frac{8u^{2}}{3\sqrt{3}\,l}.
+\end{equation}
+
+\parahead{方法2 矢量分析法}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth, scale=0.9]
+  \coordinate (B) at (0,0);
+  \coordinate (P1) at (-1.5,0.55);
+  \coordinate (P2) at (0,1.35);
+  \draw[->, thick] (B) -- (P1) node[left]{$\vec{a}_B$};
+  \draw[->] (B) -- (P2) node[right]{$\vec{a}_B^{\,n}$};
+  \draw[->] (B) -- (-0.62,1.05) node[left]{$\vec{a}_B^{\,\tau}$};
+  \draw[dashed, thin] (P1) -- (P2);
+  \draw[dashed, thin] (-0.62,1.05) -- (P1);
+  \draw pic[draw, "$30^\circ$", angle radius=17pt, angle eccentricity=1.5] {angle=P1--B--P2};
+  \node[below right] at (B) {$B$};
+\end{tikzpicture}
+\end{center}
+
+由速度分析得角速度
+\begin{equation}\label{eq:9-wall-m2-w}
+  \omega=\frac{2u}{\sqrt{3}\,l}=\frac{2\sqrt{3}\,u}{3l}.
+\end{equation}
+% 待核对：原稿此处似作 \omega=\frac{3u}{2l}；按方法1的结果 \ddot y=-\frac{8u^2}{3\sqrt{3}l} 反推，
+% 相容者为 \omega=\frac{2u}{\sqrt{3}l}（代入 \cos30^\circ 后恰得同一结果），故取后者，待核对。
+将 $\vec{a}_B$（沿墙，竖直）在 $AB$ 方向投影，$A$ 端匀速运动 $\vec{a}_A=\vec{0}$，相对法向加速度大小为 $l\omega^{2}$：
+\begin{equation}\label{eq:9-wall-m2-proj}
+  a_B\cos 30^\circ = a_{BA}^{\,n} = l\omega^{2}.
+\end{equation}
+% 待核对：原稿图2将法向量记于 a_B 名下（a_B\cos30^\circ=a_B^n=l\omega^2），此处按基点法投影式书写，待核对。
+于是
+\begin{equation}\label{eq:9-wall-m2-ab}
+  a_B=\frac{l\omega^{2}}{\cos 30^\circ}
+     =\frac{l\left(\dfrac{2u}{\sqrt{3}\,l}\right)^{2}}{\cos 30^\circ}
+     =\frac{8u^{2}}{3\sqrt{3}\,l},
+\end{equation}
+与方法1结果式~\eqref{eq:9-wall-num} 一致。
+\end{longexample}
+
+\begin{longexample}[例2 求 $\omega_{AB}$、$\alpha_{AB}$]
+% 图待补：本例机构原图整体较潦草（顶部水平构件 AB、A 下接竖直杆至 D、B 外接斜杆、底部交点 D/E、角 \varphi），
+% 杆件标识（OA/BC/AB）及长度、角度数值均难确认，暂缺，待对照原件补绘。
+平面机构中构件作平面运动，求 $\omega_{AB}$、$\alpha_{AB}$。
+
+\begin{solution}
+% 待核对：本例原稿极潦草，下列各式为按原稿可辨认内容的零散转录，彼此衔接与符号均有待核对。
+按原稿可辨内容，研究杆 $BC$（平面运动），列速度瞬心 $C$，有
+\begin{equation}\label{eq:9-synth2-v}
+  v_B=\sqrt{2}\,l\,\omega_0,
+  \qquad
+  \omega_{BC}=\frac{v_B}{l}.
+\end{equation}
+加速度方面，原稿先后出现两种写法：
+\begin{equation}\label{eq:9-synth2-a}
+  a_B=2l\,\omega_0^{2}\ (\text{方向待定}),
+  \qquad\text{另一处}\qquad
+  a_B=\sqrt{2}\,l\,\omega_0^{2};
+\end{equation}
+% 待核对：上式两种系数（2l\omega_0^2 与 \sqrt{2}l\omega_0^2）原稿并存，且下方另有 a_B^{\tau}=-2\frac{v_B^2}{l}
+%（旁边注 \omega?）等整理式，均无法确认，待核对。
+并有
+\begin{equation}\label{eq:9-synth2-at}
+  a_B^{\tau}=-2\,\frac{v_B^{2}}{l}.
+\end{equation}
+本例完整解题链条（构件命名、角度与数值代入）待对照原扫描件补齐。
+\end{solution}
+\end{longexample}
+
+\begin{longexample}[例3 求 $\omega_{BC}$、$\alpha_{BC}$]
+平面机构：上方竖直构件顶端为 $A$，$B$ 位于中部；$B$ 端经杆 $BC$ 与下方水平导轨上的滑块相连，图上以圆弧标注 $20^\circ$、$30^\circ$ 角。构件 $AB$（或 $OA$）绕 $A$ 转动，$B$ 端经杆 $BC$ 与下方滑块相连，作平面运动。
+% 待核对：机构简图按下述文字主干简化绘制，构件连接方式与 20^\circ、30^\circ 两角的归属以原扫描件为准。
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \coordinate (A) at (0,3);
+  \coordinate (B) at (0,1.6);
+  \coordinate (C) at (2.3,0);
+  \draw (-0.22,2.55) -- (0.22,2.55) -- (A) -- cycle;
+  \draw[thick] (A) -- (B);
+  \draw[thick] (B) -- (C);
+  \draw (-0.7,0) -- (3.5,0);
+  \foreach \x in {-0.6,-0.3,...,3.4}{\draw (\x,0) -- ({\x-0.26},-0.26);}
+  \draw[fill=white] (2.12,-0.17) rectangle (2.48,0.17);
+  \fill (A) circle (1.3pt) node[above]{$A$};
+  \fill (B) circle (1.3pt) node[left]{$B$};
+  \fill (C) circle (1.3pt) node[below right]{$C$};
+  \draw[->] (0.14,1.62) -- (0.14,2.25) node[right]{$\vec{v}_B$};
+  \draw[->] ([shift={(B)}]40:0.45) arc (40:-60:0.45);
+  \node at ($(B)+(-65:0.72)$) {\small $\omega_{AB}$};
+  \draw[->] (2.5,0) -- (3.3,0) node[above]{$\vec{v}_C$};
+  \coordinate (Cleft) at (1.3,0);
+  \draw pic[draw, "$30^\circ$", angle radius=24pt, angle eccentricity=1.3] {angle=B--C--Cleft};
+\end{tikzpicture}
+\end{center}
+
+\parahead{速度分析}
+
+「解」：以 $B$ 为动点、$OA$ 为动系，用速度合成定理：
+\begin{equation}\label{eq:9-p57e1-v-sys}
+  \vec{v}_B=\vec{v}_C+\vec{v}_{BC},
+  \qquad
+  \vec{v}_B=\vec{v}_e+\vec{v}_r.
+\end{equation}
+联立两式：
+\begin{equation}\label{eq:9-p57e1-v-comb}
+  \vec{v}_C+\vec{v}_{BC}=\vec{v}_e+\vec{v}_r.
+\end{equation}
+% 待核对：原稿计算表中首行作 “v_e-v_A\cos30^\circ=v_e”（左端似有笔误），并见 v_e=v_A\cos30^\circ；
+% 系数按原稿转录（v_e=\frac{1}{2}l\omega），具体列出方式待核对。
+解出：
+\begin{equation}\label{eq:9-p57e1-v-sol}
+  \begin{aligned}
+    v_e &= v_A\cos 30^\circ,\\
+    v_C &= 2\,(v_C-v_e)=2\left(l\omega-\frac{1}{2}l\omega\right)=l\omega,\\
+    \omega_{BC} &= \omega .
+  \end{aligned}
+\end{equation}
+
+\parahead{加速度分析}
+
+仍以 $B$ 为动点、$OA$ 为动系，用加速度合成定理：
+% 待核对：原稿此式下标较乱（e/r/t/n、C/BC 混杂），右侧等价式亦潦草，照原稿结构转录，待核对。
+\begin{equation}\label{eq:9-p57e1-a-sys}
+  \vec{a}_C=\vec{a}_e+\vec{a}_r^{\,t}+\vec{a}_r^{\,n}
+  =\vec{a}_e^{\,t}+\vec{a}_r^{\,n}.
+\end{equation}
+投影计算中用到（原稿）：
+% 待核对：原稿见 -v_C=\frac{3}{2}l\omega、Y_r=-\frac{3}{2}l\omega（大小/方向「?\checkmark」）等零散式，
+% 与下行投影式的衔接无法完全确认，待核对。
+\begin{equation}\label{eq:9-p57e1-a-proj}
+  a_e\cos 30^\circ+a_r^{\,n}\cos 30^\circ=a_e .
+\end{equation}
+最终结果（原稿）：
+% 待核对：原稿作 a_{BC}=2(a_{BC}\cos30^\circ+a_r)=-3\sqrt{3}l\omega^2（标记「逆时针」）；
+% 该式左端与中间项同名（疑有一处应为 \alpha_{BC}），且 \alpha_{BC} 含长度因子 l 量纲存疑
+%（或系杆上一点的分量值），推导次序与各分量均待核对。
+\begin{equation}\label{eq:9-p57e1-a-res}
+  \alpha_{BC}=-3\sqrt{3}\,l\,\omega^{2}
+  \qquad(\text{逆时针}).
+\end{equation}
+\end{longexample}
+
+\begin{longexample}[例4 求 $\omega_{AB}$、$\alpha_{AB}$]
+平面机构：$B$ 位于左上方，$A$ 位于右下方，二者由杆 $AB$ 相连，杆与水平方向夹角 $30^\circ$；底部为水平构件，$A$ 为铰接点，$A$ 点下方放大图标注 $\alpha_{AB}$、$\omega_{AB}$ 与 $30^\circ$；杆 $AB$ 旁标注点 $P$。
+% 待核对：机构简图按文字主干简化绘制，动点/动系的选取（以 C 为动点、AB 为动系）与角度归属以原扫描件为准。
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \coordinate (A) at (0.6,0);
+  \coordinate (B) at (-1.05,0.95);
+  \draw (-1.1,0) -- (2.7,0);
+  \foreach \x in {-1.0,-0.7,...,2.6}{\draw (\x,0) -- ({\x-0.26},-0.26);}
+  \draw[thick] (A) -- (B);
+  \draw[thick] (A) -- (2.3,0);
+  \draw (-0.22,-0.4) -- (0.22,-0.4) -- (A) -- cycle;
+  \fill (A) circle (1.3pt) node[below right]{$A$};
+  \fill (B) circle (1.3pt) node[above left]{$B$};
+  \coordinate (P) at ($(A)!0.5!(B)$);
+  \fill (P) circle (1.2pt) node[above left]{\small $P$};
+  \node at ($(A)!0.62!(B)+(0.34,0.1)$) {\small $\omega_{AB}$};
+  \draw ([shift={(A)}]150:0.6) arc (150:180:0.6);
+  \node at ($(A)+(165:0.88)$) {\small $30^\circ$};
+  \draw[->] ([shift={(A)}]185:0.34) arc (185:228:0.34);
+  \node at ($(A)+(245:0.56)$) {\small $\alpha_{AB}$};
+  \fill (1.7,0) circle (1.3pt) node[above right]{\small $C$};
+  \draw[->] (1.74,-0.02) -- (2.5,-0.02) node[above]{$\vec{v}_C$};
+\end{tikzpicture}
+\end{center}
+
+\parahead{速度分析}
+
+「解」：以 $C$ 为动点、$AB$ 为动系，用速度合成定理：
+% 待核对：原稿首行作 \vec v_A=\vec v_e+\vec v_r=0，旁又注「=v_C 沿 AB 杆」，等式右端是否为零存疑，待核对。
+\begin{equation}\label{eq:9-p57e2-v}
+  \vec{v}_A=\vec{v}_e+\vec{v}_r=0 .
+\end{equation}
+由此（原稿零散式）：
+% 待核对：原稿记号 Y_r 疑为 v_r；\frac{v_A}{\sqrt{3}l} 一行与上式的关联不明，各式均待核对。
+\begin{equation}\label{eq:9-p57e2-v-frag}
+  \omega_{AB}=\frac{v_A}{AP}=\frac{v_A}{AC},
+  \qquad
+  v_r=v_e+v_A\cos 60^\circ=2v_C,
+  \qquad
+  \frac{v_A}{\sqrt{3}\,l}.
+\end{equation}
+
+\parahead{加速度分析}
+
+% 待核对：本段各式下标（e/r/t/n/C）原稿潦草，第三行两端项的配置尤难确认，均待核对。
+\begin{equation}\label{eq:9-p57e2-a-sys}
+  \begin{aligned}
+    \vec{a}_A&=\vec{a}_e+\vec{a}_r^{\,t}+\vec{a}_r^{\,n}=\vec{a}_C^{\,t}+\vec{a}_r^{\,n},\\
+    a_T&=a_C,
+    \qquad
+    a_n=0,\\
+    \vec{a}_C^{\,t}+\vec{a}_C^{\,n}+\vec{a}_r&=\vec{a}_r^{\,n}.
+  \end{aligned}
+\end{equation}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth, scale=0.85]
+  \coordinate (A) at (0,0);
+  \draw[->, thick] (A) -- (1.7,0.75) node[right]{$\vec{a}_C^{\,t}$};
+  \draw[->] (A) -- (1.35,0.15) node[below]{$\vec{a}_C^{\,n}$};
+  \draw[->] (A) -- (0.55,1.5) node[above]{$\vec{a}_r$};
+  \draw[dashed, thin] (1.7,0.75) -- (0.55,1.5);
+  \draw[dashed, thin] (1.35,0.15) -- (0.55,1.5);
+  \draw ([shift={(A)}]24:0.55) arc (24:70:0.55);
+  \node at ($(A)+(47:0.85)$) {\small $30^\circ$};
+  \node at ($(A)+(-45:0.5)$) {\small $\alpha_{AB}$};
+  \node[below left] at (A) {$A$};
+\end{tikzpicture}
+\end{center}
+
+整理结果（原稿右下角，零散）：
+% 待核对：原稿右下角作 a_B^t=-2\frac{v_B^2}{l}（旁注 \omega?）、\alpha_{AB}=\frac{v_B^2}{l}(?)，
+% 符号与所涉点（A/B/C）均难确认，待核对。
+\begin{equation}\label{eq:9-p57e2-a-res}
+  a_B^{\,t}=-2\,\frac{v_B^{2}}{l},
+  \qquad
+  \alpha_{AB}=\frac{v_B^{2}}{l}.
+\end{equation}
+本例两问手写较潦草，「动点／动系」的选取及各项下标（$e/r/t/n/C/BC$）与数值代入均待对照原件复核。
+\end{longexample}
+
+\begin{remark}
+本章例题手写数字系数潦草较多：凡依上下文选取「最可能值」之处，均已在相应公式上方以「待核对」注释说明原稿字形与取舍理由，誊清时请对照原扫描件逐条复核。
+\end{remark}

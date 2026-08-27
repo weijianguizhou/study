@@ -1,0 +1,146 @@
+% ==========================================================
+% 第14章 达朗贝尔原理（《理论力学》课堂笔记）
+% 来源：手写扫描件第 75--76 页转写稿（.tmp/tljm_md/page-75.md、page-76.md）
+% 本文件仅含 \section 及以下层级；公式标签统一以 eq:14- 开头
+% ==========================================================
+
+\section{惯性力}
+
+设一质点的质量为 $m$，加速度为 $\vec{a}$，作用于质点的主动力为 $\vec{F}$，约束力为 $\vec{F}_N$。
+% 待核对：原稿约束力符号右上/右下角标模糊，判读为下标 N（记作 \vec{F}_N）。
+由牛顿第二定律
+\begin{equation}\label{eq:14-niudun-erdingshu}
+  m\vec{a} = \vec{F} + \vec{F}_N
+\end{equation}
+移项可得
+\begin{equation}\label{eq:14-yidong}
+  \vec{F} + \vec{F}_N - m\vec{a} = \vec{0}
+\end{equation}
+令
+\begin{equation}\label{eq:14-guanxingli-jishi}
+  \vec{F}_g = -m\vec{a}
+\end{equation}
+则式~\eqref{eq:14-yidong}化为
+\begin{equation}\label{eq:14-zhidian-sanli-pingheng}
+  \vec{F} + \vec{F}_N + \vec{F}_g = \vec{0}
+\end{equation}
+
+此时，$\vec{F}_g$ 具有力的量纲，且与质点的惯性有关。因此我们把 $\vec{F}_g$ 作为一个假想的力，称为\textbf{惯性力}：
+% 待核对：原稿惯性力记为 \vec{F}_g（右下角标形似 g）；部分教材记作 \vec{F}^* 或 \vec{F}_{惯}，请核对角标记法。
+\begin{definition}[惯性力]
+惯性力 $\vec{F}_g$ 是一个假想的力：
+\begin{itemize}
+  \item 大小等于质点质量与加速度的乘积；
+  \item 方向与质点加速度方向相反。
+\end{itemize}
+\end{definition}
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[>=Stealth]
+    \node[circle, draw, thick, fill=gray!15, minimum size=10mm] (m) at (0,0) {$m$};
+    \draw[->, very thick] ($(m.east)+(0.12,0)$) -- ++(1.7,0)
+      node[right] {$\vec{a}$};
+    \draw[->, very thick, dashed] ($(m.west)+(-0.12,0)$) -- ++(-1.7,0)
+      node[left] {$\vec{F}_g=-m\vec{a}$};
+  \end{tikzpicture}
+  \caption{惯性力方向示意：$\vec{F}_g$ 与质点加速度 $\vec{a}$ 方向相反、大小为 $ma$。}
+\end{figure}
+
+\section{质点的达朗贝尔原理}
+
+\begin{theorem}[质点的达朗贝尔原理]
+作用在质点上的主动力、约束力和它的惯性力在形式上组成平衡力系。
+\end{theorem}
+
+即式~\eqref{eq:14-zhidian-sanli-pingheng}。这里的“平衡”只是形式上的：质点实际上仍以加速度 $\vec{a}$ 作加速运动，只是在引入惯性力 $\vec{F}_g$ 之后，主动力、约束力与惯性力三者构成形式上的平衡力系，从而可以按静力学的方式列方程求解动力学问题。
+
+\begin{definition}[动静法]
+由达朗贝尔原理给出的求解静力学问题的动力学方法。
+\end{definition}
+% 待核对：原稿对“动静法”一句作“由达朗贝尔原理给出的求解静力学问题的动力学方法”；通行表述多为“用静力学方法处理动力学问题”，语序疑有出入，请对照原页核对。
+
+\section{质点系的达朗贝尔原理}
+
+\begin{theorem}[质点系的达朗贝尔原理]
+质点系中每个质点上作用的主动力、约束力和它的惯性力在形式上组成平衡力系。
+\end{theorem}
+
+对第 $i$ 个质点，有
+\begin{equation}\label{eq:14-dui-di-i-zhidian}
+  \vec{F}_i + \vec{F}_{Ni} + \vec{F}_{gi} = \vec{0} \qquad (i = 1, 2, \dots, n)
+\end{equation}
+作用于第 $i$ 个质点上的（将主动力区分为外力 $\vec{F}_i^{(e)}$）：
+% 待核对：原稿此处把主动力改写为 \vec{F}_i^{(e)}（右上角标 e，表示外力），其与前式 \vec{F}_i 的关系需注意区分，请对照原页核实。
+\begin{equation}\label{eq:14-dui-di-i-zhidian-waili}
+  \vec{F}_i^{(e)} + \vec{F}_{Ni} + \vec{F}_{gi} = \vec{0} \qquad (i = 1, 2, 3, \dots, n)
+\end{equation}
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[>=Stealth]
+    % 系统边界（虚线闭合区域）
+    \draw[dashed, rounded corners=16pt] (-3.0,-1.6) rectangle (3.0,2.0);
+    \node[anchor=south west, font=\small] at (-2.85,-1.52) {质点系};
+    % 质点 1
+    \node[circle, draw, thick, fill=gray!15, minimum size=8mm] (m1) at (-1.6,0.6) {$m_1$};
+    \draw[->, thick] (-3.4,2.2) -- (m1.150)
+      node[pos=0.32, above left=-2pt] {\small $\vec{F}_1^{(e)}$};
+    \draw[->, thick] (-3.2,-1.4) -- (m1.210)
+      node[pos=0.30, below left=-2pt] {\small $\vec{F}_{N1}$};
+    \draw[->, thick, dashed] (m1.-30) -- ++(0.85,-0.4)
+      node[right=-1pt] {\small $\vec{F}_{g1}$};
+    % 质点 2
+    \node[circle, draw, thick, fill=gray!15, minimum size=8mm] (m2) at (0.0,-0.35) {$m_2$};
+    \draw[->, thick] (-1.5,-1.95) -- (m2.240)
+      node[pos=0.38, below left=-2pt] {\small $\vec{F}_2^{(e)}$};
+    \draw[->, thick] (1.9,-1.9) -- (m2.300)
+      node[pos=0.30, below right=-2pt] {\small $\vec{F}_{N2}$};
+    \draw[->, thick, dashed] (m2.30) -- ++(0.65,0.45)
+      node[above right=-2pt] {\small $\vec{F}_{g2}$};
+    \node at (0.8,0.0) {$\cdots$};
+    % 质点 n
+    \node[circle, draw, thick, fill=gray!15, minimum size=8mm] (mn) at (2.0,0.95) {$m_n$};
+    \draw[->, thick] (3.35,2.25) -- (mn.40)
+      node[pos=0.55, above right=-2pt] {\small $\vec{F}_n^{(e)}$};
+    \draw[->, thick] (3.25,-0.6) -- (mn.-50)
+      node[pos=0.32, below right=-2pt] {\small $\vec{F}_{Nn}$};
+    \draw[->, thick, dashed] (mn.120) -- ++(-0.5,0.6)
+      node[left=-1pt] {\small $\vec{F}_{gn}$};
+  \end{tikzpicture}
+  \caption{质点系达朗贝尔受力示意：每个质点 $m_i$ 上，外力 $\vec{F}_i^{(e)}$、约束力 $\vec{F}_{Ni}$ 与惯性力 $\vec{F}_{gi}$ 在形式上组成平衡力系。}
+\end{figure}
+
+\section{动力学等价形式与结论}
+
+对第 $i$ 个质点的主动力--约束力--惯性力平衡式求和，并关于任一定点 $O$ 取矩，得
+\begin{equation}\label{eq:14-xitong-qiuhe-quju}
+  \begin{aligned}
+    \sum \vec{F}_i^{(e)} + \sum \vec{F}_{Ni} + \sum \vec{F}_{gi} &= \vec{0} \\
+    \sum \vec{M}_O\!\left(\vec{F}_i^{(e)}\right) + \sum \vec{M}_O\!\left(\vec{F}_{Ni}\right) + \sum \vec{M}_O\!\left(\vec{F}_{gi}\right) &= \vec{0}
+  \end{aligned}
+\end{equation}
+
+由于质点系的内力总满足牛顿第三定律，内力的主矢与主矩为零：
+\begin{equation}\label{eq:14-neili-weiling}
+  \begin{aligned}
+    \sum \vec{F}_i^{(i)} &= \vec{0} \\
+    \sum \vec{M}_O\!\left(\vec{F}_i^{(i)}\right) &= \vec{0}
+  \end{aligned}
+\end{equation}
+其中上标 $(i)$ 表示内力，与表示外力的上标 $(e)$ 相区分。于是内力（含约束力 $\vec{F}_{Ni}$ 在内的成对内力）互相抵消，式~\eqref{eq:14-xitong-qiuhe-quju}化简为
+% 待核对：原稿在“内力满足牛顿第三定律”之后紧接写出化简结果，中间未单独标注约束力 \vec{F}_{Ni} 项的合并过程；此处判读为含约束力在内的内力成对相消后所剩，请核对。
+\begin{equation}\label{eq:14-waili-guanxingli-pingheng}
+  \begin{aligned}
+    \sum \vec{F}_i^{(e)} + \sum \vec{F}_{gi} &= \vec{0} \\
+    \sum \vec{M}_O\!\left(\vec{F}_i^{(e)}\right) + \sum \vec{M}_O\!\left(\vec{F}_{gi}\right) &= \vec{0}
+  \end{aligned}
+\end{equation}
+
+\begin{keybox}
+\textbf{结论}\quad 作用在质点系上的所有外力与所有质点的惯性力系在形式上组成平衡力系。
+\end{keybox}
+
+\begin{remark}
+式~\eqref{eq:14-waili-guanxingli-pingheng}只含外力与惯性力，与静力学平衡方程同构，因此可完全套用静力学中列平衡方程（取投影、取矩）的方法处理质点系动力学问题——这正是动静法的实质。
+\end{remark}

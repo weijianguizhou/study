@@ -1,0 +1,366 @@
+% 来源：《理论力学》课堂笔记手写扫描件 第70—74页（第十三章 动能定理）
+\section{力的功}
+
+\subsection{功与元功}
+
+\begin{definition}[功]
+力 $\vec{F}$ 在某段直线路程中积累的效应的度量称为\textbf{功}。若力与运动方向成角 $\theta$，走过的路程为 $s$，则
+\begin{equation}\label{eq:13-work-linear}
+  W=F\cos\theta\cdot s .
+\end{equation}
+\end{definition}
+
+\begin{definition}[元功]
+在一无限小位移中力做的功称为\textbf{元功}：
+\begin{equation}\label{eq:13-work-element}
+  \delta W=F\cos\theta\,ds .
+\end{equation}
+\end{definition}
+
+\subsection{力在全路程上做的功}
+
+力在全路程上做的功等于元功之和。将式~\eqref{eq:13-work-element} 沿路程累加，并把 $F\cos\theta$ 写成力矢量与位移矢量的标量积，得两种等价写法：
+% 待核对：原稿两处位移矢量疑似写作 $d\vec{F}$，应为 $d\vec{r}$，请对照原页核实。
+\begin{equation}\label{eq:13-work-total}
+  W=\int F\cos\theta\,ds=\int\vec{F}\cdot d\vec{r},
+\end{equation}
+积分沿力作用点经过的路径进行。
+
+下图为力作用于沿曲线轨迹运动的质点的情形：元位移 $d\vec{r}$ 沿轨迹切向，它与力 $\vec{F}$ 的夹角为 $\theta$，元功即 $\delta W=F\cos\theta\,ds$。
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[>=Stealth, line cap=round]
+        % ---- 轨迹 ----
+        \draw[thick] (0,0) .. controls (1.4,1.6) and (2.9,-0.5) .. (4.4,0.9);
+        \node[below left] at (0,0) {$M_1$};
+        \node[above right] at (4.4,0.9) {$M_2$};
+        % ---- 轨迹上的动点 M（切向约 20 度） ----
+        \coordinate (M) at (0.77,0.55);
+        \fill (M) circle (1.4pt);
+        \node[above left] at (M) {$M$};
+        % ---- 元位移与力 ----
+        \draw[->] (M) -- ++(20:1.15) coordinate (drTip);
+        \node[below] at ($(drTip)+(0.05,-0.04)$) {$d\vec{r}$};
+        \draw[->, thick] (M) -- ++(62:1.25) coordinate (FTip);
+        \node[above] at ($(FTip)+(-0.06,0.05)$) {$\vec{F}$};
+        % ---- 夹角 ----
+        \pic["$\theta$", draw, angle eccentricity=1.45, angle radius=16pt]
+            {angle = drTip--M--FTip};
+    \end{tikzpicture}
+    \caption{力沿曲线轨迹做功的元功示意：$\delta W=F\cos\theta\,ds$}
+    \label{fig:13-work-element}
+\end{figure}
+
+\subsection{内力的功}
+
+在某些情况下，内力虽然等值、反向，但所做功的和并不等于零。
+
+但刚体内所有内力做功的代数和等于零。
+
+\begin{remark}
+因此研究刚体的动能变化时，内力的功不必计入。工程中通常还把约束力做功之和恒为零的约束称为理想约束（如光滑接触面、光滑铰链、不可伸长的柔索等），对这类系统应用动能定理时只需计入主动力的功。
+\end{remark}
+
+% ----------------------------------------------------------------------
+\section{刚体的动能}
+
+\subsection{平面运动刚体的动能}
+
+设 $P$ 是平面运动刚体在某时刻的速度瞬心，则该瞬时刚体的动能可写成绕瞬心转动的形式：
+\begin{equation}\label{eq:13-rigid-instant}
+  T=\frac{1}{2}J_P\omega^2 .
+\end{equation}
+令 $d=CP$ 表示质心 $C$ 到瞬心 $P$ 的距离，由转动惯量的平行移轴关系
+\begin{equation}\label{eq:13-rigid-parallel}
+  J_P=J_C+md^2 ,
+\end{equation}
+代入并注意 $v_C=d\omega$，得
+\begin{equation}\label{eq:13-rigid-plane}
+\begin{aligned}
+  T &=\frac{1}{2}J_P\omega^2=\frac{1}{2}\left(J_C+md^2\right)\omega^2\\
+    &=\frac{1}{2}J_C\omega^2+\frac{1}{2}m(d\omega)^2\\
+    &=\frac{1}{2}mv_C^2+\frac{1}{2}J_C\omega^2 .
+\end{aligned}
+\end{equation}
+
+\begin{keybox}[平面运动刚体的动能]
+平面运动刚体的动能等于随质心平动的动能与绕质心转动的动能之和：
+\[
+T=\frac{1}{2}mv_C^2+\frac{1}{2}J_C\omega^2 .
+\]
+\end{keybox}
+
+% ----------------------------------------------------------------------
+\section{任意运动质点系的动能}
+
+对任意质点系（可以是非刚体）的任意运动，总有：
+\begin{equation}\label{eq:13-konig-T}
+  T=\frac{1}{2}mv_C^2+T' ,
+\end{equation}
+其中
+\begin{equation}\label{eq:13-konig-Tprime}
+  T'=\frac{1}{2}\sum m_iv_i'^{\,2}
+\end{equation}
+为质点系相对以质心为基点的平移参考系的动能。
+
+\begin{theorem}[柯尼希定理]
+质点系在绝对运动中的动能，等于它随质心平移动能（质心平移动能）与相对于质心平移参考系动能的和。
+\end{theorem}
+
+\begin{tipbox}[与平面运动刚体动能的联系]
+式~\eqref{eq:13-rigid-plane} 正是柯尼希定理在平面运动刚体上的具体体现：$\tfrac{1}{2}mv_C^2$ 为随质心平移动能，$\tfrac{1}{2}J_C\omega^2$ 为绕质心转动的动能。
+\end{tipbox}
+
+% ----------------------------------------------------------------------
+\section{动能定理}
+
+\subsection{质点的动能定理}
+
+由动力学基本方程出发，
+\begin{equation}\label{eq:13-pt-newton}
+  m\frac{d\vec{v}}{dt}=\vec{F}.
+\end{equation}
+两边点乘元位移 $d\vec{r}$，并利用 $\dfrac{d\vec{v}}{dt}\cdot d\vec{r}=\vec{v}\cdot d\vec{v}$：
+% 待核对：原稿此步位移矢量写作 $d\vec{F}$，应为 $d\vec{r}$，请对照原页核实。
+\begin{equation}\label{eq:13-pt-dot}
+\begin{aligned}
+  m\frac{d\vec{v}}{dt}\cdot d\vec{r}&=\vec{F}\cdot d\vec{r},\\
+  m\vec{v}\cdot d\vec{v}&=\vec{F}\cdot d\vec{r}.
+\end{aligned}
+\end{equation}
+上式右端即元功 $\delta W$，左端恰为动能的微分，故亦可写作：
+\begin{equation}\label{eq:13-pt-diff}
+  d\left(\frac{1}{2}mv^2\right)=\delta W .
+\end{equation}
+积分上式得：
+\begin{equation}\label{eq:13-pt-integral}
+  \int_1^2 d\left(\frac{1}{2}mv^2\right)=W_{12},
+\end{equation}
+即
+\begin{equation}\label{eq:13-pt-result}
+  \frac{1}{2}mv_2^2-\frac{1}{2}mv_1^2=W_{12}.
+\end{equation}
+
+\begin{theorem}[质点的动能定理]
+质点动能的改变量，等于作用在质点上的力在全路程上所做的功。
+\end{theorem}
+
+\subsection{质点系的动能定理}
+
+对质点系中每个质点分别写出微分形式~\eqref{eq:13-pt-diff} 并求和：
+\begin{equation}\label{eq:13-sys-sum}
+\begin{aligned}
+  \sum d\left(\frac{1}{2}m_iv_i^2\right)&=\sum\delta W_i,\\
+  d\left[\sum\left(\frac{1}{2}m_iv_i^2\right)\right]&=\sum\delta W_i,
+\end{aligned}
+\end{equation}
+记质点系的动能 $T=\sum\tfrac{1}{2}m_iv_i^2$，则
+\begin{equation}\label{eq:13-sys-diff}
+  dT=\sum\delta W_i ,
+\end{equation}
+积分得
+\begin{equation}\label{eq:13-sys-result}
+  T_2-T_1=\sum W_i .
+\end{equation}
+
+\begin{theorem}[质点系的动能定理]
+质点系动能的改变量，等于作用于质点系的全部力所做功的代数和；其微分形式为式~\eqref{eq:13-sys-diff}，积分形式为式~\eqref{eq:13-sys-result}。
+\end{theorem}
+
+% ----------------------------------------------------------------------
+\section{功率、功率方程与机械效率}
+
+\subsection{功率}
+
+\begin{definition}[功率]
+力在单位时间内所做的功称为\textbf{功率}：
+% 待核对：原稿位移矢量作 $d\vec{r}$ 或 $d\vec{F}$ 连写不清，判读为 $d\vec{r}$；式末判读为 $\vec{F}\cdot\vec{v}$，请对照原页核实。
+\begin{equation}\label{eq:13-power-def}
+  P=\frac{\delta W}{dt}=\frac{\vec{F}\cdot d\vec{r}}{dt}=\vec{F}\cdot\vec{v}.
+\end{equation}
+\end{definition}
+
+即：\textbf{功率等于切向力与力作用点速度的乘积}。
+
+作用在转动刚体上的力的功率：
+\begin{equation}\label{eq:13-power-rotor}
+  P=\frac{\delta W}{dt}=M_z\frac{d\varphi}{dt}=M_z\omega .
+\end{equation}
+
+\subsection{功率方程}
+
+由质点系动能定理的微分形式~\eqref{eq:13-sys-diff}，两边除以 $dt$：
+\begin{equation}\label{eq:13-power-eq}
+  \frac{dT}{dt}=\sum\frac{\delta W_i}{dt}=\sum P_i .
+\end{equation}
+把各级功率按输入、有用与无用分类，可写成
+\begin{equation}\label{eq:13-power-balance}
+  P_{\text{输入}}=P_{\text{有用}}+P_{\text{无用}}+\frac{dT}{dt}.
+\end{equation}
+
+\subsection{机械效率}
+
+称
+\begin{equation}\label{eq:13-P-effective}
+  P_{\text{有效}}=P_{\text{有用}}+\frac{dT}{dt}
+\end{equation}
+为有效功率，机械效率定义为有效功率与输入功率之比：
+% 待核对：原稿 $\eta$ 分子字样（有效／输出／有用）手写较潦草，判读为“有效”；标准教材亦作 $\eta=P_{\text{输出}}/P_{\text{输入}}=P_{\text{有用}}/P_{\text{输入}}$，请对照原页核实。
+\begin{equation}\label{eq:13-eta-def}
+  \eta=\frac{P_{\text{有效}}}{P_{\text{输入}}}.
+\end{equation}
+对于有 $n$ 级传动的系统，总机械效率等于各级机械效率的连乘积：
+\begin{equation}\label{eq:13-eta-multi}
+  \eta=\eta_1\cdot\eta_2\cdots\eta_n .
+\end{equation}
+
+% ----------------------------------------------------------------------
+\section{势力场与势能}
+
+\begin{definition}[力场]
+如果一物体在某空间任一位置都受到一个大小和方向完全由所在位置确定的力的作用，则这部分空间称为\textbf{力场}。
+\end{definition}
+
+\begin{definition}[势力场]
+如果物体在力场内运动，作用于物体的力所做的功只与力的作用点的初始位置和末了位置有关，这种力场称为\textbf{势力场}。
+\end{definition}
+
+\begin{definition}[势能]
+质点在势力场中某点 $M$ 相对参考点 $M_0$ 的势能定义为力沿路径所做的功：
+% 待核对：定义式积分方向按原稿转录为自 $M_0$ 至 $M$；下方重力、弹性两例的中间积分步按字面计算与所给结果相差一符号（见各自注释），请一并对照原页核实。
+\begin{equation}\label{eq:13-potential-def}
+  V=\int_{M_0}^{M}\vec{F}\cdot d\vec{r}
+   =\int_{M_0}^{M}\left(F_x\,dx+F_y\,dy+F_z\,dz\right).
+\end{equation}
+点 $M_0$ 的势能为 $0$，称为\textbf{零势能点}。
+\end{definition}
+
+\subsection{重力场中的势能}
+
+取 $z$ 轴铅直向上，重力 $mg$ 方向铅直向下：
+% 待核对：原稿积分限手写较潦草，判读为自 $z_0$ 至 $z$；按力学惯例结果应为 $mg(z-z_0)$（若零势能点取在 $z=0$ 则 $V=mgz$）。注意该积分按字面计算为 $-mg(z-z_0)$，符号与积分限方向请对照原页核实。
+\begin{equation}\label{eq:13-V-weight}
+  V=\int_{z_0}^{z}(-mg)\,dz=mg\left(z-z_0\right).
+\end{equation}
+
+\subsection{弹性力场中的势能}
+
+设弹簧变形量为 $\delta$、劲度系数为 $k$，参考变形为 $\delta_0$：
+% 待核对：原稿积分限手写为自 $\delta$ 至 $\delta_0$、结果 $\tfrac{1}{2}k(\delta_0^2-\delta^2)$；若上限记为 $\delta$ 则结果应为 $\tfrac{1}{2}k(\delta^2-\delta_0^2)$。因下方取 $\delta_0=0$ 时须得到正的 $\tfrac{1}{2}k\delta^2$，方向请对照原页核实。
+\begin{equation}\label{eq:13-V-elastic-int}
+  V=\int_{\delta}^{\delta_0}k\delta\,d\delta=\frac{1}{2}k\left(\delta_0^2-\delta^2\right),
+\end{equation}
+一般选取原长（此时 $\delta_0=0$）为零势能点：
+\begin{equation}\label{eq:13-V-elastic}
+  V=\frac{1}{2}k\delta^2 .
+\end{equation}
+
+弹性力场的势能曲线是以原长为零势能点、开口向上的抛物线：
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[>=Stealth]
+        % ---- 坐标轴 ----
+        \draw[->] (-2.35,0) -- (2.75,0) node[below] {$\delta$};
+        \draw[->] (0,-0.4) -- (0,2.85) node[left] {$V$};
+        % ---- 抛物线 V = (1/2)k δ^2 ----
+        \draw[very thick, domain=-2.1:2.25, smooth, samples=45]
+            plot (\x,{0.5*\x*\x});
+        \node[above] at (0,2.35) {$V=\dfrac{1}{2}k\delta^{2}$};
+        % ---- 零势能点（原长） ----
+        \fill (0,0) circle (1.3pt);
+        \node[below left] at (0,0) {$O$（原长，$V=0$）};
+    \end{tikzpicture}
+    \caption{弹性力场的势能曲线：以弹簧原长为零势能点，$V=\frac{1}{2}k\delta^2$}
+    \label{fig:13-V-elastic}
+\end{figure}
+
+\subsection{万有引力场中的势能}
+
+质量为 $m_1$、$m_2$ 的两质点相距 $r$，万有引力沿径向、指向力心：
+% 待核对：被积函数手写略作 $-Gm_1m_2/r^2\cdot\hat{e}_r\cdot d\vec{r}$ 与 $-Gm_1m_2/r^2\,dr$ 两种写法，判读为 $-\frac{Gm_1m_2}{r^2}$；且按字面积分至 $r_0=\infty$ 应得 $+\frac{Gm_1m_2}{r}$，与下方 $-\frac{Gm_1m_2}{r}$ 相差符号（标准推导应自 $r$ 积到 $r_0$ 或加负号），请对照原页核实。
+\begin{equation}\label{eq:13-V-newton-int}
+\begin{aligned}
+  V &=\int_{M_0}^{M}\vec{F}\cdot d\vec{r}
+     =\int_{r_0}^{r}-\frac{Gm_1m_2}{r^2}\,\hat{e}_r\cdot d\vec{r}\\
+    &=\int_{r_0}^{r}-\frac{Gm_1m_2}{r^2}\,dr
+     =Gm_1m_2\left(\frac{1}{r}-\frac{1}{r_0}\right).
+\end{aligned}
+\end{equation}
+令无穷远处为零势能点，即 $r_0=\infty$：
+\begin{equation}\label{eq:13-V-newton}
+  V=-\frac{Gm_1m_2}{r}.
+\end{equation}
+
+万有引力场的势能曲线如下图：取无穷远为零势能点时 $V$ 恒为负，且随 $r$ 减小而趋于 $-\infty$。
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[>=Stealth]
+        % ---- 坐标轴 ----
+        \draw[->] (0,-2.55) -- (0,1.15) node[left] {$V$};
+        \draw[->] (-0.35,0) -- (4.05,0) node[below] {$r$};
+        \node[below left] at (0,0) {$O$};
+        % ---- 曲线 V = -Gm1m2 / r ----
+        \draw[very thick, domain=0.5:3.85, smooth, samples=70]
+            plot (\x,{-1/\x});
+        \node[below right] at (2.15,-0.62) {$V=-\dfrac{Gm_1m_2}{r}$};
+        % ---- 渐近行为标注 ----
+        \node[above] at (3.3,0.10) {\scriptsize $r\to\infty,\ V\to 0^{-}$};
+    \end{tikzpicture}
+    \caption{万有引力场的势能示意：以无穷远处为零势能点，$V=-\frac{Gm_1m_2}{r}$}
+    \label{fig:13-V-newton}
+\end{figure}
+
+% ----------------------------------------------------------------------
+\section{机械能守恒定律}
+
+把势力场中力的功与势能的变化联系起来，有
+% 待核对：本节及下一节起手处手写字形模糊：「有势力」一词与 $\delta W=-dV$ 的负号均按力学语义判读，请对照原页核实。
+\begin{equation}\label{eq:13-em-work}
+  T_2-T_1=W_{12}=V_1-V_2,
+\end{equation}
+于是
+\begin{equation}\label{eq:13-em-conserved}
+  T_2+V_2=T_1+V_1 .
+\end{equation}
+
+即质点系仅在\textbf{有势力}的作用下运动时，其机械能保持不变。这样的质点系称为\textbf{保守系统}。
+
+% ----------------------------------------------------------------------
+\section{势力场的其他性质}
+
+\parahead{(1) 有势力在直角坐标轴上的投影等于势能对该坐标的偏导数的负值}
+
+设质点由 $M(x,y,z)$ 作微小位移至 $M'(x+dx,\,y+dy,\,z+dz)$，其势能增量的微功满足：
+\begin{equation}\label{eq:13-prop-deltaW}
+  \delta W=V(x,y,z)-V(x+dx,\,y+dy,\,z+dz)=-dV .
+\end{equation}
+由全微分公式
+\begin{equation}\label{eq:13-prop-totaldiff}
+  dV=\frac{\partial V}{\partial x}\,dx+\frac{\partial V}{\partial y}\,dy+\frac{\partial V}{\partial z}\,dz,
+\end{equation}
+于是
+\begin{equation}\label{eq:13-prop-deltaW-expand}
+  \delta W=-\frac{\partial V}{\partial x}\,dx-\frac{\partial V}{\partial y}\,dy-\frac{\partial V}{\partial z}\,dz ;
+\end{equation}
+而微功又可写为
+\begin{equation}\label{eq:13-prop-W-comp}
+  \delta W=F_x\,dx+F_y\,dy+F_z\,dz .
+\end{equation}
+比较以上两式得
+\begin{equation}\label{eq:13-prop-F-grad}
+  F_x=-\frac{\partial V}{\partial x},\qquad
+  F_y=-\frac{\partial V}{\partial y},\qquad
+  F_z=-\frac{\partial V}{\partial z}.
+\end{equation}
+
+\begin{property}[有势力的投影]
+有势力在直角坐标轴上的投影，等于势能对该坐标的偏导数冠以负号（式~\eqref{eq:13-prop-F-grad}）。
+\end{property}
+
+\begin{property}[等势能面]
+在势力场中，势能相等的各点构成等势能面。
+\end{property}
+
+\begin{property}[有势力的方向]
+有势力的方向垂直于等势能面，并指向势能减小的方向。
+\end{property}

@@ -1,0 +1,122 @@
+% ============================================================
+% 《理论力学》笔记 · 绪论（开篇不编号章）
+% 转写自手写扫描件第 1–2 页（源稿 .tmp/tljm_md/page-01.md, page-02.md）
+% 本文件只含 \section 及以下层级，由主文件《理论力学笔记.tex》引入
+% ============================================================
+
+绪论交代本课程在力学学科体系中的位置、理论力学的学科分支与力学模型分类，
+介绍理论力学的研究方法，并给出课程要求与考试安排。
+
+\section{四大力学与理论力学的研究对象}
+
+就学科体系而言，通常将以下四门课程并称“四大力学”：
+\begin{itemize}
+  \item 理论力学；
+  \item 电磁力学（电磁学）；
+  \item 量子力学；
+  \item 热力学。
+\end{itemize}
+
+其中本课程讨论的理论力学，其研究对象可概括为一句话：
+
+\begin{keybox}[研究对象]
+理论力学：研究\textbf{机械运动}的规律。
+\end{keybox}
+
+\section{理论力学的学科分支}
+
+理论力学作为一门学科，分为三个分支：
+\begin{description}
+  \item[静力学] 研究\textbf{平衡}规律；
+  \item[运动学] 研究物体运动的\textbf{几何性质}；
+  \item[动力学] 研究\textbf{力与运动}的关系。
+\end{description}
+
+三个分支层层递进：静力学与运动学分别从“力”与“运动”两个侧面做准备，
+动力学再把二者联系起来。本课程的章节安排也大体循此顺序展开。
+
+\section{力学问题研究的建模闭环}
+
+解决一个力学问题，通常经历“实际问题 $\to$ 力学模型 $\to$ 数学方程 $\to$
+结果”的过程：先对实际问题作\textbf{简化抽象}得到力学模型；再运用\textbf{力学原理}
+建立数学方程并\textbf{求解}；所得结果须经过\textbf{检验}，若不符合实际，
+则返回修正力学模型，如此迭代形成闭环。
+% 待核对：转写稿将此图记为「流体力学问题解决流程框图」，与本课内容不符，疑为「力学问题解决流程框图」，正文按后者处理。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,
+  stg/.style={draw, thick, minimum width=1.9cm, minimum height=0.85cm, inner sep=2pt}]
+  \node[stg] (real)  at (0,0)    {实际问题};
+  \node[stg] (model) at (3.4,0)  {力学模型};
+  \node[stg] (eqn)   at (6.8,0)  {数学方程};
+  \node[stg] (res)   at (10.2,0) {结果};
+  \draw[->] (real)  -- node[above, font=\footnotesize]{简化抽象} (model);
+  \draw[->] (model) -- node[above, font=\footnotesize]{力学原理} (eqn);
+  \draw[->] (eqn)   -- node[above, font=\footnotesize]{求解}     (res);
+  \coordinate (upr) at ($(res.north)+(0,1.15)$);
+  \draw[->] (res.north) -- node[right, font=\footnotesize]{检验} (upr)
+        -| node[pos=0.25, above, font=\footnotesize]{No} (model.north);
+\end{tikzpicture}
+\end{center}
+
+\section{力学模型的分类}
+
+力学模型可从不同侧面加以分类：
+\begin{itemize}
+  \item \textbf{物体模型：}质点和质点系；
+  \item \textbf{工作状态模型：}刚体、变形体（变形体属材料力学的研究对象）；
+  \item 实际物体模型。
+\end{itemize}
+
+\section{理论力学的研究方法}
+
+\begin{enumerate}
+  \item \textbf{理论分析法（二十世纪以前）：}
+    \begin{itemize}
+      \item 矢量力学 $\to$ 解析解（借助于微积分）；
+      \item 分析力学 $\to$ 解析解（借助于微积分）；
+      \item 两种方法都可归结为「解析解」。
+    \end{itemize}
+  \item \textbf{实验法：}
+    \begin{itemize}
+      \item 实物（实验）；
+      \item 模型：依据相似理论与量纲分析建立模型进行实验。
+    \end{itemize}
+  \item \textbf{数值模拟（计算机仿真）。}
+\end{enumerate}
+
+\section{力学在现代中的地位}
+
+\begin{itemize}
+  \item 力学是现代工程技术的支撑；
+  \item 培养力学素养——力学是一种文化。
+\end{itemize}
+
+\section{课程要求与考试内容}
+
+\parahead{课程要求}
+\begin{enumerate}
+  \item 来听课；
+  \item 自己做作业；
+  \item 期末考 6 道大题，题目全部出自平时见过的三类：
+    书上例题、课堂上讲过的例题、做过的作业。
+\end{enumerate}
+
+\begin{warnbox}
+期末考试共 6 道大题，均取自书上例题、讲过的例题与做过的作业，
+平时题目务必独立完成、逐题吃透。
+\end{warnbox}
+
+\parahead{考试覆盖的知识模块}
+\begin{itemize}
+  \item 物体系的平衡；
+  \item 摩擦 $\Rightarrow$ 平衡范围；
+  \item 桁架：内力求解；
+  \item 合成：运动；
+  \item 平面运动；
+  \item 运动学综合。
+\end{itemize}
+
+\parahead{考试内容}
+考试围绕四个「基本」展开：基本概念、基本原理、基本技能、基本方法。
+% 待核对：转写稿底部重复出现两次「基本技能」，按最可能取值将其一排为「基本方法」。

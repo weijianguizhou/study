@@ -1,0 +1,684 @@
+% ============================================================
+%  理论力学笔记 · 第2章 平面力系
+%  来源：理论力学笔记（手写扫描原版）.pdf 第7–21页
+%  说明：仅含 \section 及以下层级；行间公式一律 equation+\label
+% ============================================================
+
+\section{平面汇交力系}
+
+\subsection{合成与平衡的几何法}
+
+\parahead{力多边形法则} 各力首尾相连，从第一个力的起点指向最后一个力的终点。
+\textbf{注意}：① 各条线段代表各力的大小和方向；② 多边形不唯一。
+
+\parahead{结论} 平面汇交力系一定可以合成为一个合力，合力等于各个力的矢量和，作用在汇交点：
+\begin{equation}
+\boxed{\;\vec{F}=\vec{F}_1+\vec{F}_2+\cdots=\sum\vec{F}\;}
+\label{eq:2-汇交-合力}
+\end{equation}
+\textbf{平衡条件}：$\boxed{\ \text{平衡}\iff\vec{F}=\sum\vec{F}=0\ }$，其几何条件为力多边形封闭。
+% 图待补：力多边形示意图（$\vec{F}_1,\vec{F}_2,\vec{F}_3$ 首尾相接连成多边形，合力为封口矢量）。
+
+\parahead{解题步骤} ①确定研究对象；②受力分析；③画力多边形；④求解。
+
+\begin{example}[几何法：均质圆柱]
+一重 $W$ 的均质圆柱放在倾角为 $\alpha$ 的光滑斜面上，用绳子系在墙上，绳与铅垂的夹角为 $\beta$。求：(1) 绳的拉力和斜面的支持力；(2) 当 $W=200\text{ N},\ \alpha=30^\circ$ 时，问 $\beta$ 在什么范围内绳的拉力不超过 $120\text{ N}$。
+
+\textbf{解．}
+(1) 以圆柱为研究对象画受力图。三力（重力 $W$、法向支持力 $F_N$、绳张力 $F_1$）汇交，由正弦定理得力三角形：
+\begin{equation}
+\frac{F_1}{\sin\alpha}=\frac{F_2}{\sin\beta}=\frac{W}{\sin(\alpha+\beta)}
+\label{eq:2-例1-正弦}
+\end{equation}
+\begin{equation}
+F_1=\frac{W\sin\beta}{\sin(\alpha+\beta)},\qquad F_N=\frac{W\sin\alpha}{\sin(\alpha+\beta)}
+\label{eq:2-例1-拉力}
+\end{equation}
+% 待核对（P7 求解式）：下标/分母关系以原图为准，图中另出现 $F_2$、$F_N$ 记号，请以纸质原稿核对分力与分母对应关系。
+
+(2) 由 $\cos\theta=\dfrac{120}{200}=\dfrac{3}{5}$ 求得 $\theta$，故
+\begin{equation}
+\boxed{\;60^\circ-\theta\le\beta\le60^\circ+\theta\;}
+\label{eq:2-例1-范围}
+\end{equation}
+% 待核对（P7 右下）：力三角形竖边 $W=200\text{N}$、斜边为绳张力方向，$\cos\theta=120/200=3/5$；角记号原稿写作 $\alpha$ 一带，具体符号请核对。
+\end{example}
+
+\subsection{合成与平衡的解析法}
+
+\parahead{1. 力的正交分解} 力 $\vec{F}$ 沿 $x,y$ 方向正交分解：
+\begin{equation}
+\vec{F}=F_x\vec{i}+F_y\vec{j},\qquad F=\sqrt{F_x^2+F_y^2}
+\label{eq:2-解析-正交分解}
+\end{equation}
+
+\parahead{2. 力在坐标轴上的投影} 投影是代数量：
+\begin{equation}
+\boxed{\;X=F\cos\alpha\;}
+\label{eq:2-解析-投影}
+\end{equation}
+力的解析表达式：
+\begin{equation}
+\boxed{\;\vec{F}=X\vec{i}+Y\vec{j}\;}
+\label{eq:2-解析-表达式}
+\end{equation}
+
+\parahead{3. 合力投影定理} 合力在某一坐标轴上的投影，等于各分力在同一坐标轴上投影的代数和：
+\begin{equation}
+X=\sum X_i,\qquad Y=\sum Y_i
+\label{eq:2-解析-合力投影}
+\end{equation}
+% 待核对（P8）：原稿另记 $X^2+Y^2=\sum\left(X_i^2+Y_i^2\right)$，与合力投影定理表达可能不一致，请核对。
+
+\parahead{4. 合成的解析法}
+\begin{equation}
+F=\sqrt{X^2+Y^2}=\sqrt{\left(\sum X_i\right)^2+\left(\sum Y_i\right)^2}
+\label{eq:2-解析-合力大小}
+\end{equation}
+\begin{equation}
+\cos\alpha=\frac{X}{F}=\frac{\sum X_i}{F}
+\label{eq:2-解析-合力方向}
+\end{equation}
+
+\parahead{5. 平衡的解析条件} 平面汇交力系平衡的解析条件：各力在 $x,y$ 两坐标轴上投影的代数和同时为零：
+\begin{equation}
+\boxed{\;\text{平衡}\iff
+\begin{cases}\sum X_i=0\\ \sum Y_i=0\end{cases}\;}
+\label{eq:2-解析-平衡}
+\end{equation}
+
+\begin{example}[平衡应用例1]
+不计杆重、不计滑轮大小及重量，求 $AB$ 和 $BC$ 杆的力。$C$ 为上部固定铰，$A$ 为左下部固定支座，两杆在 $B$ 处铰接，$B$ 附近小滑轮挂重物 $W$。
+
+\textbf{解．} 以滑轮 $B$ 为对象建立 $x$（右）、$y$（上）坐标系，三力 $F_{BC}$（沿 $CB$ 杆方向）、$F_{AB}$（沿 $AB$ 杆方向）、$W$（竖直向下）汇交，列平衡：
+\begin{equation}
+\Sigma X=0:\;F_{BC}\cos\alpha-W-F_{AB}\sin\alpha=0
+\label{eq:2-例1-平衡X}
+\end{equation}
+\begin{equation}
+\Sigma Y=0:\;F_{BC}\sin\alpha-W-F_{AB}\cos\alpha=0
+\label{eq:2-例1-平衡Y}
+\end{equation}
+解得（换坐标系简化计算）：
+\begin{equation}
+F_{AB}=\sqrt{2}\,W,\qquad F_{BC}=\cdots
+\label{eq:2-例1-解}
+\end{equation}
+% 待核对（P9 例1）：$\Sigma X=0,\Sigma Y=0$ 两式正负号与 $F_{AB},F_{BC}$ 记法以原稿为准；下方小字「换坐标系（方便计算）」，具体解出的 $F_{AB},F_{BC}$ 数值请以纸质原稿为准。
+\end{example}
+
+\begin{example}[平衡应用例2]
+水平杆 $AB$，左端 $A$、右端 $B$ 各为支座，$A,B$ 处各有一 $45^\circ$ 斜向支承约束线；$A$ 受竖直向下力 $P$，$B$ 受竖直向下力 $Q$。求各力。
+
+\textbf{解．} 以 $A$ 为对象：
+\begin{equation}
+P+F_{AB}\cos45^\circ=0\quad\Longrightarrow\quad F_{AB}=\sqrt{2}\,P
+\label{eq:2-例2-A}
+\end{equation}
+以 $B$ 为对象，考虑 $F_{AB}$ 沿杆传至 $B$ 及竖直力 $F_Q$：
+\begin{equation}
+\boxed{\;F_{AB}=\tfrac{1}{2}P\;}\qquad\boxed{\;Q=\tfrac{2}{3}P\;}
+\label{eq:2-例2-B}
+\end{equation}
+% 待核对（P9 例2 两个小方框）：原稿记 $F_{AB}=\tfrac{\sqrt2}{2}P$ 且 $Q=\tfrac23 P$，具体数值请以纸质原稿为准；此处 $F_{AB}$ 结果与以 $A$ 为对象的分析需相互一致，请核对。
+\end{example}
+% ============================================================
+%  §2 平面力偶系（P10–12）
+% ============================================================
+\section{平面力偶系}
+
+\subsection{力对点的矩（平面）}
+
+\parahead{1. 力矩的定义} 取 $O$ 为矩心，力 $\vec{F}$ 作用于 $B$ 点，$O$ 到力 $\vec{F}$ 作用线的垂距为力臂 $d$，则力对点之矩为代数量（逆时针为正、顺时针为负）：
+\begin{equation}
+M_O(\vec{F})=\pm F\,d
+\label{eq:2-力偶-定义}
+\end{equation}
+亦等于 $\triangle OAB$ 面积的两倍：
+\begin{equation}
+M_O(\vec{F})=2\,S_{\triangle OAB}
+\label{eq:2-力偶-面积}
+\end{equation}
+
+\parahead{2. 汇交力系的合力矩定理} 平面汇交力系的合力对某点的矩，等于各分力对该点矩的代数和：
+\begin{equation}
+\vec{F}=\sum\vec{F}_i,\qquad
+\boxed{\;M_O(\vec{F})=\sum M_O(\vec{F}_i)\;}
+\label{eq:2-力偶-合力矩}
+\end{equation}
+% 待核对（P10 图2）：力偶对其所在平面内任意一点 $O$ 的矩均相等，可用 $M_O(\vec{F})=OA\cdot AD=OB\cdot AB=2\,OE\cdot AC$ 表示，线段记号以原稿为准。
+
+\parahead{3. 合力矩定理的应用} 力 $\vec{F}$ 过 $A(x_1,y_1)$ 点、方向与 $x$ 轴成角 $\alpha$，其作用线方程 $y-y_1=(x-x_1)\tan\alpha$，原点 $O$ 到作用线的垂距：
+\begin{equation}
+d=\frac{|y_1-x_1\tan\alpha|}{\sqrt{1+\tan^2\alpha}}=\left|x_1\sin\alpha-y_1\cos\alpha\right|
+\label{eq:2-力偶-垂距}
+\end{equation}
+故
+\begin{equation}
+M_O(\vec{F})=M_O(\vec{F}_x)+M_O(\vec{F}_y)=-F\cos\alpha\cdot y_1+F\sin\alpha\cdot x_1
+\label{eq:2-力偶-合力矩坐标}
+\end{equation}
+
+\begin{example}[求分布力的合力]
+水平梁 $AB$ 长 $l$，作用三角形分布载荷 $q=q(x)$（$A$ 端集度 $0$，向 $B$ 端线性增至最大集度 $q$），求合力大小与作用点。
+
+\textbf{解．} 合力即载荷「面积」，作用点在图形形心：
+\begin{equation}
+F=\int_0^l q\,\mathrm{d}x=\int_0^l \frac{q}{l}x\,\mathrm{d}x=\frac12 ql
+\label{eq:2-例-分布力-合力}
+\end{equation}
+\begin{equation}
+S=\int_0^l x\,q\,\mathrm{d}x=\int_0^l x\cdot\frac{q}{l}x\,\mathrm{d}x=\frac13 ql^2
+\label{eq:2-例-分布力-静矩}
+\end{equation}
+合力作用点到 $A$ 的距离：
+\begin{equation}
+\bar{x}=\frac{S}{F}=\frac{2}{3}l
+\label{eq:2-例-分布力-作用点}
+\end{equation}
+% 待核对（P11）：原稿记 $S=\tfrac23 l$ 表示合力作用点（形心）到 $A$ 的距离 $=\tfrac23 l$；$S$ 先表示对 $A$ 的一阶矩，末式表示到 $A$ 的距离，请按原稿核对变量含义。
+% 图待补：三角形分布载荷梁 AB（A 端集度 0、B 端最大集度 q）。
+\end{example}
+
+\subsection{平行力系的合成}
+
+\parahead{同向平行力} 两个同向平行力一定可以合成一个合力，合力大小等于两力大小之和，方向与分力一致，分点与两力大小成反比：
+\begin{equation}
+\frac{AC}{BC}=\frac{F_2}{F_1}
+\label{eq:2-平行力-同向}
+\end{equation}
+
+\parahead{反向平行力} 两个反向平行力不一定能合成一个合力，合力大小等于两力大小之差的绝对值，方向与较大者一致：
+\begin{equation}
+\frac{AC}{BC}=\frac{F_2}{F_1}
+\label{eq:2-平行力-反向}
+\end{equation}
+当两反向平行力大小相等时，恰好构成一个力偶，不能再合成一个单力。
+% 图待补：同向平行力与反向平行力合成示意图。
+
+\subsection{平面力偶理论}
+
+\parahead{1. 力偶的定义} 大小相等、方向相反、作用线平行但不共线的两个力 $(\vec{F},\vec{F}')$ 构成力偶。
+% 图待补：力偶示意图（两等值反向平行力、力偶臂）。
+
+\parahead{2. 力偶的性质}
+\begin{enumerate}
+\item 力偶没有合力；
+\item 力偶是力系中的基本量，不能与一个单力等效，只能与另一力偶等效；
+\item 力偶对其作用面内任一点的矩，都等于力偶矩。
+\end{enumerate}
+% 待核对（P11 性质②）：原稿此条字迹模糊，大意「力偶是力系中的基本量」，请以纸质原稿为准。
+
+\subsection{平面力偶等效定理}
+
+\textbf{力偶矩大小相等、转向相同 $\Rightarrow$ 力偶等效。}
+\begin{itemize}
+\item 推论1：可任意改变力偶的作用位置和力的作用方向；
+\item 推论2：可任意改变力的大小及力偶臂的大小。
+\end{itemize}
+% 图待补：力偶等效示意（带转向圆弧与力偶矩 m）。
+
+\subsection{平面力偶系的合成与平衡}
+
+平面力偶系的合成：
+\begin{equation}
+\boxed{\;m=\sum m_i\;}
+\label{eq:2-力偶-合成}
+\end{equation}
+平面力偶系的平衡（只有一个平衡方程）：
+\begin{equation}
+\boxed{\;m=0\;}
+\label{eq:2-力偶-平衡}
+\end{equation}
+
+\begin{example}[力偶平衡例1]
+已知 $OA=0.4\text{ m}$，$OB=0.6\text{ m}$，$m_1=1\text{ N}\cdot\text{m}$，求平衡时 $m_2$ 与 $F_{AB}$。
+
+\textbf{解．} 取 $O,A$ 为对象。由力偶性质——力偶只能由力偶平衡：
+\begin{equation}
+F_{AB}\cdot l_{OA}\sin30^\circ=m_1
+\label{eq:2-例-力偶1}
+\end{equation}
+\begin{equation}
+F_{AB}=\frac{1}{0.4\times0.5}=5\text{ N}
+\label{eq:2-例-力偶1-力}
+\end{equation}
+\begin{equation}
+m_2=F_{AB}\cdot l_{OB}=5\times0.6=3\text{ N}\cdot\text{m}
+\label{eq:2-例-力偶1-m2}
+\end{equation}
+% 待核对（P12 例1）：$F_{AB}=1/(0.4\times0.5)=5\text{N}$，$m_2=5\times0.6=3\text{N}\cdot\text{m}$，请按原稿核对。
+\end{example}
+
+\begin{example}[力偶平衡例2（对称拱架）]
+左右对称拱形框架，$A$ 为左支座、$B$ 为右支座、$C$ 为顶部，两侧对称位置各作用一个力偶（转向相反），底部两段水平长度 $l,l$，求 $A,B$ 处约束力。
+
+\textbf{解．} 由对称性竖向反力 $F_{Ay}=F_{By}$，故 $F_A=F_B$；两竖向反力构成的力偶与外力偶系平衡：
+\begin{equation}
+F_{Ax}=0,\qquad F_{Ay}=F_{By}\ \Rightarrow\ (F_A=F_B)
+\label{eq:2-例-力偶2-对称}
+\end{equation}
+\begin{equation}
+F\,l=m\ \Rightarrow\ F=\frac{m}{l}
+\label{eq:2-例-力偶2-力}
+\end{equation}
+% 待核对（P12 例2）：力臂取 $l$ 还是 $2l$ 等细节请按原稿核对。
+\end{example}
+
+% ============================================================
+%  §3 平面一般力系的简化（P13–14）
+% ============================================================
+\section{平面一般力系的简化}
+
+\subsection{力线平移定理}
+
+\parahead{定理} 把作用于 $A$ 的力 $\vec{F}$ 平移到刚体上另一点 $B$ 时，除在 $B$ 点得到一与原力相等的力 $\vec{F}$ 外，还须附加一个力偶，其矩等于原力对 $B$ 点之矩：
+\begin{equation}
+m=M_B(\vec{F})
+\label{eq:2-简化-平移}
+\end{equation}
+% 图待补：力线平移定理示意（A 点力 $\vec{F}$ 平移至 B 点，附加力偶矩 M）。
+
+\parahead{力系分类与简化结果} 一般力系分解为汇交力系与力偶系，再分别简化为力与力偶。
+
+\subsection{主矢与主矩}
+
+\parahead{主矢} 力系中各个力的矢量和，与简化中心无关，是力系中的不变量：
+\begin{equation}
+\vec{R}=\sum\vec{F}_i
+\label{eq:2-简化-主矢}
+\end{equation}
+
+\parahead{主矩} 原力对简化中心力矩的代数和，与简化中心有关：
+\begin{equation}
+\vec{M}_O=\sum\vec{M}_O(\vec{F}_i)
+\label{eq:2-简化-主矩}
+\end{equation}
+
+\subsection{固定端约束}
+
+固定端约束既能提供一个约束力（有 $F_x,F_y$ 两个分量），又能提供一个约束力偶 $m$。
+% 图待补：固定端约束示意（墙面斜线阴影，约束反力 $F_x,F_y$ 与约束力偶 m）。
+
+% ============================================================
+%  §4 简化结果讨论、合力矩定理（P13–14）
+% ============================================================
+\section{简化结果的讨论与合力矩定理}
+
+\subsection{简化结果}
+
+\begin{enumerate}
+\item $\vec{R}=0,\ \vec{M}_O=0$：平衡力系；
+\item $\vec{R}=0,\ \vec{M}_O\neq0$：力偶；
+\item $\vec{R}\neq0,\ \vec{M}_O=0$：合力，作用在简化中心；
+\item $\vec{R}\neq0,\ \vec{M}_O\neq0$：合力，不作用在简化中心，$d=\dfrac{M_O}{R}$。
+\end{enumerate}
+
+\subsection{合力矩定理}
+
+\parahead{定理} 合力对某点的矩等于各分力对该点矩的代数和。由 $d=M_O/R$ 导出合力作用线到简化中心的距离：
+\begin{equation}
+\vec{M}_O(\vec{R})=\vec{R}\cdot d=\vec{R}\cdot\frac{M_O}{R}=m=\vec{M}_O(\vec{F}_i)
+\label{eq:2-简化-合力矩}
+\end{equation}
+
+\begin{example}[简化问题的计算]
+矩形板上作用三力：$F_1=200\text{ N}$（与竖直方向成 $60^\circ$ 指向右上）、$F_2=150\text{ N}$（竖直向下）、$F_3=100\text{ N}$（水平向右），求向 $A$ 和 $D$ 点简化的最终结果。
+
+\textbf{解．}
+(1) 先求主矢：
+\begin{equation}
+\sum F_x=F_1\cos60^\circ-F_3=5\text{ N}
+\label{eq:2-例-简化-Σx}
+\end{equation}
+\begin{equation}
+\sum F_y=F_1\sin60^\circ-F_2=73.2\text{ N}
+\label{eq:2-例-简化-Σy}
+\end{equation}
+\begin{equation}
+F_R=\sqrt{(\sum F_x)^2+(\sum F_y)^2}=88.65\text{ N}
+\label{eq:2-例-简化-FR}
+\end{equation}
+\begin{equation}
+\cos\alpha=\frac{\sum F_x}{F_R}=-0.564,\qquad \alpha=-120^\circ
+\label{eq:2-例-简化-alpha}
+\end{equation}
+(2) 计算主矩：
+\begin{equation}
+M_A=F_2\times0.5-F_3\times0.2=28\text{ N}\cdot\text{m}
+\label{eq:2-例-简化-MA}
+\end{equation}
+\begin{equation}
+M_D=-F_1\sin60^\circ\times0.4+F_3\times0.2=-14.28\text{ N}\cdot\text{m}
+\label{eq:2-例-简化-MD}
+\end{equation}
+\begin{equation}
+d=\frac{M_A}{F_R}=0.282\text{ m}
+\label{eq:2-例-简化-d}
+\end{equation}
+% 待核对（P14 例）：部分笔算结果疑有误（如 $F_1\cos60^\circ -F_3=100-100=0$ 而非 5），数值与各力力矩累加方式需人工核对原笔记。
+\end{example}
+
+% ============================================================
+%  §5 平面一般力系的平衡条件与平衡方程（P14）
+% ============================================================
+\section{平面一般力系的平衡条件与平衡方程}
+
+平面一般力系平衡的充要条件：主矢与主矩均为零：
+\begin{equation}
+\vec{F}_R=0,\quad \vec{M}_O=0
+\label{eq:2-平衡-充要}
+\end{equation}
+\begin{equation}
+\begin{cases}
+\sum X=0\\ \sum Y=0\\ \sum M_O(\vec{F}_i)=0
+\end{cases}
+\label{eq:2-平衡-方程}
+\end{equation}
+
+\begin{example}[二力杆/梁求约束反力]
+通过铰 $A,B$ 连接的梁/杆结构，作用一竖直向下力 $P$ 与一与杆成 $30^\circ$ 的力 $Q$，求约束反力。
+
+\textbf{解．} 取力矩平衡：
+\begin{equation}
+\sum M_B=0:\quad P\cdot OA-Q\cos30^\circ\cdot OB=0
+\label{eq:2-例-平衡-MB}
+\end{equation}
+\begin{equation}
+Q=\frac{OA\cdot P}{OB\cos30^\circ}=\frac{P}{OB\cos30^\circ}\,OA
+\label{eq:2-例-平衡-Q}
+\end{equation}
+% 待核对（P14 例1）：最终表达式写法较潦草，可能为 $Q=\dfrac{OA}{OB\cos30^\circ}\cdot P$，请按原稿核对。
+\end{example}
+% ============================================================
+%  §5 续：平衡方程形式、物体系平衡、例（起重机）+ §6 桁架（P15–21）
+% ============================================================
+\subsection{平衡方程的形式}
+
+\parahead{注} 二矩式条件：$A,B$ 连线不与 $X$ 轴垂直；三矩式条件：$A,B,C$ 三点不共线。
+
+\subsubsection{一矩式}
+\begin{equation}
+\begin{cases}\sum X=0\\ \sum Y=0\\ \sum M_A=0\end{cases}
+\label{eq:2-平衡-一矩}
+\end{equation}
+
+\subsubsection{二矩式}
+\begin{equation}
+\begin{cases}\sum X=0\\ \sum M_A=0\\ \sum M_B=0\end{cases}
+\label{eq:2-平衡-二矩}
+\end{equation}
+
+\subsubsection{三矩式}
+\begin{equation}
+\begin{cases}\sum M_A=0\\ \sum M_B=0\\ \sum M_C=0\end{cases}
+\label{eq:2-平衡-三矩}
+\end{equation}
+
+\begin{example}[求 $F_{AC}$ 与 $A$ 处约束力]
+斜置杆 $AB$，$B$ 端受竖直方向约束（移动支座），杆上作用两集中载荷 $W_1,W_2$，求 $F_{AC}$ 与 $A$ 处约束力。
+
+\textbf{解．} 以 $AB$ 为对象：
+\begin{equation}
+\sum X=0:\;F_{AB}-F_{AC}\cos(\beta-\alpha)=0
+\label{eq:2-例-AB-X}
+\end{equation}
+\begin{equation}
+\sum Y=0:\;F_{Ay}+F_{AC}\sin(\beta-\alpha)-W_1-W_2=0
+\label{eq:2-例-AB-Y}
+\end{equation}
+\begin{equation}
+\sum M_A=0:\;F_{AC}\sin\beta\cdot W_1-\tfrac12\cos\alpha-W_2\tfrac{l}{2}\cos\alpha=0
+\label{eq:2-例-AB-MA}
+\end{equation}
+% 待核对（P15）：第三个力矩方程各项（$\sin\beta$、$\tfrac12\cos\alpha$ 等）写法较潦草，请按原稿核对具体项与系数。
+\end{example}
+
+\subsection{物体系的平衡}
+
+\begin{itemize}
+\item \textbf{静定问题}：平衡方程个数 $=$ 未知数个数。
+\item \textbf{静不定问题（超静定问题）}：平衡方程个数 $<$ 未知数个数；需补充变形协调方程求解。
+\end{itemize}
+% 待核对（P16 图）：静定/静不定判定的三根梁示例（静不定：2 个平衡方程 3 个未知；静定：3 个平衡方程 3 个未知；静不定：3 个平衡方程 3 个未知量但变形已知可求解、+变形协调方程），请按原稿核对分类与注释。
+% 图待补：静定/静不定三梁判定示意图。
+
+\begin{example}[求 $A,B,C$ 三点处约束力]
+由 $AC$ 杆与 $BC$ 斜杆组成的复合结构（左端 $A$ 固定铰，右端 $C$ 与斜杆 $BC$ 相连，$B$ 端作用水平力 $Q$，$AC$ 上作用竖直力 $P$），尺寸：左段水平长 $l$、右段长 $l$、竖直尺寸 $a,b$。未知力 $3\times2=6$，为静定问题。
+
+\textbf{解．} 以 $AC$ 为对象（矩心取 $D$，距 $A$ 为 $l$、距 $C$ 为 $a$）：
+\begin{equation}
+\sum X=0:\;F_{Ax}+F_{Cx}=0
+\label{eq:2-例-AC-X}
+\end{equation}
+\begin{equation}
+\sum Y=0:\;F_{Ay}+F_{Cy}-P=0
+\label{eq:2-例-AC-Y}
+\end{equation}
+\begin{equation}
+\sum M_D=0:\;P(l-a)-F_{Ay}l-F_{Cy}a=0
+\label{eq:2-例-AC-M}
+\end{equation}
+以 $BC$ 为对象：
+\begin{equation}
+\sum X=0:\;-F_{Cx}-Q+F_{Bx}=0
+\label{eq:2-例-BC-X}
+\end{equation}
+\begin{equation}
+\sum Y=0:\;-F_{Cy}+F_{By}=0
+\label{eq:2-例-BC-Y}
+\end{equation}
+\begin{equation}
+\sum M_B=0:\;Qb+F_{By}l+F_{Bx}l=0
+\label{eq:2-例-BC-M}
+\end{equation}
+% 待核对（P16）：第(6)式 $\sum M_B=0$ 的符号与项、各杆隔离体受力方向以原笔记为准。
+\end{example}
+
+\subsection{平面一般力系平衡的解题类型}
+
+\parahead{第一个类型（一个结构、两个支撑）} 以整体为对象：
+\begin{equation}
+\sum M_A=0:\;F_{By}\cdot2l+Q\cdot b-P\cdot a=0
+\label{eq:2-类型1-MA}
+\end{equation}
+\begin{equation}
+F_{By}=\frac{1}{2l}\left[Pa-Qb\right]
+\label{eq:2-类型1-FBy}
+\end{equation}
+再由 $\sum M_B=0$（或 $\sum Y=0$）求 $F_{Ay}$。
+
+\begin{example}[求 $EF$ 杆受力]
+框架：左端 $A$ 固定铰，右端 $D$ 活动铰，顶部 $B,C$ 处竖直约束，框架内斜杆 $EF$（与水平约成 $30^\circ$）。作用一水平力 $P$。求 $EF$ 杆受力。
+
+\textbf{解．}
+①以整体为对象，由 $\sum M_B=0$ 求 $F_{Ay}$；
+②以整体为对象，由 $\sum M_E=0$ 求 $F_{By}$；
+③以 $AB$ 为对象，由 $\sum Y=0$ 求 $F_{EF}$：
+\begin{equation}
+F_{EF}=-\tfrac12 P
+\label{eq:2-例-EF}
+\end{equation}
+% 待核对（P17 例1）：步骤与力方向要统一标注，请按原稿核对。
+\end{example}
+
+\begin{example}[求 $Q$ 的大小]
+框架：左端 $A$ 固定铰，右端 $D$ 滚支，顶部 $B,C$ 支座，内有斜杆 $EF,DC$，作用力 $P$ 与待求力 $Q$。
+
+\textbf{解．}
+①以整体为对象：
+\begin{equation}
+\sum M_A=0:\;-N\cdot2l\sin\alpha-P\cdot l\sin\alpha=0
+\label{eq:2-例-Q-整体}
+\end{equation}
+\begin{equation}
+N=\frac{P\sin\alpha}{2l\sin\alpha}=\frac{P}{2}
+\label{eq:2-例-Q-N}
+\end{equation}
+②以 $EF$ 为对象：
+\begin{equation}
+\sum Y=0:\;2F_0\cos\alpha=P\;\Rightarrow\;F_0=\frac{P}{2\cos\alpha}
+\label{eq:2-例-Q-F0}
+\end{equation}
+③以 $CD$ 为对象，由 $\sum X=0$、$\sum Y=0$、$\sum M_B=0$：
+\begin{equation}
+Q=\tfrac12 P\tan\alpha
+\label{eq:2-例-Q-Q}
+\end{equation}
+% 待核对（P17 例2）：以 CD 为对象的三式（尤其 $\sum X=0$ 中 $F_{Dx}\cos\alpha$、$\sum M_B=0$ 各项符号）及约简过程请按原稿核对。
+\end{example}
+
+\parahead{第二个类型（固定部分 + 附属部分）} 先研究附属部分（以 $BC$ 为对象），再求固定部分。
+% 图待补：带附属部分的组合梁受力示意图。
+
+% ============================================================
+%  §6 平面静定桁架的内力分析（P18–21）
+% ============================================================
+\section{平面静定桁架的内力分析}
+
+\parahead{一、桁架的定义} 杆件以适当的方式连接在一起。连接方式：焊接、铆接、螺栓、铰接。
+% 图待补：三角形拼接桁架与方形框+对角斜杆示意。
+
+\parahead{二、桁架的工程要求}
+\begin{enumerate}
+\item 有足够的强度（抵抗破坏的能力）；
+\item 有足够的刚度（变形在可接受范围内）；
+\item 有足够的稳定性（保持原有平衡状态）；
+\item 有足够的经济性/抗变形性能（确定连接件的尺寸和材料）。
+\end{enumerate}
+\textbf{注}：前三者（强度、刚度、稳定性）合称「静力设计」。
+% 待核对（P18 工程要求第4条）：原稿写「有足够的抗变性/经济性能：确定连接件的尺寸和材料」，右侧用大括号括起前三条并标注「静力设计」，请按原稿核对。
+
+\parahead{三、桁架的分类}
+\begin{itemize}
+\item \textbf{平面桁架}：结构和载荷均在同一平面内；\ \textbf{空间桁架}。
+\item \textbf{静定桁架}；\ \textbf{静不定桁架}。
+\end{itemize}
+
+\parahead{四、桁架的力学模型}（理想桁架：所有杆件都是二力杆）
+\begin{enumerate}
+\item 所有的杆是直杆；
+\item 不计杆重；
+\item 所有的连接均是铰链；
+\item 所有的力作用在节点上。
+\end{enumerate}
+\textbf{注}：上述 1–4 条合起来对应「理想桁架（所有杆件都是二力杆）」。
+
+\subsubsection{简单桁架与组合桁架}
+\begin{itemize}
+\item \textbf{简单桁架}：由一个基础三角形逐次添加节点（每加一个节点增加两根不共线杆）构成，静定问题；
+\item \textbf{组合桁架}：由两个刚片通过连接件组合而成，构造更复杂。
+\end{itemize}
+
+\subsubsection{简单桁架一定是静定桁架}
+\textbf{证明}：设桁架 $m$ 根杆、$n$ 个节点。未知数 $=m+3$（$m$ 根杆内力 + 3 个支座约束反力分量），平衡方程 $=2n$（每节点 2 个）。由
+\begin{equation}
+m=3+2(n-3)=2n-3
+\label{eq:2-桁架-静定}
+\end{equation}
+得 $m+3=2n$，即未知数等于平衡方程数，故简单桁架一定是静定的。
+
+\parahead{五、求桁架内力的方法}
+\subsubsection{1. 节点法} 以每个节点为研究对象，列平衡方程求解。
+\textbf{注意}：① 先以整体为对象求出支座约束力；② 所取节点上的未知力不超过两个。
+
+\begin{example}[节点法求各杆内力]
+已知 $P_1=12\text{ kN}$，$P_2=12\text{ kN}$（右端 $P_2$ 沿 $30^\circ$ 方向作用于节点 $B$），求各杆内力。
+
+\textbf{解．}
+①以整体为对象：
+\begin{equation}
+\sum X=0:\;F_{Ax}=0
+\label{eq:2-例-节点-整体X}
+\end{equation}
+\begin{equation}
+\sum M_A=0:\;F_{Ay}\cdot3L-P_1\cdot2L-P_2\cdot(\text{力臂})=0
+\label{eq:2-例-节点-整体M}
+\end{equation}
+\begin{equation}
+F_{Ay}=\tfrac23 P_2+\tfrac13 P_1
+\label{eq:2-例-节点-FAy}
+\end{equation}
+由 $\sum Y=0$ 得 $F_{By}$。最终 $F_{Ay}=30\text{ kN}$、$F_{By}=24\text{ kN}$。
+
+②以节点 $B$ 为对象：
+\begin{equation}
+\sum Y=0:\;F_{By}+F_1\sin30^\circ=0\;\Rightarrow\;F_1=-20\text{ kN}
+\label{eq:2-例-节点-BY}
+\end{equation}
+\begin{equation}
+\sum X=0:\;F_1\cos30^\circ+F_2=0\;\Rightarrow\;F_2=-10\sqrt3\text{ kN}
+\label{eq:2-例-节点-BX}
+\end{equation}
+负数表示受压。
+% 待核对（P19 例）：$P_1,P_2$ 取值、$F_{Ay}=30\text{kN}$/$F_{By}=24\text{kN}$、$\sum M_A$ 各力臂系数（$\tfrac23,\tfrac13$）、节点 B 平衡各项符号均较潦草，请按原稿核对。
+\end{example}
+
+\subsubsection{判断零杆的方法}
+\begin{enumerate}
+\item 一个节点上有两个力作用，且这两力不在同一直线上，则两杆均为零杆：
+\begin{equation}
+F_{N1}=F_{N2}=0
+\label{eq:2-零杆-两力}
+\end{equation}
+\item 一个节点上有三个力作用，且两力共线，则第三杆为零杆：
+\begin{equation}
+F_{N3}=0
+\label{eq:2-零杆-三力}
+\end{equation}
+\end{enumerate}
+
+\subsubsection{2. 截面法} 用假想的连接面（截面）将桁架切开，分成两个部分，取任一部分为研究对象列平衡方程求解。
+\textbf{常规}：取左边（或右）部分为研究对象，由 $\sum M_E=0$、$\sum M_D=0$、$\sum M_C=0$ 求解。
+
+\begin{example}[截面法求 $CD$ 杆受力]
+桁架立于水平地面，左支座 $A$ 标竖直反力 $A_y$（$30^\circ$ 角），右支座 $B$ 标竖直反力 $B_y$，节点 $F$ 处有水平向右外力 $P$，求 $CD$ 杆受力。
+
+\textbf{解．} 由 $\sum M_B=0$：
+\begin{equation}
+F_{CD}\cdot L+P\cdot\tfrac12 L=0
+\label{eq:2-例-截面-MB}
+\end{equation}
+\begin{equation}
+F_{CD}=-\frac{\sqrt3}{2}P
+\label{eq:2-例-截面-FCD}
+\end{equation}
+负号表示受压。
+% 待核对（P20）：力矩方程各项力臂与符号、最终系数 $\tfrac{\sqrt3}{2}$ 请按原稿核对。
+\end{example}
+
+\begin{example}[截面法求 $AB$ 杆受力]
+平面桁架，左支座 $A$ 标水平反力 $F_{Ax}$ 与竖直反力 $F_{Ay}$，顶部左端节点 $D$ 标 $30^\circ$、$60^\circ$ 角，上方有水平向右外力 $P$，内部节点 $B$ 连有杆 $F_{AB}$ 与 $F_1$，求 $AB$ 杆受力。
+
+\textbf{解．}
+①以整体为对象：
+\begin{equation}
+\sum Y=0:\;F_{Ay}+F_{(\cdot)}=0\;\Rightarrow\;F_{Ay}=-P
+\label{eq:2-例-AB-整体Y}
+\end{equation}
+\begin{equation}
+\sum X=0:\;F_{Ax}+P=0\;\Rightarrow\;F_{Ax}=-P
+\label{eq:2-例-AB-整体X}
+\end{equation}
+% 待核对（P21）：上方单写 $F_{Ay}=P$ 与 $\sum Y=0$ 给出的 $F_{Ay}=-P$ 符号不一致，应为笔误或两种取值，需人工核对。
+
+②将连杆截断取下半部为隔离体，由 $\sum M_{(\cdot)}=0$：
+\begin{equation}
+F_1=-\tfrac12 P
+\label{eq:2-例-AB-F1}
+\end{equation}
+
+③以 $B$ 为研究对象：
+\begin{equation}
+\begin{cases}
+F_{N4}\sin40^\circ+F_{N5}+F_{AB}=0\\[2pt]
+F_{N4}\cos40^\circ-F_{AB}=0
+\end{cases}
+\label{eq:2-例-AB-B}
+\end{equation}
+\begin{equation}
+F_{AB}=\tfrac12 P
+\label{eq:2-例-AB-结果}
+\end{equation}
+% 待核对（P21）：方程组中角度（$40^\circ$?）、$F_{N5}$ 符号位置，以及 $F_{AB}=\tfrac12 P$ 结果，请按原稿核对。
+\end{example}

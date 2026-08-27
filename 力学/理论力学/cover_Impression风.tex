@@ -1,0 +1,102 @@
+% ============================================================
+%  课程笔记封面 —— 「睡莲」风格（莫奈《睡莲》系列取色）
+%  与 cover.tex 同构的 titlepage 片段，直接 \input{} 复用：
+%      \input{cover_Impression风}
+%
+%  配色定义在统一导言区 preamble.tex（wlSky / wlWater / wlLeaf / wlFlower 等 wl* 前缀），
+%  改色只需改 preamble，无需动本文件。
+%
+%  可用字段（在主文件导言区用 \newcommand 预定义即可覆盖缺省值）：
+%      \notename     主标题（必填，主模板已定义）
+%      \noteauthor   作者（必填，主模板已定义）
+%      \notecourseen 眉题英文（缺省 Course Notes，可填课程英文名）
+%      \notesubtitle 副标题（缺省「学习笔记」）
+%      \noteextra    底部附加信息，如 2026 秋季学期（缺省不显示）
+% ============================================================
+
+% ---- 缺省字段（主文件已定义的同名命令不会被覆盖） ----
+\providecommand{\notecourseen}{Course Notes}
+\providecommand{\notesubtitle}{学\ 习\ 笔\ 记}
+\providecommand{\noteextra}{}
+
+\begin{titlepage}
+	\begin{tikzpicture}[remember picture, overlay]
+		% 坐标原点移至页面左下角（后续坐标 x∈[0,21], y∈[0,29.7]）
+		\begin{scope}[shift={(current page.south west)}]
+		% ---- 1. 天光底色（整页浅青绿，向下渐入池水） ----
+		\shade[top color=wlSkyHigh, bottom color=wlSky]
+			(current page.south west) rectangle (current page.north east);
+
+		% ---- 2. 池水（下部整幅青绿，含深水/亮斑两层叠出波光） ----
+		\fill[wlWater]
+			(current page.south west) rectangle ([yshift=10.8cm]current page.south east);
+		\fill[wlWaterDeep, opacity=0.30]
+			plot[domain=0:21, samples=90, smooth] (\x, {7.6 + 0.26*sin(deg(1.7*\x))})
+			-- (21,0) -- (0,0) -- cycle;
+		\fill[wlWaterLight, opacity=0.28]
+			plot[domain=0:21, samples=90, smooth] (\x, {9.7 + 0.22*sin(deg(2.3*\x)+40)})
+			-- (21,7.6) -- (0,7.6) -- cycle;
+
+		% ---- 3. 波光短笔触（错落横线模拟水面倒影光斑） ----
+		\foreach \x/\y/\w/\o in {
+				1.1/9.3/3.0/0.45, 2.0/8.2/2.4/0.38, 0.9/7.1/3.4/0.42,
+				1.6/6.0/2.2/0.34, 1.0/5.0/3.0/0.40, 1.8/4.0/2.6/0.36}{
+			\draw[wlWaterLight, opacity=\o, line width=1.5pt, line cap=round]
+				(\x,\y) -- ++(\w,0);
+		}
+		\foreach \x/\y/\w/\o in {
+				17.0/9.6/2.8/0.44, 16.4/8.5/2.2/0.36, 17.6/7.4/3.2/0.42,
+				16.8/6.3/2.4/0.34, 17.3/5.2/3.0/0.40}{
+			\draw[wlWaterDeep, opacity=\o, line width=1.5pt, line cap=round]
+				(\x,\y) -- ++(\w,0);
+		}
+
+		% ---- 4. （睡莲叶片已移除，保留水面与波光） ----
+		% ---- 5. （睡莲花已移除，保留水面与波光） ----
+
+		% ---- 6. 金色细边框（与 cover.tex 同款） ----
+		\draw[gold, line width=0.7pt, opacity=0.6]
+			([shift={(0.85,0.85)}]current page.south west) rectangle
+			([shift={(-0.85,-0.85)}]current page.north east);
+
+		% ---- 7. 顶部眉题（课程英文小字 + 随文字长度自适应的金色短线） ----
+		\node[anchor=north, text=structurecolor!85, align=center]
+			(imEyebrow) at ([yshift=-3.4cm]current page.north) {%
+			{\sffamily\fontsize{12}{15}\selectfont \uppercase{\notecourseen}}
+		};
+		\draw[gold, line width=1.0pt]
+			($(imEyebrow.west)+(-0.25cm,0)$) -- ++(-1.1cm,0);
+		\draw[gold, line width=1.0pt]
+			($(imEyebrow.east)+(0.25cm,0)$) -- ++(1.1cm,0);
+
+		% ---- 8. 主标题（居中，使用 \notename）----
+		\node[anchor=center, align=center, text=structurecolor]
+			at ([yshift=-8.3cm]current page.north) {%
+			{\fontsize{38}{48}\sffamily\bfseries \notename}
+		};
+
+		% ---- 9. 金色菱形 + 双细线（与 cover.tex 同款饰线） ----
+		\coordinate (C) at ([yshift=-11.6cm]current page.north);
+		\draw[gold, line width=1.1pt] (C) ++(-2.2cm,0) -- ++(1.55cm,0);
+		\draw[gold, line width=1.1pt] (C) ++(0.65cm,0) -- ++(1.55cm,0);
+		\node[fill=gold, minimum size=0.24cm, inner sep=0pt, rotate=45] at (C) {};
+
+		% ---- 10. 副标题（使用 \notesubtitle）----
+		\node[anchor=north, text=structurecolor!75, align=center]
+			at ([yshift=-12.4cm]current page.north) {
+			{\fontsize{15}{20}\sffamily \notesubtitle}
+		};
+
+		% ---- 11. 底部作者、日期、附加信息（白字置于池水之上） ----
+		\coordinate (B) at ([yshift=2.7cm]current page.south);
+		\draw[gold, line width=0.8pt, opacity=0.85] (B) ++(-1.1cm,0.95cm) -- ++(2.2cm,0);
+		\node[anchor=south, text=white, align=center] at (B) {
+			\begin{tabular}{c}
+				{\fontsize{19}{24}\sffamily\bfseries \noteauthor} \\[0.35cm]
+				{\large \sffamily \today}
+				\ifstrempty{\noteextra}{}{\\[0.3cm]{\normalsize\sffamily \noteextra}}
+			\end{tabular}
+		};
+		\end{scope} % 坐标原点 scope
+	\end{tikzpicture}
+\end{titlepage}

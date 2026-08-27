@@ -1,0 +1,367 @@
+% ============================================================
+%  理论力学笔记 · 第3章 空间力系
+%  来源：理论力学笔记（手写扫描原版）.pdf 第22–28页
+%  说明：仅含 \section 及以下层级；行间公式一律 equation+\label
+% ============================================================
+
+\section{空间汇交力系}
+
+\parahead{结论} 空间汇交力系一定可以合成一个合力：
+\begin{equation}
+\vec{F}=\sum\vec{F}_i
+\label{eq:3-汇交-合力}
+\end{equation}
+
+\parahead{平衡条件} 空间汇交力系平衡的充要条件为主矢为零：
+\begin{equation}
+\vec{F}=0 \quad\Longrightarrow\quad
+\begin{cases}
+\Sigma X=0\\ \Sigma Y=0\\ \Sigma Z=0
+\end{cases}
+\label{eq:3-汇交-平衡}
+\end{equation}
+
+\subsection{力在坐标轴上的投影}
+
+\parahead{一次投影法（方向余弦法）} 设力 $\vec{F}$ 与 $x,y,z$ 三轴分别成方向角 $\alpha,\beta,\gamma$，其投影为：
+\begin{equation}
+X=F\cos\alpha,\qquad Y=F\cos\beta,\qquad Z=F\cos\gamma
+\label{eq:3-汇交-一次投影}
+\end{equation}
+% 待核对（P22 图1 旁注）：已知 $F$ 与方向角，此为一次投影法。
+
+\parahead{二次投影法} 设 $\vec{F}$ 与 $z$ 轴成角 $\theta$，$\vec{F}$ 在 $xy$ 面上的投影与 $x$ 轴成角 $\phi$，则：
+\begin{equation}
+X=F\sin\theta\cos\phi,\qquad Y=F\sin\theta\sin\phi,\qquad Z=F\cos\theta
+\label{eq:3-汇交-二次投影}
+\end{equation}
+% 待核对（P22 图2 旁注）：原稿中 $\theta$（与 $z$ 轴夹角）与 $\phi$（$xy$ 面投影与 $x$ 轴夹角）书写易混淆，上式按二次投影法常规表达给出，需人工核对。
+% 图待补：一次投影法坐标轴与方向角 α,β,γ 示意图；二次投影法 θ,φ 坐标系示意图。
+
+\begin{example}[空间汇交力系：一次投影法]
+空间汇交杆系（节点 B 为汇交点）：三根杆分别沿 $z$ 轴、$y$ 方向及斜向汇交于 B，另一杆沿竖直/斜向，在某一节点作用竖直向下载荷 $W$。
+
+\textbf{解．} 由平衡条件列投影方程：
+\begin{equation}
+\Sigma X=0:\ -F_{BC}+F_{AD}\cos30^\circ\cos45^\circ=0
+\label{eq:3-例1-X}
+\end{equation}
+\begin{equation}
+\Sigma Y=0:\ F_{BD}\cos30^\circ\sin45^\circ-F_{AB}=0
+\label{eq:3-例1-Y}
+\end{equation}
+\begin{equation}
+\Sigma Z=0:\ -W+F_{AD}\sin30^\circ=0
+\label{eq:3-例1-Z}
+\end{equation}
+解得
+\begin{equation}
+F_{AD}=2W,\qquad F_{AB}=F_{BC}=-\frac{\sqrt{2}}{4}W
+\label{eq:3-例1-结果}
+\end{equation}
+% 待核对：原稿例1各角度（30°、45°）对应轴与杆件、以及 $F_{AB}=F_{BC}=-\frac{\sqrt2}{4}W$ 的结果字迹潦草，需人工核对原图与量值。
+\end{example}
+
+\begin{example}[空间汇交力系：二次投影法]
+四面体构型 $A,B,C,D$（$\Delta ABC$ 不在铅垂面内），三个汇交杆内力为 $F_A,F_B,F_C$，节点处作用重力 $W$。已知 $AB=a$、$BD=b$、$CD=c$，重力作用线通过 $\Delta ABC$ 中一点 $G$ 且 $GD=h$，求 $G$ 处受力。
+
+\textbf{解．} 由平衡条件
+\begin{equation}
+\vec{F}_A+\vec{F}_B+\vec{F}_C+\vec{W}=0
+\label{eq:3-例2-平衡}
+\end{equation}
+分量式（以 $D$ 为参考点，沿 $\vec{DA},\vec{DB},\vec{DC}$ 方向）：
+\begin{equation}
+\frac{1}{a}F_A(\vec{DA})+\frac{1}{b}F_B(\vec{DB})+\frac{1}{c}F_C(\vec{DC})-W\vec{k}=0
+\label{eq:3-例2-分量}
+\end{equation}
+% 待核对（P22 例2 后续）：原稿后续一串分量式/力矩式字迹极潦草且跨行纠缠，无法可靠辨认，此处仅录可见的平衡条件与第一组分式；完整推导请人工核对原图。
+\end{example}
+
+\section{力对点的矩和力对轴的矩}
+
+\subsection{力对点的矩}
+
+力 $\vec{F}$ 作用点相对简化中心 $O$ 的位置矢量为 $\vec{r}$，则力对点 $O$ 的矩为定位矢量：
+\begin{equation}
+\boxed{\;\vec{M}_O(\vec{F})=\vec{r}\times\vec{F}\;}
+\label{eq:3-力矩-定义}
+\end{equation}
+其中 $\vec{F}=X\vec{i}+Y\vec{j}+Z\vec{k}$、$\vec{r}=x\vec{i}+y\vec{j}+z\vec{k}$，故
+\begin{equation}
+\vec{r}\times\vec{F}=
+\begin{vmatrix}\vec{i}&\vec{j}&\vec{k}\\ x&y&z\\ X&Y&Z\end{vmatrix}
+=\big[M_x(\vec{F})\big]\vec{i}+\big[M_y(\vec{F})\big]\vec{j}+\big[M_z(\vec{F})\big]\vec{k}
+\label{eq:3-力矩-行列式}
+\end{equation}
+% 待核对（P23 图2）：行列式第一行为 $\vec{i},\vec{j},\vec{k}$，第二行为 $\vec{r}$ 分量，第三行为 $\vec{F}$ 分量，书写顺序以原稿为准，需人工核对。
+% 图待补：力对点矩的空间直角坐标示意（O 为原点，$\vec{r}$、$\vec{F}$ 及 $\vec{M}_O$）。
+
+\subsection{力对轴的矩}
+
+\parahead{定义} 力 $\vec{F}$ 对 $z$ 轴的矩，等于 $\vec{F}$ 在垂直于 $z$ 轴的平面上的投影对该平面与 $z$ 轴交点的矩。
+% 待核对：正负号规定取右手螺旋法则。
+
+\paragraph{特殊情况}
+\begin{itemize}
+\item 当 $\vec{F}\parallel z$ 轴时，$M_z(\vec{F})=0$；
+\item 当 $\vec{F}$ 与 $z$ 轴相交时，$M_z(\vec{F})=0$；
+\item 大小关系：$|M_z(\vec{F})|=\sqrt{M_x^2+M_y^2}$。
+\end{itemize}
+% 待核对（P23 末尾）：原稿作 $|M_z(\vec{F})|=\sqrt{M_x^2+M_y^2}$，是否应为 $\sqrt{M_x^2+M_y^2+M_z^2}$（合力矩大小）需人工核对。
+
+% 图待补：力对轴矩示意图（$xy$ 面斜线阴影，$F_{xy}$ 为 $\vec{F}$ 在该面投影，$z$ 轴过交点 $O$，右手螺旋法则示意）。
+
+\begin{example}[力对点的矩]
+空间直角坐标系 $x,y,z$ 中长方体，棱长 $a$，力 $\vec{F}$ 作用于长方体某一顶点，求其对原点 $O$ 之矩。
+
+\textbf{解．}
+\begin{equation}
+\vec{M}_O(\vec{F})=\vec{r}\times\vec{F}=(a\vec{i}+a\vec{j})\times\vec{F}
+\label{eq:3-力矩-例-首步}
+\end{equation}
+% 待核对（P23 例）：后续 $\vec{r}=a\vec{i}+a\vec{j}$ 与 $\vec{F}$ 叉乘的展开各项字迹极潦草，此处省略中段，仅录首步；请人工核对原图。
+
+各坐标轴分量矩：
+\begin{equation}
+M_x=\tfrac{1}{2}Fa,\qquad M_y=-\tfrac{1}{2}Fa,\qquad M_z=\tfrac{\sqrt{3}}{2}Fa
+\label{eq:3-力矩-例-分量}
+\end{equation}
+% 待核对：结果 $M_x,M_y,M_z$ 的符号与系数按原稿照录，需人工核对原图。
+\end{example}
+
+\section{空间力偶系}
+
+\begin{itemize}
+\item \textbf{力偶矩矢量是自由矢量}。
+\item \textbf{合成结果}：按矢量求和 $\vec{M}=\sum\vec{M}_i$。
+\item \textbf{平衡条件}：
+\begin{equation}
+\boxed{\;\sum\vec{M}_i=0\;}
+\label{eq:3-力偶-平衡}
+\end{equation}
+\end{itemize}
+% 图待补：力偶矩自由矢量示意（长方体上力 $\vec{F}$ 及相伴力偶矩 $\vec{M}$）；斜置平行四边形平面的力偶（$F'$、$F''$ 等值反向、平面法向为 $\vec{M}$）。
+
+\begin{example}[求合力偶]
+空间杆系（四面体/三角锥构型，顶点 $A,B,C,D$），各节点作用有力偶矩，求合力偶。
+
+\textbf{解．} 把合力偶沿 $x,y,z$ 三轴分解：
+\begin{equation}
+\vec{M}=M_1\vec{i}+M_2\vec{j}+M_3\vec{k}
+\label{eq:3-力偶-例-分解}
+\end{equation}
+其中各分量 $M_1,M_2,M_3$ 由各节点力偶矩投影求合力偶大小 $M$。
+% 待核对（P23 例）：原稿各分量 $M_1,M_2,M_3$ 的具体投影/力臂表达式（含 $d(\tfrac12\vec{i}+\dots)$、$4\text{ N}$ 等项）字迹极潦草，此处仅保留分解思路与目标；请人工核对原图。
+% 图待补：四面体/三角锥杆系各节点力偶矩示意。
+\end{example}
+
+\section{空间一般力系的简化}
+
+\subsection{力线平移定理}
+
+\parahead{定理} 作用在刚体上的力可以平移到任一点，但必须同时附加一个力偶，该力偶之矩等于原力对该点的矩。
+% 图待补：力线平移定理三阶段示意（力 $\vec{F}$ 作用点 A → 平移到点 B 并附加力偶 $\vec{M}$ → 等效的力 + 力偶）。
+
+\subsection{简化结果（主矢与主矩）}
+
+把一般力系中各力平移到同一简化中心，得：
+\begin{equation}
+F_R=\sum\vec{F}_i \quad \text{（主矢）}
+\label{eq:3-简化-主矢}
+\end{equation}
+\begin{equation}
+M_O=\sum M_O(\vec{F}_i) \quad \text{（主矩）}
+\label{eq:3-简化-主矩}
+\end{equation}
+
+简化路径：
+\begin{equation}
+\text{一般力系}\;\longrightarrow\;
+\begin{cases}
+\text{汇交力系}\longrightarrow\text{力（主矢）}\\
+\text{力偶系}\longrightarrow\text{力偶（主矩）}
+\end{cases}
+\label{eq:3-简化-路径}
+\end{equation}
+
+\subsection{空间固定端}
+
+空间固定端能提供 6 个约束：$\overline{F_x},\overline{F_y},\overline{F_z},\overline{M_x},\overline{M_y},\overline{M_z}$，限制刚体的全部 6 个自由度（3 平动 + 3 转动）。
+% 图待补：空间固定端约束示意（斜线阴影固定基座向右伸出悬臂刚体，基座处产生 3 约束力分量与 3 约束力偶分量）。
+
+\paragraph{以飞机为例（六分量命名）}
+机身横截面建立 $x$（前后/纵向）、$y$（侧向）、$z$（竖直向上）三轴，六个分量的命名为：
+\begin{align*}
+\overline{F_x}&\ \text{阻力} & \overline{M_x}&\ \text{滚转力矩}\\
+\overline{F_y}&\ \text{侧向力} & \overline{M_y}&\ \text{偏航力矩}\\
+\overline{F_z}&\ \text{升力} & \overline{M_z}&\ \text{偏转力矩}
+\end{align*}
+% 待核对（P25 右栏）：$\overline{M_y}$ 手写疑似「俯仰力矩」、$\overline{M_z}$ 手写疑似「偏航力矩」，与常规六分量命名可能不同，需人工核对原稿。
+
+\subsection{空间一般力系的简化结果}
+
+\begin{enumerate}
+\item $F_R=0,\ M_O=0$：\textbf{平衡}。
+% 待核对（P25）：原稿此处手写 $F_R$ 带斜杠似为 $\neq0$，但「平衡」要求 $F_R=0$，以常规为准，需人工核对。
+\item $F_R=0,\ M_O\ne0$：\textbf{合力偶}，且与简化中心无关。
+\item $F_R\ne0,\ M_O=0$：\textbf{合力}，且作用在简化中心。
+\item $F_R\ne0,\ M_O\ne0$：
+\begin{equation}
+\begin{cases}
+F_R\perp M_O: & \text{合力，且合力不在简化中心}\\
+F_R\parallel M_O: & \text{力螺旋（不变更）}
+\end{cases}
+\label{eq:3-简化-结果}
+\end{equation}
+% 待核对（P25）：上/下分支条件符号为手写（上支 $\perp$、下支 $\parallel$），需人工核对。
+\end{enumerate}
+
+\parahead{三个基本量} 力、力偶、力螺旋。
+% 图待补：三个基本量示意（力 $\vec{F}$ 向下箭头、力偶 $\vec{M}$ 圆弧箭头、力螺旋竖直向上双线箭头）。
+
+\section{空间一般力系的平衡}
+
+空间一般力系平衡的充要条件：主矢与主矩均为零，即沿三坐标轴分力之和为零、对三坐标轴之矩之和为零，共 6 个独立平衡方程：
+\begin{equation}
+\begin{cases}
+F_R=0\\ M_O=0
+\end{cases}
+\;\Longrightarrow\;
+\begin{cases}
+\Sigma X=0 & \Sigma M_x=0\\
+\Sigma Y=0 & \Sigma M_y=0\\
+\Sigma Z=0 & \Sigma M_z=0
+\end{cases}
+\label{eq:3-平衡-充要}
+\end{equation}
+
+\begin{example}[求六杆受力]
+空间静定桁架由 6 根杆（编号 1~6）组成，节点 $A$ 处作用沿 $y$ 向的外力 $P$，求各杆内力。建立 $x$（斜向右上）、$y$（指向纸面前方）、$z$（竖直向上）坐标系。
+
+\textbf{解．} 列节点平衡方程（沿三轴投影 + 对三轴取矩）：
+\begin{equation}
+\Sigma X=0:\ -\frac{\sqrt{3}}{3}F_1-\frac{\sqrt{3}}{3}F_6=0
+\label{eq:3-例1-平-X}
+\end{equation}
+\begin{equation}
+\Sigma Y=0:\ P-\frac{\sqrt{3}}{3}F_2=0
+\label{eq:3-例1-平-Y}
+\end{equation}
+\begin{equation}
+\Sigma Z=0:\ -F_4-\frac{\sqrt{3}}{3}F_2-\frac{\sqrt{3}}{3}F_1-F_5-F_3=0
+\label{eq:3-例1-平-Z}
+\end{equation}
+\begin{equation}
+\Sigma M_x=0:\ -\frac{\sqrt{3}}{3}F_1a-F_4a-\frac{\sqrt{3}}{3}F_5a-F_6a=0
+\label{eq:3-例1-平-Mx}
+\end{equation}
+\begin{equation}
+\Sigma M_y=0:\ -\frac{\sqrt{3}}{3}F_1a-F_4a=0
+\label{eq:3-例1-平-My}
+\end{equation}
+\begin{equation}
+\Sigma M_z=0:\ -\frac{\sqrt{3}}{3}F_2a+\frac{\sqrt{3}}{3}F_3a=0
+\label{eq:3-例1-平-Mz}
+\end{equation}
+% 待核对（P26 整组方程）：手写系数与项较潦草（$P$ 项归属、系数 $\frac{\sqrt{3}}{3}$ 或 $\frac{\sqrt{3}}{2}$），以上为尽量还原的辨识结果，待核对。各杆件连接关系与几何尺寸以手写图为准。
+% 图待补：例1 空间桁架受力示意（6 杆、底部斜线阴影接地铰支座、节点 A 外力 P）。
+\end{example}
+
+\section{物体的重心}
+
+\parahead{注}
+\begin{enumerate}
+\item 重心只对刚体定义（重心只对刚体有意义）。
+\item 看作平行力系合力的中心。
+\end{enumerate}
+
+\subsection{重心坐标的公式}
+
+由平行力系合力矩定理，重心坐标由权重矩求得：
+\begin{equation}
+P\,z_C=\sum\Delta P_i\,z_i
+\label{eq:3-重心-z}
+\end{equation}
+\begin{equation}
+x_C=\frac{\sum\Delta P_i x_i}{\sum\Delta P_i}
+=\frac{\int x\,\mathrm{d}p}{\int\mathrm{d}p}
+\;\Longrightarrow\;\frac{\int x\,\mathrm{d}V}{\int\mathrm{d}V}
+\;\Longrightarrow\;\frac{\int x\,\mathrm{d}A}{\int\mathrm{d}A}
+\;\Longrightarrow\;\frac{\int x\,\mathrm{d}L}{\int\mathrm{d}L}
+\label{eq:3-重心-x}
+\end{equation}
+即对均质体，重心（形心）可由体积分、面积分、线积分逐级退化得到。
+% 图待补：三维刚体重心 C 示意（平行力系微元重力 $\Delta P_i$ 的合力作用点，三维坐标系与投影虚线）。
+
+\subsection{重心的求法}
+
+\begin{enumerate}
+\item \textbf{实验法}：悬挂法、称重法。
+\item \textbf{积分法}。
+\end{enumerate}
+
+\begin{example}[圆扇形重心]
+求半径为 $R$、圆心角为 $2\alpha$（关于 $y$ 轴对称）的均质圆扇形重心。
+
+\textbf{解．} 由对称性 $x_C=0$，只需求 $y_C$：
+\begin{equation}
+y_C=\frac{\int y\,\mathrm{d}A}{\int\mathrm{d}A}
+\label{eq:3-重心-扇形}
+\end{equation}
+取极角为 $\theta$ 的窄扇形微元：$\mathrm{d}A=\tfrac12 R^2\,\mathrm{d}\theta$，该微元形心距原点 $\tfrac23 R$，其竖直分量 $y=\tfrac23 R\cos\theta$，代入：
+\begin{equation}
+y_C=
+\frac{\displaystyle\int_{-\alpha}^{\alpha}\tfrac23 R\cos\theta\cdot\tfrac12 R^2\,\mathrm{d}\theta}
+{\displaystyle\int_{-\alpha}^{\alpha}\tfrac12 R^2\,\mathrm{d}\theta}
+=\frac{\displaystyle\tfrac{2R^3\sin\alpha}{3}}{R^2\alpha}
+=\frac{2R\sin\alpha}{3\alpha}
+\label{eq:3-重心-扇形结果}
+\end{equation}
+\textbf{结论（框出）}：
+\begin{equation}
+y_C=\frac{2R\sin\alpha}{3\alpha}
+\label{eq:3-重心-扇形结论}
+\end{equation}
+% 待核对（P27 方框）：原稿手写分子似为 $2R^2\sin\alpha$（$R$ 指数为 2），但由推导得 $y_C=2R\sin\alpha/(3\alpha)$，且 $\alpha=\pi/2$ 时应得半圆重心 $4R/(3\pi)$，故此处 $R^2$ 应为 $R$ 的笔误，待核。
+
+当 $\alpha=\tfrac{\pi}{2}$（半圆重心）：
+\begin{equation}
+y_C=\frac{2R\sin\alpha}{3\alpha}=\frac{4R}{3\pi}
+\label{eq:3-重心-半圆}
+\end{equation}
+\end{example}
+
+\subsection{组合法}
+
+\paragraph{三角形的重心} 三角形三顶点 $(x_1,y_1),(x_2,y_2),(x_3,y_3)$ 的重心坐标为三顶点坐标的平均值：
+\begin{equation}
+\left(\frac{x_1+x_2+x_3}{3},\ \frac{y_1+y_2+y_3}{3}\right)
+\label{eq:3-重心-三角形}
+\end{equation}
+
+\paragraph{① 分割法} 把组合图形分割成若干简单图形，分别求形心后再按面积加权：
+\begin{equation}
+x_C=\frac{\sum x_i\Delta A_i}{\sum\Delta A_i},\qquad y_C=\frac{\sum y_i\Delta A_i}{\sum\Delta A_i}
+\label{eq:3-重心-分割}
+\end{equation}
+
+\paragraph{② 负面积法} 把组合图形看作「从大面积中挖去小块（负面积）」：
+\begin{equation}
+x_C=\frac{x_1\Delta A_1+x_2\Delta A_2}{\Delta A_1+\Delta A_2}
+\label{eq:3-重心-负面积}
+\end{equation}
+\textbf{注：}小面积 $\Delta A$ 为负（被挖去的那块面积取负值）。
+% 图待补：组合截面/负面积法示意（L 形或矩形右上角挖去小矩形，建立坐标系）。
+
+\begin{example}[带偏心圆孔的圆盘形心]
+大圆盘半径 $R$，内部偏置挖去小圆孔半径 $r$，两圆心均在 $x$ 轴上，图形关于 $x$ 轴对称，求形心位置。
+
+\textbf{解．} 由对称性 $y_C=0$，只需求 $x_C$。由负面积法：
+\begin{equation}
+x_C=\frac{x_1\Delta A_1+x_2\Delta A_2}{\Delta A_1+\Delta A_2}
+\label{eq:3-重心-孔盘公式}
+\end{equation}
+% 待核对（P28 例）：原稿此例各分项的坐标系数及最终结果分式（含 $-\dfrac{}{}$ 的分子分母）手写潦草难辨，未敢强认，需人工核对原图。方法清晰：大盘取面积 $\pi R^2$、挖去小孔取负面积 $-\pi r^2$，再按面积加权求 $x_C$。
+% 图待补：带偏心圆孔圆盘（大圆 $R$、偏置小孔 $r$、关于 x 轴对称，对称轴虚线）。
+\end{example}

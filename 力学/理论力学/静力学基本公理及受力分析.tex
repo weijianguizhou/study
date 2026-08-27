@@ -1,0 +1,363 @@
+% ------------------------------------------------------------
+% 《理论力学》第 1 章　静力学基本公理及受力分析
+% 转写自课堂笔记扫描件第 3–6 页（.tmp/tljm_md/page-03..06.md）
+% 本文件只含 \section 及以下层级；导言区与 \chapter 由主文件提供
+% ------------------------------------------------------------
+
+静力学研究物体在力作用下的平衡规律。
+
+\parahead{基本概念}
+
+\begin{definition}[平衡]
+物体的平衡，是对惯性参考系而言的：物体在力的作用下保持静止或匀速直线运动状态。
+\end{definition}
+
+\begin{definition}[力]
+力是物体间相互的机械作用。其作用效果表现为两个方面：
+\begin{itemize}
+  \item 使物体\textbf{运动状态改变}——外效应；
+  \item 使物体\textbf{形状发生变化}——内效应。
+\end{itemize}
+力的三要素：\textbf{大小、方向、作用点}。
+\end{definition}
+
+力用矢量 $\vec{F}$ 表示；就其对刚体的作用而言，力是滑移矢量（区别于固定矢量、定位矢量）。
+% 待核对：原稿此处仅记「滑移矢量（固定矢量）（定位矢量）」，措辞简略，上文按最可能的讲解方式排入。
+
+\parahead{静力学的三个任务}
+
+\begin{enumerate}
+  \item 进行物体受力分析（找力）；
+  \item 力系简化理论（等效）；
+  \item 平衡条件及平衡方程。
+\end{enumerate}
+
+其中「等效」指：不同力系若对刚体的作用效果相同，则互为等效力系，如下图所示。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\small]
+  \draw[fill=gray!20] (0,0) rectangle (0.8,0.8);
+  \node at (0.4,-0.3) {\scriptsize 刚体};
+  \draw[->,thick] (0.8,0.4) -- (2.1,0.4) node[midway,below] {$\vec{F}$};
+  \node at (3.0,0.42) {$\Longleftrightarrow$};
+  \begin{scope}[xshift=3.9cm]
+    \draw[fill=gray!20] (0,0) rectangle (0.8,0.8);
+    \draw[->,thick] (0.8,0.62) -- (2.1,0.62) node[midway,above] {$\vec{F}$};
+  \end{scope}
+  \node at (3.0,-0.3) {\scriptsize 同一力系的等效作用};
+\end{tikzpicture}
+\end{center}
+
+% =============================================================
+
+\section{静力学五公理及推论}
+
+\begin{axiom}[二力平衡]
+作用于刚体上的两个力平衡 $\Leftrightarrow$ 此两力等值、反向、共线。
+\end{axiom}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\small]
+  \draw[dashed] (-1.6,0.3) -- (4.6,0.3);
+  \draw[fill=gray!20] (0,0.1) rectangle (3,0.5);
+  \draw[->,thick] (0,0.3) -- (-1.5,0.3) node[left] {$\vec{F}_A$};
+  \draw[->,thick] (3,0.3) -- (4.5,0.3) node[right] {$\vec{F}_B$};
+  \node[below] at (0,0.05) {$A$};
+  \node[below] at (3,0.05) {$B$};
+  \node[below] at (1.5,-0.35) {\scriptsize 一对平衡力：等值、反向、共线};
+\end{tikzpicture}
+\end{center}
+
+由公理 1.1 立即可得工程中极为常用的概念：
+
+\begin{definition}[二力构件]
+只在两点受力且保持平衡的构件，称为二力构件。其两端所受的两个力一定沿两点的连线方向。
+\end{definition}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\small]
+  \coordinate (A) at (0.75,0);
+  \coordinate (B) at (0,2.7);
+  \draw[dashed] (1.112,-1.302) -- (-0.365,4.001);
+  \draw[line width=3.2pt] (A) -- (B);
+  \draw[->,thick] (B) -- (-0.281,3.712) node[above] {$\vec{F}_B$};
+  \draw[->,thick] (A) -- (1.031,-1.012) node[right] {$\vec{F}_A$};
+  \node[left] at (A) {$A$};
+  \node[right] at (B) {$B$};
+  \node[below] at (0.6,-1.45) {\scriptsize 二力构件：两力沿两端点连线，等值、反向};
+\end{tikzpicture}
+\end{center}
+
+\begin{axiom}[加减平衡力系]
+在刚体上加上或减去一对平衡力，不改变原力系对刚体的作用效果。
+\end{axiom}
+
+
+\begin{corollary}[力的可传性]
+力可以沿其作用线任意移动，而不改变它对刚体的作用效果（说明作用于刚体上的力是滑移矢量）。
+\end{corollary}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\small]
+  \draw[dashed] (-0.6,0.4) -- (8.4,0.4);
+  \draw[fill=gray!20] (0,0) rectangle (1,0.8);
+  \draw[->,thick] (0.45,0.4) -- (2.0,0.4) node[below,pos=0.55] {$\vec{F}$};
+  \node at (3.0,0.4) {$\Longrightarrow$};
+  \begin{scope}[xshift=3.9cm]
+    \draw[fill=gray!20] (0,0) rectangle (1,0.8);
+    \draw[->,thick] (1.0,0.4) -- (2.6,0.4) node[above,pos=0.5] {$\vec{F}$};
+  \end{scope}
+  \node at (3.0,-0.35) {\scriptsize 力沿作用线滑移，效果不变};
+\end{tikzpicture}
+\end{center}
+
+\begin{axiom}[力的平行四边形法则]
+作用于物体上同一点的两个力，可以合成为作用于该点的一个合力；合力的大小和方向由以这两个力为邻边所作平行四边形的对角线确定。设两分力之间的夹角为 $\alpha$，则合力的大小为
+\begin{equation}\label{eq:1-pingxing-sibianxing}
+  F = \sqrt{F_1^2 + F_2^2 + 2F_1F_2\cos\alpha}.
+\end{equation}
+\end{axiom}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\small]
+  \coordinate (A) at (0,0);
+  \coordinate (P1) at (2.6,0);
+  \coordinate (P2) at (1.9,2.4);
+  \coordinate (S) at ($(P1)+(P2)$);
+  \draw[dashed] (P1) -- (S);
+  \draw[dashed] (P2) -- (S);
+  \draw[->,thick] (A) -- (P1) node[pos=0.55,below] {$\vec{F}_1$};
+  \draw[->,thick] (A) -- (P2) node[pos=0.5,sloped,above] {$\vec{F}_2$};
+  \draw[->,very thick] (A) -- (S) node[pos=0.45,sloped,above] {$\vec{F}$};
+  \draw pic["$\alpha$", draw, angle eccentricity=1.4, angle radius=0.7cm] {angle=P1--A--P2};
+  \fill (A) circle (1pt) node[below left] {$A$};
+\end{tikzpicture}
+\end{center}
+
+\begin{corollary}[三力平衡汇交定理]
+作用于物体上并使其保持平衡的三个力，如果其中有两个力汇交于一点，则第三个力必通过该交点，且三力共面。
+\end{corollary}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\small]
+  \draw[fill=gray!12] (0,0) circle (0.85);
+  \coordinate (O) at (2.6,1.4);
+  \coordinate (PA) at (215:0.85);
+  \coordinate (PB) at (270:0.85);
+  \coordinate (PC) at (170:0.85);
+  \draw[dashed] (PA) -- (O);
+  \draw[dashed] (PB) -- (O);
+  \draw[dashed] (PC) -- (O);
+  \draw[->,thick] (PA) -- (0.042,-0.066);
+  \draw[->,thick] (PB) -- (0.643,-0.294);
+  \draw[->,thick] (PC) -- (-0.039,0.439);
+  \node[below left] at (PA) {$\vec{F}_A$};
+  \node[below] at (0,-0.92) {$\vec{F}_B$};
+  \node[left] at (PC) {$\vec{F}_C$};
+  \fill (O) circle (1.2pt) node[above right] {$O$};
+  \node at (2.1,-1.35) {\scriptsize 三力作用线汇交于一点（且共面）};
+\end{tikzpicture}
+\end{center}
+% 注：原页此处画有多幅辅助小图（汇交、共面、「3 力不平行」等标注），上面合并重绘为一幅规范图。
+
+\begin{remark}
+应用时，常先将其中已知的两个力按式~\eqref{eq:1-pingxing-sibianxing} 合成为一合力，再检验第三个力的作用线是否通过该汇交点。
+\end{remark}
+
+\begin{axiom}[作用与反作用]
+两物体间的相互作用力同时存在、同时消失，等值、反向、共线，且分别作用在两个不同的物体上。
+\end{axiom}
+% 待核对：原稿作「等值、方向共线」，疑为「等值、反向、共线」的手写简略，已按标准表述排入。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\small]
+  % （a）物块置于地面
+  \draw (-0.4,0) -- (2.6,0);
+  \foreach \x in {-0.3,-0.05,...,2.45} \draw (\x,0) -- ++(0.18,-0.2);
+  \draw[fill=gray!20] (0.4,0) rectangle (1.7,0.95);
+  \node at (1.05,0.5) {\scriptsize 物块};
+  \draw[->,thick] (2.25,0.05) -- (2.25,0.9) node[midway,right] {$\vec{N}$};
+  \node[below] at (1.05,-0.5) {\scriptsize （a）地面给物块的支持力};
+  % （b）隔离体
+  \begin{scope}[xshift=5.4cm]
+    \draw[fill=gray!20] (0.4,0) rectangle (1.7,0.95);
+    \node at (1.05,0.5) {\scriptsize 物块};
+    \draw[->,thick] (2.25,0.05) -- (2.25,0.9) node[midway,right] {$\vec{N}$};
+    \draw[->,thick] (-0.15,0.9) -- (-0.15,0.05) node[midway,left] {$\vec{W}$};
+    \node[below] at (1.05,-0.5) {\scriptsize （b）隔离体：$\vec{W}$ 与 $\vec{N}$};
+  \end{scope}
+\end{tikzpicture}
+\end{center}
+% 注：原稿为三幅小图（后两幅相同），上面合并为两幅。
+
+\begin{axiom}[刚体原理]
+变形体在力的作用下保持平衡，若将其变为刚体，则（变形体）仍保持平衡。
+\end{axiom}
+
+据此，静力学中把研究对象抽象为刚体。力又可按其是否预先已知分为两类：
+\begin{itemize}
+  \item \textbf{主动力}——已知力（如重力、给定载荷）；
+  \item \textbf{被动力}——约束力（未知）。
+\end{itemize}
+
+% =============================================================
+
+\section{约束和约束力}
+
+\subsection{约束的概念}
+
+\begin{definition}[约束]
+对非自由体的运动起限制作用的周围物体，称为约束。
+\end{definition}
+
+\begin{note}
+非自由体即被约束物体。
+\end{note}
+
+约束力的性质：
+\begin{enumerate}
+  \item 大小不能事先确定；
+  \item 方向一般可以确定。
+\end{enumerate}
+
+\begin{keybox}
+约束力方向判断的准则：约束力的方向总是与约束所阻碍的运动方向相反。
+\end{keybox}
+
+\subsection{常见的约束类型}
+
+\parahead{1．光滑接触面约束}
+
+约束力沿接触面的法线方向，指向被约束物体。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\small]
+  % 左：平面接触
+  \draw (-0.4,0) -- (2.6,0);
+  \foreach \x in {-0.3,-0.05,...,2.45} \draw (\x,0) -- ++(0.18,-0.2);
+  \draw[fill=gray!20] (0.4,0) rectangle (1.7,0.95);
+  \draw[->,thick] (1.05,0.02) -- (1.05,0.7) node[midway,right] {$\vec{N}$};
+  \node[below] at (1.1,-0.5) {\scriptsize 平面接触：$\vec{N}$ 垂直于接触面};
+  % 右：曲面接触（球）
+  \begin{scope}[xshift=5.8cm]
+    \draw (-1.3,-0.7) -- (1.3,-0.7);
+    \foreach \x in {-1.2,-0.95,...,1.15} \draw (\x,-0.7) -- ++(0.18,-0.2);
+    \draw[fill=gray!12] (0,0) circle (0.7);
+    \draw[->,thick] (0,-0.7) -- (0,0.25) node[pos=0.78,right] {$\vec{N}$};
+    \node[below] at (0,-1.15) {\scriptsize 曲面接触：$\vec{N}$ 沿公法线指向物体};
+  \end{scope}
+\end{tikzpicture}
+\end{center}
+
+\parahead{2．柔索约束}
+
+约束力沿着柔索方向且背离物体（即只能是拉力）。绳、链条、皮带等均属此类。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,font=\small]
+  \draw (-0.3,2.4) -- (1.7,2.4);
+  \foreach \x in {-0.2,0.05,...,1.55} \draw (\x,2.4) -- ++(0.18,0.2);
+  \draw (0.7,2.4) -- (0.7,0.9);
+  \node[left] at (0.66,1.9) {\scriptsize 绳};
+  \draw[fill=gray!20] (0.1,0) rectangle (1.3,0.9);
+  \node at (0.7,0.45) {\scriptsize 物块};
+  \draw[->,thick] (1.0,0.95) -- (1.0,2.1) node[midway,right] {$\vec{F}_T$};
+  \node[below] at (0.7,-0.35) {\scriptsize 柔索约束：拉力沿索、背离物体};
+\end{tikzpicture}
+\end{center}
+
+\parahead{3．光滑圆柱铰链（含销钉）}
+
+构件通过圆柱形销钉相连接，可绕销钉轴线相对转动；其约束力通过销钉中心，方向一般不能预先确定。
+% 待核对：原稿此条仅有标题「光滑圆柱铰链 & 销钉」与示意图，无成段文字；上行说明按通行教材口径补写，「固定支座／活动支座」字样亦难以完全辨认。
+
+% 图待补：光滑圆柱铰链与销钉连接结构示意。原稿左图为水平杆（A—B）经圆柱铰链与支座相连（注有「固定支座」「活动支座」），右图为销钉连接的杆件（C、D 端各受力 F_C、F_D），细节难以辨认，暂留待补。
+
+% =============================================================
+
+\section{物体的受力分析}
+
+\parahead{受力分析的步骤（受力图）}
+
+\begin{enumerate}
+  \item 确定研究对象；
+  \item 画分离体；
+  \item 画主动力；
+  \item 画约束力。
+\end{enumerate}
+
+% 图待补：例题受力分析示意图。原稿右上角为典型多力构件受力图：斜置杆件，A 端为铰支座（约束力以一对相互垂直分量 F_Ax、F_Ay 表示），B、C、D、E 各点作用有主动力与约束力（F_B、F_C、F_D、F_E），细节复杂，暂留待补。
+
+\parahead{注意事项}
+
+受力分析时必须注意以下几点：
+\begin{enumerate}
+  \item 只画受力（外力），不画内力；
+  \item 注意作用力与反作用力；
+  \item 注意二力构件；
+  \item 注意三力平衡汇交；
+  \item 注意多处连接问题。
+\end{enumerate}
+
+\begin{center}
+\begin{minipage}[t]{0.46\textwidth}
+\centering
+\begin{tikzpicture}[>=Stealth,font=\small]
+  % 固定铰支座（地面固定 + 三角形支架 + 销钉）
+  \draw[line width=1.0pt] (-0.85,-0.35) -- (0.85,-0.35);
+  \foreach \x in {-0.8,-0.6,...,0.8} \draw[thin] (\x,-0.35) -- ++(0.13,-0.17);
+  % 支架（顶点在销钉中心）
+  \draw[line width=1.4pt] (-0.34,-0.35) -- (0.34,-0.35) -- (0,0.06) -- cycle;
+  % 杆件（与销钉同高）
+  \draw[line width=1.4pt] (0,0.06) -- (1.9,0.06);
+  \node[above right] at (1.9,0.10) {$B$};
+  % 销钉（嵌在支架顶点）
+  \draw[fill=white,line width=1.0pt] (0,0.06) circle (0.13);
+  % 约束反力：方向不能预先确定，正交分解为水平/竖直两分量
+  \draw[->,semithick] (0,0.06) -- (-0.95,0.06) node[above left]{$F_{Ax}$};
+  \draw[->,semithick] (0,0.06) -- (0,1.00) node[left]{$F_{Ay}$};
+  \node[below left] at (0,0.06) {$A$};
+  \node[below] at (0.5,-0.55) {\scriptsize 固定铰支座};
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.46\textwidth}
+\centering
+\begin{tikzpicture}[>=Stealth,font=\small]
+  % 滚动铰支座（支承面 + 滚轮 + 托板 + 销钉）
+  \draw[line width=1.0pt] (-0.9,-0.55) -- (0.9,-0.55);
+  \foreach \x in {-0.8,-0.6,...,0.8} \draw[thin] (\x,-0.55) -- ++(0.13,-0.17);
+  % 滚轮
+  \draw[line width=1.4pt] (0,-0.33) circle (0.22);
+  % 托板
+  \draw[line width=1.4pt] (-0.34,-0.11) -- (0.34,-0.11);
+  % 竖杆连接销钉
+  \draw[line width=1.4pt] (0,-0.11) -- (0,0.10);
+  % 杆件
+  \draw[line width=1.4pt] (0,0.10) -- (1.9,0.10);
+  \node[above right] at (1.9,0.14) {$B$};
+  % 销钉
+  \draw[fill=white,line width=1.0pt] (0,0.10) circle (0.13);
+  % 约束反力：垂直于支承面（方向确定），单一反力
+  \draw[->,semithick] (0,0.10) -- (0,1.10) node[left]{$F_B$};
+  \node[below left] at (0,0.10) {$A$};
+  \node[below] at (0.5,-0.78) {\scriptsize 滚动铰支座};
+\end{tikzpicture}
+\end{minipage}
+\end{center}
+
+\subsection{力系的分类}
+
+按\textbf{作用面}分：
+\begin{itemize}
+  \item 平面力系；
+  \item 空间力系。
+\end{itemize}
+
+按\textbf{作用线}的分布分：
+\begin{itemize}
+  \item 汇交力系（共点力系）；
+  \item 平行力系（力偶系）；
+  \item 任意力系（一般力系）。
+\end{itemize}
+
+至此，本章完成了从静力学五公理出发、经约束与约束力、到物体受力分析方法的基本框架。

@@ -1,0 +1,418 @@
+% ============================================================
+%  第 7 章  刚体的基本运动
+%  转写自《理论力学》课堂笔记扫描件第 41—43 页
+%  （原笔记页首误标“第六章”，现按主文件章节顺序统一为第七章）
+% ============================================================
+
+\section{刚体的平行移动}
+
+\begin{definition}[平行移动]
+刚体在运动过程中，其上任意一条直线始终与初始位置平行，这种运动称为刚体的\textbf{平行移动}，简称\textbf{平动}。
+\end{definition}
+
+% 【图】原笔记两幅示意小图：(a) 平面情形——矩形平板整体平移，板上水平直线方向不变；
+% (b) 曲线情形——线段 AB 沿给定方向平移，AB 始终与初始位置平行。
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[>=Stealth, scale=0.92, line cap=round]
+		% ---- (a) 平板整体平移 ----
+		\begin{scope}
+			\draw[dashed] (0,0) rectangle (2,1.2);
+			\draw[dashed] (0,0.8) -- (2,0.8);
+			\node[below] at (1,-0.05) {\footnotesize 初始位置};
+			\draw (3.2,0) rectangle (5.2,1.2);
+			\draw (3.2,0.8) -- (5.2,0.8);
+			\node[below] at (4.2,-0.05) {\footnotesize 任一位置};
+			\draw[->] (2.25,0.55) -- (3.1,0.55);
+			\node at (2.68,-1.05) {\footnotesize （a）平板整体平移，板上直线方向不变};
+		\end{scope}
+		% ---- (b) 线段 AB 沿给定方向平移 ----
+		\begin{scope}[xshift=8.1cm]
+			\coordinate (A) at (0,0);
+			\coordinate (B) at (1.1,1.1);
+			\coordinate (Ap) at (2.0,0.9);
+			\coordinate (Bp) at (3.1,2.0);
+			\draw[very thick] (A) node[below left]{$A$} -- (B) node[right]{$B$};
+			\draw[very thick] (Ap) node[below right]{$A'$} -- (Bp) node[right]{$B'$};
+			\draw[->] (A) -- (Ap);
+			\draw[->] (B) -- (Bp);
+			\node at (1.55,-1.05) {\footnotesize （b）线段 $AB$ 沿给定方向平移};
+		\end{scope}
+	\end{tikzpicture}
+	\caption{平动刚体上任意一条直线始终平行于其初始位置}
+	\label{fig:7-pingdong-dingyi}
+\end{figure}
+
+% 待核对：转写稿本小节标题作「二、平行的性质」，结合上下文（刚体平行移动的性质）疑为「平动的性质」，此处按后者整理。
+\begin{property}[平动刚体上各点的运动]
+\begin{enumerate}
+	\item 各点的轨迹相同；
+	\item 任意时刻各点具有相同的速度和加速度。
+\end{enumerate}
+\end{property}
+
+\begin{remark}
+因此，只要知道刚体上任一点的运动，就完全确定了整个平动刚体的运动，平动刚体的运动学问题可归结为上一章点的运动学问题来求解。
+\end{remark}
+
+% 【图】原笔记例题附图：O 为悬挂铰支点，摆杆 AB 长 l，M 为 AB 中点，
+% 杆与竖直方向夹角 psi，水平参考基准线 a—a，角位置 psi = psi_0 sin(pi t/4)。
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[>=Stealth, scale=1.0, line cap=round]
+		% 悬挂支点 O 与固定铰支座
+		\coordinate (O) at (0,3.2);
+		\draw[thick] (-0.3,3.5) -- (0.3,3.5);
+		\foreach \x in {-0.24,-0.02,0.2}{ \draw (\x,3.5) -- ++(-0.12,0.16); }
+		\fill (O) circle (1.6pt);
+		\node[above left] at (O) {$O$};
+		% 竖直基准线（铅垂线）
+		\coordinate (W) at (0,1.1);
+		\draw[dashed] (O) -- (0,0.35);
+		% 水平参考基准线 a—a
+		\draw[thin] (-1.35,0.4) -- (2.45,0.4);
+		\node[below] at (-1.25,0.4) {\small $a$};
+		\node[below] at (2.35,0.4) {\small $a$};
+		% 摆杆 AB（长 l，与竖直方向夹角 psi = 30 度示意）
+		\coordinate (B) at (1.35,0.862);
+		\draw[very thick] (O) -- (B) node[below]{$B$};
+		\path (O) -- (B) node[midway, above right]{$l$};
+		% 中点 M
+		\coordinate (M) at (0.675,2.031);
+		\fill (M) circle (1.5pt);
+		\node[right] at (M) {$M$};
+		% 角 psi 标注
+		\pic [draw, "$\psi$", angle radius=17pt, angle eccentricity=1.5] {angle = W--O--B};
+	\end{tikzpicture}
+	\caption{绕 $O$ 摆动的 $AB$ 杆（长 $l$），角位置 $\psi=\psi_0\sin\dfrac{\pi}{4}t$，求 $t=2\,\mathrm{s}$ 时中点 $M$ 的速度和加速度}
+	\label{fig:7-baiduan-gan}
+\end{figure}
+
+\begin{longexample}[$t=2\,\mathrm{s}$ 时 $AB$ 杆中点 $M$ 的速度和加速度]
+$AB$ 杆绕悬挂点 $O$ 作摆动（图~\ref{fig:7-baiduan-gan}），杆长 $l$，$M$ 为其中点，杆与竖直方向的夹角按
+\begin{equation}\label{eq:7-li-psi}
+	\psi=\psi_0\sin\frac{\pi}{4}t
+\end{equation}
+规律变化。求 $t=2\,\mathrm{s}$ 时 $AB$ 杆中点 $M$ 的速度和加速度。
+
+\begin{solution}
+取中点 $M$ 的坐标（$a$ 由图中参考基准确定）：
+\begin{equation}\label{eq:7-li-m-zuobiao}
+	x=a+l\sin\psi,\qquad y=l\cos\psi .
+\end{equation}
+% 待核对：转写稿注「原文字迹较草，供核对」——代回 psi 表达式后的坐标式中，x 式与 y 式均似写作
+% cos 且 y 式多出一项 a（另录得 x_c=0, y_c=0），疑有笔误；按式 (eq:7-li-m-zuobiao) 应为
+% x=a+l*sin[psi_0*sin(pi t/4)]、y=l*cos[psi_0*sin(pi t/4)]，此处不采用草式，以下按弧坐标求解（与原稿一致）。
+杆上各点绕 $O$ 作圆周运动，取弧坐标 $s$（以 $\psi=0$ 处为原点）：
+\begin{equation}\label{eq:7-li-s}
+	s=l\psi=l\psi_0\sin\frac{\pi}{4}t .
+\end{equation}
+对时间求导得速度，并代入 $t=2\,\mathrm{s}$：
+\begin{equation}\label{eq:7-li-v}
+	V=\frac{ds}{dt}=l\psi_0\cos\frac{\pi}{4}t\cdot\frac{\pi}{4}\Big|_{t=2}=0 .
+\end{equation}
+再求导得加速度，并代入 $t=2\,\mathrm{s}$：
+\begin{equation}\label{eq:7-li-a}
+	a=\frac{dV}{dt}=-\Big(\frac{\pi}{4}\Big)^{2}l\psi_0\sin\frac{\pi}{4}t\bigg|_{t=2}=-l\psi_0\Big(\frac{\pi}{4}\Big)^{2} .
+\end{equation}
+\end{solution}
+
+\begin{remark}
+$t=2\,\mathrm{s}$ 时 $M$ 点速度为零，故法向加速度 $V^{2}/l=0$ 亦为零，所求加速度即全加速度，大小为 $l\psi_0(\pi/4)^{2}$，负号表明其方向与弧坐标增大方向相反（指向摆动的最低位置一侧）。
+\end{remark}
+\end{longexample}
+
+\section{刚体的定轴转动}
+
+\begin{definition}[定轴转动]
+刚体在运动过程中，其上（或者其延伸部分）有两点保持不动，称为刚体的\textbf{定轴转动}，两点连线为\textbf{转轴}。
+\end{definition}
+
+\subsection{刚体的运动方程}
+
+% 【图】原笔记附图：刚体（圆盘）绕固定轴转动，标出角位置 varphi 及过轴的固定参考平面。
+% 原图为立体示意，此处取垂直于转轴的视图简化绘制：虚线直径为固定参考平面迹线，实线为随刚体转动的平面。
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[>=Stealth, scale=1.0, line cap=round]
+		\coordinate (O) at (0,0);
+		\draw (O) circle (1.4);
+		\fill (O) circle (1.5pt);
+		\node[below left] at (O) {$O$};
+		% 固定参考平面的迹线（过轴）
+		\draw[dashed] (-1.9,0) -- (1.9,0);
+		\node[right] at (1.9,0) {\small $\Pi$（固定参考平面）};
+		% 随刚体转动的平面（半径线）
+		\coordinate (Mp) at (50:1.4);
+		\draw[thick] (O) -- (Mp);
+		\coordinate (H) at (1.9,0);
+		\pic [draw, "$\varphi$", angle radius=19pt, angle eccentricity=1.5] {angle = H--O--Mp};
+		% 正转向（逆时针）示意箭头
+		\draw[->] ($(O)+(250:1.62)$) arc[start angle=250, end angle=320, radius=1.62];
+		\node at (0,-1.95) {\small 刚体（圆盘，垂直于转轴的视图）};
+	\end{tikzpicture}
+	\caption{定轴转动刚体的角位置：转角 $\varphi$ 自固定参考平面 $\Pi$ 量起}
+	\label{fig:7-yundong-fangcheng}
+\end{figure}
+
+刚体定轴转动时，其位置只需一个参变量即可确定：过转轴任取一个过轴的固定参考平面，再取一个随刚体转动的平面，两平面间的夹角 $\varphi$ 称为\textbf{转角}（角位置）。刚体的\textbf{转动方程}为
+\begin{equation}\label{eq:7-zhuandong-fangcheng}
+	\varphi=\varphi(t).
+\end{equation}
+即定轴转动刚体具有\textbf{一个自由度}。转角的符号规定：\textbf{逆时针为正，顺时针为负}。
+
+\subsection{转动角速度}
+
+转角对时间的变化率称为\textbf{转动角速度}，用 $\omega$ 表示：
+\begin{equation}\label{eq:7-jiaosudu}
+	\omega=\lim_{\Delta t\to 0}\frac{\Delta\varphi}{\Delta t}=\frac{d\varphi}{dt}.
+\end{equation}
+角速度表征刚体转动的快慢与方向，其正负号按转角的符号规定确定。
+
+\subsection{转动角加速度}
+
+角速度对时间的变化率称为\textbf{转动角加速度}，用 $\alpha$ 表示：
+\begin{equation}\label{eq:7-jiajiasudu}
+	\alpha=\lim_{\Delta t\to 0}\frac{\Delta\omega}{\Delta t}=\frac{d\omega}{dt}=\frac{d^{2}\varphi}{dt^{2}}.
+\end{equation}
+即 $\alpha=\dot{\omega}$、$\omega=\dot{\varphi}$：角加速度等于角速度的一阶导数，也等于转角的二阶导数。
+
+\section{定轴转动刚体上各点的速度和加速度}
+
+% 【图】原笔记附图：圆盘绕中心轴 O 转动，半径 R，边缘取点 M，
+% 自 O 画半径至 M，M 处沿切线方向画速度 V，并标出角位置 varphi。
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[>=Stealth, scale=1.0, line cap=round]
+		\coordinate (O) at (0,0);
+		\draw (O) circle (1.4);
+		\fill (O) circle (1.5pt);
+		\node[below left] at (O) {$O$};
+		% 半径 OM（R）
+		\coordinate (M) at (40:1.4);
+		\draw[thick] (O) -- (M);
+		\path (O) -- (M) node[midway, above left]{$R$};
+		\fill (M) circle (1.5pt);
+		\node[above right] at (M) {$M$};
+		% 角位置 varphi
+		\coordinate (H) at (1.7,0);
+		\pic [draw, "$\varphi$", angle radius=17pt, angle eccentricity=1.5] {angle = H--O--M};
+		% M 点切向速度 V（垂直于半径，沿转动方向）
+		\draw[->, thick] (M) -- ++(130:1.25) node[above]{$V$};
+		% 转向箭头
+		\draw[->] ($(O)+(250:1.62)$) arc[start angle=250, end angle=320, radius=1.62];
+	\end{tikzpicture}
+	\caption{定轴转动刚体上点 $M$ 的速度：$V=R\omega$，方向沿所在圆周的切线}
+	\label{fig:7-ge-dian-sudu}
+\end{figure}
+
+设刚体绕轴 $O$ 转动，刚体内任一点 $M$ 到转轴的距离为 $R$（转动半径）。点 $M$ 在垂直于转轴的平面内作半径为 $R$ 的圆周运动，以转角 $\varphi=0$ 时所在位置为弧坐标原点，则点 $M$ 的弧坐标为
+\begin{equation}\label{eq:7-s-Rphi}
+	S=R\varphi .
+\end{equation}
+将弧坐标对时间求导，得点 $M$ 的\textbf{速度}：
+\begin{equation}\label{eq:7-v-Romega}
+	V=\frac{ds}{dt}=R\frac{d\varphi}{dt}=R\omega ,
+\end{equation}
+其方向沿圆周切线、指向转动一方。
+
+再将速度对时间求导，得点 $M$ 的\textbf{切向加速度}与\textbf{法向加速度}：
+\begin{equation}\label{eq:7-a-tao}
+	a_\tau=\frac{dV}{dt}=R\frac{d\omega}{dt}=R\alpha,
+\end{equation}
+\begin{equation}\label{eq:7-a-n}
+	a_n=\frac{V^{2}}{R}=R\omega^{2}.
+\end{equation}
+切向加速度沿切线方向，法向加速度恒指向圆心。全加速度的大小为
+\begin{equation}\label{eq:7-a-magnitude}
+	a=\sqrt{a_n^{2}+a_\tau^{2}}=R\sqrt{\omega^{4}+\alpha^{2}} .
+\end{equation}
+
+\begin{remark}
+定轴转动刚体上各点的速度、切向加速度、法向加速度及全加速度的大小均与该点到转轴的距离 $R$ 成正比：同一瞬时，离轴越远的点速度和加速度越大；转轴上各点（$R=0$）速度与加速度均为零。
+\end{remark}
+
+\section{轮系传动}
+
+\subsection{齿轮传动}
+
+% 【图】原笔记附图：两个彼此啮合的圆齿轮，画出各自中心、半径与转向
+% （角速度 omega_1、omega_2），以及啮合点处线速度 V_1、V_2。
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[>=Stealth, scale=1.0, line cap=round]
+		\coordinate (O1) at (0,0);
+		\coordinate (O2) at (2.7,0);
+		\draw (O1) circle (1.0);
+		\draw (O2) circle (1.7);
+		\fill (O1) circle (1.5pt);
+		\fill (O2) circle (1.5pt);
+		\node[below left] at (O1) {$O_1$};
+		\node[below right] at (O2) {$O_2$};
+		% 啮合点 P（两圆公切点）
+		\coordinate (P) at (1.0,0);
+		\fill (P) circle (1.3pt);
+		\node[below] at (0.82,-0.12) {\small 啮合点 $P$};
+		% 半径线
+		\draw (O1) -- (P);
+		\node[above] at (0.5,0.05) {\small $R_1$};
+		\draw (O2) -- (P);
+		\node[above] at (1.85,0.05) {\small $R_2$};
+		% 转向：外啮合时两轮转向相反
+		\draw[->] ($(O1)+(130:0.45)$) arc[start angle=130, end angle=420, radius=0.45];
+		\node at ($(O1)+(150:0.78)$) {\small $\omega_1$};
+		\draw[->] ($(O2)+(50:0.6)$) arc[start angle=50, end angle=-220, radius=0.6];
+		\node at ($(O2)+(-40:1.05)$) {\small $\omega_2$};
+		% 啮合点处两轮线速度（等值同向）
+		\draw[->, thick] (0.66,0.08) -- (0.66,0.98) node[above]{\small $V_1$};
+		\draw[->, thick] (1.34,0.08) -- (1.34,0.98) node[above]{\small $V_2$};
+	\end{tikzpicture}
+	\caption{齿轮传动：两轮在啮合点处线速度相等}
+	\label{fig:7-chilun-chuandong}
+\end{figure}
+
+两齿轮啮合传动时，啮合点处两轮的线速度相等：
+\begin{equation}\label{eq:7-chilun-rw}
+	V_1=V_2\quad\Longrightarrow\quad R_1\omega_1=R_2\omega_2 ,
+\end{equation}
+其中 $R_1$、$R_2$ 分别为两轮的半径（对齿轮即为节圆半径），$\omega_1$、$\omega_2$ 为两轮角速度。由此得\textbf{传动比}：
+\begin{equation}\label{eq:7-chilun-bi}
+	i_{12}=\frac{\omega_1}{\omega_2}=\frac{R_2}{R_1}.
+\end{equation}
+
+\subsection{定带传动}
+% 待核对：原笔记小节标题作「定带传动」（页面标题同），术语或应为「带传动（皮带传动）」，此处照录原文。
+
+两个不同半径的皮带轮由传送带相连：左侧小轮半径 $r_1$、角速度 $\omega_1$，右侧大轮半径 $r_2$、角速度 $\omega_2$，两轮之间由带传动。
+
+% 【图】原笔记附图：左小右大两个带轮，上方一带绕过两轮，箭头标注带的运动方向；
+% 两轮转向使带在顶部同向移动，几何关系为 omega_1/omega_2 = r_2/r_1。
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[>=Stealth, scale=1.0, line cap=round]
+		\coordinate (C1) at (0,0);
+		\coordinate (C2) at (5,0);
+		% 两带轮（外切公切线近似包络）
+		\draw (C1) circle (0.8);
+		\draw (C2) circle (1.35);
+		\fill (C1) circle (1.4pt);
+		\fill (C2) circle (1.4pt);
+		% 带：上、下两条外公切线（切点按 r1=0.8, r2=1.35, L=5 计算）
+		\draw[thick] (-0.09,0.80) -- (4.85,1.34);
+		\draw[thick] (-0.09,-0.80) -- (4.85,-1.34);
+		% 带运动方向（顶部向右）
+		\draw[->, thick] (1.9,0.99) -- (2.8,1.09);
+		% 转向：顶部带向右移动，两轮同为顺时针
+		\draw[->] ($(C1)+(95:0.42)$) arc[start angle=95, end angle=-185, radius=0.42];
+		\node at ($(C1)+(0,-1.05)$) {\small $\omega_1$};
+		\draw[->] ($(C2)+(85:0.75)$) arc[start angle=85, end angle=-195, radius=0.75];
+		\node at (5,-1.55) {\small $\omega_2$};
+		% 半径标注
+		\draw (C1) -- ++(215:0.8) node[pos=0.6, left]{\small $r_1$};
+		\draw (C2) -- ++(-25:1.35) node[pos=0.6, below right]{\small $r_2$};
+	\end{tikzpicture}
+	\caption{带传动：带与轮缘间不打滑时，两轮边缘处带的线速度相等}
+	\label{fig:7-pidai-chuandong}
+\end{figure}
+
+带与轮缘之间不打滑时，带在两轮边缘处的线速度相等，故与齿轮传动同理，角速度与半径成反比：
+\begin{equation}\label{eq:7-pidai-bi}
+	\frac{\omega_1}{\omega_2}=\frac{r_2}{r_1}.
+\end{equation}
+
+\section{用角速度和角加速度矢量表示点的速度和加速度}
+
+本节将定轴转动刚体的角速度、角加速度用沿转轴的矢量表示，从而把刚体上各点的速度、加速度写成矢量叉积的形式。
+
+取转轴为 $z$ 轴，$\vec{k}$ 为沿 $z$ 轴正向的单位矢量，则角速度矢量与角加速度矢量均沿转轴：
+\begin{equation}\label{eq:7-shiliang-wa}
+	\vec{\omega}=\omega\vec{k},\qquad \vec{\alpha}=\alpha\vec{k}.
+\end{equation}
+设点 $M$ 相对转轴上任一定点 $O$ 的矢径为 $\vec{r}$，则该点的速度为
+\begin{equation}\label{eq:7-shiliang-v}
+	\vec{v}=\vec{\omega}\times\vec{r},
+\end{equation}
+加速度为切向与法向两个分量之和：
+\begin{equation}\label{eq:7-shiliang-a}
+	\vec{a}=\vec{a}^{\,\tau}+\vec{a}^{\,n}=\vec{\alpha}\times\vec{r}+\vec{\omega}\times\vec{v}.
+\end{equation}
+
+\parahead{大小关系}
+设 $\theta$ 为 $\vec{r}$ 与角速度矢量（转轴）之间的夹角，$r$ 为点到转轴的距离，则
+\begin{equation}\label{eq:7-shiliang-vmag}
+	|\vec{v}|=|\vec{\omega}|\,|\vec{r}|\sin\theta=\omega r\sin\theta,
+\end{equation}
+\begin{equation}\label{eq:7-shiliang-anmag}
+	|\vec{a}^{\,n}|=\omega^{2}r.
+\end{equation}
+
+\parahead{双重叉积}
+利用矢量三重积公式可将 $\vec{\omega}\times\vec{v}$ 展开：
+\begin{equation}\label{eq:7-shiliang-shuangcha}
+	\vec{\omega}\times\vec{v}
+	=\vec{\omega}\times(\vec{\omega}\times\vec{r})
+	=\vec{\omega}\,[\vec{\omega}\cdot\vec{r}]-\vec{r}\,\omega^{2}.
+\end{equation}
+% 待核对：转写稿注「末尾叉积式未能完全确定，请核对第二项符号与形式」。经按矢量三重积恒等式
+% a×(b×c)=b(a·c)−c(a·b) 核对，上式第二项为 −r·ω²，符号与形式均无误，照录。
+
+% 【图】原笔记附图：定轴转动圆盘（轮缘画成椭圆表示绕竖直轴转动的轮），
+% 中心一点，竖直轴向上标注 k（z 轴），旁标 omega。
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[>=Stealth, scale=1.0, line cap=round]
+		% 边缘视椭圆（绕竖直轴的轮）
+		\draw (0,0) ellipse (1.35 and 0.3);
+		\fill (0,0) circle (1.4pt);
+		% 转轴 z 与单位矢量 k
+		\draw[->, thick] (0,-1.5) -- (0,2.0) node[right]{$\vec{k}$};
+		\node[right] at (0.08,-1.35) {\small $z$};
+		% 角速度矢量沿转轴
+		\draw[->, very thick] (-0.35,-0.7) -- (-0.35,1.35) node[left]{$\vec{\omega}$};
+	\end{tikzpicture}
+	\caption{定轴转动刚体的角速度矢量 $\vec{\omega}$ 沿转轴}
+	\label{fig:7-jiaosudu-shiliang}
+\end{figure}
+
+\subsection{刚体绕固定轴 $z$ 轴转动（泊松公式）}
+
+设矢量 $\vec{A}$ 固连（冻结）在绕定轴 $z$ 转动的刚体上，随刚体一起转动，则该矢量对时间的变化率由\textbf{泊松公式}给出：
+\begin{theorem}[泊松公式]
+固连于定轴转动刚体的矢量，其对时间的导数等于角速度矢量与该矢量的叉积：
+\begin{equation}\label{eq:7-boisson}
+	\begin{aligned}
+		\frac{d\vec{A}}{dt}&=\vec{\omega}\times\vec{A},\\[2pt]
+		\frac{d\vec{\varphi}}{dt}&=\vec{\omega}\times\vec{\varphi},\\[2pt]
+		\frac{d\vec{R}}{dt}&=\vec{\omega}\times\vec{R}.
+	\end{aligned}
+\end{equation}
+\end{theorem}
+% 待核对：转写稿注「此处有涂改/划去痕迹，中间一式 d(varphi)/dt = omega×varphi 似被划去，请核对」。
+% 三式形式一致（均为泊松公式对固连矢量的应用），故一并照录，采用与否请依课堂讲授为准。
+
+% 【图】原笔记附图：相互垂直的 x、y、z 三轴构成右手直角系，
+% 原点附近画一台旋转刚体（椭圆体），注明「刚体绕固定轴 z 轴转动」。
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[>=Stealth, scale=1.0, line cap=round]
+		\coordinate (O) at (0,0);
+		% 右手直角坐标系（伪三维）
+		\draw[->] (O) -- (-2.1,-0.9) node[left]{$x$};
+		\draw[->] (O) -- (3.1,0) node[right]{$y$};
+		\draw[->] (O) -- (0,3.3) node[above]{$z$};
+		\node[below left] at (O) {$O$};
+		% 旋转刚体（椭圆体示意）
+		\begin{scope}[rotate around={-18:(0.95,1.0)}]
+			\draw (0.95,1.0) ellipse (1.0 and 0.52);
+			\draw[dashed] (1.01,1.1) ellipse (1.0 and 0.52);
+		\end{scope}
+		\node at (0.95,0.05) {\small 刚体绕固定轴 $z$ 轴转动};
+		% 角速度矢量沿 z 轴
+		\draw[->, very thick] (-0.3,0.35) -- (-0.3,2.0) node[left]{$\vec{\omega}$};
+		% 固连于刚体的矢量 A
+		\draw[->, thick] (O) -- (1.5,1.25) node[above right]{$\vec{A}$};
+		\fill (1.5,1.25) circle (1.4pt);
+	\end{tikzpicture}
+	\caption{泊松公式：固连于转动刚体的矢量 $\vec{A}$，其对时间的导数等于 $\vec{\omega}\times\vec{A}$}
+	\label{fig:7-boisson}
+\end{figure}

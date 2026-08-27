@@ -1,0 +1,54 @@
+% 来源：《理论力学》课堂笔记手写扫描件 第61页全页、第62页上半部分（第九章）
+\section{质点动力学的基本方程}
+
+动力学研究物体的机械运动与作用力之间的关系。
+
+\subsection{动力学基本定律}
+
+\parahead{Ⅰ. 牛顿第一定律（惯性定律）}
+
+不受力作用的质点，将保持静止或做匀速直线运动状态，即：物体具有惯性。
+
+\parahead{Ⅱ. 牛顿第二定律（力与加速度关系定律）}
+
+% 待核对：原稿作「即得明得摩尔著名的 F=ma」，中间二字字形难辨，疑为「牛顿」，此处取「牛顿」。
+牛顿第二定律可表述为
+\begin{equation}\label{eq:10-newton-second}
+  \frac{d}{dt}\left(m\vec{v}\right)=\vec{F},
+\end{equation}
+即得牛顿著名的 $\vec{F}=m\vec{a}$。
+% 待核对：原稿作「成立的光条件」，疑为「前提条件／充分条件」，此处取「前提条件」。
+该式成立的前提条件是在经典力学框架下物体质量不变。
+
+\parahead{Ⅲ. 牛顿第三定律（作用与反作用定律）}
+
+即静力学公理四。它不仅适用于平衡的物体，也适用于运动的物体，且与参考系的选取无关。
+
+\subsection{质点的运动微分方程}
+
+由牛顿第二定律，质点的运动微分方程（矢量形式）为
+\begin{equation}\label{eq:10-motion-ode}
+  m\frac{d^2\vec{r}}{dt^2}=\sum\vec{F}.
+\end{equation}
+
+\subsection{在直角坐标轴上的投影}
+
+设矢径 $\vec{r}$ 在直角坐标轴上的投影分别为 $x,y,z$，力 $\vec{F}$ 在坐标轴上的投影分别为 $F_x,F_y,F_z$，则运动微分方程的投影式为
+\begin{equation}\label{eq:10-projection-xyz}
+  m\frac{d^2x}{dt^2}=\sum F_x,\qquad
+  m\frac{d^2y}{dt^2}=\sum F_y,\qquad
+  m\frac{d^2z}{dt^2}=\sum F_z.
+\end{equation}
+
+\subsection{在自然轴上的投影}
+
+已知加速度沿自然轴的分解
+\begin{equation}\label{eq:10-accel-natural}
+  \vec{a}=a_t\vec{e}_t+a_n\vec{e}_n,\qquad a_b=0,
+\end{equation}
+则在自然轴上有投影式
+\begin{equation}\label{eq:10-projection-natural}
+  m\frac{dv}{dt}=\sum F_t,\qquad
+  m\frac{v^2}{\rho}=\sum F_n,\qquad
+  0=\sum F_b.
+\end{equation}

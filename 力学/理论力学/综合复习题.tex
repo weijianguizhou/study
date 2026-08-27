@@ -1,0 +1,359 @@
+% ======================================================================
+% 综合复习题.tex —— 《理论力学》课堂笔记 · 附录
+% 转写自手写扫描件第 58–60 页（复习题部分）
+% 主文件已在 \appendix 后引入本文件：此处仅含 \section 及以下层级。
+% 潦草难辨处均以「% 待核对：…」注明。
+% ======================================================================
+
+\section{综合复习题}
+
+本部分收录课堂笔记末尾的 6 道综合复习题，是全课程的收官练习：复习题 1--3 属静力学（物系平衡、考虑摩擦的平衡范围、桁架内力的截面法），复习题 4--6 属运动学（点的合成运动、刚体平面运动的基点法）。其中复习题 6 原稿未完成，仅保留题目与解题起笔，如实照录。
+
+% ----------------------------------------------------------------------
+\begin{exercise}[复习题 1]
+\parahead{已知}
+\begin{equation}\label{eq:A1-given}
+F=50\,\mathrm{kN},\qquad q=10\,\mathrm{kN/m},\qquad l=1\,\mathrm{m}.
+\end{equation}
+\parahead{求}
+$A$、$B$、$C$ 三处的约束反力。
+
+结构如图~A--1：梁由杆 $AB$ 与杆 $BC$ 在铰链 $C$ 处连接构成，左段（长 $2l$）作用竖直向下的均布载荷 $q$；$A$ 为铰支座，$C$ 为中间铰，右端 $B$ 处设有支座并竖立一根竖杆，杆顶作用水平向左的力 $F$。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth, line cap=round]
+  % 梁 AB—CB 与 B 处竖杆
+  \draw[very thick] (0,0) -- (6,0);
+  \draw[very thick] (6,0) -- (6,1.4);
+  % 均布载荷 q（左段 2l）
+  \draw[thick] (0,0.6) -- (3,0.6);
+  \foreach \x in {0,0.3,...,3} \draw[->] (\x,0.6) -- (\x,0.08);
+  \node at (1.5,0.82) {$q$};
+  % 力 F（B 处竖杆顶端，水平向左）
+  \draw[->,very thick] (6,1.4) -- (4.9,1.4) node[midway,above]{$F$};
+  % 固定铰支座 A
+  \draw[fill=white] (0,0) circle (0.08);
+  \draw (0,-0.08) -- (-0.26,-0.46) -- (0.26,-0.46) -- cycle;
+  \draw (-0.32,-0.46) -- (0.32,-0.46);
+  \foreach \x in {-0.28,-0.08,0.12,0.32} \draw (\x,-0.46) -- ++(-0.1,-0.14);
+  % 中间铰 C
+  \draw[fill=white] (3,0) circle (0.09);
+  % 支座 B（按固定铰支座绘制）
+  \draw[fill=white] (6,0) circle (0.08);
+  \draw (6,-0.08) -- (5.74,-0.46) -- (6.26,-0.46) -- cycle;
+  \draw (5.68,-0.46) -- (6.32,-0.46);
+  \foreach \x in {5.72,5.92,6.12,6.32} \draw (\x,-0.46) -- ++(-0.1,-0.14);
+  % 节点标注
+  \node[above left] at (0,0) {$A$};
+  \node[above] at (3,0.14) {$C$};
+  \node[right] at (6.12,0) {$B$};
+  % 尺寸标注
+  \draw[<->] (0,-1.0) -- node[fill=white,inner sep=1pt]{$2l$} (3,-1.0);
+  \draw[<->] (3,-1.0) -- node[fill=white,inner sep=1pt]{$2l$} (6,-1.0);
+\end{tikzpicture}\\[2pt]
+{\small 图~A--1\quad 复习题 1 结构简图（据原稿重绘）}
+\end{center}
+% 待核对：原稿对 B 处支座仅称「支座」，未辨明类型，上图按固定铰支座绘制；分段尺寸（2l、2l）与均布载荷作用段亦依原图推测。
+\end{exercise}
+
+\begin{solution}
+分别取 $AB$ 杆与 $BC$ 杆为隔离体：$AB$ 杆受均布载荷 $q$ 及 $A$、$C$ 两处约束反力 $F_{Ax}$、$F_{Ay}$、$F_{Cx}$、$F_{Cy}$；$BC$ 杆受 $B$ 处反力、$C$ 处反力及竖杆传来的力 $F$。对每个隔离体列平面力系平衡方程（$\sum F=0$、$\sum M=0$）。原稿所见方程十分潦草，按最可能读法整理如下：
+\begin{equation}\label{eq:A1-equilib}
+\begin{aligned}
+&\sum M_C=0:\quad F_{Ax}\cdot 2l+F\cdot l=0
+&&\Longrightarrow\quad F_{Ax}=-\frac{F}{2},\\[2pt]
+&\sum M_B=0:\quad F_{Ax}=\frac{F}{2},\qquad F_{Cx}=\frac{F}{2},\\[2pt]
+&\sum F_y=0:\quad F_{Ay}=0,\qquad F_{Cy}=q\cdot 4l=40\,\mathrm{kN},\\[2pt]
+&\sum F_x=0:\quad F_{Ax}+F_{Bx}=0
+&&\Longrightarrow\quad F_{Ax}=F_{Bx}=-\frac{F}{2}.
+\end{aligned}
+\end{equation}% 待核对：原稿此组方程极潦草，「对 A 取矩得 F_Ax=F_Bx」「对 B 取矩得 F_Cx=F/2」等式的所属隔离体与各项正负号、下标均难以确认，式\eqref{eq:A1-equilib}按最可能读法整理。
+
+据此，各处反力整理为
+\begin{equation}\label{eq:A1-result}
+F_{Ax}=-\frac{F}{2}=-25\,\mathrm{kN},\quad
+F_{Bx}=\frac{F}{2}=25\,\mathrm{kN},\quad
+F_{Ay}=0,\quad
+F_{Cx}=\frac{F}{2}=25\,\mathrm{kN},\quad
+F_{Cy}=4lq=40\,\mathrm{kN}.
+\end{equation}% 待核对：原稿右下角另见含 \sqrt{2} 的整理式（似与斜杆或合力投影有关），各反力关于 F、q、l 的最终表达式及数值结果待核对。
+\end{solution}
+
+% ----------------------------------------------------------------------
+\begin{exercise}[复习题 2]
+\parahead{已知}
+\begin{equation}\label{eq:A2-given}
+q=10\,\mathrm{kN/m},\qquad l=4\,\mathrm{m},\qquad f_0=\frac{1}{3},
+\end{equation}% 待核对：f_0 按静摩擦因数理解。
+其中 $f_0$ 为摩擦因数。\parahead{求}保持平衡时力偶 $M$ 的范围。
+
+结构如图~A--2：水平梁左端为铰支座，梁上作用竖直向下的均布载荷 $q$；中部偏右一点 $B$ 向上接一斜杆，斜杆与水平方向成 $60^\circ$ 角，顶端为 $C$；梁上近右端一点 $A$ 处作用一力偶 $M$（转向以圆弧箭头示意）。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth, line cap=round]
+  % 水平梁
+  \draw[very thick] (0,0) -- (7,0);
+  % 均布载荷 q
+  \draw[thick] (0,0.6) -- (7,0.6);
+  \foreach \x in {0,0.35,...,7} \draw[->] (\x,0.6) -- (\x,0.08);
+  \node at (3.1,0.82) {$q$};
+  % 左端固定铰支座
+  \draw[fill=white] (0,0) circle (0.08);
+  \draw (0,-0.08) -- (-0.26,-0.44) -- (0.26,-0.44) -- cycle;
+  \draw (-0.32,-0.44) -- (0.32,-0.44);
+  \foreach \x in {-0.28,-0.08,0.12,0.32} \draw (\x,-0.44) -- ++(-0.1,-0.14);
+  % 斜杆 B—C（与水平成 60°）
+  \coordinate (B) at (4.5,0);
+  \coordinate (Br) at ($(B)+(1.3,0)$);
+  \coordinate (C) at ($(B)+(60:2.4)$);
+  \draw[very thick] (B) -- (C);
+  \draw[fill=white] (B) circle (0.08);
+  \draw[fill=white] (C) circle (0.08);
+  \node[below=3pt] at (B) {$B$};
+  \node[above right] at (C) {$C$};
+  % 60° 角标
+  \draw pic[draw, angle radius=0.85cm, "$60^\circ$", angle eccentricity=1.45] {angle=Br--B--C};
+  % 力偶 M（A 点，圆弧箭头）
+  \coordinate (Ap) at (6.5,0);
+  \node[below=3pt] at (Ap) {$A$};
+  \draw[->,thick] ($(Ap)+(20:0.45)$) arc[start angle=20, end angle=320, radius=0.45];
+  \node at ($(Ap)+(1.15,0.55)$) {$M$};
+  % 尺寸分段（依原图推测每段为 l）
+  \draw[<->] (0,-1.0) -- node[fill=white,inner sep=1pt]{$l$} (3.5,-1.0);
+  \draw[<->] (3.5,-1.0) -- node[fill=white,inner sep=1pt]{$l$} (7,-1.0);
+\end{tikzpicture}\\[2pt]
+{\small 图~A--2\quad 复习题 2 结构简图（据原稿重绘）}
+\end{center}
+% 待核对：梁的分段尺寸原图仅见零散刻度，上图按两个等长 l 段绘制；力偶 M 的作用点（A 或端部）与转向、斜杆上端 C 是否设支座，原稿均不明确，待核对。
+\end{exercise}
+
+\begin{solution}
+对 $BC$ 杆与 $AB$ 杆分别作受力分析。原稿所见对 $C$ 取矩及投影方程整理如下（潦草，待核对）：
+\begin{equation}\label{eq:A2-equilib}
+\begin{aligned}
+&\sum M_C=0:\quad \sqrt{2}\,F_{Ay}\,l+\sqrt{2}\,F\,l-2\sqrt{2}\,l^{2}q=0,\\[2pt]
+&\sum F_x=0:\quad \sqrt{2}\,F_{Ax}\,l-\sqrt{2}\,l\,q=0,\\[2pt]
+&-M+F_{Ax}\cdot l=0
+&&\Longrightarrow\quad F_{Ax}=\frac{M}{4l},\\[2pt]
+&\frac{M}{4l}+F-2\sqrt{2}\,l\,q=0.
+\end{aligned}
+\end{equation}% 待核对：原稿标明斜杆夹角为 60°，但方程中反复出现 \sqrt{2} 系数（对应 45° 投影），二者矛盾；各式具体形式、所属隔离体、正负号以及式中 F 的来历均待核对。
+
+摩擦平衡的界限条件（原稿写作 $-f_0|F_{Ax}|\le F_{Ax}\le f_0|F_{Ax}|$ 一类的界限式）
+\begin{equation}\label{eq:A2-friction}
+-f_0\,|F_N|\le F_s\le f_0\,|F_N|
+\end{equation}% 待核对：原稿摩擦界限式直接以 F_Ax 写出，疑应区分法向压力与切向摩擦力两个量，此处按通用形式转录，待核对。
+给出保持平衡时 $M$ 的允许范围：
+\begin{equation}\label{eq:A2-result}
+-62.1\,\mathrm{kN\cdot m}\le M\le 72.7\,\mathrm{kN\cdot m}.
+\end{equation}% 待核对：式\eqref{eq:A2-result}两端数值为手写，量纲 kN·m，具体数值待核对。
+
+另有 AB（或相关杆）受力小图一幅（画出该杆所受 $F$、$F_{ax}$、$F_{ay}$ 等，杆呈斜置态），用于补充对 $AB$ 杆的平衡分析。
+% 待核对：该受力小图的杆件方位与相应方程在原稿中较模糊，未予重绘，待核对。
+\end{solution}
+
+% ----------------------------------------------------------------------
+\begin{exercise}[复习题 3]
+【题】求图示平面桁架中 1、2 两杆的内力。桁架外形近似三角形，顶部作用竖直向下的集中力 $F$，底边左端为铰支座、右端为可动支座，可用截面法（截面①②③）取隔离体并对矩心 $O$ 取矩求解。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth, line cap=round]
+  \coordinate (A) at (0,0);
+  \coordinate (D) at (3,0);
+  \coordinate (B) at (6,0);
+  \coordinate (T) at (3,2.7);
+  % 杆件
+  \draw[very thick] (A) -- (T) -- (B);
+  \draw[very thick] (A) -- (D) -- (B);
+  \draw[very thick] (T) -- (D);
+  % 节点
+  \foreach \p in {(A),(D),(B),(T)} \draw[fill=white] \p circle (0.07);
+  % 顶部集中力
+  \draw[->,very thick] ($(T)+(0,1.05)$) -- (T) node[midway,right]{$F$};
+  % 左端固定铰支座
+  \draw (A) -- (-0.24,-0.38) -- (0.24,-0.38) -- cycle;
+  \draw (-0.30,-0.38) -- (0.30,-0.38);
+  \foreach \x in {-0.26,-0.06,0.14,0.34} \draw[shift={(0,-0.38)}] (\x,0) -- ++(-0.1,-0.13);
+  % 右端可动支座
+  \draw (B) -- (5.78,-0.36) -- (6.22,-0.36) -- cycle;
+  \draw[fill=white] (5.87,-0.47) circle (0.06);
+  \draw[fill=white] (6.13,-0.47) circle (0.06);
+  \draw (5.74,-0.54) -- (6.26,-0.54);
+  \foreach \x in {5.78,5.98,6.18} \draw (\x,-0.54) -- ++(-0.1,-0.13);
+  % 杆件编号（依原图推测标于杆 1、杆 2 处）
+  \node[fill=white,inner sep=1.5pt] at (1.5,-0.22) {$1$};
+  \node[fill=white,inner sep=1.5pt] at (3.24,1.35) {$2$};
+\end{tikzpicture}\\[2pt]
+{\small 图~A--3\quad 复习题 3 桁架简图（据原稿重绘）}
+\end{center}
+% 待核对：杆件编号 1、2 在原图中的具体对应位置较潦草，上图按下弦左段为杆 1、中竖杆为杆 2 标注；截面①②③的划分线未绘出，待核对。
+\end{exercise}
+
+\begin{solution}
+截面法求内力。
+
+截面①：取截面一侧的小三角形部分为隔离体，对矩心 $O$ 取矩，
+\begin{equation}\label{eq:A3-F1}
+F_1\cdot\sqrt{3}\,l-F\cdot\frac{\sqrt{3}}{2}\,l=0
+\quad\Longrightarrow\quad F_1=\frac{1}{2}F.
+\end{equation}
+截面②、③：对整体（或另一矩心）取矩，
+\begin{equation}\label{eq:A3-moment}
+-F_1\sqrt{3}\,l-F_2\,l+F\cdot\frac{\sqrt{3}}{2}\,l=0,
+\end{equation}
+于是
+\begin{equation}\label{eq:A3-F2}
+F_2\,l=(F-F_1)\,\frac{\sqrt{3}}{2}\,l=\frac{\sqrt{3}}{4}\,Fl
+\quad\Longrightarrow\quad F_2=\frac{\sqrt{3}}{4}F.
+\end{equation}% 待核对：各杆长（\sqrt{3}l、l 等）、矩心 O 的位置与截面①②③的对应关系在原稿中较潦草；F_1、F_2 的拉压性质（正负号）依上式符号约定，待核对。
+\end{solution}
+
+% ----------------------------------------------------------------------
+\begin{exercise}[复习题 4]
+\parahead{已知}
+\begin{equation}\label{eq:A4-given}
+R=1\,\mathrm{m},\qquad \alpha=1\,\mathrm{rad/s^2},\qquad \omega=1\,\mathrm{s^{-1}},\qquad v_A=\sqrt{3}\,R.
+\end{equation}
+\parahead{求}$\theta=45^\circ$ 时 $M$ 点的速度和加速度。
+
+机构如图所示：左端 $O$ 为固定铰支座，曲柄 $OA$（长 $R$）自 $O$ 向上引出；$A$ 点铰接一刚性直角（L 形）构件——一臂自 $A$ 竖直向上，另一臂自 $A$ 向下延至点 $M$（位于右下方），臂长亦记为 $R$；$A$ 处标注转角 $\theta=45^\circ$ 及角速度 $\omega$、角加速度 $\alpha$ 的转向箭头；$M$ 点画有速度矢量 $\vec v_M$ 与加速度矢量。曲柄 $OA$ 绕 $O$ 以 $\omega$、$\alpha$ 转动，L 形构件随 $A$ 点运动，点 $M$ 作复合运动。
+
+% 图待补：曲柄机构简图——O 固定铰 + 曲柄 OA(R)，A 接 L 形构件（一臂竖直向上、一臂伸向右下至 M，臂长 R），A 处标 θ=45°、ω、α，M 点标 v_M 与加速度矢量；原稿构件几何关系较乱，暂不重绘，待核对。
+\end{exercise}
+
+\begin{solution}
+以 $A$ 为动点（连杆 $OA$ 为动系），由速度合成定理，
+\begin{equation}\label{eq:A4-vel}
+\vec v_a=\vec v_e+\vec v_r=0,
+\end{equation}% 待核对：原稿即写如上（等号后带 0），疑指某分量为零或系笔误，待核对。
+再由加速度合成定理（含科氏加速度 $\vec a_C$），
+\begin{equation}\label{eq:A4-acc}
+\vec a_a=\vec a_e+\vec a_r+\vec a_C.
+\end{equation}
+\begin{remark}
+原稿此后对 $M$ 点速度、加速度的具体分量计算，以及 $\theta=45^\circ$、$v_A=\sqrt{3}R$ 的代入结果未见完整展开；动系选取（连杆 $OA$ 抑或 L 形构件）在手写稿中亦难以确认，待核对。
+\end{remark}
+\end{solution}
+
+% ----------------------------------------------------------------------
+\begin{exercise}[复习题 5]
+\parahead{已知}
+\begin{equation}\label{eq:A5-given}
+a_A=2\,\mathrm{m/s^2},\qquad a_B=1\,\mathrm{m/s^2},\qquad AB=10\,\mathrm{cm},\qquad BC=5\,\mathrm{cm},
+\end{equation}% 待核对：第二个加速度原稿记作 a_g（取值 1 m/s²），疑为 a_B 或角加速度 α，暂按 a_B 整理，待核对。
+其中 $\vec a_A$ 与水平方向成 $30^\circ$ 角。\parahead{求}$a_C$（$C$ 点的加速度）。
+
+矩形刚体 $ABCD$（$A$ 左上、$B$ 右上、$C$ 右下、$D$ 左下）作平面运动：$A$ 点加速度指向右上、与水平成 $30^\circ$；$B$ 点加速度竖直向下；下边 $DC$ 落在固定面上，$D$ 点附近标有小角速度 $\omega$，如图~A--4。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth, line cap=round]
+  % 固定面（斜线）
+  \draw[thick] (-0.7,0) -- (5.7,0);
+  \foreach \x in {-0.6,-0.2,...,5.8} \draw (\x,0) -- ++(0.22,-0.22);
+  % 矩形刚体 ABCD
+  \coordinate (D) at (0,0);
+  \coordinate (C) at (5,0);
+  \coordinate (B) at (5,2.5);
+  \coordinate (A) at (0,2.5);
+  \draw[very thick, fill=gray!8] (D) -- (C) -- (B) -- (A) -- cycle;
+  \node[above left] at (A) {$A$};
+  \node[above right] at (B) {$B$};
+  \node[below right] at (C) {$C$};
+  \node[below left] at (D) {$D$};
+  % a_A（指向右上，与水平成 30°）
+  \coordinate (Ax) at ($(A)+(2.2,0)$);
+  \coordinate (Ae) at ($(A)+(30:2.3)$);
+  \draw[dashed] (A) -- (Ax);
+  \draw[->,very thick] (A) -- (Ae) node[right]{$\vec a_A$};
+  \draw pic[draw, angle radius=0.8cm, "$30^\circ$", angle eccentricity=1.5] {angle=Ax--A--Ae};
+  % a_B（竖直向下）
+  \draw (B) -- (5.35,2.5);
+  \draw[->,very thick] (5.35,2.5) -- (5.35,0.85) node[below]{$\vec a_B$};
+  % D 处小角速度 ω
+  \draw[->] (0.85,0) arc[start angle=0, end angle=105, radius=0.85];
+  \node at (1.2,0.68) {$\omega$};
+  % 尺寸标注
+  \draw[<->] (0,3.05) -- node[fill=white,inner sep=1pt]{$10\,\mathrm{cm}$} (5,3.05);
+  \draw[<->] (5.95,2.5) -- node[fill=white,inner sep=1pt]{$5\,\mathrm{cm}$} (5.95,0);
+\end{tikzpicture}\\[2pt]
+{\small 图~A--4\quad 复习题 5 矩形刚体示意图（据原稿重绘）}
+\end{center}
+\end{exercise}
+
+\begin{solution}
+基点法求解。以 $A$ 为基点：
+\begin{equation}\label{eq:A5-baseA}
+\vec a_C=\vec a_A+\vec a_{AB}^{\,n}+\vec a_{AB}^{\,\tau};
+\end{equation}
+以 $B$ 为基点：
+\begin{equation}\label{eq:A5-baseB}
+\vec a_C=\vec a_B+\vec a_{CB}^{\,n}+\vec a_{CB}^{\,\tau},
+\end{equation}% 待核对：以 A 为基点时相对项下标原稿记作 AB（按基点法疑应为 CA），照录待核对。
+其中相对转动的法向、切向加速度大小为
+\begin{equation}\label{eq:A5-rel}
+a_{AB}^{\,n}=\omega^{2}\cdot\overline{AB},\qquad
+a_{AB}^{\,\tau}=\alpha\cdot\overline{AB}.
+\end{equation}
+沿 $AB$ 方向与沿 $BC$ 方向分别投影（原稿投影式潦草，照录）：
+\begin{equation}\label{eq:A5-proj}
+\begin{aligned}
+a_{AB}\cos 30^\circ&=a_{BC}\cos 45^\circ+\bar{a}_{AB}^{\,n},\\
+a_{BC}\cos 30^\circ&=a_{BC}\cos 45^\circ+\bar{a}_{AB}^{\,n},
+\end{aligned}
+\end{equation}% 待核对：式\eqref{eq:A5-proj}两条投影式的角度（30°/45°）、下标与正负号均潦草难辨，第二式左右两端同现 a_BC 疑有笔误；最终 a_C 的数值原稿未保留完整，待核对。
+\end{solution}
+
+% ----------------------------------------------------------------------
+\begin{exercise}[复习题 6]
+\parahead{已知}
+\begin{equation}\label{eq:A6-given}
+\omega=10\,\mathrm{rad/s},\qquad \alpha=0,\qquad OA=1\,\mathrm{m},\qquad \theta=30^\circ.
+\end{equation}
+\parahead{求}$B$ 点的速度和加速度。
+
+机构为曲柄滑块机构，如图~A--5：左下方 $O$ 为固定铰支座，曲柄 $OA$（$OA=1\,\mathrm{m}$）由 $O$ 向上引出；$A$ 端接连杆 $AB$ 向上延伸至滑块 $B$，滑块沿竖直导轨（固定导轨）上下滑动；$C$ 位于导轨顶端附近；$A$ 处标注转角 $\theta=30^\circ$ 及角速度 $\omega$、角加速度 $\alpha$（$\alpha=0$）。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth, line cap=round]
+  % 固定铰支座 O
+  \coordinate (O) at (0,0);
+  \draw[fill=white] (O) circle (0.08);
+  \draw (0,-0.08) -- (-0.26,-0.44) -- (0.26,-0.44) -- cycle;
+  \draw (-0.32,-0.44) -- (0.32,-0.44);
+  \foreach \x in {-0.28,-0.08,0.12,0.32} \draw (\x,-0.44) -- ++(-0.1,-0.14);
+  \node[below left] at (O) {$O$};
+  % 曲柄 OA（θ=30° 自竖直方向起量）
+  \coordinate (A) at (60:2.2);
+  \draw[very thick] (O) -- (A);
+  \draw[fill=white] (A) circle (0.08);
+  \node[left=2pt] at (A) {$A$};
+  % ω 转向箭头
+  \draw[->] (0.75,0) arc[start angle=0, end angle=125, radius=0.75];
+  \node at (1.05,0.85) {$\omega$};
+  % θ 角标
+  \coordinate (Pv) at (0,2.6);
+  \draw[dashed] (O) -- (Pv);
+  \draw pic[draw, angle radius=0.95cm, "$\theta=30^\circ$", angle eccentricity=1.7] {angle=A--O--Pv};
+  % 竖直导轨（右侧线带斜线表示固定）
+  \draw[thick] (2.25,2.35) -- (2.25,4.35);
+  \draw[thick] (2.95,2.35) -- (2.95,4.35);
+  \foreach \y in {2.55,2.95,3.35,3.75,4.15} \draw (2.95,\y) -- ++(0.2,0.15);
+  % 滑块 B
+  \coordinate (Bg) at (2.6,3.3);
+  \draw[very thick, fill=white] (2.25,2.95) rectangle (2.95,3.65);
+  \node[above right] at (2.95,3.65) {$B$};
+  % 连杆 AB
+  \draw[very thick] (A) -- (Bg);
+  % C 点（导轨顶端附近）
+  \node[fill=white,inner sep=1pt] at (2.6,4.18) {$C$};
+\end{tikzpicture}\\[2pt]
+{\small 图~A--5\quad 复习题 6 曲柄滑块机构简图（据原稿重绘）}
+\end{center}
+% 待核对：θ=30° 的起始边（OA 与竖直方向抑或与连杆 AB）原稿不明，上图按 OA 与竖直方向绘制；导轨朝向（竖直）与 C 点位置依原文文字，待核对。
+\end{exercise}
+
+\begin{solution}
+\parahead{解（原稿未完成）}
+原稿仅起笔：「解：以 $B$ 为动点，$A$（或 $OA$ 为动系）……」，其下推导部分为空白，本题未写完。
+% 待核对：页面底部另有一处微小标注（似"0.6"），较潦草，辨认不清，待核对。
+\end{solution}

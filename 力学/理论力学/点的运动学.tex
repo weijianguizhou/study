@@ -1,0 +1,489 @@
+% ============================================================
+% 《理论力学》课堂笔记 · 第六章 点的运动学（第 36–40 页转写）
+% 说明：第 36 页上半「§4 矢量导数及动参考系」位于本章标题之前，
+%       属上一章内容，未收入本文件。
+% ============================================================
+
+\section{矢量法}
+
+\subsection{运动方程}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=1.0]
+  % 固定坐标系（z 轴以斜向表示）
+  \draw[->] (0,0) -- (3.2,0) node[below]{$x$};
+  \draw[->] (0,0) -- (0,2.7) node[left]{$y$};
+  \draw[->] (0,0) -- (-1.2,1.15) node[left]{$z$};
+  \node[below left] at (0,0) {$O$};
+  % 动点 M 与矢径 r
+  \fill (2.2,1.8) circle (1.5pt) node[above right]{$M$};
+  \draw[->,very thick] (0,0) -- (2.2,1.8) node[pos=0.55,above,sloped]{$\vec{r}$};
+\end{tikzpicture}
+\end{center}
+
+取固定点 $O$，动点 $M$ 的位置由矢径 $\vec{r}$ 表示，它是时间 $t$ 的单值连续函数：
+\begin{equation}
+  \vec{r} = \vec{r}(t)
+  \label{eq:6-r-vector}
+\end{equation}
+这就是点的矢量法运动方程。
+
+\subsection{点的速度}
+
+瞬时速度定义为矢径对时间的导数：
+\begin{equation}
+  \vec{v} = \lim_{\Delta t \to 0} \frac{\Delta \vec{r}}{\Delta t}
+          = \frac{d\vec{r}}{dt}
+  \label{eq:6-v-def}
+\end{equation}
+速度沿轨迹的切线方向。
+
+\subsection{点的加速度}
+
+瞬时加速度定义为速度对时间的导数：
+\begin{equation}
+  \vec{a} = \lim_{\Delta t \to 0} \frac{\Delta \vec{v}}{\Delta t}
+          = \frac{d\vec{v}}{dt}
+          = \frac{d^2\vec{r}}{dt^2}
+  \label{eq:6-a-def}
+\end{equation}
+加速度沿速度矢端曲线的切线方向。
+
+\subsection{变矢量导数的几何意义}
+
+\parahead{矢量端点的运动速度}
+
+把变矢量在各个时刻的矢量都平移到同一起点，其端点随时间描出的曲线称为该矢量的矢端图（矢量端迹）。变矢量对时间的导数沿矢端图在对应端点处的切线方向，其大小等于端点沿矢端图运动的速度。具体到点的运动：速度 $\vec{v}=\frac{d\vec{r}}{dt}$ 沿轨迹（矢径端图）的切线方向；加速度 $\vec{a}=\frac{d\vec{v}}{dt}$ 沿速度矢端曲线的切线方向。
+% 待核对：原稿此小节仅存标题「矢量端点的运动速度」，正文要点按第 36 页
+% 「速度沿轨迹切线、加速度沿速度矢端曲线切线」两条结论整理。
+
+\section{直角坐标法}
+
+\subsection{运动方程}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=0.92]
+  % 斜投影坐标架：z 轴向左上方
+  \draw[->] (0,0) -- (3.4,0) node[below]{$x$};
+  \draw[->] (0,0) -- (0,3.4) node[left]{$y$};
+  \draw[->] (0,0) -- (-1.35,1.2) node[left]{$z$};
+  \node[below left] at (0,0) {$O$};
+  % 单位矢量 i, j, k
+  \draw[->,thick] (0,0) -- (0.6,0) node[below]{$\vec{i}$};
+  \draw[->,thick] (0,0) -- (0,0.6) node[left]{$\vec{j}$};
+  \draw[->,thick] (0,0) -- (-0.33,0.30) node[above left=-1pt]{$\vec{k}$};
+  % 空间轨迹曲线
+  \draw[thick] plot [smooth,tension=0.9] coordinates
+    {(0.4,0.30) (0.80,0.88) (1.30,1.66) (1.80,2.44) (2.15,3.18)};
+  % 动点 M 与矢径 r
+  \fill (1.30,1.66) circle (1.6pt) node[above left]{$M$};
+  \draw[->,very thick] (0,0) -- (1.30,1.66) node[pos=0.5,above,sloped]{$\vec{r}$};
+  % 分量投影（虚线）
+  \draw[dashed] (1.30,1.66) -- (1.7,1.3);
+  \draw[dashed] (1.7,1.3) -- (1.7,0);
+  \draw[dashed] (1.7,1.3) -- (0,1.3);
+  \node[right,font=\small] at (1.7,0.65) {$x$};
+  \node[above,font=\small] at (0.85,1.3) {$y$};
+  \node[right,font=\small] at (1.52,1.48) {$z$};
+  % 切线方向（速度）箭头
+  \draw[->,thick] (1.30,1.66) -- +(0.34,0.52) node[right]{$\vec{v}$};
+\end{tikzpicture}
+\end{center}
+
+将矢径沿直角坐标轴单位矢量分解：
+\begin{equation}
+  \vec{r} = x\vec{i} + y\vec{j} + z\vec{k}
+  \label{eq:6-r-xyz}
+\end{equation}
+由于 $\vec{r}$ 随时间变化，直角坐标法的运动方程为
+\begin{equation}
+  \left\{\begin{aligned}
+    x &= x(t) \\
+    y &= y(t) \\
+    z &= z(t)
+  \end{aligned}\right.
+  \label{eq:6-motion-xyz}
+\end{equation}
+
+\subsection{点的速度}
+
+\begin{equation}
+  \begin{aligned}
+    \vec{v} &= \frac{d\vec{r}}{dt}
+             = \frac{d}{dt}\left(x\vec{i} + y\vec{j} + z\vec{k}\right) \\
+            &= \dot{x}\,\vec{i} + \dot{y}\,\vec{j} + \dot{z}\,\vec{k}
+             = v_x\vec{i} + v_y\vec{j} + v_z\vec{k}
+  \end{aligned}
+  \label{eq:6-v-xyz}
+\end{equation}
+速度投影与速度大小：
+\begin{equation}
+  \left\{\begin{aligned}
+    v_x &= \frac{dx}{dt} = \dot{x} \\
+    v_y &= \frac{dy}{dt} = \dot{y} \\
+    v_z &= \frac{dz}{dt} = \dot{z}
+  \end{aligned}\right.
+  \qquad\Longrightarrow\qquad
+  v = \sqrt{v_x^2 + v_y^2 + v_z^2}
+  \label{eq:6-v-mod}
+\end{equation}
+速度的方向由方向余弦确定，例如
+\begin{equation}
+  \cos\langle \vec{v},\vec{i}\rangle = \frac{v_x}{v}
+  \label{eq:6-v-dir}
+\end{equation}
+
+\subsection{点的加速度}
+
+加速度投影等于速度投影对时间的导数，也等于坐标对时间的二阶导数：
+\begin{equation}
+  a_x = \dot{v}_x = \ddot{x}, \qquad
+  a_y = \dot{v}_y = \ddot{y}, \qquad
+  a_z = \dot{v}_z = \ddot{z}
+  \label{eq:6-a-xyz}
+\end{equation}
+加速度的大小：
+\begin{equation}
+  a = \sqrt{a_x^2 + a_y^2 + a_z^2}
+  \label{eq:6-a-mod}
+\end{equation}
+加速度的方向余弦，例如
+\begin{equation}
+  \cos\langle \vec{a},\vec{i}\rangle = \frac{a_x}{a}
+  \label{eq:6-a-dir}
+\end{equation}
+
+% 图待补：第 37 页右下角草图被裁切、细节不清晰（隐约可见曲线、切线与
+% 圆弧/椭圆轮廓），无法准确判读，未转绘。
+
+\section{弧坐标法（自然坐标法）}
+
+适用条件：轨迹已知。
+
+\subsection{运动方程}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=1.0]
+  % 已知轨迹曲线
+  \draw[very thick] (0,0.25) .. controls (1.5,1.85) and (3.2,-0.65) .. (5.3,1.0);
+  % 弧坐标原点 O
+  \fill (0.33,0.47) circle (1.3pt) node[below left]{$O$};
+  % 动点 M 与切向单位矢量 tau
+  \fill (3.55,0.62) circle (1.6pt) node[below right]{$M$};
+  \draw[->,very thick] (3.55,0.62) -- +(0.78,0.30) node[right]{$\vec{\tau}$};
+  % 弧长 s 的量度方向（沿曲线的细箭头）
+  \draw[->,thin] (0.62,0.68) .. controls (1.6,1.62) and (2.5,0.28) .. (3.25,0.55);
+  \node[above,font=\small] at (1.75,1.02) {$s$};
+\end{tikzpicture}
+\end{center}
+
+轨迹已知时，在轨迹上取定一点 $O$ 作为弧坐标原点并规定正向，动点的位置即可由弧长 $s$ 唯一确定。弧长随时间变化，即得运动方程
+\begin{equation}
+  s = s(t)
+  \label{eq:6-s-arc}
+\end{equation}
+
+\subsection{点的速度}
+
+\begin{equation}
+  \begin{aligned}
+    \vec{v} &= \frac{d\vec{r}}{dt}
+      = \lim_{\Delta t\to 0}\frac{\Delta\vec{r}}{\Delta t}
+      = \lim_{\Delta t\to 0}\frac{\Delta\vec{r}}{\Delta s}\cdot\frac{\Delta s}{\Delta t} \\
+    &= \frac{ds}{dt}\,\vec{\tau} = v\vec{\tau}
+  \end{aligned}
+  \label{eq:6-v-arc}
+\end{equation}
+其中 $\lim_{\Delta s\to 0}\left|\frac{\Delta\vec{r}}{\Delta s}\right|=1$，$\Delta\vec{r}$ 的极限方向即轨迹切线方向 $\vec{\tau}$。
+
+\begin{keybox}
+  \centering
+  $v = \dfrac{ds}{dt}$ \quad——\ 速度的数值
+\end{keybox}
+
+\subsection{点的加速度}
+
+\begin{equation}
+  \vec{a} = \frac{d\vec{v}}{dt}
+          = \frac{d}{dt}\left(v\vec{\tau}\right)
+          = \frac{dv}{dt}\,\vec{\tau} + v\,\frac{d\vec{\tau}}{dt}
+  \label{eq:6-a-product}
+\end{equation}
+第一项沿切线方向，即切向加速度所在的方向；第二项涉及切向单位矢量的导数 $\frac{d\vec{\tau}}{dt}$，下面分别讨论它的大小和方向。
+
+\parahead{讨论 \texorpdfstring{$\dfrac{d\vec{\tau}}{dt}$}{d tau/dt} 的大小}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=1.0]
+  % 曲率圆弧与曲率中心
+  \coordinate (O) at (0,0);
+  \draw[very thick] (10:1.9) arc[start angle=10,end angle=85,radius=1.9];
+  \fill (O) circle (1.3pt) node[below left]{$O$};
+  % 动点 A、A' 与半径
+  \coordinate (A)  at (15:1.9);
+  \coordinate (Ap) at (70:1.9);
+  \fill (A)  circle (1.4pt) node[below right]{$A$};
+  \fill (Ap) circle (1.4pt) node[right]{$A'$};
+  \draw[->] (O) -- (A) node[midway,below left]{$\rho$};
+  \draw[dashed] (O) -- (Ap);
+  % 切向单位矢量 tau 与 tau'
+  \coordinate (T1) at ($(A)+(105:0.95)$);
+  \coordinate (T2) at ($(Ap)+(160:0.95)$);
+  \draw[->,very thick] (A) -- (T1) node[above]{$\vec{\tau}$};
+  \draw[->,very thick] (Ap) -- (T2) node[above]{$\vec{\tau}\,'$};
+  % 矢量差 |tau' - tau|
+  \draw[dotted] (T1) -- (T2) node[midway,above right,font=\small]
+    {$|\vec{\tau}\,'-\vec{\tau}| = 2\sin\frac{\Delta\theta}{2}$};
+  % 圆心角 Delta theta
+  \draw[->,thin] (15:0.62) arc[start angle=15,end angle=70,radius=0.62];
+  \node[font=\small] at (43:0.92) {$\Delta\theta$};
+\end{tikzpicture}
+\end{center}
+
+设动点由 $A$ 沿弧长 $\Delta s$ 移至 $A'$，切线方向转过角度 $\Delta\theta$，则 $\left|\vec{\tau}\,'-\vec{\tau}\right| = 2\sin\frac{\Delta\theta}{2}$，且 $\frac{\Delta\theta}{\Delta s} = \frac{1}{\rho}$（曲率，$\rho$ 为曲率半径）。于是
+\begin{equation}
+  \begin{aligned}
+    \left|\frac{d\vec{\tau}}{dt}\right|
+      &= \lim_{\Delta t\to 0}\left|\frac{\Delta\vec{\tau}}{\Delta t}\right|
+       = \lim_{\Delta t\to 0}\frac{\left|\vec{\tau}\,'-\vec{\tau}\right|}{\Delta t}
+       = \lim_{\Delta t\to 0}\frac{2\sin\frac{\Delta\theta}{2}}{\Delta t} \\
+    &= \lim_{\Delta t\to 0}
+       \frac{\sin\frac{\Delta\theta}{2}}{\frac{\Delta\theta}{2}}
+       \cdot\frac{\Delta\theta}{\Delta s}\cdot\frac{\Delta s}{\Delta t}
+     = \frac{1}{\rho}\,v
+  \end{aligned}
+  \label{eq:6-dtau-magnitude}
+\end{equation}
+
+\parahead{\texorpdfstring{$\dfrac{d\vec{\tau}}{dt}$}{d tau/dt} 的方向——主法线方向}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=1.0]
+  % 平面曲线（凹向上）
+  \draw[very thick] (0,1.7) .. controls (1.6,0.2) and (3.4,0.2) .. (5.0,1.7);
+  \coordinate (M) at (2.5,0.55);
+  \fill (M) circle (1.5pt) node[below]{$M$};
+  % 切向单位矢量 tau 与主法线 n（指向凹侧）
+  \draw[->,very thick] (M) -- +(1.05,0) node[below right=-1pt]{$\vec{\tau}$};
+  \draw[->,very thick] (M) -- +(0,0.95) node[above]{$\vec{n}$};
+  % 副法线 b（垂直图面向外）
+  \node at ($(M)+(-0.6,0.05)$) {$\odot$};
+  \node[below,font=\small] at ($(M)+(-0.6,0.0)$) {$\vec{b}$};
+  % 密切平面标注
+  \node[font=\small] (lab) at (4.7,2.35) {密切平面};
+  \draw[->,thin] (lab.west) to[bend right=12] (3.05,0.98);
+\end{tikzpicture}
+\end{center}
+
+$\frac{d\vec{\tau}}{dt}$ 的方向垂直于 $\vec{\tau}$、指向曲线的凹侧；$\vec{\tau}$ 与 $\frac{d\vec{\tau}}{dt}$ 共面，所在平面即为密切平面，主法线方向就是 $\frac{d\vec{\tau}}{dt}$ 的方向。由此引入自然轴系：
+\begin{itemize}
+  \item $\vec{n}$ —— 主法线（密切平面内的法线），指向曲线凹侧的方向；
+  \item $\vec{b} = \vec{\tau}\times\vec{n}$ —— 副法线；
+  \item $(\vec{\tau},\vec{n},\vec{b})$ 构成右手直角坐标系。
+\end{itemize}
+于是加速度的自然坐标分解为
+\begin{equation}
+  \vec{a} = \frac{dv}{dt}\,\vec{\tau} + \frac{v^2}{\rho}\,\vec{n} + 0\cdot\vec{b}
+  \label{eq:6-a-natural}
+\end{equation}
+即 $\vec{a}$ 在密切平面内，副法线方向无分量。其中：
+\begin{itemize}
+  \item ①\ $a_\tau = \dfrac{dv}{dt}$ —— 切向加速度，由速度大小的变化引起；
+  \item ②\ $a_n = \dfrac{v^2}{\rho}$ —— 法向加速度，由速度方向的变化引起。
+\end{itemize}
+
+\section{例题}
+
+\begin{longexample}[纯滚动轮缘点的运动——摆线]
+半径为 $R$ 的圆轮沿水平地面（取为 $x$ 轴）无滑动地纯滚动，圆心 $C$ 始终在地面上方高度 $R$ 处；$A$ 为轮缘上一点，接触点（初始位置）记为 $O$（坐标原点）。研究点 $A$ 的运动。
+\end{longexample}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,x=1cm,y=1cm]
+  % 地面（x 轴）
+  \draw[->,thick] (-0.7,0) -- (7.7,0) node[below]{$x$};
+  \node[below,font=\small] at (6.9,-0.08) {地面};
+  % 摆线轨迹
+  \draw[thick] plot[domain=0:6.2832,samples=140] ({\x - sin(\x r)},{1 - cos(\x r)});
+  % 初始接触点 O（坐标原点）
+  \fill (0,0) circle (1.5pt) node[below left]{$O$};
+  % 当前位置的轮（phi = 2.0）
+  \def\ph{2.0}
+  \coordinate (C) at ({\ph},1);
+  \draw[very thick] (C) circle (1);
+  \fill (C) circle (1.3pt) node[above right=-1pt]{$C$};
+  % 轮缘点 A（按摆线参数式定位）
+  \coordinate (A) at ({\ph - sin(\ph r)},{1 - cos(\ph r)});
+  \fill (A) circle (1.6pt) node[above left]{$A$};
+  \draw[thick] (C) -- (A);
+  % 圆心高度 R（竖直虚线）
+  \draw[dashed] (C) -- ({\ph},0) node[midway,right]{$R$};
+  % 纯滚动方向
+  \draw[->,thick] (4.7,-0.42) -- (6.0,-0.42) node[right,font=\small]{纯滚动};
+\end{tikzpicture}
+\end{center}
+
+\begin{solution}
+设轮自接触位置起转过的角度为 $\varphi$，纯滚动时轮心前进的距离为 $R\varphi$，由几何关系得
+\begin{equation}
+  \begin{aligned}
+    x &= R\varphi - R\cos(\varphi - 90^\circ) = R(\varphi - \sin\varphi) \\
+    y &= R + R\sin(\varphi - 90^\circ) = R(1 - \cos\varphi)
+  \end{aligned}
+  \label{eq:6-cycloid-param}
+\end{equation}
+% 待核对：式\eqref{eq:6-cycloid-param} 首项原稿手写形近“OA”，
+% 按纯滚动条件（滚过弧长 = R\varphi）取 R\varphi。
+点 $A$ 的轨迹为摆线（旋轮线）。
+
+轮作匀速转动：$\dot{\varphi} = \text{常数}$，$\varphi = \dot{\varphi}\,t$。对时间求导：
+\begin{equation}
+  \left\{\begin{aligned}
+    \dot{x} &= R\dot{\varphi}\,(1 - \cos\varphi) \\
+    \dot{y} &= R\dot{\varphi}\,\sin\varphi
+  \end{aligned}\right.
+  \qquad\qquad
+  \left\{\begin{aligned}
+    \ddot{x} &= R\dot{\varphi}^{\,2}\sin\varphi \\
+    \ddot{y} &= R\dot{\varphi}^{\,2}\cos\varphi
+  \end{aligned}\right.
+  \label{eq:6-cycloid-va}
+\end{equation}
+当 $\varphi = 0$ 或 $2\pi$ 时 $v = 0$，即轮缘点在与地面接触的位置瞬时静止。
+\end{solution}
+
+\begin{example}[由运动方程求轨迹的曲率半径]
+已知点的运动方程
+\begin{equation}
+  \left\{\begin{aligned}
+    x &= 50t \\
+    y &= 10 - 5t^2
+  \end{aligned}\right.
+  \label{eq:6-ex2-given}
+\end{equation}
+求 $t = 2\,\mathrm{s}$ 时轨迹的曲率半径。
+\end{example}
+
+\begin{solution}
+由式~\eqref{eq:6-a-natural}，$\rho = \dfrac{v^2}{a_n}$，故
+\begin{equation}
+  \rho\big|_{t=2} = \frac{v^2}{a_n} = \frac{50^2}{10} = 250
+  \label{eq:6-ex2-rho}
+\end{equation}
+\begin{remark}
+原稿注：此处直接取 $v = 50$、$a_n = 10$ 代入得 $\rho = 250$，为示意性计算。
+\end{remark}
+\end{solution}
+% 待核对：式\eqref{eq:6-ex2-rho} 为黑板示意性代入（取 v=50、a_n=10）；
+% 若按精确公式 rho = v^3 / |xdot*yddot - ydot*xddot| 计算，t=2 时约为 312。
+
+\begin{example}[匀速圆周运动 M 点的加速度]
+点 $M$ 绕中心 $O$ 作匀速圆周运动，圆周半径为 $R$，角速度为 $\omega$，求 $M$ 点的加速度。
+\end{example}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=1.0]
+  \draw[->] (-0.5,0) -- (3.0,0) node[below]{$x$};
+  \draw[->] (0,-0.5) -- (0,2.8) node[left]{$y$};
+  \coordinate (O) at (0,0);
+  \draw[very thick] (O) circle (1.6);
+  \fill (O) circle (1.2pt) node[below left]{$O$};
+  \coordinate (M) at (50:1.6);
+  \fill (M) circle (1.5pt) node[above right]{$M$};
+  \draw[thick] (O) -- (M) node[midway,above left]{$R$};
+  % 切线方向（速度）与指向圆心的法向
+  \draw[->,very thick] (M) -- ++(140:1.05) node[above]{$\vec{v}\,(\vec{\tau})$};
+  \draw[->,thick] (M) -- ++(230:0.85) node[below]{$a_n$};
+\end{tikzpicture}
+\end{center}
+
+\begin{solution}
+用自然坐标法，弧坐标 $s$ 自起点量起：
+\begin{equation}
+  \begin{aligned}
+    s &= R\omega t \\
+    v &= R\omega \\
+    a_\tau &= \frac{dv}{dt} = 0 \\
+    a_n &= \frac{v^2}{R} = \frac{R^2\omega^2}{R} = R\omega^2
+  \end{aligned}
+  \label{eq:6-ex3-uniform}
+\end{equation}
+% 待核对：半径符号原稿手写形近 R 或 \ell，此处取 R。
+即匀速圆周运动的切向加速度为零，只有法向加速度 $a_n = R\omega^2$。
+\end{solution}
+
+\begin{longexample}[圆周运动的轨迹与自然坐标表示]
+已知点的直角坐标运动方程
+\begin{equation}
+  x = R\cos kt, \qquad y = R\sin kt, \qquad k > 0 .
+  \label{eq:6-ex4-given}
+\end{equation}
+求：(1) 点的轨迹；(2) 用自然坐标（弧坐标）表示运动。
+\end{longexample}
+
+\begin{solution}
+\parahead{(1) 求轨迹}
+
+消去参数 $t$：
+\begin{equation}
+  x^2 + y^2 = R^2
+  \label{eq:6-ex4-traj}
+\end{equation}
+轨迹为以原点 $O$ 为圆心、半径 $R$ 的圆。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=1.0]
+  \draw[->] (-0.5,0) -- (2.9,0) node[below]{$x$};
+  \draw[->] (0,-0.5) -- (0,2.7) node[left]{$y$};
+  \coordinate (O) at (0,0);
+  \draw[very thick] (O) circle (1.55);
+  \fill (O) circle (1.2pt) node[below left]{$O$};
+  \coordinate (P) at (40:1.55);
+  \fill (P) circle (1.5pt);
+  \draw[thick] (O) -- (P) node[midway,below left]{$R$};
+  \draw[->,very thick] (P) -- ++(130:1.0) node[above]{$\vec{v}$};
+  \draw[->,thin] (-0.55,0.35) arc[start angle=160,end angle=40,radius=0.55];
+\end{tikzpicture}
+\end{center}
+
+\parahead{(2) 用自然坐标表示运动}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=1.0]
+  \draw[->] (-0.5,0) -- (2.9,0) node[below]{$x$};
+  \draw[->] (0,-0.5) -- (0,2.7) node[left]{$y$};
+  \coordinate (O) at (0,0);
+  \draw[very thick] (O) circle (1.55);
+  \fill (O) circle (1.2pt) node[below left]{$O$};
+  % 动点 M（角 kt）
+  \coordinate (M) at (40:1.55);
+  \fill (M) circle (1.5pt) node[above right]{$M$};
+  \draw[->,very thick] (O) -- (M) node[midway,below left]{$\vec{r}$};
+  \draw[->,very thick] (M) -- ++(130:0.95) node[above]{$\vec{\tau}$};
+  \draw[->,thick] (M) -- ++(220:0.8) node[below left=-2pt]{$\vec{n}$};
+  % 夹角 kt
+  \draw[->,thin] (0.6,0) arc[start angle=0,end angle=40,radius=0.6];
+  \node[font=\small] at (20:0.88) {$kt$};
+\end{tikzpicture}
+\end{center}
+
+速度沿切线方向，其大小为
+\begin{equation}
+  v = \frac{ds}{dt} = \dot{s}
+  \label{eq:6-ex4-v}
+\end{equation}
+对匀速圆周运动 $s = Rkt$，故 $v = \dot{s} = Rk$，速度方向沿切线。再由式~\eqref{eq:6-a-natural}（取 $\rho = R$）：
+\begin{equation}
+  \begin{aligned}
+    a_\tau &= \frac{dv}{dt} = \ddot{s} = 0 \\
+    a_n &= \frac{v^2}{\rho} = \frac{v^2}{R} = \frac{R^2k^2}{R} = Rk^2
+  \end{aligned}
+  \label{eq:6-ex4-accel}
+\end{equation}
+即匀速圆周运动中切向加速度为零，法向（向心）加速度 $a_n = Rk^2$，指向圆心。
+\begin{note}
+原稿注：中间一步推导字迹过小、辨认不确定，据上下文应为
+$\frac{d\vec{r}}{dt} = \frac{ds}{dt}\vec{\tau}$，$v_n = 0$，$a_n = \frac{v^2}{R}$。
+\end{note}
+\end{solution}
+% 待核对：上一 note 中间推导原稿字迹过小，系按上下文补记，供核对。

@@ -1,0 +1,576 @@
+% ============================================================
+% 《理论力学》笔记 · 第四章 摩擦
+% 转写自手写扫描件第 29–34 页（源稿 .tmp/tljm_md/page-29.md ～ page-34.md）
+% 本文件只含 \section 及以下层级，由主文件《理论力学笔记.tex》引入
+% ============================================================
+
+本章记录第四章「摩擦」：从摩擦现象与分类入手，建立滑动摩擦力与摩擦角的概念，
+讨论平衡范围、自锁条件与滚动摩擦，最后归结为考虑摩擦时平衡问题的几类典型题型：
+判断物体是否平衡、摩擦力方向的判断、求平衡范围、翻倒问题与多处摩擦问题。
+
+\section{摩擦的基本概念}
+
+\subsection{摩擦现象}
+
+摩擦是\textbf{阻碍物体运动趋势的力}。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \draw[thick] (-2.8,0) -- (2.8,0);
+  \foreach \x in {-2.6,-2.2,...,2.6} \draw (\x,0) -- ++(-0.2,-0.2);
+  \draw[thick,fill=gray!12] (-0.9,0) rectangle (0.9,1.1);
+  \draw[->,thick] (0,1.1) -- (0,2.15) node[above]{$W$};
+  \draw[->,thick] (2.35,0.55) -- (0.98,0.55) node[midway,above]{$P$};
+  \draw[->,thick] (0.4,0.03) -- (2.0,0.03) node[midway,above]{$f$};
+\end{tikzpicture}
+\end{center}
+
+\subsection{摩擦的分类}
+
+按接触面间有无流体（润滑）状况，摩擦分为三类：
+\begin{enumerate}
+  \item \textbf{干摩擦：}固体与固体之间的摩擦；
+  \item \textbf{湿摩擦：}固体与流体、或流体与流体之间的摩擦（粘性）；
+  \item \textbf{内摩擦：}刚体内部的摩擦。例如弹簧在真空中振动会逐渐衰减直至停止，
+        就是由于弹簧内部存在内摩擦。
+\end{enumerate}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \draw[thick] (-0.9,3.1) -- (0.9,3.1);
+  \foreach \x in {-0.85,-0.55,...,0.85} \draw (\x,3.1) -- ++(0.18,0.16);
+  \draw[thick] (0,3.1) -- (0,2.8);
+  \draw[thick] (0,2.8) -- (-0.32,2.56) -- (0.32,2.32) -- (-0.32,2.08)
+    -- (0.32,1.84) -- (-0.32,1.6) -- (0.32,1.36) -- (-0.32,1.12)
+    -- (0.32,0.88) -- (0,0.64);
+  \draw[->,thick] (0,0.64) -- (0,-0.4) node[midway,right]{$P$};
+  \node[font=\footnotesize] at (2.3,1.7) {真空中振动的弹簧};
+\end{tikzpicture}
+\end{center}
+
+按运动形式，摩擦又进一步分为\textbf{滑动摩擦}与\textbf{滚动摩擦}两类。
+
+\subsection{滑动摩擦产生的原因}
+
+\begin{enumerate}
+  \item 由于接触面凹凸不平；
+  \item 由于分子间的相互作用。
+\end{enumerate}
+
+\begin{note}
+本课程只讨论力的\textbf{宏观力学效应}，不深入微观机理。
+\end{note}
+
+\subsection{摩擦的防止与利用}
+
+课堂此处仅列出标题「摩擦的防止与利用」，内容未展开（原稿如此）。
+
+\section{滑动摩擦力}
+
+\parahead{1. 静滑动摩擦力 $\overline{F}$}
+
+有相对运动趋势时存在，方向与\textbf{相对运动趋势的方向相反}。
+其大小是「被动」的：不由事先给出的规律决定，而由平衡方程确定。
+
+\parahead{2. 最大静滑动摩擦力 $F_m$}
+
+即将滑动而尚未滑动时（临界状态）的静摩擦力，服从\textbf{静滑动摩擦定律}：
+\begin{equation}\label{eq:4-static-law}
+  F_m = f_s\,F_N
+\end{equation}
+其中 $f_s$ 为\textbf{静摩擦系数}，$F_N$ 为\textbf{正压力}。
+
+\parahead{3. 动滑动摩擦力 $F'$}
+
+相对滑动已经发生时的摩擦力：
+\begin{equation}\label{eq:4-kinetic-law}
+  F' = f'\,F_N
+\end{equation}
+其中 $f'$ 为\textbf{动滑动摩擦系数}。
+
+\begin{note}
+① 一般而言 $f_s > f'$；② 当 $v$ 增大时，$f'$ 减小（速度越快，摩擦越小）；
+③ 不作特别说明时，取 $f_s = f' = f$。
+\end{note}
+
+\section{摩擦角、平衡范围、自锁与不自锁}
+
+\subsection{摩擦角}
+
+支承面对物块的作用力可分解为法向反力 $\overline{F_N}$ 与切向摩擦力
+$\overline{F}$，二者合成为\textbf{全反力}（约束全反力）$\overline{F_{R_1}}$：
+\begin{equation}\label{eq:4-full-reaction}
+  \overline{F_{R_1}} = \overline{F} + \overline{F_N},
+  \qquad
+  \tan\varphi = \frac{F}{F_N}
+\end{equation}
+夹角 $\varphi$ 随摩擦力 $F$ 增大而增大；当 $F \to F_m$ 时，$\varphi \to \varphi_m$，
+称 $\varphi_m$ 为\textbf{摩擦角}：
+\begin{equation}\label{eq:4-friction-angle}
+  \tan\varphi_m = \frac{F_m}{F_N} = f_s
+\end{equation}
+
+\begin{keybox}[摩擦角]
+摩擦角的正切等于静摩擦系数：$\tan\varphi_m = f_s$。
+\end{keybox}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \draw[thick] (-3.0,0) -- (3.0,0);
+  \foreach \x in {-2.8,-2.4,...,2.8} \draw (\x,0) -- ++(-0.2,-0.2);
+  \draw[thick,fill=gray!12] (-1.1,0) rectangle (1.1,1.0);
+  \draw[->,thick] (2.35,0.5) -- (1.15,0.5) node[midway,above]{$P$};
+  \draw[->,thick] (0,1.0) -- (0,2.0) node[right,pos=0.6]{$W$};
+  \coordinate (C) at (0.45,0);
+  \draw[->,very thick] (C) -- (0.45,2.5) node[above]{$\overline{F_N}$};
+  \draw[->,very thick] (C) -- (1.85,0) node[below]{$\overline{F}$};
+  \draw[->,very thick] (C) -- ($(C)+(62:2.9)$) node[above]{$\overline{F_{R_1}}$};
+  \draw ($(C)+(90:1.3)$) arc[start angle=90,end angle=62,radius=1.3];
+  \node at ($(C)+(76:1.62)$) {$\varphi$};
+  \draw[dashed] (C) -- ($(C)+(48:3.1)$);
+  \draw ($(C)+(90:1.9)$) arc[start angle=90,end angle=48,radius=1.9];
+  \node at ($(C)+(69:2.25)$) {$\varphi_m$};
+\end{tikzpicture}
+\end{center}
+
+\subsection{平衡范围}
+
+外力一定要作用在摩擦角里，物体方可能平衡——由摩擦角所限定的这一方位范围，
+称为\textbf{平衡范围}。
+% 待核对：手迹原文「则称摩擦角方向平衡范围」语句不全，按上下文语义补足为「称为平衡范围」。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \draw[thick] (-2.6,0) -- (2.6,0);
+  \foreach \x in {-2.4,-2.0,...,2.4} \draw (\x,0) -- ++(-0.2,-0.2);
+  \draw[thick,fill=gray!12] (-0.85,0) rectangle (0.85,1.0);
+  \coordinate (V) at (-0.85,0);
+  \fill[orange!30] (V) -- ($(V)+(205:1.7)$)
+    arc[start angle=205,end angle=255,radius=1.7] -- cycle;
+  \draw ($(V)+(205:1.7)$) -- (V);
+  \draw ($(V)+(255:1.7)$) -- (V);
+  \draw ($(V)+(205:1.15)$) arc[start angle=205,end angle=230,radius=1.15];
+  \node at ($(V)+(218:1.45)$) {$\varphi_m$};
+  \node[font=\footnotesize,align=left] at (1.9,-0.9)
+    {外力合力作用线\\须落在摩擦角（锥）内};
+\end{tikzpicture}
+\end{center}
+
+\subsection{自锁与不自锁}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \draw[thick,fill=gray!8] (0,0) -- (4.6,0) -- (0,2.66) -- cycle;
+  \begin{scope}[rotate around={30:(1.7,1.677)}]
+    \draw[thick,fill=gray!15] (1.35,1.677) rectangle (2.15,2.377);
+  \end{scope}
+  \draw (4.6,0) ++(180:0.85) arc[start angle=180,end angle=150,radius=0.85];
+  \node at ($(4.6,0)+(165:1.12)$) {$\alpha$};
+  \draw[dashed] (0,0) -- (22:3.1);
+  \draw (0,0) ++(0:1.25) arc[start angle=0,end angle=22,radius=1.25];
+  \node at ($(0,0)+(11:1.58)$) {$\varphi_m$};
+  \node[font=\footnotesize] at (2.4,-0.72)
+    {$\alpha > \varphi_m$：停不住；\quad $\alpha < \varphi_m$：滑不下来};
+\end{tikzpicture}
+\end{center}
+
+\begin{keybox}[斜面自锁条件]
+$\alpha < \varphi_m$：无论物体多重，都滑不下来（自锁）；
+
+$\alpha > \varphi_m$：无论物体多轻，都停不住（不自锁）。
+\end{keybox}
+
+\section{考虑摩擦时的平衡问题}
+
+解题基本思路：\textbf{先假设物体平衡}，把摩擦力作为未知数代入平衡方程求解，
+再校核所得摩擦力是否满足 $F \le F_m$（必要时还要校核不翻倒条件）；
+若成立则假设正确，物体平衡；否则不平衡，或需更换假设重新分析。
+
+\subsection{判断物体是否平衡}
+
+\begin{longexample}[判断是否平衡]
+已知 $\alpha = 30^{\circ}$，$f = 0.1$，$W = 1200\,\mathrm{N}$，$P = 500\,\mathrm{N}$，
+问物体是否平衡。
+\begin{solution}
+假设物体平衡。物块置于倾角 $\alpha$ 的斜面上，受力如图。
+% 待核对：手迹图注称坐标轴 X「沿斜面向下」、P「沿斜面作用」，但按平衡方程各项的投影关系，X 轴应沿斜面向上、P 应为水平力，正文受力图按方程绘制。
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \draw[thick,fill=gray!8] (0,0) -- (5,0) -- (5,2.89) -- cycle;
+  \begin{scope}[rotate around={30:(1.9,1.098)}]
+    \draw[thick,fill=gray!15] (1.5,1.098) rectangle (2.4,1.848);
+    \draw[->,thick] (1.95,1.098) -- (3.15,1.098) node[above,pos=0.9]{$X$};
+    \draw[->,thick] (1.95,1.098) -- (1.95,2.198) node[left,pos=0.9]{$Y$};
+    \draw[->,very thick] (2.25,1.098) -- (2.25,2.0) node[right,pos=0.55]{$N$};
+    \draw[->,very thick] (2.4,1.28) -- (3.35,1.28) node[above,pos=0.5]{$F$};
+  \end{scope}
+  \draw[->,very thick] (1.76,1.45) -- (1.76,0.55) node[right,pos=0.4]{$W$};
+  \draw[->,very thick] (2.01,1.91) -- (3.15,1.91) node[above,midway]{$P$};
+  \draw (5,0) ++(180:0.8) arc[start angle=180,end angle=150,radius=0.8];
+  \node at ($(5,0)+(165:1.08)$) {$\alpha$};
+\end{tikzpicture}
+\end{center}
+沿斜面方向与垂直斜面方向列平衡方程：
+\begin{equation}\label{eq:4-ex1-sumX}
+  \sum X = 0:\quad -W\sin\alpha + P\cos\alpha + F = 0
+  \;\Rightarrow\; F = 167\,\mathrm{N}
+\end{equation}
+\begin{equation}\label{eq:4-ex1-sumY}
+  \sum Y = 0:\quad N - W\cos\alpha - P\sin\alpha = 0
+  \;\Rightarrow\; N = 1289\,\mathrm{N}
+\end{equation}
+最大静摩擦力
+\begin{equation}\label{eq:4-ex1-check}
+  F_m = N \cdot f = 128.9\,\mathrm{N} < F
+\end{equation}
+维持平衡所需的摩擦力超过最大静摩擦力，摩擦不足以阻止滑动，
+故物体\textbf{不平衡}。
+\end{solution}
+\end{longexample}
+
+\subsection{摩擦力方向的判断}
+
+另一条快捷判据：不看单个摩擦力，而是看\textbf{全部主动力的合力作用线}
+是否落在摩擦角之内。
+
+\begin{example}[合力方向判据]
+物块重 $W$，置于水平粗糙面上，顶端受与水平成 $\alpha$ 角的倾斜力 $P$ 作用。
+已知 $P = W$，$\varphi_m = 25^{\circ}$；经计算，主动力合力的作用线与接触面法线的夹角
+$\alpha = 22.5^{\circ} < \varphi_m = 25^{\circ}$，
+即合力落在摩擦角之内，$\therefore$ \textbf{平衡}。
+% 待核对：手迹中间步骤写作「α = (45° + 22.5°)/2 = 22.5°」，两端数值不符（(45°+22.5°)/2 = 33.75°），疑为笔误；正文按手迹结论 α = 22.5° 排版。
+\end{example}
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \draw[thick] (-2.2,0) -- (2.6,0);
+  \foreach \x in {-2.0,-1.6,...,2.4} \draw (\x,0) -- ++(-0.2,-0.2);
+  \draw[thick,fill=gray!12] (-0.75,0) rectangle (0.75,1.3);
+  \draw[->,very thick] (0.75,1.3) -- ++(22.5:1.5) node[right]{$P$};
+  \draw (0.75,1.3) ++(0:0.55) arc[start angle=0,end angle=22.5,radius=0.55];
+  \node at ($(0.75,1.3)+(11:0.84)$) {$\alpha$};
+  \draw[->,very thick] (0,1.3) -- (0,0.25) node[left,pos=0.5]{$W$};
+\end{tikzpicture}
+\end{center}
+
+\subsection{平衡范围}
+
+\begin{longexample}[斜面上的平衡范围]
+已知 $\alpha > \varphi_m$，物块重 $W$、受水平力 $Q$ 作用，
+求保持平衡时 $Q$ 的范围。
+% 待核对：手迹图中 Q 画成相对竖直方向略有倾斜，但由推导结果 Q = W tan(α ± φm) 可知 Q 应为水平力，正文按水平力分析与绘图。
+\begin{solution}
+\parahead{1. 求 $Q_{\min}$}
+
+物块有向下滑动趋势，摩擦力 $F_m$ 方向沿斜面向上。
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \draw[thick,fill=gray!8] (0,0) -- (4.2,0) -- (4.2,2.42) -- cycle;
+  \begin{scope}[rotate around={30:(1.55,0.895)}]
+    \draw[thick,fill=gray!15] (1.2,0.895) rectangle (1.95,1.595);
+    \draw[->,very thick] (1.5,0.895) -- (1.5,1.75) node[left,pos=0.6]{$N$};
+    \draw[->,very thick] (1.95,1.05) -- (2.85,1.05) node[above,midway]{$F_m$};
+  \end{scope}
+  \draw[->,very thick] (1.40,1.21) -- (1.40,0.45) node[right,pos=0.35]{$W$};
+  \draw[->,very thick] (1.73,1.40) -- (2.85,1.40) node[above,midway]{$Q$};
+  \draw (4.2,0) ++(180:0.7) arc[start angle=180,end angle=150,radius=0.7];
+  \node at ($(4.2,0)+(166:0.95)$) {$\alpha$};
+  \node[font=\footnotesize] at (2.1,-0.62) {求 $Q_{\min}$：$F_m$ 沿斜面向上};
+\end{tikzpicture}
+\end{center}
+列平衡方程：
+\begin{equation}\label{eq:4-range-sumX}
+  \sum X = 0:\quad F_m\cos\alpha + Q\cos\alpha - W\sin\alpha = 0
+\end{equation}
+\begin{equation}\label{eq:4-range-sumY}
+  \sum Y = 0:\quad N - Q\sin\alpha - W\cos\alpha = 0
+\end{equation}
+% 待核对：手迹此式首项写作 F_m sinα，结合下一步代入与最终结果应为法向反力 N（疑手写 N 被误认为 F_m），正文按 N 排版。
+临界状态下，摩擦力达最大值：
+\begin{equation}\label{eq:4-range-law}
+  F_m = \tan\varphi_m \cdot F_N
+\end{equation}
+联立\eqref{eq:4-range-sumX}--\eqref{eq:4-range-law}解得
+\begin{equation}\label{eq:4-Qmin}
+\begin{aligned}
+Q_{\min}
+  &= \frac{W\sin\alpha - W\cos\alpha\,\tan\varphi_m}
+          {\cos\alpha + \sin\alpha\,\tan\varphi_m}
+   = \frac{W(\sin\alpha\cos\varphi_m - \cos\alpha\sin\varphi_m)}
+          {\cos\alpha\cos\varphi_m + \sin\alpha\sin\varphi_m}\\[2pt]
+  &= W\tan(\alpha - \varphi_m)
+\end{aligned}
+\end{equation}
+
+\parahead{2. 求 $Q_{\max}$}
+
+物块有向上滑动趋势，摩擦力 $F_m$ 方向改为沿斜面向下。
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \draw[thick,fill=gray!8] (0,0) -- (4.2,0) -- (4.2,2.42) -- cycle;
+  \begin{scope}[rotate around={30:(1.55,0.895)}]
+    \draw[thick,fill=gray!15] (1.2,0.895) rectangle (1.95,1.595);
+    \draw[->,very thick] (1.5,0.895) -- (1.5,1.75) node[left,pos=0.6]{$N$};
+    \draw[->,very thick] (2.85,1.05) -- (1.95,1.05) node[above,midway]{$F_m$};
+  \end{scope}
+  \draw[->,very thick] (1.40,1.21) -- (1.40,0.45) node[right,pos=0.35]{$W$};
+  \draw[->,very thick] (1.73,1.40) -- (2.85,1.40) node[above,midway]{$Q$};
+  \draw (4.2,0) ++(180:0.7) arc[start angle=180,end angle=150,radius=0.7];
+  \node at ($(4.2,0)+(166:0.95)$) {$\alpha$};
+  \node[font=\footnotesize] at (2.1,-0.62) {求 $Q_{\max}$：$F_m$ 沿斜面向下};
+\end{tikzpicture}
+\end{center}
+同理，将\eqref{eq:4-range-sumX}中摩擦力一项反号，并联立\eqref{eq:4-range-law}解得
+\begin{equation}\label{eq:4-Qmax}
+  Q_{\max} = W\tan(\alpha + \varphi_m)
+\end{equation}
+\end{solution}
+
+故平衡范围为
+\begin{equation}\label{eq:4-range-final}
+  W\tan(\alpha - \varphi_m) \le Q \le W\tan(\alpha + \varphi_m)
+\end{equation}
+\end{longexample}
+
+\subsection{翻倒问题}
+
+除滑动之外，还须校核物块是否会绕支承面边缘\textbf{翻倒}。法向反力 $F_N$
+是支承面分布压力的合力，随倾覆因素增大，其作用点会离开中线向边缘移动；
+一旦需要移出支承面之外，物块即翻倒。
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \begin{scope}
+    \draw[thick] (-1.3,0) -- (1.3,0);
+    \foreach \x in {-1.2,-0.9,...,1.2} \draw (\x,0) -- ++(-0.16,-0.16);
+    \draw[thick,fill=gray!12] (-0.8,0) rectangle (0.8,1.5);
+    \draw[->,very thick] (0,1.5) -- (0,0.45) node[right,pos=0.45]{$W$};
+    \draw[->,very thick] (0,-0.95) -- (0,-0.05) node[right,pos=0.5]{$F_N$};
+    \node[font=\footnotesize] at (0,-1.45) {(1) $F_N$ 过中线：不滑不翻};
+  \end{scope}
+  \begin{scope}[shift={(3.4,0)}]
+    \draw[thick] (0,0) -- (2.6,0);
+    \foreach \x in {0.1,0.4,...,2.5} \draw (\x,0) -- ++(-0.16,-0.16);
+    \draw[thick,fill=gray!12] (0.5,0) rectangle (2.1,1.5);
+    \draw[dashed] (1.3,-1.05) -- (1.3,1.65);
+    \draw[->,very thick] (1.3,1.5) -- (1.3,0.45) node[right,pos=0.45]{$W$};
+    \draw[->,very thick] (2.1,-0.95) -- (2.1,-0.05) node[right,pos=0.5]{$F_N$};
+    \draw[<->,thick] (1.3,-0.72) -- (2.1,-0.72) node[above,midway,font=\small]{$d$};
+    \fill (2.1,0) circle (0.05);
+    \node[font=\footnotesize] at (1.3,-1.45) {(2) 临界翻倒：$F_N$ 移向边缘，$d \to 0$};
+  \end{scope}
+\end{tikzpicture}
+\end{center}
+
+\begin{keybox}[不滑不翻条件]
+① $F \le F_m$：不滑；\qquad ② $d > 0$：不翻。
+\end{keybox}
+
+其中 $d$ 为法向反力合力作用线偏离支承面中线的距离，$d = 0$ 即翻倒临界状态。
+
+\begin{longexample}[是否平衡与 $P_{\max}$]
+矩形物块宽 $a$、高 $h = 2a = 2\,\mathrm{m}$，重 $W = 5000\,\mathrm{N}$，
+$f_s = 0.4$，置于水平面上，受与水平成 $30^{\circ}$ 角的力 $P$ 作用。试求：
+\begin{enumerate}
+  \item 当 $P = 1000\,\mathrm{N}$ 时，物块是否平衡；
+  \item 保持平衡的 $P_{\max}$。
+\end{enumerate}
+% 待核对：手迹图注将 P 画成水平向右的力，但其投影式为 P cos30°、P sin30°，可知 P 应与水平成 30°，正文按倾斜 30° 处理。
+\begin{solution}
+\parahead{1. $P = 1000\,\mathrm{N}$ 时是否平衡}
+
+假设平衡。
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \draw[thick] (-1.6,0) -- (2.3,0);
+  \foreach \x in {-1.5,-1.2,...,2.2} \draw (\x,0) -- ++(-0.18,-0.18);
+  \draw[thick,fill=gray!12] (0,0) rectangle (1.4,2.8);
+  \draw[->,very thick] (-1.13,1.75) -- (0,2.4) node[midway,above left]{$P$};
+  \draw ($(0,2.4)+(180:0.55)$) arc[start angle=180,end angle=210,radius=0.55];
+  \node at ($(0,2.4)+(195:0.88)$) {\small$30^{\circ}$};
+  \draw[->,very thick] (0.7,1.4) -- (0.7,0.3) node[right,pos=0.55]{$W$};
+  \draw[->,very thick] (1.05,0) -- (1.05,1.05) node[right,pos=0.6]{$F_N$};
+  \draw[->,very thick] (1.35,0.02) -- (0.4,0.02) node[above,pos=0.3]{$F$};
+  \draw[dashed] (0.7,0) -- (0.7,-0.85);
+  \draw[<->,thick] (0.7,-0.62) -- (1.05,-0.62) node[below,midway,font=\small]{$d$};
+  \fill (0,0) circle (0.045) node[below left,font=\small]{$O$};
+  \draw[<->,thick] (0,3.1) -- (1.4,3.1) node[above,midway,font=\small]{$a$};
+  \draw[<->,thick] (1.85,0) -- (1.85,2.8) node[right,midway,font=\small]{$h$};
+\end{tikzpicture}
+\end{center}
+\begin{equation}\label{eq:4-tip1-F}
+  \sum X = 0:\quad F = P\cos 30^{\circ} = 866\,\mathrm{N}
+\end{equation}
+\begin{equation}\label{eq:4-tip1-N}
+  \sum Y = 0:\quad F_N + P\sin 30^{\circ} - W = 0
+  \;\Rightarrow\; F_N = 4500\,\mathrm{N}
+\end{equation}
+\begin{equation}\label{eq:4-tip1-check}
+  F_m = f_s F_N = 1800\,\mathrm{N} > F \qquad\text{（不滑）}
+\end{equation}
+再校核不翻条件，对 $O$ 点取矩：
+\begin{equation}\label{eq:4-tip1-M}
+  \sum M_O = 0:\quad
+  P\cos 30^{\circ}\cdot h + F_N\cdot d - W\cdot\frac{a}{2} = 0
+  \;\Rightarrow\; d = 0.17\,\mathrm{m} > 0 \quad\text{（不翻）}
+\end{equation}
+$\therefore$ 当 $P = 1000\,\mathrm{N}$ 时，物块\textbf{能平衡}。
+
+\parahead{2. 求 $P_{\max}$}
+
+分别由「不滑」与「不翻」两个临界条件求出各自的限值，取较小者。
+
+临界滑动（所需摩擦力恰达 $F_m = f_s F_N$）：
+\begin{equation}\label{eq:4-tip2-slide}
+  P\cos 30^{\circ} = f_s\,(W - P\sin 30^{\circ})
+  \;\Rightarrow\;
+  P_1 = \frac{f_s\,W}{\cos 30^{\circ} + f_s\sin 30^{\circ}}
+      \approx 1876\,\mathrm{N}
+\end{equation}
+% 待核对：手迹第二问开头一行「F_m = P sinα cos30° = ?」书写潦草、疑似误写，结果栏写作「188 W（不确定，原手迹此处较潦草）」；按滑动临界方程还原为上式，1876 N（约 1.88 kN）疑即手迹之「188」。
+
+临界翻倒：在\eqref{eq:4-tip1-M}中令 $d = 0$，
+\begin{equation}\label{eq:4-tip2-tip}
+  P\cos 30^{\circ}\cdot h = W\cdot\frac{a}{2}
+  \;\Rightarrow\;
+  P_2 = \frac{W\,a}{2h\cos 30^{\circ}} = 1443\,\mathrm{N}
+\end{equation}
+% 待核对：手迹公式写作 P_max = Wa/(2 cos30°)，未含 h；但代入本题数据（h = 2a = 2 m）恰得手迹数值 1443 N，故正文补入 h。手迹注「1443 与上式 188 关系不清」由此厘清：1876 N 为滑动限值、1443 N 为翻倒限值。
+由于 $P_2 < P_1$，翻倒先于滑动发生，故
+\begin{equation}\label{eq:4-tip2-Pmax}
+  P_{\max} = \min(P_1,\,P_2) = 1443\,\mathrm{N}
+\end{equation}
+即保持平衡的 $P_{\max} = 1443\,\mathrm{N}$（由翻倒条件控制）。
+\end{solution}
+\end{longexample}
+
+\subsection{滚动摩擦}
+
+物体在支承面上滚动时同样受到阻碍。理想刚性接触中法向反力过轮心、不构成阻力偶；
+实际接触处发生变形，法向反力向前偏移，与重力形成\textbf{滚动阻力偶}。
+（§3 节标题虽含「滚动」，课堂上滚动摩擦安排在翻倒问题之后讲授，本笔记按授课顺序编于此节。）
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \begin{scope}
+    \draw[thick] (-2.1,0) -- (2.1,0);
+    \foreach \x in {-2.0,-1.7,...,2.0} \draw (\x,0) -- ++(-0.16,-0.16);
+    \draw[thick,fill=gray!8] (0,1) circle (1);
+    \fill (0,1) circle (0.04);
+    \draw[->,very thick] (0,1) -- (1.85,1) node[above,midway]{$P$};
+    \draw[->,very thick] (0,1) -- (0,0.12) node[left,pos=0.6]{$W$};
+    \draw[->,very thick] (0,-1.0) -- (0,-0.02) node[right,pos=0.5]{$F_N$};
+    \node[font=\footnotesize] at (0,-1.55) {(1) 理想刚性接触：$F_N$ 过轮心};
+  \end{scope}
+  \begin{scope}[shift={(5.0,0)}]
+    \draw[thick] (-1.9,0) -- (-0.55,0) .. controls (-0.15,-0.22) .. (0.55,0) -- (1.9,0);
+    \foreach \x in {-1.8,-1.5,...,-0.7} \draw (\x,0) -- ++(-0.16,-0.16);
+    \foreach \x in {0.8,1.1,...,1.7} \draw (\x,0) -- ++(-0.16,-0.16);
+    \draw[thick,fill=gray!8] (0,1.02) circle (1);
+    \fill (0,1.02) circle (0.04);
+    \draw[->,very thick] (0,1.02) -- (1.85,1.02) node[above,midway]{$P$};
+    \draw[->,very thick] (0,1.02) -- (0,0.14) node[left,pos=0.6]{$W$};
+    \draw[->,very thick] (0.4,-0.1) -- (0.4,0.95) node[right,pos=0.55]{$F_N$};
+    \draw[->,thick] ($(0,1.02)+(140:0.5)$) arc[start angle=140,end angle=20,radius=0.5];
+    \node at ($(0,1.02)+(80:0.75)$) {$M$};
+    \draw[dashed] (0,0) -- (0,-0.62);
+    \draw[dashed] (0.4,-0.12) -- (0.4,-0.62);
+    \draw[<->,thick] (0,-0.5) -- (0.4,-0.5) node[below,midway,font=\small]{$\delta$};
+    \node[font=\footnotesize,align=center] at (0,-1.55)
+      {(2) 实际：接触处变形，$F_N$ 前移 $\delta$，\\形成滚动阻力偶 $M$};
+  \end{scope}
+\end{tikzpicture}
+\end{center}
+
+滚动阻力偶之矩与法向反力成正比：
+\begin{equation}\label{eq:4-roll-moment}
+  M = F_N \cdot \delta
+\end{equation}
+其中 $\delta$ 称为\textbf{滚阻系数}，具有\textbf{长度量纲}，数值很小，
+$\delta \approx 10^{-2}\,\mathrm{mm}$；而滑动摩擦系数 $f_s$ 无量纲、
+典型量级约 $f_s \sim 10^{-1}$，故滚动远比滑动省力。
+% 待核对：手迹此处写作「f_s = 10^{-1}」，按上下文（与具有长度量纲的 δ 作对比）应为量级估计 f_s ∼ 10^{-1}，请核对原始讲义。
+
+\subsection{多处摩擦问题}
+
+有些物系同时在不同位置存在多处摩擦接触（如杆与轮、轮与面之间）。
+各处摩擦力未必同时达到最大静摩擦，常用\textbf{假设法}处理：先假设某一接触面光滑
+（或假设某处先达到最大静摩擦）求解，再逐处校核 $F \le F_m$；
+若与假设矛盾，则更换假设重新分析。
+% 图待补：多处摩擦模型图——倾斜直杆左下端抵在竖直面上、杆上套一圆轮、杆右下端受竖直向上拉力 P，杆与轮、轮与杆之间均存在摩擦接触。
+
+\begin{longexample}[多处摩擦：假设一个接触面光滑]
+圆环外径 $R = 100\,\mathrm{mm}$、内径 $r = 50\,\mathrm{mm}$，置于水平面上，
+底部接触点为 $B$，顶部一点为 $D$；圆环中心挂重物 $P_B = 100\,\mathrm{N}$，
+左侧切向作用水平力 $P_A = 50\,\mathrm{N}$。已知 $f_A = 0.5$，$f_B = 0.2$。
+求：保持平衡时 $P_A$ 的最大值。
+% 待核对：题目既给出 P_A = 50 N 又求 P_A 的最大值，前后矛盾；疑手迹将某已知重量记作 50 N，或 50 N 为试算值，暂照录待核。
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \draw[thick] (-2.0,-1.1) -- (2.0,-1.1);
+  \foreach \x in {-1.9,-1.6,...,1.9} \draw (\x,-1.1) -- ++(-0.18,-0.18);
+  \draw[thick,fill=gray!10] (0,0) circle (1.1);
+  \draw[thick,fill=white] (0,0) circle (0.55);
+  \fill (0,0) circle (0.045) node[above left,font=\small]{$O$};
+  \fill (0,-1.1) circle (0.05) node[below right,font=\small]{$B$};
+  \fill (0,1.1) circle (0.05) node[above right,font=\small]{$D$};
+  \draw[dashed] (0,0) -- (0,1.1);
+  \draw[thin] (0,0) -- (0,-1.1);
+  \draw[->,very thick] (0,-1.1) -- (0,-2.1) node[right,midway]{$P_B$};
+  \draw[->,very thick] (-2.35,0) -- (-1.1,0) node[above,midway]{$P_A$};
+  \draw[->,thick] (0,0) -- (40:1.1) node[pos=0.55,above,font=\footnotesize]{$R$};
+  \draw[->,thick] (0,0) -- (-35:0.55) node[pos=0.5,below,font=\footnotesize]{$r$};
+\end{tikzpicture}
+\end{center}
+
+\begin{solution}
+\parahead{第一次尝试：假设法}
+
+\parahead{(1) 假设 $A$ 处光滑}
+\begin{equation}\label{eq:4-multi-A}
+  \sum M_O = 0:\quad
+  P_B f_B\,(R + r) = P_A\cdot\frac{2}{3}(r + R) + P_A\cdot\frac{R}{3}
+\end{equation}
+% 待核对：手迹此式书写潦草，系数 2/3 与 1/3 为按最可能值辨认排入，请对照原稿核验。
+
+\parahead{(2) 假设 $B$ 处光滑}
+\begin{equation}\label{eq:4-multi-B}
+  \sum M_O = 0:\quad
+  F_B\,(R + r) = f_B P_B\,(R + r) = P_A\cdot\frac{2}{3}(R - r) + P_A\cdot\frac{eR}{3}
+\end{equation}
+% 待核对：手迹末项含一个无法辨认的小写字母（暂记作 e），整式存疑，请对照原稿核验。
+\begin{equation}\label{eq:4-multi-check}
+  F_m = P_A\times\frac{2}{3} - P_A = 0, \qquad
+  F_A - F_m\times\frac{2}{3} - F_B = 0
+\end{equation}
+\begin{remark}
+假设法在此遇到困难：\textbf{无法判断何处先达到最大静摩擦}（手迹原注：
+「假设法：无法判断何处先达最大静摩擦」），需放弃上述假设、重新分析。
+\end{remark}
+
+\parahead{重新分析}
+
+先比较两处接触的法向压力大小：
+\begin{equation}\label{eq:4-multi-sumY}
+  \sum Y = 0:\quad
+  F_{NB} = F_{NA} + W > F_{NA}
+  \;\Longrightarrow\; F_{mB} > F_{mA}
+\end{equation}
+即 $B$ 处法向压力更大、必先达到最大静摩擦。继而分别对 $A$、$D$ 两点取矩：
+\begin{equation}\label{eq:4-multi-MA}
+  \sum M_A = 0 \;\Rightarrow\; F_B = \frac{3}{4}F_{Q1},
+  \qquad
+  \sum M_D = 0 \;\Rightarrow\; F_B = \frac{1}{4}F_{Q1}
+\end{equation}
+取
+\begin{equation}\label{eq:4-multi-FB}
+  F_B = \frac{1}{4}F_{Q}, \qquad F_{Q1} = \frac{2\sqrt{2}}{3}\,F_{Q}
+\end{equation}
+最后由对接触点的力矩条件写出结论式：
+\begin{equation}\label{eq:4-multi-final}
+  W\cdot L + F_{mB}\cdot 3L = F_{mQ}\cdot 3L
+\end{equation}
+% 待核对：「重新分析」一段手迹极潦草且符号混用（W 与 P_B、F_Q 与 P_A 疑指同一量，L 的几何含义不明），以上各式按原样照录仅供核对；结论一句手迹作「假设未先出现最大应力状态」，疑为「假设未先出现最大静摩擦」；左下角另有 (4/3)·(3√2/2)F_Q / f_s 等潦草表达，未能完全辨认。
+\end{solution}
+% 图待补：重新分析用图——圆环左侧水平杆 CD 与圆环在 D 点接触，及 D 点局部放大的 A、D 处接触受力图（切向 F_mA、F_mD 与法向力）；手迹另有接触点放大小图（标注 F_mQ、F_N、P、Q），一并留待补绘。
+\end{longexample}
