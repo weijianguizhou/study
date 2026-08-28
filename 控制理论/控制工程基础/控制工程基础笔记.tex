@@ -1,0 +1,55 @@
+% ============================================================
+%  控制工程基础 —— 课程笔记（整理自读书笔记.md）
+%  样式：课程笔记模板（XeLaTeX 编译 2~3 遍）
+% ============================================================
+\documentclass[12pt,a4paper]{book}
+\input{preamble}            % 样式：字体、颜色、定理/定义/例题环境、章节格式
+
+% ============================================================
+%	笔记元信息
+% ============================================================
+\newcommand{\notename}{控制工程基础}   % 封面大标题
+\newcommand{\noteauthor}{课程笔记整理} % 封面作者（按需替换）
+
+% 正文骨架
+\newcommand{\notebody}{
+	% 前言
+	\chapter*{前言}
+	\input{前言}
+
+	% 绪论：含符号说明
+	\chapter{绪论}
+	\input{绪论}
+
+	% 正文各章
+	\chapter{控制系统基础知识}
+	\input{第一章}
+
+}
+
+\begin{document}
+	% 封面
+	\input{cover}
+
+	\newpage
+
+	% 格言页
+	\thispagestyle{empty}
+	\vspace*{\fill}
+	\begin{center}
+		{\kaishu\fontsize{18}{28}\selectfont 我们不必追求完美，只要足够好以满足指标要求即可。}
+	\end{center}
+	\vfill
+	\newpage
+
+	\pagestyle{mainstyle}
+
+	\setcounter{tocdepth}{3}
+
+	\tableofcontents
+
+	\setcounter{page}{0}
+	\thispagestyle{empty}
+	\newpage
+	\notebody
+\end{document}

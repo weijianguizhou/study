@@ -1,0 +1,105 @@
+% ============================================================
+%  第一章 控制系统基础知识
+%  整理自《控制工程基础》读书笔记
+% ============================================================
+\section{增益（Gain）}
+\begin{definition}[增益]
+	增益是一个比例值，显示了稳态时输入信号大小与输出信号大小之间的关系。许多系统提供改变增益的方法，从而为系统提供或多或少的“功率（power）”。
+\end{definition}
+
+下图所示系统，由于输出是输入幅度的两倍，因此系统的增益为 $K=2$。
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.55\textwidth]{Figure/增益为K=2的系统的演示.png}
+	\caption{增益为 $K=2$ 的系统演示}
+	\label{fig:gain-K2}
+\end{figure}
+
+\section{方框图（Block diagrams）}
+方框图是设计与分析控制系统的有力工具，可被系统地操纵和简化。其一般形式如下图所示。
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.7\textwidth]{Figure/带命名法的框图.png}
+	\caption{带命名法的方框图}
+	\label{fig:block-named}
+\end{figure}
+
+\begin{definition}[开环增益]
+	开环增益是从输入（圆）处的和节点到输出支路的总增益。若把反馈回路断开，这就是系统的增益。
+\end{definition}
+
+\begin{definition}[反馈增益]
+	反馈增益是从输出返回到输入和节点的总增益。求和节点的输出是其输入的总和。
+\end{definition}
+
+\subsection{级联块（Cascaded blocks）}
+表示关系：
+\begin{equation}
+	Y = (P_1P_2)\,X .
+	\label{eq:cascade}
+\end{equation}
+图示形式如下。
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.55\textwidth]{Figure/级联块.png}\hfill
+	\includegraphics[width=0.4\textwidth]{Figure/简单级联块.png}
+	\caption{级联块的两种表示}
+	\label{fig:cascade}
+\end{figure}
+
+\subsection{并行组合块（Combining blocks in parallel）}
+表示关系：
+\begin{equation}
+	Y = P_1X \pm P_2X .
+	\label{eq:parallel}
+\end{equation}
+图示形式如下。
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.55\textwidth]{Figure/并行块.png}\hfill
+	\includegraphics[width=0.4\textwidth]{Figure/简单并行块.png}
+	\caption{并行组合块的两种表示}
+	\label{fig:parallel}
+\end{figure}
+
+\subsection{从前馈循环中删除块}
+表示关系：
+\begin{equation}
+	Y = P_1X \pm P_2X .
+	\label{eq:feedforward}
+\end{equation}
+图示关系如下。
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.5\textwidth]{Figure/前馈环.png}\hfill
+	\includegraphics[width=0.5\textwidth]{Figure/变换的前馈环.png}
+	\caption{前馈环及其变换}
+	\label{fig:feedforward}
+\end{figure}
+
+\subsection{消除反馈回路}
+表示关系：
+\begin{equation}
+	Y = P_1\bigl(X \mp P_2Y\bigr) .
+	\label{eq:feedback}
+\end{equation}
+图示关系如下。
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.5\textwidth]{Figure/反馈环.png}
+	\caption{反馈环}
+	\label{fig:feedback-orig}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.85\textwidth]{Figure/变换的反馈环.png}
+	\caption{反馈环的变换}
+	\label{fig:feedback-trans}
+\end{figure}

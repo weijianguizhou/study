@@ -1,12 +1,10 @@
 \usepackage{ctex}
 \usepackage{geometry,graphicx,xcolor,color,subcaption}
 \geometry{a4paper, top=2.5cm, bottom=2.5cm, left=2.8cm, right=2.8cm, headheight=14.5pt}
-\usepackage{amssymb,amsmath,amsthm,bm}                             % 数学字体
+\usepackage{amssymb,amsmath,amsthm}                             % 数学字体
 \usepackage{cancel}                                             % 数学划线（\cancel）
 \usepackage{booktabs}   % 提供 \toprule, \midrule, \bottomrule    % 采用 Palatino 风格字体
 \usepackage{multirow}   % 表格合并行（\multirow）
-\usepackage{longtable}  % 可跨页断行的长表格（随文排版，不留浮动空白）
-\setlength{\LTleft}{\fill}\setlength{\LTright}{\fill}  % longtable 水平居中
 \usepackage{newclude,ulem}
 \definecolor{winered}{rgb}{0.5,0,0}
 \definecolor{structurecolor}{RGB}{24,44,82}     % 深藏青：章/节标题主色（与封面同系）
@@ -118,19 +116,12 @@
 \newtcolorbox{tipbox}[1][技巧]{commonbox, colback=tipBg,  colbacktitle=tipColor,  title={#1}}
 \newtcolorbox{warnbox}[1][注意]{commonbox, colback=warnBg, colbacktitle=warnColor, title={#1}}
 
-% 结论盒（无编号，结论专用）
-\newtcolorbox{conBox}[1][]{commonbox, colback=proBg, colbacktitle=proColor, title={结论#1}}
-\newenvironment{conclusion}[1][]{\begin{conBox}{#1}}{\end{conBox}}
-
 % 证明 / 解 / 注 / 引言落款
 \renewenvironment{proof}[1][推导]{\par\vspace{0.6em}\noindent{\heiti\color{structurecolor}#1：}\;\songti}{\hfill\textcolor{gold}{\rule{0.55em}{0.55em}}\par\vspace{0.3em}}
 \newenvironment{solution}{\par\vspace{0.4em}\noindent\underline{{\heiti 解.}} \;\kaishu}{\par\vspace{0.4em}}
 \newenvironment{remark}{\par\vspace{0.4em}\noindent\underline{{\heiti 注.}} \;\fangsong}{\par\vspace{0.4em}}
 \newenvironment{note}{\par\vspace{0.4em}\noindent{\heiti\color{proColor}注：}\;}{\par\vspace{0.4em}}
 \newcommand{\intro}[1]{\rightline{\parbox[t]{5cm}{\footnotesize \fangsong\quad\quad #1 }}}
-\newcommand{\blocksep}{\vspace{1em}}
-% 段落级小标题：替代默认 \paragraph 的行内样式（独立成行的黑体小标题）
-\newcommand{\parahead}[1]{\par\vspace{0.9em}\noindent{\heiti #1}\par\vspace{0.3em}}
 % ------------------------------------------------------------%
 
 \usepackage{enumerate}

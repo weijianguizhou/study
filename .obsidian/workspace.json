@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "教材/控制理论/读书笔记.md",
+                "file": "教材/流体力学 张兆顺 崔桂香 第三版/读书笔记——流体的物理性质.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "读书笔记"
+              "title": "读书笔记——流体的物理性质"
             }
           }
         ]
@@ -179,8 +179,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -200,32 +199,32 @@
       "pdf-plus:PDF++: Toggle auto-paste": false
     }
   },
-  "active": "b275d19387b88fb4",
+  "active": "a01a1ccd280cf04c",
   "lastOpenFiles": [
-    "控制理论/Figure/带命名法的框图.png",
-    "控制理论/Figure/变换的反馈环.png",
+    "力学/流体力学/Figure/微元体上的表面力.png",
+    "力学/流体力学/Figure/一点的应力状态.png",
+    "力学/流体力学/Figure/有限体上的表面力.png",
+    "教材/流体力学 张兆顺 崔桂香 第三版/读书笔记——流体的物理性质.md",
+    "教材/流体力学 张兆顺 崔桂香 第三版/流体力学 张兆顺 崔桂香 第三版.pdf",
     "教材/控制理论/读书笔记.md",
-    "控制理论/Figure/反馈环.png",
+    "力学/流体力学/流体力学笔记.pdf",
+    "力学/流体力学/Figure/WPS图片(1).png",
+    "力学/力学.md",
+    "力学/系统动力学建模与仿真/系统动力学建模与仿真笔记.synctex.gz",
     "力学/系统动力学建模与仿真/系统动力学建模与仿真笔记.synctex(busy)",
-    "控制理论/Figure/变换的前馈环.png",
-    "控制理论/Figure/前馈环.png",
-    "控制理论/Figure/简单并行块.png",
-    "控制理论/Figure/并行块.png",
-    "控制理论/Figure/简单级联块.png",
-    "控制理论/Figure/级联块.png",
-    "控制理论/Figure",
-    "控制理论",
-    "控制理论/控制理论学习笔记.pdf",
-    "控制理论/Figure/增益为K=2的系统的演示.png",
-    "vividbook_1210_preview.png",
-    "vividbook_fig_cover4.pdf",
-    "vividbook_fig_q2.pdf",
-    "vividbook_fig_sd6.pdf",
+    "力学/系统动力学建模与仿真/系统动力学建模与仿真笔记.fdb_latexmk",
+    "力学/系统动力学建模与仿真/系统动力学建模与仿真笔记.xdv",
+    "力学/系统动力学建模与仿真/系统动力学建模与仿真笔记.fls",
+    "力学/系统动力学建模与仿真/xelatex47832.fls",
+    "力学/系统动力学建模与仿真/系统动力学建模与仿真笔记.toc",
+    "力学/系统动力学建模与仿真/系统动力学建模与仿真笔记.out",
+    "控制理论/控制工程基础/Figure/级联块.png",
+    "控制理论/控制工程基础/Figure/简单级联块.png",
+    "控制理论/控制工程基础/Figure/并行块.png",
+    "控制理论/控制工程基础/Figure/简单并行块.png",
+    "控制理论/控制工程基础/Figure/带命名法的框图.png",
+    "控制理论/控制工程基础/Figure/增益为K=2的系统的演示.png",
     "VividBook_README.md",
-    "力学/流体力学/流体的物理性质.md",
-    "力学/流体力学/流体力学笔记.synctex(busy)",
-    "力学/流体力学/流体力学笔记.synctex.gz",
-    "fetch_latexstudio3.py",
     "VividBooK_Research_Report.md",
     "latexzero_docs/docs__beamer-setup-doc.md",
     "latexzero_docs/docs__beamer-setup-doc-cn.md",
@@ -246,7 +245,6 @@
     "conflict-files-obsidian-git.md",
     "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/8.1汇报讲稿.md",
     "数学建模/数学建模教程/12-论文写作/05-常见问题与避坑.md",
-    "数学建模/数学建模教程/12-论文写作/03-图表制作与美化.md",
-    "数学建模/数学建模教程/12-论文写作/04-摘要写作技巧.md"
+    "数学建模/数学建模教程/12-论文写作/03-图表制作与美化.md"
   ]
 }
