@@ -4,45 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "e8cf5a65e67758c6",
+        "id": "94a9643df740c373",
         "type": "tabs",
-        "dimension": 56.66311300639659,
         "children": [
           {
-            "id": "63c958a43a4df96c",
-            "type": "leaf",
-            "state": {
-              "type": "pdf",
-              "state": {
-                "file": "教材/SystemDynamicsModelingAndSimulation/SystemDynamicsModelingAndSimulation.pdf",
-                "page": 32,
-                "left": -12,
-                "top": 542,
-                "zoom": 1.2737703265690097
-              },
-              "icon": "lucide-file-text",
-              "title": "SystemDynamicsModelingAndSimulation"
-            }
-          }
-        ]
-      },
-      {
-        "id": "e3c5eff5555998fb",
-        "type": "tabs",
-        "dimension": 43.336886993603414,
-        "children": [
-          {
-            "id": "b126bec797f059bf",
+            "id": "a01a1ccd280cf04c",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "教材/SystemDynamicsModelingAndSimulation/存疑.md",
+                "file": "教材/控制理论/读书笔记.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "存疑"
+              "title": "读书笔记"
             }
           }
         ]
@@ -104,8 +80,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "dfcd6f1a0be67c9c",
@@ -225,31 +200,41 @@
       "pdf-plus:PDF++: Toggle auto-paste": false
     }
   },
-  "active": "b126bec797f059bf",
+  "active": "b275d19387b88fb4",
   "lastOpenFiles": [
-    "数理基础/数理统计/数理统计学习笔记.synctex(busy)",
-    "数理基础/数理统计/数理统计学习笔记.synctex.gz",
-    "数理基础/概率论/概率论学习笔记.synctex(busy)",
-    "数理基础/概率论/概率论学习笔记.synctex.gz",
-    "模板/课程笔记/课程笔记模板.synctex(busy)",
-    "机械/机械原理/机械原理.toc",
-    "机械/机械原理/机械原理.out",
-    "机械/机械原理/机械原理.aux",
-    "机械/机械原理/机械原理.log",
-    "数理基础/工程数学/工程数学.toc",
-    "数理基础/工程数学/工程数学.out",
+    "控制理论/Figure/带命名法的框图.png",
+    "控制理论/Figure/变换的反馈环.png",
+    "教材/控制理论/读书笔记.md",
+    "控制理论/Figure/反馈环.png",
+    "力学/系统动力学建模与仿真/系统动力学建模与仿真笔记.synctex(busy)",
+    "控制理论/Figure/变换的前馈环.png",
+    "控制理论/Figure/前馈环.png",
+    "控制理论/Figure/简单并行块.png",
+    "控制理论/Figure/并行块.png",
+    "控制理论/Figure/简单级联块.png",
+    "控制理论/Figure/级联块.png",
+    "控制理论/Figure",
+    "控制理论",
+    "控制理论/控制理论学习笔记.pdf",
+    "控制理论/Figure/增益为K=2的系统的演示.png",
+    "vividbook_1210_preview.png",
+    "vividbook_fig_cover4.pdf",
+    "vividbook_fig_q2.pdf",
+    "vividbook_fig_sd6.pdf",
+    "VividBook_README.md",
+    "力学/流体力学/流体的物理性质.md",
+    "力学/流体力学/流体力学笔记.synctex(busy)",
+    "力学/流体力学/流体力学笔记.synctex.gz",
+    "fetch_latexstudio3.py",
+    "VividBooK_Research_Report.md",
+    "latexzero_docs/docs__beamer-setup-doc.md",
+    "latexzero_docs/docs__beamer-setup-doc-cn.md",
+    "latexzero_docs/docs__note-setup-doc.md",
+    "latexzero_docs/docs__note-setup-doc-cn.md",
+    "latexzero_docs/README.zh-CN.md",
+    "latexzero_docs/README.md",
     "教材/SystemDynamicsModelingAndSimulation/存疑.md",
     "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/学习笔记.md",
-    "力学/系统动力学建模与仿真/Figure/fig_1_12.png",
-    "力学/系统动力学建模与仿真/Figure/fig_1_11.png",
-    "力学/系统动力学建模与仿真/Figure/fig_1_10.png",
-    "数理基础/常微分方程/_verify/pg-16.png",
-    "数理基础/常微分方程/_verify/pg-15.png",
-    "数理基础/常微分方程/_verify/pg-14.png",
-    "数理基础/常微分方程/_verify/pg-13.png",
-    "数理基础/常微分方程/_verify/pg-12.png",
-    "数理基础/常微分方程/_verify/pg-11.png",
-    "数理基础/常微分方程/_verify/pg-10.png",
     "模板/课程笔记/符号约定与工作要求.md",
     "电类/电工学/符号约定与工作要求.md",
     "数理基础/常微分方程/第二章 一阶微分方程的初等积分法.md",
@@ -262,16 +247,6 @@
     "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/8.1汇报讲稿.md",
     "数学建模/数学建模教程/12-论文写作/05-常见问题与避坑.md",
     "数学建模/数学建模教程/12-论文写作/03-图表制作与美化.md",
-    "数学建模/数学建模教程/12-论文写作/04-摘要写作技巧.md",
-    "数学建模/数学建模教程/12-论文写作/02-数学公式排版.md",
-    "数学建模/数学建模教程/12-论文写作/01-论文结构与规范.md",
-    "数学建模/数学建模教程/11-数据分析/04-异常检测.md",
-    "数学建模/数学建模教程/11-数据分析/05-数据可视化.md",
-    "数学建模/数学建模教程/09-微分方程模型/08-微分方程建模实例.md",
-    "数学建模/数学建模教程/11-数据分析/03-特征工程.md",
-    "数学建模/数学建模教程/09-微分方程模型/07-生态动力学模型.md",
-    "数学建模/数学建模教程/11-数据分析/02-降维方法.md",
-    "数学建模/数学建模教程/09-微分方程模型/06-反应扩散方程.md",
-    "数学建模/数学建模教程/11-数据分析/01-数据清洗与预处理.md"
+    "数学建模/数学建模教程/12-论文写作/04-摘要写作技巧.md"
   ]
 }

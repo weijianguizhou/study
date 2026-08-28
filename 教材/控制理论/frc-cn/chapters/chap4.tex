@@ -1,0 +1,192 @@
+﻿\chapterphoto{圣玛丽亚与文图拉之间北行高速公路旁的山丘}{photo-chap4}
+\chapter{微积分}
+
+本书会偶尔使用导数和积分：前者表示量在时间上的微小变化，后者表示量随时间的无穷小累加。这里给出的公式和表格，足以支撑你在后续章节中完成数学推导。
+
+如果你读完后想了解更多，3Blue1Brown 的《Essence of calculus》系列对这些概念的介绍非常精彩。
+
+\begin{media}[视频资源]
+``Essence of calculus''（微积分的本质）\\
+3Blue1Brown\\
+\url{https://www.3blue1brown.com/?topic=calculus}
+\end{media}
+
+\section{导数}
+\label{sec:derivatives}
+
+导数（derivative）是表示曲线在任意点处斜率的表达式。对形如 $f(x)$ 的函数施行这一运算的常用记号包括：
+
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{lll}
+    \toprule
+    莱布尼茨记号 & 拉格朗日记号 & 牛顿记号 \\
+    \midrule
+    $\dfrac{d}{dx} f(x)$  & $f'(x)$    & $\dot{f}(x)$ \\
+    $\dfrac{d^2}{dx^2} f(x)$ & $f''(x)$ & $\ddot{f}(x)$ \\
+    $\dfrac{d^3}{dx^3} f(x)$ & $f'''(x)$ & $\dottriple{f}(x)$ \\
+    $\dfrac{d^4}{dx^4} f(x)$ & $f^{(4)}(x)$ & $\dotquad{f}(x)$ \\
+    $\dfrac{d^n}{dx^n} f(x)$ & $f^{(n)}(x)$ & $\overset{n}{\dot{f}}(x)$ \\
+    \bottomrule
+  \end{tabular}
+  \caption{$f(x)$ 的导数记号}
+  \label{tab:deriv-notation}
+\end{table}
+
+拉格朗日记号读作``f 一撇''（f prime of x）、``f 两撇''（f double-prime of x）等。牛顿记号读作``f 加一点''（f dot of x）、``f 加两点''（f double-dot of x）等。
+
+\subsection{幂法则}
+\label{sec:powerrule}
+
+\begin{align*}
+  f(x) &= x^n \\
+  f'(x) &= n x^{n-1}
+\end{align*}
+
+\subsection{乘积法则}
+\label{sec:productrule}
+
+乘积法则用于对两个表达式的乘积求导。
+
+\begin{align*}
+  h(x) &= f(x) \, g(x) \\
+  h'(x) &= f'(x) \, g(x) + f(x) \, g'(x)
+\end{align*}
+
+\subsection{链式法则}
+\label{sec:chainrule}
+
+链式法则用于对嵌套的表达式求导。
+
+\begin{align*}
+  h(x) &= f(g(x)) \\
+  h'(x) &= f'(g(x)) \cdot g'(x)
+\end{align*}
+
+例如：
+
+\begin{align*}
+  h(x) &= (3x + 2)^5 \\
+  h'(x) &= 5 \, (3x + 2)^4 \cdot (3) \\
+  h'(x) &= 15 \, (3x + 2)^4
+\end{align*}
+
+\subsection{偏导数}
+\label{sec:partialderivatives}
+
+多元函数的偏导数（partial derivative）是该函数对其中某一个变量求导，而其余变量保持不变（这与全导数不同，全导数允许所有变量同时变化）。在莱布尼茨记号中，偏导数用 $\partial$ 代替 $d$。
+
+例如，设 $h(x, y) = 3xy + 2x$。求对 $x$ 的偏导数时，把 $y$ 当作常数：
+
+\[
+  \frac{\partial h(x,y)}{\partial x} = 3y + 2
+\]
+
+求对 $y$ 的偏导数时，$x$ 被当作常数，因此第二项变为零：
+
+\[
+  \frac{\partial h(x,y)}{\partial y} = 3x
+\]
+
+\section{积分}
+\label{sec:integrals}
+
+积分（integral）是导数的逆运算，用于计算曲线下的面积。下面基于表~\ref{tab:common-deriv-int} 给出一个例子：
+
+\[
+  \int e^{at} \, dt = \frac{1}{a} e^{at} + C
+\]
+
+需要引入任意常数 $C$，是因为求导时常数会被丢弃——竖直方向的平移不影响斜率。在做逆运算时，我们没有足够的信息来确定这个常数。
+
+不过，我们可以为积分加上积分限：
+
+\begin{align*}
+  \int_0^t e^{at} \, dt
+    &= \left. \left( \frac{1}{a} e^{at} + C \right) \right|_0^t \\
+    &= \left( \frac{1}{a} e^{at} + C \right) - \left( \frac{1}{a} e^{a \cdot 0} + C \right) \\
+    &= \left( \frac{1}{a} e^{at} + C \right) - \left( \frac{1}{a} + C \right) \\
+    &= \frac{1}{a} e^{at} + C - \frac{1}{a} - C \\
+    &= \frac{1}{a} e^{at} - \frac{1}{a}
+\end{align*}
+
+这样做之后，任意常数就抵消了。
+
+\section{变量代换}
+\label{sec:changeofvariables}
+
+变量代换（change of variables）是一种简化问题的技巧：把表达式替换成新的变量，使问题变得更易处理。这既可以意味着问题变得更直接，也可以意味着问题化成了某种已有成熟求解工具的常见形式。下面是一个利用变量代换求积分的例子：
+
+\[
+  \int \cos \omega t \, dt
+\]
+
+令 $u = \omega t$，则
+
+\begin{align*}
+  du &= \omega \, dt \\
+  dt &= \frac{1}{\omega} \, du
+\end{align*}
+
+现在把 $u$ 和 $dt$ 的表达式代入：
+
+\begin{align*}
+  \int \cos u \, \frac{1}{\omega} \, du
+    &= \frac{1}{\omega} \int \cos u \, du \\
+    &= \frac{1}{\omega} \sin u + C \\
+    &= \frac{1}{\omega} \sin \omega t + C
+\end{align*}
+
+另一个例子——当我们真正讲到状态空间记号（$\dot{x} = Ax + Bu$）时会用到——是闭环状态空间系统：
+
+\begin{align*}
+  \dot{x} &= (A - BK)x + BKr \\
+  \dot{x} &= A_{\mathrm{cl}} x + B_{\mathrm{cl}} u_{\mathrm{cl}}
+\end{align*}
+
+其中 $A_{\mathrm{cl}} = A - BK$，$B_{\mathrm{cl}} = BK$，$u_{\mathrm{cl}} = r$。由于它与开环系统的形式一致，所有相同的分析工具都可以直接用于它。
+
+\section{常用表}
+\label{sec:tables}
+
+\subsection{常用导数与积分}
+\label{sec:commonderivatives}
+
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{lll}
+    \toprule
+    $\displaystyle\int f(x) \, dx$ & $f(x)$ & $f'(x)$ \\
+    \midrule
+    $ax$ & $a$ & $0$ \\
+    $\dfrac{1}{2} a x^2$ & $ax$ & $a$ \\
+    $\dfrac{1}{a+1} x^{a+1}$ & $x^a$ & $a x^{a-1}$ \\
+    $\dfrac{1}{a} e^{ax}$ & $e^{ax}$ & $a e^{ax}$ \\
+    $-\cos(x)$ & $\sin(x)$ & $\cos(x)$ \\
+    $\sin(x)$ & $\cos(x)$ & $-\sin(x)$ \\
+    $\cos(x)$ & $-\sin(x)$ & $-\cos(x)$ \\
+    $-\sin(x)$ & $-\cos(x)$ & $\sin(x)$ \\
+    \bottomrule
+  \end{tabular}
+  \caption{常用导数与积分}
+  \label{tab:common-deriv-int}
+\end{table}
+
+\section{微分方程}
+\label{sec:odes}
+
+微分方程（differential equation）是含有导数的方程。
+
+设 $y$ 是 $x$ 的未知函数，$f$ 是给定的 $x$ 的函数。\textbf{常微分方程}（ODE）包含一个单变量 $x$ 的未知函数、该未知函数的导数，以及 $x$ 的给定函数。例如：
+
+\[
+  \frac{dy}{dx} = f(x)
+\]
+
+设 $y$ 是 $x_1$ 和 $x_2$ 的未知函数。\textbf{偏微分方程}（PDE）包含未知的多元函数及其偏导数。例如：
+
+\[
+  y(x_1, x_2) = x_1 \frac{\partial y}{\partial x_1} + x_2 \frac{\partial y}{\partial x_2}
+\]
+
+某些 ODE 和 PDE 有闭式解（例如 ODE $\frac{dy}{dx} = ay$ 的解为 $y(x) = y(0) e^{ax}$），但大多数方程必须用计算机进行数值求解。

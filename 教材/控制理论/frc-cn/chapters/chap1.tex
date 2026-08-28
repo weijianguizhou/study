@@ -1,0 +1,107 @@
+﻿\chapterphoto{圣玛丽亚市 Rice Ranch 路旁步道附近的公路}{photo-chap1}
+\chapter{控制系统基础}
+
+控制系统无处不在，我们每天都在与它们打交道。你可能见过的一小部分例子包括：带恒温器的暖气与空调、汽车上的巡航控制和防抱死制动系统（ABS）、以及现代笔记本电脑上的风扇转速调节。控制系统监测或控制这类系统的行为；它们可以由人直接控制（手动控制），也可以完全由机器构成（自动控制）。
+
+例如，我们如何证明自动驾驶汽车上的闭环控制器在存在不确定性的情况下仍能安全运行，并满足期望的性能指标？控制理论是代数与几何的一种应用，用来分析和预测系统的行为、让系统按我们的意愿响应，并使系统对扰动和不确定性具有鲁棒性。
+
+简而言之，控制工程（controls engineering）就是将工程流程应用于控制理论。因此，它不仅仅是应用数学。尽管控制理论背后有一些漂亮的数学，但控制工程和其他工程学科一样，充满了权衡。对于控制理论给出的解，我们总是应当进行合理性检验，并以我们的性能指标为依据。我们不需要完美；我们只需要足够好，能够满足指标即可。\textsuperscript{[1]}
+
+\begin{tip}
+大多数高级工程主题的资料所假设的知识水平都远高于实际所需。部分原因在于行话（jargon）的使用。行话固然能在领域内高效地交流思想，但不熟悉它的新人却会一头雾水。因此，在使用术语之前先给出定义非常重要。书末的术语表列出了控制理论中的常用词汇和短语、它们的来源及其含义。书中某些词语附有指向术语表的链接，并以这种颜色显示。
+\end{tip}
+
+\section{增益是什么？}
+\label{sec:gain}
+增益（gain）是一个比例值，它描述稳态下输出信号幅值与输入信号幅值之间的关系。许多系统都包含可以改变增益的机制，从而能够为系统提供或多或少的``动力''。
+
+图~\ref{fig:gain} 展示了一个具有假想输入和输出的系统。由于输出的幅值是输入的两倍，该系统的增益为 2。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.75\textwidth]{fig1-1.png}
+  \caption{演示增益为 $K = 2$ 的系统}
+  \label{fig:gain}
+\end{figure}
+
+\section{框图}
+\label{sec:blockdiagrams}
+在设计或分析控制系统时，用图形来为系统建模往往很有用。框图（block diagram）正是为此目的而使用的工具。它可以被系统地操作和化简（见附录 A）。图~\ref{fig:blockdiag} 就是一个例子。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.7\textwidth]{fig1-2.png}
+  \caption{框图及其各部分的名称}
+  \label{fig:blockdiag}
+\end{figure}
+
+开环增益（open-loop gain）是从输入端的求和节点（圆圈）到输出支路的总增益。如果断开反馈回路，它就是系统的增益。
+
+反馈增益（feedback gain）是从输出返回到输入求和节点的总增益。求和节点的输出等于其输入之和。
+
+图~\ref{fig:feedbackdiag} 是一个采用更正式记号的反馈结构框图。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.45\textwidth]{fig1-3.png}
+  \caption{反馈框图}
+  \label{fig:feedbackdiag}
+\end{figure}
+
+$\mp$ 表示``负或正''，其中负号代表负反馈。
+
+\section{开环系统与闭环系统}
+\label{sec:openloop}
+被控制系统所控制的系统或执行器的集合称为被控对象（plant）。控制器（controller）用于驱动被控对象从当前状态到达某个期望的状态（即参考值，reference）。在框图中，我们对相关量使用如下记号：
+
+\begin{center}
+\begin{tabular}{ll}
+  $r(t)$ & 参考值 \\
+  $u(t)$ & 控制输入 \\
+  $e(t)$ & 误差 \\
+  $y(t)$ & 输出 \\
+\end{tabular}
+\end{center}
+
+不利用从被控对象输出处测量到的信息的控制器称为\textbf{开环控制器}或\textbf{前馈控制器}。图~\ref{fig:openloop} 展示了一个带前馈控制器的被控对象。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{fig1-4.png}
+  \caption{开环控制系统}
+  \label{fig:openloop}
+\end{figure}
+
+利用从被控对象输出反馈回来的信息的控制器称为\textbf{闭环控制器}或\textbf{反馈控制器}。图~\ref{fig:closedloop} 展示了一个带反馈控制器的被控对象。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.7\textwidth]{fig1-5.png}
+  \caption{闭环控制系统}
+  \label{fig:closedloop}
+\end{figure}
+
+注意，系统的输入和输出都是从被控对象的角度来定义的。图中所示的负反馈控制器的作用是将参考值与输出之差（也称为误差）驱动到零。
+
+图~\ref{fig:fffb} 展示了一个同时带有前馈控制器和反馈控制器的被控对象。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{fig1-6.png}
+  \caption{同时具有前馈与反馈的控制系统}
+  \label{fig:fffb}
+\end{figure}
+
+\section{前馈}
+\label{sec:feedforward}
+反馈控制对于参考值跟踪（让系统输出跟随期望的参考信号）可以很有效，但它是一种被动应对的措施——系统要等到已经落后于参考值之后，才会开始施加控制作用。如果我们能\textbf{提前}告诉控制器期望的运动和所需的输入，系统就能更快地响应，反馈控制器要做的功课也会更少。像这样把信息向前馈入被控对象的控制器称为前馈控制器（feedforward controller）。
+
+前馈控制器注入的是关于系统动态的信息（就像模型所做的那样）或者关于期望运动的信息。前馈负责处理控制动作中我们已经知道的部分——即让系统跟踪参考值所必须施加的部分——而反馈则补偿我们在运行时不了解或无法了解的系统行为。
+
+前馈有两类：基于模型的前馈（model-based feedforward）和针对未建模动态的前馈（feedforward for unmodeled dynamics）。前者求解系统的数学模型，得到满足期望速度和加速度所需的输入；后者直接补偿未建模的力或行为，让反馈控制器不必亲自处理它们。这两类前馈都能让反馈控制器变得更简单。我们将在后面的章节中给出这两类前馈的例子。
+
+\section{为什么需要反馈控制？}
+\label{sec:whyfeedback}
+假设我们正在控制一台直流电机。只要拥有数学模型以及系统所有当前状态（即角速度）的知识，给定未来的电压输入，我们就能预测出所有未来的状态。既然如此，为什么还需要反馈控制？这是因为，如果系统受到任何未被我们的方程所建模的扰动——比如电枢上被施加了负载，或者电路其余部分的电压跌落导致指令电压与实际施加的电压不符——电机的角速度就会随时间偏离模型。
+
+为了解决这个问题，我们可以对系统和环境进行测量，检测这种偏差并对它加以补偿。例如，我们可以测量当前的位置，并从中估计出角速度；然后，我们既向电机发出纠正指令，又把我们的模型拉回到与现实相符。这种反馈让我们能够应对不确定性，并对不确定性保持鲁棒。

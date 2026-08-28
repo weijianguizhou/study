@@ -1,0 +1,514 @@
+% 第1章 流体的物理性质 —— 依据原书扫描页手工精修版
+\chapter{流体的物理性质}
+
+流体力学研究液体和气体的宏观运动以及它们与周围物体的相互作用，如力的作用和传热等.研究流体的宏观运动必须首先了解流体的宏观性质.
+
+\section*{1.1  流体的连续介质模型}\addcontentsline{toc}{section}{1.1 流体的连续介质模型}
+
+流体力学研究流体的宏观运动，它是在远远大于分子运动尺度的范围里考察流体运动，而不考虑个别流体分子的行为.因此我们可以把流体视为连续介质，它具有以下性质：
+
+(1)流体是连续分布的物质，它可以无限分割为具有均布质量的宏观微元体；
+
+(2)不发生化学反应和离解等非平衡热力学过程的运动流体中，微元体内流体状态服从热力学关系；
+
+(3)除了特殊面(例如，激波)外，流体的力学和热力学状态参数在时空中是连续分布的，并且通常认为是无限可微的.
+
+连续介质是一种力学模型.它适用于所考察的流体运动尺度$L$(如管道流动中管道的直径，机翼绕流中机翼的长度等)远远大于流体分子运动平均自由程$l$的情况，即
+\begin{equation*}
+\frac{L}{l}\gg 1
+\tag{1.1}
+\end{equation*}
+
+物质分子运动理论指出，尺度远远大于分子运动平均自由程的封闭系统是热力学平衡体，它的统计特性，也就是宏观物理性质与个别分子行为无关.举例来说，在常温常压下空气分子运动平均自由程约为几十纳米($10^{-8}\,$m)量级，这时我们即使用微米($10^{-6}\,$m)尺度的测针来量度流体特性，测得的仍是巨量分子运动的统计平均量，即宏观属性.也就是说即使在这么小的尺度上来观察流体运动，还可以把流体视作连续介质.在外层空间中航天器运动的情况恰好相反，在那里气体十分稀薄，分子运动的平均自由程高达几米以上，如航天器的尺度为几十米，它周围的气体运动就不能采用连续介质模型.不满足$\dfrac{L}{l}\gg 1$的气体运动属于稀薄气体动力学，它不在本书范围内.
+
+把流体无限分割为具有均布质量的微元，它是研究流体运动的最小单元，称之为\textbf{流体微团}，它是流体力学中最基本的概念.流体微团具有如下性质：
+
+流体微团的体积$\delta V$相对于被考察的流体运动尺度$L$应有
+\[
+\frac{\delta V}{L^{3}}\ll 1
+\]
+而微团相对于分子运动平均自由程尺度$l$，应有
+\[
+\frac{\delta V}{l^{3}}\gg 1
+\]
+
+形象地说流体微团是宏观上无限小，微观上无限大的一个质量体.为了更好地理解宏观微团概念，下面考察流体中的质量分布.假设用不同尺度的立方“采样”盒子来测量流体质量密度.设$s$为采样盒子边长，$M_s$为采样盒子中的流体质量，则采样盒子中的流体密度为
+\[
+\rho_s=\frac{M_s}{s^{3}}
+\]
+当采样盒子尺度$s$为分子运动尺度时(图1.1中$s\sim l$)，分子的随机行为使盒子中流体总质量$M_s$为不确定值，因此盒子中的质量密度随$s$变化极不规则；当采样盒子的尺度是宏观上无限小，微观上无限大时，即$L\gg s\gg l$，个别分子行为不影响质量密度的度量，另一方面采样尺度相对于流场尺度是无限小，所以宏观的不均匀性在这一尺度范围可以忽略不计，这时盒中流体有一确定的均匀密度值
+\begin{equation*}
+\rho=\Big(\frac{\delta m}{\delta V}\Big),\qquad L^{3}\gg \delta V\gg l^{3}
+\tag{1.2}
+\end{equation*}
+
+当采样盒子尺度与流场尺度相当时($s\sim L$)，宏观不均匀性逐渐显示出来，从而使质量密度随量度的尺度有规则地变化，如图1.1所示.
+
+微团具有宏观无限小体积，因而可以用时空中一个点标记它，非均匀连续介质的当地物性可以用时空变量$(\boldsymbol{x},t)$的函数来描述.例如气体中密度分布$\rho=\rho(\boldsymbol{x},t)$，温度分布$T=T(\boldsymbol{x},t)$等.微团的体积或它的表面积在宏观上都是无限小的，但发生在体积内或表面上的物理过程都属于宏观的力学和热力学过程.当不需要考虑微团的体积和变形，只研究它的位移和各物理状态时，可以把它视作没有体积的质点，这时称流体微团为\textbf{流体质点}.
+
+\section*{1.2  作用在流体上的体积力和表面力}\addcontentsline{toc}{section}{1.2 作用在流体上的体积力和表面力}
+
+在流体中任取一个微团，其上受到两种外力：第一种外力作用在微团内均布质量的质心上，这种力通常和微团的体积成正比，称为\textbf{体积力}；第二种外力是周围流体或物体作用在流体微团表面上的力，它和力的作用面大小成正比，称为\textbf{表面力}.下面分别讨论这两种力的性质.
+
+\subsection*{1. 体积力和体积力强度}
+
+在地球引力场中流体微团受到的引力$\delta\boldsymbol{G}$与它的质量$\delta m$成正比：
+\begin{equation*}
+\delta\boldsymbol{G}=\boldsymbol{g}\,\delta m
+\tag{1.3}
+\end{equation*}
+式中$\boldsymbol{g}$是重力加速度.由于微团的质量$\delta m$和它的体积$\delta V$成正比($\delta m=\rho\,\delta V$)，因此引力$\delta\boldsymbol{G}$也和微团的体积成正比，它是体积力：
+\begin{equation*}
+\delta\boldsymbol{G}=\rho\,\boldsymbol{g}\,\delta V
+\tag{1.4}
+\end{equation*}
+
+除了引力外，还有其他形式的体积力.例如：带电质点在静电场中运动时，静电力也是一种体积力，设流体微团的电荷密度为$q\,(\mathrm{C/m^{3}})$，则在静电场$\boldsymbol{E}$中，该微团受到的静电力为
+\begin{equation*}
+\delta\boldsymbol{F}=q\,\boldsymbol{E}\,\delta V
+\tag{1.5}
+\end{equation*}
+
+微团单位体积上作用的体积力称为体积力强度，它的数学表达式为
+\begin{equation*}
+\boldsymbol{f}_V=\lim_{\delta V\to 0}\frac{\delta\boldsymbol{F}}{\delta V}
+\tag{1.6}
+\end{equation*}
+上述例子中引力的体积力强度为$\rho\boldsymbol{g}$，静电力的体积力强度为$q\boldsymbol{E}$.
+
+有限体积流体上所受体积力的合力以及体积力相对于某参考点的合力矩可以用求和方法计算.
+
+体积力的合力：
+\begin{equation*}
+\boldsymbol{F}=\int_V \boldsymbol{f}_V\,\mathrm{d}V
+\tag{1.7}
+\end{equation*}
+体积力的合力矩：
+\begin{equation*}
+\boldsymbol{L}=\int_V \boldsymbol{r}\times\boldsymbol{f}_V\,\mathrm{d}V
+\tag{1.8}
+\end{equation*}
+$\boldsymbol{r}$为任意一流体微团相对于参考点的向径.
+
+\subsection*{2. 表面力和应力}
+
+任取一有限体积的流体，它的表面上受到周围流体或物体的接触力，这种力分布于有限体的表面，称为\textbf{表面力}，并示于图1.2.
+
+有限体的微元面积$\delta A$上单位面积的表面力称为表面力的局部强度，又称为应力，定义如下：
+\begin{equation*}
+\boldsymbol{T}_n=\lim_{\delta A\to 0}\frac{\delta\boldsymbol{F}}{\delta A}
+\tag{1.9}
+\end{equation*}
+式中$\delta\boldsymbol{F}$是面积$\delta A$上的作用力；$\boldsymbol{T}_n$表示应力向量，下标$n$表示表面力作用面$\delta A$的法线方向.
+
+需要强调指出，应力和它的作用面方向有关.一般情况下，流体内部同一空间点而不同方向的作用面上，流体所受应力是不等的，所以必须标注应力作用面的法向量.约定作用面的法向量以指向域外为正.例如图1.2(b)中，$\delta A_+$面的法向量为$\boldsymbol{n}_{A_+}$，作用于其上的应力为$\boldsymbol{T}_{n_{A_+}}$，相邻面$\delta A_-$的法向量为$\boldsymbol{n}_{A_-}$，其上应力符号写作$\boldsymbol{T}_{n_{A_-}}$.
+
+应力$\boldsymbol{T}_n$是向量，一般情况下，它并不垂直于它的作用面，所以可将它分解为垂直于作用面的分量$T_{nn}$和平行于作用面的两个相互垂直分量$T_{nt}$和$T_{ns}$.约定$(\boldsymbol{n},\boldsymbol{t},\boldsymbol{s})$组成右手直角坐标系.根据上述约定，应力分量第一个下标符号表示应力作用面的法向量，第二个下标表示应力分量的方向.
+
+\noindent\textbf{定义1.1}\quad 应力向量在作用面法线方向的分量称为正应力.
+
+根据应力分量的约定，正值的正应力指向作用面外，是拉力；而负值的正应力指向作用面内，因而是压力.
+
+\noindent\textbf{定义1.2}\quad 应力向量在作用面切向的分量称为切应力，也称剪应力.
+
+应力具有以下性质：
+
+(1)相邻两微元面上的表面力是作用力与反作用力，因此它们大小相等方向相反(见图1.2)，令$\boldsymbol{n}_{A_+}=\boldsymbol{n}$，则$\boldsymbol{n}_{A_-}=-\boldsymbol{n}$，并将应力写作$\boldsymbol{T}_{n_{A_+}}=\boldsymbol{T}_n$，$\boldsymbol{T}_{n_{A_-}}=\boldsymbol{T}_{-n}$，则有
+\begin{equation*}
+\boldsymbol{T}_{-n}=\lim_{\delta A\to 0}\frac{-\delta\boldsymbol{F}}{\delta A}=-\boldsymbol{T}_n
+\tag{1.10}
+\end{equation*}
+
+(2)相邻微元面上的正应力和切应力值都相等.
+
+在$\delta A_+$面上的正应力$T_{nn}$等于
+\begin{equation*}
+T_{nn}=\boldsymbol{T}_n\cdot\boldsymbol{n}
+\tag{1.11}
+\end{equation*}
+相邻面$\delta A_-$上正应力为$T_{-n,-n}=\boldsymbol{T}_{-n}\cdot(-\boldsymbol{n})$，由式(1.10)，我们很容易证明相邻面上的正应力相等：
+\begin{equation*}
+T_{-n,-n}=\boldsymbol{T}_{-n}\cdot(-\boldsymbol{n})=-\boldsymbol{T}_n\cdot(-\boldsymbol{n})=\boldsymbol{T}_n\cdot\boldsymbol{n}=T_{nn}
+\tag{1.12}
+\end{equation*}
+在$\delta A_+$面上的剪应力等于
+\begin{equation*}
+\begin{cases}
+T_{nt}=\boldsymbol{T}_n\cdot\boldsymbol{t}\\[2pt]
+T_{ns}=\boldsymbol{T}_n\cdot\boldsymbol{s}
+\end{cases}
+\tag{1.13}
+\end{equation*}
+在相邻面$\delta A_-$上相应的切应力分量为$T_{-n,\,t}$，$T_{-n,\,s}$，很容易证明，两相邻面上的切应力分量也相等，即
+\begin{equation*}
+\begin{cases}
+T_{-n,\,t}=\boldsymbol{T}_{-n}\cdot(-\boldsymbol{t})=-\boldsymbol{T}_n\cdot(-\boldsymbol{t})=\boldsymbol{T}_n\cdot\boldsymbol{t}=T_{nt}\\[2pt]
+T_{-n,\,s}=\boldsymbol{T}_{-n}\cdot(-\boldsymbol{s})=-\boldsymbol{T}_n\cdot(-\boldsymbol{s})=\boldsymbol{T}_n\cdot\boldsymbol{s}=T_{ns}
+\end{cases}
+\tag{1.14}
+\end{equation*}
+
+\subsection*{3. 一点的应力张量及其性质}
+
+通过同一点不同面上的应力一般不相等，但是我们将证明：只要知道通过一点三个互相垂直坐标面上的应力值，就可以确定该点任意方向面上的应力.下面证明这一性质.为了论述简明起见，在点$O$处取一直角四面体(图1.3)，其中三个面为坐标面，任意倾斜面具有法向量$\boldsymbol{n}$和面积$\delta A_n$.
+
+图1.3中四面体四个面上的法向量分别为$\boldsymbol{n}$，$-\boldsymbol{e}_1$，$-\boldsymbol{e}_2$，$-\boldsymbol{e}_3$；作用的应力分别为$\boldsymbol{T}_n$，$\boldsymbol{T}_1$，$\boldsymbol{T}_2$，$\boldsymbol{T}_3$；直角四面体的四个表面积分别为$\delta A_n$，$\delta A_1$，$\delta A_2$，$\delta A_3$；根据面积投影定理，$\delta A_i\,(i=1,2,3)$与$\delta A_n$的关系为
+\begin{equation*}
+\delta A_i=\delta A_n\, n_i
+\tag{1.15}
+\end{equation*}
+
+现在我们来建立该微元四面体的力学平衡式，假定微元体处于体积力强度$\rho\boldsymbol{f}$的外力场中，则按牛顿定律$\boldsymbol{F}=m\boldsymbol{a}$($m=\rho\,\delta V$是微元体的质量，$\boldsymbol{a}$是微团加速度)，四面体的平衡方程应为
+\[
+\rho\boldsymbol{a}\,\delta V=\rho\boldsymbol{f}\,\delta V+\boldsymbol{T}_n\delta A_n+\boldsymbol{T}_{-1}\delta A_1+\boldsymbol{T}_{-2}\delta A_2+\boldsymbol{T}_{-3}\delta A_3
+\]
+式中$\delta V$是微元体的体积.方程左端为微元体的质量和加速度的乘积，右端第一项是作用在四面体上的体积力的合力，右端后四项是作用在四面体表面上的表面力的合力.将等式两边同除以$\delta A_n$，则明显有
+\[
+\lim_{\delta A_n\to 0}\frac{\delta V}{\delta A_n}=0
+\]
+此外由式(1.15)：$\dfrac{\delta A_i}{\delta A_n}=n_i$，因而有
+\[
+\boldsymbol{T}_n+\boldsymbol{T}_{-1}n_1+\boldsymbol{T}_{-2}n_2+\boldsymbol{T}_{-3}n_3=\boldsymbol{0}
+\]
+注意到相邻面上应力关系式(1.10)：$\boldsymbol{T}_{-i}=-\boldsymbol{T}_i$，上式可写作
+\begin{equation*}
+\boldsymbol{T}_n=\boldsymbol{T}_1 n_1+\boldsymbol{T}_2 n_2+\boldsymbol{T}_3 n_3=\boldsymbol{T}_i n_i
+\tag{1.16}
+\end{equation*}
+该式说明过一点任意面(它的法向量为$\boldsymbol{n}=n_i\boldsymbol{e}_i$)上的应力由通过该点三个相互垂直面上的应力按式(1.16)确定.也就是说，只要知道一点的三个应力$(\boldsymbol{T}_1,\boldsymbol{T}_2,\boldsymbol{T}_3)$，则任意面上的应力可以计算出来.因此称$(\boldsymbol{T}_1,\boldsymbol{T}_2,\boldsymbol{T}_3)$为一点的\textbf{应力状态}.
+
+众所周知，一个向量可以分解为三个分量，因此每个应力向量$\{\boldsymbol{T}_i\}$都可以分解为三个分量如下：
+\begin{equation*}
+\begin{cases}
+\boldsymbol{T}_1=T_{11}\boldsymbol{e}_1+T_{12}\boldsymbol{e}_2+T_{13}\boldsymbol{e}_3\\
+\boldsymbol{T}_2=T_{21}\boldsymbol{e}_1+T_{22}\boldsymbol{e}_2+T_{23}\boldsymbol{e}_3\\
+\boldsymbol{T}_3=T_{31}\boldsymbol{e}_1+T_{32}\boldsymbol{e}_2+T_{33}\boldsymbol{e}_3
+\end{cases}
+\tag{1.17}
+\end{equation*}
+于是一点应力状态还可以用九个代数值组成的方阵表示：
+\begin{equation*}
+[T_{ij}]=\begin{bmatrix}
+T_{11} & T_{12} & T_{13}\\
+T_{21} & T_{22} & T_{23}\\
+T_{31} & T_{32} & T_{33}
+\end{bmatrix}
+\tag{1.18a}
+\end{equation*}
+应用应力状态的公式(1.17)，任意面上的应力可写作
+\begin{equation*}
+\boldsymbol{T}_n=\boldsymbol{T}_i n_i=T_{ij}n_i\boldsymbol{e}_j
+\tag{1.18b}
+\end{equation*}
+利用张量识别定理(见附录)可以证明一点应力状态是张量，因而$T_{ij}$称为应力张量的分量.
+
+\subsection*{4. 应力张量的对称性}
+
+由微团的力矩平衡原理，可以进一步证明，九个应力分量不是相互独立的，而有以下的对称关系式
+\begin{equation*}
+T_{ij}=T_{ji}
+\tag{1.19}
+\end{equation*}
+即应力分量的方阵是对称方阵，或应力张量是对称张量.
+
+\noindent\textbf{证明}\quad 根据动量矩定理：有限质量体的动量矩增长率应等于作用在该质量体上的外力矩之和.在流体中取任意一有限体积流体，作用在该有限体表面$\Sigma$上的外力矩为
+\[
+\boldsymbol{L}_\Sigma=\oint_\Sigma \boldsymbol{r}\times\boldsymbol{T}_n\,\mathrm{d}A=\oint_\Sigma \boldsymbol{r}\times\boldsymbol{T}_i n_i\,\mathrm{d}A
+\]
+体积力矩为
+\[
+\boldsymbol{L}_V=\iiint_V \rho(\boldsymbol{r}\times\boldsymbol{f})\,\mathrm{d}V
+\]
+有限体的动量矩用$\boldsymbol{K}$表示，它的增长率等于
+\[
+\frac{\mathrm{d}\boldsymbol{K}}{\mathrm{d}t}=\iiint_V \rho(\boldsymbol{r}\times\boldsymbol{a})\,\mathrm{d}V
+\]
+根据动量矩原理$\dfrac{\mathrm{d}\boldsymbol{K}}{\mathrm{d}t}=\boldsymbol{L}_\Sigma+\boldsymbol{L}_V$，应有
+\[
+\iiint_V \rho(\boldsymbol{r}\times\boldsymbol{a})\,\mathrm{d}V=\oint_\Sigma \boldsymbol{r}\times\boldsymbol{T}_i n_i\,\mathrm{d}A+\iiint_V \rho\,\boldsymbol{r}\times\boldsymbol{f}\,\mathrm{d}V
+\]
+式中面积分可以用高斯公式(见附录)转换成体积分
+\[
+\oint_\Sigma (\boldsymbol{r}\times\boldsymbol{T}_i)\,n_i\,\mathrm{d}A=\iiint_V \frac{\partial}{\partial x_i}(\boldsymbol{r}\times\boldsymbol{T}_i)\,\mathrm{d}V
+\]
+体积分公式中被积函数可以进一步简化为
+\[
+\frac{\partial}{\partial x_i}(\boldsymbol{r}\times\boldsymbol{T}_i)=\frac{\partial\boldsymbol{r}}{\partial x_i}\times\boldsymbol{T}_i+\boldsymbol{r}\times\frac{\partial\boldsymbol{T}_i}{\partial x_i}
+\]
+向量$\boldsymbol{r}=x_1\boldsymbol{e}_1+x_2\boldsymbol{e}_2+x_3\boldsymbol{e}_3=x_i\boldsymbol{e}_i$，故被积函数为
+\[
+\frac{\partial}{\partial x_i}(\boldsymbol{r}\times\boldsymbol{T}_i)=\boldsymbol{e}_i\times\boldsymbol{T}_i+\boldsymbol{r}\times\frac{\partial\boldsymbol{T}_i}{\partial x_i}
+\]
+将它代入动量矩定理表达式后，得
+\[
+\iiint_V\Big(\boldsymbol{e}_i\times\boldsymbol{T}_i+\boldsymbol{r}\times\frac{\partial\boldsymbol{T}_i}{\partial x_i}+\rho\,\boldsymbol{r}\times\boldsymbol{f}-\rho\,\boldsymbol{r}\times\boldsymbol{a}\Big)\mathrm{d}V=\boldsymbol{0}
+\]
+将有限体体积无限缩小，这时被积函数中位置向量$|\boldsymbol{r}|\to 0$，因而被积函数中后三项较第一项小一量级，当取极限$V\to 0$时，后三项可略去不计.于是微团的动量矩定理表达式简化为
+\begin{equation*}
+\boldsymbol{e}_i\times\boldsymbol{T}_i=\boldsymbol{0}
+\tag{1.20}
+\end{equation*}
+用应力张量的分量表示式(1.17)，式(1.20)可简化为
+\[
+\boldsymbol{e}_i\times\boldsymbol{T}_i=\boldsymbol{e}_i\times T_{ij}\boldsymbol{e}_j=T_{ij}(\boldsymbol{e}_i\times\boldsymbol{e}_j)
+\]
+在向量运算中(见附录)有以下公式
+\[
+\boldsymbol{e}_i\times\boldsymbol{e}_j=-\boldsymbol{e}_j\times\boldsymbol{e}_i=\epsilon_{ijk}\,\boldsymbol{e}_k
+\]
+代入前面公式，得
+\[
+\boldsymbol{e}_i\times\boldsymbol{T}_i=T_{ij}(\boldsymbol{e}_i\times\boldsymbol{e}_j)=T_{ij}\,\epsilon_{ijk}\boldsymbol{e}_k-T_{ji}\,\epsilon_{ijk}\boldsymbol{e}_k=\boldsymbol{0}
+\]
+于是有
+\[
+T_{ij}-T_{ji}=0
+\]
+就证明了应力张量的对称性
+\[
+T_{ij}=T_{ji}
+\]
+应力张量的对称性说明，连续介质中一点应力张量只有六个独立分量.
+
+\subsection*{5. 理想流体的应力张量}
+
+一般来说运动流体中的应力状态有六个分量.一种最简单的流体模型称为\textbf{理想流体}，这种流体中任意一点应力状态是各向同性张量，即理想流体中任意一点的应力张量可表示为
+\begin{equation*}
+T_{ij}=-p\,\delta_{ij}
+\tag{1.21}
+\end{equation*}
+其中$p$是标量且通常大于零，负号表示正应力作用方向与作用面的外法线方向相反，$\delta_{ij}$是单位张量，即
+\begin{equation*}
+\begin{cases}
+\delta_{ij}=0,\quad i\neq j\\[2pt]
+\delta_{ij}=1,\quad i=j
+\end{cases}
+\tag{1.22}
+\end{equation*}
+式(1.21)表明，理想流体中任意面上只有正应力，并且是压强$p$，即任意面上的正应力$T_{nn}=-p$.很容易由式(1.22)导出上述结论.由式(1.18b)，任意面上的应力可写作
+\[
+\boldsymbol{T}_n=\boldsymbol{T}_i n_i=T_{ij}\boldsymbol{e}_j n_i
+\]
+因$T_{ij}=-p\,\delta_{ij}$，故$T_{ij}\boldsymbol{e}_j=-p\,\delta_{ij}\boldsymbol{e}_j=-p\,\boldsymbol{e}_i$，于是任意面上应力
+\begin{equation*}
+\boldsymbol{T}_n=-p\,\boldsymbol{e}_j n_j=-p\,\boldsymbol{n}
+\tag{1.23}
+\end{equation*}
+上式表明任意面上的应力为正应力，同时说明任意面上的应力分量都等于$-p$，即理想流体微团表面承受均匀分布的压强.
+
+\section*{1.3  流体的粘性和压缩性}\addcontentsline{toc}{section}{1.3 流体的粘性和压缩性}
+
+流体和固体的基本区别是它的易流性.固体在剪切力作用下发生剪切变形后可以达到新的静平衡状态，而静止流体不能承受剪切力，任何微小的剪切力都能驱动流体使之持续的流动.也就是说，静止流体中的应力只有压强，而当流体运动时，流体微团的表面除了压强外还有剪应力.流体运动时，微团之间具有抵抗相互滑移运动的属性称为流体的粘性.
+
+最常见的流体，如空气和水，它们的粘性具有以下性质.在厚度为$\delta y$的薄层流体运动中，如上下速度差等于$\delta u$时，则作用在流体薄层面上的剪应力与$\delta u$成正比、与薄层厚度$\delta y$成反比，即有
+\begin{equation*}
+\tau_{xy}\propto\frac{\delta u}{\delta y}
+\tag{1.24}
+\end{equation*}
+具有以上性质的流体称为牛顿流体.式(1.24)也可写作
+\begin{equation*}
+\tau_{xy}=\mu\,\frac{\delta u}{\delta y}
+\tag{1.25}
+\end{equation*}
+式中$\mu$称作动力粘性系数，它的单位是泊，量纲是$\mathrm{kg\cdot m^{-1}\cdot s^{-1}}$.有时还用动力粘性系数除以密度，称作运动粘性系数，用$\nu$表示：
+\begin{equation*}
+\nu=\frac{\mu}{\rho}
+\tag{1.26}
+\end{equation*}
+式中$\nu$的量纲是$\mathrm{m^{2}s^{-1}}$.流体的粘性和温度有关，附表1和附表2收录了常见流体的粘性系数.
+
+根据是否考虑流体的粘性，把流体动力学分为两大类，理想流体动力学和粘性流体动力学.是否应当考虑粘性，不仅由粘性系数决定，还和流动的速度$U$和尺度$L$有关.常用雷诺数$Re=\dfrac{UL}{\nu}$衡量流动过程中粘性作用的大小；如$Re\ll 1$，则认为粘性主宰流动.本书将在第4章、第5章讲述理想流体运动；第8章详细介绍粘性流体的运动.
+
+由于压强变化而引起流体密度的变化称为\textbf{压缩性}.气体和液体的压缩性有明显区别.气体的密度通常随压强的增高而增大，随温度的升高而减小，具有明显的可压缩性，它可用热力学状态方程表示：
+\begin{equation*}
+p=p(\rho,T)
+\tag{1.27}
+\end{equation*}
+式中$T$为绝对温度.常见的气体大多数服从完全气体状态方程：
+\begin{equation*}
+p=R\rho T
+\tag{1.28}
+\end{equation*}
+式中$R$为气体常数.一般来说液体密度几乎不随压强变化，但当温度增加时，密度稍有减小：
+\begin{equation*}
+\rho=\rho_0\,[1-\beta\,(T-T_0)]
+\tag{1.29}
+\end{equation*}
+式中$\beta$称为膨胀系数，它表示单位温升时液体密度的相对变化率，通常$\beta\sim 10^{-3}\,\mathrm{K}^{-1}$.流体力学中，按运动中流体密度的相对变化率的大小把流动分为可压缩流和不可压缩流两大类.气体一般视作可压缩的，但是在后面第7章中我们将论述：当气体速度远远小于当地声速时(用$c$表示声速)，气体密度的相对变化率十分微小，几乎可以忽略不计，这时可以把这种低速气体流动作为不可压缩流体处理.就是说，气体流动的压缩性可以用它的流速和当地声速之比来衡量，$u/c=Ma$称为马赫数.$Ma\ll 1$的气体流动可以近似为不可压缩流动，否则为可压缩流动.液体的体积相对变化率很小，因此通常认为是不可压缩的，但是在水下强爆炸的情况中，压强及其变化率都很大，这时水的密度变化率很可观，必须考虑水的压缩性.本书大部分内容讨论不可压缩流体运动，第7章专门介绍可压缩流体运动.
+
+\section*{1.4  流体的界面现象和性质}\addcontentsline{toc}{section}{1.4 流体的界面现象和性质}
+
+流体和固体或流体和另一互不掺混流体交界面处的力学和热力学现象称为界面现象，界面上流体具有以下性质.
+
+\subsection*{1. 流-固界面上流体温度和速度的连续性}
+
+讨论流体的宏观运动，界面上任意微元面积在宏观上无限小，在微观上远远大于分子运动尺度，因此宏观的微元界面两侧的流体应处于热力学平衡状态，即界面两侧的流体分子运动处于统计平衡态，如果不考虑界面上的表面张力，微元界面两侧的流体速度和温度相等，应力向量大小相等、方向相反或应力分量相等：
+\begin{gather*}
+\boldsymbol{T}_n=\boldsymbol{T}_{-n}\tag{1.30}\\
+\boldsymbol{V}_n=\boldsymbol{V}_{-n}\tag{1.31}\\
+\boldsymbol{T}_n=-\boldsymbol{T}_{-n}\tag{1.32a}\\
+T_{nn}=T_{-n,\,-n},\qquad T_{nt}=T_{-n,\,-t},\qquad T_{ns}=T_{-n,\,-s}\tag{1.32b}
+\end{gather*}
+在理想流体近似中，不计粘性，流动界面上不存在剪应力，也就是说界面上允许流体有任意相对滑移，这时界面条件(1.31)，(1.32)应修正为
+\begin{gather*}
+\boldsymbol{V}_{+n}\cdot\boldsymbol{n}=\boldsymbol{V}_{-n}\cdot\boldsymbol{n}\tag{1.33}\\[2pt]
+p_{+n}=p_{-n}\tag{1.34}
+\end{gather*}
+式(1.33)的边界条件表明理想流体在物体表面或在互不掺混的理想流体界面上流体可以滑移，但不能相互侵入或穿透，故条件(1.33)称为理想流体界面上的不可穿透条件.
+
+\subsection*{2. 互不掺混流体界面上的表面张力和界面上的应力平衡条件}
+
+自然界许多流动现象中有气、液或液、液共存状态.例如：液滴在气流中运动，气泡在液流中运动，以及油滴在水流中的运动等.这时必须考虑气、液或液、液界面上的力平衡条件.在没有外力场作用下空气中平衡的液滴总是呈圆球形，这表明在热力学平衡时液体表面像一张紧的薄膜包裹着液滴.如果用类似应力分析的方法(参见图1.4)，把界面分割成两部分，则在分割线上必有某种张力使界面处于平衡，称这种张力为表面张力.单位长度的表面张力称为表面张力系数，并用$\gamma$表示.表面张力系数和界面两侧的介质有关，例如水银与空气界面上的表面张力系数大于水与空气界面上的表面张力系数.通常表面张力系数还随温度升高而减小.
+
+下面导出液-液或气-液界面上的应力关系.表面张力位于界面的切平面内并和分割线垂直.规定界面的法向量指向凸面外法线方向，从张力方向俯视割线时，割线以逆时针方向为正，则在微元弧上表面张力$\delta\boldsymbol{\Gamma}$可表示为
+\begin{equation*}
+\delta\boldsymbol{\Gamma}=\gamma\,\boldsymbol{n}\times\mathrm{d}\boldsymbol{x}
+\tag{1.35}
+\end{equation*}
+式中$\mathrm{d}\boldsymbol{x}$是微元弧长的位移向量.任取一微元曲面，并将坐标设在曲面的顶点，同时假定微元曲面的边界周线为平面曲线且平行于$x\text{-}y$平面(图1.4)，则微元曲面的方程可写作：
+\begin{equation*}
+z=\zeta(x,y)
+\tag{1.36}
+\end{equation*}
+在设定的坐标系中，该微元曲面有以下性质：
+\begin{gather*}
+\zeta(0,0)=0\tag{1.37}\\[2pt]
+\frac{\partial\zeta}{\partial x}(0,0)=\frac{\partial\zeta}{\partial y}(0,0)=0\tag{1.38}
+\end{gather*}
+凸面的外法线向量为
+\[
+\boldsymbol{n}=\frac{\dfrac{\partial\zeta}{\partial x}\boldsymbol{i}+\dfrac{\partial\zeta}{\partial y}\boldsymbol{j}-\boldsymbol{k}}{\sqrt{1+\Big(\dfrac{\partial\zeta}{\partial x}\Big)^{2}+\Big(\dfrac{\partial\zeta}{\partial y}\Big)^{2}}}
+\]
+在微元面的原点附近$\dfrac{\partial\zeta}{\partial x}\approx\dfrac{\partial\zeta}{\partial y}\approx 0$，故它的法向量
+\[
+\boldsymbol{n}=\frac{\partial\zeta}{\partial x}\boldsymbol{i}+\frac{\partial\zeta}{\partial y}\boldsymbol{j}-\boldsymbol{k}+\text{高阶小量}
+\]
+于是表面张力的合力
+\begin{align*}
+\boldsymbol{\Gamma}=\oint\delta\boldsymbol{\Gamma}=\oint\gamma\,\boldsymbol{n}\times\mathrm{d}\boldsymbol{x}
+&=\gamma\oint\Big(\frac{\partial\zeta}{\partial x}\boldsymbol{i}+\frac{\partial\zeta}{\partial y}\boldsymbol{j}-\boldsymbol{k}\Big)\times(\boldsymbol{i}\,\mathrm{d}x+\boldsymbol{j}\,\mathrm{d}y)\\[2pt]
+&=\gamma\oint\Big(\frac{\partial\zeta}{\partial x}\,\mathrm{d}y-\frac{\partial\zeta}{\partial y}\,\mathrm{d}x\Big)\boldsymbol{k}
+\end{align*}
+利用斯托克斯回路积分公式，上式可写成面积分
+\begin{equation*}
+\boldsymbol{\Gamma}=\gamma\Big(\frac{\partial^{2}\zeta}{\partial x^{2}}+\frac{\partial^{2}\zeta}{\partial y^{2}}\Big)_{\!0}\delta A\,\boldsymbol{k}
+\tag{1.39}
+\end{equation*}
+$\delta A$是微元周线$l$的平面面积.根据曲面理论，$x\text{-}z$、$y\text{-}z$平面内曲线的曲率分别为
+\[
+\frac{1}{R_1}=\frac{\dfrac{\partial^{2}\zeta}{\partial x^{2}}}{\Big[1+\Big(\dfrac{\partial\zeta}{\partial x}\Big)^{2}\Big]^{3/2}},\qquad
+\frac{1}{R_2}=\frac{\dfrac{\partial^{2}\zeta}{\partial y^{2}}}{\Big[1+\Big(\dfrac{\partial\zeta}{\partial y}\Big)^{2}\Big]^{3/2}}
+\]
+由于微元面的原点上：$\dfrac{\partial\zeta}{\partial x}=0$，$\dfrac{\partial\zeta}{\partial y}=0$，故在原点上
+\[
+\frac{1}{R_1}=\Big(\frac{\partial^{2}\zeta}{\partial x^{2}}\Big)_{\!0},\qquad
+\frac{1}{R_2}=\Big(\frac{\partial^{2}\zeta}{\partial y^{2}}\Big)_{\!0}
+\]
+于是表面张力的合力为
+\begin{equation*}
+\boldsymbol{\Gamma}=\gamma\Big(\frac{1}{R_1}+\frac{1}{R_2}\Big)\delta A\,\boldsymbol{k}
+\tag{1.40}
+\end{equation*}
+另一方面，界面两侧的正应力合力为(见图1.4)
+\[
+\big[(\boldsymbol{T}_{nn})_{+}-(\boldsymbol{T}_{nn})_{-}\big]\delta A\,\boldsymbol{k}
+\]
+此处下标“$+$”表示在凸面一侧的正应力，下标“$-$”表示在凹面一侧的正应力.由于界面厚度为零，它本身的惯性质量也等于零.由力平衡关系可导出：
+\begin{equation*}
+(T_{nn})_{-}-(T_{nn})_{+}+\gamma\Big(\frac{1}{R_1}+\frac{1}{R_2}\Big)=0
+\tag{1.41}
+\end{equation*}
+在理想流体中
+\[
+T_{nn}=-p
+\]
+于是有
+\begin{equation*}
+\Delta p=p_{-}-p_{+}=\gamma\Big(\frac{1}{R_1}+\frac{1}{R_2}\Big)
+\tag{1.42}
+\end{equation*}
+式中$p_+$是界面的凸面一侧的压强，$p_-$是界面的凹面一侧的压强.由上面导出的公式可见，球形气泡内外存在压差.当气泡平衡时，气泡内的压强大于气泡外的液体压强，而且气泡越小，内外压差越大.在平衡的液滴内外也有同样的情况.
+
+\noindent\textbf{例1.1}\quad 在水中球形气泡的直径为$2\,$cm，已知$20\,^\circ$C水在空气中的表面张力系数为$7.28\times 10^{-2}\,\mathrm{N/m}$，求气泡内外的压差.
+
+\noindent\textbf{解}\quad 利用式(1.42)，气泡内压强比气泡外压强大，
+\[
+\Delta p=\frac{2\gamma}{R}=\frac{2\times 7.28\times 10^{-2}}{1\times 10^{-2}}\approx 14\;(\mathrm{N/m^{2}})
+\]
+
+\subsection*{3. 流体界面在固壁上的接触角}
+
+当流场中有三种互不侵入的介质共存时，三种介质间界面交于一曲线.如果其中一个界面为固壁，则称该交线为接触线.任意流体的界面上有表面张力$\gamma_{ij}$，如图1.5所示.当流体处于平衡状态时，在界面的交线或接触线上三个表面张力应满足杨氏方程，即有
+\begin{equation*}
+\gamma_{32}=\gamma_{31}+\gamma_{21}\cos\theta
+\tag{1.43}
+\end{equation*}
+在接触线上流体界面和固壁面的夹角称作接触角.接触角的定义是接触线上流体界面的法线和固壁面的法线的夹角，规定法线的方向如下：在流体界面上法线指向被考察的流体一侧；在固壁上法线指向固壁内侧.例如图1.5中介质1和固壁的接触角为$\theta_1$，介质2和固壁的接触角则为$\pi-\theta_1$.接触角的大小取决于固壁材料与流体的性质.例如当介质2为空气、介质1为水、固壁是玻璃时，水和玻璃的接触角$\theta<90^\circ$；而当介质2为空气、介质1为水银时，水银和玻璃的接触角$\theta>90^\circ$，约为$150^\circ$.接触角越小该液体在固壁上越是容易湿润.如接触角$\theta=0^\circ$，称液体和固壁是完全浸润的；接触角$\theta=180^\circ$的液-固之间称作非浸润的.由于气、液、固三种界面之间的液体浸润作用，在垂直细管中可见到液体高于或低于周围连通的液面，这种现象称为毛细现象.图1.6(a)是玻璃管中水或酒精的毛细现象，图(b)是玻璃管中水银的毛细现象，前者属于易浸润，后者为不易浸润.
+
+利用界面上表面张力的平衡关系式，可以计算毛细现象中液面升起(负值为下降)高度.
+
+\noindent\textbf{例1.2}\quad 设有细管直径为$d$，已知细管内液体的表面张力系数为$\gamma$，液体界面和管壁的接触角为$\theta$，求管内液体在静止时的液面升高(参见图1.6(a)).
+
+\noindent\textbf{解}\quad 根据表面张力原理，假设细管中液面为球面，该球面曲率半径为(凹面曲率半径为正，见图1.5)
+\[
+R=\frac{d}{2\cos\theta}
+\]
+液面开放一侧为大气压，内侧压力按表面张力公式为
+\[
+p=p_a-\frac{2\gamma}{R}=p_a-\frac{4\gamma\cos\theta}{d}
+\]
+另一方面，在静止液体中，有压强公式
+\[
+p=p_a-\rho g H
+\]
+$H$为液柱高，消去$p_a$后得
+\[
+H=\frac{4\gamma\cos\theta}{\rho g d}
+\]
+如果$\theta<90^\circ$，细管的液面升高，$\theta>90^\circ$，细管的液面下降.上述分析说明，当细玻璃管插入易浸润流体时，在玻璃管内液面升高；与之相反，玻璃管插入不易浸润流体时，玻璃管中液面下降.
+
+\noindent\textbf{例1.3}\quad 直径为$1\,$cm的玻璃管垂直插入水中，已知水气界面的表面张力系数$\gamma=7.28\times 10^{-2}\,\mathrm{N/m}$，水气界面和干净玻璃管的接触角为$0^\circ$.求液面毛细现象引起的水位升高.
+
+\noindent\textbf{解}\quad 利用上题公式$H=\dfrac{4\gamma\cos\theta}{\rho g d}$，已知水的密度$\rho=1000\,\mathrm{kg/m^3}$，得水在玻璃管中的毛细现象引起的升高为
+\[
+H=\frac{4\times 7.28\times 10^{-2}\cos 0^{\circ}}{1000\times 9.81\times 1\times 10^{-2}}\approx 0.3\;(\mathrm{cm})
+\]
+
+\section*{习题}\addcontentsline{toc}{section}{习题}
+
+\noindent\textbf{1.1}\quad 能把流体看作连续介质的条件是什么？设稀薄气体的分子自由程是几米的数量级，问人造卫星在飞离大气层进入稀薄气体层时，连续介质假设是否成立？
+
+\medskip
+\noindent\textbf{1.2}\quad 有一氢气球在$30\,$km高空处膨胀为直径$20\,$m的气球，该处大气压为$1100\,\mathrm{N/m^2}$，温度为零下$40\,^\circ$C.如不考虑气球蒙布中的应力，问该气球在地面时具有多大的体积？地面气压和温度分别为$101.3\,\mathrm{kN/m^2}$和$15\,^\circ$C.又如已知氢气的气体常数$R=4120\,\mathrm{J/(kg\cdot K)}$，问气球中氢气的质量有多少？
+
+\medskip
+\noindent\textbf{1.3}\quad 两块相距很小的垂直平板，其距离为$r$，插在密度为$\rho$的液体中，由于表面张力引起毛细现象.如表面张力系数为$\gamma$，接触角为$\alpha$，试推导由于毛细现象引起液柱升高或下降的表达式.
+
+\medskip
+\noindent\textbf{1.4}\quad 为了防止水银蒸发，在水银槽中放一层水，用一根直径为$6\,$mm的玻璃管插入后，又向玻璃管中加一点水，如图1.7所示.今读得$h_1=30.5\,$mm、$h_2=3.6\,$mm.已知水银比重为13.56，空气与水的表面张力系数$\gamma_1=0.073\,\mathrm{N/m}$，空气、水和玻璃管的接触角$\theta_1=0^\circ$，水银、水和玻璃管的接触角$\theta_2=140^\circ$，求水与水银的表面张力系数$\gamma_2$为多少？
+
+\medskip
+\noindent\textbf{1.5}\quad 大气中有一股圆柱形水束射流，直径为$4\,$mm，如水与大气的表面张力系数$\gamma=0.073\,\mathrm{N/m}$，问水束中的水压比大气压大多少？
+
+\medskip
+\noindent\textbf{1.6}\quad 两个半径分别为$a_1$和$a_2$的球形肥皂泡合在一起，证明合成后的肥皂泡的半径由下列方程确定：
+\[
+p_a r^{3}+4\gamma r^{2}=p_a(a_1^{3}+a_2^{3})+4\gamma(a_1^{2}+a_2^{2})
+\]
+式中$p_a$为大气压力，$\gamma$为空气与肥皂水的表面张力系数.
+
+\medskip
+\noindent\textbf{1.7}\quad 内径为$10\,$mm的开口玻璃管插入温度为$20\,^\circ$C的水中，已知水与玻璃的接触角$\alpha=10^\circ$，求水在管中上升的高度.
+
+\section*{思考题}\addcontentsline{toc}{section}{思考题}
+
+\noindent\textbf{S1.1}\quad 是否存在应力张量不对称的流体？如果存在，这种流体具有什么特性？
+
+\medskip
+\noindent\textbf{S1.2}\quad 连续介质模型和稀薄气体模型的差别是什么？选择模型的依据是什么？
+
+\medskip
+\noindent\textbf{S1.3}\quad 静止水中小气泡呈圆球形，运动水流中气泡是否保持圆球形？为什么？
+
+\medskip
+\noindent\textbf{S1.4}\quad 粘性流体运动和理想流体运动的主要差别是什么？依据什么选用模型？

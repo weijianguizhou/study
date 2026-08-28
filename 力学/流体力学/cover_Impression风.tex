@@ -1,0 +1,277 @@
+% ============================================================
+%  课程笔记封面 —— 「星月夜」× VividBook 设计语言
+%  梵高《星月夜》主题 + VividBook 渐变/几何装饰/色彩条带风格
+%
+%  配色定义在 preamble.tex（vn* 前缀）
+%
+%  可用字段：
+%      \notename     主标题（必填）
+%      \noteauthor   作者（必填）
+%      \notecourseen 眉题英文（缺省 Fluid Mechanics）
+%      \notesubtitle 副标题（缺省「学习笔记」）
+%      \noteextra    底部附加信息（缺省不显示）
+% ============================================================
+
+\providecommand{\notecourseen}{Fluid Mechanics}
+\providecommand{\notesubtitle}{学\ 习\ 笔\ 记}
+\providecommand{\noteextra}{}
+
+\begin{titlepage}
+	\begin{tikzpicture}[remember picture, overlay]
+		% ====================================================
+		%  A4: (0,0) 左下 → (21,29.7) 右上
+		%  overlay 图片原点不在页角，需把 (0,0) 平移到页面左下角
+		% ====================================================
+		\begin{scope}[shift={(current page.south west)}]
+		% ---- 1. 深夜天空渐变（靛蓝→深紫→近黑） ----
+		\shade[top color=vnNight!85!black, bottom color=vnNightMid]
+			(0,0) rectangle (21,29.7);
+
+		% ---- 2. VividBook 风格：左侧紫色渐变装饰条带 ----
+		\fill[vnAccent, opacity=0.12] (0,0) rectangle (2.5,29.7);
+		\fill[vnAccentPink, opacity=0.08] (0,0) rectangle (1.2,29.7);
+
+		% ---- 3. VividBook 风格：底部色彩渐变条 ----
+		\fill[vnAccent, opacity=0.25]
+			(0,0) -- (0,2.0) .. controls (5,2.8) and (10,1.5) .. (16,2.2)
+			.. controls (18,2.5) and (20,1.8) .. (21,2.0) -- (21,0) -- cycle;
+		\fill[vnAccentPink, opacity=0.18]
+			(0,0) -- (0,1.2) .. controls (6,1.8) and (12,0.9) .. (18,1.4)
+			.. controls (20,1.6) and (21,1.0) .. (21,1.2) -- (21,0) -- cycle;
+
+		% ---- 4. 旋涡星云（3 个固定螺旋弧组） ----
+		% 旋涡 1：右上
+		\draw[vnNightLight, opacity=0.35, line width=1.3pt]
+			(16,23) ++(0:0.3cm) arc[start angle=0, end angle=70, radius=0.3cm];
+		\draw[vnNightLight, opacity=0.30, line width=1.2pt]
+			(16,23) ++(12:0.55cm) arc[start angle=12, end angle=82, radius=0.55cm];
+		\draw[vnNightLight, opacity=0.25, line width=1.1pt]
+			(16,23) ++(24:0.8cm) arc[start angle=24, end angle=94, radius=0.8cm];
+		\draw[vnNightLight, opacity=0.20, line width=1.0pt]
+			(16,23) ++(36:1.1cm) arc[start angle=36, end angle=106, radius=1.1cm];
+		\draw[vnNightLight, opacity=0.15, line width=0.9pt]
+			(16,23) ++(48:1.45cm) arc[start angle=48, end angle=118, radius=1.45cm];
+		\draw[vnNightLight, opacity=0.10, line width=0.8pt]
+			(16,23) ++(60:1.85cm) arc[start angle=60, end angle=130, radius=1.85cm];
+		\draw[vnNightLight, opacity=0.07, line width=0.7pt]
+			(16,23) ++(72:2.3cm) arc[start angle=72, end angle=142, radius=2.3cm];
+		% 旋涡 2：左中
+		\draw[vnNightLight, opacity=0.28, line width=1.1pt]
+			(5,20) ++(0:0.25cm) arc[start angle=0, end angle=60, radius=0.25cm];
+		\draw[vnNightLight, opacity=0.23, line width=1.0pt]
+			(5,20) ++(15:0.5cm) arc[start angle=15, end angle=75, radius=0.5cm];
+		\draw[vnNightLight, opacity=0.18, line width=0.9pt]
+			(5,20) ++(30:0.8cm) arc[start angle=30, end angle=90, radius=0.8cm];
+		\draw[vnNightLight, opacity=0.13, line width=0.8pt]
+			(5,20) ++(45:1.15cm) arc[start angle=45, end angle=105, radius=1.15cm];
+		\draw[vnNightLight, opacity=0.08, line width=0.7pt]
+			(5,20) ++(60:1.55cm) arc[start angle=60, end angle=120, radius=1.55cm];
+		% 旋涡 3：中上
+		\draw[vnNightLight, opacity=0.25, line width=1.0pt]
+			(10,25) ++(0:0.2cm) arc[start angle=0, end angle=55, radius=0.2cm];
+		\draw[vnNightLight, opacity=0.20, line width=0.9pt]
+			(10,25) ++(12:0.4cm) arc[start angle=12, end angle=67, radius=0.4cm];
+		\draw[vnNightLight, opacity=0.15, line width=0.8pt]
+			(10,25) ++(24:0.65cm) arc[start angle=24, end angle=79, radius=0.65cm];
+		\draw[vnNightLight, opacity=0.10, line width=0.7pt]
+			(10,25) ++(36:0.95cm) arc[start angle=36, end angle=91, radius=0.95cm];
+		\draw[vnNightLight, opacity=0.06, line width=0.6pt]
+			(10,25) ++(48:1.3cm) arc[start angle=48, end angle=103, radius=1.3cm];
+
+		% ---- 5. 横贯天空的波浪短笔触 ----
+		\foreach \yy/\xs/\xl/\op in {
+				18/1/5/0.30, 19/3/4/0.25, 20/0.5/6/0.28,
+				21/2/4.5/0.22, 22/1.5/5.5/0.26, 23/4/3.5/0.24,
+				24/0.8/5/0.22, 25/3/4/0.20, 26/1/6/0.25,
+				27/2.5/4.5/0.20, 16/5/3.5/0.18, 17/6/4/0.20,
+				15/7/3/0.16, 24/12/4/0.22, 25/14/3.5/0.20,
+				26/11/5/0.18, 23/15/4/0.20, 22/16/3.5/0.18,
+				20/17/4/0.16, 27/8/4.5/0.22, 28/10/3/0.18}{
+			\draw[vnNightLight, opacity=\op, line width=1.5pt, line cap=round]
+				(\xs,\yy) .. controls ++(\xl*0.3,0.2) and ++(\xl*0.6,-0.2) .. ++(\xl,0);
+		}
+
+		% ---- 6. 弯月（右上角，三层光晕 + 暗面遮挡） ----
+		\coordinate (MOON) at (16,23);
+		\fill[vnMoonGlow, opacity=0.08] (MOON) circle(4.0cm);
+		\fill[vnMoonGlow, opacity=0.15] (MOON) circle(3.0cm);
+		\fill[vnMoonGlow, opacity=0.25] (MOON) circle(2.2cm);
+		\fill[vnMoon, opacity=0.9] (MOON) circle(1.5cm);
+		\fill[vnNightMid] ([xshift=0.6cm,yshift=0.4cm]MOON) circle(1.3cm);
+
+		% ---- 7. 星星（15 颗，硬编码避免变量展开问题） ----
+		% 星1
+		\fill[vnStarGlow, opacity=0.24] (3,27) circle(0.84cm);
+		\fill[vnStar, opacity=0.48] (3,27) circle(0.50cm);
+		\fill[vnStar, opacity=0.95] (3,27) circle(0.28cm);
+		\draw[vnStar, opacity=0.57, line width=0.7pt] (2.16,27) -- (3.84,27);
+		\draw[vnStar, opacity=0.57, line width=0.7pt] (3,26.16) -- (3,27.84);
+		% 星2
+		\fill[vnStarGlow, opacity=0.22] (8,26) circle(0.66cm);
+		\fill[vnStar, opacity=0.45] (8,26) circle(0.40cm);
+		\fill[vnStar, opacity=0.90] (8,26) circle(0.22cm);
+		\draw[vnStar, opacity=0.54, line width=0.7pt] (7.34,26) -- (8.66,26);
+		\draw[vnStar, opacity=0.54, line width=0.7pt] (8,25.34) -- (8,26.66);
+		% 星3
+		\fill[vnStarGlow, opacity=0.25] (13,27.5) circle(0.90cm);
+		\fill[vnStar, opacity=0.50] (13,27.5) circle(0.54cm);
+		\fill[vnStar, opacity=1.0] (13,27.5) circle(0.30cm);
+		\draw[vnStar, opacity=0.60, line width=0.7pt] (12.1,27.5) -- (13.9,27.5);
+		\draw[vnStar, opacity=0.60, line width=0.7pt] (13,26.6) -- (13,28.4);
+		% 星4
+		\fill[vnStarGlow, opacity=0.23] (18,26) circle(0.75cm);
+		\fill[vnStar, opacity=0.46] (18,26) circle(0.45cm);
+		\fill[vnStar, opacity=0.92] (18,26) circle(0.25cm);
+		\draw[vnStar, opacity=0.55, line width=0.7pt] (17.25,26) -- (18.75,26);
+		\draw[vnStar, opacity=0.55, line width=0.7pt] (18,25.25) -- (18,26.75);
+		% 星5
+		\fill[vnStarGlow, opacity=0.21] (5,24) circle(0.60cm);
+		\fill[vnStar, opacity=0.42] (5,24) circle(0.36cm);
+		\fill[vnStar, opacity=0.85] (5,24) circle(0.20cm);
+		\draw[vnStar, opacity=0.51, line width=0.7pt] (4.4,24) -- (5.6,24);
+		\draw[vnStar, opacity=0.51, line width=0.7pt] (5,23.4) -- (5,24.6);
+		% 星6
+		\fill[vnStarGlow, opacity=0.24] (11,25) circle(0.78cm);
+		\fill[vnStar, opacity=0.48] (11,25) circle(0.47cm);
+		\fill[vnStar, opacity=0.95] (11,25) circle(0.26cm);
+		\draw[vnStar, opacity=0.57, line width=0.7pt] (10.22,25) -- (11.78,25);
+		\draw[vnStar, opacity=0.57, line width=0.7pt] (11,24.22) -- (11,25.78);
+		% 星7
+		\fill[vnStarGlow, opacity=0.20] (7,22) circle(0.54cm);
+		\fill[vnStar, opacity=0.40] (7,22) circle(0.32cm);
+		\fill[vnStar, opacity=0.80] (7,22) circle(0.18cm);
+		\draw[vnStar, opacity=0.48, line width=0.7pt] (6.46,22) -- (7.54,22);
+		\draw[vnStar, opacity=0.48, line width=0.7pt] (7,21.46) -- (7,22.54);
+		% 星8
+		\fill[vnStarGlow, opacity=0.22] (14,24) circle(0.66cm);
+		\fill[vnStar, opacity=0.44] (14,24) circle(0.40cm);
+		\fill[vnStar, opacity=0.88] (14,24) circle(0.22cm);
+		\draw[vnStar, opacity=0.53, line width=0.7pt] (13.34,24) -- (14.66,24);
+		\draw[vnStar, opacity=0.53, line width=0.7pt] (14,23.34) -- (14,24.66);
+		% 星9
+		\fill[vnStarGlow, opacity=0.21] (19,25.5) circle(0.60cm);
+		\fill[vnStar, opacity=0.42] (19,25.5) circle(0.36cm);
+		\fill[vnStar, opacity=0.85] (19,25.5) circle(0.20cm);
+		\draw[vnStar, opacity=0.51, line width=0.7pt] (18.4,25.5) -- (19.6,25.5);
+		\draw[vnStar, opacity=0.51, line width=0.7pt] (19,24.9) -- (19,26.1);
+		% 星10
+		\fill[vnStarGlow, opacity=0.19] (2,21) circle(0.48cm);
+		\fill[vnStar, opacity=0.39] (2,21) circle(0.29cm);
+		\fill[vnStar, opacity=0.78] (2,21) circle(0.16cm);
+		\draw[vnStar, opacity=0.47, line width=0.7pt] (1.52,21) -- (2.48,21);
+		\draw[vnStar, opacity=0.47, line width=0.7pt] (2,20.52) -- (2,21.48);
+		% 星11
+		\fill[vnStarGlow, opacity=0.22] (10,23) circle(0.72cm);
+		\fill[vnStar, opacity=0.45] (10,23) circle(0.43cm);
+		\fill[vnStar, opacity=0.90] (10,23) circle(0.24cm);
+		\draw[vnStar, opacity=0.54, line width=0.7pt] (9.28,23) -- (10.72,23);
+		\draw[vnStar, opacity=0.54, line width=0.7pt] (10,22.28) -- (10,23.72);
+		% 星12
+		\fill[vnStarGlow, opacity=0.20] (17,21) circle(0.54cm);
+		\fill[vnStar, opacity=0.41] (17,21) circle(0.32cm);
+		\fill[vnStar, opacity=0.82] (17,21) circle(0.18cm);
+		\draw[vnStar, opacity=0.49, line width=0.7pt] (16.46,21) -- (17.54,21);
+		\draw[vnStar, opacity=0.49, line width=0.7pt] (17,20.46) -- (17,21.54);
+		% 星13
+		\fill[vnStarGlow, opacity=0.22] (6,28) circle(0.60cm);
+		\fill[vnStar, opacity=0.44] (6,28) circle(0.36cm);
+		\fill[vnStar, opacity=0.88] (6,28) circle(0.20cm);
+		\draw[vnStar, opacity=0.53, line width=0.7pt] (5.4,28) -- (6.6,28);
+		\draw[vnStar, opacity=0.53, line width=0.7pt] (6,27.4) -- (6,28.6);
+		% 星14
+		\fill[vnStarGlow, opacity=0.21] (15,28.5) circle(0.54cm);
+		\fill[vnStar, opacity=0.42] (15,28.5) circle(0.32cm);
+		\fill[vnStar, opacity=0.85] (15,28.5) circle(0.18cm);
+		\draw[vnStar, opacity=0.51, line width=0.7pt] (14.46,28.5) -- (15.54,28.5);
+		\draw[vnStar, opacity=0.51, line width=0.7pt] (15,27.96) -- (15,29.04);
+		% 星15
+		\fill[vnStarGlow, opacity=0.20] (20,27) circle(0.48cm);
+		\fill[vnStar, opacity=0.40] (20,27) circle(0.29cm);
+		\fill[vnStar, opacity=0.80] (20,27) circle(0.16cm);
+		\draw[vnStar, opacity=0.48, line width=0.7pt] (19.52,27) -- (20.48,27);
+		\draw[vnStar, opacity=0.48, line width=0.7pt] (20,26.52) -- (20,27.48);
+
+		% ---- 8. 远山轮廓 ----
+		\fill[vnHill]
+			(0,7) .. controls (3,8.5) and (5,7.5) .. (8,9)
+			.. controls (10,10) and (12,7.5) .. (14,9.5)
+			.. controls (16,11) and (18,8) .. (21,9)
+			-- (21,0) -- (0,0) -- cycle;
+
+		% ---- 9. 村庄剪影 + 教堂尖塔 ----
+		\foreach \bx/\bh/\bw in {5/2.0/0.8, 6.2/2.5/0.7, 7.5/1.8/0.9, 9/2.2/0.7, 10.5/1.9/0.8} {
+			\pgfmathsetmacro{\bxL}{\bx-\bw/2}
+			\pgfmathsetmacro{\bxR}{\bx+\bw/2}
+			\pgfmathsetmacro{\byT}{8.5+\bh}
+			\fill[vnVillage] (\bxL,8.5) rectangle (\bxR,\byT);
+			\fill[vnVillage] (\bxL-0.06,\byT) -- (\bx,\byT+0.5) -- (\bxR+0.06,\byT) -- cycle;
+		}
+		\fill[vnVillage] (12.5,8.5) rectangle ++(0.5,3.0);
+		\fill[vnVillage] (12.5,11.5) -- (12.75,13) -- (13,11.5) -- cycle;
+		\foreach \wx/\wy in {5/9.2, 6.2/9.8, 7.5/9.0, 9/9.5, 10.5/9.1, 12.75/10.5} {
+			\fill[vnMoon, opacity=0.55] (\wx-0.08,\wy) rectangle ++(0.16,0.2);
+		}
+
+		% ---- 10. 柏树剪影 ----
+		\fill[vnTree]
+			(1.5,0) .. controls (1.2,4) and (2.2,8) .. (1.8,12)
+			.. controls (1.4,15) and (2.0,18) .. (1.7,21)
+			.. controls (1.5,23) and (1.9,24.5) .. (1.8,26)
+			.. controls (2.1,24.5) and (2.5,23) .. (2.3,21)
+			.. controls (2.7,18) and (2.2,15) .. (2.6,12)
+			.. controls (3.0,8) and (2.5,4) .. (2.8,0) -- cycle;
+		\foreach \ty in {1,2,...,24} {
+			\pgfmathsetmacro{\txf}{0.2*sin(25*\ty)}
+			\draw[vnCypress, opacity=0.35, line width=1.0pt, line cap=round]
+				(1.5+\txf,\ty) .. controls ++(0.25,0.4) and ++(-0.25,0.4) .. ++(0.5,0);
+		}
+		\end{scope}
+
+		% ---- 11. VividBook 风格：圆形装饰元素（标题周围） ----
+		\fill[vnAccentTeal, opacity=0.12] ([xshift=-6.5cm,yshift=-8.0cm]current page.north) circle(3.5cm);
+		\fill[vnAccent, opacity=0.08] ([xshift=6.5cm,yshift=-10.0cm]current page.north) circle(2.8cm);
+		\fill[vnAccentPink, opacity=0.06] ([xshift=0cm,yshift=-12.0cm]current page.north) circle(4.0cm);
+
+		% ---- 12. 金色细边框 ----
+		\draw[gold, line width=0.7pt, opacity=0.55]
+			([shift={(0.85,0.85)}]current page.south west) rectangle
+			([shift={(-0.85,-0.85)}]current page.north east);
+
+		% ---- 13. 顶部眉题（英文小字 + 金色短线）----
+		\coordinate (T) at ([yshift=-3.5cm]current page.north);
+		\draw[gold, line width=1.0pt] (T) ++(-3.4cm,0) -- ++(1.0cm,0);
+		\draw[gold, line width=1.0pt] (T) ++(2.4cm,0) -- ++(1.0cm,0);
+		\node[anchor=north, text=white, opacity=0.85, align=center] at (T) {
+			{\sffamily\fontsize{13}{16}\selectfont
+				\uppercase{\notecourseen}}
+		};
+
+		% ---- 14. 主标题 ----
+		\node[anchor=center, align=center, text=white] at ([yshift=-8.0cm]current page.north) {%
+			{\fontsize{40}{50}\sffamily\bfseries \notename}
+		};
+
+		% ---- 15. 金色菱形 + 双细线 ----
+		\coordinate (C) at ([yshift=-11.4cm]current page.north);
+		\draw[gold, line width=1.1pt] (C) ++(-2.2cm,0) -- ++(1.55cm,0);
+		\draw[gold, line width=1.1pt] (C) ++(0.65cm,0) -- ++(1.55cm,0);
+		\node[fill=gold, minimum size=0.24cm, inner sep=0pt, rotate=45] at (C) {};
+
+		% ---- 16. 副标题 ----
+		\node[anchor=north, text=white, opacity=0.9, align=center]
+			at ([yshift=-12.2cm]current page.north) {
+			{\fontsize{16}{20}\sffamily \notesubtitle}
+		};
+
+		% ---- 17. 底部作者、日期 ----
+		\coordinate (B) at ([yshift=3.4cm]current page.south);
+		\draw[gold, line width=0.8pt, opacity=0.7] (B) ++(-1.1cm,0.85cm) -- ++(2.2cm,0);
+		\node[anchor=south, text=white, align=center] at (B) {
+			\begin{tabular}{c}
+				{\fontsize{20}{24}\sffamily\bfseries \noteauthor} \\[0.4cm]
+				{\large \sffamily \today}
+				\ifstrempty{\noteextra}{}{\\[0.3cm]{\normalsize\sffamily \noteextra}}
+			\end{tabular}
+		};
+	\end{tikzpicture}
+\end{titlepage}

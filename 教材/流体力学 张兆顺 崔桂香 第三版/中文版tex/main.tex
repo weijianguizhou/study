@@ -1,0 +1,76 @@
+% !TEX program = xelatex
+\documentclass[11pt,a4paper,UTF8]{ctexbook}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathrsfs}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{hyperref}
+
+\graphicspath{{./Figures/}{../Figures/}}
+
+\usepackage{fontspec}
+\setmainfont{TeX Gyre Termes}
+\setmonofont{TeX Gyre Cursor}
+
+% 中文字体（Windows 系统字体）
+\setCJKmainfont{SimSun}
+\setCJKsansfont{SimHei}
+\setCJKmonofont{FangSong}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!60!black,
+    citecolor=blue!60!black,
+    urlcolor=blue!60!black
+}
+
+\newtheorem{exercise}{习题}[chapter]
+\newtheorem{example}{例题}[chapter]
+\newtheorem*{think}{思考题}
+
+\titlespacing{\chapter}{0pt}{*4}{*2}
+\titlespacing{\section}{0pt}{*3}{*1.5}
+\titlespacing{\subsection}{0pt}{*2}{*1}
+
+\setlength{\headheight}{14pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[RE]{\nouppercase{\leftmark}}
+\fancyhead[LO]{\nouppercase{\rightmark}}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\title{流体力学（第三版）}
+\author{张兆顺 \quad 崔桂香 \\ \small 清华大学出版社}
+\date{}
+
+\begin{document}
+
+\frontmatter
+\maketitle
+\tableofcontents
+
+\include{chapters/Preface}
+
+\mainmatter
+\include{chapters/Ch1}
+\include{chapters/Ch2}
+\include{chapters/Ch3}
+\include{chapters/Ch4}
+\include{chapters/Ch5}
+\include{chapters/Ch6}
+\include{chapters/Ch7}
+\include{chapters/Ch8}
+\include{chapters/Ch9}
+\include{chapters/Ch10}
+\include{chapters/Appendix}
+\include{chapters/TablesAnswers}
+
+\end{document}

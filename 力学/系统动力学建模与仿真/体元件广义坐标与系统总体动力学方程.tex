@@ -90,7 +90,9 @@ $\bm{c}_{\text{J}}$ 与 $\bm{c}_{\text{B}}$ 虽同为系统广义坐标不独立
 \begin{equation}
     c_{\text{B}_i} = \epsilon_{i,1}^2 + \epsilon_{i,2}^2 + \epsilon_{i,3}^2 + \epsilon_{i,4}^2 - 1 = 0,
 \end{equation}
-该式仅含体元件 $i$ 自身的广义坐标；若 $\bm{\theta}_{0,i}$ 取为三轴角形式，各体元件自身广义坐标相互独立，$\bm{c}_{\text{B}}$ 即为空集. 相应地，$\partial \bm{c}_{\text{B}} / \partial \bm{q}$ 恒为分块对角矩阵.
+该式仅含体元件 $i$ 自身的广义坐标；若 $\bm{\theta}_{0,i}$ 取为三轴角形式，各体元件自身广义坐标相互独立，$\bm{c}_{\text{B}}$ 即为空集.
+
+相应地，$\partial \bm{c}_{\text{B}} / \partial \bm{q}$ 恒为分块对角矩阵.
 
 铰元件约束方程源于元件之间的运动副连接. 以上述转动铰元件为例，其约束方程中同时出现两体元件的位置矢量与姿态变换矩阵，无法表示为单个体元件自身坐标的函数；由后文雅可比矩阵可见，$\partial \bm{c}_{\text{J}_j} / \partial \bm{q}$ 恰在 $\text{b}(j)$、$\text{m}(j)$ 两体对应的列块处非零，非零块的分布由系统拓扑连接关系决定.
 
@@ -128,7 +130,7 @@ $\bm{c}_{\text{J}}$ 与 $\bm{c}_{\text{B}}$ 虽同为系统广义坐标不独立
     \frac{\partial}{\partial \bm{q}_{\text{B}_{\text{b}(j)}}} \bm{c}_{\text{J}_j}
     &= \frac{\partial}{\partial \bm{q}_{\text{B}_{\text{b}(j)}}} \begin{bmatrix} \bm{r}_{\text{O}_0\underline{\text{M}}_j|0} - \bm{r}_{\text{O}_0\text{B}_j|0} \\ \bm{T}_{\text{J}_j}^\text{T} \bm{A}_{0,\text{b}(j)}^\text{T} \bm{A}_{0,\text{m}(j)} \bm{n}_{\text{J}_j} \end{bmatrix} \notag \\
     &= \frac{\partial}{\partial \bm{q}_{\text{B}_{\text{b}(j)}}} \begin{bmatrix} -\bm{r}_{\text{O}_0\text{O}_{\text{b}(j)}|0} - \bm{A}_{0,\text{b}(j)} \bm{r}_{\text{O}_{\text{b}(j)}\text{B}_j|\text{b}(j)} \\ \bm{T}_{\text{J}_j}^\text{T} \bm{A}_{0,\text{b}(j)}^\text{T} \bm{A}_{0,\text{m}(j)} \bm{n}_{\text{J}_j} \end{bmatrix} \notag \\
-    &= -\begin{bmatrix} \bm{I}_3 & \bm{A}_{0,\text{b}(j)} \tilde{\bm{r}}_{\text{O}_{\text{b}(j)}\text{B}_j|\text{b}(j)} \bm{H}_\star(\bm{\theta}_{0,\text{b}(j)}) \\ \bm{O}_{2\times 3} & \bm{T}_{\text{J}_j}^\text{T} [\bm{A}_{0,\text{b}(j)}^\text{T} \bm{A}_{0,\text{m}(j)} \bm{n}_{\text{J}_j}]_\times^\text{T} \bm{H}_\star(\bm{\theta}_{0,\text{b}(j)}) \end{bmatrix}.
+    &= -\begin{bmatrix} \bm{I}_3 & \bm{A}_{0,\text{b}(j)} \tilde{\bm{r}}_{\text{O}_{\text{b}(j)}\text{B}_j|\text{b}(j)}^\text{T} \bm{H}_\star(\bm{\theta}_{0,\text{b}(j)}) \\ \bm{O}_{2\times 3} & \bm{T}_{\text{J}_j}^\text{T} [\bm{A}_{0,\text{b}(j)}^\text{T} \bm{A}_{0,\text{m}(j)} \bm{n}_{\text{J}_j}]_\times^\text{T} \bm{H}_\star(\bm{\theta}_{0,\text{b}(j)}) \end{bmatrix}.
 \end{align}
 
 对于转动铰元件 $\text{J}_j$，其约束方程对体元件 $\text{B}_{\text{m}(j)}$ 的广义坐标 $\bm{q}_{\text{B}_{\text{m}(j)}}$ 的偏导数满足
@@ -136,8 +138,70 @@ $\bm{c}_{\text{J}}$ 与 $\bm{c}_{\text{B}}$ 虽同为系统广义坐标不独立
     \frac{\partial}{\partial \bm{q}_{\text{B}_{\text{m}(j)}}} \bm{c}_{\text{J}_j}
     &= \frac{\partial}{\partial \bm{q}_{\text{B}_{\text{m}(j)}}} \begin{bmatrix} \bm{r}_{\text{O}_0\underline{\text{M}}_j|0} - \bm{r}_{\text{O}_0\text{B}_j|0} \\ \bm{T}_{\text{J}_j}^\text{T} \bm{A}_{0,\text{b}(j)}^\text{T} \bm{A}_{0,\text{m}(j)} \bm{n}_{\text{J}_j} \end{bmatrix} \notag \\
     &= \frac{\partial}{\partial \bm{q}_{\text{B}_{\text{m}(j)}}} \begin{bmatrix} \bm{r}_{\text{O}_0\text{O}_{\text{m}(j)}|0} + \bm{A}_{0,\text{m}(j)} \bm{r}_{\text{O}_{\text{m}(j)}\underline{\text{M}}_j|\text{m}(j)} \\ \bm{T}_{\text{J}_j}^\text{T} \bm{A}_{0,\text{b}(j)}^\text{T} \bm{A}_{0,\text{m}(j)} \bm{n}_{\text{J}_j} \end{bmatrix} \notag \\
-    &= \begin{bmatrix} \bm{I}_3 & \bm{A}_{0,\text{m}(j)} \tilde{\bm{r}}_{\text{O}_{\text{m}(j)}\underline{\text{M}}_j|\text{m}(j)} \bm{H}_\star(\bm{\theta}_{0,\text{m}(j)}) \\ \bm{O}_{2\times 3} & \bm{T}_{\text{J}_j}^\text{T} \bm{A}_{0,\text{b}(j)}^\text{T} \bm{A}_{0,\text{m}(j)} \tilde{\bm{n}}_{\text{J}_j}^\text{T} \bm{H}_\star(\bm{\theta}_{0,\text{m}(j)}) \end{bmatrix}.
+    &= \begin{bmatrix} \bm{I}_3 & \bm{A}_{0,\text{m}(j)} \tilde{\bm{r}}_{\text{O}_{\text{m}(j)}\underline{\text{M}}_j|\text{m}(j)}^\text{T} \bm{H}_\star(\bm{\theta}_{0,\text{m}(j)}) \\ \bm{O}_{2\times 3} & \bm{T}_{\text{J}_j}^\text{T} \bm{A}_{0,\text{b}(j)}^\text{T} \bm{A}_{0,\text{m}(j)} \tilde{\bm{n}}_{\text{J}_j}^\text{T} \bm{H}_\star(\bm{\theta}_{0,\text{m}(j)}) \end{bmatrix}.
 \end{align}
+
+\parahead{两个雅可比矩阵的详细推导}
+
+推导只需一条核心公式：\emph{方向余弦矩阵乘以连体系常矢量，对姿态参数的偏导}。设 $\bm{a}$ 为体元件 $i$ 连体系中的定常三维列阵，由
+\begin{equation}
+    \dot{\bm{A}}_{0,i} = \bm{A}_{0,i}\tilde{\bm{\omega}}_{0,i|i}, \qquad \bm{\omega}_{0,i|i} = \bm{H}_\star(\bm{\theta}_{0,i})\dot{\bm{\theta}}_{0,i},
+\end{equation}
+可得
+\begin{align}
+    \frac{\partial}{\partial \bm{\theta}_{0,i}}\big(\bm{A}_{0,i}\bm{a}\big)
+    &= -\bm{A}_{0,i}\tilde{\bm{a}}\,\bm{H}_\star(\bm{\theta}_{0,i}) = \bm{A}_{0,i}\tilde{\bm{a}}^\text{T}\bm{H}_\star(\bm{\theta}_{0,i}),
+\end{align}
+式中用到 $\tilde{\bm{a}}^\text{T} = -\tilde{\bm{a}}$（叉乘矩阵的反对称性，见数学基础.tex:260）. 该式的推导是：对 $\bm{A}_{0,i}\bm{a}$ 求时间导数，结合 $\tilde{\bm{\omega}}_{0,i|i}\bm{a} = \bm{\omega}_{0,i|i}\times\bm{a} = -\bm{a}\times\bm{\omega}_{0,i|i} = -\tilde{\bm{a}}\bm{\omega}_{0,i|i}$，得
+\begin{align}
+    \frac{d}{dt}\big(\bm{A}_{0,i}\bm{a}\big) = \dot{\bm{A}}_{0,i}\bm{a} = \bm{A}_{0,i}\tilde{\bm{\omega}}_{0,i|i}\bm{a} = -\bm{A}_{0,i}\tilde{\bm{a}}\,\bm{\omega}_{0,i|i} = -\bm{A}_{0,i}\tilde{\bm{a}}\,\bm{H}_\star\dot{\bm{\theta}}_{0,i},
+\end{align}
+而链式法则给出 $\frac{d}{dt}(\bm{A}_{0,i}\bm{a}) = \frac{\partial}{\partial \bm{\theta}_{0,i}}(\bm{A}_{0,i}\bm{a})\,\dot{\bm{\theta}}_{0,i}$，两者对照即得核心公式.
+
+在此基础上，两处求导便只是按广义坐标的两个部分（位置与姿态）分块套用上述公式.
+
+\textbf{（1）对体元件 $\text{B}_{\text{b}(j)}$ 广义坐标的偏导}
+
+约束方程第一块中随 $\bm{q}_{\text{B}_{\text{b}(j)}}$ 变化的部分为 $-\bm{r}_{\text{O}_0\text{O}_{\text{b}(j)}|0} - \bm{A}_{0,\text{b}(j)}\bm{r}_{\text{O}_{\text{b}(j)}\text{B}_j|\text{b}(j)}$.
+
+位置列块：$\bm{A}_{0,\text{b}(j)}$ 与 $\bm{r}_{\text{O}_0\text{O}_{\text{b}(j)}|0}$ 无关，直接求导得
+\begin{equation}
+    \frac{\partial}{\partial \bm{r}_{\text{O}_0\text{O}_{\text{b}(j)}|0}}\big(-\bm{r}_{\text{O}_0\text{O}_{\text{b}(j)}|0}\big) = -\bm{I}_3.
+\end{equation}
+姿态列块：$\bm{r}_{\text{O}_0\text{O}_{\text{b}(j)}|0}$ 与 $\bm{\theta}_{0,\text{b}(j)}$ 无关，仅对 $\bm{A}_{0,\text{b}(j)}\bm{r}_{\text{O}_{\text{b}(j)}\text{B}_j|\text{b}(j)}$ 求导，由核心公式（取 $\bm{a} = \bm{r}_{\text{O}_{\text{b}(j)}\text{B}_j|\text{b}(j)}$）并注意约束方程中的负号
+\begin{equation}
+    \frac{\partial}{\partial \bm{\theta}_{0,\text{b}(j)}}\big(-\bm{A}_{0,\text{b}(j)}\bm{a}\big) = -(-\bm{A}_{0,\text{b}(j)}\tilde{\bm{a}}\bm{H}_\star) = +\bm{A}_{0,\text{b}(j)}\tilde{\bm{a}}\bm{H}_\star = -\bm{A}_{0,\text{b}(j)}\tilde{\bm{a}}^\text{T}\bm{H}_\star.
+\end{equation}
+两块合并，即得第一行 $[-\bm{I}_3,\ -\bm{A}_{0,\text{b}(j)}\tilde{\bm{r}}_{\text{O}_{\text{b}(j)}\text{B}_j|\text{b}(j)}^\text{T}\bm{H}_\star]$，与笔记中式前的整体负号一致.
+
+第二块 $\bm{T}_{\text{J}_j}^\text{T}\bm{A}_{0,\text{b}(j)}^\text{T}\bm{A}_{0,\text{m}(j)}\bm{n}_{\text{J}_j}$ 对 $\bm{q}_{\text{B}_{\text{b}(j)}}$ 求导时，记 $\bm{v} = \bm{A}_{0,\text{m}(j)}\bm{n}_{\text{J}_j}$（与 $\bm{\theta}_{0,\text{b}(j)}$ 无关，可视为常量），需要 $\bm{T}_{\text{J}_j}^\text{T}\bm{A}_{0,\text{b}(j)}^\text{T}\bm{v}$ 对 $\bm{\theta}_{0,\text{b}(j)}$ 的偏导. 由 $\dot{\bm{A}}_{0,\text{b}(j)}^\text{T} = (\bm{A}\tilde{\bm{\omega}})^\text{T} = \tilde{\bm{\omega}}^\text{T}\bm{A}^\text{T} = -\tilde{\bm{\omega}}\bm{A}^\text{T}$，有
+\begin{align}
+    \frac{\partial}{\partial \bm{\theta}_{0,\text{b}(j)}}\big(\bm{A}_{0,\text{b}(j)}^\text{T}\bm{v}\big)
+    &= -\tilde{\bm{\omega}}_{0,\text{b}(j)|\text{b}(j)}\bm{A}_{0,\text{b}(j)}^\text{T}\bm{v}
+    = -\big(\bm{\omega}\times(\bm{A}_{0,\text{b}(j)}^\text{T}\bm{v})\big) \notag \\
+    &= \big(\bm{A}_{0,\text{b}(j)}^\text{T}\bm{v}\big)\times\bm{\omega}
+    = \big[\bm{A}_{0,\text{b}(j)}^\text{T}\bm{v}\big]_\times\bm{\omega}
+    = \big[\bm{A}_{0,\text{b}(j)}^\text{T}\bm{A}_{0,\text{m}(j)}\bm{n}_{\text{J}_j}\big]_\times\bm{H}_\star.
+\end{align}
+乘以 $\bm{T}_{\text{J}_j}^\text{T}$ 后即得第二行的姿态列块，与笔记中的 $\bm{T}_{\text{J}_j}^\text{T}[\cdot]_\times^\text{T}\bm{H}_\star$（连同整体负号）一致，因为 $[\cdot]_\times^\text{T} = -[\cdot]_\times$.
+
+\textbf{（2）对体元件 $\text{B}_{\text{m}(j)}$ 广义坐标的偏导}
+
+约束方程第一块中随 $\bm{q}_{\text{B}_{\text{m}(j)}}$ 变化的部分为 $+\bm{r}_{\text{O}_0\text{O}_{\text{m}(j)}|0} + \bm{A}_{0,\text{m}(j)}\bm{r}_{\text{O}_{\text{m}(j)}\underline{\text{M}}_j|\text{m}(j)}$.
+
+位置列块直接求导得 $+\bm{I}_3$；姿态列块由核心公式（取 $\bm{a} = \bm{r}_{\text{O}_{\text{m}(j)}\underline{\text{M}}_j|\text{m}(j)}$，此处约束方程带正号）
+\begin{equation}
+    \frac{\partial}{\partial \bm{\theta}_{0,\text{m}(j)}}\big(\bm{A}_{0,\text{m}(j)}\bm{a}\big) = -\bm{A}_{0,\text{m}(j)}\tilde{\bm{a}}\bm{H}_\star = \bm{A}_{0,\text{m}(j)}\tilde{\bm{a}}^\text{T}\bm{H}_\star,
+\end{equation}
+即第一行 $[\bm{I}_3,\ \bm{A}_{0,\text{m}(j)}\tilde{\bm{r}}_{\text{O}_{\text{m}(j)}\underline{\text{M}}_j|\text{m}(j)}^\text{T}\bm{H}_\star]$.
+
+第二块 $\bm{T}_{\text{J}_j}^\text{T}\bm{A}_{0,\text{b}(j)}^\text{T}\bm{A}_{0,\text{m}(j)}\bm{n}_{\text{J}_j}$ 对 $\bm{q}_{\text{B}_{\text{m}(j)}}$ 求导时，$\bm{A}_{0,\text{b}(j)}^\text{T}$ 视为常量，仅 $\bm{A}_{0,\text{m}(j)}\bm{n}_{\text{J}_j}$ 随 $\bm{\theta}_{0,\text{m}(j)}$ 变化，再套核心公式（$\bm{a} = \bm{n}_{\text{J}_j}$）
+\begin{align}
+    \frac{\partial}{\partial \bm{\theta}_{0,\text{m}(j)}}\big(\bm{T}_{\text{J}_j}^\text{T}\bm{A}_{0,\text{b}(j)}^\text{T}\bm{A}_{0,\text{m}(j)}\bm{n}_{\text{J}_j}\big)
+    &= \bm{T}_{\text{J}_j}^\text{T}\bm{A}_{0,\text{b}(j)}^\text{T}\big(-\bm{A}_{0,\text{m}(j)}\tilde{\bm{n}}_{\text{J}_j}\bm{H}_\star\big) \notag \\
+    &= \bm{T}_{\text{J}_j}^\text{T}\bm{A}_{0,\text{b}(j)}^\text{T}\bm{A}_{0,\text{m}(j)}\tilde{\bm{n}}_{\text{J}_j}^\text{T}\bm{H}_\star,
+\end{align}
+即第二行的姿态列块. 至此两处雅可比矩阵全部导出，各分块与笔记公式逐一对应.
 
 两块雅可比矩阵的结构具有明确的规律. 每个分块的列按广义坐标的两个部分划分：位置列块与姿态列块；姿态列块中的 $\bm{H}_\star(\bm{\theta}_{0,i})$ 为姿态参数化映射矩阵，满足 $\bm{\omega}_{0,i|i} = \bm{H}_\star(\bm{\theta}_{0,i}) \dot{\bm{\theta}}_{0,i}$（见前文角速度一节），叉乘矩阵 $[\cdot]_\times$ 则源于对方向余弦矩阵关于姿态参数的微分. $\text{b}(j)$ 体对应的分块带整体负号、$\text{m}(j)$ 体对应的分块为正，来源于约束方程第一块中两点矢量相减的先后次序；两体的位置列块分别为 $\pm\bm{I}_3$，是因为原点平移直接、等量地带动各自的铰点.
 
