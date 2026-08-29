@@ -26,7 +26,7 @@
 			(current page.south west) rectangle (current page.north east);
 
 		% ---- 2. 初升的太阳（右侧低垂于海面上方：三层光晕 + 橙红圆盘） ----
-		\coordinate (SUN) at ([xshift=-6.2cm, yshift=-16.5cm]current page.north east);
+		\coordinate (SUN) at ([xshift=-6.2cm, yshift=-18.5cm]current page.north east);
 		\fill[imSunGlow, opacity=0.16] (SUN) circle[radius=3.4cm];
 		\fill[imSunGlow, opacity=0.26] (SUN) circle[radius=2.4cm];
 		\fill[imSunGlow, opacity=0.42] (SUN) circle[radius=1.9cm];
@@ -35,6 +35,10 @@
 		% ---- 3. 海面（下部整幅青灰蓝，两层波浪色带叠出远近） ----
 		\fill[imSea]
 			(current page.south west) rectangle ([yshift=10.5cm]current page.south east);
+		% 3b. 海面纹理（波纹色带 / 波纹 / 太阳倒影 / 船）：统一锚定到页面左下角 (0,0)，
+		%     y 轴自下而上，与海面填充（底部 10.5cm）同坐标系。否则 remember picture 的
+		%     overlay 画卷会把裸局部坐标落到「插入点」= 页面顶部，导致海面元素窜到天上去。
+		\begin{scope}[shift={(current page.south west)}]
 		\fill[imSeaLight, opacity=0.30]
 			plot[domain=0:21, samples=90, smooth] (\x, {9.4 + 0.24*sin(deg(2.1*\x)+50)})
 			-- (21,7.3) -- (0,7.3) -- cycle;
@@ -42,7 +46,7 @@
 			plot[domain=0:21, samples=90, smooth] (\x, {7.7 + 0.26*sin(deg(1.6*\x))})
 			-- (21,0) -- (0,0) -- cycle;
 
-		% ---- 4. 波纹短笔触（左右两组错落的亮/暗横线，模拟莫奈笔触） ----
+		% ---- 4/5/6. 海面元素（波纹 / 太阳倒影 / 船）----
 		\foreach \x/\y/\w/\o in {
 				1.1/1.7/3.2/0.50, 1.8/2.6/2.4/0.40, 0.9/3.5/3.8/0.50,
 				1.5/4.4/2.0/0.35, 1.0/5.4/2.8/0.45, 1.7/6.3/3.4/0.40,
@@ -74,6 +78,7 @@
 		\fill[imSeaDark!70!black, opacity=0.85]
 			(9.0,9.35) .. controls (9.3,9.05) and (10.2,9.05) .. (10.5,9.35)
 			-- (10.3,9.37) .. controls (10.1,9.22) and (9.4,9.22) .. (9.2,9.37) -- cycle;
+		\end{scope}
 
 		% ---- 7. 金色细边框（与 cover.tex 同款） ----
 		\draw[gold, line width=0.7pt, opacity=0.6]

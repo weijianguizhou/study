@@ -4,24 +4,39 @@
     "type": "split",
     "children": [
       {
-        "id": "81bcc77aeb945aff",
+        "id": "1fff74e1c92f1900",
         "type": "tabs",
         "children": [
           {
-            "id": "7ee03455fe00acff",
+            "id": "3c324104ba4b2a98",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "教材/流体力学 张兆顺 崔桂香 第三版/读书笔记——第一章 流体的物理性质.md",
+                "file": "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "读书笔记——第一章 流体的物理性质"
+              "title": "读书笔记——第十章 多刚体系统运动学方程递推形式"
+            }
+          },
+          {
+            "id": "1fe20a4370cb1160",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "读书笔记——第一章 机械设计概论.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "读书笔记——第一章 机械设计概论"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -80,7 +95,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 200
   },
   "right": {
     "id": "dfcd6f1a0be67c9c",
@@ -156,6 +171,7 @@
             "state": {
               "type": "outline",
               "state": {
+                "file": "读书笔记——第一章 机械设计概论.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -173,14 +189,23 @@
               "icon": "git-pull-request",
               "title": "Source Control"
             }
+          },
+          {
+            "id": "1c77e13313f2a44c",
+            "type": "leaf",
+            "state": {
+              "type": "oh-my-claudian-view",
+              "state": {},
+              "icon": "bot",
+              "title": "Oh My Claudian"
+            }
           }
         ],
-        "currentTab": 3
+        "currentTab": 5
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 414.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -193,40 +218,45 @@
       "command-palette:打开命令面板": false,
       "bases:新建数据库": false,
       "obsidian-git:Open Git source control": false,
-      "opencode:Opencode terminal": false,
-      "opencode:Opencode conversations": false,
       "pdf-plus:PDF++: Toggle auto-copy": false,
       "pdf-plus:PDF++: Toggle auto-focus": false,
-      "pdf-plus:PDF++: Toggle auto-paste": false
+      "pdf-plus:PDF++: Toggle auto-paste": false,
+      "oh-my-claudian:Open Oh My Claudian": false
     }
   },
-  "active": "7ee03455fe00acff",
+  "active": "437ab6934dc5f66d",
   "lastOpenFiles": [
-    "力学/系统动力学建模与仿真/系统动力学建模与仿真笔记.toc",
-    "力学/系统动力学建模与仿真/系统动力学建模与仿真笔记.out",
-    "力学/系统动力学建模与仿真/系统动力学建模与仿真笔记.aux",
-    "力学/系统动力学建模与仿真/系统动力学建模与仿真笔记.synctex(busy)",
-    "力学/系统动力学建模与仿真/系统动力学建模与仿真笔记.log",
+    "教材/机械设计/机械原理与机械设计 下 (范元勋，梁医，张龙主编, 范元勋, 梁医, 张龙主编, 张龙, Liang yi etc.).pdf",
+    "教材/机械设计/机械原理与机械设计 下 (范元勋，梁医，张龙主编, 范元勋, 梁医, 张龙主编, 张龙, Liang yi etc.)(OCR).pdf",
+    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md",
+    "力学/流体力学/流体力学笔记.synctex.gz",
     "力学/流体力学/流体力学笔记.synctex(busy)",
-    "力学/系统动力学建模与仿真/系统动力学建模与仿真笔记.synctex.gz",
-    "教材/流体力学 张兆顺 崔桂香 第三版/流体力学 张兆顺 崔桂香 第三版.pdf",
-    "数理基础/常微分方程/第二章 一阶微分方程的初等积分法.md",
+    "力学/流体力学/xelatex38044.fls",
+    "力学/流体力学/流体的物理性质.synctex.gz",
+    "力学/流体力学/流体的物理性质.pdf",
+    "力学/流体力学/流体的物理性质.synctex(busy)",
+    "力学/流体力学/流体的物理性质.log",
+    "读书笔记——第一章 机械设计概论.md",
+    "教材/机械设计",
     "教材/流体力学 张兆顺 崔桂香 第三版/读书笔记——第一章 流体的物理性质.md",
-    "力学/流体力学/Figure/微元体上的表面力.png",
-    "力学/流体力学/Figure/一点的应力状态.png",
-    "力学/流体力学/Figure/有限体上的表面力.png",
-    "教材/控制理论/读书笔记.md",
-    "力学/流体力学/流体力学笔记.pdf",
-    "力学/流体力学/Figure/WPS图片(1).png",
+    "力学/流体力学/_pv2-20.png",
+    "力学/流体力学/_pv2-19.png",
+    "力学/流体力学/_pv2-18.png",
+    "力学/流体力学/_pv2-17.png",
+    "力学/流体力学/_pv2-16.png",
+    "力学/流体力学/_pv2-15.png",
+    "力学/流体力学/_pv2-14.png",
+    "力学/流体力学/_pv2-13.png",
+    "力学/流体力学/_pv-12.png",
+    "力学/流体力学/_pv-11.png",
+    "教材/控制理论/读书笔记——控制工程基础.md",
+    "数理基础/常微分方程/第二章 一阶微分方程的初等积分法.md",
+    "数理基础/常微分方程/第六章 非线性微分方程.md",
+    "数理基础/常微分方程/第三章 一阶微分方程解的存在定理.md",
+    "数理基础/常微分方程/第四章 高阶微分方程.md",
+    "数理基础/常微分方程/第五章 线性微分方程组.md",
+    "数理基础/常微分方程/第一章 绪论.md",
     "力学/力学.md",
-    "力学/系统动力学建模与仿真/系统动力学建模与仿真笔记.fdb_latexmk",
-    "力学/系统动力学建模与仿真/系统动力学建模与仿真笔记.xdv",
-    "控制理论/控制工程基础/Figure/级联块.png",
-    "控制理论/控制工程基础/Figure/简单级联块.png",
-    "控制理论/控制工程基础/Figure/并行块.png",
-    "控制理论/控制工程基础/Figure/简单并行块.png",
-    "控制理论/控制工程基础/Figure/带命名法的框图.png",
-    "控制理论/控制工程基础/Figure/增益为K=2的系统的演示.png",
     "VividBook_README.md",
     "VividBooK_Research_Report.md",
     "latexzero_docs/docs__beamer-setup-doc.md",
@@ -235,18 +265,11 @@
     "latexzero_docs/docs__note-setup-doc-cn.md",
     "latexzero_docs/README.zh-CN.md",
     "latexzero_docs/README.md",
-    "教材/SystemDynamicsModelingAndSimulation/存疑.md",
     "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/学习笔记.md",
     "模板/课程笔记/符号约定与工作要求.md",
     "电类/电工学/符号约定与工作要求.md",
-    "数理基础/常微分方程/第六章 非线性微分方程.md",
-    "数理基础/常微分方程/第三章 一阶微分方程解的存在定理.md",
-    "数理基础/常微分方程/第四章 高阶微分方程.md",
-    "数理基础/常微分方程/第五章 线性微分方程组.md",
-    "数理基础/常微分方程/第一章 绪论.md",
     "conflict-files-obsidian-git.md",
     "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/8.1汇报讲稿.md",
-    "数学建模/数学建模教程/12-论文写作/05-常见问题与避坑.md",
-    "数学建模/数学建模教程/12-论文写作/03-图表制作与美化.md"
+    "数学建模/数学建模教程/12-论文写作/05-常见问题与避坑.md"
   ]
 }

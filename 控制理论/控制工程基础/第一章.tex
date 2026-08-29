@@ -103,3 +103,72 @@
 	\caption{反馈环的变换}
 	\label{fig:feedback-trans}
 \end{figure}
+
+\section{开环和闭环系统}
+\begin{definition}[Plant]
+	放置被控制的执行器的系统或集合称为 \emph{Plant}。
+\end{definition}
+
+\begin{definition}[控制器]
+	\emph{控制器}（\emph{Controller}）是用来驱动 \emph{Plant} 从现在的状态到希望的状态（基准状态），即通过将参考信号和输出之间的差值驱动到零来将输入施加到对象以实现所需的系统状态。
+\end{definition}
+
+\begin{definition}[基准]
+	\emph{基准}（\emph{reference}）是系统所需的状态。该值用作控制器误差计算的参考点，用符号 $r(t)$ 表示。
+\end{definition}
+
+\begin{definition}[控制输入]
+	\emph{控制输入}（\emph{control input}）是用于控制目的的设备的输入，用符号 $u(t)$ 表示。
+\end{definition}
+
+\begin{definition}[误差]
+	\emph{误差}（\emph{error}）是基准减去输出或状态，用符号 $e(t)$ 表示。
+\end{definition}
+
+\begin{definition}[输出]
+	\emph{输出}（\emph{output}）是传感器的测量结果，用符号 $y(t)$ 表示。
+\end{definition}
+
+\begin{definition}[开环控制器]
+	不包含 \emph{Plants} 的测量结果信息的控制器称为\emph{开环控制器}或\emph{前馈控制器}。
+\end{definition}
+
+下图是一个含前馈控制器的 \emph{plant}。
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.7\textwidth]{Figure/开环控制系统.png}
+	\caption{含前馈控制器的开环控制系统}
+	\label{fig:open-loop}
+\end{figure}
+
+\begin{definition}[闭环系统]
+	包含从对象输出反馈的信息的控制器称为\emph{闭环系统}或\emph{反馈控制器}。
+\end{definition}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.7\textwidth]{Figure/闭环控制系统.png}
+	\caption{闭环（反馈）控制系统}
+	\label{fig:closed-loop}
+\end{figure}
+
+\begin{note}
+	系统的输入和输出是从 \emph{plant} 的角度定义的。图中所示的负反馈控制器将基准与输出之间的差值，即误差变为 $0$。
+\end{note}
+
+\section{前馈}
+反馈控制可以有效地用于基准跟踪（使系统的输出跟随期望的参考信号），但它是一种反应性措施；直到系统已经落后时，系统才会开始努力工作😭。
+
+前馈控制器注入有关系统动态的信息或期望的运动。前馈控制器处理控制动作的一部分。前馈控制器注入有关系统动态或所需运动的信息。前馈处理我们已经知道必须应用的控制操作的一部分，以使系统跟踪引用，然后反馈补偿我们在运行时不知道或不能知道的系统行为。
+
+有两种类型的前馈：
+\begin{enumerate}
+	\item 基于模型的前馈；
+	\item 用于未建模动态的前馈。
+\end{enumerate}
+第一个是求解满足所需速度和加速度所需输入的系统的数学模型。
+
+第二个直接补偿未建模的力或行为，因此反馈控制器没有必要进行操作。
+
+这两种类型都可以使反馈控制器更简单。

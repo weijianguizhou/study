@@ -1,3 +1,4 @@
+% !TeX root = 流体力学笔记.tex
 % 流体力学笔记 —— 流体的物理性质
 % 第 1 章：流体的物理性质
 
@@ -31,59 +32,66 @@
 	形象地说，流体微团是宏观上无限小、微观上无限大的一个质量体。（好抽象）
 \end{note}
 
-微团具有宏观无限小的体积，因此可以用时空中的一个点来标记它。连续介质的当地物性可以用时空变量 $(\boldsymbol{x},t)$ 的函数来描述，例如气体中的密度分布 $\rho=\rho(\boldsymbol{x},t)$,温度分布 $T=T(\boldsymbol{x},t)$ 等。
+微团具有宏观无限小的体积，因此可以用时空中的一个点来标记它。连续非均匀介质的当地物性可以用时空变量 $(\boldsymbol{x},t)$ 的函数来描述，例如气体中密度分布 $\rho=\rho(\boldsymbol{x},t)$，温度分布 $T=T(\boldsymbol{x},t)$ 等。
 
 \begin{definition}[流体质点]
 	当不需要考虑微团的体积和变形，只研究它的位移和各物理状态时，可以把它视作无体积的质点，这时称流体微团为\textbf{流体质点}。
 \end{definition}
 
 \section{作用在流体上的体积力和表面力}
-在流体中任取一个微团，其上受到两种外力:第一种外力作用在微团内均布质量的质心上，这种力通常和微团的体积成正比，称为体积力:第二种外力是周围流体或物体作用在流体微团表面上的力，它和力的作用面大小成正比，称为表面力。
+
+在流体中任取一个微团，其上受到两种外力：第一种外力作用在微团内均布质量的质心上，这种力通常和微团的体积成正比，称为体积力；第二种外力是周围流体或物体作用在流体微团表面上的力，它和力的作用面大小成正比，称为表面力。
+
+\begin{note}
+	这让我感觉有点像传递矩阵法的处理方式？有外部力还有集中在质心的力。
+\end{note}
+
 \begin{definition}[体积力]
 	作用在微团内均布质量的质心上的外力，通常与微团的体积成正比。
 \end{definition}
 
 \begin{definition}[表面力]
-	作用在微团表面上的外力，通常与力的作用面大小成正比。
+	周围流体或物体作用在流体微团表面上的外力，通常与力的作用面大小成正比。
 \end{definition}
 
 \subsection{体积力和体积力强度}
-举两个例子。
 
-例如，在地球引力场中，流体微团受到的引力 $\delta\boldsymbol{G}$ 与它的质量 $\delta m$ 成正比：
+第一个例子：在地球引力场中的流体微团受到的引力可以表示为
 \begin{equation}\label{eq:gravity}
-	\delta\boldsymbol{G}=\boldsymbol{g}\,\delta m
+	\delta\boldsymbol{G}=\boldsymbol{g}\,\delta m=\boldsymbol{g}\rho\,\delta V
 \end{equation}
-式中 $\boldsymbol{g}$ 是重力加速度。由于微团的质量 $\delta m$ 与它的体积 $\delta V$ 成正比（$\delta m=\rho\,\delta V$），因此引力 $\delta\boldsymbol{G}$ 也和微团的体积成正比，它是体积力：
-\begin{equation}\label{eq:gravity-volume}
-	\delta\boldsymbol{G}=\boldsymbol{g}\rho\,\delta V
-\end{equation}
-除了引力外，还有其他形式的体积力。例如，带电质点在静电场中运动时，静电力也是一种体积力。设流体微团的电荷密度为 $q\ (\mathrm{C/m^3})$，则在静电场 $\boldsymbol{E}$ 中，该微团受到的静电力为
+于是和体积成正比。由此可以看出引力是体积力。
+
+再介绍一种体积力：静电力。设流体微团的电荷密度为 $q$，则在静电场 $\boldsymbol{E}$ 中，该微团受到的静电力为
 \begin{equation}\label{eq:electrostatic}
 	\delta\boldsymbol{F}=q\,\boldsymbol{E}\,\delta V
 \end{equation}
+于是可以看出静电力对流体微团来说也是体积力。
 
 上面讲完了体积力的一些例子，理解了一下定义，下面看看怎么衡量体积力的大小。引入一个体积力强度，表达如下：
 \begin{equation}\label{eq:bodyforce-intensity-def}
-	\boldsymbol{f}_V=\lim_{\delta V \to 0}\frac{\delta \boldsymbol{F}}{\delta V}
+	\boldsymbol{f}_V=\lim_{\delta V\to 0}\frac{\delta\boldsymbol{F}}{\delta V}
 \end{equation}
 
-于是引力的体积力强度为：$\rho \boldsymbol{g}$,静电力的体积力强度为：$q \boldsymbol{E}$。
+于是引力的体积力强度为 $\rho\boldsymbol{g}$，静电力的体积力强度为 $q\boldsymbol{E}$。
 
-有限体积流体上所受体积力的合力，以及体积力相对于某参考点的合力矩，可以用积分方法计算。
+\begin{note}
+	感觉有点像导数的定义了。由导数可以求原函数，那么知道体积力强度可以求合力和合力矩。
+\end{note}
 
-体积力的合力：
+体积力的合力为
 \begin{equation}\label{eq:bodyforce-resultant}
-	\boldsymbol{F}=\int_{V}\boldsymbol{f}_V d V
+	\boldsymbol{F}=\int_V\boldsymbol{f}_V\,\mathrm{d}V
 \end{equation}
 
-体积力的合力矩：
+体积力的合力矩为
 \begin{equation}\label{eq:bodyforce-moment}
-	\boldsymbol{L}=\int_{V}\boldsymbol{r}\times\boldsymbol{f}_V dV
+	\boldsymbol{L}=\int_V\boldsymbol{r}\times\boldsymbol{f}_V\,\mathrm{d}V
 \end{equation}
 式中 $\boldsymbol{r}$ 为任意一流体微团相对于参考点的向径。
 
 \subsection{表面力和应力}
+
 任取一有限体积的流体，它的表面上受到周围流体或物体的接触力，这种力分布于有限体的表面，称为表面力，如图~\ref{fig:surfaceforce} 所示。
 
 \begin{figure}[htbp]
@@ -102,37 +110,51 @@
 \end{figure}
 
 \begin{definition}[应力]
-	有限体的微元面积 $\delta A$ 上单位面积的表面力称为表面力的局部强度，亦称为应力，定义如下：
+	有限体的微元面积 $\delta A$ 上单位面积的表面力称为表面力的局部强度，又称为\textbf{应力}，定义如下：
 	\begin{equation}\label{eq:stress-def}
 		\boldsymbol{T}_n=\lim_{\delta A\to 0}\frac{\delta\boldsymbol{F}}{\delta A}
 	\end{equation}
-	式中 $\delta\boldsymbol{F}$ 是单位面积 $\delta A$ 上的作用力；$\boldsymbol{T}_n$ 表示应力向量，下标 $n$ 表示应力作用面 $\delta A$ 的法线方向。
+	这里：
+	\begin{itemize}
+		\item $\delta\boldsymbol{F}$ 是单位面积 $\delta A$ 上的作用力；
+		\item $\boldsymbol{T}_n$ 表示应力向量，下标 $n$ 表示表面力作用面 $\delta A$ 的法线方向。
+	\end{itemize}
 \end{definition}
 
-需要强调指出，应力与它的作用面方向有关。一般情况下，流体内部同一空间点处、不同方向的作用面上，流体所受应力是不等的，所以必须标注应力作用面的法向量。约定作用面的法向量以指向域外为正。例如图~\ref{fig:surfaceforce}(b) 中，$\delta A_{1}$ 面的法向量为 $\boldsymbol{n}_{A_{+}}$，作用在其上的应力为 $\boldsymbol{T}_{n_{A_{+}}}$；相邻面 $\delta A$ 的法向量为 $\boldsymbol{n}_{A_{-}}$，其上应力符号为 $\boldsymbol{T}_{n_{A_{-}}}$。
+\begin{warnbox}[注意]
+	应力和它的作用面方向有关。这一点和材料力学里面很不一样。一般情况下，流体内部同一空间点而不同方向的作用面上，流体所受应力是不等的，所以必须标注应力作用面的法向量。约定作用面的法向量以指向域外为正。
+\end{warnbox}
 
-应力 $\boldsymbol{T}_n$ 是向量，一般情况下它并不垂直于它的作用面，所以可将其分解为垂直于作用面的分量 $T_{nn}$ 和平行于作用面的两个相互垂直分量 $T_{ns}$ 和 $T_{nt}$。约定 $(\boldsymbol{n},\boldsymbol{t},\boldsymbol{s})$ 组成右手直角坐标系。根据上述约定，应力分量的第一个下标表示应力作用面的法向，第二个下标表示应力分量的方向。
+比如图~\ref{fig:surfaceforce}(a) 中，$\delta A_1$ 面的法向量为 $\boldsymbol{n}_{A_+}$，作用在其上的应力为 $\boldsymbol{T}_{n_{A_+}}$；相邻面 $\delta A$ 的法向量为 $\boldsymbol{n}_{A_-}$，其上应力符号为 $\boldsymbol{T}_{n_{A_-}}$。
+
+应力 $\boldsymbol{T}_n$ 是向量，一般情况下，它并不垂直于它的作用面，所以可将它分解为垂直于作用面的分量 $T_{nn}$ 和平行于作用面的两个相互垂直分量 $T_{ns}$ 和 $T_{nt}$。约定 $(\boldsymbol{n},\boldsymbol{t},\boldsymbol{s})$ 组成右手直角坐标系。根据上述约定，应力分量第一个下标符号表示应力作用面的法向量，第二个下标表示应力分量的方向。
+
+下面像材料力学一样给出正应力和切应力的定义：
 
 \begin{definition}[正应力]
-	应力向量在作用面法线方向的分量称为正应力。根据应力分量的约定，正值的正应力指向作用面外，是拉力；负值的正应力指向作用面内，因而是压力。依旧和材料力学里一样使用"拉正压负"的约定。
+	应力向量在作用面法线方向的分量称为正应力。根据应力分量的约定，正值的正应力指向作用面外是拉力，而负值的正应力指向作用面内，因而是压力。依旧和材料力学里一样使用"拉正压负"的约定。
 \end{definition}
 
 \begin{definition}[切应力]
 	应力向量在作用面切向的分量称为切应力，也称剪应力。
 \end{definition}
 
-\begin{property}
-	应力具有以下性质：
+\begin{property}[应力的性质]
+	应力具有如下性质：
 	\begin{enumerate}
-		\item 相邻两微元面上的表面力是作用力与反作用力，因此它们大小相等、方向相反。令 $n_A=-n$，则 $\boldsymbol{T}_{-n}=-\boldsymbol{T}_n$，即
-		\[
-			\boldsymbol{T}_{-n}=\lim_{\delta A\to 0}\frac{-\delta\boldsymbol{F}}{\delta A}=-\boldsymbol{T}_n
-		\]
+		\item 相邻两微元面上的表面力是作用力与反作用力，因此它们大小相等方向相反；
 		\item 相邻微元面上的正应力和切应力值都相等。
 	\end{enumerate}
 \end{property}
 
-\begin{proof}
+下面给出逐条证明：
+
+\begin{proof}[证明]
+	令 $\boldsymbol{n}_{A_+}=\boldsymbol{n}$，则 $\boldsymbol{n}_{A_-}=-\boldsymbol{n}$，即
+	\begin{equation}\label{eq:stress-action-reaction}
+		\boldsymbol{T}_{-n}=\lim_{\delta A\to 0}\frac{-\delta\boldsymbol{F}}{\delta A}=-\boldsymbol{T}_n
+	\end{equation}
+
 	在 $\delta A_n$ 面上的正应力 $T_{nn}$ 等于
 	\begin{equation}\label{eq:normal-stress}
 		T_{nn}=\boldsymbol{T}_n\cdot\boldsymbol{n}
@@ -145,14 +167,14 @@
 	在 $\delta A_n$ 面上的切应力等于
 	\begin{equation}\label{eq:shear-stress}
 		\left\{\begin{array}{l}
-			T_{nt}=\boldsymbol{T}_n\cdot\boldsymbol{t}\\
+			T_{nt}=\boldsymbol{T}_n\cdot\boldsymbol{t}\\[2pt]
 			T_{ns}=\boldsymbol{T}_n\cdot\boldsymbol{s}
 		\end{array}\right.
 	\end{equation}
 	在相邻面 $\delta A$ 上相应的切应力分量为 $T_{-n,-t}$、$T_{-n,-s}$。同理可证两相邻面上的切应力分量也相等：
 	\begin{equation}\label{eq:shear-stress-equal}
 		\left\{\begin{array}{l}
-			T_{-n,-t}=\boldsymbol{T}_{-n}\cdot(-\boldsymbol{t})=(-\boldsymbol{T}_n)\cdot(-\boldsymbol{t})=\boldsymbol{T}_n\cdot\boldsymbol{t}=T_{nt}\\
+			T_{-n,-t}=\boldsymbol{T}_{-n}\cdot(-\boldsymbol{t})=(-\boldsymbol{T}_n)\cdot(-\boldsymbol{t})=\boldsymbol{T}_n\cdot\boldsymbol{t}=T_{nt}\\[2pt]
 			T_{-n,-s}=\boldsymbol{T}_{-n}\cdot(-\boldsymbol{s})=(-\boldsymbol{T}_n)\cdot(-\boldsymbol{s})=\boldsymbol{T}_n\cdot\boldsymbol{s}=T_{ns}
 		\end{array}\right.
 	\end{equation}
@@ -167,11 +189,12 @@
 众所周知，一个向量可以分解为三个分量（其实几个分量都行，这里讨论应力状态），因此每个应力向量 $\{\boldsymbol{T}_i\}$ 都可以分解为三个分量如下：
 \begin{equation}\label{eq:stress-decompose}
 	\left\{\begin{array}{l}
-		\boldsymbol{T}_1=T_{11}\boldsymbol{e}_1+T_{12}\boldsymbol{e}_2+T_{13}\boldsymbol{e}_3\\
-		\boldsymbol{T}_2=T_{21}\boldsymbol{e}_1+T_{22}\boldsymbol{e}_2+T_{23}\boldsymbol{e}_3\\
+		\boldsymbol{T}_1=T_{11}\boldsymbol{e}_1+T_{12}\boldsymbol{e}_2+T_{13}\boldsymbol{e}_3\\[2pt]
+		\boldsymbol{T}_2=T_{21}\boldsymbol{e}_1+T_{22}\boldsymbol{e}_2+T_{23}\boldsymbol{e}_3\\[2pt]
 		\boldsymbol{T}_3=T_{31}\boldsymbol{e}_1+T_{32}\boldsymbol{e}_2+T_{33}\boldsymbol{e}_3
 	\end{array}\right.
 \end{equation}
+
 于是一点应力状态还可以用九个代数值组成的方阵表示：
 \begin{equation}\label{eq:stress-tensor}
 	[T_{ij}]=\begin{bmatrix}
@@ -182,11 +205,11 @@
 \end{equation}
 
 \begin{definition}[应力张量]
-	任意面上的应力可写作
+	应用应力状态的上述公式，任意面上的应力可写作
 	\begin{equation}\label{eq:stress-tensor-action}
 		\boldsymbol{T}_n=\boldsymbol{T}_i\,n_i=T_{ij}\boldsymbol{e}_j\,n_i
 	\end{equation}
-	利用\textbf{张量识别定理}可以证明一点应力状态是张量，因而 $T_{ij}$ 称为应力张量的分量，$[T_{ij}]$ 称为应力张量。
+	利用\textbf{张量识别定理}可以证明一点应力状态是张量，因而 $T_{ij}$ 称为应力张量的分量。
 \end{definition}
 
 \begin{property}[一点应力张量的确定]
@@ -194,10 +217,10 @@
 	\begin{equation}\label{eq:stress-arbitrary}
 		\boldsymbol{T}_n=\boldsymbol{T}_1\,n_1+\boldsymbol{T}_2\,n_2+\boldsymbol{T}_3\,n_3=\boldsymbol{T}_i\,n_i
 	\end{equation}
-	因此，一点的应力状态可用九个分量 $T_{ij}$（即应力张量）完全描述。
+	因此，只要知道一点的三个应力 $(\boldsymbol{T}_1,\boldsymbol{T}_2,\boldsymbol{T}_3)$，则任意面上的应力就可以计算出来。
 \end{property}
 
-\begin{proof}
+\begin{proof}[证明（微元四面体的力学平衡）]
 	为了论述简明起见，在点 $O$ 处取一直角四面体（如图~\ref{fig:stressstate}），其中三个面为坐标面，任意倾斜面具有法向量 $\boldsymbol{n}$ 和面积 $\delta A_n$。
 
 	\begin{figure}[htbp]
@@ -207,7 +230,7 @@
 		\label{fig:stressstate}
 	\end{figure}
 
-	图~\ref{fig:stressstate} 中四面体四个面上的法向量分别为 $\boldsymbol{n}$、$-\boldsymbol{e}_1$、$-\boldsymbol{e}_2$、$-\boldsymbol{e}_3$；作用的应力分别为 $\boldsymbol{T}_n$、$\boldsymbol{T}_1$、$\boldsymbol{T}_2$、$\boldsymbol{T}_3$；直角四面体的四个表面积分别为 $\delta A_n$、$\delta A_1$、$\delta A_2$、$\delta A_3$。根据面积投影定理，$\delta A_i\ (i=1,2,3)$ 与 $\delta A_n$ 的关系为
+	上图中四面体四个面上的法向量分别为 $\boldsymbol{n}$、$-\boldsymbol{e}_1$、$-\boldsymbol{e}_2$、$-\boldsymbol{e}_3$；作用的应力分别为 $\boldsymbol{T}_n$、$\boldsymbol{T}_1$、$\boldsymbol{T}_2$、$\boldsymbol{T}_3$；直角四面体的四个表面积分别为 $\delta A_n$、$\delta A_1$、$\delta A_2$、$\delta A_3$。根据面积投影定理，$\delta A_i\ (i=1,2,3)$ 与 $\delta A_n$ 的关系为
 	\begin{equation}\label{eq:area-projection}
 		\delta A_i=\delta A_n\,n_i
 	\end{equation}
@@ -217,101 +240,237 @@
 		\rho\boldsymbol{a}\,\delta V=\rho\boldsymbol{f}\,\delta V+\boldsymbol{T}_n\,\delta A_n+\boldsymbol{T}_{-1}\,\delta A_1+\boldsymbol{T}_{-2}\,\delta A_2+\boldsymbol{T}_{-3}\,\delta A_3
 	\end{equation}
 	式中 $\delta V$ 是微元体的体积。方程左端为微元体的质量与加速度的乘积，右端第一项是作用在四面体上的体积力的合力，右端后四项是作用在四面体表面上的表面力的合力。将等式两边同除以 $\delta A_n$，则明显有
-	\begin{equation}
+	\begin{equation}\label{eq:volume-area-limit}
 		\lim_{\delta A_n\to 0}\frac{\delta V}{\delta A_n}=0
 	\end{equation}
+
 	此外，由面积投影关系 $\dfrac{\delta A_i}{\delta A_n}=n_i$，因而有
 	\begin{equation}
 		\boldsymbol{T}_n+\boldsymbol{T}_{-1}\,n_1+\boldsymbol{T}_{-2}\,n_2+\boldsymbol{T}_{-3}\,n_3=0
 	\end{equation}
-	注意到相邻面上应力关系 $\boldsymbol{T}_{-i}=-\boldsymbol{T}_i$，上式可写作（使用爱因斯坦求和约定），即得式~\eqref{eq:stress-arbitrary}。
+	注意到相邻面上应力关系 $\boldsymbol{T}_{-i}=-\boldsymbol{T}_i$，上式可写作（使用爱因斯坦求和约定）
+	\begin{equation}
+		\boldsymbol{T}_n=\boldsymbol{T}_1\,n_1+\boldsymbol{T}_2\,n_2+\boldsymbol{T}_3\,n_3=\boldsymbol{T}_i\,n_i
+	\end{equation}
+
+	该式说明，过一点任意面（它的法向量为 $\boldsymbol{n}=n_i\boldsymbol{e}_i$）上的应力，由通过该点三个相互垂直面上的应力确定。也就是说，只要知道一点的三个应力 $(\boldsymbol{T}_1,\boldsymbol{T}_2,\boldsymbol{T}_3)$，则任意面上的应力就可以计算出来。因此称 $(\boldsymbol{T}_1,\boldsymbol{T}_2,\boldsymbol{T}_3)$ 为一点的应力状态。
 \end{proof}
 
 \subsection{应力张量的对称性}
-\begin{property}[应力张量的对称性]
-	由微团的力矩平衡原理，可以进一步证明，九个应力分量不是相互独立的，而有以下的对称关系式
+
+\begin{theorem}[应力张量的对称性]
+	由微团的力矩平衡原理，可以进一步证明，九个应力分量不是相互独立的，而有以下的对称关系式：
 	\begin{equation}\label{eq:stress-symmetry}
 		T_{ij}=T_{ji}
 	\end{equation}
-	即应力分量的方阵是对称方阵，或者说应力张量是对称张量。因此，连续介质中一点的应力张量只有六个独立分量。
-\end{property}
+	即应力分量的方阵是对称方阵，或应力张量是对称张量。
+\end{theorem}
+
+在证明之前，先给出后面要用到的\textbf{微分形式动量方程}。对任取的一有限体积流体，牛顿第二定律（质量$\times$加速度 $=$ 体积力合力 $+$ 表面力合力）为
+\begin{equation}\label{eq:momentum-integral}
+	\iiint_V\rho\boldsymbol{a}\,\mathrm{d}V=\iiint_V\rho\boldsymbol{f}\,\mathrm{d}V+\oiint_\Sigma\boldsymbol{T}_n\,\mathrm{d}A
+\end{equation}
+右端表面力合力用高斯公式化为体积分：
+\begin{equation}\label{eq:surface-to-volume}
+	\oiint_\Sigma\boldsymbol{T}_n\,\mathrm{d}A=\oiint_\Sigma\boldsymbol{T}_i\,n_i\,\mathrm{d}A=\iiint_V\frac{\partial\boldsymbol{T}_i}{\partial x_i}\,\mathrm{d}V
+\end{equation}
+代入并移项：
+\begin{equation}
+	\iiint_V\left[\rho\boldsymbol{a}-\rho\boldsymbol{f}-\frac{\partial\boldsymbol{T}_i}{\partial x_i}\right]\mathrm{d}V=0
+\end{equation}
+因 $V$ 任意，被积函数必须为零，得微分形式动量方程
+\begin{equation}\label{eq:momentum-equation}
+	\rho\boldsymbol{a}=\rho\boldsymbol{f}+\frac{\partial\boldsymbol{T}_i}{\partial x_i}
+\end{equation}
 
 \begin{proof}[应力张量对称性的证明]
-	根据动量矩定理：有限质量体的动量矩增长率等于作用在该质量体上的外力矩之和。在流体中取任意一有限体积流体，作用在该有限体表面 $\Sigma$ 上的外力矩为
+	根据动量矩定理：\textbf{有限质量体的动量矩增长率应等于作用在该质量体上的外力矩之和}。在流体中取任意一有限体积流体，它所受的外力矩有两类——表面力矩和体积力矩，二者的共同来源都是"力矩 $=$ 位矢 $\boldsymbol{r}$ 叉乘力"：
+	\begin{itemize}
+		\item 微元面积 $\mathrm{d}A$ 上所受表面力为 $\boldsymbol{T}_n\,\mathrm{d}A$（应力乘面积），它对参考点 $O$ 的力矩为 $\boldsymbol{r}\times(\boldsymbol{T}_n\,\mathrm{d}A)$，对整个封闭面 $\Sigma$ 积分，并利用 $\boldsymbol{T}_n=\boldsymbol{T}_i\,n_i$，得表面力矩
+		      \begin{equation}\label{eq:surface-moment}
+			      \boldsymbol{L}_\Sigma=\oiint_\Sigma\boldsymbol{r}\times\boldsymbol{T}_n\,\mathrm{d}A=\oiint_\Sigma\boldsymbol{r}\times\boldsymbol{T}_i\,n_i\,\mathrm{d}A
+		      \end{equation}
+		\item 微元体积 $\mathrm{d}V$ 的质量为 $\rho\,\mathrm{d}V$，所受体积力为 $\rho\boldsymbol{f}\,\mathrm{d}V$（单位质量体积力 $\boldsymbol{f}$ 乘质量），它对 $O$ 点的力矩为 $\boldsymbol{r}\times(\rho\boldsymbol{f}\,\mathrm{d}V)$，对全体积积分，得体积力矩
+		      \begin{equation}\label{eq:volume-moment}
+			      \boldsymbol{L}_V=\iiint_V\rho\,(\boldsymbol{r}\times\boldsymbol{f})\,\mathrm{d}V
+		      \end{equation}
+		      （这与前面"由体积力强度求合力矩"的公式 $\boldsymbol{L}=\int_V\boldsymbol{r}\times\boldsymbol{f}_V\,\mathrm{d}V$ 一致，只是此处 $\boldsymbol{f}_V=\rho\boldsymbol{f}$。）
+	\end{itemize}
+
+	有限体的动量矩用 $\boldsymbol{K}$ 表示，它的增长率等于
 	\begin{equation}
-		\boldsymbol{L}_\Sigma=\oiint_\Sigma \boldsymbol{r}\times\boldsymbol{T}_n\,\mathrm{d}A=\oiint_\Sigma \boldsymbol{r}\times T_{ni}\boldsymbol{e}_i\,\mathrm{d}A
+		\frac{\mathrm{d}\boldsymbol{K}}{\mathrm{d}t}=\iiint_V\rho\,(\boldsymbol{r}\times\boldsymbol{a})\,\mathrm{d}V
 	\end{equation}
-	体积力矩为
+
+	\begin{note}
+		这里解释一下为什么增长率是 $\boldsymbol{r}\times\boldsymbol{a}$：动量矩（角动量）定义为 $\boldsymbol{K}=\iiint_V\boldsymbol{r}\times(\rho\boldsymbol{v})\,\mathrm{d}V$，即"位矢叉乘动量"。对跟随流体的质量体求物质导数，叉积同样满足乘积法则：
+		\[
+		\frac{\mathrm{d}\boldsymbol{K}}{\mathrm{d}t}=\iiint_V\left[\frac{\mathrm{d}\boldsymbol{r}}{\mathrm{d}t}\times\rho\boldsymbol{v}+\boldsymbol{r}\times\frac{\mathrm{d}}{\mathrm{d}t}(\rho\boldsymbol{v})\right]\mathrm{d}V
+		\]
+		参考点 $O$ 固定，$\dfrac{\mathrm{d}\boldsymbol{r}}{\mathrm{d}t}=\boldsymbol{v}$，故第一项 $=\rho(\boldsymbol{v}\times\boldsymbol{v})=0$；又因质量守恒 $\dfrac{\mathrm{d}}{\mathrm{d}t}(\rho\,\mathrm{d}V)=0$，第二项 $=\boldsymbol{r}\times\rho\boldsymbol{a}$。于是得上式。
+	\end{note}
+
+	将动量矩定理应用于有限体，有
 	\begin{equation}
-		\boldsymbol{L}_V=\iiint_V \rho\,(\boldsymbol{r}\times\boldsymbol{f})\,\mathrm{d}V
+		\frac{\mathrm{d}\boldsymbol{K}}{\mathrm{d}t}=\boldsymbol{L}_\Sigma+\boldsymbol{L}_V
 	\end{equation}
-	有限体的动量矩用 $\boldsymbol{K}$ 表示，它的增长率为
+	即
 	\begin{equation}
-		\frac{\mathrm{d}\boldsymbol{K}}{\mathrm{d}t}=\iiint_V \rho\,(\boldsymbol{r}\times\boldsymbol{a})\,\mathrm{d}V
+		\iiint_V\rho\,(\boldsymbol{r}\times\boldsymbol{a})\,\mathrm{d}V=\oiint_\Sigma\boldsymbol{r}\times\boldsymbol{T}_i\,n_i\,\mathrm{d}A+\iiint_V\rho\,(\boldsymbol{r}\times\boldsymbol{f})\,\mathrm{d}V
 	\end{equation}
-	根据动量矩原理 $\dfrac{\mathrm{d}\boldsymbol{K}}{\mathrm{d}t}=\boldsymbol{L}_\Sigma+\boldsymbol{L}_V$，应有
+
+	又有高斯公式（散度定理）：
 	\begin{equation}
-		\iiint_V \rho\,(\boldsymbol{r}\times\boldsymbol{a})\,\mathrm{d}V=\oiint_\Sigma \boldsymbol{r}\times T_{ni}\boldsymbol{e}_i\,\mathrm{d}A+\iiint_V \rho\,\boldsymbol{r}\times\boldsymbol{f}\,\mathrm{d}V
+		\oiint_\Sigma\boldsymbol{A}\cdot\boldsymbol{n}\,\mathrm{d}A=\iiint_V\nabla\cdot\boldsymbol{A}\,\mathrm{d}V
 	\end{equation}
-	式中面积分可以用高斯公式（见附录）转换成体积分：
+	写成分量形式（爱因斯坦求和约定）即
 	\begin{equation}
-		\oiint_\Sigma \boldsymbol{r}\times\boldsymbol{T}_i\,n_i\,\mathrm{d}A=\iiint_V \frac{\partial}{\partial x_i}(\boldsymbol{r}\times\boldsymbol{T}_i)\,\mathrm{d}V
+		\oiint_\Sigma A_i\,n_i\,\mathrm{d}A=\iiint_V\frac{\partial A_i}{\partial x_i}\,\mathrm{d}V
 	\end{equation}
-	体积分中的被积函数可以进一步化简：
+	把它应用于表面力矩，把 $(\boldsymbol{r}\times\boldsymbol{T}_i)$ 当作上面的向量函数 $A_i$，得
 	\begin{equation}
-		\frac{\partial}{\partial x_i}(\boldsymbol{r}\times\boldsymbol{T}_i)=\frac{\partial\boldsymbol{r}}{\partial x_i}\times\boldsymbol{T}_i+\boldsymbol{r}\times\frac{\partial\boldsymbol{T}_i}{\partial x_i}
+		\boldsymbol{L}_\Sigma=\oiint_\Sigma\boldsymbol{r}\times\boldsymbol{T}_i\,n_i\,\mathrm{d}A=\iiint_V\frac{\partial}{\partial x_i}\left(\boldsymbol{r}\times\boldsymbol{T}_i\right)\mathrm{d}V
 	\end{equation}
-	向量 $\boldsymbol{r}=x_1\boldsymbol{e}_1+x_2\boldsymbol{e}_2+x_3\boldsymbol{e}_3=x_i\boldsymbol{e}_i$，故被积函数为
+	叉积同样满足乘积法则，对叉积求偏导：
 	\begin{equation}
-		\frac{\partial}{\partial x_i}(\boldsymbol{r}\times\boldsymbol{T}_i)=\boldsymbol{e}_i\times\boldsymbol{T}_i+\boldsymbol{r}\times\frac{\partial\boldsymbol{T}_i}{\partial x_i}
+		\frac{\partial}{\partial x_i}\left(\boldsymbol{r}\times\boldsymbol{T}_i\right)=\frac{\partial\boldsymbol{r}}{\partial x_i}\times\boldsymbol{T}_i+\boldsymbol{r}\times\frac{\partial\boldsymbol{T}_i}{\partial x_i}=\boldsymbol{e}_i\times\boldsymbol{T}_i+\boldsymbol{r}\times\frac{\partial\boldsymbol{T}_i}{\partial x_i}
 	\end{equation}
-	将它代入动量矩定理表达式后，得
+	其中用到 $\dfrac{\partial\boldsymbol{r}}{\partial x_i}=\boldsymbol{e}_i$（因 $\boldsymbol{r}=x_j\boldsymbol{e}_j$，$\dfrac{\partial x_j}{\partial x_i}=\delta_{ij}$）。于是表面力矩可写为
 	\begin{equation}
-		\iiint_V\left(\boldsymbol{e}_i\times\boldsymbol{T}_i+\boldsymbol{r}\times\frac{\partial\boldsymbol{T}_i}{\partial x_i}+\rho\,\boldsymbol{r}\times\boldsymbol{f}-\rho\,\boldsymbol{r}\times\boldsymbol{a}\right)\mathrm{d}V=0
+		\boldsymbol{L}_\Sigma=\iiint_V\boldsymbol{e}_i\times\boldsymbol{T}_i\,\mathrm{d}V+\iiint_V\boldsymbol{r}\times\frac{\partial\boldsymbol{T}_i}{\partial x_i}\,\mathrm{d}V
 	\end{equation}
-	将有限体积无限缩小，这时被积函数中位置向量 $|\boldsymbol{r}|\to 0$，因而被积函数中后三项较第一项小一个量级；当取极限 $V\to 0$ 时，后三项可略去不计。于是微团的动量矩定理表达式简化为
+
+	代回动量矩方程：
+	\begin{equation}
+		\iiint_V\rho\,(\boldsymbol{r}\times\boldsymbol{a})\,\mathrm{d}V=\iiint_V\boldsymbol{e}_i\times\boldsymbol{T}_i\,\mathrm{d}V+\iiint_V\boldsymbol{r}\times\frac{\partial\boldsymbol{T}_i}{\partial x_i}\,\mathrm{d}V+\iiint_V\rho\,(\boldsymbol{r}\times\boldsymbol{f})\,\mathrm{d}V
+	\end{equation}
+	移项并提取公因子 $\boldsymbol{r}\times$：
+	\begin{equation}
+		\iiint_V\boldsymbol{r}\times\left[\rho\boldsymbol{a}-\frac{\partial\boldsymbol{T}_i}{\partial x_i}-\rho\boldsymbol{f}\right]\mathrm{d}V=\iiint_V\boldsymbol{e}_i\times\boldsymbol{T}_i\,\mathrm{d}V
+	\end{equation}
+
+	由上面推导的动量方程
+	\begin{equation}
+		\rho\boldsymbol{a}=\rho\boldsymbol{f}+\frac{\partial\boldsymbol{T}_i}{\partial x_i}
+	\end{equation}
+	左端方括号恒为零，故
+	\begin{equation}
+		\iiint_V\boldsymbol{e}_i\times\boldsymbol{T}_i\,\mathrm{d}V=0
+	\end{equation}
+	由于 $V$ 是任取的，被积函数必须处处为零：
 	\begin{equation}
 		\boldsymbol{e}_i\times\boldsymbol{T}_i=0
 	\end{equation}
-	用应力张量的分量表示 $\boldsymbol{T}_i=T_{ij}\boldsymbol{e}_j$，上式可写为
+	把 $\boldsymbol{T}_i=T_{ij}\boldsymbol{e}_j$ 代入，并利用 $\boldsymbol{e}_i\times\boldsymbol{e}_j=\varepsilon_{ijk}\boldsymbol{e}_k$，得
 	\begin{equation}
-		\boldsymbol{e}_i\times\boldsymbol{T}_i=\boldsymbol{e}_i\times T_{ij}\boldsymbol{e}_j=T_{ij}(\boldsymbol{e}_i\times\boldsymbol{e}_j)
+		\boldsymbol{e}_i\times\boldsymbol{T}_i=T_{ij}\,\varepsilon_{ijk}\boldsymbol{e}_k=0
 	\end{equation}
-	在向量运算中（见附录）有以下公式
-	\begin{equation}
-		\boldsymbol{e}_i\times\boldsymbol{e}_j=-\boldsymbol{e}_j\times\boldsymbol{e}_i
+	对每个 $k$ 有 $\varepsilon_{ijk}T_{ij}=0$，逐项写出即
+	\begin{equation}\label{eq:symmetry-components}
+		T_{23}-T_{32}=0,\qquad T_{31}-T_{13}=0,\qquad T_{12}-T_{21}=0
 	\end{equation}
-	代入前式并交换哑指标，得
-	\begin{equation}
-		T_{ij}(\boldsymbol{e}_i\times\boldsymbol{e}_j)=-T_{ij}(\boldsymbol{e}_j\times\boldsymbol{e}_i)=-T_{ji}(\boldsymbol{e}_i\times\boldsymbol{e}_j)
-	\end{equation}
-	于是有
-	\begin{equation}
-		(T_{ij}-T_{ji})(\boldsymbol{e}_i\times\boldsymbol{e}_j)=0
-	\end{equation}
-	由于 $\boldsymbol{e}_i\times\boldsymbol{e}_j$ 不全为零，故
-	\begin{equation}
-		T_{ij}=T_{ji}
-	\end{equation}
+	于是 $T_{ij}=T_{ji}$，即应力张量是对称张量。证毕。
 \end{proof}
 
 \subsection{理想流体的应力张量}
+
 \begin{theorem}[理想流体的应力张量]
-	一般来说，运动流体中的应力状态有六个分量。一种最简单的流体模型称为理想流体，这种流体中任意一点的应力状态是各向同性张量，即理想流体中任意一点的应力张量可表示为
+	由流体应力张量的对称性可知，运动的流体中的应力状态有六个分量。一种最简单的流体模型称为\textbf{理想流体}，这种流体中任意一点应力状态是各向同性张量，即理想流体中任意一点的应力张量可表示为
 	\begin{equation}\label{eq:ideal-fluid-stress}
 		T_{ij}=-p\,\delta_{ij}
 	\end{equation}
-	其中 $p$ 是标量且通常大于零，负号表示正应力作用方向与作用面的外法线方向相反；$\delta_{ij}$ 是单位张量（Kronecker 符号），即
-	\begin{equation}\label{eq:kronecker-delta}
-		\delta_{ij}=\begin{cases}1,& i=j\\ 0,& i\neq j\end{cases}
-	\end{equation}
+	其中：
+	\begin{itemize}
+		\item $p$ 是标量且通常大于零，负号表示正应力作用方向与作用面的外法方向相反；
+		\item $\delta_{ij}$ 是单位张量（Kronecker 符号），即
+		      \begin{equation}\label{eq:kronecker-delta}
+			      \delta_{ij}=\begin{cases}
+				      0, & i\neq j\\
+				      1, & i=j
+			      \end{cases}
+		      \end{equation}
+	\end{itemize}
 \end{theorem}
 
-上式表明，理想流体中任意面上只有正应力，并且就是压强 $p$，即任意面上的正应力 $T_{nn}=-p$。很容易由上述关系导出这一结论。任意面上的应力可写作式~\eqref{eq:stress-tensor-action}，因 $T_{ij}=-p\,\delta_{ij}$，故 $T_{ij}\boldsymbol{e}_j=-p\,\delta_{ij}\boldsymbol{e}_j=-p\,\boldsymbol{e}_i$，于是任意面上的应力
+上式表明，理想流体的应力状态方阵 $[T_{ij}]$ 为对角矩阵，即理想流体任意面上只有正应力 $T_{nn}=-p$。结合上面的式子
 \begin{equation}\label{eq:ideal-fluid-stress-n}
-	\boldsymbol{T}_n=-p\,\boldsymbol{e}_i\,n_i=-p\,\boldsymbol{n}
+	\boldsymbol{T}_n=\boldsymbol{T}_i\,n_i=-p\,\boldsymbol{n}
 \end{equation}
-上式表明任意面上的应力为正应力，同时说明任意面上的应力分量都等于 $-p$，即理想流体微团表面承受均匀分布的压强。
+于是理想流体微团表面承受均匀分布的压强。
 
 \section{流体的粘性和压缩性}
-流体和固体的基本区别在于它的易流性。固体在剪切力作用下发生剪切变形后可以达到新的静平衡状态，而静止流体不能承受剪切力，任何微小的剪切力都能驱使流体持续流动。也就是说，静止流体中的应力只有压强，而当流体运动时，流体微团的表面除了压强外还有剪应力。流体运动时，微团之间具有抵抗相互滑移运动的属性，称为流体的粘性。
+
+流体和固体的基本区别在于它的易流性。固体在剪切力作用下发生剪切变形后可以达到新的静平衡状态，而静止流体不能承受剪切力，任何微小的剪切力都能驱使流体持续流动。也就是说，静止流体中的应力只有压强，而当流体运动时，流体微团的表面除了压强外还有剪应力。
+
+\subsection{粘性}
+
+\begin{definition}[粘性]
+	流体运动时，微团之间具有抵抗相互滑移运动的属性称为流体的粘性。
+\end{definition}
+
+\begin{note}
+	抵抗滑移运动会产生切应力，由上节讨论可知，理想流体微团任意面上的应力均为正应力。所以理想流体不考虑粘性。
+\end{note}
+
+\begin{definition}[牛顿流体]
+	\textbf{牛顿流体}是剪应力与剪切速率呈线性关系的流体，其粘性保持恒定，不随外力变化。最常见的流体，如空气和水，都是牛顿流体。
+\end{definition}
+
+\begin{property}[牛顿流体的粘性]
+	在厚度为 $\delta y$ 的薄层流体运动中，若上下速度差为 $\delta u$ 时，作用在流体薄层面上的剪应力与 $\delta u$ 成正比，与 $\delta y$ 成反比，即
+	\begin{equation}\label{eq:newton-viscosity-proportional}
+		\tau_{xy}\propto\frac{\delta u}{\delta y}
+	\end{equation}
+	引入\textbf{动力粘性系数 $\mu$}，单位是泊，量纲为 $\mathrm{kg\cdot m^{-1}\cdot s^{-1}}$，于是上式可写为
+	\begin{equation}\label{eq:newton-viscosity}
+		\tau_{xy}=\mu\frac{\delta u}{\delta y}
+	\end{equation}
+	有时还用动力粘性系数除以密度，称作\textbf{运动粘性系数}，用 $\nu$ 表示：
+	\begin{equation}\label{eq:kinematic-viscosity}
+		\nu=\frac{\mu}{\rho}
+	\end{equation}
+\end{property}
+
+\begin{note}
+	流体的粘性和温度有关。
+\end{note}
+
+是否应当考虑粘性，不仅与粘性系数有关，还和流动的速度 $U$ 和尺度 $L$ 有关，常用\textbf{雷诺数} $\mathrm{Re}=\dfrac{UL}{\nu}$ 衡量流动过程中粘性的大小。如 $\mathrm{Re}\ll 1$ 则认为粘性主宰流动。
+
+\begin{keybox}[雷诺数]
+	\[
+	\mathrm{Re}=\frac{UL}{\nu}
+	\]
+	式中 $U$ 为流动的特征速度，$L$ 为特征尺度，$\nu$ 为运动粘性系数。它是衡量流动过程中粘性大小的无量纲数：$\mathrm{Re}\ll 1$ 时粘性主宰流动。
+\end{keybox}
+
+\subsection{压缩性}
+
+\begin{definition}[压缩性]
+	由于压强变化而引起流体密度的变化称为压缩性。气体和液体的压缩性有明显区别。
+\end{definition}
+
+气体的密度通常随压强的增高而增大，随温度的升高而减小，具有明显的可压缩性，它可用热力学状态方程表示：
+\begin{equation}\label{eq:thermal-state-equation}
+	p=p(\rho,T)
+\end{equation}
+式中 $T$ 为绝对温度。常见的气体大多数服从完全气体状态方程：
+\begin{equation}\label{eq:perfect-gas}
+	p=R\rho T
+\end{equation}
+式中 $R$ 为气体常数。
+
+一般来说液体密度几乎不随压强变化，但当温度增加时，密度稍有减小：
+\begin{equation}\label{eq:liquid-density}
+	\rho=\rho_n\left[1-\beta(T-T_0)\right]
+\end{equation}
+
+\begin{definition}[膨胀系数]
+	式~\eqref{eq:liquid-density} 中 $\beta$ 称为\textbf{膨胀系数}，它表示单位温升时液体密度的相对变化率，通常 $\beta\sim10^{3}\,\mathrm{K^{-1}}$。
+\end{definition}
+
+\begin{warnbox}[存疑]
+	教材原文此处记作 $\beta\sim10^{3}\,\mathrm{K^{-1}}$。按"单位温升时密度的相对变化率"的量级判断，应为 $\beta\sim10^{-3}\,\mathrm{K^{-1}}$，此处照录原文，待核对原书后修订。
+\end{warnbox}
+
+流体力学中按运动中流体密度的相对变化率的大小把流动分为可压缩流和不可压缩流两大类。

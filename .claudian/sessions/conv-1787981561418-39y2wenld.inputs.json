@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "conversationId": "conv-1787981561418-39y2wenld",
+  "records": [
+    {
+      "schemaVersion": 1,
+      "id": "msg-1787981561560-lt803tk",
+      "userTurnOrdinal": 1,
+      "state": "accepted",
+      "localMessageId": "msg-1787981561406-dam2lm8",
+      "timestamp": 1787981561406,
+      "rawDisplayText": "补全一下高斯公式，还有上面两个外力矩是怎么来的",
+      "canonicalText": "补全一下高斯公式，还有上面两个外力矩是怎么来的",
+      "context": {
+        "currentNote": {
+          "path": "教材/流体力学 张兆顺 崔桂香 第三版/读书笔记——第一章 流体的物理性质.md"
+        },
+        "contextFiles": [
+          "教材/流体力学 张兆顺 崔桂香 第三版/读书笔记——第一章 流体的物理性质.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "8f6d32cb036c4f4de0c7f2536338f049ae33b97ece969b3becd0037beca0cc6c",
+      "providerUserMessageId": "d7325630-0be0-4d4b-8f4d-5891f734f3b3",
+      "providerAssistantMessageId": "42a18b91-b886-4e60-8e56-03b9df071767"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1787981816300-oqo91r0",
+      "userTurnOrdinal": 2,
+      "state": "accepted",
+      "localMessageId": "msg-1787981816290-1nowdbc",
+      "timestamp": 1787981816290,
+      "rawDisplayText": "能不能补在上面，让整体合理一点",
+      "canonicalText": "能不能补在上面，让整体合理一点",
+      "context": {
+        "contextFiles": [
+          "教材/流体力学 张兆顺 崔桂香 第三版/读书笔记——第一章 流体的物理性质.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "463af33309a1fe2f2682cfdd631735957ac3732505b9ff40bf9c87d75196ceba",
+      "providerUserMessageId": "99b43313-d662-491d-b81d-928b983b1ab6",
+      "providerAssistantMessageId": "c4924dd2-a724-4dc3-8d31-6a9f4cf0643f"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1787984569561-32yq1op",
+      "userTurnOrdinal": 3,
+      "state": "accepted",
+      "localMessageId": "msg-1787984569545-ownztwo",
+      "timestamp": 1787984569545,
+      "rawDisplayText": "有限体的动量矩用 $\\boldsymbol{K}$ 表示，它的增长率等于$$\\frac{d\\boldsymbol{K}}{dt}=\\iiint_{V}\\rho (\\boldsymbol{r}\\times \\boldsymbol{a})dV$$\n动量的增长率为啥是这个",
+      "canonicalText": "有限体的动量矩用 $\\boldsymbol{K}$ 表示，它的增长率等于$$\\frac{d\\boldsymbol{K}}{dt}=\\iiint_{V}\\rho (\\boldsymbol{r}\\times \\boldsymbol{a})dV$$\n动量的增长率为啥是这个",
+      "context": {
+        "editorSelection": {
+          "notePath": "教材/流体力学 张兆顺 崔桂香 第三版/读书笔记——第一章 流体的物理性质.md",
+          "mode": "selection",
+          "selectedText": "有限体的动量矩用 $\\boldsymbol{K}$ 表示，它的增长率等于$$\\frac{d\\boldsymbol{K}}{dt}=\\iiint_{V}\\rho (\\boldsymbol{r}\\times \\boldsymbol{a})dV$$",
+          "lineCount": 1,
+          "startLine": 146
+        },
+        "contextFiles": [
+          "教材/流体力学 张兆顺 崔桂香 第三版/读书笔记——第一章 流体的物理性质.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "a6a435a36885d3fccfd3454ad96950de90e6cc625cbaef04c4b1cc34a4cd021a",
+      "providerUserMessageId": "7549c044-e89e-403e-aca6-6e9196675b2e",
+      "providerAssistantMessageId": "21fab0dc-af75-4d00-ac40-49aa5e526aa3"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1787985162639-jletr3s",
+      "userTurnOrdinal": 4,
+      "state": "accepted",
+      "localMessageId": "msg-1787985162627-ppskdz7",
+      "timestamp": 1787985162627,
+      "rawDisplayText": "$$\\begin{\\begin{cases}\n\\delta_{ij}=0,if i\\eq j\\\\\n\\delta_{ij}=1,if i=j\\\\\n\\end{cases}}$$\n为什么无法渲染",
+      "canonicalText": "$$\\begin{\\begin{cases}\n\\delta_{ij}=0,if i\\eq j\\\\\n\\delta_{ij}=1,if i=j\\\\\n\\end{cases}}$$\n为什么无法渲染",
+      "context": {
+        "editorSelection": {
+          "notePath": "教材/流体力学 张兆顺 崔桂香 第三版/读书笔记——第一章 流体的物理性质.md",
+          "mode": "selection",
+          "selectedText": "$$\\begin{\\begin{cases}\n\\delta_{ij}=0,if i\\eq j\\\\\n\\delta_{ij}=1,if i=j\\\\\n\\end{cases}}$$",
+          "lineCount": 4,
+          "startLine": 188
+        },
+        "contextFiles": [
+          "教材/流体力学 张兆顺 崔桂香 第三版/读书笔记——第一章 流体的物理性质.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "79e59f150ea828ae41bc3ef2a7808552e6ef05c45edd181dec894cd9efda4c78",
+      "providerUserMessageId": "5838e741-56b7-4669-bd5e-8fb28e8418df",
+      "providerAssistantMessageId": "91cc3dfb-21f7-4eb0-898d-a33726365074"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1787987078994-huku087",
+      "userTurnOrdinal": 5,
+      "state": "accepted",
+      "localMessageId": "msg-1787987078985-lnk1p2y",
+      "timestamp": 1787987078985,
+      "rawDisplayText": "正比符号怎么打",
+      "canonicalText": "正比符号怎么打",
+      "context": {
+        "contextFiles": [
+          "教材/流体力学 张兆顺 崔桂香 第三版/读书笔记——第一章 流体的物理性质.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "b6d7408228169520eee6404c90eee861c416cb5d6dc79df723d2ec2de7498c63",
+      "providerUserMessageId": "02c39386-7164-4f99-ad8c-2795ce6e69d0",
+      "providerAssistantMessageId": "9d521eaf-ddcc-4277-b5bd-6b2b9a0e1338"
+    }
+  ]
+}

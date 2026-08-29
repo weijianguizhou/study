@@ -1,0 +1,10 @@
+{
+  "id": "oh-my-claudian",
+  "name": "Oh My Claudian",
+  "version": "2.4.7",
+  "minAppVersion": "1.7.2",
+  "description": "Embeds coding agents as AI collaborators in your vault, including Oh My Pi support.",
+  "author": "Lee",
+  "authorUrl": "https://github.com/lee259",
+  "isDesktopOnly": true
+}

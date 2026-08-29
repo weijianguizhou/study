@@ -40,6 +40,8 @@
 }
 
 \begin{document}
+	% 前置部分（封面 / 格言 / 目录）：用罗马数字页码，避免与正文阿拉伯页码冲突
+	\frontmatter
 	\input{cover_Impression风.tex}
 
 	\newpage
@@ -57,8 +59,8 @@
 
 	\tableofcontents
 
-	\setcounter{page}{0}
-	\thispagestyle{empty}
-	\newpage
+	% 正文以阿拉伯数字从第 1 页重新起算；清空目录残留的页眉记号，避免「目录」串到正文
+	\mainmatter
+	\markboth{}{}
 	\notebody
 \end{document}

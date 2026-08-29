@@ -2,5 +2,8 @@
   "theme": "moonstone",
   "baseFontSizeAction": true,
   "baseFontSize": 22,
-  "cssTheme": "Things"
+  "cssTheme": "Things",
+  "accentColor": "#22313a",
+  "enabledCssSnippets": [],
+  "textFontFamily": "华文楷体,华文宋体,华文琥珀,华文彩云,华文中宋,仿宋,华文行楷"
 }

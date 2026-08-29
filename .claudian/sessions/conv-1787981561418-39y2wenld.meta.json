@@ -1,0 +1,14 @@
+{
+  "id": "conv-1787981561418-39y2wenld",
+  "providerId": "claude",
+  "title": "补全高斯公式并解释外力矩来源",
+  "titleGenerationStatus": "success",
+  "createdAt": 1787981561420,
+  "lastActivityAt": 1787987086478,
+  "sessionId": "505e47b1-5e89-4c67-bf8a-448b80ba27e5",
+  "selectedModel": "opus",
+  "providerState": {
+    "providerSessionId": "505e47b1-5e89-4c67-bf8a-448b80ba27e5"
+  },
+  "currentNote": "读书笔记——第一章 机械设计概论.md"
+}

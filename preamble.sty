@@ -1,0 +1,23 @@
+% ============================================================
+%  Extended MathJax 插件 preamble
+%  位置：仓库根目录  preamble.sty
+%  作用：由 Extended MathJax 插件自动加载到每篇笔记的
+%        每个数学块（$...$ / $$...$$）之前，用于补齐
+%        Obsidian 默认 MathJax 3 缺失的常用符号与命令。
+%  用法：在 Obsidian 安装并信任「Extended MathJax」社区插件，
+%        在其设置里把 preamble 文件路径设为本文件（默认即 preamble.sty），
+%        改完重启/刷新 Obsidian 即可。
+% ============================================================
+
+% ---- 闭合曲面积分符号（MathJax 3 不内置，需此宏） ----
+% \oiint  ∯  (U+222F)：二重环路积分（高斯定理、通量积分常用）
+% \oiiint ∰  (U+2230)：三重环路积分
+% 直接用 Unicode 真字形，配合 Extended MathJax 插件即可正确渲染。
+% （之前用的 \oint\!\!\!\int 实际是「单圈+普通积分」的近似，观感不对，已弃用。）
+\newcommand{\oiint}{\unicode{x222F}}
+\newcommand{\oiiint}{\unicode{x2230}}
+
+% 备选：若你的字体未含该字形（显示为方框），改用叠加近似
+% （⊂⊃ 两道弧叠 ∬/∭，不依赖字体，但需 mathtools 扩展提供 \mathllap）：
+% \newcommand{\oiint}{{\subset\!\supset}\mathllap{\iint}}
+% \newcommand{\oiiint}{{\subset\!\supset}\mathllap{\iiint}}
