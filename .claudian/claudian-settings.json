@@ -1,12 +1,12 @@
 {
-  "userName": "",
+  "userName": "舟",
   "permissionMode": "normal",
   "model": "opus",
   "thinkingBudget": "off",
   "effortLevel": "high",
   "serviceTier": "default",
   "enableAutoTitleGeneration": true,
-  "titleGenerationLocale": "",
+  "titleGenerationLocale": "zh-CN",
   "titleGenerationModel": "",
   "excludedTags": [],
   "mediaFolder": "",
@@ -71,7 +71,7 @@
       "visibleModels": null
     },
     "opencode": {
-      "catalogTimestamp": 1787981480844,
+      "catalogTimestamp": 1788004224255,
       "cliPath": "",
       "cliPathsByHost": {
         "device:75312e70-7043-4fe4-a250-5dad1f2d7bfc": "D:\\program\\Nodejs\\node_global\\node_modules\\opencode-ai\\bin\\opencode.exe"
@@ -83,7 +83,7 @@
       "preferredThinkingByModel": {},
       "selectedMode": "",
       "thinkingOptionsByModel": {
-        "deepseek/deepseek-v4-flash-vision-exp": [
+        "opencode-go/deepseek-v4-flash-vision-exp": [
           {
             "label": "Low",
             "value": "low"
@@ -99,7 +99,7 @@
         ]
       },
       "visibleModels": [
-        "deepseek/deepseek-v4-flash-vision-exp"
+        "opencode-go/deepseek-v4-flash-vision-exp"
       ]
     },
     "pi": {
@@ -140,8 +140,8 @@
   "enableAutoScroll": true,
   "showTabTitlesByDefault": false,
   "deferMathRenderingDuringStreaming": true,
-  "expandFileEditsByDefault": false,
-  "chatViewPlacement": "right-sidebar",
+  "expandFileEditsByDefault": true,
+  "chatViewPlacement": "main-tab",
   "enableDualPane": true,
   "enableFilePane": true,
   "dualPaneSide": "right",

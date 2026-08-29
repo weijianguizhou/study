@@ -17,7 +17,7 @@
 - `preamble.sty`（仓库根）用于 Obsidian 的 Extended MathJax 插件，定义 `\oiint` 等。
 
 ## 编译
-- 编译器：TeX Live 2025，位于 `D:\Latex`（`xelatex` / `latexmk` / `pdftoppm` / `pdfinfo` 均可用）。
+- 编译器：TeX Live 2025，实际可执行文件位于 `D:\Latex\R\bin\windows`（`xelatex` / `latexmk` / `pdftoppm` / `pdfinfo` 均可用）。
 - 命令：`latexmk -xelatex -interaction=nonstopmode <主文件>.tex`
 - 验收标准：`^! ` 无输出、`Reference ... undefined` 无、`Overfull` 为 0。
 

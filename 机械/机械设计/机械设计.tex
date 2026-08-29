@@ -1,0 +1,62 @@
+% ============================================================
+%  机械设计笔记 —— 基于《课程笔记模板》排版
+%  内容来源：教材/机械设计《机械原理与机械设计（下）》读书笔记
+%
+%  编译方式: XeLaTeX（中文推荐），需编译 2~3 遍生成目录与交叉引用
+% ============================================================
+\documentclass[12pt,a4paper]{book}
+\input{preamble}            % 样式：字体、颜色、定理/定义/例题环境、章节格式
+
+% ============================================================
+%	笔记元信息
+% ============================================================
+\newcommand{\notename}{机械设计}          % 封面大标题
+\newcommand{\noteauthor}{魏舟}            % 封面作者
+\newcommand{\notecourseen}{Machine Design} % 封面眉题（课程英文名）
+\newcommand{\notesubtitle}{学\ 习\ 笔\ 记} % 封面副标题
+\newcommand{\noteextra}{2026 秋季学期}     % 封面底部附加信息
+
+% 正文骨架
+\newcommand{\notebody}{
+	% 前言
+	\chapter*{前言}
+	\input{前言}
+
+	% 绪论：含符号说明小节
+	\chapter{绪论}
+	\input{绪论}
+
+	% 正文各章（每章一个 .tex 文件，章标题写在各自文件首行）
+	\input{第一章机械设计概论}
+	% \input{第二章连接设计}
+
+
+}
+
+\begin{document}
+	% 封面：「格尔尼卡」风格（灰阶立体主义，版式同 cover_Impression风.tex）
+	\input{cover_Guernica风}
+
+	\newpage
+
+	% 第 2 页：格言页（居中，可删）
+	\thispagestyle{empty}
+	\vspace*{\fill}
+	\begin{center}
+		{\kaishu\fontsize{18}{28}\selectfont 知者创物，巧者述之守之，世谓之工。}
+	\end{center}
+	\vfill
+	\newpage
+
+	% 正文页眉页脚样式（金色细线 + 章节名，见 preamble）
+	\pagestyle{mainstyle}
+
+	\setcounter{tocdepth}{3}
+
+	\tableofcontents
+
+	\setcounter{page}{0}
+	\thispagestyle{empty}
+	\newpage
+	\notebody
+\end{document}
