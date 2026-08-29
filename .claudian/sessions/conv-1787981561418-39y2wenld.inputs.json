@@ -113,6 +113,85 @@
       "contentDigest": "b6d7408228169520eee6404c90eee861c416cb5d6dc79df723d2ec2de7498c63",
       "providerUserMessageId": "02c39386-7164-4f99-ad8c-2795ce6e69d0",
       "providerAssistantMessageId": "9d521eaf-ddcc-4277-b5bd-6b2b9a0e1338"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788000929447-7msv5ux",
+      "userTurnOrdinal": 6,
+      "state": "accepted",
+      "localMessageId": "msg-1788000929426-mgtb9mh",
+      "timestamp": 1788000929426,
+      "rawDisplayText": "mermaid图表为什么无法正常显示",
+      "canonicalText": "mermaid图表为什么无法正常显示",
+      "context": {
+        "currentNote": {
+          "path": "读书笔记——第一章 机械设计概论.md"
+        },
+        "contextFiles": [
+          "读书笔记——第一章 机械设计概论.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "3e857f45d2ad6147024a75c197dcd6b3a3b3b22f609e551e2e1422669195d7a7",
+      "providerUserMessageId": "3f3373e8-85f9-4086-9f19-d5a8ccb5ff32",
+      "providerAssistantMessageId": "dc2866c5-3658-4958-a799-fbe27ef59ed7"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788001497457-ejwnljr",
+      "userTurnOrdinal": 7,
+      "state": "accepted",
+      "localMessageId": "msg-1788001497442-qsyshps",
+      "timestamp": 1788001497442,
+      "rawDisplayText": "graph TD\n    subgraph 改进设计阶段\n        direction TB\n        subgraph 阶段1 [样机试制、试验]\n            A1[样机试制与试验] --> A2{样机综合评价}\n            A2 -- N --> A3[信息反馈修改设计]\n            A3 --> A1\n            A2 -- Y --> A4[下一阶段]\n            A4 -.->|目标: 考核设计功能，完善设计方案| A5[考核设计功能，完善设计方案]\n        end\n        ...\n    end\n加上这一段",
+      "canonicalText": "graph TD\n    subgraph 改进设计阶段\n        direction TB\n        subgraph 阶段1 [样机试制、试验]\n            A1[样机试制与试验] --> A2{样机综合评价}\n            A2 -- N --> A3[信息反馈修改设计]\n            A3 --> A1\n            A2 -- Y --> A4[下一阶段]\n            A4 -.->|目标: 考核设计功能，完善设计方案| A5[考核设计功能，完善设计方案]\n        end\n        ...\n    end\n加上这一段",
+      "context": {
+        "contextFiles": [
+          "读书笔记——第一章 机械设计概论.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "32f0242cd1a9ac7e09275ecb5143bb2f6b751f10e132805fb47bfa767c40954f",
+      "providerUserMessageId": "5e673ef9-48ff-4b51-a8f1-8d6f313ac97a",
+      "providerAssistantMessageId": "f6f1ff56-595c-4de0-a121-b7c197fc915e"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788001657246-hz6oh5o",
+      "userTurnOrdinal": 8,
+      "state": "accepted",
+      "localMessageId": "msg-1788001657240-ou2cgix",
+      "timestamp": 1788001657240,
+      "rawDisplayText": "能和上面的流程图拼在一起吗",
+      "canonicalText": "能和上面的流程图拼在一起吗",
+      "context": {
+        "contextFiles": [
+          "读书笔记——第一章 机械设计概论.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "087fe3a2fe1470973d0892d7f3f2d45f75c64195e9e9912856eb846bac70cdda",
+      "providerUserMessageId": "bde9ca41-3fd5-4411-a40f-981ffa30768f",
+      "providerAssistantMessageId": "7cbd85b6-a136-489e-8821-39d56e544abe"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788001851232-p8d0k4o",
+      "userTurnOrdinal": 9,
+      "state": "accepted",
+      "localMessageId": "msg-1788001851223-f6u6ual",
+      "timestamp": 1788001851223,
+      "rawDisplayText": "直接写进去",
+      "canonicalText": "直接写进去",
+      "context": {
+        "contextFiles": [
+          "读书笔记——第一章 机械设计概论.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "6ec4d388c61ec1fa79466e5afcca318493426d30555cc6c359c5ef5025fe6824",
+      "providerUserMessageId": "f3b6e4a7-d24a-4445-8684-20273cdbbcbc",
+      "providerAssistantMessageId": "ac469810-ce25-4085-b701-d2098de65dc4"
     }
   ]
 }

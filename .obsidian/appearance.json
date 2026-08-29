@@ -1,7 +1,7 @@
 {
   "theme": "moonstone",
   "baseFontSizeAction": true,
-  "baseFontSize": 22,
+  "baseFontSize": 27,
   "cssTheme": "Things",
   "accentColor": "#22313a",
   "enabledCssSnippets": [],
