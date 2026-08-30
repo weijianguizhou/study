@@ -399,6 +399,206 @@
       "contentDigest": "f4a390566f7597c2d054a57e14c34c96c96f3954e60d8f29e4fcbea699f1a251",
       "providerUserMessageId": "993aee30-3b83-44bc-903d-a60b015ee913",
       "providerAssistantMessageId": "7bc016bf-5470-46ea-84f3-4738b7719782"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788092165639-gxqwhso",
+      "userTurnOrdinal": 18,
+      "state": "accepted",
+      "localMessageId": "msg-1788092165632-d0dcecn",
+      "timestamp": 1788092165632,
+      "rawDisplayText": "这一步怎么推过去",
+      "canonicalText": "这一步怎么推过去",
+      "context": {
+        "currentNote": {
+          "path": "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md"
+        },
+        "editorSelection": {
+          "notePath": "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md",
+          "mode": "selection",
+          "selectedText": "利用恒等式 $\\tilde{\\boldsymbol{v}}_{|A}=\\boldsymbol{A}_{AB}\\tilde{\\boldsymbol{v}}_{|B} \\boldsymbol{A}_{AB}^\\mathrm{T}$（证明见 [[读书笔记——第五章 坐标系的相对方位]] 性质七），两边同乘$\\boldsymbol{A}_{i,0}$：\n$$\\boldsymbol{A}_{0,i}\\tilde{\\boldsymbol{\\omega}}_{0,i\\mid i}\\boldsymbol{A}_{i,0}=\n\\boldsymbol{A}_{0,\\mathrm{p}(i)}\\tilde{\\boldsymbol{\\omega}}_{0,\\mathrm{p}(i)\\mid \\mathrm{p}(i)}\\boldsymbol{A}_{\\mathrm{p}(i),i}\\boldsymbol{A}_{i,0}+\n\\boldsymbol{A}_{0,i}\\tilde{\\boldsymbol{\\omega}}_{\\mathrm{p}(i),i\\mid i}\\boldsymbol{A}_{i,0}$$\n\n$$\\tilde{\\boldsymbol{\\omega}}_{0,i\\mid 0}=\n\\tilde{\\boldsymbol{\\omega}}_{0,\\mathrm{p}(i)\\mid 0}+\n\\tilde{\\boldsymbol{\\omega}}_{\\mathrm{p}(i),i\\mid 0}$$\n即得",
+          "lineCount": 9,
+          "startLine": 132
+        },
+        "contextFiles": [
+          "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "52d1dede9e1671a65dccdf04bc84c876b0e5250ae4340cdf8e41a548dbba7f53",
+      "providerUserMessageId": "4eea3abe-dd08-43b7-a892-50743d3d591f",
+      "providerAssistantMessageId": "26d8a76b-3838-4705-bb42-2649a06e820c"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788092293812-zb5s448",
+      "userTurnOrdinal": 19,
+      "state": "accepted",
+      "localMessageId": "msg-1788092293805-mhdb51q",
+      "timestamp": 1788092293805,
+      "rawDisplayText": "这一步咋过来的",
+      "canonicalText": "这一步咋过来的",
+      "context": {
+        "editorSelection": {
+          "notePath": "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md",
+          "mode": "selection",
+          "selectedText": "$$\\tilde{\\boldsymbol{\\omega}}_{0,i\\mid 0}=\n\\tilde{\\boldsymbol{\\omega}}_{0,\\mathrm{p}(i)\\mid 0}+\n\\tilde{\\boldsymbol{\\omega}}_{\\mathrm{p}(i),i\\mid 0}$$\n即得$$\n\\boldsymbol{A}_{0, i} \\boldsymbol{\\omega}_{0, i \\mid i}  =\\boldsymbol{A}_{0, \\mathrm{p}(i)} \\boldsymbol{\\omega}_{0, \\mathrm{p}(i) \\mid \\mathrm{p}(i)}+\\boldsymbol{A}_{0, \\mathrm{p}(i)} \\boldsymbol{A}_{\\mathrm{p}(i), i} \\boldsymbol{\\omega}_{\\mathrm{p}(i), i \\mid i}\n$$",
+          "lineCount": 6,
+          "startLine": 143
+        },
+        "contextFiles": [
+          "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "c17c52d1fa972bfca02fc7a21251fb5b68a16c5458043cdf51d2ff1bb9b92576",
+      "providerUserMessageId": "2c3be706-f36c-47b5-8194-22938eaa9096",
+      "providerAssistantMessageId": "3c64c241-fc77-48f7-9c41-fbd2705d9c00"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788093442078-yg08925",
+      "userTurnOrdinal": 20,
+      "state": "accepted",
+      "localMessageId": "msg-1788093442073-ougt6vy",
+      "timestamp": 1788093442073,
+      "rawDisplayText": "为什么有些公式在用obsidian工具导出为PDF的时候不能正确渲染",
+      "canonicalText": "为什么有些公式在用obsidian工具导出为PDF的时候不能正确渲染",
+      "context": {
+        "contextFiles": [
+          "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "f37e2a33e2dd1071a286384c7a5f98a6ba50e8df0a06b6fd0530404315e07a32",
+      "providerUserMessageId": "9279106b-6d79-48d6-9ba9-bc53c62307a0",
+      "providerAssistantMessageId": "54001d3b-12eb-4500-bd3e-c280eb021862"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788093605432-qbjci0h",
+      "userTurnOrdinal": 21,
+      "state": "accepted",
+      "localMessageId": "msg-1788093605424-a5peajl",
+      "timestamp": 1788093605424,
+      "rawDisplayText": "我是说现在这个多刚体的这个笔记",
+      "canonicalText": "我是说现在这个多刚体的这个笔记",
+      "context": {
+        "contextFiles": [
+          "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "05212ed650da98860523f008180895e37a175f7525a64af69ccbbb63d30befaa",
+      "providerUserMessageId": "0fd977ff-6e86-4c25-952c-9e23ed6c291d",
+      "providerAssistantMessageId": "ac9ce68f-b73f-4219-a69f-dda8f4bfec67"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788093877600-uasjms1",
+      "userTurnOrdinal": 22,
+      "state": "accepted",
+      "localMessageId": "msg-1788093877579-q8oj3iv",
+      "timestamp": 1788093877579,
+      "rawDisplayText": "无法正确渲染的是.$$\\boldsymbol{A}{0,i}=\\boldsymbol{A}\n{0,\\mathrm{p}(i)}\\boldsymbol{A}_{\\mathrm{p}(i),i}和两边对时间求导（乘积法则）：$$A˙\n0,i = A˙\n0,p(i)Ap(i),i + A\n即得$$ \\boldsymbol{A}{0, i} \\boldsymbol{\\omega}{0, i\n\\mid i} =\\boldsymbol{A}{0, \\mathrm{p}(i)}\n\\boldsymbol{\\omega}{0, \\mathrm{p}(i) \\mid \\mathrm{p}\n(i)}+\\boldsymbol{A}{0, \\mathrm{p}(i)} \\boldsymbol{A}\n{\\mathrm{p}(i), i} \\boldsymbol{\\omega}_{\\mathrm{p}(i),\ni \\mid i}\n还有$$",
+      "canonicalText": "无法正确渲染的是.$$\\boldsymbol{A}{0,i}=\\boldsymbol{A}\n{0,\\mathrm{p}(i)}\\boldsymbol{A}_{\\mathrm{p}(i),i}和两边对时间求导（乘积法则）：$$A˙\n0,i = A˙\n0,p(i)Ap(i),i + A\n即得$$ \\boldsymbol{A}{0, i} \\boldsymbol{\\omega}{0, i\n\\mid i} =\\boldsymbol{A}{0, \\mathrm{p}(i)}\n\\boldsymbol{\\omega}{0, \\mathrm{p}(i) \\mid \\mathrm{p}\n(i)}+\\boldsymbol{A}{0, \\mathrm{p}(i)} \\boldsymbol{A}\n{\\mathrm{p}(i), i} \\boldsymbol{\\omega}_{\\mathrm{p}(i),\ni \\mid i}\n还有$$",
+      "context": {
+        "editorSelection": {
+          "notePath": "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md",
+          "mode": "selection",
+          "selectedText": "\\boldsymbol{A}_{0,i}=\\boldsymbol{A}_{0,\\mathrm{p}(i)}\\boldsymbol{A}_{\\mathrm{p}(i),i}",
+          "lineCount": 1,
+          "startLine": 127
+        },
+        "contextFiles": [
+          "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "f778016244c1b788b57b3d0ef86a55e1b69712bf98e017d7bb5393868c17a141",
+      "providerUserMessageId": "530f5fe2-dec1-4a8d-9c76-c6fd29fe7e17",
+      "providerAssistantMessageId": "99b37026-2511-4b7b-a58e-f32c4f310855"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788095874044-vyveaon",
+      "userTurnOrdinal": 23,
+      "state": "accepted",
+      "localMessageId": "msg-1788095874037-8i4hclc",
+      "timestamp": 1788095874037,
+      "rawDisplayText": "\\dot{tilde{\\boldsymbol{r}}}_{O_{\\mathrm{p}(i)} O_i|\\mathrm{p}(i)}^{\\mathrm{T}}是什么",
+      "canonicalText": "\\dot{tilde{\\boldsymbol{r}}}_{O_{\\mathrm{p}(i)} O_i|\\mathrm{p}(i)}^{\\mathrm{T}}是什么",
+      "context": {
+        "editorSelection": {
+          "notePath": "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md",
+          "mode": "selection",
+          "selectedText": "tilde{\\boldsymbol{r}}_{O_{\\mathrm{p}(i)} O_i|\\mathrm{p}(i)}^{\\mathrm{T}}",
+          "lineCount": 1,
+          "startLine": 219
+        },
+        "contextFiles": [
+          "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "cd2dda50c0ce236cb4a8ab549e39e02b07a2b59685168bc0899297c8e211977f",
+      "providerUserMessageId": "bbacd4c5-b716-4655-a6fe-21ec108ebec8",
+      "providerAssistantMessageId": "bc98fa08-21bd-42c0-aba6-f8b07c24e6d1"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788096224451-ne7kgo6",
+      "userTurnOrdinal": 24,
+      "state": "accepted",
+      "localMessageId": "msg-1788096224445-7y0hm65",
+      "timestamp": 1788096224445,
+      "rawDisplayText": "如果叉乘矩阵再对时间求导呢",
+      "canonicalText": "如果叉乘矩阵再对时间求导呢",
+      "context": {
+        "contextFiles": [
+          "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "1affedbde398757d60b33b1e62c3cfc289e5619d1ca5b5732544d5c5d33cea29",
+      "providerUserMessageId": "8e0d8054-ec2d-4693-93a0-72561bfb69ae",
+      "providerAssistantMessageId": "b043b809-e53c-4276-8bb6-820306fd08be"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788096526782-d9kp8zy",
+      "userTurnOrdinal": 25,
+      "state": "accepted",
+      "localMessageId": "msg-1788096526768-eh7cpdo",
+      "timestamp": 1788096526768,
+      "rawDisplayText": "把对时间求一阶导数仿照上面的格式和风格写一下",
+      "canonicalText": "把对时间求一阶导数仿照上面的格式和风格写一下",
+      "context": {
+        "contextFiles": [
+          "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "448fdbad455fe39da6455c5ce1afde990744e1376ee4bd8c954b9b54fb5bf430",
+      "providerUserMessageId": "bb530171-c7b3-4190-81c9-7ffcb9cc0f8c"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788096783466-765q6tl",
+      "userTurnOrdinal": 26,
+      "state": "accepted",
+      "localMessageId": "msg-1788096783458-32npwvy",
+      "timestamp": 1788096783458,
+      "rawDisplayText": "把对时间求一阶导数仿照上面的格式和风格写一下",
+      "canonicalText": "把对时间求一阶导数仿照上面的格式和风格写一下",
+      "context": {
+        "contextFiles": [
+          "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "448fdbad455fe39da6455c5ce1afde990744e1376ee4bd8c954b9b54fb5bf430",
+      "providerUserMessageId": "e6a7929d-b50f-421e-bf40-f8c5a5e60b2f"
     }
   ]
 }

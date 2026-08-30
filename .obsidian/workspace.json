@@ -41,12 +41,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "教材/控制理论/读书笔记——控制工程基础.md",
+                "file": "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "读书笔记——控制工程基础"
+              "title": "读书笔记——第十章 多刚体系统运动学方程递推形式"
             }
           }
         ],
@@ -185,7 +185,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "教材/控制理论/读书笔记——控制工程基础.md",
+                "file": "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -237,28 +237,28 @@
   },
   "active": "437ab6934dc5f66d",
   "lastOpenFiles": [
-    "控制理论/控制工程基础/控制工程基础笔记.pdf",
-    "教材/控制理论/读书笔记——控制工程基础.md",
-    "教材/控制理论/controls-engineering-in-frc.pdf",
+    "教材/弹性力学/弹性力学 第5版 上册 (徐芝纶).pdf",
+    "教材/弹性力学/弹性力学 第5版 下册 (徐芝纶).pdf",
+    "教材/弹性力学",
+    "教材/新建文件夹",
+    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md.tmp.42748.5af27b4cda9f",
+    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md.tmp.42748.e4d5dc2102b4",
+    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md.tmp.42748.1594ca8ec181",
+    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md.tmp.42748.14678b6257b1",
+    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md.tmp.42748.2c10b90d65e4",
+    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md.tmp.42748.5fa5dbdde974",
+    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md.tmp.42748.db86a06223c4",
+    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第五章 坐标系的相对方位.md",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md",
+    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第七章 坐标系的姿态广义坐标.md",
+    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第四章 笛卡尔张量.md",
+    "教材/控制理论/读书笔记——控制工程基础.md",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第一章 有限维广义变分原理.md",
     "控制理论/控制工程基础/Figure/电梯上的PD控制器.png",
     "力学/系统动力学建模与仿真/Figure/与大地直接关联的体元件.png",
-    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第七章 坐标系的姿态广义坐标.md",
     "控制理论/控制工程基础/Figure/比例控制器 1.png",
     "控制理论/控制工程基础/Figure/PD控制器.png",
     "README.md",
-    "教材/控制理论/读书笔记——控制工程基础.md.tmp.42748.7f08dc84527c",
-    "教材/控制理论/读书笔记——控制工程基础.md.tmp.42748.d7c87c5e3a40",
-    "教材/控制理论/读书笔记——控制工程基础.md.tmp.42748.7b96f6d4977f",
-    "教材/控制理论/读书笔记——控制工程基础.md.tmp.42748.bfcca049496d",
-    "教材/控制理论/读书笔记——控制工程基础.md.tmp.42748.5c6f441ba60d",
-    "教材/控制理论/读书笔记——控制工程基础.md.tmp.42748.b12724c33df3",
-    "教材/控制理论/读书笔记——控制工程基础.md.tmp.42748.93525f3de1e5",
-    "教材/控制理论/读书笔记——控制工程基础.md.tmp.42748.bef7ab287c5f",
-    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第五章 坐标系的相对方位.md",
-    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第四章 笛卡尔张量.md",
-    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md.tmp.42748.9265eb214fa8",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第三章 系统运动微分方程及其数值求解.md",
     "力学/系统动力学建模与仿真/Figure/PDF/SystemDynamicsModelingAndSimulation_92.png",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第二章 多体系统拉格朗日方程.md",
