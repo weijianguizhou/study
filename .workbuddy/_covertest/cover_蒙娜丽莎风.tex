@@ -1,0 +1,199 @@
+% ============================================================
+%  课程笔记封面模板 —— 「蒙娜丽莎」风格
+%  取材：达·芬奇《蒙娜丽莎》(Mona Lisa, c.1503–1519)：晕涂法暖褐调、
+%        蓝灰远景山水、交叠的双手、含蓄的微笑。
+%  与 cover_Impression风.tex 同构（眉题 / 主标题 / 菱形饰线 /
+%  副标题 / 底部作者日期），直接 \input{} 复用：
+%      \input{cover_蒙娜丽莎风}
+%
+%  配色：ml* 前缀（达·芬奇取色）。本文件用 \providecolor 兜底，
+%        单独复制到任何笔记本也能编译；想整体换调改这里即可。
+%
+%  注意：整幅画面绘于 \begin{scope}[shift={(current page.south west)}] 内，
+%        所有坐标以「页面左下角为原点、单位 cm」书写；脱离该 scope
+%        直接写 (x,y)，图形会落到页面外而不可见。
+%
+%  可用字段（在主文件导言区用 \newcommand 预定义即可覆盖缺省值）：
+%      \notename     主标题（必填，主模板已定义）
+%      \noteauthor   作者（必填，主模板已定义）
+%      \notecourseen 眉题英文（缺省 Course Notes）
+%      \notesubtitle 副标题（缺省「学习笔记」）
+%      \noteextra    底部附加信息（缺省不显示）
+% ============================================================
+
+% ---- 达·芬奇《蒙娜丽莎》取色（暖褐晕涂 + 蓝灰远景） ----
+\providecolor{mlSky}{RGB}{142,164,166}      % 远景天空：蓝灰（上）
+\providecolor{mlSky2}{RGB}{198,196,178}     % 远景亮部：暖灰
+\providecolor{mlWater}{RGB}{120,146,152}    % 远水：青灰
+\providecolor{mlGround}{RGB}{128,104,72}    % 中景地面：褐土
+\providecolor{mlSkin}{RGB}{230,200,164}     % 肤色
+\providecolor{mlHair}{RGB}{56,42,34}        % 头发：深褐
+\providecolor{mlRobe}{RGB}{92,68,44}        % 衣裙：深褐
+\providecolor{mlSleeve}{RGB}{152,114,68}    % 衣袖：赭黄
+\providecolor{mlInk}{RGB}{46,34,26}         % 墨褐（标题/五官）
+
+% ---- 缺省字段（主文件已定义的同名命令不会被覆盖） ----
+\providecommand{\notecourseen}{Course Notes}
+\providecommand{\notesubtitle}{学\ 习\ 笔\ 记}
+\providecommand{\noteextra}{}
+
+\begin{titlepage}
+	\begin{tikzpicture}[remember picture, overlay]
+		\begin{scope}[shift={(current page.south west)}]
+
+		% ============================================================
+		%  1. 远景（上冷下暖的晕涂天空）
+		% ============================================================
+		\shade[top color=mlSky, bottom color=mlSky2] (0,0) rectangle (21,29.7);
+
+		% ============================================================
+		%  2. 远山（层叠折线，越远越淡）
+		% ============================================================
+		\fill[mlSky2, opacity=0.75]
+			(0,23.4) -- (2.6,25.2) -- (4.4,24.0) -- (6.8,25.8) -- (9.0,24.2)
+			-- (12.0,26.0) -- (14.6,23.8) -- (17.2,25.4) -- (21,23.6)
+			-- (21,20.4) -- (0,20.4) -- cycle;
+		\fill[mlSky, opacity=0.45]
+			(0,20.6) -- (3.0,22.2) -- (5.2,20.8) -- (8.0,22.6) -- (11.0,20.6)
+			-- (14.2,22.4) -- (17.6,20.4) -- (21,21.8) -- (21,18.4) -- (0,18.4) -- cycle;
+
+		% ============================================================
+		%  3. 蜿蜒的河流与中景地面
+		% ============================================================
+		\draw[mlWater, line width=5.0pt, opacity=0.55, line cap=round]
+			(1.6,17.6) .. controls (5.0,17.0) and (6.4,15.2) .. (9.6,14.8)
+			.. controls (12.8,14.4) and (14.6,15.6) .. (18.0,14.6);
+		\fill[mlGround, opacity=0.50]
+			plot[domain=0:21, samples=50, smooth] (\x, {13.0 + 1.1*sin(deg(0.48*\x + 20))})
+			-- (21,0) -- (0,0) -- cycle;
+
+		% ============================================================
+		%  4. 人物：衣裙与身形
+		% ============================================================
+		\fill[mlRobe]
+			(4.2,0) .. controls (5.6,4.5) and (7.4,7.6) .. (8.9,10.2)
+			.. controls (9.6,11.2) and (11.4,11.2) .. (12.1,10.2)
+			.. controls (13.6,7.6) and (15.4,4.5) .. (16.8,0) -- cycle;
+		\fill[mlSleeve, opacity=0.85]
+			(4.6,0) .. controls (6.0,3.6) and (7.4,6.2) .. (8.6,8.4)
+			.. controls (7.6,7.0) and (6.2,3.4) .. (5.4,0) -- cycle;
+		\fill[mlSleeve, opacity=0.85]
+			(16.4,0) .. controls (15.0,3.6) and (13.6,6.2) .. (12.4,8.4)
+			.. controls (13.4,7.0) and (14.8,3.4) .. (15.6,0) -- cycle;
+
+		% ============================================================
+		%  5. 颈与头
+		% ============================================================
+		\fill[mlSkin] (9.55,9.2) -- (11.45,9.2) -- (11.45,11.8) -- (9.55,11.8) -- cycle;
+		\fill[mlSkin] (10.5,13.5) ellipse[x radius=2.30, y radius=3.00];
+
+		% ============================================================
+		%  6. 垂发（自头顶包覆两侧，垂至肩部）
+		% ============================================================
+		\fill[mlHair]
+			(10.5,16.5)
+			.. controls (7.8,16.2) and (7.3,13.2) .. (7.6,10.4)
+			.. controls (7.8,9.0) and (8.7,9.0) .. (8.8,10.6)
+			.. controls (9.0,13.2) and (9.2,15.0) .. (10.5,15.1)
+			.. controls (11.8,15.0) and (12.0,13.2) .. (12.2,10.6)
+			.. controls (12.3,9.0) and (13.2,9.0) .. (13.4,10.4)
+			.. controls (13.7,13.2) and (13.2,16.2) .. (10.5,16.5) -- cycle;
+
+		% ============================================================
+		%  7. 五官（含蓄的微笑）
+		% ============================================================
+		\draw[mlInk, line width=1.1pt, opacity=0.55]
+			(9.30,13.95) .. controls (9.62,14.15) and (9.98,14.15) .. (10.28,13.95);
+		\draw[mlInk, line width=1.1pt, opacity=0.55]
+			(10.72,13.95) .. controls (11.02,14.15) and (11.38,14.15) .. (11.70,13.95);
+		\fill[mlInk, opacity=0.85] (9.68,13.32) ellipse[x radius=0.34, y radius=0.19];
+		\fill[mlInk, opacity=0.85] (11.32,13.32) ellipse[x radius=0.34, y radius=0.19];
+		\draw[mlInk, line width=1.0pt, opacity=0.5]
+			(10.50,13.05) .. controls (10.40,12.45) and (10.62,12.22) .. (10.74,12.40);
+		\draw[mlInk, line width=1.4pt, opacity=0.7]
+			(9.86,11.72) .. controls (10.28,11.48) and (10.72,11.48) .. (11.14,11.72);
+		\draw[mlInk, line width=0.8pt, opacity=0.28]
+			(9.20,12.30) .. controls (9.05,11.60) and (9.30,11.05) .. (9.70,11.10);
+		\draw[mlInk, line width=0.8pt, opacity=0.28]
+			(11.80,12.30) .. controls (11.95,11.60) and (11.70,11.05) .. (11.30,11.10);
+
+		% ============================================================
+		%  8. 交叠的双手
+		% ============================================================
+		\fill[mlSkin]
+			(8.6,6.0) .. controls (9.4,5.1) and (11.0,4.9) .. (12.2,5.5)
+			.. controls (12.9,5.9) and (12.7,6.7) .. (11.8,6.9)
+			.. controls (10.6,7.1) and (9.2,7.0) .. (8.6,6.4) -- cycle;
+		\draw[mlInk, opacity=0.35, line width=1.0pt] (9.70,5.56) -- (10.34,5.46);
+		\draw[mlInk, opacity=0.35, line width=1.0pt] (10.86,5.62) -- (11.50,5.76);
+
+		% ============================================================
+		%  9. 标题衬底（一层薄雾般的暖白，保证文字可读）
+		% ============================================================
+		\fill[mlSky2, opacity=0.40]
+			(2.6,16.9) -- (17.4,17.3) -- (18.0,22.6) -- (16.4,23.6) -- (2.2,22.9) -- cycle;
+
+		% ============================================================
+		% 10. 金色细边框
+		% ============================================================
+		\draw[gold, line width=0.7pt, opacity=0.6]
+			([shift={(0.85,0.85)}]current page.south west) rectangle
+			([shift={(-0.85,-0.85)}]current page.north east);
+
+		% ============================================================
+		% 11. 顶部眉题（课程英文小字 + 自适应金色短线）
+		% ============================================================
+		\node[anchor=north, text=mlInk, align=center]
+			(mlEyebrow) at ([yshift=-3.4cm]current page.north) {%
+			{\sffamily\fontsize{12}{15}\selectfont \uppercase{\notecourseen}}
+		};
+		\draw[gold, line width=1.0pt] ($(mlEyebrow.west)+(-0.25cm,0)$) -- ++(-1.1cm,0);
+		\draw[gold, line width=1.0pt] ($(mlEyebrow.east)+(0.25cm,0)$) -- ++(1.1cm,0);
+
+		% ============================================================
+		% 12. 主标题（居中，使用 \notename）
+		% ============================================================
+		\node[anchor=center, align=center, text=mlInk]
+			at ([yshift=-8.3cm]current page.north) {%
+			{\fontsize{38}{48}\sffamily\bfseries \notename}
+		};
+
+		% ============================================================
+		% 13. 金色菱形 + 双细线
+		% ============================================================
+		\coordinate (C) at ([yshift=-11.6cm]current page.north);
+		\draw[gold, line width=1.1pt] (C) ++(-2.2cm,0) -- ++(1.55cm,0);
+		\draw[gold, line width=1.1pt] (C) ++(0.65cm,0) -- ++(1.55cm,0);
+		\node[fill=gold, minimum size=0.24cm, inner sep=0pt, rotate=45] at (C) {};
+
+		% ============================================================
+		% 14. 副标题（使用 \notesubtitle）
+		% ============================================================
+		\node[anchor=north, text=mlInk, align=center]
+			at ([yshift=-12.4cm]current page.north) {
+			{\fontsize{15}{20}\sffamily \notesubtitle}
+		};
+
+		% ============================================================
+		% 15. 底部作者、日期、附加信息
+		% ============================================================
+		\coordinate (B) at ([yshift=2.7cm]current page.south);
+		\draw[gold, line width=0.8pt, opacity=0.85] (B) ++(-1.1cm,0.95cm) -- ++(2.2cm,0);
+		\node[anchor=south, text=mlInk, align=center] at (B) {
+			\begin{tabular}{c}
+				{\fontsize{19}{24}\sffamily\bfseries \noteauthor} \\[0.35cm]
+				{\large \sffamily \today}
+				\ifstrempty{\noteextra}{}{\\[0.3cm]{\normalsize\sffamily \noteextra}}
+			\end{tabular}
+		};
+
+		% ============================================================
+		% 16. 右下角落款（画作信息）
+		% ============================================================
+		\node[anchor=south east, text=mlInk, opacity=0.7, font=\footnotesize\itshape]
+			at ([shift={(-1.35,1.25)}]current page.south east)
+			{Leonardo da Vinci, Mona Lisa, c.1503--1519};
+
+		\end{scope}
+	\end{tikzpicture}
+\end{titlepage}

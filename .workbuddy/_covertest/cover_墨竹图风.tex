@@ -1,0 +1,202 @@
+% ============================================================
+%  课程笔记封面模板 —— 「墨竹图」风格
+%  取材：文同《墨竹图》（北宋·湖州竹派）：素纸上以浓淡墨写数竿修竹，
+%        竹节分明，撇叶如「个」「介」字，浓淡相破，不施粉黛。
+%  与 cover_Impression风.tex 同构（眉题 / 主标题 / 菱形饰线 /
+%  副标题 / 底部作者日期），直接 \input{} 复用：
+%      \input{cover_墨竹图风}
+%
+%  配色：mz* 前缀（素纸 + 墨分五色）。本文件用 \providecolor 兜底，
+%        单独复制到任何笔记本也能编译；想整体换调改这里即可。
+%
+%  注意：整幅画面绘于 \begin{scope}[shift={(current page.south west)}] 内，
+%        所有坐标以「页面左下角为原点、单位 cm」书写；脱离该 scope
+%        直接写 (x,y)，图形会落到页面外而不可见。
+%
+%  可用字段（在主文件导言区用 \newcommand 预定义即可覆盖缺省值）：
+%      \notename     主标题（必填，主模板已定义）
+%      \noteauthor   作者（必填，主模板已定义）
+%      \notecourseen 眉题英文（缺省 Course Notes）
+%      \notesubtitle 副标题（缺省「学习笔记」）
+%      \noteextra    底部附加信息（缺省不显示）
+% ============================================================
+
+% ---- 《墨竹图》取色（素纸 + 墨） ----
+\providecolor{mzPaper}{RGB}{243,239,227}    % 素纸
+\providecolor{mzPaperDark}{RGB}{224,218,201}% 素纸：暗部
+\providecolor{mzInk3}{RGB}{166,164,156}     % 淡墨
+\providecolor{mzInk2}{RGB}{98,98,94}        % 中墨
+\providecolor{mzInk}{RGB}{44,44,42}         % 浓墨
+\providecolor{mzSeal}{RGB}{168,54,46}       % 朱红钤印
+
+% ---- 竹叶绘制宏：#1=颜色 #2=(x,y) #3=旋转角 #4=缩放 ----
+\newcommand{\mzleaf}[4][mzInk]{%
+	\begin{scope}[shift={#2}, rotate=#3, scale=#4]
+		\fill[#1] (0,0) .. controls (0.72,0.44) and (2.05,0.30) .. (2.95,-0.45)
+			.. controls (1.85,-0.12) and (0.62,0.10) .. (0,0) -- cycle;
+	\end{scope}
+}
+
+% ---- 缺省字段（主文件已定义的同名命令不会被覆盖） ----
+\providecommand{\notecourseen}{Course Notes}
+\providecommand{\notesubtitle}{学\ 习\ 笔\ 记}
+\providecommand{\noteextra}{}
+
+\begin{titlepage}
+	\begin{tikzpicture}[remember picture, overlay]
+		\begin{scope}[shift={(current page.south west)}]
+
+		% ============================================================
+		%  1. 素纸（微渐变 + 斑驳）
+		% ============================================================
+		\shade[top color=mzPaper, bottom color=mzPaperDark] (0,0) rectangle (21,29.7);
+		\foreach \x/\y in {2.6/27.2, 7.8/25.0, 12.6/28.0, 17.4/26.2, 4.2/19.6,
+		                   13.8/15.8, 19.2/12.4, 8.4/9.2, 16.0/5.6}{
+			\fill[mzInk3, opacity=0.08] (\x,\y) ellipse[x radius=1.0, y radius=0.38];
+		}
+
+		% ============================================================
+		%  2. 背景淡墨渲染（衬托竹影）
+		% ============================================================
+		\fill[mzInk3, opacity=0.16]
+			(1.2,10.6) .. controls (5.0,13.6) and (9.4,9.8) .. (13.6,12.6)
+			.. controls (17.0,15.0) and (20.0,12.4) .. (20.6,9.4)
+			-- (20.6,4.2) -- (1.2,4.2) -- cycle;
+
+		% ============================================================
+		%  3. 细竿（淡墨，居右）
+		% ============================================================
+		\draw[mzInk3, line width=3.0pt, line cap=round]
+			(15.6,-0.6) .. controls (15.9,9.0) and (16.1,19.0) .. (16.4,30.4);
+		\foreach \t in {0.14,0.32,0.50,0.68,0.86}{
+			\draw[mzInk2, opacity=0.55, line width=1.5pt, line cap=round]
+				({15.6+0.8*\t-0.28},{-0.6+31*\t}) -- ({15.6+0.8*\t+0.28},{-0.6+31*\t});
+		}
+
+		% ============================================================
+		%  4. 中竿（中墨，居中）
+		% ============================================================
+		\draw[mzInk2, line width=4.6pt, line cap=round]
+			(10.0,-0.6) .. controls (10.5,9.0) and (10.7,20.0) .. (11.2,30.4);
+		\foreach \t in {0.10,0.26,0.42,0.58,0.74,0.90}{
+			\draw[mzInk, opacity=0.7, line width=2.0pt, line cap=round]
+				({10.0+1.2*\t-0.36},{-0.6+31*\t}) -- ({10.0+1.2*\t+0.36},{-0.6+31*\t});
+		}
+
+		% ============================================================
+		%  5. 主竿（浓墨，居左，最粗）
+		% ============================================================
+		\draw[mzInk, line width=6.4pt, line cap=round]
+			(5.2,-0.6) .. controls (5.7,9.0) and (6.0,20.0) .. (6.7,30.4);
+		\foreach \t in {0.08,0.22,0.36,0.50,0.64,0.78,0.92}{
+			\draw[mzInk, line width=2.6pt, line cap=round]
+				({5.2+1.5*\t-0.48},{-0.6+31*\t}) -- ({5.2+1.5*\t+0.48},{-0.6+31*\t});
+		}
+
+		% ============================================================
+		%  6. 撇叶（浓淡相破，如「个」「介」字）
+		% ============================================================
+		% 主竿：浓墨大叶
+		\foreach \x/\y/\r/\s in {
+				6.3/25.6/-28/1.20, 6.3/25.6/6/1.35,  6.3/25.6/40/1.05,
+				6.0/19.8/-42/1.10, 6.0/19.8/-8/1.28, 6.0/19.8/28/0.98,
+				5.7/13.4/-20/1.05, 5.7/13.4/12/1.20, 5.7/13.4/46/0.88}{
+			\mzleaf{(\x,\y)}{\r}{\s}
+		}
+		% 中竿：中墨
+		\foreach \x/\y/\r/\s in {
+				10.6/23.2/-34/1.00, 10.6/23.2/2/1.15, 10.6/23.2/34/0.92,
+				10.3/16.6/-24/0.95, 10.3/16.6/14/1.08, 10.3/16.6/44/0.85,
+				10.1/10.2/-30/0.88, 10.1/10.2/8/1.00}{
+			\mzleaf[mzInk2]{(\x,\y)}{\r}{\s}
+		}
+		% 细竿：淡墨小叶
+		\foreach \x/\y/\r/\s in {
+				16.1/21.4/-26/0.80, 16.1/21.4/6/0.92,  16.1/21.4/36/0.72,
+				15.9/14.8/-18/0.76, 15.9/14.8/16/0.86}{
+			\mzleaf[mzInk3]{(\x,\y)}{\r}{\s}
+		}
+		% 新篁（低矮的嫩竹两笔）
+		\draw[mzInk2, line width=2.4pt, line cap=round]
+			(18.4,-0.4) .. controls (18.6,2.2) and (18.8,4.4) .. (19.0,6.6);
+		\mzleaf[mzInk2]{(19.0,6.6)}{-16}{0.72}
+		\mzleaf[mzInk2]{(19.0,6.6)}{18}{0.80}
+
+		% ============================================================
+		%  7. 标题衬底（一层薄纸，保证文字可读）
+		% ============================================================
+		\fill[mzPaper, opacity=0.55]
+			(2.6,16.9) -- (17.4,17.3) -- (18.0,22.6) -- (16.4,23.6) -- (2.2,22.9) -- cycle;
+
+		% ============================================================
+		%  8. 朱红钤印
+		% ============================================================
+		\fill[mzSeal, opacity=0.85] (18.3,25.0) rectangle (19.7,26.4);
+		\draw[mzPaper, line width=0.7pt, opacity=0.9] (18.55,25.25) rectangle (19.45,26.15);
+		\fill[mzSeal, opacity=0.78] (1.6,2.6) rectangle (2.8,3.8);
+		\draw[mzPaper, line width=0.6pt, opacity=0.9] (1.82,2.82) rectangle (2.58,3.58);
+
+		% ============================================================
+		%  9. 细边框（墨线）
+		% ============================================================
+		\draw[mzInk, line width=0.7pt, opacity=0.42]
+			([shift={(0.85,0.85)}]current page.south west) rectangle
+			([shift={(-0.85,-0.85)}]current page.north east);
+
+		% ============================================================
+		% 10. 顶部眉题（课程英文小字 + 自适应墨线）
+		% ============================================================
+		\node[anchor=north, text=mzInk, align=center]
+			(mzEyebrow) at ([yshift=-3.4cm]current page.north) {%
+			{\sffamily\fontsize{12}{15}\selectfont \uppercase{\notecourseen}}
+		};
+		\draw[mzInk, line width=1.0pt] ($(mzEyebrow.west)+(-0.25cm,0)$) -- ++(-1.1cm,0);
+		\draw[mzInk, line width=1.0pt] ($(mzEyebrow.east)+(0.25cm,0)$) -- ++(1.1cm,0);
+
+		% ============================================================
+		% 11. 主标题（居中，使用 \notename）
+		% ============================================================
+		\node[anchor=center, align=center, text=mzInk]
+			at ([yshift=-8.3cm]current page.north) {%
+			{\fontsize{38}{48}\sffamily\bfseries \notename}
+		};
+
+		% ============================================================
+		% 12. 菱形 + 双细线
+		% ============================================================
+		\coordinate (C) at ([yshift=-11.6cm]current page.north);
+		\draw[mzInk, line width=1.1pt] (C) ++(-2.2cm,0) -- ++(1.55cm,0);
+		\draw[mzInk, line width=1.1pt] (C) ++(0.65cm,0) -- ++(1.55cm,0);
+		\node[fill=mzInk, minimum size=0.24cm, inner sep=0pt, rotate=45] at (C) {};
+
+		% ============================================================
+		% 13. 副标题（使用 \notesubtitle）
+		% ============================================================
+		\node[anchor=north, text=mzInk, align=center]
+			at ([yshift=-12.4cm]current page.north) {
+			{\fontsize{15}{20}\sffamily \notesubtitle}
+		};
+
+		% ============================================================
+		% 14. 底部作者、日期、附加信息
+		% ============================================================
+		\coordinate (B) at ([yshift=2.7cm]current page.south);
+		\draw[mzInk, line width=0.8pt, opacity=0.8] (B) ++(-1.1cm,0.95cm) -- ++(2.2cm,0);
+		\node[anchor=south, text=mzInk, align=center] at (B) {
+			\begin{tabular}{c}
+				{\fontsize{19}{24}\sffamily\bfseries \noteauthor} \\[0.35cm]
+				{\large \sffamily \today}
+				\ifstrempty{\noteextra}{}{\\[0.3cm]{\normalsize\sffamily \noteextra}}
+			\end{tabular}
+		};
+
+		% ============================================================
+		% 15. 右下角落款（画作信息）
+		% ============================================================
+		\node[anchor=south east, text=mzInk, opacity=0.6, font=\footnotesize\itshape]
+			at ([shift={(-1.35,1.25)}]current page.south east)
+			{Wen Tong, Ink Bamboo, c.1070s};
+
+		\end{scope}
+	\end{tikzpicture}
+\end{titlepage}

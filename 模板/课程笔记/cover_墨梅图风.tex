@@ -1,0 +1,213 @@
+% ============================================================
+%  课程笔记封面模板 —— 「墨梅图」风格
+%  取材：王冕《墨梅图》（元）：素纸上一枝虬曲的墨梅，圈花点蕊，
+%        疏影横斜；配以题跋与朱红钤印，不求形似，只留清气。
+%  与 cover_Impression风.tex 同构（眉题 / 主标题 / 菱形饰线 /
+%  副标题 / 底部作者日期），直接 \input{} 复用：
+%      \input{cover_墨梅图风}
+%
+%  配色：mm* 前缀（素纸 + 墨 + 朱印）。本文件用 \providecolor 兜底，
+%        单独复制到任何笔记本也能编译；想整体换调改这里即可。
+%
+%  注意：整幅画面绘于 \begin{scope}[shift={(current page.south west)}] 内，
+%        所有坐标以「页面左下角为原点、单位 cm」书写；脱离该 scope
+%        直接写 (x,y)，图形会落到页面外而不可见。
+%
+%  可用字段（在主文件导言区用 \newcommand 预定义即可覆盖缺省值）：
+%      \notename     主标题（必填，主模板已定义）
+%      \noteauthor   作者（必填，主模板已定义）
+%      \notecourseen 眉题英文（缺省 Course Notes）
+%      \notesubtitle 副标题（缺省「学习笔记」）
+%      \noteextra    底部附加信息（缺省不显示）
+% ============================================================
+
+% ---- 《墨梅图》取色（素纸 + 墨 + 朱印） ----
+\providecolor{mmPaper}{RGB}{245,241,231}    % 素纸
+\providecolor{mmPaperDark}{RGB}{226,220,205}% 素纸：暗部
+\providecolor{mmInk3}{RGB}{160,158,150}     % 淡墨（题跋/远枝）
+\providecolor{mmInk2}{RGB}{92,90,86}        % 中墨（细枝）
+\providecolor{mmInk}{RGB}{42,40,38}         % 浓墨（主干/勾瓣）
+\providecolor{mmFlower}{RGB}{252,250,246}   % 花：留白
+\providecolor{mmSeal}{RGB}{168,54,46}       % 朱红钤印
+
+% ---- 圈花绘制宏：#1=(x,y) #2=缩放 #3=旋转角 ----
+\newcommand{\mmblossom}[3]{%
+	\begin{scope}[shift={#1}, rotate=#3, scale=#2]
+		\foreach \a in {0,72,144,216,288}{
+			\fill[mmFlower, draw=mmInk, line width=0.7pt]
+				({0.30*cos(\a)},{0.30*sin(\a)}) circle[radius=0.21];
+		}
+		\fill[mmInk] (0,0) circle[radius=0.075];
+		\foreach \a in {18,90,162,234,306}{
+			\draw[mmInk, line width=0.45pt] (0,0) -- ({0.24*cos(\a)},{0.24*sin(\a)});
+		}
+	\end{scope}
+}
+
+% ---- 缺省字段（主文件已定义的同名命令不会被覆盖） ----
+\providecommand{\notecourseen}{Course Notes}
+\providecommand{\notesubtitle}{学\ 习\ 笔\ 记}
+\providecommand{\noteextra}{}
+
+\begin{titlepage}
+	\begin{tikzpicture}[remember picture, overlay]
+		\begin{scope}[shift={(current page.south west)}]
+
+		% ============================================================
+		%  1. 素纸（微渐变 + 斑驳）
+		% ============================================================
+		\shade[top color=mmPaper, bottom color=mmPaperDark] (0,0) rectangle (21,29.7);
+		\foreach \x/\y in {3.0/27.6, 8.2/25.4, 13.0/28.2, 17.8/26.6, 5.4/20.4,
+		                   14.6/16.2, 19.4/13.0, 9.0/10.0, 16.8/6.2}{
+			\fill[mmInk3, opacity=0.08] (\x,\y) ellipse[x radius=1.0, y radius=0.38];
+		}
+
+		% ============================================================
+		%  2. 淡墨横雾（衬托疏影）
+		% ============================================================
+		\fill[mmInk3, opacity=0.13]
+			plot[domain=0:21, samples=50, smooth] (\x, {11.2 + 0.55*sin(deg(0.6*\x + 30))})
+			-- (21,7.0) -- (0,7.0) -- cycle;
+
+		% ============================================================
+		%  3. 主干（浓墨，自左下虬曲向右上）
+		% ============================================================
+		\draw[mmInk, line width=9.0pt, line cap=round]
+			(0.6,1.8) .. controls (3.8,3.2) and (5.4,5.6) .. (8.4,8.0)
+			.. controls (11.4,10.4) and (13.2,12.6) .. (16.2,15.4)
+			.. controls (17.6,16.8) and (18.8,18.0) .. (20.0,19.6);
+		% 主干的飞白（纸色细纹）
+		\draw[mmPaper, opacity=0.35, line width=1.1pt]
+			(0.9,2.1) .. controls (3.9,3.5) and (5.5,5.9) .. (8.5,8.3)
+			.. controls (11.5,10.7) and (13.3,12.9) .. (16.3,15.7);
+
+		% ============================================================
+		%  4. 细枝（中墨，疏斜交错）
+		% ============================================================
+		\draw[mmInk2, line width=3.4pt, line cap=round]
+			(5.2,5.4) .. controls (6.0,7.8) and (5.6,10.2) .. (4.8,12.6);
+		\draw[mmInk2, line width=2.6pt, line cap=round]
+			(8.4,8.0) .. controls (8.0,10.6) and (8.6,12.4) .. (9.6,14.2);
+		\draw[mmInk2, line width=3.0pt, line cap=round]
+			(11.6,10.6) .. controls (12.4,12.6) and (12.2,14.6) .. (11.4,16.2);
+		\draw[mmInk2, line width=2.4pt, line cap=round]
+			(16.2,15.4) .. controls (16.0,13.2) and (16.6,11.4) .. (17.8,9.8);
+		\draw[mmInk2, line width=2.0pt, line cap=round]
+			(13.4,12.8) .. controls (14.6,13.6) and (15.8,13.8) .. (17.0,13.4);
+		\draw[mmInk3, line width=1.6pt, line cap=round]
+			(2.6,3.0) .. controls (1.8,5.0) and (2.2,6.8) .. (3.2,8.4);
+
+		% ============================================================
+		%  5. 圈花（疏影横斜，或开或蕊）
+		% ============================================================
+		\mmblossom{(4.8,12.9)}{1.15}{12}
+		\mmblossom{(3.9,10.8)}{0.92}{-24}
+		\mmblossom{(5.6,8.6)}{1.00}{30}
+		\mmblossom{(3.2,8.6)}{0.85}{-8}
+		\mmblossom{(2.0,5.6)}{0.95}{18}
+		\mmblossom{(7.4,6.2)}{0.88}{-16}
+		\mmblossom{(9.6,14.5)}{1.20}{26}
+		\mmblossom{(8.6,12.0)}{0.96}{-12}
+		\mmblossom{(10.4,10.2)}{1.05}{8}
+		\mmblossom{(11.4,16.5)}{1.10}{-20}
+		\mmblossom{(12.6,14.2)}{0.90}{22}
+		\mmblossom{(12.0,11.8)}{0.98}{-6}
+		\mmblossom{(15.0,12.4)}{1.02}{14}
+		\mmblossom{(17.0,13.6)}{0.94}{-18}
+		\mmblossom{(17.8,9.6)}{1.08}{20}
+		\mmblossom{(18.8,17.6)}{0.92}{-10}
+		\mmblossom{(19.8,20.0)}{0.86}{16}
+		% 花苞（未开的小蕊）
+		\foreach \x/\y in {6.8/10.6, 9.2/9.0, 13.8/13.2, 16.4/11.0, 11.0/9.4}{
+			\fill[mmInk] (\x,\y) circle[radius=0.15];
+		}
+		\foreach \x/\y in {7.6/11.8, 10.2/6.6, 15.4/10.4}{
+			\fill[mmInk2] (\x,\y) circle[radius=0.13];
+		}
+
+		% ============================================================
+		%  6. 题跋（右侧竖排淡墨短行）
+		% ============================================================
+		\foreach \i in {0,1,2,3,4,5}{
+			\draw[mmInk3, opacity=0.55, line width=1.0pt, line cap=round]
+				({19.3-0.52*\i},{26.2}) -- ({19.3-0.52*\i},{20.6 + 0.35*mod(\i,3)});
+		}
+
+		% ============================================================
+		%  7. 标题衬底（一层薄纸，保证文字可读）
+		% ============================================================
+		\fill[mmPaper, opacity=0.55]
+			(2.6,16.9) -- (17.4,17.3) -- (18.0,22.6) -- (16.4,23.6) -- (2.2,22.9) -- cycle;
+
+		% ============================================================
+		%  8. 朱红钤印（题跋下两枚）
+		% ============================================================
+		\fill[mmSeal, opacity=0.85] (18.2,17.4) rectangle (19.6,18.8);
+		\draw[mmPaper, line width=0.7pt, opacity=0.9] (18.45,17.65) rectangle (19.35,18.55);
+		\fill[mmSeal, opacity=0.78] (1.4,2.2) rectangle (2.6,3.4);
+		\draw[mmPaper, line width=0.6pt, opacity=0.9] (1.62,2.42) rectangle (2.38,3.18);
+
+		% ============================================================
+		%  9. 细边框（墨线）
+		% ============================================================
+		\draw[mmInk, line width=0.7pt, opacity=0.42]
+			([shift={(0.85,0.85)}]current page.south west) rectangle
+			([shift={(-0.85,-0.85)}]current page.north east);
+
+		% ============================================================
+		% 10. 顶部眉题（课程英文小字 + 自适应墨线）
+		% ============================================================
+		\node[anchor=north, text=mmInk, align=center]
+			(mmEyebrow) at ([yshift=-3.4cm]current page.north) {%
+			{\sffamily\fontsize{12}{15}\selectfont \uppercase{\notecourseen}}
+		};
+		\draw[mmInk, line width=1.0pt] ($(mmEyebrow.west)+(-0.25cm,0)$) -- ++(-1.1cm,0);
+		\draw[mmInk, line width=1.0pt] ($(mmEyebrow.east)+(0.25cm,0)$) -- ++(1.1cm,0);
+
+		% ============================================================
+		% 11. 主标题（居中，使用 \notename）
+		% ============================================================
+		\node[anchor=center, align=center, text=mmInk]
+			at ([yshift=-8.3cm]current page.north) {%
+			{\fontsize{38}{48}\sffamily\bfseries \notename}
+		};
+
+		% ============================================================
+		% 12. 菱形 + 双细线
+		% ============================================================
+		\coordinate (C) at ([yshift=-11.6cm]current page.north);
+		\draw[mmInk, line width=1.1pt] (C) ++(-2.2cm,0) -- ++(1.55cm,0);
+		\draw[mmInk, line width=1.1pt] (C) ++(0.65cm,0) -- ++(1.55cm,0);
+		\node[fill=mmInk, minimum size=0.24cm, inner sep=0pt, rotate=45] at (C) {};
+
+		% ============================================================
+		% 13. 副标题（使用 \notesubtitle）
+		% ============================================================
+		\node[anchor=north, text=mmInk, align=center]
+			at ([yshift=-12.4cm]current page.north) {
+			{\fontsize{15}{20}\sffamily \notesubtitle}
+		};
+
+		% ============================================================
+		% 14. 底部作者、日期、附加信息
+		% ============================================================
+		\coordinate (B) at ([yshift=2.7cm]current page.south);
+		\draw[mmInk, line width=0.8pt, opacity=0.8] (B) ++(-1.1cm,0.95cm) -- ++(2.2cm,0);
+		\node[anchor=south, text=mmInk, align=center] at (B) {
+			\begin{tabular}{c}
+				{\fontsize{19}{24}\sffamily\bfseries \noteauthor} \\[0.35cm]
+				{\large \sffamily \today}
+				\ifstrempty{\noteextra}{}{\\[0.3cm]{\normalsize\sffamily \noteextra}}
+			\end{tabular}
+		};
+
+		% ============================================================
+		% 15. 右下角落款（画作信息）
+		% ============================================================
+		\node[anchor=south east, text=mmInk, opacity=0.6, font=\footnotesize\itshape]
+			at ([shift={(-1.35,1.25)}]current page.south east)
+			{Wang Mian, Ink Plum Blossoms, c.1350};
+
+		\end{scope}
+	\end{tikzpicture}
+\end{titlepage}

@@ -1,0 +1,163 @@
+% ============================================================
+%  课程笔记封面模板 —— 「向日葵」风格（仿 Van Gogh《向日葵》厚涂笔触）
+%  与 cover.tex 同构的 titlepage 片段，直接 \input{} 复用：
+%      \input{cover_向日葵风}
+%
+%  配色在本文件内用 \definecolor 定义（sf* 前缀，向日葵取色）：
+%      黄绿墙底 + 铬黄花瓣 + 深褐花心 + 全页旋拧短笔触（厚涂感）。
+%  边框/标题文字沿用导言区已定义的 gold 与 structurecolor。
+%
+%  注意：笔触与花心种子由 \pgfmathsetseed 生成随机数，
+%        修改种子值（默认 20240829）即可换一种笔触分布。
+%
+%  可用字段（在主文件导言区用 \newcommand 预定义即可覆盖缺省值）：
+%      \notename     主标题（必填，主模板已定义）
+%      \noteauthor   作者（必填，主模板已定义）
+%      \notecourseen 眉题英文（缺省 Course Notes，可填课程英文名）
+%      \notesubtitle 副标题（缺省「学习笔记」）
+%      \noteextra    底部附加信息（缺省不显示）
+% ============================================================
+
+% ---- 梵高向日葵主题配色（黄绿墙底 + 铬黄花瓣 + 深褐花心） ----
+\definecolor{sfBgTop}{RGB}{150,168,66}     % 墙面黄绿（上，略深）
+\definecolor{sfBgBot}{RGB}{190,178,74}     % 墙面黄绿（下，偏金）
+\definecolor{sfBgStrokeA}{RGB}{202,214,98} % 笔触：浅黄绿
+\definecolor{sfBgStrokeB}{RGB}{140,158,58} % 笔触：深橄榄
+\definecolor{sfBgStrokeC}{RGB}{228,186,38} % 笔触：铬黄
+\definecolor{sfBgStrokeD}{RGB}{170,184,80}% 笔触：中黄绿
+\definecolor{sfBgStrokeE}{RGB}{108,120,46} % 笔触：暗橄榄
+\definecolor{sfPetal}{RGB}{244,196,22}     % 花瓣：镉黄
+\definecolor{sfPetal2}{RGB}{232,150,40}    % 花瓣：深橙（内层）
+\definecolor{sfPetalEdge}{RGB}{86,58,16}   % 花瓣/叶：深褐轮廓
+\definecolor{sfCenter}{RGB}{72,44,20}      % 花心：深褐
+\definecolor{sfCenterDot}{RGB}{38,22,8}    % 花心点：近黑
+\definecolor{sfLeaf}{RGB}{110,130,50}      % 叶片：橄榄绿
+\definecolor{sfStem}{RGB}{92,112,54}       % 花茎：橄榄绿
+
+% ---- 向日葵绘制宏：#1=可选样式 #2=(x,y) #3=缩放 ----
+\newcommand{\sunflower}[3][]{%
+	\begin{scope}[shift={#2}, scale=#3, #1]
+		% 花茎（带深色轮廓感）
+		\draw[sfStem, line width=2.6pt, line cap=round]
+			(0,-3.6) .. controls (0.45,-1.9) and (-0.45,-0.7) .. (0,0);
+		% 叶片（深褐细轮廓）
+		\fill[sfLeaf, draw=sfPetalEdge!80!black, line width=0.8pt]
+			(0.15,-1.5) .. controls (1.45,-1.7) and (1.65,-0.5) .. (0.25,-0.7)
+			.. controls (0.7,-1.15) .. (0.15,-1.5);
+		\fill[sfLeaf, draw=sfPetalEdge!80!black, line width=0.8pt]
+			(-0.15,-2.25) .. controls (-1.45,-2.45) and (-1.65,-1.25) .. (-0.25,-1.5)
+			.. controls (-0.7,-1.95) .. (-0.15,-2.25);
+		% 外层花瓣（旋卷、尖头、深褐轮廓）
+		\foreach \a in {0,30,...,330} {
+			\begin{scope}[rotate=\a]
+				\fill[sfPetal, draw=sfPetalEdge, line width=1.1pt]
+					(0,0.55) .. controls (0.32,0.95) and (0.32,1.6) .. (0,1.78)
+					         .. controls (-0.32,1.6) and (-0.32,0.95) .. (0,0.55);
+			\end{scope}
+		}
+		% 内层花瓣（错开、偏橙、旋卷）
+		\foreach \a in {15,45,...,345} {
+			\begin{scope}[rotate=\a]
+				\fill[sfPetal2, draw=sfPetalEdge, line width=1.0pt]
+					(0,0.45) .. controls (0.25,0.75) and (0.25,1.2) .. (0,1.38)
+					         .. controls (-0.25,1.2) and (-0.25,0.75) .. (0,0.45);
+			\end{scope}
+		}
+		% 花心
+		\fill[sfCenter] (0,0) circle (0.60cm);
+		% 花心点状种子（梵高式密点）
+		\pgfmathsetseed{20240829}
+		\foreach \k in {1,...,46} {
+			\pgfmathsetmacro{\ang}{random(0,360)}
+			\pgfmathsetmacro{\rad}{random(0,55)/100}
+			\fill[sfCenterDot] (\ang:\rad cm) circle (0.035cm);
+		}
+	\end{scope}
+}
+
+% ---- 缺省字段 ----
+\providecommand{\notecourseen}{Course Notes}
+\providecommand{\notesubtitle}{学\ 习\ 笔\ 记}
+\providecommand{\noteextra}{}
+
+\begin{titlepage}
+	\begin{tikzpicture}[remember picture, overlay]
+		% ---- 1. 黄绿墙面背景（整页竖向渐变） ----
+		\shade[top color=sfBgTop, bottom color=sfBgBot]
+			(current page.south west) rectangle (current page.north east);
+
+		% ---- 2. 全页厚涂笔触（梵高式旋拧短笔） ----
+		% 每笔用绝对坐标的贝塞尔曲线：终点沿角度 \a 走 \len，
+		% 控制点在中段向 \a+25° 偏移，形成轻旋拧的笔感。
+		\pgfmathsetseed{20240829}
+		\foreach \n in {1,...,460} {
+			\pgfmathsetmacro{\x}{random(-1050,1050)/100}
+			\pgfmathsetmacro{\y}{random(-1485,1485)/100}
+			\pgfmathsetmacro{\a}{random(0,360)}
+			\pgfmathsetmacro{\len}{random(35,72)/100}
+			\pgfmathsetmacro{\w}{random(10,34)/10}
+			\pgfmathsetmacro{\o}{random(14,38)/100}
+			\pgfmathsetmacro{\ci}{random(0,4)}
+			\ifnum\ci=0\def\col{sfBgStrokeA}\else
+			\ifnum\ci=1\def\col{sfBgStrokeB}\else
+			\ifnum\ci=2\def\col{sfBgStrokeC}\else
+			\ifnum\ci=3\def\col{sfBgStrokeD}\else
+			\def\col{sfBgStrokeE}\fi\fi\fi\fi
+			\pgfmathsetmacro{\ex}{\x + \len*cos(\a)}
+			\pgfmathsetmacro{\ey}{\y + \len*sin(\a)}
+			\pgfmathsetmacro{\mx}{\x + 0.5*\len*cos(\a+25)}
+			\pgfmathsetmacro{\my}{\y + 0.5*\len*sin(\a+25)}
+			\draw[\col, line width=\w pt, line cap=round, opacity=\o]
+				(\x,\y) .. controls (\mx,\my) .. (\ex,\ey);
+		}
+
+		% ---- 3. 底部花田：三株向日葵（左直立大、右低垂、中近景） ----
+		\sunflower{(-4.3,-3.7)}{1.32}
+		\sunflower[rotate=-16]{( 4.7,-4.0)}{1.06}
+		\sunflower{( 0.7,-3.0)}{0.82}
+
+		% ---- 4. 金色细边框 ----
+		\draw[gold, line width=0.7pt, opacity=0.65]
+			([shift={(0.85,0.85)}]current page.south west) rectangle
+			([shift={(-0.85,-0.85)}]current page.north east);
+
+		% ---- 5. 顶部眉题（英文小字 + 金色短线） ----
+		\node[anchor=north, text=structurecolor!90, align=center]
+			(imEyebrow) at ([yshift=-3.4cm]current page.north) {%
+			{\sffamily\fontsize{12}{15}\selectfont \uppercase{\notecourseen}}
+		};
+		\draw[gold, line width=1.0pt]
+			($(imEyebrow.west)+(-0.25cm,0)$) -- ++(-1.1cm,0);
+		\draw[gold, line width=1.0pt]
+			($(imEyebrow.east)+(0.25cm,0)$) -- ++(1.1cm,0);
+
+		% ---- 6. 主标题（居中，使用 \notename） ----
+		\node[anchor=center, align=center, text=structurecolor]
+			at ([yshift=-8.3cm]current page.north) {%
+			{\fontsize{38}{48}\sffamily\bfseries \notename}
+		};
+
+		% ---- 7. 金色菱形 + 双细线饰线 ----
+		\coordinate (C) at ([yshift=-11.6cm]current page.north);
+		\draw[gold, line width=1.1pt] (C) ++(-2.2cm,0) -- ++(1.55cm,0);
+		\draw[gold, line width=1.1pt] (C) ++(0.65cm,0) -- ++(1.55cm,0);
+		\node[fill=gold, minimum size=0.24cm, inner sep=0pt, rotate=45] at (C) {};
+
+		% ---- 8. 副标题（使用 \notesubtitle） ----
+		\node[anchor=north, text=structurecolor!80, align=center]
+			at ([yshift=-12.4cm]current page.north) {
+			{\fontsize{15}{20}\sffamily \notesubtitle}
+		};
+
+		% ---- 9. 底部作者、日期、附加信息（置于花田之上） ----
+		\coordinate (B) at ([yshift=2.7cm]current page.south);
+		\draw[gold, line width=0.8pt, opacity=0.9] (B) ++(-1.1cm,0.95cm) -- ++(2.2cm,0);
+		\node[anchor=south, text=structurecolor, align=center] at (B) {
+			\begin{tabular}{c}
+				{\fontsize{19}{24}\sffamily\bfseries \noteauthor} \\[0.35cm]
+				{\large \sffamily \today}
+				\ifstrempty{\noteextra}{}{\\[0.3cm]{\normalsize\sffamily \noteextra}}
+			\end{tabular}
+		};
+	\end{tikzpicture}
+\end{titlepage}
