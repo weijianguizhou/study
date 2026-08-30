@@ -192,6 +192,184 @@
       "contentDigest": "6ec4d388c61ec1fa79466e5afcca318493426d30555cc6c359c5ef5025fe6824",
       "providerUserMessageId": "f3b6e4a7-d24a-4445-8684-20273cdbbcbc",
       "providerAssistantMessageId": "ac469810-ce25-4085-b701-d2098de65dc4"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788072298800-wwi7xr7",
+      "userTurnOrdinal": 10,
+      "state": "accepted",
+      "localMessageId": "msg-1788072298775-zpboxlm",
+      "timestamp": 1788072298775,
+      "rawDisplayText": "补一下这个缺少的公式",
+      "canonicalText": "补一下这个缺少的公式",
+      "context": {
+        "editorSelection": {
+          "notePath": "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md",
+          "mode": "selection",
+          "selectedText": "$$$$",
+          "lineCount": 1,
+          "startLine": 122
+        },
+        "contextFiles": [
+          "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "2c6b2dbf6fe0b148bcde7c6e2cc8884f2fe7f16bba5a01f6e0da7e5396c3bd12",
+      "providerUserMessageId": "8a39d5e5-7f35-4fd1-8c69-1f48bad377e0",
+      "providerAssistantMessageId": "3e7f2f8c-d44b-43a3-b446-d19c8dc6fd3e"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788072408679-6ntuvtx",
+      "userTurnOrdinal": 11,
+      "state": "accepted",
+      "localMessageId": "msg-1788072408667-lilxr5l",
+      "timestamp": 1788072408667,
+      "rawDisplayText": "顺手改了",
+      "canonicalText": "顺手改了",
+      "context": {
+        "editorSelection": {
+          "notePath": "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md",
+          "mode": "selection",
+          "selectedText": "$$$$",
+          "lineCount": 1,
+          "startLine": 122
+        },
+        "contextFiles": [
+          "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "df7688a67dd2608528b0aed85f3da34f9b8ef5413f68e4e601944d115a475311",
+      "providerUserMessageId": "a6fdabcf-a1bd-40d8-8778-d0ee2fe4401e",
+      "providerAssistantMessageId": "26d71e7a-89d6-4465-93e5-601371961cf8"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788072794446-4tq664k",
+      "userTurnOrdinal": 12,
+      "state": "accepted",
+      "localMessageId": "msg-1788072794438-e7572yj",
+      "timestamp": 1788072794438,
+      "rawDisplayText": "补全中间缺少的过程",
+      "canonicalText": "补全中间缺少的过程",
+      "context": {
+        "editorSelection": {
+          "notePath": "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md",
+          "mode": "selection",
+          "selectedText": "再看第二个式子。$$\n\\boldsymbol{A}_{0,i}=\\boldsymbol{A}_{0,\\mathrm{p}(i)}\\boldsymbol{A}_{\\mathrm{p}(i),i}\n$$\n即得$$\n\\boldsymbol{A}_{0, i} \\boldsymbol{\\omega}_{0, i \\mid i}  =\\boldsymbol{A}_{0, \\mathrm{p}(i)} \\boldsymbol{\\omega}_{0, \\mathrm{p}(i) \\mid \\mathrm{p}(i)}+\\boldsymbol{A}_{0, \\mathrm{p}(i)} \\boldsymbol{A}_{\\mathrm{p}(i), i} \\boldsymbol{\\omega}_{\\mathrm{p}(i), i \\mid i}\n$$",
+          "lineCount": 6,
+          "startLine": 124
+        },
+        "contextFiles": [
+          "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "a1de5d95ff7669921f85cad850f91e7b03839a8777fbc358cb04449492a83c64",
+      "providerUserMessageId": "0cca1b98-3b9c-4a6d-9b37-a63d3f402bea",
+      "providerAssistantMessageId": "e12fecda-f93e-4a67-b22b-0815be093a81"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788073449466-c73x3tj",
+      "userTurnOrdinal": 13,
+      "state": "accepted",
+      "localMessageId": "msg-1788073449454-5inb57y",
+      "timestamp": 1788073449454,
+      "rawDisplayText": "$\\boldsymbol{A}\\tilde{\\boldsymbol{\\omega}}\\boldsymbol{A}^{\\mathrm{T}}=\\widetilde{\\boldsymbol{A}\\boldsymbol{\\omega}}$这个等式是怎么来的",
+      "canonicalText": "$\\boldsymbol{A}\\tilde{\\boldsymbol{\\omega}}\\boldsymbol{A}^{\\mathrm{T}}=\\widetilde{\\boldsymbol{A}\\boldsymbol{\\omega}}$这个等式是怎么来的",
+      "context": {
+        "editorSelection": {
+          "notePath": "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md",
+          "mode": "selection",
+          "selectedText": "$\\boldsymbol{A}\\tilde{\\boldsymbol{\\omega}}\\boldsymbol{A}^{\\mathrm{T}}=\\widetilde{\\boldsymbol{A}\\boldsymbol{\\omega}}$",
+          "lineCount": 1,
+          "startLine": 132
+        },
+        "contextFiles": [
+          "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "ebdbf67f41433cb09d6c0b25a4d9408f2d2c631431c40373c29a63770df0a07b",
+      "providerUserMessageId": "b0f03bba-b25d-42ad-925e-7fb9e8739035",
+      "providerAssistantMessageId": "c82b0179-b280-4e7a-88d4-a6ae28c0f7e1"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788073795981-vc7zspl",
+      "userTurnOrdinal": 14,
+      "state": "accepted",
+      "localMessageId": "msg-1788073795972-5ro8uor",
+      "timestamp": 1788073795972,
+      "rawDisplayText": "这个证明适合补进读书笔记前面的哪一张？然后这边加个关联就好了",
+      "canonicalText": "这个证明适合补进读书笔记前面的哪一张？然后这边加个关联就好了",
+      "context": {
+        "editorSelection": {
+          "notePath": "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md",
+          "mode": "selection",
+          "selectedText": "$\\boldsymbol{A}\\tilde{\\boldsymbol{\\omega}}\\boldsymbol{A}^{\\mathrm{T}}=\\widetilde{\\boldsymbol{A}\\boldsymbol{\\omega}}$",
+          "lineCount": 1,
+          "startLine": 132
+        },
+        "contextFiles": [
+          "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "87342970d8dc1a88984034f7921b3f701a25ab07be670c1f0e9550fefc6939fb",
+      "providerUserMessageId": "51c51529-9dd3-485b-91ef-5c55a848fbc8",
+      "providerAssistantMessageId": "8429d8f0-2a38-45e5-a6dd-07cfc058e4c0"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788075623447-x5vu1c6",
+      "userTurnOrdinal": 15,
+      "state": "accepted",
+      "localMessageId": "msg-1788075623439-a193u93",
+      "timestamp": 1788075623439,
+      "rawDisplayText": "这一块能不能做成定义的callout",
+      "canonicalText": "这一块能不能做成定义的callout",
+      "context": {
+        "currentNote": {
+          "path": "教材/控制理论/读书笔记——控制工程基础.md"
+        },
+        "editorSelection": {
+          "notePath": "教材/控制理论/读书笔记——控制工程基础.md",
+          "mode": "selection",
+          "selectedText": "\n> ![比例控制器]\n> $$u(t)=K_{p}e(t)$$\n> 这里：\n> - $K_{p}$为比例增益\n> - $e(t)$是当前时间$t$的误差",
+          "lineCount": 6,
+          "startLine": 81
+        },
+        "contextFiles": [
+          "教材/控制理论/读书笔记——控制工程基础.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "a382519848ee67181adf7537a7935ff217f2407817101125ea36a1040a07d469",
+      "providerUserMessageId": "7588fa31-0049-43d3-9469-42a105579e90",
+      "providerAssistantMessageId": "9ebba989-0a2c-484c-b04c-b66a8a84bb3d"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788075785038-eg05tqv",
+      "userTurnOrdinal": 16,
+      "state": "accepted",
+      "localMessageId": "msg-1788075785033-sodenpx",
+      "timestamp": 1788075785033,
+      "rawDisplayText": "这个笔记里其他定义部分也改成callout",
+      "canonicalText": "这个笔记里其他定义部分也改成callout",
+      "context": {
+        "contextFiles": [
+          "教材/控制理论/读书笔记——控制工程基础.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "1d3e1a9d0a2b89c4259c026107353e7b6b4d13f3a0239296674e7a6995b7d2dc",
+      "providerUserMessageId": "ba1f51fe-f195-4ca1-9b57-3d7f8aaa100b",
+      "providerAssistantMessageId": "bb0781ac-d1a4-49ae-8a7b-5b31b09f972b"
     }
   ]
 }
