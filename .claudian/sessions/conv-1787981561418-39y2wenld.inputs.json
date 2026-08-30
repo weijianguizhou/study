@@ -370,6 +370,35 @@
       "contentDigest": "1d3e1a9d0a2b89c4259c026107353e7b6b4d13f3a0239296674e7a6995b7d2dc",
       "providerUserMessageId": "ba1f51fe-f195-4ca1-9b57-3d7f8aaa100b",
       "providerAssistantMessageId": "bb0781ac-d1a4-49ae-8a7b-5b31b09f972b"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788090404169-au24h4n",
+      "userTurnOrdinal": 17,
+      "state": "accepted",
+      "localMessageId": "msg-1788090404157-ohlv76g",
+      "timestamp": 1788090404157,
+      "rawDisplayText": "调整成callout",
+      "canonicalText": "调整成callout",
+      "context": {
+        "currentNote": {
+          "path": "教材/控制理论/读书笔记——控制工程基础.md"
+        },
+        "editorSelection": {
+          "notePath": "教材/控制理论/读书笔记——控制工程基础.md",
+          "mode": "selection",
+          "selectedText": "下面给出PD控制器就是两个P控制器的证明：\n>  [!proof]PD控制器就是两个P控制器的证明\n>  第一步，对时间进行离散化处理，得：$$u_{k}=K_{p} e_{k}+K_{d} \\frac{e_{k}-e_{k-1}}{\\Delta t}$$\n>  其中:\n>  - $u_{k}$是时间步长$k$处的控制输入\n>  - $e_{k}$是时间步$k$处的误差\n>  - $\\Delta t$是时间步长持续时间\n>  $$u_k = K_p(r_k - y_k) + K_d \\frac{(r_k - y_k) - (r_{k-1} - y_{k-1})}{\\Delta t}$$$$u_k = K_p(r_k - y_k) + K_d \\frac{r_k - y_k - r_{k-1} + y_{k-1}}{\\Delta t}$$$$u_k = K_p(r_k - y_k) + K_d \\frac{r_k - r_{k-1} - y_k + y_{k-1}}{\\Delta t}$$$$u_k = K_p(r_k - y_k) + K_d \\frac{(r_k - r_{k-1}) - (y_k - y_{k-1})}{\\Delta t}$$\n",
+          "lineCount": 9,
+          "startLine": 125
+        },
+        "contextFiles": [
+          "教材/控制理论/读书笔记——控制工程基础.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "f4a390566f7597c2d054a57e14c34c96c96f3954e60d8f29e4fcbea699f1a251",
+      "providerUserMessageId": "993aee30-3b83-44bc-903d-a60b015ee913",
+      "providerAssistantMessageId": "7bc016bf-5470-46ea-84f3-4738b7719782"
     }
   ]
 }
