@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md",
+                "file": "教材/控制理论/读书笔记——控制工程基础.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "读书笔记——第十章 多刚体系统运动学方程递推形式"
+              "title": "读书笔记——控制工程基础"
             }
           }
         ]
@@ -156,7 +156,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md",
+                "file": "教材/控制理论/读书笔记——控制工程基础.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -206,15 +206,20 @@
       "oh-my-claudian:Open Oh My Claudian": false
     }
   },
-  "active": "437ab6934dc5f66d",
+  "active": "64787f1208185703",
   "lastOpenFiles": [
+    "控制理论/控制工程基础/Figure/PID控制器方框图.png",
+    "控制理论/控制工程基础/Figure/大K_i增益超调飞轮的PI控制器.png",
+    "控制理论/控制工程基础/Figure/无稳态误差的飞轮PI控制器.png",
+    "控制理论/控制工程基础/Figure/具有稳态误差的飞轮上的P控制器.png",
+    "控制理论/控制工程基础/Figure/PI控制器方框图.png",
+    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第四章 笛卡尔张量.md",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第七章 坐标系的姿态广义坐标.md",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第五章 坐标系的相对方位.md",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第六章 相对转动角速度.md",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第九章 体元件广义坐标与系统总体动力学方程.md",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第三章 系统运动微分方程及其数值求解.md",
-    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第一章 有限维广义变分原理.md",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第二章 多体系统拉格朗日方程.md",
     "教材/弹性力学/弹性力学 第5版 上册 (徐芝纶).pdf",
@@ -236,14 +241,10 @@
     "力学/系统动力学建模与仿真/Figure/PDF/SystemDynamicsModelingAndSimulation_92.png",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第八章 空间运动刚体的动能与势能.md",
     "力学/系统动力学建模与仿真/Figure/PDF/SystemDynamicsModelingAndSimulation_75.png",
-    "力学/系统动力学建模与仿真/Figure/PDF/四足机器人树形拓扑图.png",
-    "力学/系统动力学建模与仿真/Figure/PDF/SystemDynamicsModelingAndSimulation_100.png",
-    "力学/系统动力学建模与仿真/Figure/PDF/SystemDynamicsModelingAndSimulation_109.png",
     "力学/多体系统传递矩阵法.md",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——绪论.md",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第五章 有限维广义变分原理.md",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第一章 绪论.md",
-    "模板/课程笔记/_check/预览_cover_墨梅图风-1.png",
     "模板/课程笔记/封面模板索引.md",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第四章 拉格朗日力学基础.md",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第七章 系统运动微分方程.md",
