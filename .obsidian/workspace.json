@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "1fff74e1c92f1900",
+        "id": "12f6af61de08b18b",
         "type": "tabs",
         "children": [
           {
-            "id": "64787f1208185703",
+            "id": "4012aa6fcf1854cc",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "教材/控制理论/读书笔记——控制工程基础.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "读书笔记——控制工程基础"
+              "title": "新标签页"
             }
           }
         ]
@@ -156,7 +152,6 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "教材/控制理论/读书笔记——控制工程基础.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -206,8 +201,11 @@
       "oh-my-claudian:Open Oh My Claudian": false
     }
   },
-  "active": "64787f1208185703",
+  "active": "4012aa6fcf1854cc",
   "lastOpenFiles": [
+    "控制理论/控制工程基础/xelatex10412.fls",
+    "控制理论/控制工程基础/xelatex8824.fls",
+    "教材/控制理论/读书笔记——控制工程基础.md",
     "控制理论/控制工程基础/Figure/PID控制器响应类型.png",
     "控制理论/控制工程基础/Figure/PID控制器方框图.png",
     "控制理论/控制工程基础/Figure/大K_i增益超调飞轮的PI控制器.png",
@@ -232,14 +230,11 @@
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md.tmp.42748.1594ca8ec181",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md.tmp.42748.14678b6257b1",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md.tmp.42748.2c10b90d65e4",
-    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md.tmp.42748.5fa5dbdde974",
-    "教材/控制理论/读书笔记——控制工程基础.md",
     "控制理论/控制工程基础/Figure/电梯上的PD控制器.png",
     "力学/系统动力学建模与仿真/Figure/与大地直接关联的体元件.png",
     "控制理论/控制工程基础/Figure/比例控制器 1.png",
     "控制理论/控制工程基础/Figure/PD控制器.png",
     "README.md",
-    "力学/系统动力学建模与仿真/Figure/PDF/SystemDynamicsModelingAndSimulation_92.png",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第八章 空间运动刚体的动能与势能.md",
     "力学/多体系统传递矩阵法.md",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——绪论.md",

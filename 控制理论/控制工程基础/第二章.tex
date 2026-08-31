@@ -137,3 +137,100 @@ PID控制器是一种常用的反馈控制器，由比例项（\emph{proportiona
 \end{proof}
 
 如果设定点是恒定的，则隐含的速度设定点为零，因此，如果系统在运动，$K_d$ 项会减慢系统的速度。这就像一个“软件定义的阻尼器”。这种情况在闭门器上很常见，它们的阻尼力随速度线性增加。
+
+\section{积分项（Integral term）}
+积分项随时间累积设定点和输出曲线图之间的面积（即位置误差的积分），并将当前总和与控制输入相加。
+
+\begin{definition}[PI控制器]
+	\begin{equation}
+		u(t)=K_{p}e(t)+K_{i}\int_{0}^{t} e(\tau)\,d\tau .
+		\label{eq:pi-controller}
+	\end{equation}
+	积分从时间 $0$ 积分到当前时间 $t$。我们使用 $\tau$ 进行积分，因为我们需要一个变量在整个积分过程中接受多个值，但我们不能使用 $t$，因为我们已经将其定义为当前时间。
+\end{definition}
+
+下面是 PI 控制器的一个方框图：
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.6\textwidth]{Figure/PI控制器方框图.png}
+	\caption{PI控制器方框图}
+	\label{fig:pi-controller}
+\end{figure}
+
+当系统在稳态时接近设定值时，比例项可能太小，不能将输出一路拉到设定值，而导数项为零。这可能会导致稳态误差，如下图所示。
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.6\textwidth]{Figure/具有稳态误差的飞轮上的P控制器.png}
+	\caption{具有稳态误差的飞轮上的P控制器}
+	\label{fig:p-steady-error}
+\end{figure}
+
+消除稳态误差的一种常见方法是对误差进行积分，并将其添加到控制输入。这增加了控制力，直到系统收敛。下图显示了添加到飞轮控制器中的积分器如何消除稳态误差。
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.6\textwidth]{Figure/无稳态误差的飞轮PI控制器.png}
+	\caption{无稳态误差的飞轮PI控制器}
+	\label{fig:pi-steady-error}
+\end{figure}
+
+然而，积分增益过高可能会导致超调，如下图所示。
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.6\textwidth]{Figure/大K_i增益超调飞轮的PI控制器.png}
+	\caption{大 $K_i$ 增益超调飞轮的PI控制器}
+	\label{fig:pi-overshoot}
+\end{figure}
+
+\section{PID控制器定义}
+对比例项、导数项和积分项进行超级拼装，可得 PID 控制器。
+
+\begin{definition}[PID控制器]
+	\begin{equation}
+		u(t)=K_{p} e(t)+K_{i} \int_{0}^{t} e(\tau) d \tau+K_{d} \frac{d e}{d t} .
+		\label{eq:pid}
+	\end{equation}
+\end{definition}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.6\textwidth]{Figure/PID控制器方框图.png}
+	\caption{PID控制器方框图}
+	\label{fig:pid-controller}
+\end{figure}
+
+\section{响应类型}
+由 PID 控制器驱动的系统通常有三种类型的响应：\textbf{欠阻尼}（\emph{underdamped}）、\textbf{过阻尼}（\emph{overdamped}）和\textbf{临界阻尼}（\emph{critically damped}）。如下图所示。
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.85\textwidth]{Figure/PID控制器响应类型.png}
+	\caption{PID控制器响应类型}
+	\label{fig:pid-response}
+\end{figure}
+
+对于上图中的阶跃响应，上升时间是施加阶跃输入后系统初始达到基准所需的时间。稳定时间是系统在施加阶跃输入后稳定在基准上所花费的时间。
+
+在达到设定点之前，欠阻尼响应围绕基准振荡。过阻尼的反应是缓慢上升的，并且不会超出参考范围。临界阻尼的响应具有最短的上升时间，而不会围绕基准振荡。
+
+\section{手动调参}
+这些步骤适用于位置 PID 控制器。速度 PID 控制器通常不需要 $K_{d}$。
+\begin{enumerate}
+	\item 将 $K_{p}$、$K_{i}$ 和 $K_{d}$ 设置为零。
+	\item 增加 $K_{p}$，直到输出开始围绕设定点振荡。
+	\item 尽可能增加 $K_{d}$，而不会在系统响应中引入抖动。
+\end{enumerate}
+
+如果设定值遵循梯形曲线（参见第 15.1 节），则调整变得容易得多。绘制位置设定点、速度设定点、位置测量结果和速度测量结果。增加 $K_p$ 直到位置跟踪良好，然后增加 $K_d$ 直到速度跟踪良好。
+
+如果控制器的输出高于或低于设定值，则可以增加 $K_{i}$，以使控制器在合理的时间内达到设定点。
+
+\begin{warnbox}[注意]
+	如果 $K_{i}$ 太大，可能会出现积分结束。在设定值发生较大变化后，积分项可能累积的误差大于最大控制输入。结果，系统超调并继续增加，直到这个累积的误差被解开。
+\end{warnbox}
+
+\section{局限性}
+在没有系统动力学先验知识的情况下，采用启发式整定方法是一个合理的选择。然而，如果已知系统的动态模型，则可以开发出具有更好响应的控制器。此外，PID 仅适用于单输入单输出（SISO）系统。
