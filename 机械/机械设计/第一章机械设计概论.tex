@@ -25,9 +25,49 @@
 组成机器的不可拆的基本单元称为\textbf{机械零件}(\emph{machine elements})或简称\textbf{零件}；为完成特定的功能在结构上组合在一起并协同工作的零件组合称为\textbf{部件}(\emph{mechanical components})，如联轴器、轴承、减速器等。机械零件一般泛指零件与部件。
 \end{definition}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\textwidth]{Figure/零件示意图.png}
+\caption{零件示意图（连杆组件装配示意）}
+\label{fig:零件示意图}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{Figure/轴承部件图.png}
+\caption{轴承部件图（几种滚动轴承剖面模型）}
+\label{fig:轴承部件图}
+\end{figure}
+
 \begin{definition}[通用零件与专用零件]
 \label{def:通用零件与专用零件}
 各种机器中普遍使用的零件称\textbf{通用零件}(\emph{universal components})，如螺钉、键、带、齿轮、轴、弹簧等；只在特定的机器上使用的零件称为\textbf{专用零件}(\emph{special components})，如发动机的曲轴、汽轮机的叶片、船用螺旋桨等都是专用零件。
+\end{definition}
+
+\begin{definition}[机构]
+\label{def:机构}
+\textbf{机构}(\emph{mechanism})是能实现预期的机械运动的实物组合。机械的共同特征为：（1）人为的实物组合；（2）其组成各部分之间具有确定的相对运动；（3）必须能做有用功，完成信息的传递及能量的转换。机构仅具有特征（1）（2），机器能做有用功，而机构不能，仅能实现预期的机械运动；机器是由一个或多个机构组成的系统。
+\end{definition}
+
+\begin{definition}[机器]
+\label{def:机器组成}
+\textbf{机器}通常由以下部分组成：
+\begin{enumerate}
+	\item 原动机：机械动力的来源；
+	\item 执行机构：完成机械预期的动作；
+	\item 传动机构：把原动机的运动和功率传递给工作机的中间环节；
+	\item 自动控制部分（控制系统）。
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[构件]
+\label{def:构件}
+\textbf{构件}是组成机器的运动单元体，具有确定的运动。按照其在机器中所起的作用可分为：
+\begin{enumerate}
+	\item 机架：固定不动的构件；
+	\item 原动件（输入构件）：驱动力（矩）作用的构件；
+	\item 从动件（输出构件）：随着原动构件的运动而运动的构件。
+\end{enumerate}
 \end{definition}
 
 \section{标准化、系列化与通用化}
@@ -231,6 +271,13 @@
 	\item 可靠性
 \end{enumerate}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{Figure/一些失效案例.png}
+\caption{齿轮类零件的失效案例}
+\label{fig:失效案例}
+\end{figure}
+
 \subsection{机械零件的计算准则}
 
 \begin{definition}[工作能力]
@@ -268,4 +315,151 @@
 	\label{eq:概论:刚度准则}
 \end{equation}
 \end{definition}
+
+\textbf{3. 耐磨性准则}
+
+\begin{definition}[耐磨性]
+\label{def:耐磨性}
+\textbf{耐磨性}(\emph{wear resistance})是作相对运动的零件及其工作表面抵抗磨损的能力。耐磨性准则要求零件工作表面的压强及压强—速度乘积不超过许用值，即
+\begin{equation}
+	p \leq [p]
+	\label{eq:概论:压强准则}
+\end{equation}
+\begin{equation}
+	pv \leq [pv]
+	\label{eq:概论:pv准则}
+\end{equation}
+其中，$p$ 为工作压强，$[p]$ 为许用压强；$pv$ 为压强—速度乘积，$[pv]$ 为许用 $pv$ 值。
+\end{definition}
+
+\begin{note}
+正常磨损是指磨损速度稳定缓慢，在预定的使用期限内，零件的磨损量不超过允许值。
+\end{note}
+
+\textbf{4. 振动与噪声准则}
+
+\begin{definition}[振动与噪声准则]
+\label{def:振动与噪声准则}
+对高速机械或对噪声有严格要求的机械，应进行振动分析和计算，确定机械或零件的固有频率 $f$ 或强迫振动频率 $f_p$，并分析噪声源。为保证机械能稳定工作，应避免共振，即
+\begin{equation}
+	\begin{cases}
+		f_p < 0.85f \\[0.5em]
+		f_p > 1.15f
+	\end{cases}
+	\label{eq:概论:振动准则}
+\end{equation}
+其中，$f$ 为固有频率，$f_p$ 为强迫振动频率。
+\end{definition}
+
+\begin{note}
+不满足上述条件时，可改变机械或零件的刚度，或采取减振措施。
+\end{note}
+
+\textbf{5. 热平衡准则}
+
+\begin{definition}[热平衡准则]
+\label{def:热平衡准则}
+工作时发生剧烈摩擦的零件，其摩擦部位会产生大量的热。若散热不良，则零件的温度升高，会破坏正常的润滑条件、使零件承载能力降低，并引起热变形及热应力。热平衡准则要求：达到热平衡时，机械或零件的温升不超过正常工作允许的最大温升。
+\end{definition}
+
+\textbf{6. 可靠性准则}
+
+\begin{definition}[可靠度]
+\label{def:可靠度}
+在规定的工作条件下和预定的工作期限内，零件正常工作（不发生失效）的概率称为\textbf{可靠度}，即
+\begin{equation}
+	R_t = \frac{N_t}{N} = \frac{N-N_f}{N} = 1-\frac{N_f}{N}
+	\label{eq:概论:可靠度}
+\end{equation}
+\end{definition}
+
+\begin{definition}[不可靠度]
+\label{def:不可靠度}
+零件失效的概率称为\textbf{不可靠度}（失效概率），即
+\begin{equation}
+	F_t = \frac{N_f}{N} = 1 - R_t
+	\label{eq:概论:不可靠度}
+\end{equation}
+其中，$N$ 为零件总数量，$N_t$ 为正常工作零件数，$N_f$ 为失效零件数。
+\end{definition}
+
+\begin{note}
+由多个零件组成的串联系统，任一零件失效都会引起整个系统的失效，整个机器的可靠度为
+\begin{equation}
+	R = R_1 R_2 \cdots R_n
+	\label{eq:概论:串联系统可靠度}
+\end{equation}
+机械零件可靠性水平的高低，直接影响机械系统的可靠性。
+\end{note}
+
+\section{机械零件的常用材料}
+\label{sec:常用材料}
+
+\subsection{常用材料}
+
+\subsubsection{黑色金属（铁基）}
+
+\begin{enumerate}
+	\item \textbf{灰铸铁}：铸造性好、减震耐磨、成本低，多用于机座、箱体、床身；
+	\item \textbf{球墨铸铁}：强度韧性优于普通铸铁，可替代部分钢材，用于制造曲轴、齿轮；
+	\item \textbf{可锻铸铁}：塑性韧性较好，适合薄壁复杂小件；
+	\item \textbf{铸钢}：强度高，适合承受大载荷的铸造零件；
+	\item \textbf{碳钢、合金钢}：机械中使用最多，可热处理强化，用于轴、齿轮、螺栓等受力零件。
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{Figure/黑色金属材料.png}
+\caption{黑色金属材料示例}
+\label{fig:黑色金属材料}
+\end{figure}
+
+\subsubsection{有色金属（非铁金属）}
+
+\begin{enumerate}
+	\item \textbf{铝合金}：密度小、可减重，用于壳体、支架；
+	\item \textbf{铜合金（黄铜、青铜）}：减摩耐磨、导热导电，用于轴承、蜗轮、垫片；
+	\item \textbf{钛合金}：比强度高、耐腐蚀，多用于高端设备。
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{Figure/有色金属材料.png}
+\caption{有色金属材料示例}
+\label{fig:有色金属材料}
+\end{figure}
+
+\subsubsection{非金属材料}
+
+\begin{enumerate}
+	\item \textbf{工程塑料}（尼龙、POM 聚甲醛等）：耐磨、自润滑，用于制造轻载齿轮、滑块；
+	\item \textbf{橡胶}：用于减振、密封件；
+	\item \textbf{陶瓷}：耐磨耐高温，用于特殊工况。
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{Figure/非金属材料.png}
+\caption{非金属材料示例}
+\label{fig:非金属材料}
+\end{figure}
+
+\subsubsection{复合材料}
+
+复合材料（如碳纤维复合材料、氧化陶瓷基复合材料等）由两种或多种性质不同的材料组合而成，具有纤维增强、轻质高强等特点，在航空航天等领域应用广泛。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{Figure/复合材料.png}
+\caption{复合材料在航空领域中的应用}
+\label{fig:复合材料}
+\end{figure}
+
+\subsection{机械零件材料的选用要求}
+
+\textbf{（1）使用要求。}根据零件的受载情况和工作状况、对零件尺寸和质量的限制、零件的重要程度等提出要求。
+
+\textbf{（2）工艺要求。}要考虑毛坯制造、机械加工、热处理等工艺的可行性。
+
+\textbf{（3）经济性要求。}考虑材料的相对价格、零件质量、加工性能及加工费用、材料的利用率，遵循局部品质原则，在性能相近时选用廉价的材料。
 

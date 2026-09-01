@@ -11,14 +11,12 @@
             "id": "314d91fe3be64cc3",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "pdf",
               "state": {
-                "file": "机械/机械设计/笔记/2.机械零件的强度.md",
-                "mode": "source",
-                "source": false
+                "file": "机械/机械设计/机械设计.pdf"
               },
-              "icon": "lucide-file",
-              "title": "2.机械零件的强度"
+              "icon": "lucide-file-text",
+              "title": "机械设计"
             }
           }
         ]
@@ -156,7 +154,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "机械/机械设计/笔记/2.机械零件的强度.md",
+                "file": "机械/机械设计/机械设计.pdf",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -206,34 +204,34 @@
       "oh-my-claudian:Open Oh My Claudian": false
     }
   },
-  "active": "437ab6934dc5f66d",
+  "active": "314d91fe3be64cc3",
   "lastOpenFiles": [
-    "控制理论/控制工程基础/课堂笔记/images_ch2/slide211_img07.png",
-    "控制理论/控制工程基础/课堂笔记/images_ch2/slide211_img06.png",
-    "控制理论/控制工程基础/课堂笔记/images_ch2/slide211_img05.png",
-    "控制理论/控制工程基础/课堂笔记/images_ch2/slide211_img04.png",
-    "控制理论/控制工程基础/课堂笔记/images_ch2/slide211_img03.png",
-    "控制理论/控制工程基础/课堂笔记/images_ch2/slide211_img02.png",
-    "控制理论/控制工程基础/课堂笔记/images_ch2/slide211_img01.png",
-    "控制理论/控制工程基础/课堂笔记/images_ch2/slide210_img04.png",
-    "控制理论/控制工程基础/课堂笔记/images_ch2/slide210_img03.png",
-    "控制理论/控制工程基础/课堂笔记/images_ch2/slide210_img02.png",
-    "控制理论/控制工程基础/课堂笔记/images_ch2/slide210_img01.png",
-    "README.md",
+    "机械/机械设计/_chk_g-05.png",
+    "机械/机械设计/_chk_g-04.png",
+    "机械/机械设计/_chk_g-03.png",
+    "机械/机械设计/xelatex52852.fls",
+    "机械/机械设计/xelatex54224.fls",
+    "机械/机械设计/_chk_f-26.png",
+    "机械/机械设计/_chk_f-25.png",
+    "机械/机械设计/xelatex20748.fls",
+    "机械/机械设计/xelatex45004.fls",
+    "机械/机械设计/_chk_p12-12.png",
+    "机械/机械设计/_chk_p11-11.png",
+    "机械/机械设计/_chk_p8-10.png",
+    "机械/机械设计/_chk_p8-09.png",
+    "机械/机械设计/_chk_p8-08.png",
+    "机械/机械设计/_chk_p24-26.png",
     "机械/机械设计/笔记/2.机械零件的强度.md",
+    "机械/机械设计/xelatex38128.fls",
+    "机械/机械设计/xelatex38428.fls",
+    "机械/机械设计/xelatex54260.fls",
+    "机械/机械设计/xelatex51580.fls",
+    "机械/机械设计/第二章机械零件的强度.tex",
+    "机械/机械设计/第一章机械设计概论.tex.agent_infra_tmp_833658379283683140_29519527660600",
+    "README.md",
     "机械/机械设计/笔记/1.机械设计概论.md",
-    "机械/机械设计/笔记/1.机械设计概论.md.tmp.48096.8a19b4aefc70",
     "教材/机械设计/读书笔记——第一章 机械设计概论.md",
-    "机械/机械设计/笔记/1.机械设计概论.md.tmp.48096.20f44d65745a",
-    "控制理论/控制工程基础/ppt_to_md_v2.py.agent_infra_tmp_15268327982245008825_24045809034200",
-    "机械/机械设计/机械设计.pdf",
     "控制理论/控制工程基础/课堂笔记/第1章.md",
-    "控制理论/控制工程基础/ppt_to_md_v2.py.agent_infra_tmp_17249395442521922906_23425480925100",
-    "控制理论/控制工程基础/ppt_to_md_v2.py",
-    "控制理论/控制工程基础/ppt_to_md_full.py",
-    "控制理论/控制工程基础/ppt_to_md_full.py.agent_infra_tmp_5694128162524214787_9751735653500",
-    "控制理论/控制工程基础/课堂笔记/images_ch2",
-    "控制理论/控制工程基础/extract_aspose_images.py",
     "控制理论/控制工程基础/课堂笔记/第8章.md",
     "控制理论/控制工程基础/课堂笔记/第7章.md",
     "控制理论/控制工程基础/课堂笔记/第6章.md",
