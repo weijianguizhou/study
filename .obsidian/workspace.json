@@ -4,17 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "12f6af61de08b18b",
+        "id": "64ba334313fd113b",
         "type": "tabs",
         "children": [
           {
-            "id": "4012aa6fcf1854cc",
+            "id": "314d91fe3be64cc3",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "机械/机械设计/笔记/2.机械零件的强度.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "新标签页"
+              "title": "2.机械零件的强度"
             }
           }
         ]
@@ -152,6 +156,7 @@
             "state": {
               "type": "outline",
               "state": {
+                "file": "机械/机械设计/笔记/2.机械零件的强度.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -201,30 +206,44 @@
       "oh-my-claudian:Open Oh My Claudian": false
     }
   },
-  "active": "b275d19387b88fb4",
+  "active": "437ab6934dc5f66d",
   "lastOpenFiles": [
-    "教材/控制理论/控制工程基础（第四版） (董景新，郭美凤，陈志勇，刘云峰)/控制工程基础 第4版 (董景新).pdf",
-    "教材/控制理论/控制工程基础（第四版） (董景新，郭美凤，陈志勇，刘云峰)/控制工程基础习题解（第四版） (董景新，郭美凤，陈志勇，刘云峰).pdf",
-    "教材/控制理论/控制工程基础（第四版） (董景新，郭美凤，陈志勇，刘云峰)",
+    "机械/机械设计/Figure/对称循环变应力.png",
+    "机械/机械设计/Figure/脉动循环变应力.png",
+    "机械/机械设计/Figure/非对称循环变应力.png",
+    "README.md",
+    "机械/机械设计/Figure/随机变应力.png",
+    "机械/机械设计/笔记/2.机械零件的强度.md",
+    "机械/机械设计/Figure/规律性不稳定变应力.png",
+    "机械/机械设计/Figure/静应力.png",
+    "机械/机械设计/笔记/1.机械设计概论.md",
+    "机械/机械设计/Figure/复合材料.png",
+    "机械/机械设计/Figure/非金属材料.png",
+    "机械/机械设计/Figure/有色金属材料.png",
+    "机械/机械设计/Figure/黑色金属材料.png",
+    "机械/机械设计/Figure/一些失效案例.png",
+    "机械/机械设计/笔记/1.机械设计概论.md.tmp.48096.8a19b4aefc70",
+    "教材/机械设计/读书笔记——第一章 机械设计概论.md",
+    "机械/机械设计/笔记/1.机械设计概论.md.tmp.48096.20f44d65745a",
+    "控制理论/控制工程基础/ppt_to_md_v2.py.agent_infra_tmp_15268327982245008825_24045809034200",
+    "机械/机械设计/机械设计.pdf",
+    "控制理论/控制工程基础/课堂笔记/第1章.md",
+    "控制理论/控制工程基础/ppt_to_md_v2.py.agent_infra_tmp_17249395442521922906_23425480925100",
+    "控制理论/控制工程基础/ppt_to_md_v2.py",
+    "控制理论/控制工程基础/ppt_to_md_full.py",
+    "控制理论/控制工程基础/ppt_to_md_full.py.agent_infra_tmp_5694128162524214787_9751735653500",
+    "控制理论/控制工程基础/课堂笔记/images_ch2",
+    "控制理论/控制工程基础/extract_aspose_images.py",
+    "控制理论/控制工程基础/课堂笔记/第8章.md",
+    "控制理论/控制工程基础/课堂笔记/第7章.md",
+    "控制理论/控制工程基础/课堂笔记/第6章.md",
+    "控制理论/控制工程基础/课堂笔记/第5章.md",
+    "控制理论/控制工程基础/课堂笔记/第4章.md",
+    "控制理论/控制工程基础/课堂笔记/第3章.md",
+    "控制理论/控制工程基础/课堂笔记/第2章.md",
+    "控制理论/控制工程基础/课堂笔记/例题讲解及作业.md",
     "教材/控制理论/controls-engineering-in-frc/读书笔记——控制工程基础.md",
-    "教材/控制理论/controls-engineering-in-frc/controls-engineering-in-frc.pdf",
-    "教材/控制理论/controls-engineering-in-frc",
-    "教材/控制理论/新建文件夹",
-    "教材/控制理论/控制工程基础/控制工程基础习题解（第四版） (董景新，郭美凤，陈志勇，刘云峰).pdf",
-    "教材/控制理论/控制工程基础",
-    "模板/公文与书信/c2.txt",
-    "一些信件/给韩尧宇学弟的一封信.synctex.gz",
-    "一些信件/给韩尧宇学弟的一封信.synctex(busy)",
-    "一些信件/preview-2.png",
-    "一些信件/preview-1.png",
-    "模板/公文与书信/preview-1.png",
     "教材/控制理论/读书笔记——控制工程基础.md",
-    "控制理论/控制工程基础/Figure/PID控制器响应类型.png",
-    "控制理论/控制工程基础/Figure/PID控制器方框图.png",
-    "控制理论/控制工程基础/Figure/大K_i增益超调飞轮的PI控制器.png",
-    "控制理论/控制工程基础/Figure/无稳态误差的飞轮PI控制器.png",
-    "控制理论/控制工程基础/Figure/具有稳态误差的飞轮上的P控制器.png",
-    "控制理论/控制工程基础/Figure/PI控制器方框图.png",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第四章 笛卡尔张量.md",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第七章 坐标系的姿态广义坐标.md",
@@ -234,20 +253,6 @@
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第三章 系统运动微分方程及其数值求解.md",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第一章 有限维广义变分原理.md",
     "教材/SystemDynamicsModelingAndSimulation/读书笔记——第二章 多体系统拉格朗日方程.md",
-    "控制理论/控制工程基础/Figure/电梯上的PD控制器.png",
-    "README.md",
-    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第八章 空间运动刚体的动能与势能.md",
-    "力学/多体系统传递矩阵法.md",
-    "教材/SystemDynamicsModelingAndSimulation/读书笔记——绪论.md",
-    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第五章 有限维广义变分原理.md",
-    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第一章 绪论.md",
-    "模板/课程笔记/封面模板索引.md",
-    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第四章 拉格朗日力学基础.md",
-    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第七章 系统运动微分方程.md",
-    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第二章 数学基础.md",
-    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第六章 多体系统的拉格朗日方程.md",
-    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第三章 运动学基础.md",
-    "读书笔记——第一章 机械设计概论.md",
-    "教材/流体力学 张兆顺 崔桂香 第三版/读书笔记——第一章 流体的物理性质.md"
+    "教材/SystemDynamicsModelingAndSimulation/读书笔记——第八章 空间运动刚体的动能与势能.md"
   ]
 }

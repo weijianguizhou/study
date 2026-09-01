@@ -580,7 +580,8 @@
       },
       "images": [],
       "contentDigest": "448fdbad455fe39da6455c5ce1afde990744e1376ee4bd8c954b9b54fb5bf430",
-      "providerUserMessageId": "bb530171-c7b3-4190-81c9-7ffcb9cc0f8c"
+      "providerUserMessageId": "bb530171-c7b3-4190-81c9-7ffcb9cc0f8c",
+      "providerAssistantMessageId": "0874f997-265a-448a-8ffe-60b38539885a"
     },
     {
       "schemaVersion": 1,
@@ -599,6 +600,87 @@
       "images": [],
       "contentDigest": "448fdbad455fe39da6455c5ce1afde990744e1376ee4bd8c954b9b54fb5bf430",
       "providerUserMessageId": "e6a7929d-b50f-421e-bf40-f8c5a5e60b2f"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788248326633-jwaglyi",
+      "userTurnOrdinal": 26,
+      "state": "accepted",
+      "localMessageId": "msg-1788248326612-psm0mm5",
+      "timestamp": 1788248326612,
+      "rawDisplayText": "整理一下",
+      "canonicalText": "整理一下",
+      "context": {
+        "editorSelection": {
+          "notePath": "机械/机械设计/笔记/1.机械设计概论.md",
+          "mode": "selection",
+          "selectedText": "① 机械设计概论 ⑥铆接、焊接与胶接1\n蜗杆传动\n② 机械零件的强度\n⑦ 螺旋传动\n12 轴\n③ 摩擦、磨损及润滑 ③ 带传动\n13 滑动轴承\n螺纹连接9链传动\n14 滚动轴承\n轴穀连接 10 齿轮传动\n15 联轴器、离合器和制动器",
+          "lineCount": 11,
+          "startLine": 8
+        }
+      },
+      "images": [],
+      "contentDigest": "af478752a3cf9311d362f000cc87d89ee55e8b4435ad9778fa09584ea6977a08",
+      "providerUserMessageId": "162d1bbe-38a0-49ff-b957-6ab2dddcc142",
+      "providerAssistantMessageId": "6ea0abaf-db05-4830-b421-6387bbcd2fa3"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788265618964-p45r820",
+      "userTurnOrdinal": 27,
+      "state": "accepted",
+      "localMessageId": "msg-1788265618957-smx59pw",
+      "timestamp": 1788265618957,
+      "rawDisplayText": "整理一下",
+      "canonicalText": "整理一下",
+      "context": {
+        "currentNote": {
+          "path": "机械/机械设计/笔记/1.机械设计概论.md"
+        },
+        "editorSelection": {
+          "notePath": "机械/机械设计/笔记/1.机械设计概论.md",
+          "mode": "selection",
+          "selectedText": "「 a）使用功能\n1）对机器的设计要求一 b）可靠性\nLc）经济性\n2）对机械零件的设计基本要求\na）在预定工作期限内正常、可靠地工作\nb） 要尽量降低生产成本",
+          "lineCount": 6,
+          "startLine": 92
+        },
+        "contextFiles": [
+          "机械/机械设计/笔记/1.机械设计概论.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "af478752a3cf9311d362f000cc87d89ee55e8b4435ad9778fa09584ea6977a08",
+      "providerUserMessageId": "e1e053f1-6584-4942-bd35-0abe20c8b9a3",
+      "providerAssistantMessageId": "5af0b070-449c-4afa-8fed-1323e8f00391"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788266295430-4484z7k",
+      "userTurnOrdinal": 28,
+      "state": "accepted",
+      "localMessageId": "msg-1788266295423-6tgw3ue",
+      "timestamp": 1788266295423,
+      "rawDisplayText": "整理一下",
+      "canonicalText": "整理一下",
+      "context": {
+        "currentNote": {
+          "path": "机械/机械设计/笔记/1.机械设计概论.md"
+        },
+        "editorSelection": {
+          "notePath": "机械/机械设计/笔记/1.机械设计概论.md",
+          "mode": "selection",
+          "selectedText": "1）建立零件的受力模型，确定零件的计算载荷\n$$F_{ca} =KF$$\n- $F_{ca}$:计算载荷*Calculated load*\n- 载荷系数*Load factor*\n- 名义载荷*Nominalload*\n2） 选择零件的基本类型与结构；\n3）选择零件的材料；\n4） 按可能的失效形式（Failure forms）确定零件的计算准则（Criteria for calculation），\n并确定零件的基本尺寸（Basic dimensions），并加于标准化（standardization ）和圆\n*(Round-off);\n5） 零件的结构设计；\n6）绘制零件的工作图（Parts drawing），并编写计算说明书。\n机械零件的计算可分为设计计算和校核计算两种。",
+          "lineCount": 13,
+          "startLine": 107
+        },
+        "contextFiles": [
+          "机械/机械设计/笔记/1.机械设计概论.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "af478752a3cf9311d362f000cc87d89ee55e8b4435ad9778fa09584ea6977a08",
+      "providerUserMessageId": "0ee62413-2ae3-4e83-8967-eff3c107b5fe",
+      "providerAssistantMessageId": "0f8d3720-a1b1-4614-bd96-8fa5d416dea4"
     }
   ]
 }
