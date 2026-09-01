@@ -1,51 +1,89 @@
 % ============================================================
 %  书信/邮件模板 —— 正式中文书信（推荐信、请假条、申请信）
 %  编译方式: XeLaTeX
+%  特色: 信头 + 装饰双线 + 精致落款 + 正文分点
 % ============================================================
 \documentclass[12pt,a4paper]{article}
 
-\usepackage[margin=2.5cm]{geometry}
+% ---------- 页面设置 ----------
+\usepackage[margin=2.8cm, top=3cm, bottom=3cm]{geometry}
 \usepackage{ctex}
+\usepackage{xcolor}
 \usepackage{setspace}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+
+% ---------- 行距 ----------
 \onehalfspacing
 
+% ---------- 页眉：极简信纸感 ----------
+\setlength{\headheight}{14pt}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyhead[C]{\small\color{gray}缄 \  ·  \ 【写信日期：YYYY年M月D日】}
+\fancyfoot[C]{\small\color{gray}—— 第 \thepage 页 ——}
+
+% ---------- 颜色 ----------
+\definecolor{ink}{RGB}{60,60,60}
+\definecolor{deepblue}{RGB}{30,60,110}
+\definecolor{softgold}{RGB}{180,150,80}
+\definecolor{lightbg}{RGB}{246,243,238}
+
 \begin{document}
+\color{ink}
 
-\begin{flushright}
-    【写信日期：YYYY年M月D日】
-\end{flushright}
+% ============================================================
+%	信头
+% ============================================================
+\begin{tcolorbox}[colback=lightbg, colframe=deepblue, boxrule=1pt,
+                  arc=2mm, left=6mm, right=6mm, top=4mm, bottom=4mm]
+  \centering
+  {\color{deepblue}\Large\heiti【信件标题，如：致……的一封信】}\\[0.6em]
+  \textcolor{softgold}{\rule{0.4\textwidth}{1pt}\ $\diamond$\ \rule{0.4\textwidth}{1pt}}\\[0.5em]
+  {\small\color{gray}【写信日期：YYYY年M月D日】}
+\end{tcolorbox}
 
-% 称呼
-\noindent\textbf{尊敬的【收信人称呼/职务】}：\par
+\vspace{1.4em}
 
-\vspace{0.6em}
+% ============================================================
+%	称呼
+% ============================================================
+\noindent\textbf{\large 尊敬的【收信人称呼/职务】}：\par
+\vspace{0.4em}
 
 % ============================================================
 %	正文
 % ============================================================
-【正文第一段：自我介绍 + 写信目的。】
-\par
-【正文第二段：详细说明事由、需求或请求。可分点陈述：】
-\begin{enumerate}
-    \item 【要点一：……】
-    \item 【要点二：……】
-    \item 【要点三：……】
+{\color{ink}【正文第一段：自我介绍 + 写信目的。】}\par
+
+{\color{ink}【正文第二段：详细说明事由、需求或请求。可分点陈述：】}
+
+\begin{enumerate}[leftmargin=2.2em, itemsep=0.4em]
+  \item 【要点一：……】
+  \item 【要点二：……】
+  \item 【要点三：……】
 \end{enumerate}
-【正文第三段：礼貌收束，表达感谢或期待。】
-\par
-【如需附件，可加注：随信附上【材料名称】。】
 
-\vspace{1.2em}
+{\color{ink}【正文第三段：礼貌收束，表达感谢或期待。】}\par
 
-% 敬语
-\noindent 此致\\
-\noindent 敬礼！
+{\color{ink}【如需附件，可加注：】随信附上【材料名称】。}
 
-\vspace{2em}
+% ============================================================
+%	落款
+% ============================================================
+\vspace{1.6em}
 \begin{flushright}
-    落款：【姓名】\\
-    单位：【单位/学院】\\
-    联系电话：【电话】
+  {\heiti 落款：【姓名】}\\[0.5em]
+  {\small 单位：【单位/学院】}\\[0.2em]
+  {\small\color{gray}联系电话：【电话】}
 \end{flushright}
+
+\vspace{2.5em}
+\begin{center}
+  \textcolor{softgold}{\rule{0.6\textwidth}{0.6pt}}\\[0.3em]
+  {\footnotesize\color{gray} — 谨此奉闻，敬颂时祺 —}
+\end{center}
 
 \end{document}
