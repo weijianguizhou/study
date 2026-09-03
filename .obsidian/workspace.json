@@ -4,21 +4,35 @@
     "type": "split",
     "children": [
       {
-        "id": "1e906b877691f580",
+        "id": "51d89efdf673e616",
         "type": "tabs",
         "children": [
           {
-            "id": "7a07f9471be77ca6",
+            "id": "4a7b60e988f11029",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "机械/机械设计/笔记/2.机械零件的强度.md",
+                "file": "教材/SystemDynamicsModelingAndSimulation/11读书笔记——多刚体系统拉格朗日方程递推形式.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "2.机械零件的强度"
+              "title": "11读书笔记——多刚体系统拉格朗日方程递推形式"
+            }
+          },
+          {
+            "id": "91dca7a4f8fe97c0",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "教材/SystemDynamicsModelingAndSimulation/2读书笔记——第二章 多体系统拉格朗日方程.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "2读书笔记——第二章 多体系统拉格朗日方程"
             }
           }
         ]
@@ -156,7 +170,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "机械/机械设计/笔记/2.机械零件的强度.md",
+                "file": "教材/SystemDynamicsModelingAndSimulation/11读书笔记——多刚体系统拉格朗日方程递推形式.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -206,29 +220,34 @@
       "oh-my-claudian:Open Oh My Claudian": false
     }
   },
-  "active": "437ab6934dc5f66d",
+  "active": "4a7b60e988f11029",
   "lastOpenFiles": [
-    "机械/机械设计/机械设计.synctex(busy)",
-    "机械/机械设计/机械设计.synctex.gz",
-    "机械/机械设计/课件/01章机械设计概论.pdf",
-    "机械/机械设计/Figure/两球体接触应力.png",
-    "机械/机械设计/Figure/两圆柱接触应力.png",
-    "机械/机械设计/Figure/零件的极限应力图.png",
-    "机械/机械设计/Figure/材料的简化疲劳极限应力图.png",
-    "机械/机械设计/Figure/材料的疲劳极限应力图.png",
-    "机械/机械设计/Figure/疲劳曲线.png",
-    "机械/机械设计/Figure/疲劳破坏过程.png",
-    "机械/机械设计/Figure/静载荷动应力的例子.png",
-    "教材/机械设计/读书笔记——第一章 机械设计概论.md",
+    "教材/SystemDynamicsModelingAndSimulation/2读书笔记——第二章 多体系统拉格朗日方程.md",
+    "教材/SystemDynamicsModelingAndSimulation/3读书笔记——第三章 系统运动微分方程及其数值求解.md",
+    "教材/SystemDynamicsModelingAndSimulation/4读书笔记——第四章 笛卡尔张量.md",
     "教材/SystemDynamicsModelingAndSimulation/11读书笔记——多刚体系统拉格朗日方程递推形式.md",
+    "机械/机械设计/笔记/2.机械零件的强度.md",
+    "机械/机械设计/机械设计tex笔记.zip",
+    "机械/机械设计/机械设计tex笔记/前言.tex",
+    "机械/机械设计/机械设计tex笔记/前言.log",
+    "机械/机械设计/机械设计tex笔记/机械设计.xdv",
+    "机械/机械设计/机械设计tex笔记/机械设计.toc",
+    "机械/机械设计/机械设计tex笔记/机械设计.tex",
+    "机械/机械设计/机械设计tex笔记/机械设计.synctex.gz",
+    "机械/机械设计/机械设计tex笔记/机械设计.pdf",
+    "机械/机械设计/机械设计tex笔记/机械设计.out",
+    "机械/机械设计/机械设计tex笔记/机械设计.log",
+    "机械/机械设计/机械设计tex笔记/Figure/两球体接触应力.png",
+    "机械/机械设计/机械设计tex笔记/Figure/两圆柱接触应力.png",
+    "机械/机械设计/机械设计tex笔记/Figure/零件的极限应力图.png",
+    "机械/机械设计/机械设计tex笔记/Figure/材料的简化疲劳极限应力图.png",
+    "机械/机械设计/机械设计tex笔记/Figure/材料的疲劳极限应力图.png",
+    "机械/机械设计/机械设计tex笔记/Figure/疲劳曲线.png",
+    "机械/机械设计/机械设计tex笔记/Figure/疲劳破坏过程.png",
+    "机械/机械设计/机械设计tex笔记/Figure/静载荷动应力的例子.png",
+    "教材/机械设计/读书笔记——第一章 机械设计概论.md",
     "机械/机械设计/课件/pages_hi/page_54.png",
     "机械/机械设计/课件/pages_hi/page_14.png",
-    "机械/机械设计/课件/pages_hi",
-    "机械/机械设计/课件/pages",
-    "机械/机械设计/课件/02章_text.txt",
-    "机械/机械设计/课件/02章机械零件的强度.pdf",
-    "机械/机械设计/课件",
-    "机械/机械设计/新建文件夹",
     "教材/SystemDynamicsModelingAndSimulation/10读书笔记——第十章 多刚体系统运动学方程递推形式.md",
     "教材/SystemDynamicsModelingAndSimulation/9读书笔记——第九章 体元件广义坐标与系统总体动力学方程.md",
     "力学/系统动力学建模与仿真/符号约定与工作要求.md",
@@ -240,10 +259,6 @@
     "教材/Spacecraft_Dynamics/md/31-45.md",
     "教材/Spacecraft_Dynamics/md/16-30.md",
     "教材/Spacecraft_Dynamics/md/1-15.md",
-    "教材/Spacecraft_Dynamics/Spacecraft_Dynamics.pdf",
-    "教材/SystemDynamicsModelingAndSimulation/4读书笔记——第四章 笛卡尔张量.md",
-    "教材/SystemDynamicsModelingAndSimulation/3读书笔记——第三章 系统运动微分方程及其数值求解.md",
-    "教材/SystemDynamicsModelingAndSimulation/2读书笔记——第二章 多体系统拉格朗日方程.md",
     "教材/SystemDynamicsModelingAndSimulation/1读书笔记——第一章 有限维广义变分原理.md",
     "教材/Spacecraft_Dynamics/读书笔记.md",
     "教材/Spacecraft_Dynamics/读书笔记/19-偏角速度与偏速度.md",
@@ -251,8 +266,6 @@
     "教材/Spacecraft_Dynamics/读书笔记/17-瞬时轴.md",
     "教材/Spacecraft_Dynamics/读书笔记/16-缓慢小转动.md",
     "教材/Spacecraft_Dynamics/读书笔记/15-角速度与方向角.md",
-    "教材/Spacecraft_Dynamics/读书笔记/14-辅助参考系.md",
-    "教材/Spacecraft_Dynamics/读书笔记/13-角速度与欧拉参数.md",
-    "教材/Spacecraft_Dynamics/读书笔记"
+    "教材/Spacecraft_Dynamics/读书笔记/14-辅助参考系.md"
   ]
 }
