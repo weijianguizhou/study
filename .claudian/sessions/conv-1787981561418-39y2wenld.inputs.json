@@ -681,6 +681,176 @@
       "contentDigest": "af478752a3cf9311d362f000cc87d89ee55e8b4435ad9778fa09584ea6977a08",
       "providerUserMessageId": "0ee62413-2ae3-4e83-8967-eff3c107b5fe",
       "providerAssistantMessageId": "0f8d3720-a1b1-4614-bd96-8fa5d416dea4"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788323808499-s9ba17k",
+      "userTurnOrdinal": 29,
+      "state": "accepted",
+      "localMessageId": "msg-1788323808481-tlt3be7",
+      "timestamp": 1788323808481,
+      "rawDisplayText": "转动铰元件只约束平动而不约束转动，为什么方向余弦矩阵不是单位阵",
+      "canonicalText": "转动铰元件只约束平动而不约束转动，为什么方向余弦矩阵不是单位阵",
+      "context": {
+        "currentNote": {
+          "path": "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md"
+        },
+        "editorSelection": {
+          "notePath": "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md",
+          "mode": "selection",
+          "selectedText": "对于转动铰元件  $i$  ，位置级相对运动学方程可表示为\n$$\\left\\{\\begin{aligned}\n\\boldsymbol{r}_{\\mathrm{R}_{i} \\mathrm{O}_{i} \\mid \\mathrm{p}(i)} & =\\mathbf{0}_{3}, \\\\\n\\boldsymbol{A}_{\\mathrm{p}(i), i} & =\\boldsymbol{I}_{3} \\cos \\theta_{\\mathrm{J}_{i}}+\\tilde{\\boldsymbol{n}}_{\\mathrm{J}_{i}} \\sin \\theta_{\\mathrm{J}_{i}}+\\boldsymbol{n}_{\\mathrm{J}_{i}} \\boldsymbol{n}_{\\mathrm{J}_{i}}^{\\mathrm{T}}\\left(1-\\cos \\theta_{\\mathrm{J}_{i}}\\right) \\\\\n& =I_{3}+\\tilde{n}_{\\mathrm{J}_{i}} \\sin \\theta_{\\mathrm{J}_{i}}+\\tilde{n}_{\\mathrm{J}_{i}} \\tilde{n}_{\\mathrm{J}_{i}}\\left(1-\\cos \\theta_{\\mathrm{J}_{i}}\\right),\n\\end{aligned}\\right.$$",
+          "lineCount": 6,
+          "startLine": 347
+        },
+        "contextFiles": [
+          "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "e7af13c5a7bf6d7eee02164325b1093eb8500ce3aeaa02064503b6a71c6228ff",
+      "providerUserMessageId": "2024fe55-2762-4970-99e4-dc777513790b",
+      "providerAssistantMessageId": "da3ad0d8-b6e0-4315-9c4b-3f1118052ba3"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788324007703-zcajh7d",
+      "userTurnOrdinal": 30,
+      "state": "accepted",
+      "localMessageId": "msg-1788324007694-an962a9",
+      "timestamp": 1788324007694,
+      "rawDisplayText": "Rodrigues 旋转公式下面那个等号怎么理解",
+      "canonicalText": "Rodrigues 旋转公式下面那个等号怎么理解",
+      "context": {
+        "contextFiles": [
+          "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "242dfb016e1f90c03ecdfd949d1e31cd407ceb6556849fa7005423150e02ac8b",
+      "providerUserMessageId": "75f3d09d-00c9-40fa-a165-0c23f78ea757",
+      "providerAssistantMessageId": "2709f3e3-f5e3-43d8-85ee-270cbc1f12c1"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788324138325-pjkxu59",
+      "userTurnOrdinal": 31,
+      "state": "accepted",
+      "localMessageId": "msg-1788324138317-uhdyfel",
+      "timestamp": 1788324138317,
+      "rawDisplayText": "补充一下",
+      "canonicalText": "补充一下",
+      "context": {
+        "contextFiles": [
+          "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "ab7a8188c282e2fe7df7d312f78df74ac8a710816e84c7896fd02b1d1dced235",
+      "providerUserMessageId": "8bc74c96-44ba-453b-9afa-cc21b93eca51",
+      "providerAssistantMessageId": "4d528418-c42e-4556-b1a5-7116aa4d239c"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788324383285-kkvm1c2",
+      "userTurnOrdinal": 32,
+      "state": "accepted",
+      "localMessageId": "msg-1788324383276-jlfft54",
+      "timestamp": 1788324383276,
+      "rawDisplayText": "这个是怎么推导的",
+      "canonicalText": "这个是怎么推导的",
+      "context": {
+        "editorSelection": {
+          "notePath": "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md",
+          "mode": "selection",
+          "selectedText": "速度级相对运动学方程可表示为\n$$\\left\\{\\begin{aligned}\n\\dot{\\boldsymbol{r}}_{\\mathrm{R}_{i} \\mathrm{O}_{i} \\mid \\mathrm{p}(i)} & =\\mathbf{0}_{3}, \\\\\n\\boldsymbol{\\omega}_{\\mathrm{p}(i), i \\mid i} & =\\boldsymbol{n}_{\\mathrm{J}_{i}} \\dot{\\theta}_{\\mathrm{J}_{j}},\n\\end{aligned}\\right.$$",
+          "lineCount": 5,
+          "startLine": 361
+        },
+        "contextFiles": [
+          "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "a98218e4d447ae0adeb152900fb46469770c7c1d978f90ce49db97b7016ec0bb",
+      "providerUserMessageId": "977e2111-a40f-4caa-a763-9d68171e5e9a"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788324646999-wre11wy",
+      "userTurnOrdinal": 33,
+      "state": "accepted",
+      "localMessageId": "msg-1788324646989-1e7xahz",
+      "timestamp": 1788324646989,
+      "rawDisplayText": "继续",
+      "canonicalText": "继续",
+      "context": {
+        "editorSelection": {
+          "notePath": "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md",
+          "mode": "selection",
+          "selectedText": "速度级相对运动学方程可表示为\n$$\\left\\{\\begin{aligned}\n\\dot{\\boldsymbol{r}}_{\\mathrm{R}_{i} \\mathrm{O}_{i} \\mid \\mathrm{p}(i)} & =\\mathbf{0}_{3}, \\\\\n\\boldsymbol{\\omega}_{\\mathrm{p}(i), i \\mid i} & =\\boldsymbol{n}_{\\mathrm{J}_{i}} \\dot{\\theta}_{\\mathrm{J}_{j}},\n\\end{aligned}\\right.$$",
+          "lineCount": 5,
+          "startLine": 361
+        },
+        "contextFiles": [
+          "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "65f454414e2fda4840658901f9399831363ad75712ba36b930b5ad393f72f7b7",
+      "providerUserMessageId": "2504c6f7-bc6f-4c27-a17f-64be9ee75afa"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788324653202-ehzpwke",
+      "userTurnOrdinal": 34,
+      "state": "accepted",
+      "localMessageId": "msg-1788324653194-ijbj50b",
+      "timestamp": 1788324653194,
+      "rawDisplayText": "？",
+      "canonicalText": "？",
+      "context": {
+        "editorSelection": {
+          "notePath": "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md",
+          "mode": "selection",
+          "selectedText": "速度级相对运动学方程可表示为\n$$\\left\\{\\begin{aligned}\n\\dot{\\boldsymbol{r}}_{\\mathrm{R}_{i} \\mathrm{O}_{i} \\mid \\mathrm{p}(i)} & =\\mathbf{0}_{3}, \\\\\n\\boldsymbol{\\omega}_{\\mathrm{p}(i), i \\mid i} & =\\boldsymbol{n}_{\\mathrm{J}_{i}} \\dot{\\theta}_{\\mathrm{J}_{j}},\n\\end{aligned}\\right.$$",
+          "lineCount": 5,
+          "startLine": 361
+        },
+        "contextFiles": [
+          "教材/SystemDynamicsModelingAndSimulation/读书笔记——第十章 多刚体系统运动学方程递推形式.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "57c7b502e5bb5c722e3316c669e4fb7f25c215f1e690cfe2533e7069529086a8",
+      "providerUserMessageId": "927ace92-3f25-489c-86c0-a3f35e2ee191"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788358397383-dmofs1l",
+      "userTurnOrdinal": 35,
+      "state": "accepted",
+      "localMessageId": "msg-1788358397371-z3alz7n",
+      "timestamp": 1788358397371,
+      "rawDisplayText": "美化一下这个公式",
+      "canonicalText": "美化一下这个公式",
+      "context": {
+        "currentNote": {
+          "path": "教材/SystemDynamicsModelingAndSimulation/10读书笔记——第十章 多刚体系统运动学方程递推形式.md"
+        },
+        "editorSelection": {
+          "notePath": "教材/SystemDynamicsModelingAndSimulation/10读书笔记——第十章 多刚体系统运动学方程递推形式.md",
+          "mode": "selection",
+          "selectedText": "$$\\begin{aligned}\n\\dot{\\boldsymbol{c}}_{\\mathrm{L}_{j}, \\mathrm{D}} & =\\frac{\\mathrm{d}}{\\mathrm{~d} t}\\left(\\boldsymbol{T}_{\\mathrm{L}_{j}}^{\\mathrm{T}} \\boldsymbol{A}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{b}}(j)}^{\\mathrm{T}} \\boldsymbol{A}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{m}}(j)} \\boldsymbol{n}_{\\mathrm{L}_{j}}\\right) \\\\\n& =\\boldsymbol{T}_{\\mathrm{L}_{j}}^{\\mathrm{T}} \\dot{\\boldsymbol{A}}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{b}}(j)}^{\\mathrm{T}} \\boldsymbol{A}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{m}}(j)} \\boldsymbol{n}_{\\mathrm{L}_{j}}+\\boldsymbol{T}_{\\mathrm{L}_{j}}^{\\mathrm{T}} \\boldsymbol{A}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{b}}(j)}^{\\mathrm{T}} \\dot{\\boldsymbol{A}}_{\\mathrm{r}(j), \\underline{\\mathrm{m}}(j)} \\boldsymbol{n}_{\\mathrm{L}_{j}} \\\\\n& =\\boldsymbol{T}_{\\mathrm{L}_{j}}^{\\mathrm{T}} \\boldsymbol{A}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{b}}(j)}^{\\mathrm{T}} \\tilde{\\boldsymbol{\\omega}}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{b}}(j) \\mid \\underline{\\mathrm{r}}(j)}^{\\mathrm{T}} \\boldsymbol{A}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{m}}(j)} \\boldsymbol{n}_{\\mathrm{L}_{j}}-\\boldsymbol{T}_{\\mathrm{L}_{j}}^{\\mathrm{T}} \\boldsymbol{A}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{b}}(j)}^{\\mathrm{T}} \\tilde{\\boldsymbol{\\omega}}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{m}}(j) \\mid \\underline{\\mathrm{r}}(j)}^{\\mathrm{T}} \\boldsymbol{A}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{m}}(j)} \\boldsymbol{n}_{\\mathrm{L}_{j}} \\\\\n& =\\boldsymbol{T}_{\\mathrm{L}_{j}}^{\\mathrm{T}} \\boldsymbol{A}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{b}}(j)}^{\\mathrm{T}} \\boldsymbol{A}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{m}}(j)} \\tilde{\\boldsymbol{n}}_{\\mathrm{L}_{j}} \\boldsymbol{\\omega}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{b}}(j) \\mid \\underline{\\mathrm{m}}(j)}-\\boldsymbol{T}_{\\mathrm{L}_{j}}^{\\mathrm{T}} \\boldsymbol{A}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{b}}(j)}^{\\mathrm{T}} \\boldsymbol{A}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{m}}(j)} \\tilde{\\boldsymbol{n}}_{\\mathrm{L}_{j}} \\boldsymbol{\\omega}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{m}}(j) \\mid \\underline{\\mathrm{m}}(j)} \\\\\n& =\\boldsymbol{T}_{\\mathrm{L}_{j}}^{\\mathrm{T}} \\boldsymbol{A}_{\\underline{\\mathrm{b}}(j), \\underline{\\mathrm{m}}(j)} \\tilde{\\boldsymbol{n}}_{\\mathrm{L}_{j}} \\boldsymbol{\\omega}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{b}}(j) \\mid \\underline{\\mathrm{m}}(j)}-\\boldsymbol{T}_{\\mathrm{L}_{j}}^{\\mathrm{T}} \\boldsymbol{A}_{\\underline{\\mathrm{b}}(j), \\underline{\\mathrm{m}}(j)} \\tilde{\\boldsymbol{n}}_{\\mathrm{L}_{j}} \\boldsymbol{\\omega}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{m}}(j) \\mid \\underline{\\mathrm{m}}(j)} \\\\\n& =\\boldsymbol{T}_{\\mathrm{L}_{j}}^{\\mathrm{T}} \\boldsymbol{A}_{\\underline{\\mathrm{b}}(j), \\underline{\\mathrm{m}}(j)} \\tilde{\\boldsymbol{n}}_{\\mathrm{L}_{j}} \\boldsymbol{A}_{\\underline{\\mathrm{b}}(j), \\underline{\\mathrm{m}}(j)}^{\\mathrm{T}} \\boldsymbol{\\omega}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{b}}(j) \\mid \\underline{\\mathrm{b}}(j)}-\\boldsymbol{T}_{\\mathrm{L}_{j}}^{\\mathrm{T}} \\boldsymbol{A}_{\\underline{\\mathrm{b}}(j), \\underline{\\mathrm{m}}(j)} \\tilde{\\boldsymbol{n}}_{\\mathrm{L}_{j}} \\boldsymbol{\\omega}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{m}}(j) \\mid \\underline{\\mathrm{m}}(j)} \\\\\n& =\\left[\\begin{array}{ll}\n\\boldsymbol{O}_{2 \\times 3} & \\boldsymbol{T}_{\\mathrm{L}_{j}}^{\\mathrm{T}} \\boldsymbol{A}_{\\underline{\\mathrm{b}}(j), \\underline{\\mathrm{m}}(j)} \\tilde{\\boldsymbol{n}}_{\\mathrm{L}_{j}}^{\\mathrm{T}}\n\\end{array}\\right]\\left[\\begin{array}{c}\n\\boldsymbol{A}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{m}}(j)}^{\\mathrm{T}} \\dot{\\boldsymbol{r}}_{\\mathrm{O}_{\\mathrm{r}}(j)} \\mathrm{O}_{\\underline{\\mathrm{m}}(j)} \\mid \\underline{\\mathrm{r}}(j) \\\\\n\\boldsymbol{\\omega}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{m}}(j) \\mid \\underline{\\mathrm{m}}(j)}\n\\end{array}\\right] \\\\\n& -\\left[\\begin{array}{ll}\n\\boldsymbol{O}_{2 \\times 3} & \\boldsymbol{T}_{\\mathrm{L}_{j}}^{\\mathrm{T}} \\boldsymbol{A}_{\\underline{\\mathrm{b}}(j), \\underline{\\mathrm{m}}(j)} \\tilde{\\boldsymbol{n}}_{\\mathrm{L}_{j}}^{\\mathrm{T}} \\boldsymbol{A}_{\\underline{\\mathrm{b}}(j), \\underline{\\mathrm{m}}(j)}^{\\mathrm{T}}\n\\end{array}\\right]\\left[\\begin{array}{c}\n\\boldsymbol{A}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{b}}(j)}^{\\mathrm{T}} \\dot{\\boldsymbol{r}}_{\\mathrm{O}_{\\mathrm{r}}(j)} \\mathrm{O}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{r}}(j)} \\\\\n\\\\\n\\\\\n\\\\\n\\\\\n\\\\\n\\\\\n\\\\\n\\\\\n\\\\\n\\\\\n\\\\\n\\\\\n=\\left[\\begin{array}{ll}\n\\boldsymbol{O}_{2 \\times 3} & \\boldsymbol{T}_{\\mathrm{L}_{j}}^{\\mathrm{T}} \\boldsymbol{A}_{\\underline{\\mathrm{b}}(j), \\underline{\\mathrm{m}}(j)} \\tilde{\\boldsymbol{n}}_{\\mathrm{L}_{j}}^{\\mathrm{T}}\n\\end{array}\\right] \\boldsymbol{v}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{m}}(j) \\mid \\underline{\\mathrm{m}}(j)}\n\\end{array} \\boldsymbol{T}_{\\mathrm{L}_{j}}^{\\mathrm{T} \\boldsymbol{A}_{\\underline{\\mathrm{b}}(j), \\underline{\\mathrm{m}}(j)} \\tilde{\\boldsymbol{n}}_{\\mathrm{L}_{j}}^{\\mathrm{T}} \\boldsymbol{A}_{\\underline{\\mathrm{b}}(j), \\underline{\\mathrm{m}}(j)}^{\\mathrm{T}}}\\right] \\boldsymbol{v}_{\\underline{\\mathrm{r}}(j), \\underline{\\mathrm{b}}(j) \\mid \\underline{\\mathrm{b}}(j)} .\n\\end{aligned}$$",
+          "lineCount": 34,
+          "startLine": 710
+        },
+        "contextFiles": [
+          "教材/SystemDynamicsModelingAndSimulation/10读书笔记——第十章 多刚体系统运动学方程递推形式.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "93986c486686c5886eced04c57cfa87c479c78f5c9e712a981be8ef424506ce7",
+      "providerUserMessageId": "7641b76e-5482-445b-b031-a3df4d2da58a"
     }
   ]
 }
