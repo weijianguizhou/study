@@ -1,5 +1,5 @@
 {
-  "readableLineLength": true,
+  "readableLineLength": false,
   "promptDelete": false,
   "alwaysUpdateLinks": true,
   "pdfExportSettings": {

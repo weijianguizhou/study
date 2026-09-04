@@ -1,0 +1,154 @@
+\section{笛卡尔张量}
+并矢一节从几何对象的角度讨论了二阶线性变换，本节转入它的坐标基础：引入右手笛卡尔直角坐标系的单位矢量基，建立矢量及其点积、叉积、混合积等运算的坐标（矩阵）表示。这套形式记号是后续章节中方向余弦矩阵、角速度列阵与动能计算的公共工具。
+\parahead{坐标系、坐标轴上的单位矢量与矢量基}
+\parahead{右手笛卡尔直角坐标系及其坐标轴上的单位矢量}
+在右手笛卡尔直角坐标系中，沿三根坐标轴取单位矢量 $\mathbf{e}_1$、$\mathbf{e}_2$、$\mathbf{e}_3$，构成右手正交单位向量组。由正交归一性，任意两个单位矢量的点积为
+\[
+\mathbf{e}_m \cdot \mathbf{e}_n = \delta_{mn}, \qquad
+\delta_{mn} =
+\begin{cases}
+1, & m = n, \\
+0, & m \neq n,
+\end{cases}
+\]
+式中 $\delta_{mn}$ 称为 Kronecker 符号。叉积则为
+\[
+\mathbf{e}_m \times \mathbf{e}_n = \sum_{l=1}^{3} \varepsilon_{mnl}\,\mathbf{e}_l, \qquad
+\varepsilon_{mnl} =
+\begin{cases}
+1, & (m,n,l)=(1,2,3)\ \text{或}\ (2,3,1)\ \text{或}\ (3,1,2), \\
+-1, & (m,n,l)=(2,1,3)\ \text{或}\ (3,2,1)\ \text{或}\ (1,3,2), \\
+0, & m=n\ \text{或}\ n=l\ \text{或}\ l=m,
+\end{cases}
+\]
+$\varepsilon_{mnl}$ 称为置换符号。
+\parahead{右手笛卡尔直角坐标系矢量基及其运算法则}
+将三个单位矢量按列、按行排成阵列，
+\[
+\boldsymbol{e} \triangleq
+\begin{bmatrix} \mathbf{e}_1 \\ \mathbf{e}_2 \\ \mathbf{e}_3 \end{bmatrix}, \qquad
+\boldsymbol{e}^{\mathrm{T}} \triangleq
+\begin{bmatrix} \mathbf{e}_1 & \mathbf{e}_2 & \mathbf{e}_3 \end{bmatrix},
+\]
+称为右手笛卡尔直角坐标系的矢量基。矢量基仅是形式记号：它把三个矢量排成阵列，其元素是矢量而非数量。后续章节将以带下标的形式引用它，如 $\boldsymbol{e}_O$、$\boldsymbol{e}_R$ 分别表示 $O$ 系与 $R$ 系的矢量基。
+规定矢量基的乘法按对应元素的点积与叉积逐项进行，直接展开可得
+\begin{gather*}\boldsymbol{e}^{\mathrm{T}} \cdot \boldsymbol{e}
+= \mathbf{e}_1\cdot\mathbf{e}_1 + \mathbf{e}_2\cdot\mathbf{e}_2 + \mathbf{e}_3\cdot\mathbf{e}_3 = 3,
+\\[2pt]
+\boldsymbol{e} \cdot \boldsymbol{e}^{\mathrm{T}}
+=
+\begin{bmatrix}
+\mathbf{e}_1\!\cdot\!\mathbf{e}_1 & \mathbf{e}_1\!\cdot\!\mathbf{e}_2 & \mathbf{e}_1\!\cdot\!\mathbf{e}_3 \\
+\mathbf{e}_2\!\cdot\!\mathbf{e}_1 & \mathbf{e}_2\!\cdot\!\mathbf{e}_2 & \mathbf{e}_2\!\cdot\!\mathbf{e}_3 \\
+\mathbf{e}_3\!\cdot\!\mathbf{e}_1 & \mathbf{e}_3\!\cdot\!\mathbf{e}_2 & \mathbf{e}_3\!\cdot\!\mathbf{e}_3
+\end{bmatrix}
+= \boldsymbol{I}_3,
+\\[2pt]
+\boldsymbol{e}^{\mathrm{T}} \times \boldsymbol{e}
+= \mathbf{e}_1\times\mathbf{e}_1 + \mathbf{e}_2\times\mathbf{e}_2 + \mathbf{e}_3\times\mathbf{e}_3 = \boldsymbol{0},
+\\[2pt]
+\boldsymbol{e} \times \boldsymbol{e}^{\mathrm{T}}
+=
+\begin{bmatrix}
+\boldsymbol{0} & \mathbf{e}_3 & -\mathbf{e}_2 \\
+-\mathbf{e}_3 & \boldsymbol{0} & \mathbf{e}_1 \\
+\mathbf{e}_2 & -\mathbf{e}_1 & \boldsymbol{0}
+\end{bmatrix}
+= -\tilde{\boldsymbol{e}}.
+\end{gather*}
+式 （笛卡尔张量:exeT） 中的 $\tilde{\boldsymbol{e}}$ 是叉乘矩阵的形式推广。对任意三维列阵 $\boldsymbol{u}=\begin{bmatrix}u_1&u_2&u_3\end{bmatrix}^{\mathrm{T}}$，定义其叉乘矩阵为反对称矩阵
+\[
+\tilde{\boldsymbol{u}} \triangleq
+\begin{bmatrix}
+0 & -u_3 & u_2 \\
+u_3 & 0 & -u_1 \\
+-u_2 & u_1 & 0
+\end{bmatrix},
+\qquad \tilde{u}(m,n) = -\sum_{l=1}^{3}\varepsilon_{mnl}\,u_l,
+\]
+它与式 （2.2） 定义的叉乘矩阵 $\boldsymbol{u}^{\times}$ 是同一对象，两种记法通用。叉乘矩阵具有如下性质：
+\[
+\tilde{\boldsymbol{u}}^{\mathrm{T}} = -\tilde{\boldsymbol{u}}, \qquad
+\tilde{\boldsymbol{u}}\,\boldsymbol{v} = -\tilde{\boldsymbol{v}}\,\boldsymbol{u}, \qquad
+\boldsymbol{v}^{\mathrm{T}}\tilde{\boldsymbol{u}} = -\boldsymbol{u}^{\mathrm{T}}\tilde{\boldsymbol{v}}, \qquad
+\tilde{\boldsymbol{u}}\,\boldsymbol{u} = \boldsymbol{0},
+\]
+\[
+\tilde{\boldsymbol{u}}\,\tilde{\boldsymbol{v}} = \boldsymbol{v}\boldsymbol{u}^{\mathrm{T}} - \left(\boldsymbol{u}^{\mathrm{T}}\boldsymbol{v}\right)\boldsymbol{I}_3.
+\]
+\parahead{矢量及矢量运算的坐标表示}
+在不引起混淆的前提下，本小节用同一粗体字母表示矢量与其坐标列阵，由上下文区分。
+\parahead{矢量的坐标表示}
+任意矢量沿基矢量的分解可写成矩阵乘积（数乘）的形式：
+\[
+\boldsymbol{u} = u_1\mathbf{e}_1 + u_2\mathbf{e}_2 + u_3\mathbf{e}_3
+= \boldsymbol{e}^{\mathrm{T}}\boldsymbol{u} = \boldsymbol{u}^{\mathrm{T}}\boldsymbol{e},
+\]
+式中 $\boldsymbol{u} = \begin{bmatrix} u_1 & u_2 & u_3 \end{bmatrix}^{\mathrm{T}}$ 称为矢量 $\boldsymbol{u}$ 的坐标列阵（投影列阵）。
+\parahead{两矢量点积运算的坐标表示}
+利用式 （笛卡尔张量:eeT），两矢量的点积（内积）为
+\[
+\boldsymbol{u}\cdot\boldsymbol{v}
+= \left(\boldsymbol{u}^{\mathrm{T}}\boldsymbol{e}\right)\cdot\left(\boldsymbol{e}^{\mathrm{T}}\boldsymbol{v}\right)
+= \boldsymbol{u}^{\mathrm{T}}\boldsymbol{v}.
+\]
+点积具有如下性质：
+\begin{enumerate}
+
+\item $\boldsymbol{u}\cdot\boldsymbol{u} = \boldsymbol{u}^{\mathrm{T}}\boldsymbol{u} = |\boldsymbol{u}|^2$，即矢量模长的平方；
+
+\item $\boldsymbol{u}\cdot\boldsymbol{v} = \boldsymbol{u}^{\mathrm{T}}\boldsymbol{v} = \boldsymbol{v}^{\mathrm{T}}\boldsymbol{u} = \boldsymbol{v}\cdot\boldsymbol{u}$，点积满足交换律；
+
+\item 比较 $|\boldsymbol{u}-\boldsymbol{v}|^2 = |\boldsymbol{u}|^2 + |\boldsymbol{v}|^2 - 2\,\boldsymbol{u}\cdot\boldsymbol{v}$ 与余弦定理 $|\boldsymbol{u}-\boldsymbol{v}|^2 = |\boldsymbol{u}|^2 + |\boldsymbol{v}|^2 - 2|\boldsymbol{u}||\boldsymbol{v}|\cos\langle\boldsymbol{u},\boldsymbol{v}\rangle$，可得
+
+\end{enumerate}
+\[
+\boldsymbol{u}\cdot\boldsymbol{v} = |\boldsymbol{u}|\,|\boldsymbol{v}|\cos\langle\boldsymbol{u},\boldsymbol{v}\rangle.
+\]
+\parahead{两矢量叉积运算的坐标表示}
+将叉积按基矢量展开并代入式 （2.20），得
+\[
+\boldsymbol{u}\times\boldsymbol{v}
+= \sum_{i=1}^{3}\sum_{j=1}^{3} u_i v_j \left(\mathbf{e}_i\times\mathbf{e}_j\right)
+= \boldsymbol{e}^{\mathrm{T}}\tilde{\boldsymbol{u}}\,\boldsymbol{v},
+\]
+即叉积等于矢量基行阵左乘叉乘矩阵再乘坐标列阵。叉积具有如下性质：
+\begin{enumerate}
+
+\item 反交换性：$\boldsymbol{u}\times\boldsymbol{v} = \boldsymbol{e}^{\mathrm{T}}\tilde{\boldsymbol{u}}\,\boldsymbol{v} = -\boldsymbol{e}^{\mathrm{T}}\tilde{\boldsymbol{v}}\,\boldsymbol{u} = -\boldsymbol{v}\times\boldsymbol{u}$；
+
+\item $\boldsymbol{u}\cdot\left(\boldsymbol{u}\times\boldsymbol{v}\right) = \boldsymbol{u}^{\mathrm{T}}\tilde{\boldsymbol{u}}\,\boldsymbol{v} = 0$，同理 $\boldsymbol{v}\cdot\left(\boldsymbol{u}\times\boldsymbol{v}\right) = -\boldsymbol{v}^{\mathrm{T}}\tilde{\boldsymbol{v}}\,\boldsymbol{u} = 0$，即叉积同时垂直于参与运算的两个矢量；
+
+\item 由 $|\boldsymbol{u}\times\boldsymbol{v}|^2 = \boldsymbol{v}^{\mathrm{T}}\tilde{\boldsymbol{u}}^{\mathrm{T}}\tilde{\boldsymbol{u}}\,\boldsymbol{v} = |\boldsymbol{u}|^2|\boldsymbol{v}|^2 - (\boldsymbol{u}\cdot\boldsymbol{v})^2$ 及式 （2.28） 可得
+
+\end{enumerate}
+\[
+|\boldsymbol{u}\times\boldsymbol{v}| = |\boldsymbol{u}|\,|\boldsymbol{v}|\sin\langle\boldsymbol{u},\boldsymbol{v}\rangle.
+\]
+\parahead{三矢量混合积运算的坐标表示}
+三矢量的混合积为
+\[
+\boldsymbol{u}\cdot\left(\boldsymbol{v}\times\boldsymbol{w}\right)
+= \left(\boldsymbol{u}^{\mathrm{T}}\boldsymbol{e}\right)\cdot\left(\boldsymbol{e}^{\mathrm{T}}\tilde{\boldsymbol{v}}\,\boldsymbol{w}\right)
+= \boldsymbol{u}^{\mathrm{T}}\tilde{\boldsymbol{v}}\,\boldsymbol{w},
+\]
+由式 （2.24） 可知混合积具有轮换不变性：
+\[
+\boldsymbol{u}\cdot\left(\boldsymbol{v}\times\boldsymbol{w}\right)
+= \boldsymbol{v}^{\mathrm{T}}\tilde{\boldsymbol{w}}\,\boldsymbol{u} = \boldsymbol{v}\cdot\left(\boldsymbol{w}\times\boldsymbol{u}\right)
+= \boldsymbol{w}^{\mathrm{T}}\tilde{\boldsymbol{u}}\,\boldsymbol{v} = \boldsymbol{w}\cdot\left(\boldsymbol{u}\times\boldsymbol{v}\right).
+\]
+\parahead{三矢量叉积运算的坐标表示}
+三矢量的叉积可写成两个叉乘矩阵的复合：
+\[
+\boldsymbol{u}\times\left(\boldsymbol{v}\times\boldsymbol{w}\right)
+= \left(\boldsymbol{u}^{\mathrm{T}}\boldsymbol{e}\right)\times\left(\boldsymbol{e}^{\mathrm{T}}\tilde{\boldsymbol{v}}\,\boldsymbol{w}\right)
+= \boldsymbol{e}^{\mathrm{T}}\tilde{\boldsymbol{u}}\,\tilde{\boldsymbol{v}}\,\boldsymbol{w}.
+\]
+代入式 （2.25） 展开，得常用的三重叉积展开式
+\[
+\boldsymbol{u}\times\left(\boldsymbol{v}\times\boldsymbol{w}\right)
+= \boldsymbol{e}^{\mathrm{T}}\left[\boldsymbol{v}\left(\boldsymbol{u}^{\mathrm{T}}\boldsymbol{w}\right) - \left(\boldsymbol{u}^{\mathrm{T}}\boldsymbol{v}\right)\boldsymbol{w}\right]
+= \left(\boldsymbol{u}\cdot\boldsymbol{w}\right)\boldsymbol{v} - \left(\boldsymbol{u}\cdot\boldsymbol{v}\right)\boldsymbol{w}.
+\]
+至此，矢量及其基本运算均已化为矩阵运算。结合并矢的矩阵表示（式 （2.14）），几何量（矢量、并矢）与坐标量（列阵、矩阵）的两条线索在本章内互相衔接，后续章节中方向余弦矩阵及其时间变化率、角速度列阵的定义以及动能的二次型表达均以此为基础。

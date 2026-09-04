@@ -4,35 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "51d89efdf673e616",
+        "id": "d5025005e02c76b3",
         "type": "tabs",
         "children": [
           {
-            "id": "4a7b60e988f11029",
+            "id": "b136e6daad6e2e1f",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "教材/SystemDynamicsModelingAndSimulation/11读书笔记——多刚体系统拉格朗日方程递推形式.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "11读书笔记——多刚体系统拉格朗日方程递推形式"
-            }
-          },
-          {
-            "id": "91dca7a4f8fe97c0",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "教材/SystemDynamicsModelingAndSimulation/2读书笔记——第二章 多体系统拉格朗日方程.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "2读书笔记——第二章 多体系统拉格朗日方程"
+              "title": "新标签页"
             }
           }
         ]
@@ -220,36 +202,42 @@
       "oh-my-claudian:Open Oh My Claudian": false
     }
   },
-  "active": "4a7b60e988f11029",
+  "active": "b275d19387b88fb4",
   "lastOpenFiles": [
-    "教材/SystemDynamicsModelingAndSimulation/2读书笔记——第二章 多体系统拉格朗日方程.md",
+    "教材/控制理论/控制系统计算机辅助设计—MATLAB语言与应用/课件/03微分方程求解.pdf",
+    "教材/控制理论/控制系统计算机辅助设计—MATLAB语言与应用/课件/02MATLAB基础.pdf",
+    "教材/控制理论/控制系统计算机辅助设计—MATLAB语言与应用/课件/01绪论.pdf",
+    "教材/控制理论/控制系统计算机辅助设计—MATLAB语言与应用/课件/01-01 为什么学习MATLAB.pdf",
+    "力学/系统动力学建模与仿真/系统动力学建模与仿真笔记.pdf",
+    "教材/SystemDynamicsModelingAndSimulation/SystemDynamicsModelingAndSimulation.pdf",
+    "教材/控制理论/控制系统计算机辅助设计—MATLAB语言与应用/_extract/11-07 分数阶非线性系统仿真(下).txt",
+    "教材/控制理论/控制系统计算机辅助设计—MATLAB语言与应用/_extract/11-06 分数阶非线性系统仿真(上).txt",
+    "教材/控制理论/控制系统计算机辅助设计—MATLAB语言与应用/_extract/11-05 分数阶PID控制器.txt",
+    "教材/控制理论/控制系统计算机辅助设计—MATLAB语言与应用/_extract/11-04 分数阶传递函数模型(下).txt",
+    "教材/控制理论/控制系统计算机辅助设计—MATLAB语言与应用/_extract/11-03 分数阶传递函数模型(上).txt",
+    "力学/系统动力学建模与仿真/Figure/SystemDynamicsModelingAndSimulation_59a.png",
+    "力学/系统动力学建模与仿真/Figure/SystemDynamicsModelingAndSimulation_58a.png",
+    "力学/系统动力学建模与仿真/Figure/SystemDynamicsModelingAndSimulation_61.png",
+    "力学/系统动力学建模与仿真/Figure/SystemDynamicsModelingAndSimulation_59b.png",
+    "力学/系统动力学建模与仿真/Figure/SystemDynamicsModelingAndSimulation_58b.png",
+    "力学/系统动力学建模与仿真/Figure/SystemDynamicsModelingAndSimulation_57.png",
+    "力学/系统动力学建模与仿真/Figure/SystemDynamicsModelingAndSimulation_56.png",
+    "力学/系统动力学建模与仿真/Figure/SystemDynamicsModelingAndSimulation_53.png",
     "教材/SystemDynamicsModelingAndSimulation/3读书笔记——第三章 系统运动微分方程及其数值求解.md",
-    "教材/SystemDynamicsModelingAndSimulation/4读书笔记——第四章 笛卡尔张量.md",
+    "教材/SystemDynamicsModelingAndSimulation/_pdf_ch1/ch1_p26.png",
+    "教材/SystemDynamicsModelingAndSimulation/_pdf_ch1/ch1_p25.png",
+    "力学/难题整理/材料力学.md",
     "教材/SystemDynamicsModelingAndSimulation/11读书笔记——多刚体系统拉格朗日方程递推形式.md",
-    "机械/机械设计/笔记/2.机械零件的强度.md",
-    "机械/机械设计/机械设计tex笔记.zip",
-    "机械/机械设计/机械设计tex笔记/前言.tex",
-    "机械/机械设计/机械设计tex笔记/前言.log",
-    "机械/机械设计/机械设计tex笔记/机械设计.xdv",
-    "机械/机械设计/机械设计tex笔记/机械设计.toc",
-    "机械/机械设计/机械设计tex笔记/机械设计.tex",
-    "机械/机械设计/机械设计tex笔记/机械设计.synctex.gz",
-    "机械/机械设计/机械设计tex笔记/机械设计.pdf",
-    "机械/机械设计/机械设计tex笔记/机械设计.out",
-    "机械/机械设计/机械设计tex笔记/机械设计.log",
-    "机械/机械设计/机械设计tex笔记/Figure/两球体接触应力.png",
-    "机械/机械设计/机械设计tex笔记/Figure/两圆柱接触应力.png",
-    "机械/机械设计/机械设计tex笔记/Figure/零件的极限应力图.png",
-    "机械/机械设计/机械设计tex笔记/Figure/材料的简化疲劳极限应力图.png",
-    "机械/机械设计/机械设计tex笔记/Figure/材料的疲劳极限应力图.png",
-    "机械/机械设计/机械设计tex笔记/Figure/疲劳曲线.png",
-    "机械/机械设计/机械设计tex笔记/Figure/疲劳破坏过程.png",
-    "机械/机械设计/机械设计tex笔记/Figure/静载荷动应力的例子.png",
-    "教材/机械设计/读书笔记——第一章 机械设计概论.md",
-    "机械/机械设计/课件/pages_hi/page_54.png",
-    "机械/机械设计/课件/pages_hi/page_14.png",
     "教材/SystemDynamicsModelingAndSimulation/10读书笔记——第十章 多刚体系统运动学方程递推形式.md",
     "教材/SystemDynamicsModelingAndSimulation/9读书笔记——第九章 体元件广义坐标与系统总体动力学方程.md",
+    "教材/SystemDynamicsModelingAndSimulation/8读书笔记——第八章 空间运动刚体的动能与势能.md",
+    "教材/SystemDynamicsModelingAndSimulation/7读书笔记——第七章 坐标系的姿态广义坐标.md",
+    "教材/SystemDynamicsModelingAndSimulation/6读书笔记——第六章 相对转动角速度.md",
+    "教材/SystemDynamicsModelingAndSimulation/2读书笔记——第二章 多体系统拉格朗日方程.md",
+    "教材/SystemDynamicsModelingAndSimulation/_note6_full.md",
+    "教材/SystemDynamicsModelingAndSimulation/4读书笔记——第四章 笛卡尔张量.md",
+    "机械/机械设计/笔记/2.机械零件的强度.md",
+    "教材/机械设计/读书笔记——第一章 机械设计概论.md",
     "力学/系统动力学建模与仿真/符号约定与工作要求.md",
     "教材/Spacecraft_Dynamics/读书笔记/04-欧拉角.md",
     "教材/Spacecraft_Dynamics/读书笔记/03-欧拉参数.md",
@@ -261,11 +249,6 @@
     "教材/Spacecraft_Dynamics/md/1-15.md",
     "教材/SystemDynamicsModelingAndSimulation/1读书笔记——第一章 有限维广义变分原理.md",
     "教材/Spacecraft_Dynamics/读书笔记.md",
-    "教材/Spacecraft_Dynamics/读书笔记/19-偏角速度与偏速度.md",
-    "教材/Spacecraft_Dynamics/读书笔记/18-角加速度.md",
-    "教材/Spacecraft_Dynamics/读书笔记/17-瞬时轴.md",
-    "教材/Spacecraft_Dynamics/读书笔记/16-缓慢小转动.md",
-    "教材/Spacecraft_Dynamics/读书笔记/15-角速度与方向角.md",
-    "教材/Spacecraft_Dynamics/读书笔记/14-辅助参考系.md"
+    "教材/Spacecraft_Dynamics/读书笔记/19-偏角速度与偏速度.md"
   ]
 }
