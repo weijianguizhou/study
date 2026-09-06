@@ -160,3 +160,50 @@ $$
 	\boldsymbol{A}_z(\theta)=\begin{bmatrix}\cos\theta&-\sin\theta&0\\\sin\theta&\cos\theta&0\\0&0&1\end{bmatrix}.
 	$$
 \end{property}
+
+\subsection{由方向余弦矩阵反求转轴和转角}
+罗德里格斯旋转公式：
+$$\begin{aligned}
+	\boldsymbol{A}_{i j} & =\boldsymbol{I}_{3} \cos \theta+\tilde{\boldsymbol{n}} \sin \theta+\boldsymbol{n} \boldsymbol{n}^{\mathrm{T}}(1-\cos \theta) \\
+	& =\left[\begin{array}{rrr}
+		\cos \theta+n_{1} n_{1}(1-\cos \theta) & -n_{3} \sin \theta+n_{1} n_{2}(1-\cos \theta) & n_{2} \sin \theta+n_{1} n_{3}(1-\cos \theta) \\
+		n_{3} \sin \theta+n_{2} n_{1}(1-\cos \theta) & \cos \theta+n_{2} n_{2}(1-\cos \theta) & -n_{1} \sin \theta+n_{2} n_{3}(1-\cos \theta) \\
+		-n_{2} \sin \theta+n_{3} n_{1}(1-\cos \theta) & n_{1} \sin \theta+n_{3} n_{2}(1-\cos \theta) & \cos \theta+n_{3} n_{3}(1-\cos \theta)
+	\end{array}\right] \\
+	& =:\left[\begin{array}{lll}
+		a_{11} & a_{12} & a_{13} \\
+		a_{21} & a_{22} & a_{23} \\
+		a_{31} & a_{32} & a_{33}
+	\end{array}\right] .
+\end{aligned}$$
+
+由上式可知:$$\begin{aligned}
+	\operatorname{tr} \boldsymbol{A} & =a_{11}+a_{12}+a_{33} \\
+	& =3 \cos \theta+\left(n_{1}^{2}+n_{2}^{2}+n_{3}^{2}\right)(1-\cos \theta) \\
+	& =2 \cos \theta+1,
+\end{aligned}$$
+
+以及反对称部分：
+
+$$
+\begin{cases}a_{32}-a_{23}=2n_1\sin\theta,\\a_{13}-a_{31}=2n_2\sin\theta,\\a_{21}-a_{12}=2n_3\sin\theta.\end{cases}
+$$
+
+于是由方向余弦矩阵反求转轴和转角：
+
+$$
+\begin{cases}\cos\theta=(\mathrm{tr}\,\boldsymbol{A}-1)/2,\\n_1\sin\theta=(a_{32}-a_{23})/2,\\n_2\sin\theta=(a_{13}-a_{31})/2,\\n_3\sin\theta=(a_{21}-a_{12})/2.\end{cases}
+$$
+
+若约定 $\theta\in[0,\pi]$，则分三种情形：
+
+(1) 当 $|(\mathrm{tr}\,\boldsymbol{A}-1)/2-1|<\varepsilon$ 时，$\cos\theta\approx1$，$\sin\theta\approx0$，即 $\theta\approx0$，$\boldsymbol{A}\approx\boldsymbol{I}_3$，转轴 $\boldsymbol{n}$ 可为任意单位矢量列阵。
+
+(2) 当 $|(\mathrm{tr}\,\boldsymbol{A}-1)/2+1|<\varepsilon$ 时，$\cos\theta\approx-1$，$\sin\theta\approx0$，即 $\theta\approx\pi$，$(\boldsymbol{A}+\boldsymbol{I})/2\approx\boldsymbol{n}\boldsymbol{n}^{\mathrm{T}}$，依此确定 $\boldsymbol{n}$ 的按模最大分量后即可求出完整的 $\boldsymbol{n}$。
+
+(3) 当 $|(\mathrm{tr}\,\boldsymbol{A}-1)/2-1|>\varepsilon$ 且 $|(\mathrm{tr}\,\boldsymbol{A}-1)/2+1|>\varepsilon$ 时，
+
+$$
+\begin{cases}\theta=\mathrm{acos}\left((\mathrm{tr}\,\boldsymbol{A}-1)/2\right),\\n_1=(a_{32}-a_{23})/(2\sin\theta),\\n_2=(a_{13}-a_{31})/(2\sin\theta),\\n_3=(a_{21}-a_{12})/(2\sin\theta).\end{cases}
+$$
+
