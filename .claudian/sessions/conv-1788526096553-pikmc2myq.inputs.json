@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "conversationId": "conv-1788526096553-pikmc2myq",
+  "records": [
+    {
+      "schemaVersion": 1,
+      "id": "msg-1788526098318-010mdbp",
+      "userTurnOrdinal": 1,
+      "state": "accepted",
+      "localMessageId": "msg-1788526096549-24f99dm",
+      "timestamp": 1788526096549,
+      "rawDisplayText": "补充完整其他数据结构类型和完整定义和实例",
+      "canonicalText": "补充完整其他数据结构类型和完整定义和实例",
+      "context": {
+        "currentNote": {
+          "path": "教材/控制理论/控制系统计算机辅助设计—MATLAB语言与应用/笔记/MATLAB语言程序设计基础.md"
+        },
+        "contextFiles": [
+          "教材/控制理论/控制系统计算机辅助设计—MATLAB语言与应用/笔记/MATLAB语言程序设计基础.md"
+        ]
+      },
+      "images": [],
+      "contentDigest": "a1a37e2e534b49d428dcc5d42b2a1532457072a7239c70077436cad631a94efb",
+      "providerUserMessageId": "8e1ea5b9-8605-4dd2-a72c-78b1f0dc82db"
+    }
+  ]
+}

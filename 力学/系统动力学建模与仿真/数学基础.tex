@@ -1,180 +1,401 @@
-﻿% !TeX root = 系统动力学建模与仿真笔记.tex
-\section{代数基础}
+% !TeX root = 系统动力学建模与仿真笔记.tex
+看书，看张老师的文档，觉得多体动力学相关的研究需要以下的数学知识：笛卡尔张量分析、微分几何、矩阵分析、数值分析、泛函理论等。总结一下方便后续复习。
+\section{笛卡尔张量}
+在右手笛卡尔直角坐标系如下图中，沿三根坐标轴取单位矢量 $\mathbf{e}_1$、$\mathbf{e}_2$、$\mathbf{e}_3$，构成右手正交单位向量组。
 
-本节介绍多体系统动力学建模中所需要的矩阵知识。由于后续章节仅用到反对称矩阵与叉乘矩阵，这里只保留这一部分内容，其余矩阵分析内容从略。
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.45\linewidth]{Figure/右手笛卡尔直角坐标系}
+	\caption{右手笛卡尔直角坐标系}
+	\label{fig:右手笛卡尔直角坐标系}
+\end{figure}
 
-\begin{mydefinition}{对称矩阵与反对称矩阵}
-设 $\bm{A}$ 为 $n$ 阶方阵。若 $\bm{A}^{\mathrm{T}} = \bm{A}$，即 $a_{ij} = a_{ji}$，则称 $\bm{A}$ 为对称矩阵；若 $\bm{A}^{\mathrm{T}} = -\bm{A}$，即 $a_{ij} = -a_{ji}$，则称 $\bm{A}$ 为反对称矩阵。反对称矩阵的主对角元素均为零。
-\end{mydefinition}
+由正交归一性，任意两个单位矢量的点积为$$
+\mathbf{e}_m \cdot \mathbf{e}_n = \delta_{mn}, \qquad
+\delta_{mn} =
+\begin{cases}
+	1, & m = n, \\
+	0, & m \neq n,
+\end{cases}
+$$
+式中 $\delta_{mn}$ 称为 \textit{Kronecker }符号。
+叉积则为:
+$$
+\mathbf{e}_m \times \mathbf{e}_n = \sum_{l=1}^{3} \varepsilon_{mnl}\,\mathbf{e}_l, \qquad
+\varepsilon_{mnl} =
+\begin{cases}
+	1, & (m,n,l)=(1,2,3)\ \text{或}\ (2,3,1)\ \text{或}\ (3,1,2), \\
+	-1, & (m,n,l)=(2,1,3)\ \text{或}\ (3,2,1)\ \text{或}\ (1,3,2), \\
+	0, & m=n\ \text{或}\ n=l\ \text{或}\ l=m,
+\end{cases}
+$$
+$\varepsilon_{mnl}$ 称为置换符号。其实可以简记为偶排列时1，奇排列时-1.有重复时为0.
 
-任一 $n$ 阶方阵 $\bm{A}$ 均可唯一分解为一个对称矩阵与一个反对称矩阵之和：
-\begin{equation}\label{eq:矩阵:对称分解}
-\bm{A} = \frac{\bm{A}+\bm{A}^{\mathrm{T}}}{2} + \frac{\bm{A}-\bm{A}^{\mathrm{T}}}{2}.
-\end{equation}
+吕新民吕爷曾经说过，高等代数学完了，记得一个字——\textbf{基}。
 
-反对称矩阵与三维向量的叉乘有着密切的联系。对任意向量 $\bm{a} = \begin{bmatrix} a_1 & a_2 & a_3 \end{bmatrix}^{\mathrm{T}}\in\mathbb{R}^3$，定义其叉乘矩阵为反对称矩阵
-\begin{equation}\label{eq:矩阵:叉乘矩阵}
-\bm{a}^{\times} \triangleq \begin{bmatrix} 0 & -a_3 & a_2 \\ a_3 & 0 & -a_1 \\ -a_2 & a_1 & 0 \end{bmatrix},
-\end{equation}
-则向量叉乘可以表示为矩阵乘法：
-\begin{equation}\label{eq:矩阵:叉乘矩阵性质}
-\bm{a}\times\bm{b} = \bm{a}^{\times}\,\bm{b}, \qquad (\bm{a}\times\bm{b})^{\times} = \bm{b}\bm{a}^{\mathrm{T}} - \bm{a}\bm{b}^{\mathrm{T}},
-\end{equation}
-式中 $\bm{a}\times\bm{b}$ 表示向量叉乘。叉乘矩阵在刚体动力学中具有重要作用，例如角速度向量与姿态变化率的关系即借助叉乘矩阵表示。为表述方便，常把 $\mathbf{q}\times$ 看做一个矩阵，这个矩阵记为 $\tilde{\mathbf{q}}$，其元素为
-\begin{equation}
-\tilde{\mathbf{q}}=\begin{bmatrix}
-0 & -q_3 & q_2 \\
-q_3 & 0 & -q_1 \\
--q_2 & q_1 & 0
-\end{bmatrix},
-\end{equation}
-即 $\tilde{\mathbf{q}}$ 与式~\eqref{eq:矩阵:叉乘矩阵} 中的 $\bm{a}^{\times}$ 表示同一个对象，两种记法在不同文献中通用。
+下面看看笛卡尔张量空间里的基。
 
-反对称矩阵还具有如下性质：对 $n$ 阶反对称矩阵 $\bm{A}$，
-\begin{equation*}
-\det(\bm{A}^{\mathrm{T}}) = \det(-\bm{A}) = (-1)^{n}\det(\bm{A}),
-\end{equation*}
-当 $n$ 为奇数时 $\det\bm{A} = 0$；且反对称矩阵的特征值位于虚轴上，特征向量相互正交（酉）。此外，任意方阵均可唯一分解为对称部分与反对称部分之和（式~\eqref{eq:矩阵:对称分解}），该分解在刚体动力学中对应应变率张量与旋率张量的分解。
+\begin{definition}[右手笛卡尔直角坐标系的矢量基]
+	将三个单位矢量按列、按行排成阵列，
+	
+	$$
+	\boldsymbol{e} \triangleq
+	\begin{bmatrix} \mathbf{e}_1 \\ \mathbf{e}_2 \\ \mathbf{e}_3 \end{bmatrix}, \qquad
+	\boldsymbol{e}^{\mathrm{T}} \triangleq
+	\begin{bmatrix} \mathbf{e}_1 & \mathbf{e}_2 & \mathbf{e}_3 \end{bmatrix},
+	$$
+	
+	称为右手笛卡尔直角坐标系的矢量基。
+\end{definition}
 
-\section{并矢}
+\begin{remark}
+	矢量基把三个矢量排成阵列，其元素是矢量而非数量。后续章节将以带下标的形式引用它，如 $\boldsymbol{e}_O$、$\boldsymbol{e}_R$ 分别表示 $O$ 系与 $R$ 系的矢量基。
+\end{remark}
 
-并矢（dyadic）是描述二阶线性变换的数学工具，刚体动力学中的转动算子与转动惯量张量均可表示为并矢。本节介绍并矢的定义、运算及其与矩阵的联系。
+好的，看完了矢量基的定义，下面就要来看看矢量基的一些性质了哈。
 
-\parahead{并矢的定义}
+\begin{property}[矢量基的运算性质]
+	规定矢量基的乘法按对应元素的点积与叉积逐项进行，直接展开可得
+	
+	\begin{gather*}
+		\boldsymbol{e}^{\mathrm{T}} \cdot \boldsymbol{e}
+		= \mathbf{e}_1\cdot\mathbf{e}_1 + \mathbf{e}_2\cdot\mathbf{e}_2 + \mathbf{e}_3\cdot\mathbf{e}_3 = 3,
+		\\[2pt]
+		\boldsymbol{e} \cdot \boldsymbol{e}^{\mathrm{T}}
+		=
+		\begin{bmatrix}
+			\mathbf{e}_1\!\cdot\!\mathbf{e}_1 & \mathbf{e}_1\!\cdot\!\mathbf{e}_2 & \mathbf{e}_1\!\cdot\!\mathbf{e}_3 \\
+			\mathbf{e}_2\!\cdot\!\mathbf{e}_1 & \mathbf{e}_2\!\cdot\!\mathbf{e}_2 & \mathbf{e}_2\!\cdot\!\mathbf{e}_3 \\
+			\mathbf{e}_3\!\cdot\!\mathbf{e}_1 & \mathbf{e}_3\!\cdot\!\mathbf{e}_2 & \mathbf{e}_3\!\cdot\!\mathbf{e}_3
+		\end{bmatrix}
+		= \boldsymbol{I}_3,
+		\\[2pt]
+		\boldsymbol{e}^{\mathrm{T}} \times \boldsymbol{e}
+		= \mathbf{e}_1\times\mathbf{e}_1 + \mathbf{e}_2\times\mathbf{e}_2 + \mathbf{e}_3\times\mathbf{e}_3 = \boldsymbol{0},
+		\\[2pt]
+		\boldsymbol{e} \times \boldsymbol{e}^{\mathrm{T}}
+		=
+		\begin{bmatrix}
+			\boldsymbol{0} & \mathbf{e}_3 & -\mathbf{e}_2 \\
+			-\mathbf{e}_3 & \boldsymbol{0} & \mathbf{e}_1 \\
+			\mathbf{e}_2 & -\mathbf{e}_1 & \boldsymbol{0}
+		\end{bmatrix}
+		= -\tilde{\boldsymbol{e}}.
+	\end{gather*}
+\end{property}
 
-\begin{mydefinition}{并矢}
-设 $\bm{a}$、$\bm{b}$ 为两个向量，则按确定顺序并列而成的量 $\bm{a}\bm{b}$ 称为并矢（dyad）。有限个并矢之和
-\begin{equation}\label{eq:并矢:定义}
-\bm{\Phi} = \sum_{i=1}^{N}\bm{a}_i\bm{b}_i
-\end{equation}
-称为并矢式（dyadic）。
-\end{mydefinition}
+下面定义一下叉乘矩阵：
+\begin{definition}[叉乘矩阵]
+	$$
+	\tilde{\boldsymbol{u}} \triangleq
+	\begin{bmatrix}
+		0 & -u_3 & u_2 \\
+		u_3 & 0 & -u_1 \\
+		-u_2 & u_1 & 0
+	\end{bmatrix},
+	$$
+	有时也会记作$\boldsymbol{u}^{\times}$ ，典型的南航记法。两种记法通用。
+\end{definition}
 
-并矢与向量的点积定义为
-\begin{equation}\label{eq:并矢:点积}
-\bm{a}\bm{b}\cdot\bm{v} = \bm{a}(\bm{b}\cdot\bm{v}), \qquad \bm{v}\cdot\bm{a}\bm{b} = (\bm{v}\cdot\bm{a})\bm{b},
-\end{equation}
-即并矢与向量的点积仍是向量；注意一般地 $\bm{\Phi}\cdot\bm{v}\neq\bm{v}\cdot\bm{\Phi}$，点积的顺序不可交换。
+\begin{property}[叉乘矩阵的性质]
+	\begin{itemize}
+		\item $\tilde{\boldsymbol{u}}^{\mathrm{T}} = -\tilde{\boldsymbol{u}}$
+		\item $\tilde{\boldsymbol{u}}\,\boldsymbol{v} = -\tilde{\boldsymbol{v}}\,\boldsymbol{u}$
+		\item $\boldsymbol{v}^{\mathrm{T}}\tilde{\boldsymbol{u}} = -\boldsymbol{u}^{\mathrm{T}}\tilde{\boldsymbol{v}}$
+		\item $\tilde{\boldsymbol{u}}\,\boldsymbol{u} = \boldsymbol{0}$
+		\item $\tilde{\boldsymbol{u}}\,\tilde{\boldsymbol{v}} = \boldsymbol{v}\boldsymbol{u}^{\mathrm{T}} - \left(\boldsymbol{u}^{\mathrm{T}}\boldsymbol{v}\right)\boldsymbol{I}_3.$
+	\end{itemize}
+\end{property}
 
-并矢式 $\bm{\Phi}$ 关于 $\bm{v}$ 的映射 $\bm{v}\mapsto\bm{\Phi}\cdot\bm{v}$ 是线性的，故并矢式是二阶线性变换的表示。反之，任意将向量映射为向量的线性变换均可表示为并矢式，且至多需要三个并矢：
+因为矢量基也是基，也就是说这个三维矢量空间里的所有的矢量都可以用这一组基来表示。
 
-\begin{myTheorem}{并矢的基展开}
-设 $\mathbf{e}_1,\mathbf{e}_2,\mathbf{e}_3$ 为一组右手正交单位向量，则任意并矢式 $\bm{\Phi}$ 可表示为
-\begin{equation}\label{eq:并矢:展开}
-\bm{\Phi} = \bm{\Phi}\cdot\mathbf{e}_1\,\mathbf{e}_1 + \bm{\Phi}\cdot\mathbf{e}_2\,\mathbf{e}_2 + \bm{\Phi}\cdot\mathbf{e}_3\,\mathbf{e}_3.
-\end{equation}
-\end{myTheorem}
+任意矢量沿基矢量的分解可写成矩阵乘积（数乘）的形式：
 
+$$
+\boldsymbol{u} = u_1\mathbf{e}_1 + u_2\mathbf{e}_2 + u_3\mathbf{e}_3
+= \boldsymbol{e}^{\mathrm{T}}\boldsymbol{u} = \boldsymbol{u}^{\mathrm{T}}\boldsymbol{e},
+$$
+
+式中 $\boldsymbol{u} = \begin{bmatrix} u_1 & u_2 & u_3 \end{bmatrix}^{\mathrm{T}}$ 称为矢量 $\boldsymbol{u}$ 的坐标列阵（投影列阵）。
+
+\begin{definition}[向量的点积]
+	两矢量的点积（内积）:
+	$$
+	\begin{aligned}
+		\vec{u} \cdot \vec{v} & =\boldsymbol{u}^{\mathrm{T}} \overrightarrow{\boldsymbol{e}} \cdot \overrightarrow{\boldsymbol{e}}^{\mathrm{T}} \boldsymbol{v} \\
+		& =\boldsymbol{u}^{\mathrm{T}} \boldsymbol{v} .
+	\end{aligned}
+	$$
+\end{definition}
+
+\begin{property}[向量点积的性质]
+	\begin{itemize}
+		\item $\boldsymbol{u}\cdot\boldsymbol{u} = \boldsymbol{u}^{\mathrm{T}}\boldsymbol{u} = |\boldsymbol{u}|^2$
+		\item $\boldsymbol{u}\cdot\boldsymbol{v} = \boldsymbol{u}^{\mathrm{T}}\boldsymbol{v} = \boldsymbol{v}^{\mathrm{T}}\boldsymbol{u} = \boldsymbol{v}\cdot\boldsymbol{u}$
+		\item $\boldsymbol{u}\cdot\boldsymbol{v} = |\boldsymbol{u}|\,|\boldsymbol{v}|\cos\langle\boldsymbol{u},\boldsymbol{v}\rangle.$
+	\end{itemize}
+\end{property}
+
+\begin{definition}[向量的叉积]
+	两矢量的叉积（外积）:
+	$$
+	\boldsymbol{u}\times\boldsymbol{v}
+	= \sum_{i=1}^{3}\sum_{j=1}^{3} u_i v_j \left(\mathbf{e}_i\times\mathbf{e}_j\right)
+	= \boldsymbol{e}^{\mathrm{T}}\tilde{\boldsymbol{u}}\,\boldsymbol{v}
+	$$
+\end{definition}
+
+\begin{property}[向量叉积的性质]
+	\begin{itemize}
+		\item $\boldsymbol{u}\times\boldsymbol{v} = \boldsymbol{e}^{\mathrm{T}}\tilde{\boldsymbol{u}}\,\boldsymbol{v} = -\boldsymbol{e}^{\mathrm{T}}\tilde{\boldsymbol{v}}\,\boldsymbol{u} = -\boldsymbol{v}\times\boldsymbol{u}$
+		\item$\boldsymbol{u}\cdot\left(\boldsymbol{u}\times\boldsymbol{v}\right) = \boldsymbol{u}^{\mathrm{T}}\tilde{\boldsymbol{u}}\,\boldsymbol{v} = 0$
+		\item $|\boldsymbol{u}\times\boldsymbol{v}| = |\boldsymbol{u}|\,|\boldsymbol{v}|\sin\langle\boldsymbol{u},\boldsymbol{v}\rangle.$
+	\end{itemize}
+\end{property}
+
+\begin{definition}[三矢量混合积运算]
+	$$
+	\boldsymbol{u}\cdot\left(\boldsymbol{v}\times\boldsymbol{w}\right)
+	= \left(\boldsymbol{u}^{\mathrm{T}}\boldsymbol{e}\right)\cdot\left(\boldsymbol{e}^{\mathrm{T}}\tilde{\boldsymbol{v}}\,\boldsymbol{w}\right)
+	= \boldsymbol{u}^{\mathrm{T}}\tilde{\boldsymbol{v}}\,\boldsymbol{w},
+	$$
+	常用的三重叉积展开式
+	
+	$$
+	\boldsymbol{u}\times\left(\boldsymbol{v}\times\boldsymbol{w}\right)
+	= \boldsymbol{e}^{\mathrm{T}}\left[\boldsymbol{v}\left(\boldsymbol{u}^{\mathrm{T}}\boldsymbol{w}\right) - \left(\boldsymbol{u}^{\mathrm{T}}\boldsymbol{v}\right)\boldsymbol{w}\right]
+	= \left(\boldsymbol{u}\cdot\boldsymbol{w}\right)\boldsymbol{v} - \left(\boldsymbol{u}\cdot\boldsymbol{v}\right)\boldsymbol{w}.
+	$$	
+\end{definition}
+
+\section{坐标系相对方位的表示}
+多体系统的描述基于两类坐标系：以大地为参考的全局参考系和以元件自身为参考的本体参考系。而我们描述运动时往往需要在不同的坐标系之间变换，那么了解坐标系相对方位的表示方法就显得尤为重要。
+
+下图是描述的坐标系$i,j$的相对方位的变换。
+\begin{figure}[http]
+	\centering
+	\includegraphics[width=0.4\linewidth]{Figure/不同坐标系矢量基之间的关系}
+	\caption{不同坐标系矢量基之间的关系}
+	\label{fig:不同坐标系矢量基之间的关系}
+\end{figure}
+
+用$j$系的单位矢量表示$i$系的单位向量：
+$$\left\{\begin{array}{l}
+	\left(\vec{e}_{1}\right)_{i}=\left(a_{11}\right)_{i j}\left(\vec{e}_{1}\right)_{j}+\left(a_{12}\right)_{i j}\left(\vec{e}_{2}\right)_{j}+\left(a_{13}\right)_{i j}\left(\vec{e}_{3}\right)_{j} \\
+	\left(\vec{e}_{2}\right)_{i}=\left(a_{21}\right)_{i j}\left(\vec{e}_{1}\right)_{j}+\left(a_{22}\right)_{i j}\left(\vec{e}_{2}\right)_{j}+\left(a_{23}\right)_{i j}\left(\vec{e}_{3}\right)_{j} \\
+	\left(\vec{e}_{3}\right)_{i}=\left(a_{31}\right)_{i j}\left(\vec{e}_{1}\right)_{j}+\left(a_{32}\right)_{i j}\left(\vec{e}_{2}\right)_{j}+\left(a_{33}\right)_{i j}\left(\vec{e}_{3}\right)_{j}
+\end{array}\right.$$
+
+写成矩阵的形式：
+$$\left[\begin{array}{l}
+	\vec{e}_{1} \\
+	\vec{e}_{2} \\
+	\vec{e}_{3}
+\end{array}\right]_{i}=\left[\begin{array}{lll}
+	a_{11} & a_{12} & a_{13} \\
+	a_{21} & a_{22} & a_{23} \\
+	a_{31} & a_{32} & a_{33}
+\end{array}\right]_{i j}\left[\begin{array}{c}
+	\vec{e}_{1} \\
+	\vec{e}_{2} \\
+	\vec{e}_{3}
+\end{array}\right]_{j}$$
+
+简记为：
+$$\vec{\boldsymbol{e}}_{i}=\boldsymbol{A}_{i j} \vec{\boldsymbol{e}}_{j}$$
+
+\begin{definition}[方向余弦矩阵]
+	系数矩阵$\boldsymbol{A}_{i j}$称为方向余弦矩阵。
+	且$$\boldsymbol{A}_{i j}=\vec{\boldsymbol{e}}_{i} \cdot \vec{\boldsymbol{e}}_{j}^{\mathrm{T}}$$
+	矩阵元素$(a_{m n})_{ij}$,满足关系
+	$$\begin{aligned}
+		\left(a_{m n}\right)_{i j} & =\left(\vec{e}_{m}\right)_{i} \cdot\left(\vec{e}_{n}\right)_{j} \\
+		& =\cos <\left(\vec{e}_{m}\right)_{i},\left(\vec{e}_{n}\right)_{j}>
+	\end{aligned}$$
+\end{definition}
+
+方向余弦矩阵尤其重要，下面看看方向余弦矩阵的性质：
+\begin{property}[性质一]\label{prop:dcm-identity}
+	方向相同的坐标系之间方向余弦矩阵为单位矩阵
+\end{property}
 \begin{proof}
-对任意向量 $\bm{v}$，由单位向量组的完备性 $\displaystyle\sum_{i=1}^{3}\mathbf{e}_i(\mathbf{e}_i\cdot\bm{v}) = \bm{v}$ 可得
-$$
-\left(\sum_{i=1}^{3}\bm{\Phi}\cdot\mathbf{e}_i\,\mathbf{e}_i\right)\cdot\bm{v}
-= \sum_{i=1}^{3}(\bm{\Phi}\cdot\mathbf{e}_i)(\mathbf{e}_i\cdot\bm{v})
-= \bm{\Phi}\cdot\sum_{i=1}^{3}\mathbf{e}_i(\mathbf{e}_i\cdot\bm{v})
-= \bm{\Phi}\cdot\bm{v}.
-$$
-由 $\bm{v}$ 的任意性即知式~\eqref{eq:并矢:展开} 成立。
+	当坐标系 $i$ 和坐标系 $j$ 方向相同时，有 $\vec{\boldsymbol{e}}_j=\vec{\boldsymbol{e}}_i$，则两者之间的方向余弦矩阵满足
+	$$
+	\boldsymbol{A}_{ij}=\vec{\boldsymbol{e}}_{i} \cdot \vec{\boldsymbol{e}}_{j}^{\mathrm{T}}=\vec{\boldsymbol{e}}_{i} \cdot \vec{\boldsymbol{e}}_{i}^{\mathrm{T}}=\boldsymbol{I}_3.
+	$$
 \end{proof}
 
-\parahead{并矢的运算}
-
-并矢式之间可进行加法与数乘运算，按并矢的线性性质逐项进行，并满足结合律与分配律。两个并矢式的点积定义为
-\begin{equation}\label{eq:并矢:并矢点积}
-\bm{a}\bm{b}\cdot\bm{c}\bm{d} = (\bm{b}\cdot\bm{c})\,\bm{a}\bm{d},
-\end{equation}
-即先对相邻向量作点积，结果为并矢式；一般地 $\bm{\Phi}\cdot\bm{\Psi}\neq\bm{\Psi}\cdot\bm{\Phi}$。
-
-并矢式与向量的叉积定义为
-\begin{equation}\label{eq:并矢:叉积}
-\bm{a}\bm{b}\times\bm{v} = \bm{a}(\bm{b}\times\bm{v}), \qquad \bm{v}\times\bm{a}\bm{b} = (\bm{v}\times\bm{a})\bm{b},
-\end{equation}
-并矢式与向量的叉积仍是并矢式。旋转并矢（见本节末尾）正是借助并矢式与向量的叉积构造的。
-
-\parahead{单位并矢}
-
-\begin{mydefinition}{单位并矢}
-设 $\mathbf{e}_1,\mathbf{e}_2,\mathbf{e}_3$ 为一组右手正交单位向量，则
-\begin{equation}\label{eq:并矢:单位并矢}
-\bm{U} = \mathbf{e}_1\mathbf{e}_1 + \mathbf{e}_2\mathbf{e}_2 + \mathbf{e}_3\mathbf{e}_3
-\end{equation}
-称为单位并矢。
-\end{mydefinition}
-
-单位并矢具有如下性质：
-\begin{enumerate}
-\item 对任意向量 $\bm{v}$，$\bm{U}\cdot\bm{v} = \bm{v}\cdot\bm{U} = \bm{v}$；
-\item 对任意并矢式 $\bm{\Phi}$，$\bm{U}\cdot\bm{\Phi} = \bm{\Phi}\cdot\bm{U} = \bm{\Phi}$；
-\item $\bm{U}^{\mathrm{T}} = \bm{U}$，即单位并矢为对称并矢；
-\item 对任意向量 $\bm{a}$、$\bm{b}$，$\bm{a}\cdot\bm{U}\cdot\bm{b} = \bm{a}\cdot\bm{b}$。
-\end{enumerate}
-
-\parahead{并矢的转置}
-
-\begin{mydefinition}{并矢的转置}
-并矢 $\bm{a}\bm{b}$ 的转置定义为
-\begin{equation}\label{eq:并矢:转置定义}
-(\bm{a}\bm{b})^{\mathrm{T}} = \bm{b}\bm{a},
-\end{equation}
-并矢式 $\bm{\Phi} = \sum_{i}\bm{a}_i\bm{b}_i$ 的转置定义为
-\begin{equation}\label{eq:并矢:转置}
-\bm{\Phi}^{\mathrm{T}} = \sum_{i}\bm{b}_i\bm{a}_i.
-\end{equation}
-\end{mydefinition}
-
-转置运算满足 $(\bm{\Phi}^{\mathrm{T}})^{\mathrm{T}} = \bm{\Phi}$、$(\bm{\Phi}+\bm{\Psi})^{\mathrm{T}} = \bm{\Phi}^{\mathrm{T}}+\bm{\Psi}^{\mathrm{T}}$ 以及 $(\bm{\Phi}\cdot\bm{\Psi})^{\mathrm{T}} = \bm{\Psi}^{\mathrm{T}}\cdot\bm{\Phi}^{\mathrm{T}}$。若 $\bm{\Phi}^{\mathrm{T}} = \bm{\Phi}$，则称 $\bm{\Phi}$ 为对称并矢；若 $\bm{\Phi}^{\mathrm{T}} = -\bm{\Phi}$，则称 $\bm{\Phi}$ 为反对称并矢。任一并矢式均可唯一分解为对称部分与反对称部分之和：
-\begin{equation}\label{eq:并矢:对称分解}
-\bm{\Phi} = \frac{\bm{\Phi}+\bm{\Phi}^{\mathrm{T}}}{2} + \frac{\bm{\Phi}-\bm{\Phi}^{\mathrm{T}}}{2}.
-\end{equation}
-
-\parahead{并矢的矩阵表示}
-
-设 $\mathbf{e}_1,\mathbf{e}_2,\mathbf{e}_3$ 为一组右手正交单位向量，则并矢式 $\bm{\Phi}$ 可展开为
-\begin{equation}\label{eq:并矢:分量展开}
-\bm{\Phi} = \sum_{i=1}^{3}\sum_{j=1}^{3}\Phi_{ij}\,\mathbf{e}_i\mathbf{e}_j,
-\end{equation}
-式中分量 $\Phi_{ij} = \mathbf{e}_i\cdot\bm{\Phi}\cdot\mathbf{e}_j$。于是 $\bm{\Phi}$ 与该基下的矩阵
-\begin{equation}\label{eq:并矢:矩阵表示}
-[\bm{\Phi}] = \begin{bmatrix} \Phi_{11} & \Phi_{12} & \Phi_{13} \\ \Phi_{21} & \Phi_{22} & \Phi_{23} \\ \Phi_{31} & \Phi_{32} & \Phi_{33} \end{bmatrix}
-\end{equation}
-一一对应，并矢与向量的点积对应矩阵与向量的乘法：
-\begin{equation}\label{eq:并矢:矩阵点积}
-[\bm{\Phi}\cdot\bm{v}] = [\bm{\Phi}][\bm{v}], \qquad [\bm{v}\cdot\bm{\Phi}] = [\bm{v}]^{\mathrm{T}}[\bm{\Phi}],
-\end{equation}
-并矢的转置对应矩阵的转置，即 $[\bm{\Phi}^{\mathrm{T}}] = [\bm{\Phi}]^{\mathrm{T}}$。
-
-若 $\mathbf{a}_1,\mathbf{a}_2,\mathbf{a}_3$ 与 $\mathbf{b}_1,\mathbf{b}_2,\mathbf{b}_3$ 分别为两个坐标系中的右手正交单位向量，则描述两坐标系相对姿态的并矢 $\bm{\sigma}$ 可表示为
-\begin{equation}\label{eq:并矢:方向余弦并矢}
-\bm{\sigma} = \sum_{i=1}^{3}\sum_{j=1}^{3} a_{ij}\,\mathbf{a}_i\mathbf{b}_j, \qquad a_{ij} = \mathbf{a}_i\cdot\bm{\sigma}\cdot\mathbf{b}_j,
-\end{equation}
-式中 $a_{ij}$ 即为方向余弦矩阵的元素（见第~\ref{chap:kinematics}~章第~\ref{sec:indirect-orientation}~节）。这体现了并矢是坐标无关的几何量，而矩阵只是并矢在某组基下的具体表示。
-
-\parahead{旋转并矢}
-
-在简单转动（见第~\ref{chap:kinematics}~章）中，向量 $\bm{a}$ 绕单位向量 $\bm{\lambda}$ 旋转角 $\theta$ 得到向量 $\bm{b}$，二者满足 Rodrigues 公式
-\begin{equation}\label{eq:并矢:旋转公式}
-\bm{b} = \bm{a}\cos\theta - (\bm{a}\times\bm{\lambda})\sin\theta + \bm{\lambda}(\bm{\lambda}\cdot\bm{a})(1-\cos\theta).
-\end{equation}
-上式右端是 $\bm{a}$ 的线性函数，故可表示为某个并矢与 $\bm{a}$ 的点积：
-
-\begin{myTheorem}{旋转并矢}
-\begin{equation}\label{eq:并矢:旋转并矢}
-\bm{A} = \bm{U}\cos\theta - (\bm{U}\times\bm{\lambda})\sin\theta + \bm{\lambda}\bm{\lambda}(1-\cos\theta)
-\end{equation}
-称为绕 $\bm{\lambda}$ 轴旋转角 $\theta$ 的旋转并矢，满足 $\bm{b} = \bm{a}\cdot\bm{A}$。
-\end{myTheorem}
-
+\begin{property}[性质二]\label{prop:dcm-constraint}
+	方向余弦矩阵中的 9 个数满足 6 个独立的约束方程。
+\end{property}
 \begin{proof}
-对任意向量 $\bm{a}$，
-$$
-\bm{a}\cdot\bm{A}
-= \bm{a}\cdot\bm{U}\cos\theta - \bm{a}\cdot(\bm{U}\times\bm{\lambda})\sin\theta + \bm{a}\cdot\bm{\lambda}\bm{\lambda}(1-\cos\theta).
-$$
-由单位并矢性质 $\bm{a}\cdot\bm{U} = \bm{a}$，并矢叉积定义 $\bm{a}\cdot(\bm{U}\times\bm{\lambda}) = \bm{a}\times\bm{\lambda}$ 以及 $\bm{a}\cdot\bm{\lambda}\bm{\lambda} = \bm{\lambda}(\bm{\lambda}\cdot\bm{a})$，即得
-$$
-\bm{a}\cdot\bm{A} = \bm{a}\cos\theta - (\bm{a}\times\bm{\lambda})\sin\theta + \bm{\lambda}(\bm{\lambda}\cdot\bm{a})(1-\cos\theta) = \bm{b},
-$$
-与式~\eqref{eq:并矢:旋转公式} 一致。
+	用坐标系 $j$ 的矢量基表示的坐标系 $i$ 的矢量基:
+	$$\begin{bmatrix}\vec{e}_1\\\vec{e}_2\\\vec{e}_3\end{bmatrix}_i=\begin{bmatrix}a_{11}&a_{12}&a_{13}\\a_{21}&a_{22}&a_{23}\\a_{31}&a_{32}&a_{33}\end{bmatrix}_{ij}\begin{bmatrix}\vec{e}_1\\\vec{e}_2\\\vec{e}_3\end{bmatrix}_j$$
+	满足（I） i  系坐标轴上的单位矢量模为 1 ：
+	
+	$$\left\{\begin{array}{l}
+		\left|\left(\vec{e}_{1}\right)\right|_{i}=\sqrt{a_{11}^{2}+a_{12}^{2}+a_{13}^{2}}=1, \\
+		\left|\left(\vec{e}_{2}\right)\right|_{i}=\sqrt{a_{21}^{2}+a_{22}^{2}+a_{23}^{2}}=1, \\
+		\left|\left(\vec{e}_{3}\right)\right|_{i}=\sqrt{a_{31}^{2}+a_{32}^{2}+a_{33}^{2}}=1 .
+	\end{array}\right.$$
+	
+	（II） i  系坐标轴上的单位矢量两两正交：
+	
+	$$\left\{\begin{array}{l}
+		\vec{e}_{1}\cdot\vec{e}_{2}=a_{11} a_{21}+a_{12} a_{22}+a_{13} a_{23}=0, \\
+		\vec{e}_{2}\cdot\vec{e}_{3}=a_{21} a_{31}+a_{22} a_{32}+a_{23} a_{33}=0, \\
+		\vec{e}_{3}\cdot\vec{e}_{1}=a_{31} a_{11}+a_{32} a_{12}+a_{33} a_{13}=0 .
+	\end{array}\right.$$
+	
 \end{proof}
 
-由并矢的矩阵表示可知，旋转并矢 $\bm{A}$ 在某组基下的矩阵即该旋转的方向余弦矩阵，二者是同一几何对象在不同表示体系下的体现。此外，刚体动力学中的转动惯量张量即为对称并矢，其矩阵表示就是惯量矩阵，这将在后续章节中详细讨论。
+\begin{property}[性质三]\label{prop:dcm-cofactor}
+	方向余弦矩阵等于其余子矩阵，即方向余弦矩阵中的每个数都等于其对应的代数余子
+	式，即
+	$$\begin{bmatrix}a_{11}&a_{12}&a_{13}\\a_{21}&a_{22}&a_{23}\\a_{31}&a_{32}&a_{33}\end{bmatrix}_{ij}=\left[\begin{array}{ccc}\begin{vmatrix}a_{22}&a_{23}\\a_{32}&a_{33}\end{vmatrix}&-\begin{vmatrix}a_{21}&a_{23}\\a_{31}&a_{33}\end{vmatrix}&\begin{vmatrix}a_{21}&a_{22}\\a_{31}&a_{32}\end{vmatrix}\\-\begin{vmatrix}a_{12}&a_{13}\\a_{32}&a_{33}\end{vmatrix}&\begin{vmatrix}a_{11}&a_{13}\\a_{31}&a_{33}\end{vmatrix}&-\begin{vmatrix}a_{11}&a_{12}\\a_{31}&a_{32}\end{vmatrix}\\\begin{vmatrix}a_{12}&a_{13}\\a_{22}&a_{23}\end{vmatrix}&-\begin{vmatrix}a_{11}&a_{13}\\a_{21}&a_{23}\end{vmatrix}&\begin{vmatrix}a_{11}&a_{12}\\a_{21}&a_{22}\end{vmatrix}\end{array}\right]_{ij}.$$
+\end{property}
 
+\begin{proof}
+	$$\begin{bmatrix}\vec{e}_1\\\vec{e}_2\\\vec{e}_3\end{bmatrix}_i=\begin{bmatrix}a_{11}&a_{12}&a_{13}\\a_{21}&a_{22}&a_{23}\\a_{31}&a_{32}&a_{33}\end{bmatrix}_{ij}\begin{bmatrix}\vec{e}_1\\\vec{e}_2\\\vec{e}_3\end{bmatrix}_j$$
+	满足
+	$$\begin{aligned}
+		\left(\vec{e}_{1}\right)_{i} & =\left(\vec{e}_{2}\right)_{i} \times\left(\vec{e}_{3}\right)_{i} \\
+		& =\left|\begin{array}{ccc}
+			\left(\vec{e}_{1}\right)_{j} & \left(\vec{e}_{2}\right)_{j} & \left(\vec{e}_{3}\right)_{j} \\
+			a_{21} & a_{22} & a_{23} \\
+			a_{31} & a_{32} & a_{33}
+		\end{array}\right| \\
+		& =\left|\begin{array}{cc}
+			a_{22} & a_{23} \\
+			a_{32} & a_{33}
+		\end{array}\right|\left(\vec{e}_{1}\right)_{j}-\left|\begin{array}{cc}
+			a_{21} & a_{23} \\
+			a_{31} & a_{33}
+		\end{array}\right|\left(\vec{e}_{2}\right)_{j}+\left|\begin{array}{cc}
+			a_{21} & a_{22} \\
+			a_{31} & a_{32}
+		\end{array}\right|\left(\vec{e}_{3}\right)_{j} \\
+		& =a_{11}\left(\vec{e}_{1}\right)_{j}+a_{12}\left(\vec{e}_{2}\right)_{j}+a_{13}\left(\vec{e}_{3}\right)_{j}
+	\end{aligned}$$
+\end{proof}
+
+\begin{property}[性质四]\label{prop:dcm-det}
+	方向余弦矩阵行列式的值为正 1.
+\end{property}
+\begin{proof}
+	$$\begin{aligned}
+		\left| \boldsymbol{A}_{i j}\right|  & =\left|\begin{array}{ccc}
+			a_{11} & a_{12} & a_{13} \\
+			a_{21} & a_{22} & a_{23} \\
+			a_{31} & a_{32} & a_{33}
+		\end{array}\right|_{i j} \\
+		& =a_{11}\left|\begin{array}{cc}
+			a_{22} & a_{23} \\
+			a_{32} & a_{33}
+		\end{array}\right|-a_{12}\left|\begin{array}{cc}
+			a_{21} & a_{23} \\
+			a_{31} & a_{33}
+		\end{array}\right|+a_{13}\left|\begin{array}{cc}
+			a_{21} & a_{22} \\
+			a_{31} & a_{32}
+		\end{array}\right| \\
+		& =a_{11}^{2}+a_{12}^{2}+a_{13}^{2} \\
+		& =1
+	\end{aligned}$$
+\end{proof}
+
+\begin{property}[性质五]\label{prop:dcm-orthogonal}
+	方向余弦矩阵为正交矩阵，逆矩阵等于其转置.
+\end{property}
+\begin{proof}
+	$$\begin{aligned}
+		\boldsymbol{I}_{3} & =\overrightarrow{\boldsymbol{e}}_{i} \cdot \overrightarrow{\boldsymbol{e}}_{i}^{\mathrm{T}} \\
+		& =\left(\boldsymbol{A}_{i j} \overrightarrow{\boldsymbol{e}}_{j}\right) \cdot\left(\boldsymbol{A}_{i j} \overrightarrow{\boldsymbol{e}}_{j}\right)^{\mathrm{T}} \\
+		& =\boldsymbol{A}_{i j} \overrightarrow{\boldsymbol{e}}_{j} \cdot \overrightarrow{\boldsymbol{e}}_{j}^{\mathrm{T}} \boldsymbol{A}_{i j}^{\mathrm{T}} \\
+		& =\boldsymbol{A}_{i j} \boldsymbol{I}_{3} \boldsymbol{A}_{i j}^{\mathrm{T}} \\
+		& =\boldsymbol{A}_{i j} \boldsymbol{A}_{i j}^{\mathrm{T}},
+	\end{aligned}$$
+	于是有：$\boldsymbol{A}_{i j}^{-1}=\boldsymbol{A}_{i j}^{\mathrm{T}} .$
+\end{proof}
+
+\begin{property}[性质六]\label{prop:dcm-transform}
+	一矢量 $\vec{r}$ 在 $i$ 系中的投影列阵 $\boldsymbol{r}_i$ 和它在 $j$ 系中的投影列阵 $\boldsymbol{r}_j$ 之间满足坐标变换式
+	$$\boldsymbol{r}_i=\boldsymbol{A}_{ij}\boldsymbol{r}_j.$$
+\end{property}
+
+\begin{proof}
+	$$\begin{aligned}
+		\vec{r} & =\overrightarrow{\boldsymbol{e}}_{i}^{\mathrm{T}} \boldsymbol{r}_{i}=\overrightarrow{\boldsymbol{e}}_{j}^{\mathrm{T}} \boldsymbol{r}_{j} \\
+		& =\left(\boldsymbol{A}_{i j} \overrightarrow{\boldsymbol{e}}_{j}\right)^{\mathrm{T}} \boldsymbol{r}_{i} \\
+		& =\overrightarrow{\boldsymbol{e}}_{j}^{\mathrm{T}} \boldsymbol{A}_{i j}^{\mathrm{T}} \boldsymbol{r}_{i}
+	\end{aligned}$$
+	
+	由此可得:
+	$$\boldsymbol{r}_{j}=\boldsymbol{A}_{i j}^{\mathrm{T}} \boldsymbol{r}_{i} \Rightarrow \boldsymbol{r}_{i}=\boldsymbol{A}_{i j} \boldsymbol{r}_{j} .$$
+\end{proof}
+
+\begin{property}[性质七]\label{prop:dcm-skew-transform}
+	同一矢量 $\vec{r}$ 在 $i$ 系中的投影列阵 $\boldsymbol{r}_i$ 对应的叉乘矩阵 $\tilde{\boldsymbol{r}}_i$ 和它在 $j$ 系中的投影列阵 $\boldsymbol{r}_j$ 对应的叉乘矩阵 $\tilde{\boldsymbol{r}}_j$ 之间满足如下坐标变换式
+	
+	 $$
+	 \tilde{\boldsymbol{r}}_i=\boldsymbol{A}_{ij}\tilde{\boldsymbol{r}}_j\boldsymbol{A}_{ij}^{\mathrm{T}}.
+	 $$
+	由此可得
+	 $$
+	 \boldsymbol{A}_{ij}^{\mathrm{T}}\tilde{\boldsymbol{r}}_i=\tilde{\boldsymbol{r}}_j\boldsymbol{A}_{ij}^{\mathrm{T}}
+	 $$和
+	 $$
+	 \tilde{\boldsymbol{r}}_i\boldsymbol{A}_{ij}=\boldsymbol{A}_{ij}\tilde{\boldsymbol{r}}_j.
+	 $$
+\end{property}
+
+\begin{proof}
+	设矢量 $\vec{r}$ 在 $j$ 系中的投影列阵为 $\boldsymbol{r}_j$，则在 $i$ 系中的投影列阵为 $\boldsymbol{r}_i=\boldsymbol{A}_{ij}\boldsymbol{r}_j$（性质六）。
+	
+	对任意矢量 $\vec{v}$，其在 $j$ 系中的投影列阵为 $\boldsymbol{v}_j$，则在 $i$ 系中有 $\boldsymbol{v}_i=\boldsymbol{A}_{ij}\boldsymbol{v}_j$。由叉积的坐标变换关系：
+	$$
+	\vec{r}\times\vec{v}=\boldsymbol{e}_i^{\mathrm{T}}\tilde{\boldsymbol{r}}_i\boldsymbol{v}_i=\boldsymbol{e}_j^{\mathrm{T}}\tilde{\boldsymbol{r}}_j\boldsymbol{v}_j.
+	$$
+	将 $\boldsymbol{v}_i=\boldsymbol{A}_{ij}\boldsymbol{v}_j$ 代入左端：
+	$$
+	\boldsymbol{e}_i^{\mathrm{T}}\tilde{\boldsymbol{r}}_i\boldsymbol{A}_{ij}\boldsymbol{v}_j=\boldsymbol{e}_j^{\mathrm{T}}\tilde{\boldsymbol{r}}_j\boldsymbol{v}_j.
+	$$
+	又因为 $\boldsymbol{e}_i=\boldsymbol{A}_{ij}\boldsymbol{e}_j$，即 $\boldsymbol{e}_i^{\mathrm{T}}=\boldsymbol{e}_j^{\mathrm{T}}\boldsymbol{A}_{ij}^{\mathrm{T}}$，代入左端得：
+	$$
+	\boldsymbol{e}_j^{\mathrm{T}}\boldsymbol{A}_{ij}^{\mathrm{T}}\tilde{\boldsymbol{r}}_i\boldsymbol{A}_{ij}\boldsymbol{v}_j=\boldsymbol{e}_j^{\mathrm{T}}\tilde{\boldsymbol{r}}_j\boldsymbol{v}_j.
+	$$
+	由于上式对任意 $\boldsymbol{v}_j$ 均成立，故
+	$$
+	\boldsymbol{A}_{ij}^{\mathrm{T}}\tilde{\boldsymbol{r}}_i\boldsymbol{A}_{ij}=\tilde{\boldsymbol{r}}_j,
+	$$
+	左乘 $\boldsymbol{A}_{ij}$、右乘 $\boldsymbol{A}_{ij}^{\mathrm{T}}$，并利用 $\boldsymbol{A}_{ij}\boldsymbol{A}_{ij}^{\mathrm{T}}=\boldsymbol{I}_3$（性质五），即得
+	$$
+	\tilde{\boldsymbol{r}}_i=\boldsymbol{A}_{ij}\tilde{\boldsymbol{r}}_j\boldsymbol{A}_{ij}^{\mathrm{T}}.
+	$$
+	将上式左乘 $\boldsymbol{A}_{ij}^{\mathrm{T}}$，利用 $\boldsymbol{A}_{ij}^{\mathrm{T}}\boldsymbol{A}_{ij}=\boldsymbol{I}_3$ 可得
+	$$
+	\boldsymbol{A}_{ij}^{\mathrm{T}}\tilde{\boldsymbol{r}}_i=\tilde{\boldsymbol{r}}_j\boldsymbol{A}_{ij}^{\mathrm{T}};
+	$$
+	将 $\tilde{\boldsymbol{r}}_i=\boldsymbol{A}_{ij}\tilde{\boldsymbol{r}}_j\boldsymbol{A}_{ij}^{\mathrm{T}}$ 右乘 $\boldsymbol{A}_{ij}$ 可得
+	$$
+	\tilde{\boldsymbol{r}}_i\boldsymbol{A}_{ij}=\boldsymbol{A}_{ij}\tilde{\boldsymbol{r}}_j.
+	$$
+\end{proof}
+
+\begin{property}[性质八]\label{prop:dcm-eigenvalue}
+	方向余弦矩阵有一个实特征值 1
+\end{property}
+\begin{proof}
+	$$
+	 \begin{aligned}
+		 f_{\boldsymbol{A}}(\lambda)=\det(\boldsymbol{A}-\lambda\boldsymbol{I}_3)&=\begin{vmatrix}a_{11}-\lambda&a_{12}&a_{13}\\a_{21}&a_{22}-\lambda&a_{23}\\a_{31}&a_{32}&a_{33}-\lambda\end{vmatrix}\\
+		 &=-\lambda^3+\mathrm{tr}(\boldsymbol{A})\,\lambda^2-\sum_{k=1}^{3}M_{kk}\,\lambda+\det(\boldsymbol{A})\\
+		 &=-\lambda^3+\mathrm{tr}(\boldsymbol{A})\,\lambda^2-\mathrm{tr}(\boldsymbol{A})\,\lambda+1.
+		 \end{aligned} $$
+
+ 式中 $M_{kk}$ 为主对角元 $a_{kk}$ 的二阶余子式，最后一步用到了性质二（$\boldsymbol{A}^{\mathrm{T}}\boldsymbol{A}=\boldsymbol{I}_3$ 蕴含 $\sum M_{kk}=\mathrm{tr}(\boldsymbol{A})$）与性质四（$\det\boldsymbol{A}=1$）。将 $\lambda=1$ 代入上式可得
+ $$
+ f_{\boldsymbol{A}}(1)=-1+\mathrm{tr}(\boldsymbol{A})-\mathrm{tr}(\boldsymbol{A})+1=0.
+ $$ 因此 $\lambda=1$ 是 $f_{\boldsymbol{A}}(\lambda)$ 的一个根，即 $\boldsymbol{A}$ 有一个实特征值 1。
+	
+\end{proof}

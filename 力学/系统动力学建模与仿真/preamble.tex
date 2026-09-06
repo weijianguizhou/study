@@ -207,7 +207,10 @@
     colback=defBg, colbacktitle=defColor, title={#1}}
 
 % 公式强调框（无标题，居中）
+\usepackage{letltxmacro}
+\LetLtxMacro\origLabel\label
 \tcbuselibrary{skins, breakable, theorems}
+\let\label\origLabel
 \newtcolorbox{myformula}[1][]{
     enhanced, frame hidden, boxrule=0pt,
     colback=keyBg,

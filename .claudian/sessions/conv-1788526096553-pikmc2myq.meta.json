@@ -1,0 +1,14 @@
+{
+  "id": "conv-1788526096553-pikmc2myq",
+  "providerId": "claude",
+  "title": "补充完整其他数据结构类型和完整定义和实例",
+  "titleGenerationStatus": "failed",
+  "createdAt": 1788526096555,
+  "lastActivityAt": 1788526102783,
+  "sessionId": "3134330f-6a16-4e54-bd69-be43baae0a8e",
+  "selectedModel": "opus",
+  "providerState": {
+    "providerSessionId": "3134330f-6a16-4e54-bd69-be43baae0a8e"
+  },
+  "currentNote": "教材/SystemDynamicsModelingAndSimulation/11读书笔记——多刚体系统拉格朗日方程递推形式.md"
+}

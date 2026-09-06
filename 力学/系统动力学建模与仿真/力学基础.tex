@@ -1,0 +1,162 @@
+% !TeX root = 系统动力学建模与仿真笔记.tex
+
+\section{运动学基础}
+\subsection{简单转动}
+
+由方向余弦矩阵的性质八即性质~\ref{prop:dcm-eigenvalue}，可以得出欧拉旋转定理（\textit{Euler's Rotation Theorem}）。
+
+\begin{theorem}[欧拉旋转定理]\label{thm:euler-rotation}
+	任意两个坐标系 $i$ 和 $j$ 之间的方向余弦矩阵 $\boldsymbol{A}_{ij}$ 都有一个实特征值 1，即存在一个实数形式的特征向量 $\boldsymbol{r}$，该特征向量满足 $\boldsymbol{r}=\boldsymbol{A}_{ij}\boldsymbol{r}$。该性质表明两坐标间的任意相对转动都可以通过一次定轴（简单）转动来完成，且转轴方向不变。
+
+	即任意相对转动等价于一次定轴转动。
+\end{theorem}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.4\linewidth]{Figure/两坐标系间的相对转动.png}
+	\caption{简单旋转}
+	\label{fig:简单旋转}
+\end{figure}
+
+两坐标系的相对方位与转轴单位矢量 $\vec{n}$ 和转角 $\theta$ 的关系是什么？下面通过简单转动来讨论。
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Figure/任意三维矢量的定点简单转动}
+	\caption{任意三维矢量的定点简单转动}
+	\label{fig:任意三维矢量的定点简单转动}
+\end{figure}
+
+矢量 $\vec{u}$ 绕转轴 $L$（单位矢量 $\vec{n}$）转动 $\theta$ 角后变为 $\vec{v}$，图中 $\vec{u}_1$、$\vec{v}_1$ 为平行于转轴的分量，$\vec{u}_2$、$\vec{v}_2$ 为垂直于转轴的分量，$L_i$、$L_j$ 为参考直线。
+
+\begin{theorem}[矢量定点转动公式]\label{thm:vector-rotation}
+	矢量 $\vec{u}$ 绕单位矢量 $\vec{n}$ 所确定的轴转动角度 $\theta$ 后得到的矢量 $\vec{v}$ 为
+	$$
+	\vec{v}=\cos\theta\,\vec{u}+\sin\theta\,\vec{n}\times\vec{u}+(1-\cos\theta)\,\vec{n}\,(\vec{n}\cdot\vec{u}).
+	$$
+\end{theorem}
+
+\begin{proof}
+	将 $\vec{u}$ 分解为平行于转轴 $\vec{n}$ 的分量 $\vec{u}_{\parallel}$ 和垂直于转轴的分量 $\vec{u}_{\perp}$：
+	$$
+	\vec{u}_{\parallel}=(\vec{n}\cdot\vec{u})\,\vec{n}, \qquad
+	\vec{u}_{\perp}=\vec{u}-\vec{u}_{\parallel}=\vec{u}-(\vec{n}\cdot\vec{u})\,\vec{n}.
+	$$
+
+	转动过程中，平行分量不变：$\vec{v}_{\parallel}=\vec{u}_{\parallel}$。
+
+	垂直分量在垂直于 $\vec{n}$ 的平面内旋转 $\theta$ 角。设 $\vec{w}=\vec{n}\times\vec{u}$，由于 $\vec{n}$ 为单位矢量且 $\vec{u}_{\perp}\perp\vec{n}$，有
+	$$
+	|\vec{w}|=|\vec{n}|\,|\vec{u}_{\perp}|\sin\frac{\pi}{2}=|\vec{u}_{\perp}|, \quad \vec{w}\perp\vec{n}, \quad \vec{w}\perp\vec{u}_{\perp}.
+	$$
+	因此 $\vec{u}_{\perp}$ 与 $\vec{w}$ 构成垂直于 $\vec{n}$ 的平面内的一组正交基，$\vec{u}_{\perp}$ 旋转 $\theta$ 角后的结果为
+	$$
+	\vec{v}_{\perp}=\cos\theta\,\vec{u}_{\perp}+\sin\theta\,\vec{w}
+	=\cos\theta\,\vec{u}_{\perp}+\sin\theta\,\vec{n}\times\vec{u}.
+	$$
+
+	叠加两个分量，得
+	$$
+	\vec{v}=\vec{v}_{\parallel}+\vec{v}_{\perp}
+	=(\vec{n}\cdot\vec{u})\,\vec{n}+\cos\theta\,\vec{u}_{\perp}+\sin\theta\,\vec{n}\times\vec{u}.
+	$$
+	将 $\vec{u}_{\perp}=\vec{u}-(\vec{n}\cdot\vec{u})\,\vec{n}$ 代入：
+	$$
+	\vec{v}=(\vec{n}\cdot\vec{u})\,\vec{n}+\cos\theta\left[\vec{u}-(\vec{n}\cdot\vec{u})\,\vec{n}\right]+\sin\theta\,\vec{n}\times\vec{u},
+	$$
+	整理即得
+	$$
+	\vec{v}=\cos\theta\,\vec{u}+\sin\theta\,\vec{n}\times\vec{u}+(1-\cos\theta)\,\vec{n}\,(\vec{n}\cdot\vec{u}).
+	$$
+\end{proof}
+
+上述等式两端分别向 $j$ 系和 $i$ 系投影可得
+$$
+\vec{e}_j^{\mathrm{T}}\boldsymbol{v}_j
+=\vec{e}_i^{\mathrm{T}}\boldsymbol{u}_i\cos\theta
++\vec{e}_i^{\mathrm{T}}\tilde{\boldsymbol{n}}_i\boldsymbol{u}_i\sin\theta
++\vec{e}_i^{\mathrm{T}}\boldsymbol{n}_i\boldsymbol{n}_i^{\mathrm{T}}\boldsymbol{u}_i(1-\cos\theta)
+=\vec{e}_i^{\mathrm{T}}\left[\boldsymbol{I}_3\cos\theta+\tilde{\boldsymbol{n}}_i\sin\theta+\boldsymbol{n}_i\boldsymbol{n}_i^{\mathrm{T}}(1-\cos\theta)\right]\boldsymbol{u}_i.
+$$
+
+注意到
+$$
+\vec{e}_j^{\mathrm{T}}=(\boldsymbol{A}_{ji}\vec{e}_i)^{\mathrm{T}}=\vec{e}_i^{\mathrm{T}}\boldsymbol{A}_{ji}^{\mathrm{T}}=\vec{e}_i^{\mathrm{T}}\boldsymbol{A}_{ij},\qquad\boldsymbol{v}_j=\boldsymbol{u}_i,\qquad\boldsymbol{n}_j=\boldsymbol{n}_i=:\boldsymbol{n},
+$$
+
+将其代入三维矢量定点简单转动表达式可得
+$$
+\vec{e}_i^{\mathrm{T}}\boldsymbol{A}_{ij}\boldsymbol{u}_i=\vec{e}_i^{\mathrm{T}}\left[\boldsymbol{I}_3\cos\theta+\tilde{\boldsymbol{n}}\sin\theta+\boldsymbol{n}\boldsymbol{n}^{\mathrm{T}}(1-\cos\theta)\right]\boldsymbol{u}_i.
+$$
+
+移项后整理可得
+$$
+\vec{e}_i^{\mathrm{T}}\left\{\boldsymbol{A}_{ij}-\left[\boldsymbol{I}_3\cos\theta+\tilde{\boldsymbol{n}}\sin\theta+\boldsymbol{n}\boldsymbol{n}^{\mathrm{T}}(1-\cos\theta)\right]\right\}\boldsymbol{u}_i=\vec{0}.
+$$
+
+由上式可得
+$$
+\left\{\boldsymbol{A}_{ij}-\left[\boldsymbol{I}_3\cos\theta+\tilde{\boldsymbol{n}}\sin\theta+\boldsymbol{n}\boldsymbol{n}^{\mathrm{T}}(1-\cos\theta)\right]\right\}\boldsymbol{u}_i=\boldsymbol{0}.
+$$
+
+进一步，由 $\boldsymbol{u}_i$ 的任意性可得
+$$
+\boldsymbol{A}_{ij}-\left[\boldsymbol{I}_3\cos\theta+\tilde{\boldsymbol{n}}\sin\theta+\boldsymbol{n}\boldsymbol{n}^{\mathrm{T}}(1-\cos\theta)\right]=\boldsymbol{O}_{3\times3}.
+$$
+
+由此可得方向余弦矩阵与转轴转角的关系式，即
+
+\begin{theorem}[罗德里格斯旋转公式]\label{thm:rodrigues}
+	方向余弦矩阵与转轴单位矢量 $\vec{n}$ 及转角 $\theta$ 的关系为
+	$$
+	\boldsymbol{A}_{ij}=\boldsymbol{I}_3\cos\theta+\tilde{\boldsymbol{n}}\sin\theta+\boldsymbol{n}\boldsymbol{n}^{\mathrm{T}}(1-\cos\theta)=\boldsymbol{I}_3+\tilde{\boldsymbol{n}}\sin\theta+\tilde{\boldsymbol{n}}^2(1-\cos\theta).
+	$$
+\end{theorem}
+
+\begin{proof}
+	由矢量定点转动公式（定理~\ref{thm:vector-rotation}），对任意矢量 $\vec{u}$ 有
+	$$
+	\vec{v}=\cos\theta\,\vec{u}+\sin\theta\,\vec{n}\times\vec{u}+(1-\cos\theta)\,\vec{n}\,(\vec{n}\cdot\vec{u}).
+	$$
+	将等式两端向 $i$ 系投影。利用叉积的矩阵表示 $\vec{n}\times\vec{u}\leftrightarrow\tilde{\boldsymbol{n}}\boldsymbol{u}$ 以及点积的矩阵表示 $\vec{n}\cdot\vec{u}\leftrightarrow\boldsymbol{n}^{\mathrm{T}}\boldsymbol{u}$，可得
+	$$
+	\boldsymbol{v}_i=\cos\theta\,\boldsymbol{u}_i+\sin\theta\,\tilde{\boldsymbol{n}}\boldsymbol{u}_i+(1-\cos\theta)\,\boldsymbol{n}\boldsymbol{n}^{\mathrm{T}}\boldsymbol{u}_i.
+	$$
+	另一方面，由性质~\ref{prop:dcm-transform} 知 $\boldsymbol{v}_j=\boldsymbol{A}_{ij}^{\mathrm{T}}\boldsymbol{v}_i$。因 $\boldsymbol{v}_j=\boldsymbol{u}_i$（转动不改变矢量本身，只改变其在不同坐标系中的投影），故
+	$$
+	\boldsymbol{A}_{ij}^{\mathrm{T}}\boldsymbol{v}_i=\boldsymbol{u}_i \quad\Longrightarrow\quad \boldsymbol{v}_i=\boldsymbol{A}_{ij}\boldsymbol{u}_i.
+	$$
+	代入上式得
+	$$
+	\boldsymbol{A}_{ij}\boldsymbol{u}_i=\left[\boldsymbol{I}_3\cos\theta+\tilde{\boldsymbol{n}}\sin\theta+\boldsymbol{n}\boldsymbol{n}^{\mathrm{T}}(1-\cos\theta)\right]\boldsymbol{u}_i.
+	$$
+	由 $\boldsymbol{u}_i$ 的任意性即得
+	$$
+	\boldsymbol{A}_{ij}=\boldsymbol{I}_3\cos\theta+\tilde{\boldsymbol{n}}\sin\theta+\boldsymbol{n}\boldsymbol{n}^{\mathrm{T}}(1-\cos\theta).
+	$$
+	又由性质~\ref{prop:dcm-cofactor} 可知 $\boldsymbol{n}\boldsymbol{n}^{\mathrm{T}}=\tilde{\boldsymbol{n}}^2+\boldsymbol{I}_3$ 不成立的一般情形下，注意到 $\tilde{\boldsymbol{n}}^2=\boldsymbol{n}\boldsymbol{n}^{\mathrm{T}}-\boldsymbol{I}_3$（叉乘矩阵性质），故 $\boldsymbol{n}\boldsymbol{n}^{\mathrm{T}}=\tilde{\boldsymbol{n}}^2+\boldsymbol{I}_3$，代入得
+	$$
+	\boldsymbol{A}_{ij}=\boldsymbol{I}_3+\tilde{\boldsymbol{n}}\sin\theta+\tilde{\boldsymbol{n}}^2(1-\cos\theta).
+	$$
+\end{proof}
+
+罗德里格斯旋转公式的特殊形式：
+
+\begin{property}[基本旋转矩阵]\label{prop:basic-rotation}
+	当转轴分别沿三个坐标轴方向时，罗德里格斯旋转公式退化为基本旋转矩阵。
+
+	转轴沿 $x$ 轴，即 $\boldsymbol{n}=[1\ 0\ 0]^{\mathrm{T}}$ 时，
+	$$
+	\boldsymbol{A}_x(\theta)=\begin{bmatrix}1&0&0\\0&\cos\theta&-\sin\theta\\0&\sin\theta&\cos\theta\end{bmatrix}.
+	$$
+
+	转轴沿 $y$ 轴，即 $\boldsymbol{n}=[0\ 1\ 0]^{\mathrm{T}}$ 时，
+	$$
+	\boldsymbol{A}_y(\theta)=\begin{bmatrix}\cos\theta&0&\sin\theta\\0&1&0\\-\sin\theta&0&\cos\theta\end{bmatrix}.
+	$$
+
+	转轴沿 $z$ 轴，即 $\boldsymbol{n}=[0\ 0\ 1]^{\mathrm{T}}$ 时，
+	$$
+	\boldsymbol{A}_z(\theta)=\begin{bmatrix}\cos\theta&-\sin\theta&0\\\sin\theta&\cos\theta&0\\0&0&1\end{bmatrix}.
+	$$
+\end{property}

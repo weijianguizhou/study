@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="tuhokn3jdcdNRaqJNYWTQG">
+<head data-page-node-id="2dwgMCOO5q7F1cTrGE7mVh">
+<meta charset="utf-8" data-page-node-id="fQnKXtB5AcSlpOnnfkdPy8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" data-page-node-id="OqO8OlMliwTEJSKk6BCGEs">
+<meta name="apple-mobile-web-app-capable" content="yes" data-page-node-id="wOasq64DDHCH20Hmgfpxox">
+<meta name="theme-color" content="#FDFBF8" data-page-node-id="9gIwWItWAC5w73FQ1QptUy">
+<title>六级备考计划台</title>
+<!-- 本工作台通过 WorkBuddy 资料库能力（library skill）搭建、存储和部署 -->
+<style>
+:root{
+  --bg:#FDFBF8; --card:#FFFFFF; --ink:#1B2A4A; --ink2:#6B7A93; --ink3:#9AA6BA;
+  --line:#EBE2D8; --line2:#F3ECE4;
+  --orange:#E8801A; --orange-d:#C96A0C; --orange-l:#FFF3E6; --orange-l2:#FFE6CC;
+  --navy:#1B2A4A; --navy-l:#2C3E5C;
+  --green:#2FA36B; --green-l:#E8F6EE;
+  --red:#DC4545; --red-l:#FDECEC;
+  --r:14px; --sh:0 1px 2px rgba(27,42,74,.05), 0 4px 14px rgba(27,42,74,.05);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:15px; line-height:1.6; -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit;font-size:15px}
+input,select{font-family:inherit}
+.ic{display:inline-block;vertical-align:-.15em;flex:none}
+.hide{display:none !important}
+
+/* ---------- 布局 ---------- */
+.app{display:flex;min-height:100vh}
+.side{
+  width:224px;flex:none;background:var(--navy);color:#fff;
+  padding:20px 14px;position:sticky;top:0;height:100vh;overflow-y:auto;
+  display:flex;flex-direction:column;gap:6px;
+}
+.brand{display:flex;align-items:center;gap:9px;padding:0 8px 16px;font-weight:700;font-size:16px;letter-spacing:.3px}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--orange);flex:none}
+.navi{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:10px;color:#B9C4D6;font-size:14.5px;width:100%;text-align:left;min-height:44px}
+.navi:hover{background:rgba(255,255,255,.07);color:#fff}
+.navi.on{background:var(--orange);color:#fff;font-weight:600}
+.side-foot{margin-top:auto;padding:14px 10px 0;border-top:1px solid rgba(255,255,255,.12);font-size:12px;color:#8B9AB2;line-height:1.55}
+.main{flex:1;min-width:0;padding:22px 26px 40px;max-width:1180px}
+.tabbar{display:none}
+
+/* ---------- 顶部常驻条 ---------- */
+.topbar{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:14px 16px;box-shadow:var(--sh);margin-bottom:16px;
+}
+.tb-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.tb-date{font-size:17px;font-weight:700;letter-spacing:.2px}
+.tb-sub{font-size:13px;color:var(--ink2);margin-top:1px}
+.tb-spacer{flex:1;min-width:8px}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;font-size:13px;font-weight:600;background:var(--orange-l);color:var(--orange-d);border:1px solid var(--orange-l2);white-space:nowrap}
+.pill.red{background:var(--red-l);color:var(--red);border-color:#F8D5D5}
+.pill.green{background:var(--green-l);color:var(--green);border-color:#CFEADC}
+.pill.ghost{background:#F6F4F1;color:var(--ink2);border-color:var(--line)}
+.pill.click{cursor:pointer}
+.pill.click:hover{filter:brightness(.97)}
+.sync{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--ink3)}
+.sync i{width:7px;height:7px;border-radius:50%;background:var(--ink3);display:block}
+.sync.ok i{background:var(--green)}
+.sync.ing i{background:var(--orange);animation:bl 1s infinite}
+.sync.off i{background:var(--ink3)}
+@keyframes bl{50%{opacity:.3}}
+
+/* ---------- 卡片 ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--sh);margin-bottom:14px}
+.card-h{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.card-h h2{margin:0;font-size:16px;font-weight:700;letter-spacing:.2px}
+.card-h .sp{flex:1}
+.muted{color:var(--ink2);font-size:13px}
+.tiny{font-size:12px;color:var(--ink3);line-height:1.6}
+
+/* ---------- 任务项 ---------- */
+.task{display:flex;align-items:flex-start;gap:11px;padding:10px 8px;border-radius:10px;min-height:44px;cursor:pointer;transition:background .12s}
+.task:hover{background:#FAF7F3}
+.task+.task{border-top:1px solid var(--line2)}
+.tbox{width:22px;height:22px;flex:none;margin-top:1px;border:2px solid #C9CFDA;border-radius:6px;display:flex;align-items:center;justify-content:center;background:#fff;transition:.12s}
+.task.done .tbox{background:var(--green);border-color:var(--green)}
+.tbox svg{opacity:0;color:#fff}
+.task.done .tbox svg{opacity:1}
+.ttext{flex:1;min-width:0;font-size:14.5px;line-height:1.55;word-break:break-word}
+.task.done .ttext{color:var(--ink3);text-decoration:line-through}
+.ttext strong{color:var(--orange-d);font-weight:700}
+.task.done .ttext strong{color:var(--ink3);font-weight:600}
+.tbadge{flex:none;font-size:11px;padding:2px 7px;border-radius:6px;background:var(--orange-l);color:var(--orange-d);font-weight:600;white-space:nowrap;margin-top:2px}
+
+/* ---------- 天 / 周 ---------- */
+.day{border:1px solid var(--line);border-radius:12px;margin-bottom:9px;overflow:hidden;background:#fff}
+.day-h{display:flex;align-items:center;gap:10px;padding:12px 13px;min-height:48px;cursor:pointer;width:100%;text-align:left}
+.day-h:hover{background:#FAF7F3}
+.dh-date{font-weight:700;font-size:14.5px}
+.dh-tag{font-size:11px;padding:2px 7px;border-radius:6px;background:var(--orange-l2);color:var(--orange-d);font-weight:600}
+.dh-sp{flex:1}
+.dh-cnt{font-size:13px;font-weight:600;color:var(--ink2);font-variant-numeric:tabular-nums}
+.dh-cnt.full{color:var(--green)}
+.dh-cnt.over{color:var(--red)}
+.chev{transition:transform .18s;color:var(--ink3);flex:none}
+.day.open .chev{transform:rotate(90deg)}
+.day-body{padding:2px 11px 10px;border-top:1px solid var(--line2)}
+.day.od{border-color:#F3C9C9;background:#FFFCFC}
+.day.tdy{border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-l)}
+
+.week{border:1px solid var(--line);border-radius:12px;margin-bottom:11px;background:#fff;overflow:hidden}
+.week-h{display:flex;align-items:center;gap:10px;padding:13px;width:100%;text-align:left;min-height:48px}
+.week-h:hover{background:#FAF7F3}
+.wno{flex:none;width:38px;height:38px;border-radius:10px;background:var(--orange-l);color:var(--orange-d);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+.week.cur .wno{background:var(--orange);color:#fff}
+.wtt{flex:1;min-width:0}
+.wtt b{display:block;font-size:15px;font-weight:700}
+.wtt span{font-size:12.5px;color:var(--ink2)}
+.wbar{flex:none;width:96px}
+.wbar .track{height:7px;border-radius:99px;background:var(--line2);overflow:hidden;margin-bottom:4px}
+.wbar .fill{height:100%;background:var(--orange);border-radius:99px;transition:width .3s}
+.wbar .fill.full{background:var(--green)}
+.wbar .lab{font-size:11.5px;color:var(--ink2);text-align:right;font-variant-numeric:tabular-nums}
+.week-body{padding:4px 13px 13px;border-top:1px solid var(--line2)}
+.wgoal{font-size:13px;color:var(--ink2);background:#FAF7F3;border-radius:9px;padding:9px 11px;margin:10px 0 11px;line-height:1.6}
+
+/* ---------- 阶段切换 ---------- */
+.segs{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap}
+.seg{padding:9px 16px;border-radius:10px;border:1px solid var(--line);background:#fff;font-size:14px;font-weight:600;color:var(--ink2);min-height:44px}
+.seg.on{background:var(--navy);border-color:var(--navy);color:#fff}
+
+/* ---------- 倒计时 ---------- */
+.cd{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.cd-num{font-size:46px;font-weight:800;line-height:1;color:var(--orange);font-variant-numeric:tabular-nums;letter-spacing:-1px}
+.cd-num small{font-size:15px;font-weight:600;color:var(--ink2);margin-left:5px;letter-spacing:0}
+.cd-side{font-size:13px;color:var(--ink2);line-height:1.7}
+
+/* ---------- 按钮 / 表单 ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:10px 15px;border-radius:10px;border:1px solid var(--line);background:#fff;font-size:14px;font-weight:600;color:var(--ink);min-height:44px}
+.btn:hover{background:#FAF7F3}
+.btn.p{background:var(--orange);border-color:var(--orange);color:#fff}
+.btn.p:hover{background:var(--orange-d)}
+.btn.d{color:var(--red);border-color:#F0CFCF}
+.btn.d:hover{background:var(--red-l)}
+.btn.sm{padding:7px 11px;min-height:36px;font-size:13px}
+.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.fld{display:block;margin:12px 0}
+.fld span{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--ink)}
+input[type=date],input[type=text]{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font-size:16px;background:#fff;color:var(--ink);min-height:44px}
+input[type=date]:focus,input[type=text]:focus{outline:2px solid var(--orange-l2);border-color:var(--orange)}
+
+/* ---------- 提示条 ---------- */
+.notice{display:flex;align-items:flex-start;gap:9px;padding:11px 13px;border-radius:11px;background:var(--orange-l);border:1px solid var(--orange-l2);color:var(--orange-d);font-size:13.5px;margin-bottom:12px;line-height:1.6}
+.notice .btn{margin-left:auto}
+.notice.err{background:var(--red-l);border-color:#F6C9C9;color:#A32424;align-items:center}
+.notice.err .btn{margin-left:auto}
+.notice.ok{background:var(--green-l);border-color:#C6E8D5;color:#1E6E47}
+.diag{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:13px;line-height:1.7}
+.diag dt{color:var(--ink3);white-space:nowrap}
+.diag dd{margin:0;color:var(--ink);word-break:break-all}
+.diag dd.bad{color:var(--red);font-weight:600}
+.diag dd.good{color:var(--green)}
+.sync.pend i{background:var(--red)}
+
+/* ---------- 弹层 ---------- */
+.mask{position:fixed;inset:0;background:rgba(27,42,74,.42);display:flex;align-items:center;justify-content:center;padding:18px;z-index:60}
+.modal{background:#fff;border-radius:16px;padding:20px;max-width:400px;width:100%;box-shadow:0 20px 50px rgba(27,42,74,.25)}
+.modal h3{margin:0 0 8px;font-size:17px}
+.modal p{margin:0 0 14px;font-size:14px;color:var(--ink2);line-height:1.65}
+
+/* ---------- 平板 ---------- */
+@media (max-width:1023px){
+  .app{flex-direction:column}
+  .side{width:100%;height:auto;position:static;flex-direction:row;align-items:center;gap:8px;padding:10px 14px;overflow-x:auto}
+  .brand{padding:0 10px 0 0}
+  .navi{width:auto;padding:9px 14px;white-space:nowrap}
+  .side-foot{display:none}
+  .main{padding:16px 14px 30px;max-width:none}
+}
+/* ---------- 手机 ---------- */
+@media (max-width:767px){
+  .main{padding:12px 12px 88px}
+  .side{display:none}
+  .tabbar{
+    display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;background:#fff;
+    border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);
+  }
+  .tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0 7px;min-height:52px;font-size:11px;color:var(--ink3);font-weight:600}
+  .tabbar button.on{color:var(--orange)}
+  .cd-num{font-size:38px}
+  .wbar{width:64px}
+  .tb-date{font-size:16px}
+  .grid2{grid-template-columns:1fr !important}
+}
+/* ---------- 桌面多栏 ---------- */
+@media (min-width:1024px){
+  .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px;align-items:start}
+  .grid2>.card{margin-bottom:14px}
+}
+</style>
+</head>
+<body data-sp-bindable="database" data-sp-database-id="5WTsYfGW1Q0LwQGuD58fUu" data-page-node-id="QaFbnVAGJZGV5RXmC5JA5Z">
+<div class="app" data-page-node-id="s0HwIias9mjmrqsnQFbD35">
+
+  <aside class="side" data-page-node-id="23dGEl3oBsFBX0XyGX0cpa">
+    <div class="brand" data-page-node-id="StJkrMdzpnF520B9xIkWKO"><span class="dot" data-page-node-id="4H1lzA25tBoH43RaksMGdr"></span>六级备考计划台</div>
+    <button class="navi on" data-view="today" data-page-node-id="f4JyRlisTqG45RUhtAyO5t"></button>
+    <button class="navi" data-view="plan" data-page-node-id="rIA0CGLUTbYGKvUX3IgeKS"></button>
+    <button class="navi" data-view="mine" data-page-node-id="UlJyLDMFqvNyThaIVjsj0a"></button>
+    <div class="side-foot" data-page-node-id="cqx6e48wKKPjLCBuUQVZQ2">
+      数据存在本机并自动同步到资料库<br data-page-node-id="zSERwk5m6AWmhx85SiaDdy">换设备打开同一链接即可继续
+    </div>
+  </aside>
+
+  <main class="main" data-page-node-id="zYeBrXS6VvzF5rOBkGJRCR">
+
+    <div class="topbar" data-page-node-id="frCIIb9FzbGYPk0v6Gkp6Q">
+      <div class="tb-row" data-page-node-id="1leQnNfitMB82bb35qXF3C">
+        <div data-page-node-id="3UXDpdR8xmElLTXHUNYBZi">
+          <div class="tb-date" id="tbDate" data-page-node-id="1BiXhYYKIbyfvt2lxE8teP">—</div>
+          <div class="tb-sub" id="tbSub" data-page-node-id="UgwQf42zRqEA9ILqqA4LhM">—</div>
+        </div>
+        <div class="tb-spacer" data-page-node-id="xXXNTTS7IDNMZzqDQ2OvWW"></div>
+        <span class="pill click" id="pillToday" data-page-node-id="b3mlpT3zaG8wQ2DuCcYreM"></span>
+        <span class="pill click" id="pillOverdue" data-page-node-id="zqssViCyMitygjktrjPqIR"></span>
+        <span class="pill ghost" id="pillCd" data-page-node-id="L77KEu2af2TP2jNgDNGwIG"></span>
+        <span class="sync off" id="syncInd" data-page-node-id="UDPV4Xvhh4ZYnUYEJ3AH5L"><i data-page-node-id="dNOE3TSrGAIVWRtuDpxQTp"></i><span data-page-node-id="7uHD1pgJ2gWTZURbQEsLHy">离线</span></span>
+      </div>
+    </div>
+
+    <div id="backupNotice" class="notice hide" data-page-node-id="YN1jJ1w9eZPnL7CX7yzNA5">
+      <span id="backupIcon" data-page-node-id="FfqAf7rVzxsV1oKxqUAIZO"></span>
+      <span id="backupText" data-page-node-id="1djxBKBuBExlNs9oibxrwr"></span>
+      <button class="btn sm" id="btnBackupNow" data-page-node-id="nrjiaWtwKDygrMDo9SOwAA">立即备份</button>
+    </div>
+
+    <div id="persistNotice" class="notice err hide" data-page-node-id="Aoq4H4JcwDfSvXEFcsHFzo">
+      <span id="persistIcon" data-page-node-id="ZE3wQWGfeTPwJQtGr88iS4"></span>
+      <span id="persistText" data-page-node-id="Veow4KlbUMNhxWeTssOFBF"></span>
+      <button class="btn sm" id="btnPersistExport" data-page-node-id="v1hFgNWaFE5Axnfygo1PA9">导出留底</button>
+    </div>
+
+    <!-- ========== 今日 ========== -->
+    <section class="view" id="view-today" data-page-node-id="yPXVqCIjSOPBz4F69KamQe">
+      <div class="card" data-page-node-id="exNYHFLxh3qGkc4FeUXtUG">
+        <div class="card-h" data-page-node-id="326FcooDTsFhUJHDP68SRI"><span id="icSun" data-page-node-id="fXc5t07zreAgkPYAkAaHeU"></span><h2 data-page-node-id="h1sw8NMheOyvYO7l33LzvR">今天的任务</h2><div class="sp" data-page-node-id="cHhPI6BB5Dvnw4CjC6oE1r"></div><span class="muted" id="todayCnt" data-page-node-id="lZopUuyl9DHKIPQLagi5Y1"></span></div>
+        <div id="todayList" data-page-node-id="tH9lvuj8qsqc2V6eDp9jmm"></div>
+      </div>
+
+      <div class="card" id="overdueCard" data-page-node-id="WblSkTyPMDdP6f4kFt5sr4">
+        <div class="card-h" data-page-node-id="zRxnpVIybAfVrdV7APHILS"><span id="icAlert" data-page-node-id="JbrMn3GY7n312BF2ZWwSqi"></span><h2 data-page-node-id="Ma5hQ7UALghCbIofgYc51p">逾期未完成</h2><div class="sp" data-page-node-id="OKdE1zfLl4RYfw5McZAtbX"></div><span class="muted" id="overdueCnt" data-page-node-id="7ZyDFZULMrz7XokPdWUAWi"></span></div>
+        <div class="tiny" style="margin:-4px 0 10px" data-page-node-id="tPHwuQVwP3lGMHk5H6GGZU">前几天没勾完的任务会自动滚到这里，补完即可。</div>
+        <div id="overdueList" data-page-node-id="5lUvoMJM78e7A7uACGHwOq"></div>
+      </div>
+    </section>
+
+    <!-- ========== 计划表 ========== -->
+    <section class="view hide" id="view-plan" data-page-node-id="TZcDklsTT6T67C7twPBIzf">
+      <div class="segs" id="stageSegs" data-page-node-id="umm6lZADkinGWQlVtVFJUO"></div>
+      <div id="planBox" data-page-node-id="SMIlqebkkGq1x9sIopZsFO"></div>
+    </section>
+
+    <!-- ========== 我的 ========== -->
+    <section class="view hide" id="view-mine" data-page-node-id="nWOhK4p39clzyfBBNhLoZ0">
+      <div class="card" data-page-node-id="06aB1h2FL9EymYaPzD39yq">
+        <div class="card-h" data-page-node-id="zMVRfXyrhRWQiCPQruccA5"><span id="icClock" data-page-node-id="7wJui9ghG5T2loUpKFxgzr"></span><h2 data-page-node-id="Wy1FjVNB7xEWMtSGNWLCWB">考试倒计时</h2></div>
+        <div class="cd" data-page-node-id="Ad6wfAi7QwRIWknps29fYP">
+          <div class="cd-num" data-page-node-id="OjWJwtiHiFJlJjf2wPETmW"><span id="cdNum" data-page-node-id="sbTM8s3cNAsoarQBdGpGVX">—</span><small data-page-node-id="TgcZugEoqpBL8vmfONo9Cy">天</small></div>
+          <div class="cd-side" id="cdSide" data-page-node-id="wTdV065U3xaYhJD6KGufLI">—</div>
+        </div>
+        <div class="fld" style="margin-bottom:0" data-page-node-id="daOTvBROrFnSh0lu8lUUsr">
+          <span data-page-node-id="iq20Oa5dmj2tKfDTbBBK7m">考试日期（可修改）</span>
+          <div class="row" data-page-node-id="Z0cIP4yQRbjAu02CCvdPkr">
+            <input type="date" id="examDate" style="max-width:200px;flex:1" data-page-node-id="1AXVJhMfRGHkN8fHUKQLMo">
+            <button class="btn sm" id="btnExamThird" data-page-node-id="ilteGsjSoekxxwgtfDz5BB">第三个周六</button>
+            <button class="btn sm" id="btnExamPlan" data-page-node-id="odobVuEaZ4woruAAY4qg1T">计划表末日次日</button>
+          </div>
+          <div class="tiny" style="margin-top:7px" data-page-node-id="nXYiz78xMwX7YejVYALu4x">默认取今年 12 月第三个周六。实际考试日期与报名时间以教育部考试中心及学校官方公告为准。</div>
+        </div>
+      </div>
+
+      <div class="card" data-page-node-id="bJ7Ssrvjp3SrduXrWP8pgU">
+        <div class="card-h" data-page-node-id="qDjV8urnm0VlhSGryhpzNO"><span id="icList" data-page-node-id="Cg6Qb6rYBVDanOVqzrka3d"></span><h2 data-page-node-id="Fyv7Ncqqos4PhipLQoIEbV">完成情况</h2></div>
+        <div id="statBox" class="cd-side" data-page-node-id="HRz4d3E7FEVAGL4Wso5h2p"></div>
+      </div>
+
+      <div class="card" data-page-node-id="gHk8bOZJPbn3pRywdLsI6m">
+        <div class="card-h" data-page-node-id="K55cwFgmT5tMMa0kCflvwy"><span id="icDown" data-page-node-id="H5i1IGep4BIII87bhuRT4K"></span><h2 data-page-node-id="SkcCY4vI9E4cTeYbY4LqvQ">数据备份</h2></div>
+        <div class="tiny" style="margin-bottom:12px" data-page-node-id="fiGhLJaHiWXoG13GMJnbjN">数据同时存在本机和资料库。导出一份 JSON 留底，换设备或清理浏览器后用「导入恢复」。</div>
+        <div class="row" data-page-node-id="LVWGCl0FRm5GfR1IzbCi08">
+          <button class="btn p" id="btnExport" data-page-node-id="HXPOQFgI9vcK72riP1mxyv">导出 JSON 备份</button>
+          <button class="btn" id="btnImport" data-page-node-id="FW7HxbbUWswFQtVVuOSi3B">导入恢复</button>
+          <input type="file" id="fileInput" accept=".json,application/json" class="hide" data-page-node-id="bIBC8ArNxGYvhRXkduN3xY">
+        </div>
+      </div>
+
+      <div class="card" data-page-node-id="fleyMDpPm2udHGKNJFruUZ">
+        <div class="card-h" data-page-node-id="3azkiOzitJQLaYIRzVQl3t"><span id="icTrash" data-page-node-id="RWDHHJfutPBkKWLAzWuGZy"></span><h2 data-page-node-id="04Miule0SclHndkzqLu3Bj">清空数据</h2></div>
+        <div class="tiny" style="margin-bottom:12px" data-page-node-id="TLdbwreqiQ3zvDIC8RdKuH">清空后所有勾选记录会从本机和资料库一并删除，不可恢复。计划表本身不受影响。</div>
+        <button class="btn d" id="btnClear" data-page-node-id="AxrUGptufPugmPBwpR9Y0Q">清空全部勾选记录</button>
+      </div>
+
+      <div class="card" data-page-node-id="tGjMVRh24bIM5yVVgFnw36">
+        <div class="card-h" data-page-node-id="PeMIDhv8bHjXs4n4JQXkBn"><span id="icDiag" data-page-node-id="qZkEH9GALCm6xF37Iixqfz"></span><h2 data-page-node-id="ULdgNlJy6DubSNeqPu1fYv">存储诊断</h2><div class="sp" data-page-node-id="iPILAd086wBE4SU3frwk2b"></div><button class="btn sm" id="btnRetrySync" data-page-node-id="aV8k4gRedfgtdDvwHrtufA">重试同步</button></div>
+        <dl class="diag" id="diagBox" data-page-node-id="vV0tIhBC6WY5mQ7omN618r"></dl>
+        <div class="tiny" style="margin-top:10px" data-page-node-id="upDOtbMVZ8b5DXRSwjv91W">
+          进度优先写资料库在线表；资料库不可用时写本机浏览器存储，联网后自动补推。
+          若「本机存储」显示不可用，说明当前环境禁用了浏览器存储，此时请务必用导出 JSON 留底。
+        </div>
+      </div>
+
+      <div class="card" data-page-node-id="i7X74OwqyGigTMLwxO1GJN">
+        <div class="card-h" data-page-node-id="VRIdn8GY4SpxNivu38pWn4"><span id="icInfo" data-page-node-id="uAF5NUUebvPGGF5BpUED0l"></span><h2 data-page-node-id="QEfGN9x0zF6pERn28VIYbu">关于</h2></div>
+        <div class="tiny" data-page-node-id="ouLwHiF0JQl61enlmSzoYy">
+          计划内容来自《六级 550 备考计划》三阶段每日任务表，共 15 周 / 102 天 / <span id="totalTaskCnt" data-page-node-id="nqhquyhE2lLCOFnSbtkCRA">—</span> 项任务，原文措辞未作改动。<br data-page-node-id="21ArtoUsPDLTDHB6iezHxC">
+          页面为单文件 HTML，样式与脚本全部内联，无外部依赖，断网可用（断网时自动切换离线模式，联网后自动补同步）。
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="tabbar" data-page-node-id="WMfqvBUKr80xmKA5SlLzHY">
+    <button class="on" data-view="today" data-page-node-id="wQ6IkEJRDMMyC5AafKSnAa"></button>
+    <button data-view="plan" data-page-node-id="25TmEkYVrylILwmiyaDgSy"></button>
+    <button data-view="mine" data-page-node-id="fHoTXjfGc5tlzJOXUhDV2w"></button>
+  </nav>
+</div>
+
+<div id="modalHost" data-page-node-id="KjLyAPlv6mKjZugHZSvIeP"></div>
+
+<script>
+'use strict';
+/* ===================== 计划数据 ===================== */
+var PLAN = {"weeks":[{"stage":"基础期","weekNo":1,"range":"9.1–9.6","title":"摸底与方法入门","goal":"设置好不背单词词库；读懂《应试指南》；做 1 套真题**阅读部分**摸底。","days":[{"date":"2026-09-01","label":"9月1日 周二","dayNo":1,"tag":"","tasks":[{"t":"不背单词：设置\"六级核心词\"词库，新学 40 词 + 复习","done":true},{"t":"通读《应试指南》：试卷结构、时长、分值","done":true},{"t":"听力精听 1 篇（四步法）","done":false},{"t":"仔细阅读精做 1 篇 + 解析","done":false},{"t":"好句积累 3 个","done":false}]},{"date":"2026-09-02","label":"9月2日 周三","dayNo":2,"tag":"","tasks":[{"t":"不背单词：新学 40 词 + 复习","done":false},{"t":"听力精听 1 篇","done":false},{"t":"仔细阅读精做 1 篇，学\"定位 + 同义替换\"方法","done":false},{"t":"语法/长难句：拆 1 句","done":false},{"t":"翻译 1 句","done":false}]},{"date":"2026-09-03","label":"9月3日 周四","dayNo":3,"tag":"","tasks":[{"t":"不背单词：新学 40 词 + 复习","done":false},{"t":"听力精听 1 篇","done":false},{"t":"仔细阅读精做 1 篇","done":false},{"t":"好句积累 3 个","done":false},{"t":"睡前过一遍今日新词","done":false}]},{"date":"2026-09-04","label":"9月4日 周五","dayNo":4,"tag":"","tasks":[{"t":"不背单词：新学 40 词 + 复习","done":false},{"t":"听力精听 1 篇","done":false},{"t":"仔细阅读精做 1 篇","done":false},{"t":"长难句 1 句 + 翻译 1 句","done":false}]},{"date":"2026-09-05","label":"9月5日 周六","dayNo":5,"tag":"","tasks":[{"t":"不背单词：复习为主（新学 30 词）","done":false},{"t":"摸底：做 1 套真题的**阅读部分**（限时 40 分钟）","done":false},{"t":"对答案，记录正确率与薄弱题型","done":false},{"t":"听力精听 1 篇","done":false}]},{"date":"2026-09-06","label":"9月6日 周日","dayNo":6,"tag":"","tasks":[{"t":"不背单词：复习 + 整理本周生词进单词本","done":false},{"t":"周复盘：清点完成率、整理错题","done":false},{"t":"放松半天","done":false}]}],"template":["每日四件套（基础期固定模板）","- 不背单词：新学 40 词 + 完成当日复习","- 听力精听 1 篇：盲听 → 逐句对照 → 跟读 → 复盘","- 仔细阅读精做 1 篇 + 拆 1 个长难句","- 写作/翻译积累：好句 3 个 或 翻译 1 句"]},{"stage":"基础期","weekNo":2,"range":"9.7–9.13","title":"词汇与精读扎根","goal":"核心词 ×280；精听/精读各 7 篇，形成节奏。","days":[{"date":"2026-09-07","label":"9月7日 周一","dayNo":7,"tag":"","tasks":[{"t":"《控制工程基础》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 40 词 + 复习","done":false},{"t":"听力精听 1 篇","done":false},{"t":"仔细阅读精做 1 篇","done":false},{"t":"好句积累 3 个","done":false}]},{"date":"2026-09-08","label":"9月8日 周二","dayNo":8,"tag":"","tasks":[{"t":"《机械设计基础（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 40 词 + 复习","done":false},{"t":"听力精听 1 篇","done":false},{"t":"仔细阅读精做 1 篇 + 长难句 1 句","done":false},{"t":"翻译 1 句","done":false}]},{"date":"2026-09-09","label":"9月9日 周三","dayNo":9,"tag":"","tasks":[{"t":"不背单词：新学 40 词 + 复习","done":false},{"t":"听力精听 1 篇","done":false},{"t":"仔细阅读精做 1 篇","done":false},{"t":"好句积累 3 个","done":false}]},{"date":"2026-09-10","label":"9月10日 周四","dayNo":10,"tag":"","tasks":[{"t":"《控制工程基础》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《机械设计基础（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 40 词 + 复习","done":false},{"t":"听力精听 1 篇","done":false},{"t":"仔细阅读精做 1 篇 + 长难句 1 句","done":false},{"t":"翻译 1 句","done":false}]},{"date":"2026-09-11","label":"9月11日 周五","dayNo":11,"tag":"","tasks":[{"t":"不背单词：新学 40 词 + 复习","done":false},{"t":"听力精听 1 篇","done":false},{"t":"仔细阅读精做 1 篇","done":false},{"t":"好句积累 3 个","done":false}]},{"date":"2026-09-12","label":"9月12日 周六","dayNo":12,"tag":"","tasks":[{"t":"不背单词：复习 + 新学 30 词","done":false},{"t":"精听 2 篇（补平日）","done":false},{"t":"阅读精做 2 篇（补平日）","done":false},{"t":"翻译 1 句","done":false}]},{"date":"2026-09-13","label":"9月13日 周日","dayNo":13,"tag":"","tasks":[{"t":"不背单词：复习 + 生词进单词本","done":false},{"t":"周复盘：完成率、错题、下周滚动","done":false},{"t":"放松半天","done":false}]}]},{"stage":"基础期","weekNo":3,"range":"9.14–9.20","title":"第一套完整真题","goal":"核心词继续推进；周六完成第 1 套完整真题并精析。","days":[{"date":"2026-09-14","label":"9月14日 周一","dayNo":14,"tag":"","tasks":[{"t":"《控制工程基础》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 40 词 + 复习","done":false},{"t":"听力精听 1 篇","done":false},{"t":"仔细阅读精做 1 篇","done":false},{"t":"好句积累 3 个","done":false}]},{"date":"2026-09-15","label":"9月15日 周二","dayNo":15,"tag":"","tasks":[{"t":"《机械设计基础（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 40 词 + 复习（今天开始六级报名，留意学校通知）","done":false},{"t":"听力精听 1 篇","done":false},{"t":"仔细阅读精做 1 篇 + 长难句 1 句","done":false},{"t":"翻译 1 句","done":false}]},{"date":"2026-09-16","label":"9月16日 周三","dayNo":16,"tag":"","tasks":[{"t":"不背单词：新学 40 词 + 复习","done":false},{"t":"听力精听 1 篇","done":false},{"t":"仔细阅读精做 1 篇","done":false},{"t":"好句积累 3 个","done":false}]},{"date":"2026-09-17","label":"9月17日 周四","dayNo":17,"tag":"","tasks":[{"t":"《控制工程基础》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《机械设计基础（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 40 词 + 复习","done":false},{"t":"听力精听 1 篇","done":false},{"t":"仔细阅读精做 1 篇 + 长难句 1 句","done":false},{"t":"翻译 1 句","done":false}]},{"date":"2026-09-18","label":"9月18日 周五","dayNo":18,"tag":"","tasks":[{"t":"不背单词：新学 40 词 + 复习","done":false},{"t":"听力精听 1 篇","done":false},{"t":"熟悉下周真题流程，准备答题卡","done":false},{"t":"好句积累 3 个","done":false}]},{"date":"2026-09-19","label":"9月19日 周六","dayNo":19,"tag":"","tasks":[{"t":"不背单词：复习（不学新词）","done":false},{"t":"**完整真题第 1 套**（先不限时，145 分钟完整走一遍，含听力写作翻译）","done":false},{"t":"对答案，各板块记录正确率","done":false}]},{"date":"2026-09-20","label":"9月20日 周日","dayNo":20,"tag":"","tasks":[{"t":"不背单词：复习 + 生词进单词本","done":false},{"t":"真题精析：逐题看解析，标记薄弱项","done":false},{"t":"周复盘 + 放松半天","done":false}]}]},{"stage":"基础期","weekNo":4,"range":"9.21–9.27","title":"稳扎稳打","goal":"词汇推进 + 开始接触选词填空/匹配题型。","days":[{"date":"2026-09-21","label":"9月21日 周一","dayNo":21,"tag":"","tasks":[{"t":"《弹性力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《控制工程基础》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《习近平新时代中国特色社会主义思想概论》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 40 词 + 复习","done":false},{"t":"听力精听 1 篇","done":false},{"t":"仔细阅读精做 1 篇","done":false},{"t":"好句积累 3 个","done":false}]},{"date":"2026-09-22","label":"9月22日 周二","dayNo":22,"tag":"","tasks":[{"t":"《机械设计基础（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《模拟电路与数字电路（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《工程流体力学》：课后复习 ≥50min，作业 ≥1h（注：与《机械设计基础（Ⅱ）》周二第2大节时段重叠，请以实际课表为准）","done":false},{"t":"不背单词：新学 40 词 + 复习","done":false},{"t":"听力精听 1 篇","done":false},{"t":"阅读：选词填空练 1 篇（学词性判断法）","done":false},{"t":"翻译 1 句","done":false}]},{"date":"2026-09-23","label":"9月23日 周三","dayNo":23,"tag":"","tasks":[{"t":"《弹性力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 40 词 + 复习","done":false},{"t":"听力精听 1 篇","done":false},{"t":"仔细阅读精做 1 篇","done":false},{"t":"好句积累 3 个","done":false}]},{"date":"2026-09-24","label":"9月24日 周四","dayNo":24,"tag":"","tasks":[{"t":"《控制工程基础》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《机械设计基础（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《计算机视觉基础及应用》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 40 词 + 复习","done":false},{"t":"听力精听 1 篇","done":false},{"t":"阅读：长篇匹配练 1 篇（学关键词定位）","done":false},{"t":"长难句 1 句","done":false}]},{"date":"2026-09-25","label":"9月25日 周五","dayNo":25,"tag":"","tasks":[{"t":"《模拟电路与数字电路（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《工程流体力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 40 词 + 复习","done":false},{"t":"听力精听 1 篇","done":false},{"t":"仔细阅读精做 1 篇","done":false},{"t":"翻译 1 句","done":false}]},{"date":"2026-09-26","label":"9月26日 周六","dayNo":26,"tag":"","tasks":[{"t":"不背单词：复习 + 新学 30 词","done":false},{"t":"精听 2 篇 + 阅读精做 2 篇（补平日）","done":false},{"t":"好句积累 3 个","done":false}]},{"date":"2026-09-27","label":"9月27日 周日","dayNo":27,"tag":"","tasks":[{"t":"不背单词：复习 + 生词进单词本","done":false},{"t":"周复盘：完成率、错题、下周滚动","done":false},{"t":"放松半天","done":false}]}]},{"stage":"基础期","weekNo":5,"range":"9.28–10.4","title":"国庆周（弹性档）","goal":"国庆假期保持最低节奏（词汇 + 阅读不断档），尽量完成第 2 套完整真题。","days":[{"date":"2026-09-28","label":"9月28日 周一","dayNo":28,"tag":"","tasks":[{"t":"《弹性力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《控制工程基础》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《习近平新时代中国特色社会主义思想概论》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 40 词 + 复习","done":false},{"t":"听力精听 1 篇","done":false},{"t":"仔细阅读精做 1 篇","done":false},{"t":"好句积累 3 个","done":false}]},{"date":"2026-09-29","label":"9月29日 周二","dayNo":29,"tag":"","tasks":[{"t":"《机械设计基础（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《模拟电路与数字电路（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《工程流体力学》：课后复习 ≥50min，作业 ≥1h（注：与《机械设计基础（Ⅱ）》周二第2大节时段重叠，请以实际课表为准）","done":false},{"t":"不背单词：新学 40 词 + 复习","done":false},{"t":"听力精听 1 篇","done":false},{"t":"仔细阅读精做 1 篇 + 长难句 1 句","done":false},{"t":"翻译 1 句","done":false}]},{"date":"2026-09-30","label":"9月30日 周三","dayNo":30,"tag":"","tasks":[{"t":"《弹性力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 40 词 + 复习","done":false},{"t":"听力精听 1 篇","done":false},{"t":"仔细阅读精做 1 篇","done":false},{"t":"好句积累 3 个","done":false}]},{"date":"2026-10-01","label":"10月1日 周四","dayNo":31,"tag":"国庆","tasks":[{"t":"《控制工程基础》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《机械设计基础（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《计算机视觉基础及应用》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：复习 + 新学 30 词（最低档：可只复习）","done":false},{"t":"阅读精做 1 篇（最低档）","done":false},{"t":"听力精听 1 篇（可选）","done":false}]},{"date":"2026-10-02","label":"10月2日 周五","dayNo":32,"tag":"国庆","tasks":[{"t":"《模拟电路与数字电路（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《工程流体力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：复习 + 新学 30 词","done":false},{"t":"阅读精做 1 篇","done":false},{"t":"翻译 1 句（可选）","done":false}]},{"date":"2026-10-03","label":"10月3日 周六","dayNo":33,"tag":"国庆","tasks":[{"t":"不背单词：复习（不学新词）","done":false},{"t":"**完整真题第 2 套**（限时 145 分钟）——若外出则改为\"阅读 + 听力\"套题","done":false},{"t":"对答案，记录各板块正确率","done":false}]},{"date":"2026-10-04","label":"10月4日 周日","dayNo":34,"tag":"国庆","tasks":[{"t":"不背单词：复习 + 生词进单词本","done":false},{"t":"真题精析 + 周复盘","done":false},{"t":"放松半天","done":false}]}]},{"stage":"基础期","weekNo":6,"range":"10.5–10.11","title":"一轮词汇收尾 + 阶段自测","goal":"核心词一轮收尾（≥80% 认识）；周日做自测卷检验。","days":[{"date":"2026-10-05","label":"10月5日 周一","dayNo":35,"tag":"","tasks":[{"t":"《弹性力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《控制工程基础》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《习近平新时代中国特色社会主义思想概论》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 40 词 + 复习（最后冲刺新词）","done":false},{"t":"听力精听 1 篇","done":false},{"t":"仔细阅读精做 1 篇","done":false},{"t":"好句积累 3 个","done":false}]},{"date":"2026-10-06","label":"10月6日 周二","dayNo":36,"tag":"","tasks":[{"t":"《武器系统动力学建模与仿真》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《机械设计基础（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《模拟电路与数字电路（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《工程流体力学》：课后复习 ≥50min，作业 ≥1h（注：与《机械设计基础（Ⅱ）》周二第2大节时段重叠，请以实际课表为准）","done":false},{"t":"不背单词：新学 40 词 + 复习","done":false},{"t":"听力精听 1 篇","done":false},{"t":"仔细阅读精做 1 篇 + 长难句 1 句","done":false},{"t":"翻译 1 句","done":false}]},{"date":"2026-10-07","label":"10月7日 周三","dayNo":37,"tag":"","tasks":[{"t":"《弹性力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 30 词 + 复习（国庆返程日，酌情减量）","done":false},{"t":"听力精听 1 篇","done":false},{"t":"阅读精做 1 篇","done":false},{"t":"好句积累 3 个","done":false}]},{"date":"2026-10-08","label":"10月8日 周四","dayNo":38,"tag":"","tasks":[{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力精听 1 篇","done":false},{"t":"阅读：选词填空 1 篇 + 匹配 1 篇","done":false},{"t":"长难句 1 句","done":false}]},{"date":"2026-10-09","label":"10月9日 周五","dayNo":39,"tag":"","tasks":[{"t":"《工程流体力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力精听 1 篇","done":false},{"t":"仔细阅读精做 1 篇","done":false},{"t":"翻译 1 句","done":false}]},{"date":"2026-10-10","label":"10月10日 周六","dayNo":40,"tag":"","tasks":[{"t":"不背单词：复习（不学新词）","done":false},{"t":"**自测卷**：完整做一遍（限时）","done":false},{"t":"对答案，对比 9.19/10.3 的正确率变化","done":false}]},{"date":"2026-10-11","label":"10月11日 周日","dayNo":41,"tag":"","tasks":[{"t":"不背单词：复习 + 核心词一轮复盘，生词进单词本","done":false},{"t":"阶段复盘：词汇认识率、各题型正确率，制定强化期重点","done":false},{"t":"放松半天，准备进入强化期","done":false}]}]},{"stage":"强化期","weekNo":7,"range":"10.12–10.18","title":"强化期启动","goal":"正式进入限时节奏；建立写作模板框架。","days":[{"date":"2026-10-12","label":"10月12日 周一","dayNo":42,"tag":"","tasks":[{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力：完整套题训练 1 次（限时）","done":false},{"t":"阅读限时组合：匹配 1 篇 + 仔细 1 篇","done":false},{"t":"翻译 1 段真题（对照解析改）","done":false}]},{"date":"2026-10-13","label":"10月13日 周二","dayNo":43,"tag":"","tasks":[{"t":"《工程流体力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力：错题精听（重听上周套题错题）","done":false},{"t":"阅读限时组合：匹配 1 篇 + 仔细 1 篇","done":false},{"t":"长难句 1 句","done":false}]},{"date":"2026-10-14","label":"10月14日 周三","dayNo":44,"tag":"","tasks":[{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力：套题训练（重点：讲座/讲话 Section C）","done":false},{"t":"阅读限时组合：选词填空 1 篇 + 仔细 1 篇","done":false},{"t":"**写作：写第 1 篇完整作文**（先搭模板框架）","done":false}]},{"date":"2026-10-15","label":"10月15日 周四","dayNo":45,"tag":"","tasks":[{"t":"《控制工程基础》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《武器系统动力学建模与仿真》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《机械设计基础（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《计算机视觉基础及应用》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力：错题精听","done":false},{"t":"阅读限时组合：匹配 1 篇 + 仔细 1 篇","done":false},{"t":"背写作模板开头/结尾句型","done":false}]},{"date":"2026-10-16","label":"10月16日 周五","dayNo":46,"tag":"","tasks":[{"t":"《模拟电路与数字电路（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《工程流体力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力：套题训练","done":false},{"t":"阅读限时组合：匹配 1 篇 + 仔细 1 篇","done":false},{"t":"翻译 1 段真题","done":false}]},{"date":"2026-10-17","label":"10月17日 周六","dayNo":47,"tag":"","tasks":[{"t":"不背单词：复习（不学新词）","done":false},{"t":"**完整真题第 3 套**（限时 145 分钟）","done":false},{"t":"对答案，记录各板块正确率","done":false}]},{"date":"2026-10-18","label":"10月18日 周日","dayNo":48,"tag":"","tasks":[{"t":"不背单词：复习 + 生词进单词本","done":false},{"t":"真题精析 + 错题整理 + 周复盘","done":false},{"t":"放松半天","done":false}]}],"template":["强化期固定模板","- 不背单词：新学 30 词 + 复习（高频/真题词）","- 听力：套题限时训练 **或** 错题精听（隔天轮换）","- 阅读限时组合：匹配 1 篇 + 仔细 1 篇（30 分钟）","- 写作/翻译专项（按周计划：周一翻译 / 周三写作 / 周五翻译）"]},{"stage":"强化期","weekNo":8,"range":"10.19–10.25","title":"限时强化","goal":"听力、阅读稳定限时；写作第 2 篇。","days":[{"date":"2026-10-19","label":"10月19日 周一","dayNo":49,"tag":"","tasks":[{"t":"《弹性力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《控制工程基础》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《习近平新时代中国特色社会主义思想概论》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力：套题训练 1 次","done":false},{"t":"阅读限时组合：匹配 1 篇 + 仔细 1 篇","done":false},{"t":"翻译 1 段真题","done":false}]},{"date":"2026-10-20","label":"10月20日 周二","dayNo":50,"tag":"","tasks":[{"t":"《武器系统动力学建模与仿真》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《机械设计基础（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《模拟电路与数字电路（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《工程流体力学》：课后复习 ≥50min，作业 ≥1h（注：与《机械设计基础（Ⅱ）》周二第2大节时段重叠，请以实际课表为准）","done":false},{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力：错题精听","done":false},{"t":"阅读限时组合：匹配 1 篇 + 仔细 1 篇","done":false},{"t":"长难句 1 句","done":false}]},{"date":"2026-10-21","label":"10月21日 周三","dayNo":51,"tag":"","tasks":[{"t":"《弹性力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力：套题训练（Section C 精练）","done":false},{"t":"阅读限时组合：选词填空 1 篇 + 仔细 1 篇","done":false},{"t":"**写作：写第 2 篇完整作文**（用模板）","done":false}]},{"date":"2026-10-22","label":"10月22日 周四","dayNo":52,"tag":"","tasks":[{"t":"《控制工程基础》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《武器系统动力学建模与仿真》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《机械设计基础（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《计算机视觉基础及应用》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力：错题精听","done":false},{"t":"阅读限时组合：匹配 1 篇 + 仔细 1 篇","done":false},{"t":"背作文万能句 5 个","done":false}]},{"date":"2026-10-23","label":"10月23日 周五","dayNo":53,"tag":"","tasks":[{"t":"《模拟电路与数字电路（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《工程流体力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力：套题训练","done":false},{"t":"阅读限时组合：匹配 1 篇 + 仔细 1 篇","done":false},{"t":"翻译 1 段真题","done":false}]},{"date":"2026-10-24","label":"10月24日 周六","dayNo":54,"tag":"","tasks":[{"t":"不背单词：复习（不学新词）","done":false},{"t":"**完整真题第 4 套**（限时 145 分钟）","done":false},{"t":"对答案，记录正确率","done":false}]},{"date":"2026-10-25","label":"10月25日 周日","dayNo":55,"tag":"","tasks":[{"t":"不背单词：复习 + 生词进单词本","done":false},{"t":"真题精析 + 错题整理 + 周复盘","done":false},{"t":"放松半天","done":false}]}]},{"stage":"强化期","weekNo":9,"range":"10.26–11.1","title":"查漏补缺","goal":"针对上周正确率最低的题型加练；写作第 3 篇。","days":[{"date":"2026-10-26","label":"10月26日 周一","dayNo":56,"tag":"","tasks":[{"t":"《弹性力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《控制工程基础》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《习近平新时代中国特色社会主义思想概论》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力：套题训练 1 次","done":false},{"t":"阅读限时组合：匹配 1 篇 + 仔细 1 篇","done":false},{"t":"翻译 1 段真题","done":false}]},{"date":"2026-10-27","label":"10月27日 周二","dayNo":57,"tag":"","tasks":[{"t":"《武器系统动力学建模与仿真》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《机械设计基础（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《模拟电路与数字电路（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《工程流体力学》：课后复习 ≥50min，作业 ≥1h（注：与《机械设计基础（Ⅱ）》周二第2大节时段重叠，请以实际课表为准）","done":false},{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力：错题精听","done":false},{"t":"弱项加练：上周最低分题型 2 篇","done":false},{"t":"长难句 1 句","done":false}]},{"date":"2026-10-28","label":"10月28日 周三","dayNo":58,"tag":"","tasks":[{"t":"《弹性力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力：套题训练（Section C 精练）","done":false},{"t":"阅读限时组合：选词填空 1 篇 + 仔细 1 篇","done":false},{"t":"**写作：写第 3 篇完整作文**（换一种题型）","done":false}]},{"date":"2026-10-29","label":"10月29日 周四","dayNo":59,"tag":"","tasks":[{"t":"《控制工程基础》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《武器系统动力学建模与仿真》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《机械设计基础（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《计算机视觉基础及应用》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力：错题精听","done":false},{"t":"阅读限时组合：匹配 1 篇 + 仔细 1 篇","done":false},{"t":"背作文模板主体段句型","done":false}]},{"date":"2026-10-30","label":"10月30日 周五","dayNo":60,"tag":"","tasks":[{"t":"《模拟电路与数字电路（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《工程流体力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力：套题训练","done":false},{"t":"阅读限时组合：匹配 1 篇 + 仔细 1 篇","done":false},{"t":"翻译 1 段真题","done":false}]},{"date":"2026-10-31","label":"10月31日 周六","dayNo":61,"tag":"","tasks":[{"t":"不背单词：复习（不学新词）","done":false},{"t":"**完整真题第 5 套**（限时 145 分钟）","done":false},{"t":"对答案，记录正确率","done":false}]},{"date":"2026-11-01","label":"11月1日 周日","dayNo":62,"tag":"","tasks":[{"t":"不背单词：复习 + 生词进单词本","done":false},{"t":"真题精析 + 错题整理 + 周复盘","done":false},{"t":"放松半天","done":false}]}]},{"stage":"强化期","weekNo":10,"range":"11.2–11.8","title":"均衡提升","goal":"写作/翻译专项加强；听力套题正确率目标 ≥60%。","days":[{"date":"2026-11-02","label":"11月2日 周一","dayNo":63,"tag":"","tasks":[{"t":"《弹性力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《控制工程基础》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《习近平新时代中国特色社会主义思想概论》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力：套题训练 1 次","done":false},{"t":"阅读限时组合：匹配 1 篇 + 仔细 1 篇","done":false},{"t":"翻译 1 段真题","done":false}]},{"date":"2026-11-03","label":"11月3日 周二","dayNo":64,"tag":"","tasks":[{"t":"《武器系统动力学建模与仿真》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《机械设计基础（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《模拟电路与数字电路（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《工程流体力学》：课后复习 ≥50min，作业 ≥1h（注：与《机械设计基础（Ⅱ）》周二第2大节时段重叠，请以实际课表为准）","done":false},{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力：错题精听","done":false},{"t":"阅读限时组合：匹配 1 篇 + 仔细 1 篇","done":false},{"t":"长难句 1 句","done":false}]},{"date":"2026-11-04","label":"11月4日 周三","dayNo":65,"tag":"","tasks":[{"t":"《弹性力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力：套题训练（Section C 精练）","done":false},{"t":"阅读限时组合：选词填空 1 篇 + 仔细 1 篇","done":false},{"t":"**写作：写第 4 篇完整作文**（限时 30 分钟）","done":false}]},{"date":"2026-11-05","label":"11月5日 周四","dayNo":66,"tag":"","tasks":[{"t":"《控制工程基础》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《武器系统动力学建模与仿真》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《机械设计基础（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《计算机视觉基础及应用》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力：错题精听","done":false},{"t":"阅读限时组合：匹配 1 篇 + 仔细 1 篇","done":false},{"t":"翻译固定表达背诵 10 个","done":false}]},{"date":"2026-11-06","label":"11月6日 周五","dayNo":67,"tag":"","tasks":[{"t":"《模拟电路与数字电路（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《工程流体力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力：套题训练","done":false},{"t":"阅读限时组合：匹配 1 篇 + 仔细 1 篇","done":false},{"t":"翻译 1 段真题","done":false}]},{"date":"2026-11-07","label":"11月7日 周六","dayNo":68,"tag":"","tasks":[{"t":"不背单词：复习（不学新词）","done":false},{"t":"**完整真题第 6 套**（限时 145 分钟）","done":false},{"t":"对答案，记录正确率","done":false}]},{"date":"2026-11-08","label":"11月8日 周日","dayNo":69,"tag":"","tasks":[{"t":"不背单词：复习 + 生词进单词本","done":false},{"t":"真题精析 + 错题整理 + 周复盘","done":false},{"t":"放松半天","done":false}]}]},{"stage":"强化期","weekNo":11,"range":"11.9–11.15","title":"强化期收尾","goal":"完成最后 1 套强化期真题；写作第 5 篇；为冲刺期做准备。","days":[{"date":"2026-11-09","label":"11月9日 周一","dayNo":70,"tag":"","tasks":[{"t":"《弹性力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《习近平新时代中国特色社会主义思想概论》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力：套题训练 1 次","done":false},{"t":"阅读限时组合：匹配 1 篇 + 仔细 1 篇","done":false},{"t":"翻译 1 段真题","done":false}]},{"date":"2026-11-10","label":"11月10日 周二","dayNo":71,"tag":"","tasks":[{"t":"《武器系统动力学建模与仿真》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《工程流体力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力：错题精听","done":false},{"t":"弱项加练：本周重点补短板","done":false},{"t":"长难句 1 句","done":false}]},{"date":"2026-11-11","label":"11月11日 周三","dayNo":72,"tag":"","tasks":[{"t":"《弹性力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力：套题训练","done":false},{"t":"阅读限时组合：选词填空 1 篇 + 仔细 1 篇","done":false},{"t":"**写作：写第 5 篇完整作文**（限时 30 分钟）","done":false}]},{"date":"2026-11-12","label":"11月12日 周四","dayNo":73,"tag":"","tasks":[{"t":"《武器系统动力学建模与仿真》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《计算机视觉基础及应用》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力：错题精听","done":false},{"t":"阅读限时组合：匹配 1 篇 + 仔细 1 篇","done":false},{"t":"整理冲刺期需要背诵的作文模板清单","done":false}]},{"date":"2026-11-13","label":"11月13日 周五","dayNo":74,"tag":"","tasks":[{"t":"《工程流体力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：新学 30 词 + 复习","done":false},{"t":"听力：套题训练","done":false},{"t":"阅读限时组合：匹配 1 篇 + 仔细 1 篇","done":false},{"t":"翻译 1 段真题","done":false}]},{"date":"2026-11-14","label":"11月14日 周六","dayNo":75,"tag":"","tasks":[{"t":"不背单词：复习（不学新词）","done":false},{"t":"**完整真题第 7 套**（限时 145 分钟）","done":false},{"t":"对答案，记录正确率","done":false}]},{"date":"2026-11-15","label":"11月15日 周日","dayNo":76,"tag":"","tasks":[{"t":"不背单词：复习 + 生词进单词本","done":false},{"t":"阶段复盘：汇总 W7–W11 各套正确率曲线，确定冲刺期重点","done":false},{"t":"放松半天，准备进入冲刺期","done":false}]}]},{"stage":"冲刺期","weekNo":12,"range":"11.16–11.22","title":"冲刺启动","goal":"完成 2 次全真模考；开始背默作文模板。","days":[{"date":"2026-11-16","label":"11月16日 周一","dayNo":77,"tag":"","tasks":[{"t":"《弹性力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《控制工程基础》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《习近平新时代中国特色社会主义思想概论》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：复习 + 真题生词","done":false},{"t":"听力：真题听力 1 套 磨耳朵","done":false},{"t":"阅读限时组合：匹配 1 篇 + 仔细 1 篇","done":false},{"t":"翻译：真题翻译 1 段","done":false},{"t":"准备明日模考（答题卡、计时器）","done":false}]},{"date":"2026-11-17","label":"11月17日 周二","dayNo":78,"tag":"模考日","tasks":[{"t":"《武器系统动力学建模与仿真》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《工程流体力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"**全真模考 1**（15:00–17:25 严格 145 分钟）","done":false},{"t":"不背单词：复习","done":false},{"t":"模考后放松，不熬夜","done":false}]},{"date":"2026-11-18","label":"11月18日 周三","dayNo":79,"tag":"","tasks":[{"t":"《弹性力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：复习 + 真题生词","done":false},{"t":"模考复盘：错题重做，定位薄弱环节","done":false},{"t":"听力：重听模考错题","done":false}]},{"date":"2026-11-19","label":"11月19日 周四","dayNo":80,"tag":"","tasks":[{"t":"《控制工程基础》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《武器系统动力学建模与仿真》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《计算机视觉基础及应用》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：复习","done":false},{"t":"阅读限时组合","done":false},{"t":"写作：写 1 篇完整作文（限时 30 分钟，用模板）","done":false}]},{"date":"2026-11-20","label":"11月20日 周五","dayNo":81,"tag":"","tasks":[{"t":"《工程流体力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：复习 + 真题生词","done":false},{"t":"听力：真题听力 1 套","done":false},{"t":"翻译：真题翻译 1 段","done":false}]},{"date":"2026-11-21","label":"11月21日 周六","dayNo":82,"tag":"模考日","tasks":[{"t":"**全真模考 2**（严格 145 分钟）","done":false},{"t":"不背单词：复习","done":false}]},{"date":"2026-11-22","label":"11月22日 周日","dayNo":83,"tag":"","tasks":[{"t":"不背单词：复习 + 生词整理","done":false},{"t":"周复盘：两套模考分数、错题汇总","done":false},{"t":"放松半天","done":false}]}],"template":["冲刺期 CET-6 固定模板","- 不背单词：复习 + 真题生词（≈15min）","- 听力：真题听力 1 套 磨耳朵 / 错题重听","- 阅读限时组合：匹配 1 篇 + 仔细 1 篇","- 写作/翻译：模板背默 或 真题翻译（按日轮换）"]},{"stage":"冲刺期","weekNo":13,"range":"11.23–11.29","title":"模考加码","goal":"2 次全真模考；写作/翻译专项加强。","days":[{"date":"2026-11-23","label":"11月23日 周一","dayNo":84,"tag":"","tasks":[{"t":"《弹性力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《习近平新时代中国特色社会主义思想概论》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：复习 + 真题生词","done":false},{"t":"听力：真题听力 1 套","done":false},{"t":"阅读限时组合","done":false},{"t":"翻译：真题翻译 1 段","done":false}]},{"date":"2026-11-24","label":"11月24日 周二","dayNo":85,"tag":"模考日","tasks":[{"t":"《武器系统动力学建模与仿真》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《工程流体力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"**全真模考 3**（严格 145 分钟）","done":false},{"t":"不背单词：复习","done":false}]},{"date":"2026-11-25","label":"11月25日 周三","dayNo":86,"tag":"","tasks":[{"t":"《弹性力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：复习","done":false},{"t":"模考复盘 + 错题整理","done":false},{"t":"听力：重听模考错题","done":false}]},{"date":"2026-11-26","label":"11月26日 周四","dayNo":87,"tag":"","tasks":[{"t":"《武器系统动力学建模与仿真》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《计算机视觉基础及应用》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：复习 + 真题生词","done":false},{"t":"阅读限时组合","done":false},{"t":"写作：写 1 篇完整作文（限时 30 分钟）","done":false}]},{"date":"2026-11-27","label":"11月27日 周五","dayNo":88,"tag":"","tasks":[{"t":"《工程流体力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：复习","done":false},{"t":"听力：真题听力 1 套","done":false},{"t":"翻译：真题翻译 1 段","done":false}]},{"date":"2026-11-28","label":"11月28日 周六","dayNo":89,"tag":"模考日","tasks":[{"t":"**全真模考 4**（严格 145 分钟）","done":false},{"t":"不背单词：复习","done":false}]},{"date":"2026-11-29","label":"11月29日 周日","dayNo":90,"tag":"","tasks":[{"t":"不背单词：复习 + 生词整理","done":false},{"t":"周复盘：模考分数曲线、薄弱项","done":false},{"t":"放松半天","done":false}]}]},{"stage":"冲刺期","weekNo":14,"range":"11.30–12.6","title":"冲刺收官","goal":"2 次全真模考；作文模板背熟、默写过关。","days":[{"date":"2026-11-30","label":"11月30日 周一","dayNo":91,"tag":"","tasks":[{"t":"《弹性力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《控制工程基础》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《习近平新时代中国特色社会主义思想概论》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：复习 + 真题生词","done":false},{"t":"听力：真题听力 1 套","done":false},{"t":"阅读限时组合","done":false},{"t":"翻译：真题翻译 1 段","done":false}]},{"date":"2026-12-01","label":"12月1日 周二","dayNo":92,"tag":"模考日","tasks":[{"t":"《武器系统动力学建模与仿真》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《模拟电路与数字电路（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《工程流体力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"**全真模考 5**（严格 145 分钟）","done":false},{"t":"不背单词：复习","done":false}]},{"date":"2026-12-02","label":"12月2日 周三","dayNo":93,"tag":"","tasks":[{"t":"《弹性力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：复习","done":false},{"t":"模考复盘 + 错题重做","done":false},{"t":"听力：重听错题","done":false}]},{"date":"2026-12-03","label":"12月3日 周四","dayNo":94,"tag":"","tasks":[{"t":"《控制工程基础》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《武器系统动力学建模与仿真》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《计算机视觉基础及应用》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：复习 + 真题生词","done":false},{"t":"阅读限时组合","done":false},{"t":"写作：写 1 篇完整作文（限时 30 分钟）","done":false}]},{"date":"2026-12-04","label":"12月4日 周五","dayNo":95,"tag":"","tasks":[{"t":"《模拟电路与数字电路（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《工程流体力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：复习","done":false},{"t":"听力：真题听力 1 套","done":false},{"t":"翻译：真题翻译 1 段","done":false}]},{"date":"2026-12-05","label":"12月5日 周六","dayNo":96,"tag":"模考日","tasks":[{"t":"**全真模考 6**（严格 145 分钟）","done":false},{"t":"不背单词：复习","done":false}]},{"date":"2026-12-06","label":"12月6日 周日","dayNo":97,"tag":"","tasks":[{"t":"不背单词：复习 + 生词整理","done":false},{"t":"周复盘：明确最后一周查漏清单","done":false},{"t":"放松半天","done":false}]}]},{"stage":"冲刺期","weekNo":15,"range":"12.7–12.11","title":"考前轻量周","goal":"不再做新题，只看错题本与模板，调整作息，轻量保持手感。","days":[{"date":"2026-12-07","label":"12月7日 周一","dayNo":98,"tag":"","tasks":[{"t":"《弹性力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《习近平新时代中国特色社会主义思想概论》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：只复习","done":false},{"t":"听力：真题听力磨耳朵（半套即可）","done":false},{"t":"阅读：仔细阅读 1 篇保持手感","done":false}]},{"date":"2026-12-08","label":"12月8日 周二","dayNo":99,"tag":"","tasks":[{"t":"《模拟电路与数字电路（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《工程流体力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：只复习","done":false},{"t":"写作：模板背默 1 遍","done":false},{"t":"翻译：真题翻译 1 段","done":false}]},{"date":"2026-12-09","label":"12月9日 周三","dayNo":100,"tag":"","tasks":[{"t":"《弹性力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"不背单词：只复习","done":false},{"t":"错题本整体回看 1 遍","done":false},{"t":"听力：真题听力磨耳朵","done":false}]},{"date":"2026-12-10","label":"12月10日 周四","dayNo":101,"tag":"","tasks":[{"t":"《计算机视觉基础及应用》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"用考场 1:1 答题卡演练填涂 1 次","done":false},{"t":"作文模板、翻译固定表达最后过一遍","done":false},{"t":"收拾考试物品（准考证、学生证、耳机、铅笔）","done":false},{"t":"晚上 23:00 前睡觉","done":false}]},{"date":"2026-12-11","label":"12月11日 周五","dayNo":102,"tag":"","tasks":[{"t":"《模拟电路与数字电路（Ⅱ）》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"《工程流体力学》：课后复习 ≥50min，作业 ≥1h","done":false},{"t":"只翻错题本 + 作文模板","done":false},{"t":"保持心情平静，不熬夜","done":false},{"t":"晚上 22:30 前睡觉","done":false}]}]}]};
+
+var DAYS = [], DAY_MAP = {}, STAGES = [];
+(function buildIndex(){
+  PLAN.weeks.forEach(function(w, wi){
+    w.id = wi;
+    if (STAGES.indexOf(w.stage) === -1) STAGES.push(w.stage);
+    w.days.forEach(function(d){
+      d.week = w;
+      DAYS.push(d);
+      DAY_MAP[d.date] = d;
+    });
+  });
+})();
+var PLAN_START = DAYS[0].date;
+var PLAN_END   = DAYS[DAYS.length - 1].date;
+var TOTAL_TASKS = DAYS.reduce(function(a, d){ return a + d.tasks.length; }, 0);
+
+/* ===================== 图标 ===================== */
+var ICON = {
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',
+  cal:'<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+  list:'<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>',
+  gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
+  alert:'<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+  clock:'<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+  check:'<polyline points="20 6 9 17 4 12"/>',
+  chev:'<polyline points="9 18 15 12 9 6"/>',
+  down:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>',
+  up:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>',
+  trash:'<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
+  info:'<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>',
+  cloud:'<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>'
+};
+function ic(n, s){
+  s = s || 18;
+  return '<svg class="ic" viewBox="0 0 24 24" width="' + s + '" height="' + s + '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + ICON[n] + '</svg>';
+}
+
+/* ===================== 工具 ===================== */
+function $(id){ return document.getElementById(id); }
+function pad(n){ return n < 10 ? '0' + n : '' + n; }
+function fmt(d){ return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+function todayKey(){ return fmt(new Date()); }
+function parseD(s){ var p = String(s).split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+function esc(s){
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function mdInline(s){ return esc(s).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>'); }
+function mmdd(key){ var p = key.split('-'); return (+p[1]) + '月' + (+p[2]) + '日'; }
+
+/* ===================== 状态 ===================== */
+var LS_KEY = 'wb_cetplan_v1';
+var S = { done: {}, ts: {}, examDate: '', seeded: false, noticeOff: false };
+var UI = { view: 'today', stage: STAGES[0], openWeeks: {}, openDays: {}, openOver: {} };
+
+function defaultExamDate(){
+  var y = new Date().getFullYear();
+  var d = new Date(y, 11, 1), n = 0;
+  while (d.getMonth() === 11){
+    if (d.getDay() === 6){ n++; if (n === 3) return fmt(d); }
+    d.setDate(d.getDate() + 1);
+  }
+  return y + '-12-19';
+}
+// 计划表末日的次日
+function planEndNextDay(){
+  var d = parseD(PLAN_END); d.setDate(d.getDate() + 1); return fmt(d);
+}
+
+/* ---------- 本机存储：先探测可用性，失败不再静默吞掉 ---------- */
+var LS_OK = false, LS_ERR = '', LAST_SAVE = 0, LAST_BYTES = 0;
+(function probeLS(){
+  try {
+    var k = '__wb_probe__';
+    localStorage.setItem(k, '1');
+    if (localStorage.getItem(k) !== '1') throw new Error('readback mismatch');
+    localStorage.removeItem(k);
+    LS_OK = true;
+  } catch (e) {
+    LS_OK = false;
+    LS_ERR = (e && (e.name || e.message)) || 'unknown';
+  }
+})();
+
+function loadLocal(){
+  var raw = null;
+  if (LS_OK){
+    try { raw = JSON.parse(localStorage.getItem(LS_KEY)); } catch (e) { raw = null; }
+  }
+  if (raw && raw.done){
+    S.done = raw.done || {};
+    S.ts = raw.ts || {};
+    S.examDate = raw.examDate || '';
+    S.seeded = !!raw.seeded;
+    S.noticeOff = !!raw.noticeOff;
+  }
+  if (!S.examDate) S.examDate = defaultExamDate();
+}
+/* 首次把 md 里已勾选的任务作为预置数据写入。
+   必须在 pull 之后调用：远端已有记录的天不覆盖，避免新设备覆盖旧设备进度。 */
+function seedIfNeeded(){
+  if (S.seeded) return false;
+  var n = 0;
+  DAYS.forEach(function(d){
+    if ((S.done[d.date] || []).length) return;
+    if (remoteIdx[d.date]) return;
+    var pre = [];
+    d.tasks.forEach(function(t, i){ if (t.done) pre.push(i); });
+    if (pre.length){ S.done[d.date] = pre; S.ts[d.date] = new Date().toISOString(); n++; }
+  });
+  S.seeded = true;
+  saveLocal();
+  return n > 0;
+}
+function saveLocal(){
+  var snap = null;
+  try { snap = JSON.stringify(S); } catch (e) { snap = null; }
+  if (snap === null) return false;
+  LAST_BYTES = snap.length;
+  if (!LS_OK){ LAST_SAVE = 0; return false; }
+  try {
+    localStorage.setItem(LS_KEY, snap);
+    LAST_SAVE = Date.now();
+    return true;
+  } catch (e) {
+    LS_OK = false;
+    LS_ERR = (e && (e.name || e.message)) || 'quota';
+    LAST_SAVE = 0;
+    return false;
+  }
+}
+
+/* ---------- 计算层（只读 state，不改 DOM） ---------- */
+function doneArr(key){ return S.done[key] || []; }
+function dayStat(key){
+  var d = DAY_MAP[key]; if (!d) return { total: 0, done: 0 };
+  return { total: d.tasks.length, done: doneArr(key).length };
+}
+function isDone(key, i){ return doneArr(key).indexOf(i) !== -1; }
+function weekStat(w){
+  var t = 0, k = 0;
+  w.days.forEach(function(d){ var s = dayStat(d.date); t += s.total; k += s.done; });
+  return { total: t, done: k };
+}
+function stageStat(name){
+  var t = 0, k = 0;
+  PLAN.weeks.forEach(function(w){
+    if (w.stage !== name) return;
+    var s = weekStat(w); t += s.total; k += s.done;
+  });
+  return { total: t, done: k };
+}
+function totalStat(){
+  var t = 0, k = 0;
+  DAYS.forEach(function(d){ var s = dayStat(d.date); t += s.total; k += s.done; });
+  return { total: t, done: k };
+}
+function todayDay(){ return DAY_MAP[todayKey()] || null; }
+function overdueDays(){
+  var tk = todayKey(), out = [];
+  DAYS.forEach(function(d){
+    if (d.date >= tk) return;
+    var s = dayStat(d.date);
+    if (s.done < s.total) out.push(d);
+  });
+  return out;
+}
+function daysLeft(){
+  var a = parseD(todayKey()), b = parseD(S.examDate);
+  return Math.round((b - a) / 86400000);
+}
+function pct(a, b){ return b ? Math.round(a * 100 / b) : 0; }
+
+/* ===================== 在线同步（资料库） ===================== */
+var DATABASE_ID = '5WTsYfGW1Q0LwQGuD58fUu';
+var db = null, ONLINE = false;
+/* 平台在用户脚本前注入 SDK；若当时还没注入（或页面被当作本地文件打开），
+   每次同步前再探一次，联网后能自动接上。 */
+function probeSDK(){
+  try {
+    if (!ONLINE && window.__SMART_PAGE__ && window.__SMART_PAGE__.database){
+      db = window.__SMART_PAGE__.database;
+      ONLINE = true;
+    }
+  } catch (e) {}
+}
+probeSDK();
+
+var remoteIdx = {};          // dateKey -> { id, ts }
+var syncTimer = null, SYNC_STATE = 'off';
+var retryTimer = null, retryN = 0;
+var RETRY_DELAYS = [5000, 15000, 40000, 90000];
+function setSync(st){
+  SYNC_STATE = st;
+  var el = $('syncInd'); if (!el) return;
+  var cls = st === 'ok' ? 'ok' : st === 'ing' ? 'ing' : st === 'pend' ? 'pend' : 'off';
+  el.className = 'sync ' + cls;
+  var txt = st === 'ok' ? '已同步' : st === 'ing' ? '同步中' : st === 'pend' ? '待同步' : '离线模式';
+  el.lastChild.textContent = txt;
+  el.title = st === 'pend' ? '有改动还没写到资料库，联网后会自动补推'
+           : st === 'off' ? (ONLINE ? '资料库暂时连不上，进度已存本机' : '未连接资料库，进度存在本机')
+           : '';
+}
+/* 本地比远端新的天 = 待推送队列。资料库不可用时也会照常算出，用于提示「待同步」。 */
+function pendingKeys(){
+  var out = [];
+  Object.keys(S.ts).forEach(function(key){
+    if (!DAY_MAP[key]) return;
+    var lts = S.ts[key] || '';
+    var rts = remoteIdx[key] ? (remoteIdx[key].ts || '') : '';
+    if (lts && (!rts || lts > rts)) out.push(key);
+  });
+  return out;
+}
+function loadAllRecords(startCursor, acc, guard){
+  acc = acc || []; guard = guard || 0;
+  if (guard > 100) return Promise.resolve(acc);
+  return db.query({ databaseId: DATABASE_ID, pageSize: 200, startCursor: startCursor })
+    .then(function(r){
+      acc = acc.concat(r.results || []);
+      var next = r.nextCursor;
+      if (r.hasMore && next && next !== startCursor && (r.results || []).length){
+        return loadAllRecords(next, acc, guard + 1);
+      }
+      return acc;
+    });
+}
+function parseSet(v){
+  if (!v) return [];
+  return String(v).split(',').filter(function(x){ return x !== ''; }).map(Number).filter(function(n){ return !isNaN(n); });
+}
+// 拉远端并按时间戳合并（远端更新 → 覆盖本地；否则保留本地并回推）
+function pullRemote(){
+  if (!ONLINE) { setSync('off'); return Promise.resolve(false); }
+  setSync('ing');
+  return loadAllRecords().then(function(rows){
+    var changed = false;
+    rows.forEach(function(r){
+      var key = r['日期'];
+      if (!key || !DAY_MAP[key]) return;
+      remoteIdx[key] = r._id;
+      var rts = r['更新时间'] || '';
+      var lts = S.ts[key] || '';
+      if (rts && (!lts || rts > lts)){
+        S.done[key] = parseSet(r['已完成']);
+        S.ts[key] = rts;
+        changed = true;
+      }
+    });
+    if (changed) saveLocal();
+    setSync('ok');
+    return changed;
+  }).catch(function(){
+    setSync('off');
+    return false;
+  });
+}
+// 回推本地比远端新的天
+function pushPending(){
+  probeSDK();
+  var jobs = pendingKeys();
+  if (!ONLINE){
+    // 连不上资料库：有改动就标「待同步」，恢复连接后 bindSyncEvents 会自动补推
+    setSync(jobs.length ? 'pend' : 'off');
+    return Promise.resolve(0);
+  }
+  if (!jobs.length){ setSync('ok'); return Promise.resolve(0); }
+  setSync('ing');
+  return Promise.all(jobs.map(function(key){
+    var props = {
+      '日期': { text: key },
+      '阶段': { text: DAY_MAP[key].week.stage },
+      '已完成': { text: (S.done[key] || []).join(',') },
+      '更新时间': { text: S.ts[key] }
+    };
+    var rid = remoteIdx[key] ? remoteIdx[key].id : null;
+    var p = rid
+      ? db.updateRecord({ databaseId: DATABASE_ID, recordId: rid, properties: props })
+      : db.addRecord({ databaseId: DATABASE_ID, properties: props });
+    return p.then(function(res){
+      remoteIdx[key] = { id: (res && res.id) || rid, ts: S.ts[key] };
+    });
+  })).then(function(){
+    retryN = 0;
+    setSync('ok');
+    return jobs.length;
+  }).catch(function(){
+    setSync('off');
+    scheduleRetry();
+    return 0;
+  });
+}
+/* 失败后按退避重试几次（仅在用户有过改动时触发，不做轮询） */
+function scheduleRetry(){
+  if (retryTimer || retryN >= RETRY_DELAYS.length) return;
+  var d = RETRY_DELAYS[retryN++];
+  retryTimer = setTimeout(function(){ retryTimer = null; pushPending(); }, d);
+}
+function scheduleSync(){
+  if (syncTimer) clearTimeout(syncTimer);
+  syncTimer = setTimeout(function(){ syncTimer = null; pushPending(); }, 600);
+}
+/* 网络/可见性变化时补推：断网期间的勾选一恢复就写回资料库 */
+function bindSyncEvents(){
+  window.addEventListener('online', function(){
+    probeSDK(); retryN = 0; pushPending();
+  });
+  window.addEventListener('beforeunload', function(){
+    try { if (ONLINE) pushPending(); } catch (e) {}
+  });
+  if (document.addEventListener){
+    document.addEventListener('visibilitychange', function(){
+      if (!document.hidden){ probeSDK(); pushPending(); }
+    });
+  }
+}
+function clearRemote(){
+  if (!ONLINE) return Promise.resolve();
+  return loadAllRecords().then(function(rows){
+    var ids = rows.map(function(r){ return r._id; }).filter(Boolean);
+    var i = 0;
+    function step(){
+      var batch = ids.slice(i, i + 5);
+      i += 5;
+      if (!batch.length) return Promise.resolve();
+      return Promise.all(batch.map(function(id){
+        return db.deleteRecord({ databaseId: DATABASE_ID, recordId: id }).catch(function(){});
+      })).then(step);
+    }
+    return step().then(function(){ remoteIdx = {}; });
+  }).catch(function(){});
+}
+
+/* ===================== 渲染层 ===================== */
+function taskHTML(key, d, i){
+  var t = d.tasks[i], on = isDone(key, i);
+  return '<div class="task' + (on ? ' done' : '') + '" data-t="' + key + '|' + i + '">' +
+    '<span class="tbox">' + ic('check', 14) + '</span>' +
+    '<span class="ttext">' + mdInline(t.t) + '</span>' +
+    (d.tag ? '<span class="tbadge">' + esc(d.tag) + '</span>' : '') +
+    '</div>';
+}
+
+function renderTopbar(){
+  var d = todayDay(), tk = todayKey();
+  var p = parseD(tk);
+  var wd = ['周日','周一','周二','周三','周四','周五','周六'][p.getDay()];
+  $('tbDate').textContent = mmdd(tk) + ' ' + wd;
+  $('tbSub').textContent = d
+    ? ('计划第 ' + d.dayNo + ' 天 · ' + d.week.stage + ' W' + d.week.weekNo)
+    : (tk < PLAN_START ? '计划尚未开始（' + mmdd(PLAN_START) + ' 起）' : '计划已结束（' + mmdd(PLAN_END) + ' 止）');
+
+  var s = dayStat(tk);
+  var pt = $('pillToday');
+  pt.innerHTML = ic('sun', 15) + '<span>今日 ' + s.done + '/' + s.total + '</span>';
+  pt.className = 'pill click' + (s.total && s.done === s.total ? ' green' : '');
+
+  var od = overdueDays(), odCnt = od.reduce(function(a, x){ return a + (dayStat(x.date).total - dayStat(x.date).done); }, 0);
+  var po = $('pillOverdue');
+  po.innerHTML = ic('alert', 15) + '<span>逾期 ' + od.length + ' 天 / ' + odCnt + ' 项</span>';
+  po.className = 'pill click' + (od.length ? ' red' : ' ghost');
+
+  var dl = daysLeft();
+  $('pillCd').innerHTML = ic('clock', 15) + '<span>距考试 ' + (dl >= 0 ? dl : 0) + ' 天</span>';
+
+  var n = $('backupNotice');
+  var ts = totalStat();
+  if (!S.noticeOff && ts.done >= 20){
+    n.classList.remove('hide');
+    $('backupIcon').innerHTML = ic('info', 17);
+    $('backupText').textContent = '已完成 ' + ts.done + ' 项任务，建议导出一份 JSON 留底。';
+  } else {
+    n.classList.add('hide');
+  }
+}
+
+function renderToday(){
+  var tk = todayKey(), d = todayDay();
+  var box = $('todayList');
+  if (!d){
+    box.innerHTML = '<div class="muted" style="padding:10px 4px">' +
+      (tk < PLAN_START ? '还没到计划开始日（' + mmdd(PLAN_START) + '），可以先去「计划」页看看安排。' : '计划已走完（' + mmdd(PLAN_END) + ' 止），剩下的就是考试了。') +
+      '</div>';
+    $('todayCnt').textContent = '';
+  } else {
+    var s = dayStat(d.date);
+    $('todayCnt').textContent = s.done + ' / ' + s.total;
+    box.innerHTML = d.tasks.map(function(_, i){ return taskHTML(d.date, d, i); }).join('');
+  }
+
+  var od = overdueDays();
+  var oc = $('overdueCard');
+  if (!od.length){
+    $('overdueCnt').textContent = '';
+    $('overdueList').innerHTML = '<div class="muted" style="padding:8px 4px">没有欠账，节奏很稳。</div>';
+    oc.querySelector('.card-h').style.color = 'var(--green)';
+    return;
+  }
+  oc.querySelector('.card-h').style.color = 'var(--red)';
+  $('overdueCnt').textContent = od.length + ' 天';
+  $('overdueList').innerHTML = od.map(function(x){
+    var st = dayStat(x.date);
+    var open = !!UI.openOver[x.date];
+    return '<div class="day od' + (open ? ' open' : '') + '" data-day="' + x.date + '">' +
+      '<button class="day-h" data-togday="' + x.date + '">' +
+        '<span class="chev">' + ic('chev', 16) + '</span>' +
+        '<span class="dh-date">' + mmdd(x.date) + '</span>' +
+        '<span class="muted">第 ' + x.dayNo + ' 天</span>' +
+        (x.tag ? '<span class="dh-tag">' + esc(x.tag) + '</span>' : '') +
+        '<span class="dh-sp"></span>' +
+        '<span class="dh-cnt over">剩 ' + (st.total - st.done) + ' 项</span>' +
+      '</button>' +
+      (open ? '<div class="day-body">' + x.tasks.map(function(_, i){ return taskHTML(x.date, x, i); }).join('') + '</div>' : '') +
+      '</div>';
+  }).join('');
+}
+
+function renderPlan(){
+  $('stageSegs').innerHTML = STAGES.map(function(s){
+    var st = stageStat(s);
+    return '<button class="seg' + (UI.stage === s ? ' on' : '') + '" data-stage="' + esc(s) + '">' +
+      esc(s) + ' · ' + st.done + '/' + st.total + '</button>';
+  }).join('');
+
+  var ws = PLAN.weeks.filter(function(w){ return w.stage === UI.stage; });
+  var tk = todayKey();
+  $('planBox').innerHTML = '<div class="grid2">' + ws.map(function(w){
+    var st = weekStat(w);
+    var open = !!UI.openWeeks[w.id];
+    var cur = w.days.some(function(d){ return d.date === tk; });
+    var p = pct(st.done, st.total);
+    return '<div class="card week' + (cur ? ' cur' : '') + '" data-week="' + w.id + '" style="margin-bottom:0">' +
+      '<button class="week-h" data-togweek="' + w.id + '">' +
+        '<span class="wno">W' + w.weekNo + '</span>' +
+        '<span class="wtt"><b>' + esc(w.title) + '</b><span>' + esc(w.range) + '</span></span>' +
+        '<span class="wbar"><span class="track"><span class="fill' + (st.total && st.done === st.total ? ' full' : '') + '" style="width:' + p + '%"></span></span>' +
+        '<span class="lab">' + st.done + '/' + st.total + ' · ' + p + '%</span></span>' +
+        '<span class="chev">' + ic('chev', 16) + '</span>' +
+      '</button>' +
+      (open ? '<div class="week-body">' +
+        (w.goal ? '<div class="wgoal"><b>本周目标：</b>' + mdInline(w.goal) + '</div>' : '') +
+        w.days.map(function(d){
+          var ds = dayStat(d.date);
+          var dop = !!UI.openDays[d.date];
+          var cls = 'day' + (d.date === tk ? ' tdy' : (d.date < tk && ds.done < ds.total ? ' od' : ''));
+          return '<div class="' + cls + (dop ? ' open' : '') + '" data-day="' + d.date + '" style="margin-bottom:7px">' +
+            '<button class="day-h" data-togday="' + d.date + '">' +
+              '<span class="chev">' + ic('chev', 16) + '</span>' +
+              '<span class="dh-date">' + mmdd(d.date) + '</span>' +
+              '<span class="muted">第 ' + d.dayNo + ' 天</span>' +
+              (d.tag ? '<span class="dh-tag">' + esc(d.tag) + '</span>' : '') +
+              '<span class="dh-sp"></span>' +
+              '<span class="dh-cnt' + (ds.total && ds.done === ds.total ? ' full' : (d.date < tk ? ' over' : '')) + '">' + ds.done + '/' + ds.total + '</span>' +
+            '</button>' +
+            (dop ? '<div class="day-body">' + d.tasks.map(function(_, i){ return taskHTML(d.date, d, i); }).join('') + '</div>' : '') +
+            '</div>';
+        }).join('') +
+      '</div>' : '') +
+      '</div>';
+  }).join('') + '</div>';
+}
+
+function renderMine(){
+  var dl = daysLeft();
+  $('cdNum').textContent = dl >= 0 ? dl : '—';
+  $('cdSide').innerHTML = '考试日期 <b>' + mmdd(S.examDate) + '</b>（' + S.examDate + '）<br>' +
+    (dl >= 0 ? '还有 ' + dl + ' 天；' : '该日期已过去；') +
+    '计划表排到 ' + mmdd(PLAN_END) + '，共 102 天。<br>' +
+    '<span style="color:var(--ink3)">以官方公告为准。</span>';
+  var el = $('examDate'); if (el && el.value !== S.examDate) el.value = S.examDate;
+
+  var t = totalStat();
+  $('statBox').innerHTML =
+    '总进度 <b style="color:var(--orange-d);font-size:17px">' + t.done + '</b> / ' + t.total +
+    ' 项（' + pct(t.done, t.total) + '%）<br>' +
+    STAGES.map(function(s){
+      var x = stageStat(s);
+      return esc(s) + '：' + x.done + '/' + x.total + '（' + pct(x.done, x.total) + '%）';
+    }).join('　·　') +
+    '<br>今天：' + (function(){ var s = dayStat(todayKey()); return s.done + '/' + s.total; })() +
+    '　·　逾期 ' + overdueDays().length + ' 天';
+  $('totalTaskCnt').textContent = TOTAL_TASKS;
+}
+
+/* 存储不可用时的显式告警（不再静默失败） */
+function renderPersistNotice(){
+  var el = $('persistNotice'); if (!el) return;
+  if (LS_OK || ONLINE){ el.classList.add('hide'); return; }
+  el.classList.remove('hide');
+  $('persistIcon').innerHTML = ic('alert', 17);
+  $('persistText').innerHTML = '<b>当前环境保存不了进度。</b>浏览器本地存储被禁用（' + esc(LS_ERR) +
+    '），又没连上资料库，勾选记录刷新后会丢失。请先点「导出留底」，或改用本地文件版 / 登录后重新打开本页。';
+}
+/* 存储诊断：一眼看清进度到底落在哪 */
+function renderDiag(){
+  var box = $('diagBox'); if (!box) return;
+  function row(k, v, cls){ return '<dt>' + k + '</dt><dd class="' + (cls || '') + '">' + v + '</dd>'; }
+  var pend = pendingKeys().length;
+  var days = Object.keys(S.done).filter(function(k){ return (S.done[k] || []).length; }).length;
+  var stTxt = SYNC_STATE === 'ok' ? '已同步'
+            : SYNC_STATE === 'ing' ? '同步中'
+            : SYNC_STATE === 'pend' ? '有 ' + pend + ' 天改动待同步'
+            : '离线（' + (LS_OK ? '进度在本机' : '进度无处可存') + '）';
+  var stCls = SYNC_STATE === 'ok' ? 'good' : (SYNC_STATE === 'pend' || !LS_OK && !ONLINE ? 'bad' : '');
+  box.innerHTML =
+    row('资料库', ONLINE ? '已连接' : '未连接', ONLINE ? 'good' : '') +
+    row('本机存储', LS_OK ? '可用' : '不可用（' + esc(LS_ERR) + '）', LS_OK ? 'good' : 'bad') +
+    row('最近写入', LAST_SAVE ? new Date(LAST_SAVE).toLocaleTimeString() + ' · ' + LAST_BYTES + ' 字节' : '本次会话还没有写入', LAST_SAVE ? 'good' : 'bad') +
+    row('同步状态', stTxt, stCls) +
+    row('已记录', days + ' 天', '');
+}
+
+/* ---------- 统一刷新入口（铁律 9：只有这里按序调渲染函数） ---------- */
+function refreshAll(){
+  renderTopbar();
+  renderToday();
+  renderPlan();
+  renderMine();
+  renderDiag();
+  renderPersistNotice();
+}
+/* 只更新计数，不重建列表（勾选时的轻量刷新） */
+function refreshCounters(){
+  renderTopbar();
+  var tk = todayKey(), d = todayDay();
+  if (d){ var s = dayStat(d.date); $('todayCnt').textContent = s.done + ' / ' + s.total; }
+  // 逾期卡片内的计数徽标
+  Array.prototype.forEach.call(document.querySelectorAll('#overdueList .day'), function(el){
+    var key = el.getAttribute('data-day'), st = dayStat(key);
+    var c = el.querySelector('.dh-cnt');
+    if (c) c.textContent = '剩 ' + (st.total - st.done) + ' 项';
+  });
+  // 计划表内的天/周计数
+  Array.prototype.forEach.call(document.querySelectorAll('#planBox .day'), function(el){
+    var key = el.getAttribute('data-day'), st = dayStat(key), d2 = DAY_MAP[key];
+    var c = el.querySelector('.dh-cnt');
+    if (c){
+      c.textContent = st.done + '/' + st.total;
+      c.className = 'dh-cnt' + (st.total && st.done === st.total ? ' full' : (d2 && d2.date < todayKey() ? ' over' : ''));
+    }
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('#planBox .week'), function(el){
+    var w = PLAN.weeks[+el.getAttribute('data-week')], st = weekStat(w), p = pct(st.done, st.total);
+    var f = el.querySelector('.fill'), l = el.querySelector('.lab');
+    if (f){ f.style.width = p + '%'; f.className = 'fill' + (st.total && st.done === st.total ? ' full' : ''); }
+    if (l) l.textContent = st.done + '/' + st.total + ' · ' + p + '%';
+  });
+  // 阶段切换按钮上的计数
+  Array.prototype.forEach.call(document.querySelectorAll('#stageSegs .seg'), function(el){
+    var name = el.getAttribute('data-stage'), st = stageStat(name);
+    el.textContent = name + ' · ' + st.done + '/' + st.total;
+  });
+  renderMine();
+  renderDiag();
+  renderPersistNotice();
+}
+/* 局部更新单个任务行（渲染层内部，不触发其它渲染函数的互调） */
+function updateTaskRow(key, i){
+  var el = document.querySelector('.task[data-t="' + key + '|' + i + '"]');
+  if (!el) return;
+  el.classList.toggle('done', isDone(key, i));
+  refreshCounters();
+}
+
+/* ===================== 事件（改数据 → 刷新） ===================== */
+function toggleTask(key, i){
+  var arr = (S.done[key] || []).slice();
+  var at = arr.indexOf(i);
+  if (at === -1) arr.push(i); else arr.splice(at, 1);
+  arr.sort(function(a, b){ return a - b; });
+  S.done[key] = arr;
+  S.ts[key] = new Date().toISOString();
+  var ok = saveLocal();
+  updateTaskRow(key, i);
+  scheduleSync();
+  if (!ok && !ONLINE) warnSaveFail();
+}
+/* 本机写不进去、资料库又连不上时，第一次就明确告诉用户，不再静默丢数据 */
+var warnedFail = false;
+function warnSaveFail(){
+  if (warnedFail) return;
+  warnedFail = true;
+  renderPersistNotice();
+  alert('进度没能保存到本机（' + LS_ERR + '），资料库也没连上，刷新后勾选会丢失。\n' +
+        '建议：到「我的 → 数据备份」导出 JSON 留底，或改用本地文件版（D:\\studynotes\\英语\\六级备考计划台.html）。');
+}
+
+function setView(v){
+  UI.view = v;
+  ['today', 'plan', 'mine'].forEach(function(x){
+    $('view-' + x).classList.toggle('hide', x !== v);
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('.navi, .tabbar button'), function(b){
+    b.classList.toggle('on', b.getAttribute('data-view') === v);
+  });
+  window.scrollTo(0, 0);
+}
+
+function goToday(){
+  setView('today');
+  var od = overdueDays();
+  if (od.length){
+    UI.openOver[od[0].date] = true;
+    renderToday();
+    var el = document.querySelector('#overdueList .day[data-day="' + od[0].date + '"]');
+    if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+/* ---------- 弹层 ---------- */
+function modal(title, html, actions){
+  var host = $('modalHost');
+  host.innerHTML = '<div class="mask"><div class="modal"><h3>' + esc(title) + '</h3>' + html +
+    '<div class="row" style="justify-content:flex-end;margin-top:16px" id="mActions"></div></div></div>';
+  var bar = $('mActions');
+  actions.forEach(function(a){
+    var b = document.createElement('button');
+    b.className = 'btn ' + (a.cls || '');
+    b.textContent = a.label;
+    b.onclick = function(){ if (a.onClick) a.onClick(host); };
+    bar.appendChild(b);
+  });
+}
+function closeModal(){ $('modalHost').innerHTML = ''; }
+
+/* ---------- 导出 / 导入 / 清空 ---------- */
+function exportJSON(){
+  var data = JSON.stringify({ app: 'cet-plan', v: 1, exportedAt: new Date().toISOString(), data: S }, null, 2);
+  var blob = new Blob([data], { type: 'application/json' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '六级备考计划-备份-' + todayKey() + '.json';
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 200);
+  S.noticeOff = true; saveLocal(); renderTopbar();
+}
+function importJSON(file){
+  var fr = new FileReader();
+  fr.onload = function(){
+    var obj = null;
+    try { obj = JSON.parse(String(fr.result)); } catch (e) { obj = null; }
+    var d = obj && (obj.data || obj);
+    if (!d || !d.done){ alert('文件格式不对，请选择本工作台导出的 JSON。'); return; }
+    var n = 0;
+    Object.keys(d.done || {}).forEach(function(key){
+      if (!DAY_MAP[key]) return;
+      var lts = S.ts[key] || '', rts = (d.ts && d.ts[key]) || '';
+      if (rts && (!lts || rts > lts)){ S.done[key] = d.done[key]; S.ts[key] = rts; n++; }
+    });
+    if (d.examDate) S.examDate = d.examDate;
+    saveLocal(); refreshAll(); scheduleSync();
+    alert('导入完成，更新了 ' + n + ' 天的记录。');
+  };
+  fr.readAsText(file);
+}
+function askClear(){
+  modal('清空全部勾选记录',
+    '<p>这会删除本机和资料库里所有勾选记录，<b>不可恢复</b>。计划表内容不受影响。<br>确认请在下面输入 <b>清空</b> 两个字。</p>' +
+    '<input type="text" id="clearInput" placeholder="输入：清空" autocomplete="off">',
+    [
+      { label: '取消', onClick: closeModal },
+      { label: '确认清空', cls: 'd', onClick: function(){
+          var v = ($('clearInput') || {}).value || '';
+          if (v.trim() !== '清空'){ alert('请输入「清空」两个字确认。'); return; }
+          closeModal();
+          S.done = {}; S.ts = {}; S.noticeOff = false; S.seeded = true;
+          saveLocal();
+          clearRemote().then(function(){ refreshAll(); });
+          refreshAll();
+        } }
+    ]);
+}
+
+/* ===================== 初始化 ===================== */
+function bindStaticIcons(){
+  $('icSun').innerHTML = ic('sun', 19);
+  $('icAlert').innerHTML = ic('alert', 19);
+  $('icClock').innerHTML = ic('clock', 19);
+  $('icList').innerHTML = ic('list', 19);
+  $('icDown').innerHTML = ic('down', 19);
+  $('icTrash').innerHTML = ic('trash', 19);
+  $('icInfo').innerHTML = ic('info', 19);
+  $('icDiag').innerHTML = ic('cloud', 19);
+  var navIcon = { today: 'sun', plan: 'list', mine: 'gear' };
+  Array.prototype.forEach.call(document.querySelectorAll('.navi'), function(b){
+    var v = b.getAttribute('data-view');
+    b.innerHTML = ic(navIcon[v], 18) + '<span>' + ({ today: '今日', plan: '计划表', mine: '我的' })[v] + '</span>';
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('.tabbar button'), function(b){
+    var v = b.getAttribute('data-view');
+    b.innerHTML = ic(navIcon[v], 21) + '<span>' + ({ today: '今日', plan: '计划', mine: '我的' })[v] + '</span>';
+  });
+}
+
+function bindEvents(){
+  // 导航
+  Array.prototype.forEach.call(document.querySelectorAll('.navi, .tabbar button'), function(b){
+    b.addEventListener('click', function(){ setView(b.getAttribute('data-view')); });
+  });
+  // 顶栏快捷入口
+  $('pillToday').addEventListener('click', function(){ setView('today'); });
+  $('pillOverdue').addEventListener('click', goToday);
+
+  // 任务勾选 / 天展开（事件委托）
+  document.addEventListener('click', function(e){
+    var t = e.target.closest ? e.target.closest('.task') : null;
+    if (t){
+      var p = t.getAttribute('data-t').split('|');
+      toggleTask(p[0], +p[1]);
+      return;
+    }
+    var th = e.target.closest ? e.target.closest('[data-togday]') : null;
+    if (th){
+      var k = th.getAttribute('data-togday');
+      if (UI.openDays[k] !== undefined) UI.openDays[k] = !UI.openDays[k];
+      else UI.openOver[k] = !UI.openOver[k];
+      if (UI.view === 'today') renderToday(); else renderPlan();
+      return;
+    }
+    var tw = e.target.closest ? e.target.closest('[data-togweek]') : null;
+    if (tw){
+      var id = tw.getAttribute('data-togweek');
+      UI.openWeeks[id] = !UI.openWeeks[id];
+      renderPlan();
+      return;
+    }
+    var sg = e.target.closest ? e.target.closest('[data-stage]') : null;
+    if (sg){
+      UI.stage = sg.getAttribute('data-stage');
+      renderPlan();
+    }
+  });
+
+  // 我的页
+  $('examDate').addEventListener('change', function(){
+    if (this.value){ S.examDate = this.value; saveLocal(); renderTopbar(); renderMine(); }
+  });
+  $('btnExamThird').addEventListener('click', function(){
+    S.examDate = defaultExamDate(); saveLocal(); renderTopbar(); renderMine();
+  });
+  $('btnExamPlan').addEventListener('click', function(){
+    S.examDate = planEndNextDay(); saveLocal(); renderTopbar(); renderMine();
+  });
+  $('btnExport').addEventListener('click', exportJSON);
+  $('btnImport').addEventListener('click', function(){ $('fileInput').click(); });
+  $('fileInput').addEventListener('change', function(){
+    if (this.files && this.files[0]) importJSON(this.files[0]);
+    this.value = '';
+  });
+  $('btnClear').addEventListener('click', askClear);
+  $('btnBackupNow') && $('btnBackupNow').addEventListener('click', exportJSON);
+  $('btnPersistExport') && $('btnPersistExport').addEventListener('click', exportJSON);
+  $('btnRetrySync') && $('btnRetrySync').addEventListener('click', function(){
+    probeSDK(); retryN = 0; pushPending().then(function(n){
+      renderDiag(); alert(n ? ('已同步 ' + n + ' 天的改动到资料库。') : '没有需要同步的改动，或当前仍未连上资料库（见上方「同步状态」）。');
+    });
+  });
+}
+
+/* 清理平台表单缓存的过期残留（登录重定向兜底，超 48h 作废） */
+function purgeStaleCache(){
+  try {
+    var KEY = 'sp_img_flag_' + location.pathname;
+    var raw = localStorage.getItem(KEY);
+    if (raw){
+      var o = JSON.parse(raw), ts = (o && o.ts) || 0;
+      if (!ts || Date.now() - ts > 48 * 3600 * 1000) localStorage.removeItem(KEY);
+    }
+  } catch (e) {}
+}
+
+function init(){
+  purgeStaleCache();
+  bindStaticIcons();
+  loadLocal();
+  // 默认展开当前周
+  var td = todayDay();
+  if (td){ UI.stage = td.week.stage; UI.openWeeks[td.week.id] = true; UI.openDays[td.date] = true; }
+  else { UI.openWeeks[PLAN.weeks[0].id] = true; }
+  bindEvents();
+  bindSyncEvents();
+  refreshAll();
+  // 在线同步：先拉远端合并，再补种子（避免覆盖远端已有记录），最后回推本地较新的改动
+  if (ONLINE){
+    if (typeof db.onUpdated === 'function'){
+      var debounce = false;
+      db.onUpdated(function(payload){
+        var ids = (payload && payload.databaseIds) || [];
+        if (ids.indexOf(DATABASE_ID) === -1) return;
+        if (debounce) return;
+        debounce = true;
+        setTimeout(function(){
+          debounce = false;
+          pullRemote().then(function(changed){ if (changed) refreshAll(); });
+        }, 300);
+      });
+    }
+    pullRemote()
+      .then(function(){ if (seedIfNeeded()) refreshAll(); return pushPending(); })
+      .then(function(){ refreshAll(); });
+  } else {
+    // 离线：把 md 已勾项预置进本机，并提示存储状态
+    if (seedIfNeeded()) refreshAll();
+    setSync('off');
+  }
+}
+
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>
