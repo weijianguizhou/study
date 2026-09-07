@@ -11,17 +11,30 @@
             "id": "8ab0d2dd60d8c879",
             "type": "leaf",
             "state": {
+              "type": "image",
+              "state": {
+                "file": "控制理论/控制工程基础/Figure/闭环控制系统.png"
+              },
+              "icon": "lucide-image",
+              "title": "闭环控制系统"
+            }
+          },
+          {
+            "id": "625dfe77b0366fbc",
+            "type": "leaf",
+            "state": {
               "type": "markdown",
               "state": {
-                "file": "教材/SystemDynamicsModelingAndSimulation/5读书笔记——第五章 坐标系的相对方位.md",
+                "file": "控制系统的动态数学模型.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "5读书笔记——第五章 坐标系的相对方位"
+              "title": "控制系统的动态数学模型"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -156,7 +169,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "教材/SystemDynamicsModelingAndSimulation/5读书笔记——第五章 坐标系的相对方位.md",
+                "file": "控制系统的动态数学模型.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -206,11 +219,29 @@
       "oh-my-claudian:Open Oh My Claudian": false
     }
   },
-  "active": "8ab0d2dd60d8c879",
+  "active": "625dfe77b0366fbc",
   "lastOpenFiles": [
+    "控制理论/控制工程基础/课堂笔记/第1章.md",
+    "控制系统的动态数学模型.md",
+    "控制理论/控制工程基础/课堂笔记",
+    "控制理论/控制工程基础/Figure/闭环控制系统.png",
+    "控制理论/控制工程基础/Figure/变换的前馈环.png",
+    "控制理论/控制工程基础/Figure/反馈环.png",
+    "控制理论/控制工程基础/Figure/简单并行块.png",
+    "控制理论/控制工程基础/Figure/具有稳态误差的飞轮上的P控制器.png",
+    "控制理论/控制工程基础/Figure/前馈环.png",
+    "控制理论/控制工程基础/Figure/简单级联块.png",
+    "控制理论/控制工程基础/Figure/级联块.png",
+    "控制理论/控制工程基础/Figure/电梯上的PD控制器.png",
+    "控制理论/控制工程基础/Figure/大K_i增益超调飞轮的PI控制器.png",
+    "教材/SystemDynamicsModelingAndSimulation/7读书笔记——第七章 坐标系的姿态广义坐标.md",
     "力学/系统动力学建模与仿真/系统动力学建模与仿真笔记.synctex(busy)",
-    "教材/SystemDynamicsModelingAndSimulation/6读书笔记——第六章 相对转动角速度.md",
+    "力学/系统动力学建模与仿真/力学基础.tex~RF13fa0247.TMP",
+    "力学/系统动力学建模与仿真/力学基础尾部修复.tex",
+    "力学/系统动力学建模与仿真/力学基础.tex~RF13f2ee15.TMP",
+    "力学/系统动力学建模与仿真/力学基础.tex~RF13e97094.TMP",
     "教材/SystemDynamicsModelingAndSimulation/5读书笔记——第五章 坐标系的相对方位.md",
+    "教材/SystemDynamicsModelingAndSimulation/6读书笔记——第六章 相对转动角速度.md",
     "教材/Spacecraft_Dynamics/读书笔记/03-欧拉参数.md",
     "教材/Spacecraft_Dynamics/读书笔记/01-方向余弦.md",
     "教材/Spacecraft_Dynamics/读书笔记/15-角速度与方向角.md",
@@ -219,39 +250,22 @@
     "教材/Spacecraft_Dynamics/读书笔记/07-间接定向法.md",
     "教材/Spacecraft_Dynamics/读书笔记/04-欧拉角.md",
     "教材/Spacecraft_Dynamics/读书笔记/02-转轴和转角.md",
-    "力学/系统动力学建模与仿真/Figure/任意三维矢量的定点简单转动.png",
-    "力学/系统动力学建模与仿真/Figure/两坐标系间的相对转动.png",
     "力学/系统动力学建模与仿真/数学基础.tex~RF10ea2d44.TMP",
     "力学/系统动力学建模与仿真/数学基础.tex~RF10e9e4a3.TMP",
     "教材/SystemDynamicsModelingAndSimulation/4读书笔记——第四章 笛卡尔张量.md",
-    "力学/系统动力学建模与仿真/Figure/不同坐标系矢量基之间的关系.png",
     "教材/SystemDynamicsModelingAndSimulation/3读书笔记——第三章 系统运动微分方程及其数值求解.md",
     "教材/SystemDynamicsModelingAndSimulation/1读书笔记——第一章 有限维广义变分原理.md",
     "教材/控制理论/controls-engineering-in-frc/读书笔记——控制工程基础.md",
-    "力学/系统动力学建模与仿真/Figure/右手笛卡尔直角坐标系.png",
     "教材/SystemDynamicsModelingAndSimulation/2读书笔记——第二章 多体系统拉格朗日方程.md",
     "教材/SystemDynamicsModelingAndSimulation/10读书笔记——第十章 多刚体系统运动学方程递推形式.md",
     "教材/SystemDynamicsModelingAndSimulation/11读书笔记——多刚体系统拉格朗日方程递推形式.md",
     "教材/SystemDynamicsModelingAndSimulation/存疑总结.md",
     "教材/SystemDynamicsModelingAndSimulation/9读书笔记——第九章 体元件广义坐标与系统总体动力学方程.md",
-    "教材/SystemDynamicsModelingAndSimulation/7读书笔记——第七章 坐标系的姿态广义坐标.md",
     "教材/SystemDynamicsModelingAndSimulation/00-武器系统动力学读书笔记MOC.md",
     "英语/六级备考计划台.html.tmp",
     "英语/六级备考计划台.html",
-    "英语/四六级备考台.html",
     "教材/控制理论/控制系统计算机辅助设计—MATLAB语言与应用/笔记/02MATLAB语言程序设计基础.md",
     "教材/控制理论/控制系统计算机辅助设计—MATLAB语言与应用/笔记/01控制系统仿真与CAD概述.md",
-    "教材/控制理论/控制系统计算机辅助设计—MATLAB语言与应用/课件/02MATLAB基础.txt",
-    "Pasted image 20260904132747.png",
-    "Pasted image 20260904132618.png",
-    "Pasted image 20260904132106.png",
-    "教材/控制理论/控制系统计算机辅助设计—MATLAB语言与应用/课件/9491c710618d40c9bf739374a8f5a834/b1c88ed28f80486982e933702d716bd9.pdf",
-    "教材/控制理论/控制系统计算机辅助设计—MATLAB语言与应用/课件/9491c710618d40c9bf739374a8f5a834",
-    "教材/控制理论/控制系统计算机辅助设计—MATLAB语言与应用/课件/11分数阶控制基础.pdf",
-    "力学/系统动力学建模与仿真/Figure/SystemDynamicsModelingAndSimulation_59a.png",
-    "力学/系统动力学建模与仿真/Figure/SystemDynamicsModelingAndSimulation_58a.png",
-    "力学/系统动力学建模与仿真/Figure/SystemDynamicsModelingAndSimulation_61.png",
-    "力学/难题整理/材料力学.md",
-    "教材/SystemDynamicsModelingAndSimulation/8读书笔记——第八章 空间运动刚体的动能与势能.md"
+    "力学/难题整理/材料力学.md"
   ]
 }
