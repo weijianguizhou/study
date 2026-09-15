@@ -4,19 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "1ba9b7cb984631e3",
+        "id": "87090d1f0c43acda",
         "type": "tabs",
         "children": [
           {
-            "id": "8ab0d2dd60d8c879",
+            "id": "68a87f2bf0ea706e",
             "type": "leaf",
             "state": {
-              "type": "image",
+              "type": "markdown",
               "state": {
-                "file": "控制理论/控制工程基础/Figure/闭环控制系统.png"
+                "file": "控制理论/控制工程基础/笔记/2. 控制系统的动态数学模型.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-image",
-              "title": "闭环控制系统"
+              "icon": "lucide-file",
+              "title": "2. 控制系统的动态数学模型"
             }
           }
         ]
@@ -154,7 +156,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "控制理论/控制工程基础/Figure/闭环控制系统.png",
+                "file": "控制理论/控制工程基础/笔记/2. 控制系统的动态数学模型.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -188,7 +190,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 414.5
+    "width": 414.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -204,8 +207,11 @@
       "oh-my-claudian:Open Oh My Claudian": false
     }
   },
-  "active": "8ab0d2dd60d8c879",
+  "active": "68a87f2bf0ea706e",
   "lastOpenFiles": [
+    "控制理论/控制工程基础/Figure/机械平移系统及其力学模型.png",
+    "控制理论/控制工程基础/笔记",
+    "控制理论/控制工程基础/Figure/闭环控制系统.png",
     "数学建模/数学建模教程/获奖论文和赛题/2024zjhychn/C题/附件3/result1_2.xlsx",
     "数学建模/数学建模教程/获奖论文和赛题/2024zjhychn/C题/附件3/result1_1.xlsx",
     "数学建模/数学建模教程/获奖论文和赛题/2024zjhychn/C题/附件3/result2.xlsx",
@@ -221,12 +227,9 @@
     "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/垂荡运动受力分析示意图.png",
     "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/fig_sim_08.png",
     "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/fig_sim_09.png",
-    "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/fig_sim_07.png",
     "数学建模/数学建模教程/获奖论文和赛题/2024zjhychn/C题/附件3",
     "数学建模/数学建模教程/获奖论文和赛题/2024zjhychn/C题/附件2.xlsx",
     "数学建模/数学建模教程/获奖论文和赛题/2024zjhychn/C题/附件1.xlsx",
-    "数学建模/数学建模教程/获奖论文和赛题/2024zjhychn/D题/D题.pdf",
-    "数学建模/数学建模教程/获奖论文和赛题/2024zjhychn/C题/C题.pdf",
     "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/8.1汇报讲稿.md",
     "数学建模/数学建模教程/11-数据分析/04-异常检测.md",
     "数学建模/数学建模教程/11-数据分析/05-数据可视化.md",
