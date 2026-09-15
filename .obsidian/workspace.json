@@ -11,10 +11,14 @@
             "id": "e781a751d8898528",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "机器人学/ROS2/使用CMake + ament编译ROS2节点.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "新标签页"
+              "title": "使用CMake + ament编译ROS2节点"
             }
           }
         ]
@@ -152,6 +156,7 @@
             "state": {
               "type": "outline",
               "state": {
+                "file": "机器人学/ROS2/使用CMake + ament编译ROS2节点.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -203,8 +208,10 @@
       "opencode:Opencode conversations": false
     }
   },
-  "active": "437ab6934dc5f66d",
+  "active": "e781a751d8898528",
   "lastOpenFiles": [
+    "机器人学/ROS2/使用CMake + ament编译ROS2节点.md",
+    "机器人学/ROS2",
     "数理基础/教材/工程数学 矢量分析与场论 (谢树艺).pdf",
     "数理基础/教材",
     "数理基础/新建文件夹",
@@ -224,8 +231,6 @@
     "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/chapters/Ch_intro.tex",
     "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/chapters/Ch4.tex",
     "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/chapters/Ch2.tex",
-    "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/chapters/Ch5.tex",
-    "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/chapters/Ch7.tex",
     "教材/控制理论/控制系统计算机辅助设计—MATLAB语言与应用/笔记/01控制系统仿真与CAD概述.md",
     "教材/控制理论/控制系统计算机辅助设计—MATLAB语言与应用/笔记/02MATLAB语言程序设计基础.md",
     "教材/Spacecraft_Dynamics/读书笔记/15-角速度与方向角.md",
