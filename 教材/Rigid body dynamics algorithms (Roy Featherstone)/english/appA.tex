@@ -1,0 +1,185 @@
+\appendix
+\chapter{Spatial Vector Arithmetic}
+Appendix A Spatial Vector Arithmetic This appendix presents two approaches to implementing spatial vector arithmetic: one that emphasizes simplicity, and one that emphasizes efficiency. The simple method is presented for both planar and spatial vectors, but the efficient method only for spatial vectors. The simple method is appropriate whenever human productivity is more important than computing efficiency. It assumes the user has access to a general-purpose matrix arithmetic tool, like Matlab,1 and it exploits this tool by providing only those few spatial arithmetic functions that are not standard matrix operations. The efficient method uses compact data structures to store spatial quantities efficiently, and a variety of optimizations and efficiency tricks to cut the cost of performing spatial arithmetic. A.1 Simple Planar Arithmetic Almost all of the basic operations in planar vector arithmetic are standard matrix operations. Thus, if one has access to a general-purpose matrix arithmetic tool, like Matlab, then only a few extra functions are required, and these are shown in Table A.1. The function Xpln constructs a planar coordinate transformation matrix. Referring to the diagram immediately below it, the two arguments r and θ specify the position and orientation of coordinate frame B relative to frame A; and the matrix returned by Xpln is the motion-vector transform from A coordinates to B coordinates (i.e., X = BXA). This same convention is used in all other transform-making functions: the arguments describe where the new frame is relative to the current frame, and the function returns the motionvector coordinate transform from the current frame to the new one. To obtain a force-vector transform, one can use the formula BX∗ A = (BXA)−T. The functions crm and crf implement the planar cross operators. In both cases, the argument is a planar vector, v = [ω vOx vOy]T, specifying a velocity. 1Matlab is a registered trademark of The MathWorks, Inc.
+
+function X = Xpln(θ, r) c = cos(θ) s = sin(θ) X =
+
+1 0 0 s rx −c ry c s c rx + s ry −s c
+
+end A B rx ry θ X function v× = crm(v) v× =
+
+0 0 0 vOy 0 −ω −vOx ω 0
+
+end function v×∗= crf(v) v×∗=
+
+0 −vOy vOx 0 0 −ω 0 ω 0
+
+end function I = mcI(m, c, IC) I =
+
+IC + m(c2 x + c2 y) −m cy m cx −m cy m 0 m cx 0 m
+
+end function v = XtoV(X) version 1: v =
+
+X23 X31 −X21
+
+version 2: v =
+
+X23 (X31 + X22X31 + X23X21)/2 (−X21 −X22X21 + X23X31)/2
+
+end Table A.1: Planar vector arithmetic functions The expressions v× and v×∗in these functions are the names of the output variables. Strictly speaking, one does not really need both functions, since crf(v) = −crm(v)T. The function mcI constructs a rigid-body inertia matrix for a planar rigid body. The arguments m, c = [cx cy]T and IC specify the body’s mass, the position of its centre of mass, and its rotational inertia about the centre of mass, respectively. This function would typically be used to initialize the inertia matrices in a system-model data structure. Finally, the function XtoV calculates a motion vector from a coordinate transform in the following manner. Given any two coordinate frames, A and B, there exists a velocity, u, with the property that if frame A travels at this velocity for one time unit, then it will end up coincident with frame B. The argument to XtoV is the transform from A to B coordinates, which contains all the information needed to work out where frame B is relative to frame A; and the computed vector, v, is an approximation to u that converges to the exact value as the angle between A and B approaches zero. Thus, v is exactly equal to u when X is a pure translation. Two versions of this function are given. The first is simpler, but the second is more accurate, and has two special properties:
+
+(1) v is an invariant of X, i.e., v = Xv, and (2) v is a scalar multiple of u, and the two are related by the formula u = v sin−1(X23)/X23. This function is used to calculate position errors in kinematic constraint equations. Its main use in dynamics is to calculate loop-closure position errors for use in loop constraint stabilization (see §8.3). A.2 Simple Spatial Arithmetic Almost every operation in spatial vector arithmetic is a standard matrix operation. Thus, if one has access to a general-purpose matrix arithmetic tool, like Matlab, then it can provide nearly all of the necessary operations. Only a few extra functions are required, and these are shown in Table A.2. The functions rotx, roty and rotz construct Pl¨ucker transform matrices for rotations of the coordinate frame about the x, y and z axes, respectively. In particular, X transforms a motion vector from A to B coordinates, where frame B is rotated by an angle θ relative to frame A about their common x, y or z axis, as appropriate. In general, the transform matrix for a force vector can be obtained using the formula X∗= X−T. However, for a pure rotation, it just so happens that X∗= X. The functions rx, ry and rz calculate the appropriate 3 × 3 rotation matrices using the formulae at the top of the table. The function xlt constructs the Pl¨ucker transform matrix for a translation of the coordinate frame by an amount r. The argument is a 3D vector specifying the position of frame B relative to frame A, and the returned value is the Pl¨ucker transform from A to B coordinates. The functions crm and crf implement the spatial cross operators. In both cases, the argument is a motion vector representing a spatial velocity. The expressions v1:3 and v4:6 denote 3D vectors formed from the first three and last three Pl¨ucker coordinates of v, respectively; the expressions v1:3× and v4:6× are the 3 × 3 cross-product matrices calculated from v1:3 and v4:6 according to the formula at the top of the table; but the expressions v× and v×∗in these two functions are the names of the output variables. The function mcI constructs a rigid-body inertia matrix. The arguments specify the body’s mass, the position of its centre of mass, and its rotational inertia about the centre of mass. c is a 3D vector, and IC is a 3 × 3 matrix. Finally, the function XtoV calculates a motion vector from a coordinate transform in the same way as the equivalent planar function. Given any two coordinate frames, A and B, there exists a velocity, u, with the property that if frame A were to travel at this velocity for one time unit, then it would end up coincident with frame B. The argument to this function is the transform from A to B coordinates, which contains all the information needed to work out where frame B is relative to frame A; and the computed vector, v, is an approximation to u that converges to the exact value as the angle between A and B approaches zero. Thus, v is exactly equal to u when X is a pure translation. v is also an invariant of X, so v = Xv = X−1v, but it is not a scalar multiple of u. This
+
+rx(θ) =
+
+1 0 0 0 c s 0 −s c
+
+ry(θ) =
+
+c 0 −s 0 1 0 s 0 c
+
+rz(θ) =
+
+c s 0 −s c 0 0 0 1
+
+v× =
+
+0 −vz vy vz 0 −vx −vy vx 0
+
+c = cos(θ) s = sin(θ) function X = rotx(θ) E = rx(θ) X =  E 03×3 03×3 E  end function X = roty(θ) E = ry(θ) X =  E 03×3 03×3 E  end function X = rotz(θ) E = rz(θ) X =  E 03×3 03×3 E  end function X = xlt(r) X = 13×3 03×3 −r× 13×3  end function v× = crm(v) v× =  v1:3× 03×3 v4:6× v1:3×  end function v×∗= crf(v) v×∗= −crm(v)T end function I = mcI(m, c, IC) I =  IC −m c×c× m c× −m c× m 13×3  end function v = XtoV(X) v = 1 2
+
+X23 −X32 X31 −X13 X12 −X21 X53 −X62 X61 −X43 X42 −X51
+
+end Table A.2: Spatial vector arithmetic functions and supporting 3D formulae
+
+Mathematical Quantity Form Data Structure Size motion vector  ω v  mv(ω, v) 6 force vector  n f  fv(n, f) 6 Pl¨ucker transform  E 0 −E r× E  plx(E, r) 12 rigid-body inertia  I h× −h× m 1  rbi(m, h, lt(I)) 10 artic.-body inertia  I H HT M  abi(lt(M), H, lt(I)) 21 Table A.3: Data structures for compact representation of spatial quantities function is used to calculate position errors in kinematic constraint equations. Its main use in dynamics is to calculate loop-closure position errors for use in loop constraint stabilization (see §8.3). A.3 Compact Representations Most of the inefficiencies in the pure matrix implementation of spatial arithmetic come from the use of general 6 × 6 matrices to represent Pl¨ucker transforms, rigid-body inertias and articulated-body inertias. To give an extreme example, the calculation of XTIX, where X is a Pl¨ucker transform and I is a rigid-body inertia, would require 432 multiplications and 360 additions (two 6 × 6 × 6 matrix multiplications) if X and I are treated as general 6 × 6 matrices; but it is possible to perform this operation in only 52 multiplications and 56 additions if one exploits fully the special structure and properties of these two matrices. This source of inefficiency can be eliminated by defining special data structures to store these quantities, and special functions that implement optimized versions of the operations of spatial arithmetic. Table A.3 shows how this can be done. Expressions like mv(ω, v) are a short-hand way of specifying the type and value of a data object. In the case of mv(ω, v), the type is ‘motion vector’ and the value is a pair of 3D vectors. On comparing this expression with the mathematical quantity it represents, it can be seen that ω contains the first three Pl¨ucker coordinates of a spatial motion vector, and v contains the rest. In the data structures for inertias, the expression lt(· · · ) means ‘lower triangle of · · · ’. Thus, the data structure rbi(m, h, lt(I)) contains the scalar m, the 3D vector h and the lower triangle
+
+of the 3 × 3 matrix I, making a total of 1 + 3 + 6 = 10 numbers. Strictly speaking, the data types mv and fv are no more compact than the 6D vectors they represent, which raises the question of why they are worth having. The answer is type safety. By forcing the programmer to declare each vector variable to be either a motion vector or a force vector, it becomes possible for the compiler to detect a variety of incorrect expressions, like m+f, m · m, f × f, f = m, If and X∗m. With some programming languages, it is possible to go even further, and have the compiler automatically select the correct version of an operation from the types of its operands. An example is shown in the following code fragment (in a fictitious programming language). variable X : PluXfm; variable f1, f2 : SpFvec; variable I1, I2 : SpRBI; X := plx(......); f1 := fv(......); I1 := rbi(......); f2 := X.apply(f1); I2 := X.apply(I1); In this example, the first six lines declare five variables and initialize three of them; and then the last two lines apply the Pl¨ucker transform described by X to the force vector described by f1 and the rigid-body inertia described by I1. The idea here is that the function apply exists in several different versions in the software library—one for each kind of object that can be transformed—and the compiler picks the right one for the type of argument. If the argument is a force vector, then the compiler picks the version that calculates X∗f; and if the argument is a rigid-body inertia, then the compiler picks the version that calculates X∗IX−1. By designing the software in this manner, it is possible to relieve the programmer from having to remember the coordinate transformation rule for each type of object. Any well-designed spatial arithmetic package would also include a function invApply, which would apply the inverse of the transform described by X. Thus, if we were to add the lines variable f3 : SpFvec; f3 := X.invApply(f2); to the above example, then f3 would be identical to f1 except for rounding errors. This is more efficient than explicitly inverting X and applying the inverse. Again, the compiler would pick the appropriate version of invApply according to the type of object to be transformed. Table A.4 lists most of the arithmetic operations that should be provided in an efficient spatial arithmetic package, together with the formulae for implementing them using compact data structures, and their computational cost
+
+Operation Formula Cost α ˆv mv( αω, αv ) 6m α ˆf fv( αn, αf ) 6m α ˆI rbi( αm, αh, lt(αI) ) 10m α IA abi( lt(αM), αH, lt(αI) ) 21m ˆv1 + ˆv2 mv( ω1 + ω2, v1 + v2 ) 6a ˆf1 + ˆf2 fv( n1 + n2, f1 + f2 ) 6a ˆI1 + ˆI2 rbi( m1 + m2, h1 + h2, lt(I1 + I2) ) 10a IA 1 + IA 2 abi( lt(M1 + M2), H1 + H2, lt(I1 + I2) ) 21a IA 1 + ˆI2 abi( lt(M1 + m21), H1 + h2×, lt(I1 + I2) ) 15a ˆv · ˆf ω · n + v · f 6m + 5a ˆv1 × ˆv2 mv( ω1×ω2, ω1×v2 + v1×ω2 ) 18m + 12a ˆv ×∗ˆf fv( ω×n + v×f, ω×f ) 18m + 12a ˆIˆv fv( Iω + h×v, mv −h×ω ) 24m + 18a IAˆv fv( Iω + Hv, Mv + HTω ) 36m + 30a X1X2 plx( E1E2, r2 + ET 2 r1 ) 33m + 24a X−1 plx( ET, −Er ) 9m + 6a Xˆv mv( Eω, E(v −r×ω) ) 24m + 18a X−1ˆv mv( ETω, ETv + r×ETω ) 24m + 18a X∗ˆf fv( E(n −r×f), Ef ) 24m + 18a XT ˆf fv( ETn + r×ETf, ETf ) 24m + 18a X∗ˆIX−1 rbi( m, E(h −mr), lt(E(I + r×h× + (h −mr)×r×)ET) ) 52m + 56a XT ˆIX rbi( m, ETh + mr, lt(ETIE − r×(ETh)× −(ETh + mr)×r×) ) 52m + 56a X∗IAX−1 abi( lt(EMET), E(H −r×M)ET, lt(E(I −r×HT + (H −r×M)r×)ET) ) 137m + 137a XTIAX abi( lt(M ′), H′ + r×M ′, lt(ETIE + r×H′T −(H′ + r×M ′)r×) ) where M ′ = ETME and H′ = ETHE 137m + 137a Table A.4: Spatial arithmetic operation formulae and cost figures
+
+figures. The symbols m and a in the cost column refer to floating-point multiplications and additions, respectively, with subtractions counted as additions. To avoid name clashes, the symbols ˆv, ˆf and ˆI denote spatial motion (velocity), force and rigid-body inertia, respectively. The cost figures quoted here are for optimized implementations of the calculations. Thus, a calculation like r×M, for example, is treated as the product of a skew-symmetric matrix with a symmetric one, which costs only 15m + 9a. Likewise, a calculation like EMET is assumed to be implemented using the appropriate efficiency trick from Section A.5, which costs only 28m+29a. The coordinate transform formulae that would be used by X.apply(...) and X.invApply(...) are as follows: X.apply(...) X.invApply(...) Xˆv X−1ˆv X∗ˆf XTˆf X∗ˆIX−1 XT ˆIX X∗IAX−1 XTIAX Bear in mind that the cost figures in this table are not the last word in efficiency. In particular, significant further improvements can be obtained by using axial screw transforms instead of general Pl¨ucker transforms, as explained in Section A.4. To see how the formulae and cost figures in Table A.4 are obtained, let us examine the operation X∗ˆIX−1 in detail. Expressed in terms of 6×6 matrices, we have X∗ˆIX−1 =  E 0 0 E   1 −r× 0 1   I h× −h× m1   1 0 r× 1   ET 0 0 ET  = E 0 0 E  I + r×h× h× −mr× −h× m1   1 0 r× 1  ET 0 0 ET  = E 0 0 E  I + r×h× y× −h× m1   1 0 r× 1  ET 0 0 ET  =  E 0 0 E   I + r×h× + y×r× y× −h× + mr× m1   ET 0 0 ET  =  E 0 0 E   Z y× −y× m1   ET 0 0 ET  =  EZET Ey×ET −Ey×ET m1  =  EZET (Ey)× −(Ey)× m1  , where y = h −mr and Z = I + r×h× + y×r× .
+
+This agrees completely with the formula in the table. To obtain the cost figure, we proceed as follows: quantity cost quantity cost h −mr 3m + 3a lt(I + r×h× + y×r×) 12a lt(r×h×) 6m + 3a Ey 9m + 6a lt(y×r×) 6m + 3a EZET 28m + 29a Total: 52m + 56a (See Section A.5 for how to calculate EZET.) A.4 Axial Screw Transforms An axial screw transform is a combination of a rotation about and translation along a single coordinate axis. We shall use the expressions scrx(θ, d), scry(θ, d) and scrz(θ, d) to denote axial screw transforms about the x, y and z axes, respectively, in which the angle of rotation is θ and the amount of translation is d. Thus, scrx(θ, d) = rotx(θ) xlt([d 0 0]T) = xlt([d 0 0]T) rotx(θ) (because the rotation and translation commute), and so on. A compact data structure describing an axial screw transform would contain the three basic quantities c = cos(θ), s = sin(θ) and d, as well as the derived quantities s2, cs, 2cs and 1 −2s2, which are used to reduce the recurrent cost of rotating matrices, as explained in Section A.5. Axial screw transforms are useful because they can be performed efficiently. Table A.5 shows the cost of applying an axial screw transform to various spatial quantities. The quantity Ia has been included because of its relevance to the articulated-body algorithm. It will be discussed later in this section. The total cost has been divided into a recurring cost, which is the cost of applying the transform, and a one-time cost, which is the cost of calculating the quantities s2, cs, 2cs and 1 −2s2 mentioned above. If the angle is a constant, then this transformed computational cost screw quantity recurring one-time axis m, f 10m + 6a I 16m + 15a 2m + 3a IA 38m + 40a 2m + 3a Ia 28m + 34a 2m + 3a z Ia 32m + 28a 2m + 3a x, y row and column 3 of Ia are zero Table A.5: Computational costs of axial screw transforms
+
+calculation can be performed off-line, or at the start of program execution; otherwise, it must be performed each time the rotation angle changes. On comparing the costs in Table A.5 with those in Table A.4, it can be seen that the cost of an axial screw transform varies from about 40\% (for a vector) to less than a third (for an inertia) of the cost of a general Pl¨ucker transform. Now, a general Pl¨ucker transform can be achieved by three successive axial screws; but the transform from one Denavit-Hartenberg coordinate frame to another can be achieved using only two axial screws. (See Figure 4.8.) Therefore, a significant cost saving can be achieved, relative to the cost figures in Table A.4, by using a combination of Denavit-Hartenberg frames in the system model and axial-screw transforms in the calculations. Vectors Written out in full, the expression for Xm, where X = scrz(θ, d), is
+
+c s 0 0 0 0 −s c 0 0 0 0 0 0 1 0 0 0 −sd cd 0 c s 0 −cd −sd 0 −s c 0 0 0 0 0 0 1
+
+mx my mz mOx mOy mOz
+
+=
+
+cmx + smy cmy −smx mz c(mOx + myd) + s(mOy −mxd) c(mOy −mxd) −s(mOx + myd) mOz
+
+. The cost of this operation is clearly 10m+6a. It is easily shown that the cost of calculating X∗f is also 10m + 6a, and that the costs of screw transforms about the other two axes are the same. Rigid-Body Inertia Axial screw transforms are applied to rigid-body inertias using the formulae in Table A.4, but the cost of the calculation is reduced because of the special form of E and r. The cost breakdown for the operation X∗ˆIX−1 is computational cost operation recurring one-time y = h −mr 1m + 1a Z = I + r×h× + y×r× 3m + 5a Ey 4m + 2a EZET 8m + 7a 2m + 3a Totals: 16m + 15a 2m + 3a The calculation of EZET is accomplished using the appropriate efficiency trick from Section A.5. The calculation of Z proceeds as follows: if r = [0 0 d]T, then lt(r×h× + y×r×) =
+
+−(hz + yz)d · · 0 −(hz + yz)d · hxd hyd 0
+
+.
+
+The cost of calculating this expression is 3m + 1a, and the cost of adding it to lt(I) is 4a. If r = [d 0 0]T or [0 d 0]T then the details will be different, but the cost will be the same. Articulated-Body Inertias Axial screw transforms are applied to articulated-body inertias using the formulae in Table A.4, but the cost of the calculation is reduced because of the special form of E and r. The cost breakdown for the operation X∗IAX−1 is computational cost operation recurring one-time EMET 8m + 7a 2m + 3a Y = H −r×M 5m + 6a EYET 12m + 12a 2m Z = I −r×HT + Y r× 5m + 8a EZET 8m + 7a 2m + 3a Totals: 38m + 40a 2m + 3a (The cost breakdown and total cost of XTIAX are the same.) The three rotations are performed using the appropriate efficiency tricks in Section A.5. The 2m one-time cost for calculating EYET is subsumed in the 2m + 3a onetime cost for the other two rotations. The cost figures for calculating Y and Z can be understood as follows. If r = [0 0 d]T, then r×M =
+
+0 −d 0 d 0 0 0 0 0
+
+M11 M12 M13 M21 M22 M23 M31 M32 M33
+
+=
+
+−M21d −M22d −M23d M11d M12d M13d 0 0 0
+
+and lt(−r×HT + Y r×) =
+
+(H12 + Y12)d · · (Y22 −H11)d −(H21 + Y21)d · H32d −H31d 0
+
+. The cost of calculating r×M is 5m (because M12 = M21); the cost of subtracting it from H is 6a; the cost of calculating lt(−r×H T + Y r×) is 5m + 3a; and the cost of adding it to lt(I) is 5a. If r = [d 0 0]T or [0 d 0]T then the details will be different, but the costs will be the same. Articulated-Body Inertias with Zero-Valued Rows and Columns The single most expensive operation in the articulated-body algorithm is the transformation of articulated-body inertias from one coordinate system to another. However, the quantity that gets transformed is not a general articulatedbody inertia, but one of the form Ia = IA −IAS(STIAS)−1STIA .
+
+This quantity has the following special property: if S is a 6 × d matrix having 6−d zero-valued rows, then all of the rows and columns of I a corresponding to the nonzero rows of S will be zero. For example, if S = [0 0 1 0 0 0]T (a revolute joint) then row and column 3 of Ia will be zero, and if S = [03×2 13×3 03×1]T (a planar joint) then rows and columns 3, 4 and 5 of Ia will all be zero. A significant improvement in the speed of the articulated-body algorithm can be achieved by exploiting this special property of I a. To create a customized coordinate transformation procedure, one starts with the procedure for a general articulated-body inertia, and makes whatever simplifications accrue from the special form of Ia. Cost figures for two such customized transforms appear in Table A.5, and a cost breakdown for each appears below. In both cases, row and column 3 of Ia are zero. Note that scrz preserves the zeros in this row and column, but scrx and scry do not. In typical use, Ia is transformed from one Denavit-Hartenberg coordinate system to another by first applying scrz, and then applying scrx to the result. The total cost of this procedure, including the one-time cost for scrz only (because the x rotation angle is a constant), is 62m+65a. This is less than half the cost of the general transform in Table A.4, and about 10\% better than the figures reported in McMillan and Orin (1995). More on this topic can be found in McMillan and Orin (1995). z axis screw recurring cost EMET 8m + 7a Y = H −r×M 5m + 6a EYET 8m + 10a Z = I −r×HT + Y r× 3m + 6a EZET 4m + 5a Total: 28m + 34a x or y axis screw recurring cost M ′ = EMET 8m + 7a H′ = EHET 10m + 6a Y = H′ −r×M ′ 5m + 6a I′ = EIET 4m + 1a I′ −r×H′T + Y r× 5m + 8a Total: 32m + 28a A.5 Some Efficiency Tricks Product of Rotation Matrices Any one row or column of a 3 × 3 rotation matrix is the vector product of the other two. Thus, if F and G are two rotation matrices, and E = F G, then E can be calculated in the following manner:
+
+E11 E12 E21 E22 E31 E32
+
+=
+
+F11 F12 F13 F21 F22 F23 F31 F32 F33
+
+G11 G12 G21 G22 G31 G32
+
+,
+
+E13 E23 E33
+
+=
+
+E11 E21 E31
+
+×
+
+E12 E22 E32
+
+.
+
+The total cost of this calculation is 24m + 15a, which amounts to a saving of 3m + 3a over standard matrix multiplication. More generally, the cost of the calculation E = F1F2 · · · FnG is (18m + 12a)n + 6m + 3a. Rotation of a General Matrix Consider the calculation B = EAET, where E is a rotation matrix and A is a general 3 × 3 matrix. This calculation can be performed as two 3 × 3 × 3 multiplications, for a total cost of 54m + 36a. However, it is possible to reduce this cost to 40m + 39a as follows. First, split A into three components: A = L + D + v× , where L =
+
+A11 −A33 A12 0 A21 A22 −A33 0 A31 + A13 A32 + A23 0
+
+, D =
+
+A33 0 0 0 A33 0 0 0 A33
+
+, v =
+
+−A23 A13 0
+
+. B can now be expressed as B = E (L + D + v×) ET = ELET + D + (Ev)× . Defining Y = EL and Z = Y ET, we calculate
+
+Y11 Y12 Y21 Y22 Y31 Y32
+
+=
+
+E11 E12 E13 E21 E22 E23 E31 E32 E33
+
+L11 L12 L21 L22 L31 L32
+
+,
+
+· Z12 Z13 Z21 Z22 Z23 Z31 Z32 Z33
+
+=
+
+Y11 Y12 Y21 Y22 Y31 Y32
+
+ E11 E21 E31 E12 E22 E32  and Z11 = L11 + L22 −Z22 −Z33 . (This last equation exploits the invariance of the trace under rotation. Alternatively, Z11 could have been calculated with the rest of Z at a cost of 2m + 1a.) Finally, Ev is calculated by a 3 × 2 × 1 matrix multiplication between the leftmost two columns of E and the top two elements of v, and the quantities Z, D and (Ev)× are summed. The total cost of this procedure is calculated as follows: quantity cost quantity cost L 4a Z11 3a Y 18m + 12a Ev 6m + 3a Z 16m + 8a Z + D + (Ev)× 9a Total: 40m + 39a This is slightly more than the recurring cost of three successive rotations about the coordinate axes.
+
+Rotation of a Symmetric Matrix Now consider the calculation B = EAET, where E is a general 3 × 3 rotation matrix and A is a symmetric matrix. This calculation can be performed using the exact same procedure as for a general matrix A, but with some simplifications allowed by the symmetry. Specifically, we only need to calculate the lower triangle of B. As a consequence, there is no need to calculate Z12, Z13 or Z23; and, as a further consequence, there is no need to calculate Y11 or Y12. Thus, the calculations of Y and Z simplify to  Y21 Y22 Y31 Y32  =  E21 E22 E23 E31 E32 E33 
+
+L11 L12 L21 L22 L31 L32
+
+and Z21 Z22 · Z31 Z32 Z33  = Y21 Y22 Y31 Y32  E11 E21 E31 E12 E22 E32  , with Z11 calculated as before. The total cost of this simplified procedure is: quantity cost quantity cost L 4a Z11 3a Y 12m + 8a Ev 6m + 3a Z 10m + 5a Z + D + (Ev)× 6a Total: 28m + 29a This is a substantial improvement on the cost of two 3 × 3 × 3 matrix multiplications, but it is not quite as fast as performing three successive rotations about the coordinate axes. Rotation of a General Matrix about a Coordinate Axis Suppose we wish to calculate B = EAET, where E is rx(θ), ry(θ) or rz(θ), and A is a general 3 × 3 matrix. The formulae for these three rotations can be written in the following manner.2 rx(θ) A rx(θ)T =
+
+A11 cA12 + sA13 cA13 −sA12 cA21 + sA31 A22 + αx A23 + βx cA31 −sA21 A32 + βx A33 −αx
+
+ry(θ) A ry(θ)T =
+
+A11 −αy cA12 −sA32 A13 + βy cA21 −sA23 A22 cA23 + sA21 A31 + βy cA32 + sA12 A33 + αy
+
+rz(θ) A rz(θ)T =
+
+A11 + αz A12 + βz cA13 + sA23 A21 + βz A22 −αz cA23 −sA13 cA31 + sA32 cA32 −sA31 A33
+
+2These formulae, and those in the next trick, are based on the work of McMillan (1994).
+
+where αx = cs(A23 + A32) + s2(A33 −A22) αy = cs(A31 + A13) + s2(A11 −A33) αz = cs(A12 + A21) + s2(A22 −A11) βx = cs(A33 −A22) −s2(A23 + A32) βy = cs(A11 −A33) −s2(A31 + A13) βz = cs(A22 −A11) −s2(A12 + A21) s = sin(θ) and c = cos(θ) . In all cases, the cost is the same, and is calculated as follows: computational cost quantity recurring one-time cs, s2 2m α, β 4m + 4a rest of B 8m + 8a Totals: 12m + 12a 2m Observe that the total cost has been divided into a recurring cost and a onetime cost. The idea here is that an axial-rotation data structure is defined, which contains the values c, s, cs and s2, and all four quantities are available at the time the rotation is performed. Thus, the one-time cost is the cost incurred when the data structure is initialized or updated,3 and the recurring cost is the cost incurred each time a rotation is performed. This tactic allows one to exploit the fact that many rotation angles in dynamics calculations are known constants, and that even where the rotation angle varies, the data structure will often be used more than once between changes. Rotation of a Symmetric Matrix about a Coordinate Axis Now consider the calculation of B = EAET, where E is rx(θ), ry(θ) or rz(θ), and A is a symmetric 3 × 3 matrix. The formulae for these rotations are simplified versions of the formulae for rotating a general matrix, and can be written as follows: lt( rx(θ) A rx(θ)T) =
+
+A11 · · cA21 + sA31 A22 + αx · cA31 −sA21 βx A33 −αx
+
+3Strictly speaking, the cost of initializing this data structure should include the cost of performing one sine and one cosine calculation. However, these trigonometric calculations are normally excluded from the cost figures because they are assumed to be the same for all methods.
+
+lt( ry(θ) A ry(θ)T) =
+
+A11 −αy · · cA21 −sA23 A22 · βy cA32 + sA12 A33 + αy
+
+lt( rz(θ) A rz(θ)T) =
+
+A11 + αz · · βz A22 −αz · cA31 + sA32 cA32 −sA31 A33
+
+where αx = 2csA32 + s2(A33 −A22) αy = 2csA31 + s2(A11 −A33) αz = 2csA21 + s2(A22 −A11) βx = cs(A33 −A22) + (1 −2s2)A32 βy = cs(A11 −A33) + (1 −2s2)A31 βz = cs(A22 −A11) + (1 −2s2)A21 . In all cases, the cost is the same, and is calculated as follows: computational cost quantity recurring one-time cs, s2 2m 2cs, (1 −2s2) 3a α, β 4m + 3a rest of B 4m + 4a Totals: 8m + 7a 2m + 3a Once again, the total cost has been divided into a recurring cost and a onetime cost. The axial-rotation data structure is assumed to contain the values c, s, cs, s2, 2cs and 1 −2s2, all of which are available at the time the rotation is performed. Thus, the one-time cost is incurred when the data structure is initialized or updated, and the recurring cost is incurred each time a rotation is performed.

@@ -1,0 +1,210 @@
+% ch6.tex — Exercises and Complements II (hand-typeset)
+\chapter{Exercises and Complements II}
+
+\section{Ordinary Differential Equations and Matrices}
+
+Second-order ODEs $y''+\omega^2 y=\beta$ map to $\dot{\vect z}=\hat M\vect z+\vect\phi$ with
+$\hat M=\mat{0&-\omega^2\\1&0}$, recovering the harmonic-oscillator matrix of
+Chapter~2. The general solution is
+\begin{equation}
+\vect z(t) = e^{\hat M t}\vect z(0) + \int_0^t e^{\hat M(t-t')}\vect\phi\,dt'.
+\label{eq:6.1.1}
+\end{equation}
+
+For $\vect\phi=\vect 0$ and $\hat M$ constant,
+\begin{equation}
+e^{\hat M t} =
+\mat{\cos(\omega t)&-\omega\sin(\omega t)\\
+     \frac{1}{\omega}\sin(\omega t)&\cos(\omega t)},
+\label{eq:6.1.2}
+\end{equation}
+exactly as derived in Chapter~2.
+
+\begin{exercise}
+Solve $y''+2\zeta\omega_0 y'+\omega_0^2 y = F_0\cos(\Omega t)$ using the matrix
+method and derive the resonance curve.
+\end{exercise}
+
+\section{Crofton--Glaisher Identities and Heat-Type Equations}
+
+The Crofton identity
+$e^{\xi\hat A}\hat B = \hat B e^{\xi\hat A} + \xi[\hat A,\hat B]e^{\xi\hat A}$
+applied to heat polynomials gives the Glaisher identity
+\begin{equation}
+e^{at\partial_x^2}\,e^{-x^2}
+= \frac{1}{\sqrt{1+4at}}\;
+\exp\!\left(-\frac{x^2}{1+4at}\right).
+\label{eq:6.2.1}
+\end{equation}
+
+A generalisation: for the heat-type equation
+$\partial_t F = a\,\partial_x^2 F$ with $F(x,0)=x^n$,
+\begin{equation}
+F(x,t) = H_n(x,at) = n!\sum_{r=0}^{\lfloor n/2\rfloor}
+\frac{x^{n-2r}(at)^r}{(n-2r)!\,r!}.
+\label{eq:6.2.2}
+\end{equation}
+
+\begin{exercise}
+Prove the Crofton identity $e^{y\partial_x^m}f(x)=f(x+my\partial_x^{m-1})e^{y\partial_x^m}$
+and use it to derive the generalised Glaisher identity for $\partial_x^{2m}$.
+\end{exercise}
+
+\section{Gamma Function and Definite Integrals}
+
+Euler's Gamma function:
+\begin{equation}
+\Gamma(z) = \int_0^\infty t^{z-1}e^{-t}\,dt, \qquad \Re(z)>0.
+\label{eq:6.3.1}
+\end{equation}
+
+Key properties:
+\begin{align}
+\Gamma(z+1) &= z\,\Gamma(z),\\
+\Gamma(\tfrac12) &= \sqrt{\pi},\\
+\Gamma(n+1) &= n! \quad (n\in\mathbb N_0).
+\label{eq:6.3.2}
+\end{align}
+
+Beta function:
+\begin{equation}
+B(p,q) = \int_0^1 t^{p-1}(1-t)^{q-1}dt
+= \frac{\Gamma(p)\Gamma(q)}{\Gamma(p+q)}.
+\label{eq:6.3.3}
+\end{equation}
+
+Useful integral:
+\begin{equation}
+\int_0^\infty x^{n}e^{-ax^2}dx =
+\frac{\Gamma\!\left(\frac{n+1}{2}\right)}{2a^{(n+1)/2}},
+\qquad a>0,\;n>-1.
+\label{eq:6.3.4}
+\end{equation}
+
+\begin{exercise}
+Evaluate $\int_0^{\pi/2}\sin^{2m}\theta\cos^{2n}\theta\,d\theta$
+using the Beta function.
+\end{exercise}
+
+\section{Complex Variable Method and Evaluation of Integrals}
+
+For a function $f(z)$ analytic in a simple domain, the closed-path integral
+vanishes (Cauchy theorem). The residue theorem:
+\begin{equation}
+\oint_C f(z)\,dz = 2\pi i\sum_{z_k\in\text{int}(C)} \operatorname{Res}(f,z_k).
+\label{eq:6.4.1}
+\end{equation}
+
+Jordan's lemma: for $f(z)\to0$ uniformly as $|z|\to\infty$ in the
+upper/lower half-plane, the semicircular arc integral vanishes.
+
+\begin{exercise}
+Evaluate $\int_{-\infty}^{\infty}\frac{\cos(kx)}{1+x^2}\,dx$ using a semicircular
+contour in the upper half-plane.
+\end{exercise}
+
+Principal value: for a pole at $x=\Omega$ on the real axis,
+\begin{equation}
+\mathcal P\int_{-\infty}^{\infty}\frac{\tilde\chi(\omega)}{\omega-\Omega}\,d\omega
+= \lim_{\epsilon\to0}\left(
+\int_{-\infty}^{\Omega-\epsilon}+\int_{\Omega+\epsilon}^{\infty}
+\right)\frac{\tilde\chi(\omega)}{\omega-\Omega}\,d\omega.
+\label{eq:6.4.2}
+\end{equation}
+The small semicircle around $\omega=\Omega$ contributes $-i\pi\tilde\chi(\Omega)$.
+
+\section{Fourier Transform}
+
+Definition:
+\begin{equation}
+\tilde f(k)=\int_{-\infty}^{\infty}f(x)\,e^{-ikx}\,dx,\qquad
+f(x)=\frac{1}{2\pi}\int_{-\infty}^{\infty}\tilde f(k)\,e^{ikx}\,dk.
+\label{eq:6.5.1}
+\end{equation}
+
+The transform diagonalises $\partial_x\mapsto ik$ and turns PDEs into ODEs.
+Key properties:
+\begin{align}
+\mathcal F[f'(x)] &= ik\,\tilde f(k),\\
+\mathcal F[xf(x)] &= i\,\widetilde f\,'(k),\\
+\mathcal F[f*g] &= \tilde f(k)\,\tilde g(k),
+\label{eq:6.5.2}
+\end{align}
+where $(f*g)(x)=\int f(y)g(x-y)\,dy$.
+
+Gaussian:
+\begin{equation}
+\mathcal F[e^{-ax^2}] = \sqrt{\frac{\pi}{a}}\,e^{-k^2/(4a)}.
+\label{eq:6.5.3}
+\end{equation}
+
+\begin{exercise}
+Derive the convolution theorem and use it to solve
+$y''+k_0^2y=s(x)$ via Fourier transform.
+\end{exercise}
+
+\section{Fourier Transform and the Solution of Differential Equations}
+
+For $y''+k_0^2y=s(x)$ with boundary conditions at infinity,
+\begin{equation}
+\tilde y(k) = \frac{\tilde s(k)}{k_0^2-k^2},
+\label{eq:6.6.1}
+\end{equation}
+and the inverse transform yields the Green's-function solution
+\begin{equation}
+y(x) = \int_{-\infty}^{\infty} G(x-\xi)\,s(\xi)\,d\xi,
+\qquad G(x) = \frac{1}{2\pi}\int_{-\infty}^{\infty}
+\frac{e^{ikx}}{k_0^2-k^2}\,dk.
+\label{eq:6.6.2}
+\end{equation}
+
+Closing the contour in the upper/lower half-plane gives
+$G(x)=\frac{\sin(k_0|x|)}{k_0}$, recovering the Green's function of
+Chapter~8.
+
+\section{Fourier-Type Transforms}
+
+Hankel transform (cylindrical symmetry):
+\begin{equation}
+\tilde f(\rho) = \int_0^\infty f(r)\,J_0(\rho r)\,r\,dr,
+\qquad
+f(r) = \int_0^\infty \tilde f(\rho)\,J_0(\rho r)\,\rho\,d\rho.
+\label{eq:6.7.1}
+\end{equation}
+
+Mellin transform:
+\begin{equation}
+\mathcal M[f](s) = \int_0^\infty f(x)\,x^{s-1}\,dx,
+\qquad
+f(x) = \frac{1}{2\pi i}\int_{c-i\infty}^{c+i\infty}
+\mathcal M[f](s)\,x^{-s}\,ds.
+\label{eq:6.7.2}
+\end{equation}
+
+Laplace transform:
+\begin{equation}
+\mathcal L[f](s) = \int_0^\infty f(t)\,e^{-st}\,dt,
+\qquad
+\mathcal L[f'](s) = s\tilde f(s)-f(0).
+\label{eq:6.7.3}
+\end{equation}
+
+\begin{exercise}
+Show that the Hankel transform is the Fourier transform in cylindrical
+coordinates and derive the orthogonality relation for $J_0$.
+\end{exercise}
+
+% Figures
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig6_1.png}
+\caption{Fourier transform pairs: Gaussian and its transform.}
+\label{fig:6.1}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig6_13.png}
+\caption{Integration contour in the complex $\omega$-plane for principal-value integrals.}
+\label{fig:6.13}
+\end{figure}

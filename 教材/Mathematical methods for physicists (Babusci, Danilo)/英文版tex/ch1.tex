@@ -1,0 +1,2831 @@
+% ch1.tex — Chapter 1: Matrices, Exponential Operators and Physical Applications
+% 对应原书第 1–62 页（Sec. 1.1 – 1.6.7 + Bibliography）
+
+\chapter{Matrices, Exponential Operators and Physical Applications}
+\label{ch:1}
+
+% ============================================================
+\section{Introduction}
+\label{sec:1.1}
+
+The matrices and the relevant formalism are widely exploited tools in Physics and Mathematics.
+They provide the backbone of the treatment of many problems in classical and quantum Physics.
+Thus we start these lectures with a short resume on the relevant properties, aimed at fixing the notation and at illustrating the technicalities we will later employ in solving mathematical problems of physical interest.
+
+Our starting point is the equation
+\begin{equation}
+\hat{A}\,\underline{\zeta} = \underline{b},
+\label{eq:1.1.1}
+\end{equation}
+where
+\[
+\hat{A} = \mat{\alpha_{11} & \alpha_{12} \\ \alpha_{21} & \alpha_{22}},\qquad
+\underline{\zeta} = \mat{z_{1} \\ z_{2}},\qquad
+\underline{b} = \mat{b_{1} \\ b_{2}},\qquad
+\forall\,\alpha_{ij},z_{i},b_{i}\in\mathbb{C}.
+\]
+Equation~\eqref{eq:1.1.1} can be considered as the generalisation of an algebraic equation of first degree.
+Provided that we accept the matrix as a generalisation of ordinary numbers, its solution can be written in the form
+\begin{equation}
+\underline{\zeta} = \hat{A}^{-1}\,\underline{b},
+\label{eq:1.1.3}
+\end{equation}
+reminiscent of the solution of first-degree algebraic equations.
+Such a formal solution makes sense if the matrix $\hat{A}$ is not singular, i.e.\ if it is invertible.
+We have tacitly assumed that
+\begin{equation}
+\hat{A}\,\hat{A}^{-1} = \hat{1},
+\label{eq:1.1.4}
+\end{equation}
+where the real-unity matrix is
+\[
+\hat{1} = \mat{1 & 0 \\ 0 & 1},
+\]
+satisfying
+\[
+\hat{1}\,\hat{B} = \hat{B}\,\hat{1} = \hat{B},\qquad \hat{1}\,\underline{\zeta} = \underline{\zeta}.
+\]
+
+For the two-dimensional case the inverse of $\hat{A}$ is
+\[
+\hat{A}^{-1} = \frac{1}{\Delta}\mat{\alpha_{22} & -\alpha_{12} \\ -\alpha_{21} & \alpha_{11}},\qquad
+\Delta = \alpha_{11}\alpha_{22} - \alpha_{12}\alpha_{21}.
+\]
+A matrix is singular (non-invertible) if its determinant vanishes.
+
+Along with the unity matrix we introduce the \emph{imaginary matrix}
+\begin{equation}
+\hat{i} = \mat{0 & 1 \\ -1 & 0},\qquad \hat{i}^{2} = -\hat{1}.
+\label{eq:1.1.9}
+\end{equation}
+
+A function of a matrix is defined via its Maclaurin expansion
+\[
+f(\hat{A}) = \sum_{n=0}^{\infty}\frac{f^{(n)}(0)}{n!}\,\hat{A}^{n}.
+\]
+Exponentiating $\hat{i}$ gives the Euler formula for matrices:
+\begin{align}
+e^{\alpha\hat{i}}
+&= \sum_{n=0}^{\infty}\frac{\alpha^{n}}{n!}\,\hat{i}^{n}
+ = \cos\alpha\,\hat{1} + \sin\alpha\,\hat{i} \notag \\
+&= \mat{\cos\alpha & \sin\alpha \\ -\sin\alpha & \cos\alpha}
+ = \hat{R}(\alpha).
+\label{eq:1.1.17}
+\end{align}
+Thus the exponentiation of the imaginary matrix yields the two-dimensional rotation matrix.
+
+The \emph{hyperbolic unit matrix}
+\[
+\hat{h} = \mat{0 & 1 \\ 1 & 0},\qquad \hat{h}^{2} = \hat{1},
+\]
+gives
+\[
+e^{\alpha\hat{h}} = \mat{\cosh\alpha & \sinh\alpha \\ \sinh\alpha & \cosh\alpha}
+= \hat{R}_{h}(\alpha).
+\]
+
+The three units do not commute:
+\[
+[\hat{i},\hat{h}] = 2\hat{t},\qquad
+\hat{t} = \mat{1 & 0 \\ 0 & -1}.
+\]
+Any $2\times 2$ matrix expands as
+\[
+\mat{\alpha_{11} & \alpha_{12} \\ \alpha_{21} & \alpha_{22}}
+= a\,\hat{1} + b\,\hat{i} + c\,\hat{h} + d\,\hat{t}.
+\]
+
+The Hermitian conjugate is
+\[
+\hat{A}^{\dagger} = \mat{\alpha_{11}^{*} & \alpha_{21}^{*} \\ \alpha_{12}^{*} & \alpha_{22}^{*}}.
+\]
+We have $\hat{i}^{\dagger} = -\hat{i}$ (anti-Hermitian) while $\hat{h},\hat{t},\hat{1}$ are Hermitian.
+
+% ============================================================
+\section{Pauli Matrices}
+\label{sec:1.2}
+
+Define the ladder operators
+\[
+\spp = \mat{0 & 1 \\ 0 & 0},\qquad
+\smm = \mat{0 & 0 \\ 1 & 0},\qquad
+\spp^{2} = \smm^{2} = \hat{0},
+\]
+so that
+\[
+\hat{i} = \spp - \smm.
+\]
+The Pauli--$z$ matrix is
+\[
+\sigz = \frac{1}{2}\hat{t} = \mat{\tfrac{1}{2} & 0 \\ 0 & -\tfrac{1}{2}}.
+\]
+
+The commutation relations are
+\begin{equation}
+[\spp,\smm] = 2\sigz,\qquad
+[\sigz,\spp] = \spp,\qquad
+[\sigz,\smm] = -\smm,
+\label{eq:1.2.8}
+\end{equation}
+which are the $SU(2)$ algebra. The standard Pauli vector is
+\[
+\sigx = \frac{1}{2}(\spp+\smm),\quad
+\sigy = \frac{1}{2i}(\spp-\smm),\quad
+\sigz = \frac{1}{2}\mat{1 & 0 \\ 0 & -1},
+\]
+with
+\[
+[\sig_{j},\sig_{k}] = i\,\varepsilon_{jkl}\,\sig_{l}.
+\]
+
+For a Hamiltonian $\hat{H} = \hbar\,\vec{\Omega}\!\cdot\!\vec{\sigma}$ the evolution operator is
+\[
+\hat{U}(t) = e^{-i\Omega t\,\vec{n}\!\cdot\!\vec{\sigma}}
+= \cos\!\left(\frac{\Omega t}{2}\right)\hat{1}
+- 2i\sin\!\left(\frac{\Omega t}{2}\right)\vec{n}\!\cdot\!\vec{\sigma}.
+\]
+
+A useful disentanglement formula for a traceless anti-Hermitian $2\times 2$ matrix is
+\[
+e^{\alpha(\spp-\smm)}
+= e^{2h(\alpha)\sigz}\,e^{f(\alpha)\spp}\,e^{-g(\alpha)\smm},
+\]
+with $h(0)=f(0)=g(0)=0$ and (for this special case)
+\[
+e^{h(\alpha)} = \sec\alpha,\qquad
+f(\alpha) = \tfrac{1}{2}\sin 2\alpha,\qquad
+g(\alpha) = \tan\alpha.
+\]
+
+For a generic $2\times 2$ matrix $\hat{\alpha}$ with $\tr\hat{\alpha}\neq 0$,
+\[
+e^{\hat{\alpha}} = \mat{A_{11} & A_{12} \\ A_{21} & A_{22}},
+\]
+where (with $\Delta = (\alpha_{11}-\alpha_{22})^{2}+4\alpha_{12}\alpha_{21}$)
+\begin{align*}
+A_{11} &= \left\{\frac{\alpha_{11}-\alpha_{22}}{\sqrt{\Delta}}\sinh\frac{\sqrt{\Delta}}{2}
+           + \cosh\frac{\sqrt{\Delta}}{2}\right\}e^{\frac{1}{2}\tr\hat{\alpha}},\\
+A_{22} &= \left\{-\frac{\alpha_{11}-\alpha_{22}}{\sqrt{\Delta}}\sinh\frac{\sqrt{\Delta}}{2}
+           + \cosh\frac{\sqrt{\Delta}}{2}\right\}e^{\frac{1}{2}\tr\hat{\alpha}},\\
+\frac{A_{12}}{\alpha_{12}} &= \frac{A_{21}}{\alpha_{21}}
+ = \frac{2}{\sqrt{\Delta}}\sinh\frac{\sqrt{\Delta}}{2}\,e^{\frac{1}{2}\tr\hat{\alpha}}.
+\end{align*}
+
+% ============================================================
+\section{Applications of $2\times 2$ Matrices}
+\label{sec:1.3}
+
+\subsection{Classical Optics: Ray Propagation and ABCD Law}
+
+A paraxial ray is described by $\mat{r & \vartheta}^{T}$.
+Free space of length $d$:
+\[
+\hat{O} = \mat{1 & d \\ 0 & 1} = e^{d\spp}.
+\]
+Thin lens of focal length $f$:
+\[
+\hat{F} = \mat{1 & 0 \\ -1/f & 1} = e^{-\frac{1}{f}\smm},\qquad
+\hat{D} = \mat{1 & 0 \\ 1/f & 1} = e^{\frac{1}{f}\smm}.
+\]
+Beam expander (squeeze):
+\[
+e^{b\sigz} = \mat{e^{b} & 0 \\ 0 & e^{-b}}.
+\]
+The ABCD law is
+\[
+\mat{r \\ \vartheta}_{\mathrm{out}}
+= \mat{A & B \\ C & D}
+  \mat{r \\ \vartheta}_{\mathrm{in}}.
+\]
+
+\subsection{Quantum Mechanics}
+
+Pauli equation for spin-$\tfrac{1}{2}$ in a magnetic field $\vec{B}=B\hat{y}$:
+\[
+i\hbar\,\partial_{t}\underline{\Phi}
+= -\frac{q\hbar}{2m}\,\vec{\sigma}\!\cdot\!\vec{B}\,\underline{\Phi}
+\;\Longrightarrow\;
+\partial_{t}\underline{\Phi}
+= \omega_{c}(\spp-\smm)\underline{\Phi},\qquad
+\omega_{c} = \frac{qB}{4m}.
+\]
+Solution: $\underline{\Phi}(t) = \hat{R}(\omega_{c}t)\,\underline{\Phi}_{0}$.
+
+Two-level system:
+\[
+i\hbar\,\partial_{t}\mat{a_{+} \\ a_{-}}
+= \bigl(\omega\sigz + 2\Omega\sigy\bigr)\mat{a_{+} \\ a_{-}},
+\]
+with the $SU(2)$ rotation evolution matrix given above.
+
+\subsection{Particle Physics: Kaon Mixing}
+
+Neutral kaon states:
+\[
+|K^{0}\rangle = |\bar{s}d\rangle,\qquad
+|\bar{K}^{0}\rangle = |\bar{d}s\rangle.
+\]
+CP eigenstates:
+\[
+|K_{S}\rangle = \frac{1}{\sqrt{2}}\bigl(|K^{0}\rangle + |\bar{K}^{0}\rangle\bigr),\qquad
+|K_{L}\rangle = \frac{1}{\sqrt{2}}\bigl(|K^{0}\rangle - |\bar{K}^{0}\rangle\bigr).
+\]
+Evolution with non-Hermitian Hamiltonian
+\[
+\hat{H} = \mat{E_{S}-i\Gamma_{S}/2 & 0 \\ 0 & E_{L}-i\Gamma_{L}/2}
+\]
+gives the oscillatory transition probability
+\[
+\bigl|\langle\bar{K}^{0}\mid\Psi_{K}(t)\rangle\bigr|^{2}
+= \frac{1}{4}\Bigl(e^{-t/\tau_{S}} + e^{-t/\tau_{L}}
+- 2e^{-t/\tau^{*}}\cos\bigl((\omega_{S}-\omega_{L})t\bigr)\Bigr).
+\]
+
+% ============================================================
+\section{Cabibbo Angle and See-Saw Mechanism}
+\label{sec:1.4}
+
+Flavour mixing in the $s$--$d$ sector:
+\[
+\mat{d' \\ s'} = e^{\vartheta\hat{i}}\mat{d \\ s}
+= \mat{\cos\vartheta & \sin\vartheta \\ -\sin\vartheta & \cos\vartheta}\mat{d \\ s}.
+\]
+See-saw neutrino mass matrix:
+\[
+\hat{m}_{\nu} = \mat{0 & m_{D} \\ m_{D} & M_{NHL}},\qquad M_{NHL}\gg m_{D}.
+\]
+
+% ============================================================
+\section{Gell-Mann and Pauli Matrices}
+\label{sec:1.5}
+
+\subsection{Spin Composition}
+
+\[
+\tfrac{1}{2}\otimes\tfrac{1}{2} = 0\oplus 1,\qquad
+\tfrac{1}{2}\otimes\tfrac{1}{2}\otimes\tfrac{1}{2}
+= \tfrac{1}{2}\oplus\tfrac{1}{2}\oplus\tfrac{3}{2}.
+\]
+
+\subsection{Gell-Mann Matrices}
+
+The eight $3\times 3$ Gell-Mann matrices $\hat{\lambda}_{\alpha}$ ($\alpha=1,\dots,8$) satisfy
+\[
+[\hat{\lambda}_{\alpha},\hat{\lambda}_{\beta}] = i\,f_{\alpha\beta\gamma}\,\hat{\lambda}_{\gamma},\qquad
+\tr(\hat{\lambda}_{\alpha}\hat{\lambda}_{\beta}) = 2\delta_{\alpha\beta}.
+\]
+Explicitly,
+\begin{align*}
+\hat{\lambda}_{1}&=\mat{0&1&0\\1&0&0\\0&0&0},&
+\hat{\lambda}_{2}&=\mat{0&-i&0\\i&0&0\\0&0&0},&
+\hat{\lambda}_{3}&=\mat{1&0&0\\0&-1&0\\0&0&0},\\
+\hat{\lambda}_{4}&=\mat{0&0&1\\0&0&0\\1&0&0},&
+\hat{\lambda}_{5}&=\mat{0&0&-i\\0&0&0\\i&0&0},&
+\hat{\lambda}_{6}&=\mat{0&0&0\\0&0&1\\0&1&0},\\
+\hat{\lambda}_{7}&=\mat{0&0&0\\0&0&-i\\0&i&0},&
+\hat{\lambda}_{8}&=\frac{1}{\sqrt{3}}\mat{1&0&0\\0&1&0\\0&0&-2}.
+\end{align*}
+
+\subsection{Flavours and Spin}
+
+Mesons: $3\otimes\bar{3} = 1\oplus 8$.\\
+Baryons: $3\otimes 3\otimes 3 = 1\oplus 8\oplus 8\oplus 10$.
+
+Proton wave function (flavour $\times$ spin):
+\[
+|p\rangle = \frac{1}{2\sqrt{3}}\,
+(duu\;\;udu\;\;uud)\,
+\mat{2&-1&-1\\-1&2&-1\\-1&-1&2}\,
+\mat{\downarrow\uparrow\uparrow \\ \uparrow\downarrow\uparrow \\ \uparrow\uparrow\downarrow}.
+\]
+
+\subsection{Colour and QCD}
+
+Colour triplet $R,G,B$ makes baryons antisymmetric in colour:
+\[
+|\Omega^{-}\rangle = \frac{1}{\sqrt{6}}\sum_{ijk}\varepsilon_{ijk}\,|s_{i}s_{j}s_{k}\rangle.
+\]
+Gluons belong to the $SU(3)$ colour octet.
+
+% ============================================================
+\section{Concluding Remarks}
+\label{sec:1.6}
+
+\subsection{Vector Differential Equations and Matrices}
+\label{sec:1.6.1}
+
+Heisenberg-like equation for the Pauli vector:
+\[
+\frac{d}{dt}\vec{\sigma} = \vec{\Omega}\times\vec{\sigma}.
+\]
+Solution (Rodrigues rotation):
+\begin{align}
+\vec{\sigma}(t)
+&= \cos(\Omega t)\,\vec{\sigma}_{0}
+ + \sin(\Omega t)\,(\vec{n}\times\vec{\sigma}_{0}) \notag \\
+&\quad + \bigl[1-\cos(\Omega t)\bigr]\,(\vec{n}\!\cdot\!\vec{\sigma}_{0})\,\vec{n}.
+\label{eq:rodrigues}
+\end{align}
+Non-homogeneous case:
+\[
+\frac{d}{dt}\vec{\sigma} = \vec{\Omega}\times\vec{\sigma} + \vec{\gamma}
+\;\Longrightarrow\;
+\vec{\sigma}(t) = e^{t[\vec{\Omega}]}\vec{\sigma}_{0}
++ \int_{0}^{t} e^{(t-t')[\vec{\Omega}]}\,\vec{\gamma}\,dt'.
+\]
+
+\subsection{Matrices, Vector Equations and Rotations}
+\label{sec:1.6.2}
+
+For $\vec{S} = (S_{1},S_{2},S_{3})^{T}$,
+\[
+\frac{d}{dt}\mat{S_{1}\\S_{2}\\S_{3}}
+= \mat{0&-\Omega_{3}&\Omega_{2}\\
+        \Omega_{3}&0&-\Omega_{1}\\
+       -\Omega_{2}&\Omega_{1}&0}
+  \mat{S_{1}\\S_{2}\\S_{3}}.
+\]
+The evolution operator $\hat{U}(t)$ is the Rodrigues rotation matrix
+\[
+\hat{U}(t) = \hat{1} + \frac{\sin\Omega t}{\Omega}\,\hat{\Omega}
++ \frac{1-\cos\Omega t}{\Omega^{2}}\,\hat{\Omega}^{2},
+\]
+with $\Omega = \sqrt{\Omega_{1}^{2}+\Omega_{2}^{2}+\Omega_{3}^{2}}$.
+
+\subsection{Cabibbo--Kobayashi--Maskawa Matrix}
+\label{sec:1.6.3}
+
+Generalisation to three families:
+\[
+\mat{d'\\s'\\b'} = e^{\hat{\Omega}}\mat{d\\s\\b},
+\]
+with $\Omega_{3}=\vartheta_{c}$, $\Omega_{2}=x\vartheta_{c}^{2}$, $\Omega_{1}=y\vartheta_{c}^{3}$
+and $\vartheta_{c}\simeq 0.22$ rad.
+
+\subsection{Frenet--Serret Equations}
+\label{sec:1.6.4}
+
+\[
+\frac{d}{ds}\mat{T\\N\\B}
+= \mat{0&\kappa&0\\-\kappa&0&\tau\\0&-\tau&0}
+  \mat{T\\N\\B}.
+\]
+
+\subsection{Matrix, Rotations and Euler Angles}
+\label{sec:1.6.5}
+
+Euler-angle factorisation:
+\begin{align*}
+\hat{R}
+&= e^{\alpha\hat{J}_{z}}\,e^{\beta\hat{J}_{y}}\,e^{\gamma\hat{J}_{z}} \\
+&= \mat{\cos\alpha&-\sin\alpha&0\\\sin\alpha&\cos\alpha&0\\0&0&1}
+   \mat{1&0&0\\0&\cos\beta&-\sin\beta\\0&\sin\beta&\cos\beta}
+   \mat{\cos\gamma&-\sin\gamma&0\\\sin\gamma&\cos\gamma&0\\0&0&1}.
+\end{align*}
+
+\subsection{4-Vectors and Lorentz Transformations}
+\label{sec:1.6.6}
+
+Minkowski metric:
+\[
+\eta_{\mu\nu} = \mat{-1&0&0&0\\0&1&0&0\\0&0&1&0\\0&0&0&1}.
+\]
+Lorentz boost along $x$:
+\[
+\mat{ct'\\x'\\y'\\z'}
+= \mat{\gamma&-\gamma\beta&0&0\\-\gamma\beta&\gamma&0&0\\0&0&1&0\\0&0&0&1}
+  \mat{ct\\x\\y\\z},
+\qquad \gamma = \frac{1}{\sqrt{1-\beta^{2}}}.
+\]
+
+\subsection{Dirac Matrices}
+\label{sec:1.6.7}
+
+In block form (using $2\times 2$ blocks $\hat{1},\hat{i},\hat{h},\hat{t}$):
+\[
+\gamma^{0} = \mat{\hat{1}&\hat{0}\\\hat{0}&-\hat{1}},\quad
+\gamma^{1} = \mat{\hat{0}&\hat{h}\\-\hat{h}&\hat{0}},\quad
+\gamma^{2} = -i\mat{\hat{0}&\hat{i}\\-\hat{i}&\hat{0}},\quad
+\gamma^{3} = \mat{\hat{0}&\hat{t}\\-\hat{t}&\hat{0}}.
+\]
+And
+\[
+\gamma^{5} = i\gamma^{0}\gamma^{1}\gamma^{2}\gamma^{3}
+= \mat{\hat{0}&\hat{1}\\\hat{1}&\hat{0}}.
+\]
+
+The Dirac equation:
+\[
+i\hbar\,\partial_{t}\Psi = \vec{\alpha}\!\cdot\!\vec{p}\,\Psi + \beta\,mc^{2}\Psi.
+\]
+
+Foldy--Wouthuysen transformation:
+\[
+\hat{U} = e^{\beta\vec{\alpha}\!\cdot\!\vec{p}\,\vartheta}
+= \cos\theta + \beta\,\vec{\alpha}\!\cdot\!\vec{n}_{p}\sin\theta,\qquad
+\vec{n}_{p} = \frac{\vec{p}}{p},
+\]
+with $\tan(2\vartheta) = p/(mc)$.
+
+% ============================================================
+\section*{Bibliography for Chapter 1}
+\addcontentsline{toc}{section}{Bibliography for Chapter 1}
+
+\begin{thebibliography}{99}
+
+\bibitem{gantmaker} F.~R.\ Gantmaker, \emph{The Theory of Matrices}, Chelsea, New York, 1959.
+
+\bibitem{lancaster} P.~Lancaster, M.~Tismenetsky, \emph{The Theory of Matrices with Applications}, Academic Press, 1985.
+
+\bibitem{bronson1} R.~Bronson, \emph{Matrix Methods: An Introduction}, Academic Press, 1970.
+
+\bibitem{bronson2} R.~Bronson, \emph{Schaum's Outline of Theory and Problems of Matrix Operations}, McGraw-Hill, 1989.
+
+\bibitem{brown} W.~Brown, \emph{Matrices and Vector Spaces}, Marcel Dekker, 1991.
+
+\bibitem{leonhardt} U.~Leonhardt, \emph{Essential Quantum Optics}, Cambridge University Press, 2000.
+
+\bibitem{gasiorowicz} S.~Gasiorowicz, \emph{Quantum Physics}, Wiley, 1974.
+
+\bibitem{goldstein} H.~Goldstein, \emph{Classical Mechanics}, 2nd ed., Addison-Wesley, 1980.
+
+\bibitem{dattoli1990} G.~Dattoli, M.~Richetta, G.~Schettini, A.~Torre,
+``Lie algebraic methods and solutions of linear partial differential equations'', \emph{J.\ Math.\ Phys.}\ \textbf{31}, 2856 (1990).
+
+\bibitem{wei1963} J.~Wei, E.~Norman,
+``Lie algebraic solution of linear differential equations'', \emph{J.\ Math.\ Phys.}\ \textbf{4}, 575 (1963).
+
+\bibitem{vanderlugt} A.~Vander Lugt,
+``Operational Notation for the Analysis and Synthesis of Optical Data Processing Systems'', \emph{Proc.\ IEEE} \textbf{54}, 1055 (1966).
+
+\bibitem{stoler} D.~Stoler, ``Operator Methods in Physical Optics'', \emph{J.\ Opt.\ Soc.\ Am.}\ \textbf{71}, 334 (1981).
+
+\bibitem{bacry} H.~Bacry, M.~Cadilhac, ``Metaplectic Group and Fourier Optics'', \emph{Phys.\ Rev.\ A} \textbf{23}, 2533 (1981).
+
+\bibitem{sanchez} J.~Sanchez-Mandragon, K.~B.~Wolf, \emph{Lie Methods in Optics}, Springer, 1986.
+
+\bibitem{dattoli1988} G.~Dattoli, A.~Torre, J.~C.~Gallardo,
+``Operatorial methods in Optics'', \emph{Riv.\ Nuovo Cimento} \textbf{11}, 1 (1988).
+
+\bibitem{torre2005} A.~Torre, \emph{Linear Ray and Wave Optics in Phase Space}, Elsevier, 2005.
+
+\bibitem{feynman1957} R.~P.~Feynman, L.~P.~Vernon, R.~W.~Hellwarth,
+``Geometrical Representation of the Schrodinger Equation to Solve Maser Problems'', \emph{J.\ Appl.\ Phys.}\ \textbf{28}, 49 (1957).
+
+\bibitem{wu1957} C.~S.~Wu \emph{et al.}, ``Experimental Test of Parity Conservation in Beta Decay'', \emph{Phys.\ Rev.}\ \textbf{105}, 1413 (1957).
+
+\bibitem{yariv} A.~Yariv, \emph{Quantum Electronics}, Wiley, 1985.
+
+\bibitem{hallen} L.~Hallen, J.~H.~Eberly, \emph{Optical Resonance and Two-Level Atoms}, Wiley, 1975.
+
+\bibitem{baym} G.~Baym, \emph{Lectures on Quantum Mechanics}, Benjamin, 1969.
+
+\bibitem{cabibbo} N.~Cabibbo, ``Unitary Symmetry and Leptonic Decays'', \emph{Phys.\ Rev.\ Lett.}\ \textbf{10}, 531 (1963).
+
+\bibitem{kobayashi} M.~Kobayashi, T.~Maskawa,
+``CP Violation in the Renormalizable Theory of Weak Interaction'', \emph{Prog.\ Theor.\ Phys.}\ \textbf{49}, 652 (1973).
+
+\bibitem{wolfenstein} L.~Wolfenstein, ``Parametrization of the Kobayashi-Maskawa Matrix'', \emph{Phys.\ Rev.\ Lett.}\ \textbf{51}, 1945 (1983).
+
+\bibitem{dattoli1994} G.~Dattoli, ``Weak mixing angles, CP-violating phase and exponential parametrization of the Cabibbo-Kobayashi-Maskawa matrix'', \emph{Nuovo Cim.\ A} \textbf{107}, 1243 (1994).
+
+\bibitem{mohapatra} R.~N.~Mohapatra, ``Physics of Neutrino Masses'', SLAC Summer Institute (SSI04), 2004.
+
+\bibitem{gellmann} M.~Gell-Mann, \emph{The Eightfold Way}, Benjamin, 1964.
+
+\bibitem{lichtenberg} D.~B.~Lichtenberg, \emph{Unitary Symmetry and Elementary Particles}, Academic Press, 1978.
+
+\bibitem{peskin} M.~E.~Peskin, D.~V.~Schroeder, \emph{An Introduction to Quantum Field Theory}, Addison Wesley, 1995.
+
+\bibitem{mangano} M.~L.~Mangano, ``Introduction to QCD'', in \emph{Proc.\ 1998 European School of High-Energy Physics}.
+
+\bibitem{babusci2011} D.~Babusci, G.~Dattoli, E.~Sabia,
+``Operational Methods and Lorentz Type Equations'', \emph{J.\ Phys.\ Math.}\ \textbf{3}, P110601 (2011).
+
+\bibitem{varshalovich} D.~A.~Varshalovich, A.~N.~Moskalev, V.~K.~Khersonskii,
+\emph{Quantum Theory of Angular Momentum}, World Scientific, 1988.
+
+\bibitem{morin} D.~Morin, \emph{Relativity (Kinematics)}, Ch.~11, Harvard University, 2007.
+
+\bibitem{good} R.~H.~Good Jr., ``Properties of Dirac Matrices'', \emph{Rev.\ Mod.\ Phys.}\ \textbf{27}, 187 (1955).
+
+\bibitem{bjorken} S.~D.~Bjorken, S.~D.~Drell, \emph{Relativistic Quantum Mechanics}, McGraw-Hill, 1964.
+
+\end{thebibliography}
+
+\section*{Transcribed Notes (raw OCR, verbatim)}
+\begin{verbatim}
+M
+ATHEMATICAL
+METHODS
+FOR PHYSICISTS
+11315_9789811201578_TP.indd   1 18/9/19   11:14 AM
+This page intentionally left blankThis page intentionally left blank
+NEW JERSEY   •  LONDON   •  SINGAPORE   •  BEIJING   •  SHANGHAI   •  HONG KONG   •  TAIPEI   •  CHENNAI   •  TOKYO
+World Scientific
+Danilo Babusci
+INFN, Italy
+Giuseppe Dattoli
+ENEA, Italy
+Silvia Licciardi
+ENEA, Italy
+Elio Sabia
+ENEA, Italy
+M
+ATHEMATICAL
+METHODS
+FOR PHYSICISTS
+11315_9789811201578_TP.indd   2 18/9/19   11:14 AM
+Published by
+World Scientific Publishing Co. Pte. Ltd.
+5 Toh Tuck Link, Singapore 596224
+USA office:  27 Warren Street, Suite 401-402, Hackensack, NJ 07601
+UK office:  57 Shelton Street, Covent Garden, London WC2H 9HE
+British Library Cataloguing-in-Publication Data
+A catalogue record for this book is available from the British Library.
+MATHEMATICAL
+METHODS
+FOR
+PHYSICISTS
+Copyright © 2020 by World Scientific Publishing Co. Pte. Ltd.
+All rights reserved. This book, or parts thereof, may not be reproduced in any form or by any means, electronic or
+mechanical, including photocopying, recording or any information storage and retrieval system now known or to
+be invented, without written permission from the publisher.
+For photocopying of material in this volume, please pay a copying fee through the Copyright Clearance Center,
+Inc., 222 Rosewood Drive, Danvers, MA 01923, USA. In this case permission to photocopy is not required from
+the publisher.
+ISBN
+978-981-120-157-8
+ISBN
+978-981-120-268-1 (pbk)
+For any available supplementary material, please visit
+https://www
+.worldscientific.com/worldscibooks/10.1142/11315#t=suppl
+Desk Editor: Nur Syarfeena Binte Mohd Fauzi
+Typeset by Stallion Press
+Email: enquiries@stallionpress.com
+Printed in Singapore
+Syarfeena - 11315 - Mathematical Methods for Physicists.indd   1 18-09-19   11:44:13 AM
+v
+“If you intend to mount heavy mathematical artillery again during your com-
+ing year in Europe, I would ask you not only not to come to Leiden, but if
+possible not even to Holland, and just because I am really so fond of you and
+want to keep it that way. But if, on the contrary, you want to spend at least
+your ﬁrst few months patiently, comfortably, and joyfully in discussions that
+keep coming back to the same few points, chatting about a few basic questions
+with me and our young people - and without thinking much about publishing -
+then I welcome you with open arms!! ”
+Eherenfest in a letter to Oppenheimer, Summer 1928
+This page intentionally left blankThis page intentionally left blank
+Contents
+Abstract xiii
+1 Matrices, Exponential Operators and Physical Applications 1
+1.1 Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . 1
+1.2 Pauli Matrices . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+1.3 Applications of 2 × 2 Matrices . . . . . . . . . . . . . . . . . . 12
+1.3.1 Classical Optics: Ray Beam Propagation and ABCD
+Law . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12
+1.3.2 Quantum Mechanics . . . . . . . . . . . . . . . . . . . 19
+1.3.3 Particle Physics: Kaon Mixing . . . . . . . . . . . . . . 22
+1.4 Cabibbo Angle and See-Saw Mechanism . . . . . . . . . . . . 29
+1.5 Gell-Mann and Pauli Matrices . . . . . . . . . . . . . . . . . . 33
+1.5.1 Spin Composition . . . . . . . . . . . . . . . . . . . . . 33
+1.5.2 Gell-Mann Matrices . . . . . . . . . . . . . . . . . . . . 36
+1.5.3 Flavors and Spin . . . . . . . . . . . . . . . . . . . . . 38
+1.5.4 Color and QCD . . . . . . . . . . . . . . . . . . . . . . 41
+1.6 Concluding Remarks . . . . . . . . . . . . . . . . . . . . . . . 43
+1.6.1 Vector Diﬀerential Equations and Matrices . . . . . . . 44
+1.6.2 Matrices, Vector Equations and Rotations . . . . . . . 47
+1.6.3 Cabibbo-Kobayashi-Maskawa Matrix . . . . . . . . . . 50
+1.6.4 Frenet-Serret Equations . . . . . . . . . . . . . . . . . 51
+1.6.5 Matrix, Rotations and Euler Angles . . . . . . . . . . . 52
+1.6.6 4-Vectors and Lorentz Transformations . . . . . . . . . 53
+1.6.7 Dirac Matrices . . . . . . . . . . . . . . . . . . . . . . 55
+Bibliography . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 59
+vii
+viii Mathematical Methods for Physicists
+2 Ordinary and Partial Diﬀerential Equations, Evolution
+Operator Method and Applications 63
+2.1 Ordinary Diﬀerential Equations, Matrices and Exponential
+Operators . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 63
+2.2 Partial Diﬀerential Equations and Exponential
+Operators, I . . . . . . . . . . . . . . . . . . . . . . . . . . . . 66
+2.3 Partial Diﬀerential Equations and Exponential
+Operators, II . . . . . . . . . . . . . . . . . . . . . . . . . . . 72
+2.4 Operator Ordering . . . . . . . . . . . . . . . . . . . . . . . . 73
+2.5 Schr¨ odinger Equation and Paraxial Wave Equation
+of Classical Optics . . . . . . . . . . . . . . . . . . . . . . . . 79
+2.6 Examples of Fokker-Planck, Schr¨ odinger and Liouville
+Equations . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 84
+2.7 Concluding Remarks . . . . . . . . . . . . . . . . . . . . . . . 88
+Bibliography . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 95
+3 Hermite Polynomials and Applications 101
+3.1 Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . 101
+3.2 Hermite Polynomials Generating Function . . . . . . . . . . . 104
+3.2.1 Introducing the Generating Function . . . . . . . . . . 104
+3.2.2 Generating Function Applications . . . . . . . . . . . . 106
+3.3 Hermite Polynomials as an Orthogonal Basis . . . . . . . . . . 109
+3.4 Hermite Polynomials in Quantum Mechanics: Creation and
+Annihilation Operators . . . . . . . . . . . . . . . . . . . . . . 113
+3.5 Quantum Mechanics Applications . . . . . . . . . . . . . . . . 117
+3.6 Coherent or Quasi-Classical States of Harmonic Oscillators . . 121
+3.7 Jaynes-Cummings Model . . . . . . . . . . . . . . . . . . . . . 127
+3.8 Classical Optics and Hermite Polynomials . . . . . . . . . . . 129
+Bibliography . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 132
+4 Laguerre Polynomials, Integral Operators and
+Applications 135
+4.1 Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . 135
+4.2 Laguerre Polynomials Generating Function . . . . . . . . . . . 140
+4.3 Orthogonality Properties of Laguerre Polynomials . . . . . . . 141
+4.4 Bessel Functions . . . . . . . . . . . . . . . . . . . . . . . . . 144
+4.5 Associated Laguerre Polynomials . . . . . . . . . . . . . . . . 148
+4.6 Legendre Polynomials . . . . . . . . . . . . . . . . . . . . . . . 151
+Contents ix
+4.7 Miscellaneous Applications and Comments . . . . . . . . . . . 153
+4.8 App´ el Polynomials and Final Comments . . . . . . . . . . . . 158
+Bibliography . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 163
+5 Exercises and Complements I 167
+5.1 Pauli and Jones Matrices and Mueller Calculus . . . . . . . . 167
+5.2 Magnetic Lenses and Matrix Description . . . . . . . . . . . . 174
+5.3 Miscellanea on the Matrix Formalism and Solution
+of Evolution Problems . . . . . . . . . . . . . . . . . . . . . . 182
+5.3.1 Matrices and Quaternions . . . . . . . . . . . . . . . . 182
+5.3.2 Matrix Solution of Evolution Problems . . . . . . . . . 183
+5.4 Lorentz Transformation . . . . . . . . . . . . . . . . . . . . . . 186
+5.5 Hyperbolic Trigonometry and Special Relativity . . . . . . . . 189
+5.6 A Touch on Elliptic Functions . . . . . . . . . . . . . . . . . . 194
+5.7 Concluding Comments . . . . . . . . . . . . . . . . . . . . . . 207
+Bibliography . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 212
+6 Exercises and Complements II 217
+6.1 Ordinary Diﬀerential Equations and Matrices . . . . . . . . . 217
+6.2 Crofton-Glaisher Identities and Heat Type Equations . . . . . 230
+6.3 Gamma Function and Deﬁnite Integrals . . . . . . . . . . . . . 235
+6.4 Complex Variable Method and Evaluation of Integrals . . . . . 244
+6.5 Fourier Transform . . . . . . . . . . . . . . . . . . . . . . . . . 250
+6.6 Fourier Transform and the Solution of Diﬀerential
+Equations . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 259
+6.7 Fourier-Type Transforms . . . . . . . . . . . . . . . . . . . . . 262
+Bibliography . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 267
+7 Exercises and Complements III 273
+7.1 Second Solution of Hermite Equation . . . . . . . . . . . . . . 273
+7.2 Higher Orders Hermite Polynomials . . . . . . . . . . . . . . . 275
+7.3 Multi-Index Hermite Polynomials . . . . . . . . . . . . . . . . 280
+7.4 Creation-Annihilation Operators Algebra and Physical
+Applications . . . . . . . . . . . . . . . . . . . . . . . . . . . . 284
+7.5 Eisenstein Integers . . . . . . . . . . . . . . . . . . . . . . . . 290
+7.6 Harmonic Oscillator Hamiltonian Formal Aspects and Further
+Miscellaneous Considerations . . . . . . . . . . . . . . . . . . 295
+7.7 Time-Dependent Hamiltonians . . . . . . . . . . . . . . . . . . 298
+x Mathematical Methods for Physicists
+7.8 Dyson Series . . . . . . . . . . . . . . . . . . . . . . . . . . . . 299
+7.8.1 Beyond the Dyson Expansion . . . . . . . . . . . . . . 303
+7.9 Special Polynomials and Perturbation Theory . . . . . . . . . 307
+Bibliography . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 311
+8 Exercises and Complements IV 319
+8.1 Sturm-Liouville Problem . . . . . . . . . . . . . . . . . . . . . 319
+8.2 Green’s Functions . . . . . . . . . . . . . . . . . . . . . . . . . 324
+8.3 Laguerre Polynomials, Associated Operators and PDE . . . . 326
+8.4 App´ el Polynomials, Associated Operators and Partial
+Diﬀerential Equations . . . . . . . . . . . . . . . . . . . . . . . 331
+8.5 Riemann Function . . . . . . . . . . . . . . . . . . . . . . . . 337
+8.6 Bessel Special Functions . . . . . . . . . . . . . . . . . . . . . 342
+Bibliography . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 351
+9 Special Functions, Umbral Methods and Applications 355
+9.1 Introduction to Umbral Methods and Relevant
+Applications . . . . . . . . . . . . . . . . . . . . . . . . . . . . 355
+9.2 Further Comments on Umbral Methods, Inﬁnite Integrals
+and Borel Transform . . . . . . . . . . . . . . . . . . . . . . . 362
+9.3 Borel Transform and Applications . . . . . . . . . . . . . . . . 368
+9.3.1 Borel - Pad´ e . . . . . . . . . . . . . . . . . . . . . . . . 371
+9.4 Umbral Formalism and Laguerre Polynomials . . . . . . . . . 378
+9.5 Umbral Formalism and Hermite Polynomials . . . . . . . . . . 380
+9.6 Umbral Formalism and Operator Ordering . . . . . . . . . . . 382
+9.7 Mittag-Leﬄer Function and Fractional Calculus
+Application . . . . . . . . . . . . . . . . . . . . . . . . . . . . 386
+9.8 Formalism of Negative Derivative and Deﬁnite Integrals . . . . 392
+9.9 Umbral Formalism, Dual Numbers and Super-Gaussian
+Beam Transport . . . . . . . . . . . . . . . . . . . . . . . . . . 394
+Bibliography . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 403
+10 A Glimpse into the Math of the Feynman Diagrams 411
+10.1 Introduction Non Relativistic Scattering Theory
+and Lippman-Schwinger Equation . . . . . . . . . . . . . . . . 411
+10.2 Fermi Golden Rule . . . . . . . . . . . . . . . . . . . . . . . . 417
+10.2.1 Fermi Golden Rule Application . . . . . . . . . . . . . 421
+10.3 Feynman Diagrams: Introductory Rules . . . . . . . . . . . . . 423
+Contents xi
+10.4 Virtual Particles and Propagators . . . . . . . . . . . . . . . 427
+10.5 Space and Time like Feynman Diagrams . . . . . . . . . . . . 430
+10.6 Dirac Gamma Matrices . . . . . . . . . . . . . . . . . . . . . . 431
+10.7 Mathematics of the Dirac Equation . . . . . . . . . . . . . . . 439
+10.8 A Touch on Quantum Electrodynamics . . . . . . . . . . . . . 445
+10.9 Formal Point of View to the Dimensions and Units
+in Physics . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 450
+Bibliography . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 460
+Index 463
+This page intentionally left blankThis page intentionally left blank
+Abstract
+This book reports on Mathematical Methods for Physics elaborated
+on the original plots of the lectures given by one of the Authors, Giuseppe
+Dattoli, at the Rome “Tre” University in the academic year 2008-2009.
+During these laps of time, the lectures have appeared in the form of an
+internal note http://opac22.bologna.enea.it/RT/2010/2010 58 ENEA.pdf co-
+authored by Danilo Babusci, Giuseppe Dattoli and Mario Del Franco. The
+present version is completely revisited and new topics have been included. In
+particular two new chapters have been added.
+The book plane follows the orginal conception guided by the question:
+“Which methods for which Physics?”
+Our goal is not that of providing a series of lectures on well known problems
+in Mathematical Physics but, rather, to give some tools to attack speciﬁc
+problems which are often encountered in diﬀerent branches of Physics, ran-
+ging from Quantum Field Theory, to Laser Physics and to Charged Particle
+Transport in Accelerators.
+The power of Mathematics, or better what has been called its “unreaso-
+nable success” in describing physical phenomena, is just the fact that the same
+tools can be exploited to model diﬀerent aspects of Physics. The formalism of
+matrices is useful in Quantum Mechanics to study the dynamical behavior of
+particles with spin but it turns out to be useful to study the propagation of
+optical beams through lens systems or to treat the charged beam transport in
+Linacs or in Storage Rings. The Schr¨ odinger equation can be used to study
+the quantum mechanical spreading of a free particle and the distribution of
+electromagnetic ﬁelds in an optical cavity as well. The heat equation can be
+xiii
+xiv Mathematical Methods for Physicists
+exploited in so a large number of contexts which even includes the behavior
+of the stock options in the ﬁnancial markets.
+Therefore, our choice has been to pick up a certain number of mathemat-
+ical techniques, discuss them carefully and present the physical problems to
+which they apply. We have touched on problems in Classical and Quantum
+Electromagnetism, in particle and solid state Physics, by taking into account
+a kind of unitarity (at least formal) between the diﬀerent physical phenomena.
+This is an attempt which requires some eﬀort by the reader, since we
+have not used sharp cuts between Quantum and Classical Mechanics or be-
+tween high energy and solid state Physics, we have mainly been guided by the
+evolution and by the internal mathematical consistency of ideas ﬂowing from
+matrices, to diﬀerential operators, to group theory . . .
+We owe our gratitude to Prof. Orlando Ragnisco and to Prof. Decio Levi
+who allowed this experiment and encouraged and advised us during the prepa-
+ration of the original version of the book.
+The elaboration of the present version comes after years of intensive work
+on diﬀerent topics in Theoretical Physics and Mathematics, including a new
+point of view to Special Functions via Umbral Methods and research on elec-
+tromagnetic processes ruled by non local equations.
+We have therefore spread out these further experience in the diﬀerent
+chapters. We have, for example, dedicated chapter IX (written by Giuseppe
+Dattoli and Silvia Licciardi) to the use of umbral methods, including ap-
+plication to Physics. Moreover, we have added the chapter X (written by
+Giuseppe Dattoli and Elio Sabia) to provide a less qualitiative understanding
+of the mathematical aspects underlying the technicalities of Feynman Dia-
+grams. This chapter has beneﬁtted from the kind help of Dr. Federico Nguyen
+who corrected the original draft.
+It is ﬁnally a pleasure to recognize the interest of the late Prof. Benedetto
+De Tollis who gave access to his unpublished lectues notes on Feynman Dia-
+grams given at Rome “La Sapienza” University.
+Chapter 1
+Matrices, Exponential
+Operators and Physical
+Applications
+1.1 Introduction
+The matrices and the relevant formalism are widely exploited tools in
+Physics and Mathematics. They provide the back bone of the treatment of
+many problems in classical and quantum Physics. Thus, we start these lec-
+tures with a short resume on the relevant properties, aimed at ﬁxing the
+notation and at illustrating the technicalities we will later employ in solving
+mathematical problems of physical interest.
+Our starting point is the equation 1
+ˆAζ =b (1.1.1)
+where
+ˆA =
+( α1 1 α1 2
+α2 1 α2 2
+)
+, ζ =
+( z1
+z2
+)
+, b =
+( b1
+b2
+)
+, ∀αij, zi, bi∈ C.
+(1.1.2)
+Eq. (1.1.1) can be considered as the generalization of an algebraic equation of
+ﬁrst degree (it represents indeed an algebraic system of ﬁrst degree equations)
+1The symbol ˆO will denote either a matrix or an operator, the column vectors will be
+denoted by δ , the scalars will not be speciﬁed by any extra symbol.
+1
+2 Mathematical Methods for Physicists
+and, provided that we accept the matrix as the generalization of the ordinary
+numbers, its solution can, therefore, be written in the form
+ζ = ˆA−1b, (1.1.3)
+reminiscent of the solution of ﬁrst degree algebraic equations. Such a formal
+solution makes sense if the matrix ˆA is not singular or, what is the same, if
+it is invertible. It goes by itself that, in deriving eq. (1.1.3), we have tacitly
+assumed that
+ˆA ˆA−1 = ˆ1 (1.1.4)
+where we have denoted with
+ˆ1 =
+( 1 0
+0 1
+)
+(1.1.5)
+the real-unity matrix, satisfying the obvious property
+ˆ1 ˆB = ˆB ˆ1 = ˆB, ˆ1ζ =ζ, (1.1.6)
+valid for any generic matrix. Regarding the two dimensional case, it is easily
+checked that the inverse of ˆA writes
+ˆA−1 = 1
+∆
+( α2 2 −α1 2
+−α2 1 α1 1
+)
+(1.1.7)
+where ∆ is the matrix determinant
+∆ =α1 1α2 1−α1 2α21. (1.1.8)
+A matrix will be said singular, and thus not invertible, if its determinant is
+vanishing.
+Needless to say, we have just “rediscovered” the well known solution of a
+system of ﬁrst order algebraic equation with the Cramer’s method by using
+a point of view aimed at showing that, within certain limits, we can use
+matrices as suitable generalizations of the ordinary numbers (complex or
+real). We can therefore deﬁne simple procedures to introduce operations like
+sum, diﬀerence, product and power. As a further support to the previous
+statements, let us note that, along with the matrix (1.1.5), playing the role
+of unity, we can introduce the matrix
+ˆi =
+( 0 1
+−1 0
+)
+(1.1.9)
+Matrices, Exponential Operators and Physical Applications 3
+called the imaginary matrix (or sympletic unit ), which may be understood
+as a kind of “imaginary” unity matrix, since
+ˆi2 =−ˆ1. (1.1.10)
+We can make a further step in the direction of considering matrices as
+ordinary numbers, by introducing the notion of the function of a matrix .
+Accordingly, we will say that
+ˆF =f( ˆA) (1.1.11)
+is a matrix, which is explicitly deﬁned through the Mac Laurin series expan-
+sion of the function f(x), namely
+f( ˆA) =
+∞∑
+n=0
+f (n)(0)
+n!
+ˆAn (1.1.12)
+with f (n)(0) denoting the nth derivative calculated at x = 0. The above
+expansion is just a formal expression, since we did not specify any radius
+of convergence which, on the other side, cannot be stated from the expan-
+sion itself. The convergence can be checked a posteriori using, for example,
+the following procedure. By considering the matrix operator ˆF acting on a
+generic column vector ζ, we have
+ˆF ζ=
+∞∑
+n=0
+f (n)(0)
+n!
+ˆAnζ =
+∞∑
+n=0
+f (n)(0)
+n! ζn, ζ n = ˆAnζ. (1.1.13)
+It is evident that, once we have deﬁed the vector ζn, we can use the ordinary
+criteria to establish whether the series in (1.1.13) is convergent. Going back
+to eq. (1.1.12) we can also state that a suﬃcient (but not necessary) condi-
+tion to deﬁne the function of a matrix is that the function admits a series
+expansion. In less na¨ ıve terms, we can also say that a function of a matrix
+can be deﬁned if the function is “locally” given by a convergent power series.
+In other words, we require that f(x) be at least analytic. The adjective local
+(reported between quotes) will be clariﬁed later.
+A simple but important example is oﬀered by the “exponentiation” of
+the imaginary unit matrix, which will (nicely) bring us to a generalization
+4 Mathematical Methods for Physicists
+of the Euler formula. According to the previous discussion, the exponential
+function having ˆi as argument, can be handled as it follows
+eαˆi =
+∞∑
+n=0
+αn
+n!
+ˆin =
+∞∑
+n=0
+(−1)nα2n
+(2n)!
+ˆ1 +
+∞∑
+n=0
+(−1)nα2n+1
+(2n + 1)!
+ˆi = cosα ˆ1 + sinαˆi.
+(1.1.14)
+The use of the correspondences
+1→ ˆ1, i → ˆi (1.1.15)
+and of the cyclical identities
+ˆin =
+{ (−1)mˆ1 n = 2m,
+(−1)mˆi n = 2m + 1, (1.1.16)
+suggest that eq. (1.1.14) is a generalization of the Euler formula , involving
+the imaginary unit matrix instead of the imaginary unit. Written in a matrix
+form, eq. (1.1.14) yields
+eαˆi = ˆR(α) =
+( cosα sinα
+− sinα cosα
+)
+. (1.1.17)
+We can therefore state the following.
+Theorem 1. The exponentiation of the imaginary matrix leads to the two
+dimensional rotation matrix.
+We have underscored that the matrices are generalizations of the ordi-
+nary numbers and they have therefore more general properties which will be
+discussed below.
+Let us now consider the 2× 2 matrix
+ˆh =
+( 0 1
+1 0
+)
+(1.1.18)
+which will be deﬁned the hyperbolic unit matrix. It is, indeed, easily checked
+that it satisﬁes the relation
+ˆh2 = ˆ1 (1.1.19)
+Matrices, Exponential Operators and Physical Applications 5
+and that its exponentiation yields
+eα ˆh = ˆRh(α) =
+( coshα sinhα
+sinhα coshα
+)
+. (1.1.20)
+Note that the matrix (1.1.20) represents a rotation in a hyperbolic space
+(hence the name hyperbolic of the unit ˆh) and its mathematical and physi-
+cal meaning will be more deeply discussed in the following. Unlike ordinary
+numbers, matrices are not commuting entities. We may, thus, expect that
+the three units “ ˆ1, ˆi, ˆh” do not commute. It is easily checked that the real
+unit matrix commutes, by deﬁnition, with any matrix, while the imaginary
+and hyperbolic units yield
+[
+ˆi, ˆh
+]
+= ˆi ˆh− ˆhˆi = 2 ˆt, ˆt =
+( 1 0
+0 −1
+)
+. (1.1.21)
+The matrix ˆt is a fourth unit and satisﬁes the conditions
+eα ˆt = ˆS(α) =
+( eα 0
+0 e−α
+)
+, ˆt2 = ˆ1. (1.1.22)
+The matrix ˆS(α) is called the squeezing mapping. Its role in physical prob-
+lems is of paramount importance and will be discussed later. The four ma-
+trices ˆi, ˆh, ˆt, ˆ1 represent the basis to express any 2× 2 matrix,( α1 1 α12
+α21 α22
+)
+=α ˆ1 +β ˆi +γ ˆh +δ ˆt, (1.1.23)
+where α, β, γ, δare the coeﬃcients of the linear combination and can be
+expressed in terms of the matrix entries. If we limit our analysis to traceless
+matrices only, i.e. it is zero the sum of the elements of the principal diagonal
+α1 1 +α22 = 0, (1.1.24)
+we can trace out the real unity matrix and use the remaining units as basis.
+Before concluding this section, let us remind that we can deﬁne the her-
+mitian conjugate of the matrix ˆA as
+ˆA+ =
+( α∗
+11 α∗
+21
+α∗
+12 α∗
+22
+)
+(1.1.25)
+and ﬁnd that the simplectic unit is anti-hermitian
+ˆi+ =−ˆi, (1.1.26)
+while all the other matrices are Hermitian.
+6 Mathematical Methods for Physicists
+1.2 Pauli Matrices
+In the previous section, we have introduced a set of matrices and we have
+shown that at least two of them, once exponentiated, generate rotations of
+circular or hyperbolic nature. Concerning the circular case, we have stressed
+that the operation
+ψ =eαˆiξ ⇒
+( x′
+y′
+)
+=
+( cosα sinα
+− sinα cosα
+)( x
+y
+)
+(1.2.1)
+generates the rotation of the plane coordinates x,y . This conclusion, even
+though apparently trivial, is extremely interesting, and opens the way to
+further speculations about the notion of Lie Group, which will be discussed
+later. By keeping the derivative of both sides with respect to α, we ﬁnd
+dψ
+dα = ˆiψ. (1.2.2)
+Furthermore if we set
+ˆi = ˆσ+− ˆσ−, α = Ωτ (1.2.3)
+with
+ˆσ+ =
+( 0 1
+0 0
+)
+, ˆσ− =
+( 0 0
+1 0
+)
+(1.2.4)
+satisfying the identity ˆσ2
+± = ˆ0 (with ˆ0 being the null matrix, i.e. a matrix
+with all vanishing entries), we can recast eq. (1.2.2) in the form
+dψ
+dτ = Ω (ˆσ+− ˆσ−) ψ. (1.2.5)
+This is essentially the Schr¨ odinger equationwith the Hamiltonian
+ˆH =i ℏ Ω (ˆσ+− ˆσ−). (1.2.6)
+The “hermiticity” of ˆH is ensured by the fact that the operators (1.2.4)
+satisﬁes also the identitiy
+ˆσ+
+± = ˆσ∓. (1.2.7)
+As we will see in the forthcoming parts of this chapter, the Hamiltonian
+(1.2.6) is a paradigmatic tool for the study of two-level quantum mechanical
+systems. However, before discussing these aspects of the problem, some na¨ ıve
+Matrices, Exponential Operators and Physical Applications 7
+algebraic manipulations are in order. We ﬁrst note that the above matrices
+are not commuting, we get
+[ˆσ+, ˆσ−] = 2 ˆσ3, ˆσ3 = 1
+2
+ˆt =
+( 1
+2 0
+0 − 1
+2
+)
+, [ ˆσ3, ˆσ±] =± ˆσ±
+(1.2.8)
+which are equivalent to the commutation relations of the angular momentum
+operator components in Quantum Mechanics. By using the language of the
+theory of groups, we can say that these matrices realize one of the repre-
+sentations of the generators of the uni-modular group SU (2)2. The matrices
+ˆσ±, ˆσ3 are the Pauli matrices3, introduced during the pioneering days of
+Quantum Mechanics to describe the spin dynamics. We can now apply the
+previous discussion to the solution of the Schr¨ odinger problem (1.2.5) which
+can be written in the form
+ψ(τ) = ˆU(τ)ψ0 (1.2.9)
+where the operator
+ˆU(τ) =eΩτ(ˆσ+−ˆσ−) (1.2.10)
+denotes the evolution operator associated with the solution of eq. (1.2.5)
+which, from the mathematical point of view, is an initial value Cauchy pro-
+blem. The unitarity4 of the ˆU operator is easily checked and follows from
+the hermiticity of the operator (1.2.6). The argument of the exponential in
+(1.2.10) contains two matrices which are not commuting quantities. It is
+therefore evident that this imposes some cautions in handling the so called
+disentanglement of the above exponential as a product of exponential opera-
+tors. We have indeed that, as an obvious consequence of non commutative
+character of the matrices, the “semigroup” property 5 of the exponential
+eaeb =ebea =ea+b (1.2.11)
+2In the following chapter we will discuss diﬀerent realizations of the SU (2) group in-
+cluding the more familiar case employing diﬀerential operators.
+3The Pauli matrices standard deﬁnition does not provide for ˆσ± but ˆσ1 = ˆh, ˆσ2 =−iˆi,
+ˆσ3 = ˆt.
+4We remind that an operator is said unitary if its hermitian conjugate is equal to its
+inverse. From eq. (1.2.10) we get indeed ˆU+(τ) =eΩτ (ˆσ+
++−ˆσ+
+−) =e−Ωτ (ˆσ+−ˆσ−) = ˆU−1(τ).
+5In Mathematics, a semigroup is an algebraic structure consisting of a set closed under
+a binary associative operation.
+8 Mathematical Methods for Physicists
+does not hold anymore, and
+eΩτ(ˆσ+−ˆσ−)̸=eΩτ ˆσ+eΩτ ˆσ−̸=eΩτ ˆσ−eΩτ ˆσ+. (1.2.12)
+This fact implies that we must take into account appropriate ordering crite-
+ria. The problems underlying operator ordering play a central role in modern
+Theoretical Physics and will carefully be treated in this book. Here we use
+a simple but eﬀective argument which can be easily generalized. We assume
+that a convenient ordering for the previous exponential operator is a product
+of three exponential operators, containing the group generators, namely
+eα (ˆσ+−ˆσ−) =e2h(α) ˆσ3ef(α) ˆσ+e−g(α) ˆσ−, α = Ωτ, (1.2.13)
+where the functions h(α), f(α), g(α) are the characteristic ordering func-
+tions, satisfying the “initial” condition
+h(0) =f(0) =g(0) = 0. (1.2.14)
+To proceed further we note that we have, as a consequence of the condition
+U(0) = 1,
+ef(α) ˆσ+ =
+( 1 f(α)
+0 1
+)
+, e −g(α) ˆσ− =
+( 1 0
+−g(α) 1
+)
+,
+e2h(α)ˆσ3 =
+( eh(α) 0
+0 e−h(α)
+) (1.2.15)
+and therefore the products of the previous matrices yields
+e2h(α) ˆσ3ef(α) ˆσ+e−g(α) ˆσ− =
+( eh(α) 0
+0 e−h(α)
+)( 1 f(α)
+0 1
+)( 1 0
+−g(α) 1
+)
+=
+( eh(α)(1−g(α)f(α)) f(α)eh(α)
+−g(α)e−h(α) e−h(α)
+)
+.
+(1.2.16)
+It is useful to verify for Exercise that the above matrix has unit determi-
+nant. Its unitarity is a consequence of the fact that the operator α (ˆσ+− ˆσ−)
+is anti-Hermitian6. Furthermore, because
+Ω τ (ˆσ+− ˆσ−) = Ωτ ˆi, (1.2.17)
+6It is possible also prove that the unitarity condition imposes that 1
+f(α)− 1
+g(α) =g(α).
+Matrices, Exponential Operators and Physical Applications 9
+we know that the overall eﬀect of the evolution operator is that of produc-
+ing a rotation, which can always be decomposed in three successive distinct
+actions, generated by the exponential operators. We will discuss the physi-
+cal meaning of the previous result in the forthcoming sections. Here we note
+that by comparing eq. (1.2.16) with the rotation matrix, we can specify the
+characteristic functions as follows 7
+eh(α) = secα, f (α) = 1
+2 sin 2α, g (α) = tanα. (1.2.18)
+In Fig. 1.1 we have reported a geometric interpretation of the characteristic
+functions,which are related to a kind of decomposition of the ordinary rota-
+tion matrix. Further comments on such interpretation can be found in the
+second part of this book (sec 5.5).
+Figure 1.1: Characteristic functions g(α),f (α) and eh(α).
+The previous results are relevant to the particular case in which the matrix
+in the argument of the exponential contains non diagonal entries only. We
+will treat a more general situation in which the matrix is anti-hermitian
+and with vanishing trace. To this aim, we introduce the following operator
+written in vector form ⃗ σ= (ˆσx, ˆσy, ˆσz) with
+ˆσx = 1
+2(ˆσ+ + ˆσ−) = 1
+2
+( 0 1
+1 0
+)
+, ˆσy = 1
+2i(ˆσ+− ˆσ−) = 1
+2i
+( 0 1
+−1 0
+)
+,
+ˆσz = ˆσ3 = 1
+2
+( 1 0
+0 −1
+)
+.
+(1.2.19)
+7Note that∀A,B matrices we have A =B if a11 =b11,a 21 =b21, ... .
+10 Mathematical Methods for Physicists
+The vector components satisfy the relations of commutation of angular mo-
+mentum
+[ˆσj, ˆσk] =iεj,k,l ˆσl, j, k, l ≡x, y,z, (1.2.20)
+where εj,k,l is the Levi Civita tensor . The use of such an operator allows
+the deﬁnition of the following Hamiltonian operator
+ˆH = ℏ⃗Ω·⃗ σ= ℏ Ω⃗ n·⃗ σ, ⃗ n =
+⃗Ω
+Ω (1.2.21)
+where Ω is the modulus of the vector ⃗Ω, usually called the torque vector,
+and ⃗ nis the unit vector deﬁning its direction. The physical meaning of the
+previous Hamiltonian will be discussed in the forthcoming sections.
+The associated evolution operator ˆU =e−i ˆH
+ℏ t writes
+ˆU(t) =e−i Ωt⃗ n·⃗ σ (1.2.22)
+and the reader will not ﬁnd any problem in proving that
+ˆU(t) = cos
+(
+Ω t
+2
+)
+ˆ1− 2i sin
+(
+Ωt
+2
+)
+⃗ σ·⃗ n (1.2.23)
+(hint: note that ( ⃗ σ·⃗ n)2 = 1
+4
+ˆ1 and use the same procedure leading to eq.
+(1.1.14)).
+Before concluding this section we want to stress the following points:
+a) An exponential operator containing a 2 × 2 matrix (with vanishing
+trace) can always be written as the ordered product of three exponen-
+tials containing the Pauli matrices, like in eq. (1.2.13) 8
+ˆU(t) =eiωτ ˆσ3+Ωt (ˆσ+−ˆσ−) =e2h(α) ˆσ3ef(α) ˆσ+e−g(α) ˆσ− . (1.2.24)
+8The evolution operator is associated with a Hamiltonian operator
+ˆH =−ℏω ˆσ3 +i ℏ Ω (ˆσ+− ˆσ−).
+Matrices, Exponential Operators and Physical Applications 11
+b) The ordering (1.2.13) is valid for the exponentiation of any linear com-
+bination of the angular momentum operators and is independent of the
+speciﬁc representation (this aspect of the problem will be discussed in
+the forthcoming Chapters).
+It can be useful to prove the degree of understanding of the topics dis-
+cussed in these sections by considering the problems proposed below.
+Exercise 1. i) The operator ordering in eq. (1.2.13) is one of the 3 possible
+ordered forms, it goes by itself that each form will be characterized by an
+appropriate set of characteristic functions as e.g.
+ˆU(τ) =e−γ(α) ˆσ−eφ(α) ˆσ+e2η(α) ˆσ3. (1.2.25)
+Find the link between the diﬀerent characteristic functions, corresponding to
+diﬀerent exponential ordering.
+ii) Proof the identity
+⃗ σ×⃗ σ=i⃗ σ (1.2.26)
+and the understanding of its physical and geometric meaning
+(hint: use the ordinary deﬁnition of the vector product and then the commu-
+tation relations (1.2.8)).
+iii) Finally, given a generic 2× 2 matrix ˆα with trace̸= 0, prove that
+exp
+(( α11 α12
+α21 α2 2
+))
+=
+( A11 A12
+A2 1 A22
+)
+, (1.2.27)
+where
+A1 1 =
+{
+1√
+∆
+(α1 1−α2 2) sinh
+(√
+∆
+2
+)
++ cosh
+(√
+∆
+2
+)}
+e
+1
+2Tr (ˆα),
+A2 2 =
+{
+− 1√
+∆
+(α1 1−α2 2) sinh
+(√
+∆
+2
+)
++ cosh
+(√
+∆
+2
+)}
+e
+1
+2Tr (ˆα),
+A12
+α1 2
+= A2 1
+α2 1
+=
+{
+2√
+∆
+sinh
+(√
+∆
+2
+)}
+e
+1
+2Tr (ˆα),
+Tr(ˆα) =α11 +α2 2, ∆ = (α11−α22)2 + 4α1 2α2 1
+(1.2.28)
+12 Mathematical Methods for Physicists
+(hint: take into account that the matrix at the exponent is not traceless there-
+fore it writes as a combination of Pauli matrices including the unit matrix).
+Here we have introduced and discussed the properties of 2 × 2 matrices
+useful to describe two-level systems or spin doublets (or spin- 1
+2 particles).
+The case of three level systems or spin-1 particles (spin triplets) requires the
+use of 3× 3 matrices, as it will be brieﬂy discussed in the next sections and
+more carefully in Chapter 5.
+The results obtained in this section will provide the mathematical appa-
+ratus for treating the physical problems we will discuss in the forthcoming
+sections.
+1.3 Applications of 2 × 2 Matrices
+1.3.1 Classical Optics: Ray Beam Propagation and
+ABCD Law
+Talking about Pauli matrices, the most natural application that comes
+to mind is the dynamics of particles with spin- 1
+2 in a magnetic ﬁeld. This
+problem will be discussed in the following section. Here we show how the
+Pauli matrices can be used to discuss other physical problems, usually not
+treated within these frameworks.
+Let us consider the transmission of optical beams through an etalon,
+which can be considered as an interface of thickness l between media with
+diﬀerent optical indices. This process is usually described using elementary
+mathematical tools, however the propagation of optical beams through such
+an optical device can be conveniently described using the matrix formalism
+which may provide, as we will see below, a signiﬁcant improvement simplify-
+ing the associated computational tools. The geometry of the ray transmission
+and reﬂection inside the etalon is shown in Fig. 1.2. The direction of prop-
+agation is speciﬁed by the dashed line perpendicular to the surfaces. The
+ray position and angles (see Figs. 1.2-1.5) are deﬁned with respect to the
+optical axis and here we limit ourselves to the case of paraxial propagation,
+i.e. ray propagation involving small angular deviation from the propagation
+axis. If we characterize the ray beam in terms of a column vector having
+Matrices, Exponential Operators and Physical Applications 13
+Figure 1.2: Optical ray beams reﬂected and transmitted through an etalon.
+its components as the distance from the optical axis and the angle it forms
+with the axis direction, the problem of the ray propagation 9, whatever com-
+plicated the optical system is, can always be reduced to that of ﬁnding the
+relationship between input and output rays, in terms of the relation
+( r
+ϑ
+)
+0
+=
+( A B
+C D
+)( r
+ϑ
+)
+i
+(1.3.1)
+where the matrix with entries A,B,C,D is the transport matrix and charac-
+terizes the optical element (or the combination of a series of optical elements)
+guiding the beam.
+Figure 1.3: Input and output ray-beams from a complicated optical system. The dotted
+line represents the propagation axis and position and angles are taken with respect to it
+as indicated in the ﬁgure.
+9Along with propagation we will use as “synonyms” evolution and transport.
+14 Mathematical Methods for Physicists
+The simplest optical transport element is the free space10 (see Fig. 1.4),
+whose transport matrix is speciﬁed by
+A = 1, B =d, C = 0, D = 1. (1.3.2)
+Figure 1.4: Ray propagation through a drift section.
+An analogous result can be obtained for a thin lens system (see Fig. 1.5)
+A = 1, B = 0, C =∓ 1
+f, D = 1 (1.3.3)
+where f is the focal length and the sign speciﬁes the focusing or defocusing
+nature of the lens, respectively.
+It is now worth noting that ˆO, ˆF, ˆD, indicating the matrices correspond-
+ing to a straight section, a focusing and a defocusing lens, respectively (see
+Fig. 1.6), we have (see eq. (1.2.4))
+ˆO =
+( 1 d
+0 1
+)
+= ˆ1 +d ˆσ+ =ed ˆσ+, ˆF =
+
+
+1 0
+− 1
+f 1
+
+ = ˆ1− 1
+f ˆσ− =e− 1
+f ˆσ−,
+ˆD =
+
+
+1 0
+1
+f 1
+
+ = ˆ1 + 1
+f ˆσ− =e
+1
+f ˆσ− .
+(1.3.4)
+10We will use the terms free space, drift region or straight section to indicate the same
+region.
+Matrices, Exponential Operators and Physical Applications 15
+Figure 1.5: Ray propagation through a converging lens.
+Axis
+R1R2
+Focal point
+Ray propagation
+D F O
+f
+d
+Figure 1.6: Symbols for straight section, focusing and defocusing lens, respectively.
+The above relations are of noticeable importance since they state that the
+propagation through optical systems can be accomplished using the formal-
+ism of the Pauli matrices and their algebraic properties. We can derive, from
+the previous equation and according to the discussion of the previous sec-
+tions, the identity
+[
+ˆF, ˆO
+]
+= ˆF ˆO− ˆO ˆF = 2d
+f ˆσ3,
+[
+ˆD, ˆO
+]
+=−2d
+f ˆσ3 (1.3.5)
+whose physical meaning is clear: it states that the sequence of the optical
+elements, along a transport line, is important. Even though trivial, such a
+remark may be helpful in understanding the role of operators in the descrip-
+tion of physical devices.
+We may ask whether the operator ˆS = eb ˆσ3 (the already introduced
+squeeze mapping, see eq. (1.1.22)) can be interpreted as an optical element.
+16 Mathematical Methods for Physicists
+To this aim, we note that
+( r
+ϑ
+)
+0
+=eb ˆσ3
+( r
+ϑ
+)
+i
+=
+( ebr
+e−bϑ
+)
+i
+. (1.3.6)
+We can conclude that it represents the action of a beam expander, whose
+practical realization is shown in Fig. 1.7.
+Figure 1.7: Beam expander ( Galilean telescope ). We note that the length of the free
+region between defocusing and focusing length is f2−f1.
+According to the above picture the action of a certain number of succes-
+sive optical elements is given by the product of a corresponding number of
+matrices. The successive action of a drift section, a thin focusing lens and a
+beam expender, can be written as
+ˆO ˆF ˆE =ed ˆσ+e− 1
+f ˆσ−ebσ 3 (1.3.7)
+which has the same structure of the evolution operator discussed in the previ-
+ous section and may be exploited to provide a possible physical interpretation
+of the characteristic functions. The use of the above few elements about the
+operatorial treatment of optical systems allows some interesting conclusions
+which are left as exercises.
+Exercise 2. a) Prove that the action of two consecutive focusing thin lenses
+is equivalent to a single thin lens with focal length
+f = f1f2
+f1 +f2
+. (1.3.8)
+b) Consider an optical system composed by a thin lens followed by a straight
+section. Prove that such a system is equivalent to the composition
+ˆM1 =
+(
+1 0
+− 1
+f 1
+)( 1 d
+0 1
+)
+=
+( 1 d
+− 1
+f 1− d
+f
+)
+. (1.3.9)
+Matrices, Exponential Operators and Physical Applications 17
+c) Show that an optical system composed by a drift followed by a thin lens
+is equivalent to
+ˆM2 =
+( 1 d
+0 1
+)(
+1 0
+− 1
+f 1
+)
+=
+(
+1− d
+f d
+− 1
+f 1
+)
+̸= ˆM1. (1.3.10)
+Concerning this result, it is worth stressing that from the mathematical point
+of view, it is just a consequence of the non-commutativity of the matrices.
+Consider carefully its physical meaning.
+d) Show that ˆD ˆO ˆF corresponds to a beam expander with b = ln
+(
+f1
+f2
+)
+.
+e) Discuss the arrangement of ˆD ˆO ˆF and ﬁnd the condition to obtain a beam
+reducer.
+f) Finally, develop physical arguments to justify the matrices describing the
+optical elements reported in Fig. 1.8 and use the various elements to ﬁnd the
+matrix corresponding to the optical element reported in Fig. 1.3.
+Figure 1.8: Optical element and corresponding ABCD matrix.
+18 Mathematical Methods for Physicists
+We will reconsider the ABCD law of ray beam propagation within the
+context of wave optics in the next chapters. The same formalism can further-
+more be applied to circuit network like two-port systems of the type shown
+in Fig. 1.9.
+Figure 1.9: Two port system.
+In this case, the ABCD law (represented by the impedances Z) connects
+voltages U and currents I and it is straightforward to ﬁnd a physical justi-
+ﬁcation for the characterization, reported in Tab. 1.1, of circuit elements in
+terms of matrices.
+Table 1.1: Circuit element and corresponding ABCD matrix.
+Element Matrix Remarks
+Series resistor
+(
+1 −R
+0 1
+)
+R = resistance
+Shunt resistor
+(
+1 0
+− 1
+R 1
+)
+R = resistance
+Series conductor
+(
+1 − 1
+G
+0 1
+)
+G = conductance
+Shunt conductor
+(
+1 0
+−G 1
+)
+G = conductance
+Series inductor
+(
+1 −Ls
+0 1
+)
+L = inductance ;
+s = complex angular frequency
+Shunt capacitor
+(
+1 0
+−Cs 1
+)
+C = capacitance;
+s = complex angular frequency
+Matrices, Exponential Operators and Physical Applications 19
+1.3.2 Quantum Mechanics
+In this section, we will discuss the use of 2× 2 matrix operators in quan-
+tum mechanical problems like the dynamics of charged particles with spin
+interacting with an external magnetic ﬁeld. The non relativistic Pauli equa-
+tion describing the coupling of a spin- 1
+2 charged particle with an external
+static magnetic ﬁeld ⃗B writes11
+i ℏ∂t Φ =−q ℏ
+2m⃗ σ· ⃗B Φ (1.3.11)
+where q is the particle charge, m its mass, and Φ is a two-component wave
+function. In Fig. 1.10 we have reported a generic spin orientation and if we
+Figure 1.10: Total spin direction not aligned with any component(
+S = ℏ
+√
+s(s + 1) =
+√
+3
+2 ℏ
+)
+.
+assume that ⃗B is along the y direction, eq. (1.3.11) can be written as
+∂t Φ =ωc (ˆσ+− ˆσ−) Φ, (1.3.12)
+whereωc = qB
+4m is the cyclotron frequency. According to the discussion of the
+previous section, the solution of eq. (1.3.12) is almost straightforward and
+we get
+Φ = ˆR (ωct) Φ0 , (1.3.13)
+where ˆR is the rotation matrix (see eq. (1.1.17)), corresponding to the evo-
+lution operator associated with the Hamiltonian of the Schr¨ odinger equation
+11The equation has been written in the above form by neglecting the kinetic term and by
+retaining the Stern and Gerlach interaction (magnetic moment-magnetic ﬁeld) only.
+20 Mathematical Methods for Physicists
+(1.3.12). A more general result can be achieved by casting the above equa-
+tion, in the form
+∂t Φ = 2iqωc⃗ σ·⃗ nΦ, ⃗ n =
+⃗B
+B, (1.3.14)
+whose solution is again obtained in the form of a rotation.
+Let us now consider a two-level quantum system which will be deﬁned
+as a quantum system with only two allowed energy states, like an atomic or
+molecular system. The two states are coupled by some external ﬁeld which,
+in the example of the Figure 1.11, is an electromagnetic interaction.
+Figure 1.11: A schematic representation of an atomic or molecular two-level system cou-
+pled by an electromagnetic ﬁeld.
+The Schr¨ odinger equation, accounting for the evolution of such a system, is12
+i ℏ∂tΨ = ( ˆH0 + ˆV ) Ψ, (1.3.15)
+where V is the interaction potential between upper and lower levels and
+ˆH0 is the un-perturbed part of the Hamiltonian, satisfying the eigenvalues
+equation
+ˆH0ψ± =E±ψ±, E ± =±1
+2 ℏω (1.3.16)
+with ψ± denoting the wave functions of the two states independent and or-
+thogonal13 and E± the relevant energy eigenvalues.
+12We assume V independent of time in the sense that its possible variation with time
+are very slow compared with the dynamics associated with frequency ωc .
+13The concept of orthogonal states will be more carefully discussed in the following.
+Here orthogonal means that
+∫
+ψ∗
++ψ−dV = 0 .
+Matrices, Exponential Operators and Physical Applications 21
+The evolution of such a system is ruled by the Schr¨ odinger eq. (1.3.15) and
+can be written as follows
+Ψ =a+(t)ψ+ +a−(t)ψ−. (1.3.17)
+By deﬁnition, the operator V connects lower and upper levels and does not
+contain diagonal elements.
+Exercise 3. The equation of motion satisﬁed by the time dependent coeﬃ-
+cients in eq. (1.3.17) can be inferred from the Schr¨ odinger equation.
+Verify that it can be cast in the form
+i∂t χ = [ω ˆσz + 2 Ω ˆσy] χ, (1.3.18)
+whereχ =
+( a+
+a−
+)
+and
+i ℏ Ω =⟨ψ+| ˆV|ψ−⟩ =−⟨ψ−| ˆV|ψ+⟩. (1.3.19)
+The evolution operator associated with the solution of eq. (1.3.18) is given
+by eq. (1.2.22), with
+ˆU(t) =e−it⃗Γ·⃗ σ, ⃗Γ≡ (0, 2Ω, ω). (1.3.20)
+A straightforward application of eq. (1.2.23) leads to the following time
+dependence of the evolution matrix
+ˆU(t) =
+
+ cos
+(
+Γ t
+2
+)
+−iω
+sin(Γ t
+2)
+Γ − 2Ω
+Γ sin
+(
+Γ t
+2
+)
+2Ω
+Γ sin
+(
+Γ t
+2
+)
+cos
+(
+Γ t
+2
+)
++iω
+sin(Γt
+2)
+Γ
+
+. (1.3.21)
+The probability that the two-level system will be found in the state ψ± is
+therefore given by
+P±(t) =|⟨ψ±| Ψ⟩|2 =
+[
+cos
+(
+Γt
+2
+)
+a± (0)∓ 2Ω
+Γ sin(Γt)a∓ (0)
+]2
++
++ ω2
+Γ2 sin
+(
+Γt
+2
+)2
+|a± (0)|2,
+(1.3.22)
+where
+|a+ (0)|2 +|a− (0)|2 =|a+ (t)|2 +|a− (t)|2 = 1. (1.3.23)
+The examples discussed in the forthcoming sections clarify how the con-
+cept of two-level system and the associated formalism apply in a wider con-
+text.
+22 Mathematical Methods for Physicists
+1.3.3 Particle Physics: Kaon Mixing
+Before getting into the speciﬁc aspects of this problem, let us remind
+that, in Particle Physics, the strong interactions are characterized by the
+conservation of some quantum numbers like isotopic spin, baryonic number,
+strangeness, charm . . . The isotopic spin is a concept introduced to express
+the charge independence of the strong interaction, where neutron and proton,
+in absence of any other interaction, can be viewed as the manifestation of
+the same particle, the nucleon, a kind of two-level system whose upper and
+lower states are the proton and the neutron respectively. According to this
+picture, we have
+N =
+( p
+n
+)
+. (1.3.24)
+The transitions from the lower to the upper state and vice-versa occur through
+an interaction of the type (see Fig. 1.12) 14
+ˆH =i
+(
+g ˆσ+−g∗ˆσ−
+)
+(1.3.25)
+In analogy to the case of two-level atomic or molecular system, the cou-
+pling between up and down level is ensured by the exchange of particles, the
+mesons, which unlike the photons are massive. Along with the conservation
+of the isotopic spin strong interaction are characterized by the conservation
+of strangeness, which is an additive quantum number 15. Strangeness S, iso-
+topic spin I, baryonic number B and charge Q (normalized to the modulus
+of the electron charge) are linked by the relation
+Q =I3 + Y
+2, Y =B +S, (1.3.26)
+where I3 refers to the third component of the isotopic spin and Y is called
+hypercharge. The consistency of eq. (1.3.26) can be veriﬁed in the case of the
+neutron and proton, as shown in Tab. 1.2.
+14In the following chapters we will use Feynman diagrams to illustrate processes involv-
+ing the interaction between elementary particles. We assume that the reader is familiar
+with the relevant qualitative meaning. The chapters are suﬃciently self contained and the
+reader unfamiliar with the meaning of pittograms appearing in Fig. 1.12 can read them,
+before proceeding further.
+15Denoting by ˆA an operator such that ˆA|ni⟩ =λi | ni⟩, if|N⟩ =|n1,..., nm⟩ is a
+composite system, the operator is said additive if ˆA|N⟩ = (∑m
+i=1λi)|N⟩, multiplicative
+if ˆA|N⟩ = (∏m
+i=1λi)|N⟩ .
+Matrices, Exponential Operators and Physical Applications 23
+Figure 1.12: Feynman diagram describing the interaction between proton and neutron.
+They can be viewed as a two-level system, the coupling between upper and lower level is
+ensured by the exchange of a pion. a) This representatiom belongs to an old poit of view,
+in b) the pion exchange at the quark level via gluon intermediate exchange is shown (see
+below).
+Table 1.2: Quantum numbers of the nucleon.
+B I3 S Q
+p 1 1/2 0 1
+n 1 −1/2 0 0
+The quarks, the elementary building blocks of strongly interacting parti-
+cles, were introduced by Murray Gell-Mann and George Zweig in the early
+sixties of the last century and are characterized by the quantum numbers
+reported in Tab. 1.3 16
+The so called quark model assumes that mesons, are realized as q ¯q com-
+bination. The reader can verify that the only allowed combinations are those
+reported in Fig. 1.13, which shows the so called octet of pseudo-scalar mesons
+(see below). It consists of two iso-doublets of strange mesons (the kaons with
+strangeness±1), one iso-triplet of null strangeness mesons (the pions) and
+an iso-singlet with strangeness equal to zero: the eta meson (η)17.
+16We do not take into account, for the moment c,b , ant t quarks.
+17An SU (3) singlet should also be included; the η′.
+24 Mathematical Methods for Physicists
+Table 1.3: Quarks quantum numbers.
+B I3 S Q
+u (up) 1/3 1/2 0 2/3
+d (down) 1/3 −1/2 0 −1/3
+s (strange) 1/3 0 −1 −1/3
+Figure 1.13: The I3−S diagram of the pseudo-scalar meson octet.
+In Fig. 1.13, we have reported strange and non strange mesons arranged
+in aSU (3) octet. The strangeness quantum number S is conserved in strong
+interactions but not in weak ones. This means that weak processes do not
+distinguish beween the K0 and its antiparticle. From the phenomenologi-
+cal point of view, it happens when an initial beam composed by K0, while
+propagating, can transform into anti-K0 and then go back to the original con-
+ﬁguration. The K0 and anti-K0 states can therefore be mixed. If we view the
+two particles as a two-level system, as illustrated in Fig. 1.14, we can envis-
+age a kind of oscillation mechanism.
+Such a transition can be viewed, at a microscopic scale 18, as a two-level
+system in which the lower and upper states are provided by ¯d and s quark
+18By microscopic we mean occurring at the level of constituent quarks.
+Matrices, Exponential Operators and Physical Applications 25
+Figure 1.14: Oscillation of a neutral kaon into its anti-particle.
+respectively, coupled by the intermediate charged vector bosonsW (see Chap-
+ter 5 for further comments), responsible for the weak interaction decays 19.
+If we limit ourselves to the K0− ¯K0 systems, the strangeness operator can
+be realized in terms of the ˆt matrix, as it is easily checked. However, being
+strangeness not conserved in weak decay processes, it cannot be considered a
+good quantum number to study processes involving neutral kaon decays and
+to draw useful consequences from the relevant analysis.
+Before getting into further details, let us remind a few notions relevant to
+weak decay processes which is characterized by the violation of other physical
+quantities. The most remarkable is the parity (see Fig. 1.15). We remind
+that the operation of parity inversion transforms right handed coordinate
+systems into left handed as shown in Fig. 1.15. It can also be viewed as the
+Figure 1.15: Parity transformation.
+ﬂip in sign of the spatial coordinates, namely
+19We are greatly simplifying the discussion. We should indeed include the transitions
+due to eﬀects involving heavier quarks ( c,t ) within the context of the so called box dia-
+grams.
+26 Mathematical Methods for Physicists
+ˆP
+
+
+x
+y
+z
+
+ =
+
+
+−x
+−y
+−z
+
+. (1.3.27)
+Particles can be characterized as scalar, vectors, pseudo-scalars or pseudo-
+vectors according to their transformation under parity conjugation. By
+pseudo-scalar particle, we mean a particle with spin zero but with nega-
+tive intrinsic parity, where the parity is a multiplicative quantum number.
+Just to give an example from elementary geometry, we note that a vector is a
+quantity with negative parity (if reﬂected it changes sign), the vector product
+between two vectors is a pseudo vector, namely a vector with positive parity,
+and the scalar product between a pseudo vector and a vector is a pseudo
+scalar, namely a scalar with negative parity. In Chapter 10, we will provide
+a more extensive treatment of the concepts associated with parity inversion.
+As already underlined, parity is not conserved in weak interactions, which
+means that mirror symmetry is violated in weak decay process.
+In Fig. 1.16 we have reported a
+Figure 1.16: Parity violation in beta decay.
+sketch of the crucial experiment
+which showed the parity violation in
+weak decays. It was indeed shown
+that in beta decay of 60Co, electrons
+are preferentially emitted in the di-
+rection opposite to the direction of
+the nuclear spin.
+A further example of parity is as-
+sociated with the C-parity, or char-
+ge conjugation, represented by the
+operation C| ψ⟩ =| ¯ψ⟩ exchanging
+a particle into its anti-particle. The charge conjugation operator applied to
+a π+, π− system, with L total angular momentum, yields
+C|π+π−⟩ = (−1)L|π−π+⟩. (1.3.28)
+We can deﬁne the product of the operation of charge and parity conjugations
+asCP . An idea of CP transformation applied to the electron is in Fig. 1.17.
+Matrices, Exponential Operators and Physical Applications 27
+Figure 1.17: CP -conjugation for electrons.
+The charge and parity conjugations are not separately conserved in weak
+interaction processes. Here we assume that the operation of CP conjugation
+is conserved in the neutral kaon oscillation process. It can therefore be con-
+sidered a good quantum number to study the decay of neutral kaons. By
+noting that
+|K0⟩ =| ¯sd⟩, | ¯K0⟩ =| ¯ds ⟩, (1.3.29)
+we ﬁnd
+CP |K0⟩ =| ¯ds ⟩ =| ¯K0⟩, C P | ¯K0⟩ =| ¯sd⟩ =|K0⟩,
+(1.3.30)
+which ensure that they are not eigenvalues of the CP operator, which in
+terms of 2× 2 matrix operators can, in this speciﬁc case, be written as
+CP = ˆh. (1.3.31)
+The eigenstates of this operator can be written as a linear combination of
+the “pure” K0, ¯K0 states, namely
+|KS⟩ = 1√
+2
+(
+|K0⟩ + | ¯K0⟩
+)
+, |KL⟩ = 1√
+2
+(
+|K0⟩− | ¯K0⟩
+)
+(1.3.32)
+such that
+CP |KS⟩ =|KS⟩, CP |KL⟩ =− |KL⟩, (1.3.33)
+28 Mathematical Methods for Physicists
+where| KS,L ⟩ corresponds to the so called short ( S) and long ( L) lived
+K-mesons20. They have diﬀerent decay modes, and indeed
+KS→π+π−, K L→π+π−π0 (1.3.34)
+(verify that CP is conserved in the decay modes reported in eq. (1.3.34)).
+It is remarkable that these na¨ ıve manipulations have shown that diﬀerent
+combinations of neutral kaon states lead to diﬀerent particles with diﬀerent
+decay modes. They have diﬀerent masses and diﬀerent life-times and we can
+further explore their properties by using the simple mathematics developed
+so far.
+Let us now discuss the evolution of the above two-level system which can
+be described through the Hamiltonian
+ˆH =
+
+
+Es−i Γs
+2 0
+0 EL−i ΓL
+2
+
+ (1.3.35)
+which is clearly not Hermitian, since it contains two imaginary terms linked to
+the decay rates (Γ∝ 1
+τ withτ being the life-time of the two particles21). The
+evolution of the quantum states (1.3.32) is therefore ruled by the operator
+ˆU(t) =
+
+ e−iωst− t
+2τs 0
+0 e
+−iωLt− t
+2τL
+
+, ω S,L = ES,L
+ℏ , ΓS,L = ℏ
+τS,L
+.
+(1.3.36)
+Accordingly, we ﬁnd
+| ΨK(t)⟩ = 1√
+2
+(
+e−iωst− t
+2τs |KS⟩ +e
+−iωLt− t
+2τL |KL⟩
+)
+. (1.3.37)
+The probability that the state will behave as a | ¯K0⟩ is therefore
+|⟨ ¯K0| ΨK(t)⟩| 2= 1
+4
+(
+e
+− t
+τS +e
+− t
+τL− 2e− t
+τ∗ cos ((ωS−ωL)t)
+)
+, (1.3.38)
+20The decay times are given by τS≃ 9· 10−11s, τL≃ 5· 10−8s, hence the name of long
+and short living system.
+21The system is not closed but open, the particles are not conserved. The non hermitian
+part account for this dissipative eﬀect. All open systems in quantum mechanics are treated
+with non hermitian operators.
+Matrices, Exponential Operators and Physical Applications 29
+with τ∗ = 1
+2
+τSτL
+τS +τL
+(prove for Exercise).
+We want however to point out a diﬀerent way of computing the previous
+probability amplitude. We note indeed that by inverting eq. (1.3.32), we
+obtain (
+|K0⟩
+| ¯K0⟩
+)
+= 1√
+2
+(
+1 1
+1 −1
+)(
+|KS⟩
+|KL⟩
+)
+. (1.3.39)
+The Schr¨ odinger equation describing the evolution of theCP eigenstates
+can be transformed into that for the neutral kaon system by simply per-
+forming the change of basis given by eq. (1.3.39). In fact, starting from the
+Schr¨ odinger equation for the Hamiltonian in eq. (1.3.35),
+i∂t
+(
+|KS⟩
+|KL⟩
+)
+=
+(
+ωs−i 1
+2τS
+0
+0 ωL−i 1
+2τL
+)(
+|KS⟩
+|KL⟩
+)
+, (1.3.40)
+we get, for ˆT = 1√
+2
+( 1 1
+1 −1
+)
+,
+i∂t
+(
+|K0⟩
+| ¯K0⟩
+)
+= ˆH′
+(
+|K0⟩
+| ¯K0⟩
+)
+, ˆH′ = ˆT
+(
+ωs−i 1
+2τS
+0
+0 ωL−i 1
+2τL
+)
+ˆT−1,
+(1.3.41)
+The eﬀective Hamiltonian yielding the kaon oscillations is therefore
+ˆH′ = 1
+2
+
+
+ω+− i
+2τ∗
++
+ω− + i
+2τ∗
+−
+ω−− i
+2τ∗
+−
+ω+− i
+2τ∗
++
+
+, τ ∗
+± =τ−1
+S ±τ−1
+L , ω ± =ωS±ωL.
+(1.3.42)
+The mechanism ensuring the oscillations is provided by the term ω−,
+which also drives the interferential terms in the probability evolution. Since
+it is linked to the mass diﬀerence of theS,L doublet, it is used in the analysis
+of the decay rates to measure the value of this observable 22.
+1.4 Cabibbo Angle and See-Saw Mechanism
+In this section, we will consider two further examples from Particle Physics
+showing that important results can be obtained with a good understanding
+22We will not discuss these details, but we remark that mass diﬀerence is few eV .
+30 Mathematical Methods for Physicists
+of phenomenology and with fairly simple mathematical tools. In the previous
+section, we have seen that at microscopic level strong or weak process are due
+to processes occurring at quark level, as in the classical weak decay process
+of the neutron reported in Fig. 1.18.
+(a) Neutron decay n→ p +e− + ¯νe at
+quark level involved in neutron decay
+and beta decay.
+(b) Mirror process in nuclear fu-
+sion involved in proton-proton
+fusion.
+Figure 1.18: Weak interaction transformations of u and d quarks. The echanged particle
+is the intermediate vector boson W , whose role in weak decay process will be discussed in
+Chapter 5.
+As already remarked, the kaon oscillation is due to a kind of oscillation in
+the s−d quark sector, associated with the strangeness non conservation in
+weak interactions.The s−d quarks are not distinguished by these processes
+and therefore we can consider a kind of interaction which mixes the s−
+d ﬂavours, transforming them into weak interaction eigenstates s′−d′. On
+purely phenomenological grounds, s−d quarks can be considered as forming
+a two-level system and we can write the interaction Hamiltonian in the form
+ˆHs,d = i (χ ˆσ+−χ∗ˆσ−) (1.4.1)
+which leads, for χ =χ∗, to the result 23
+( d′
+s′
+)
+= eϑˆi
+( d
+s
+)
+=
+( cosϑ sinϑ
+− sinϑ cosϑ
+)( d
+s
+)
+, ϑ =χt, (1.4.2)
+whereϑ is the Cabibbo angle whose experimental value is close to 13.1 deg
+(see Fig. 1.19).
+23The angle ϑ is a quantity depending on the strength of the interaction χ and on its
+characteristic times. These unknown quantities are all comprised into the phenomenolo-
+gical Cabibbo angle.
+Matrices, Exponential Operators and Physical Applications 31
+Figure 1.19: Cabibbo mixing.
+Before discussing a further example taken from Particle Physics, we con-
+sider the following Exercise.
+Exercise 4. Prove that the following identity is a direct consequence of eq.
+(1.2.28)
+exp
+(
+α
+( 0 1
+1 R
+))
+= eλ+−eλ−
+λ+−λ−
+ˆM + λ+eλ−−λ−eλ+
+(λ+−λ−)
+ˆ1 =
+=
+
+ E(α,R ) α sh
+(√
+∆
+2 α
+)
+α sh
+(√
+∆
+2 α
+)
+E(α, R) +αR sh
+(√
+∆
+2 α
+)
+
+ e
+αR
+2 ,
+(1.4.3)
+where
+ˆM =α
+( 0 1
+1 R
+)
+, λ ± =αR±
+√
+∆
+2 , ∆ = 4 +R2,
+E(α, R) = Rα
+2 sh
+(√
+∆
+2 α
+)
++ cosh
+(√
+∆
+2 α
+)
+, sh(x) = sinh x
+x ,
+(1.4.4)
+which is a direct consequence of eq. (1.2.28).
+32 Mathematical Methods for Physicists
+Let us now consider a mass matrix Hamiltonian of the type
+ˆm =c2
+( 0 m
+m M
+)
+=mc 2
+( 0 1
+1 R
+)
+, R = M
+m. (1.4.5)
+The associated evolution operator is
+ˆU(t) = exp
+(
+−i t
+τ
+( 0 1
+1 R
+))
+, τ = ℏ
+mc 2 (1.4.6)
+and it can be explicitly written in a 2 × 2 matrix form, using eq. (1.4.3).
+In Figs. 1.20 and 1.21 we have reported the real and imaginary parts of the
+diagonal entries of ˆU(t) vs. t, for small and large values of R.
+(a) Real (dot line) and Imaginary (con-
+tinuous line) parts of ˆU(t)1, 1vs t
+τ .
+(b) Real (dot line) and Imaginary (con-
+tinuous line) parts of ˆU(t)2, 2 vs t
+τ .
+Figure 1.20: The case R=1.
+It is interesting to consider mass matrices of the type (1.4.5) withR>> 1
+and explain why they are exploited in Particle Physics within the context of
+the so called see-saw mechanism which is invoked to explain why the neutri-
+nos have so small masses compared to the other particles
+(hint: this exercise is just an invitation to confront himself with an interesting
+problem in Particle Physics which we can understand from the mathemati-
+cal point of view, but not in its physical aspects, requiring concepts which
+will be only marginally covered in this book. The idea beyond the see-saw
+mechanism is that the neutrino masses are acquired through an interaction
+Matrices, Exponential Operators and Physical Applications 33
+(a) Real (dot line) and Imaginary (con-
+tinuous line) parts of ˆU(t)1, 1vs t
+τ .
+(b) Real (dot line) and Imaginary (con-
+tinuous line) parts of ˆU(t)2, 2 vs t
+τ .
+Figure 1.21: The case R=10.
+which can be described by means of a mass matrix given by
+ˆmν =
+( 0 mD
+mD MNHL
+)
+(1.4.7)
+where MNHL denotes the mass of a heavy neutral lepton 24, very large com-
+pared to the typical mD mass values of the standard model. The coupling
+of this lepton to neutrinos determines their masses and their time evolu-
+tion characterized by a mixing between diﬀerent neutrino ﬂavours, known as
+neutrino oscillations).
+1.5 Gell-Mann and Pauli Matrices
+1.5.1 Spin Composition
+The rules of composition of angular momentum are well known from
+elementary Quantum Mechanics. Two quantum systems with spin- 1
+2 each
+can be composed to get either a system with spin 0 or 1, according to the
+following rule
+1
+2⊗ 1
+2 = 0⊕ 1. (1.5.1)
+24The heavy neutral lepton is one of the candidates for the constituents of the dark
+matter in the Universe.
+34 Mathematical Methods for Physicists
+If we denote by|↑⟩ the spin-1
+2 states, we can write the previous states in term
+of spin wave-functions as
+0 → |↑↓⟩−|↓↑⟩√
+2 Singletstate,
+1 → |↑↑⟩,|↓↓⟩,|↑↓⟩+|↓↑⟩√
+2 Tripletstate,
+(1.5.2)
+where the associated wave functions to spin-1 are diﬀerent for the diﬀerent
+eigenvalues of sz =−1, 0, 1. The matrices describing spin-1 systems are,
+therefore, 3×3 matrices. We invite the reader to derive such a generalization
+of the Pauli matrices (for the study of the relevant properties see sec. 5.1).
+In the case of the composition of three spin- 1
+2 systems we have
+1
+2⊗ 1
+2⊗ 1
+2 = 1
+2⊕ 1
+2⊕ 3
+2, (1.5.3)
+namely two spin- 1
+2 and one spin- 3
+2 quantum systems. The state with spin-
+3
+2 will be speciﬁed by the completely symmetric (with respect to the spin
+component exchange) wave function
+3
+2 → |↑↑↑⟩, (1.5.4)
+while the states with spin- 1
+2 will be speciﬁed by the following wave functions
+with mixed symmetry 25
+1
+2 → 1√
+6 (2|↓↑↑⟩−|↑↓↑⟩−|↑↑↓⟩ ), 1
+2 → 1
+2 (|↑↑↓⟩−|↑↓↑⟩ ).
+(1.5.5)
+It is interesting to derive the 4 × 4 matrices, describing the case of systems
+with spin- 3
+2 (see sec. 5.1).
+Regarding the symmetry properties, the following argument can be used.
+Let us ﬁrst keep in mind that when we combine two spin- 1
+2 particles,
+the ﬁrst rule to be respected is the principle of particle indistinguishability .
+25It is fairly straightforward to state the symmetry properties associated with the com-
+binations of three identical particles. A speciﬁc discussion is available in Chapter 5.
+Matrices, Exponential Operators and Physical Applications 35
+Denoting with ψi,j(1, 2) the wave function, for such a state we must have
+|ψi,j(1, 2)|2=|ψi,j(2, 1)|2 (1.5.6)
+which yields
+ψi,j(1, 2) =eiθψi,j(2, 1) =e2iθψi,j(1, 2). (1.5.7)
+Since the double exchange restores the original state, we have e2iθ = 1, for
+θ = 0,π . Accordingly, we get that the state may be odd (antisymmetric)
+or even (symmetric) under particle permutation, for this reason we ﬁnd the
+following possible conﬁgurations (1 =↑, 2 =↓)
+Symmetric :
+
+
+
+ψ1ψ1,
+ψ1ψ2 +ψ2ψ1√
+2 ,
+ψ2ψ2 ;
+Antisymmetric : ψ1ψ2−ψ2ψ1√
+2 .
+(1.5.8)
+The above states corresponds respectively to spin-1 and spin-0. By using the
+arrow notation we recover eq. (1.5.2).
+Let us now consider the product
+( 1
+2⊗ 1
+2
+)
+⊗ 1
+2 which can be written also as
+(0⊕ 1)⊗ 1
+2. It is almost straightforward to understand that the symmetric
+combination is just provided by
+ψ1ψ1ψ1 , ψ1ψ1ψ2 +ψ2ψ1ψ1 +ψ1ψ2ψ1√
+3 ,
+ψ1ψ2ψ2 +ψ2ψ2ψ1 +ψ2ψ1ψ2√
+3 , ψ 2ψ2ψ2 .
+(1.5.9)
+In terms of “arrow” representation, we end up with the combinations con-
+tained in eq. (1.5.5).
+Let us now combine the “singlet” ψ0 and the “doublet” ψ1 as
+ψ0ψ1−ψ1ψ0→|ψM,2⟩ =|↑↓↑⟩−|↑↑↓⟩√
+2 (1.5.10)
+36 Mathematical Methods for Physicists
+representing a mixed symmetry doublet. The second doublet can be obtained
+|ψM,1⟩ = 2|↓↑↑⟩−|↑↑↓⟩−|↑↓↑⟩√
+6 (1.5.11)
+by exploiting the orthogonal properties of the wave functions, it is indeed
+easily checked that
+⟨ψM,1|ψM,2⟩ = 0. (1.5.12)
+1.5.2 Gell-Mann Matrices
+In the previous sections, we have studied the properties of 2×2 Pauli ma-
+trices and we have discussed the importance of their application to diﬀerent
+physical problems. We have also seen that 3 × 3 matrices can be exploited
+to describe the states of particles with spin 1. This set of three matrices
+realizes a representation of SU (2) generators but not a basis for all three
+dimensional matrices. A generalization in this sense is provided by a set of 8
+matrices known as Gell-Mann matrices which have played a fundamental
+role in the development of theSU (3) classiﬁcation of the elementary particles
+and of Quantum Chromo Dynamics.
+The Gell-Mann matrices are a direct generalization of the Pauli matrices
+and are
+ˆλ1 =
+
+
+0 1 0
+1 0 0
+0 0 0
+
+, ˆλ2 =
+
+
+0 −i 0
+i 0 0
+0 0 0
+
+, ˆλ3 =
+
+
+1 0 0
+0 −1 0
+0 0 0
+
+,
+ˆλ4 =
+
+
+0 0 1
+0 0 0
+1 0 0
+
+, ˆλ5 =
+
+
+0 0 −i
+0 0 0
+i 0 0
+
+, ˆλ6 =
+
+
+0 0 0
+0 0 1
+0 1 0
+
+,
+ˆλ7 =
+
+
+0 0 0
+0 0 −i
+0 i 0
+
+, ˆλ8 = 1√
+3
+
+
+1 0 0
+0 1 0
+0 0 −2
+
+.
+(1.5.13)
+These matrices satisfy the following relations of commutation
+[
+ˆλα, ˆλβ
+]
+=ifαβγ ˆλγ (1.5.14)
+where fαβγ plays the same role of the Ricci-Levi Civita tensor in SU (2).
+Matrices, Exponential Operators and Physical Applications 37
+Exercise 5. Prove that
+f123 = 1, f 147 =f165 =f246 =f257 =f345 =f376 = 1
+2,
+f458 =f678 =
+√
+3
+2 and, whit δαβ Kronecker symbol,
+(1.5.15)
+Tr
+(
+ˆλαˆλβ
+)
+= 2δαβ. (1.5.16)
+The physical meaning of the Gell-Mann matrices can be inferred from Fig.
+1.22 where we have reported the fundamental quark triplet in the ( I3, Y)
+plane. The states on which the ˆλα act are deﬁned by the 3-column vector
+Figure 1.22: (I3,Y ) diagram of the fundamental quark triplet.
+called the fundamental SU (3) triplet
+ϖ =
+
+
+d
+u
+s
+
+. (1.5.17)
+The ﬁrst three matrices account for the isotopic spin symmetry (d−u quarks),
+the second two for the so calledU-spin symmetry (d−s sector), and the sixth
+and seventh account for theu−s sector symmetry (V -spin). The matrix ˆλ8 is
+associated with the hypercharge quantum number. It commutes with ˆλ3, as-
+sociated with the third component of the isotopic spin, and both hypercharge
+and isotopic spin are linked to the charge through the Gell-Mann-Nishima-
+Nakano formula (1.3.26).
+38 Mathematical Methods for Physicists
+1.5.3 Flavors and Spin
+In this section, we will see how we can merge the concepts underlying
+SU (3) and SU (2) and the quark model. Mesons are constructed by combin-
+ing a quark and an anti-quark belonging to the fundamental triplet in all
+possible ways. It is not diﬃcult to realize that all the available combinations
+are those given in Fig. 1.14 plus a contribution, called SU (3) singlet, whose
+wave function in terms of quark content is provided by
+|η
+′
+⟩ = 1√
+3
+(
+|d ¯d⟩+ |u ¯u⟩+|s ¯s⟩
+)
+. (1.5.18)
+Diﬀerent multiplet wave functions are all mutually orthogonal. In more tech-
+nical terms we can say that, by denoting with 3 the fundamental represen-
+tation of the SU (3) triplet, mesons belong to the product of representations
+3⊗ ¯3 = 1⊕ 8. (1.5.19)
+Exercise 6. Prove that the mesons π0, ηare speciﬁed by the combinations
+|π0⟩ = 1√
+2
+(
+−| d ¯d⟩+|u ¯u⟩
+)
+, |η⟩ = 1√
+6
+(
+|d ¯d⟩+|u ¯u⟩− 2|s ¯s⟩
+)
+,
+⟨π0| η⟩ = 0
+(1.5.20)
+(hint: note that we must require ⟨η| η
+′
+⟩ =⟨π0| η
+′
+⟩ = 0 ... ).
+Baryons are composed of three quarks. The relevant wave functions are
+characterized by symmetry properties with respect to the exchange of two
+quarks and all the particles with the same symmetry properties belong to
+the same SU (3) multiplet.
+Exercise 7. Prove that baryons belong to the product of representations
+3⊗ 3⊗ 3 = 1⊕ 81⊕ 82⊕ 10. (1.5.21)
+The multiplet 10 (see Fig. 1.23a) is completely symmetric, which means
+that a particle with quark content u,u,d belonging to this multiplet is char-
+acterized by the wave function
+| ∆+⟩ = 1√
+3 (|uud ⟩+|duu ⟩+|duu ⟩). (1.5.22)
+Matrices, Exponential Operators and Physical Applications 39
+Any other combination will have mixed symmetry and belong to the multi-
+plets with mixed symmetry (namely 8 1,2), where those with the same quark
+content as (1.5.22) are (see Chapter 5 for further discussion)
+|p1⟩ = 1√
+3 (2|duu⟩−| udu ⟩−| uud⟩), (1.5.23)
+|p2⟩ = 1√
+2 (|uud ⟩−| udu ⟩). (1.5.24)
+Eq.(1.5.23) is recognized as the proton (see Fig. 1.23b for the baryon octet
+81 where other baryons, along with their quark content, are also shown 26).
+(a) Baryon decuplet.
+(b) Baryon octect.
+Figure 1.23: I3−S diagram.
+Finally the singlet 1 has a completely anti-symmetric wave function which
+can be easily be realized as (see Chapter 5 for details)
+| Γ0⟩ = 1√
+6
+∑
+i,j,k
+εijk|ijk ⟩, (1.5.25)
+where we made the identiﬁcation 1→u, 2→d, 3→s. Since the quarks are
+fermions with half integer spin, the most correct way to frame their relevant
+properties is using a symmetry which includes spin and ﬂavor 27 degrees of
+26The second octet contains particles with same quantum numbers of the ﬁrst. The
+interested reader can ﬁnd more details in the book by D. B. Lichtenberg , Unitary Sym-
+metries and Elementary Particles, Benjamin, New York (1978).
+27By ﬂavour we mean the SU (3) quantum numbers (isotopic spin and strangeness).
+40 Mathematical Methods for Physicists
+freedom. From the mathematical point of view this corresponds to studying
+the so called direct product SU (3)⊗SU (2).
+Proposition 1. The direct product between two groups (G,∗) and (H,◦) is
+denoted by G⊗H and it represents a new group in which the set of the
+elements is the Cartesian product of the sets of elements of G and H that
+is{(g,h ) :g∈G,h∈H} and on these elements we put an operation deﬁned
+element wise
+(g,h )× (g′,h′) = (g ∗ g′, h◦h′). (1.5.26)
+If we denote the fundamental quark triplet by 3 and the fundamental SU (2)
+doublet by 1
+2, we can write the fundamental representation ofSU (3)⊗SU (2)
+as
+(
+3, 1
+2
+)
+. Mesons will therefore be provided by
+(
+3, 1
+2
+)
+⊗
+(
+¯3, 1
+2
+)
+= (1⊕ 8, 0⊕ 1) = (1, 0)⊕ (8, 0)⊕ (1, 1)⊕ (8, 1), (1.5.27)
+while for baryons we get
+(
+3, 1
+2
+)
+⊗
+(
+3, 1
+2
+)
+⊗
+(
+3, 1
+2
+)
+=
+(
+1⊕ 81⊕ 82⊕ 10, 1
+2⊕ 3
+2
+)
+. (1.5.28)
+Exercise 8. The wave function of mesons and baryons as well should be
+written by including the spin so prove that
+| ∆++⟩ =|u↑u↑u↑⟩, |π−⟩ = 1√
+2 (|d↑u↓⟩−| d↓ ¯u↑⟩ )
+(1.5.29)
+(hint: recall that ∆ particles have spin- 3
+2 and pions spin 0 . . . ).
+Furthermore, write the wave functions of vector mesons (mesons with spin- 1
+belonging to the multiplet (8, 1)).
+Exercise 9. Concerning the proton, we remind that it belongs to the multiplet(
+81, 1
+2
+)
+. Prove that its wave function can be written as
+|p⟩ = 1
+2
+√
+3
+(duu udu uud )
+
+
+2 −1 −1
+−1 2 −1
+−1 −1 2
+
+
+
+
+↓↑↑
+↑↓↑
+↑↑↓
+
+ (1.5.30)
+(hint: take into account the symmetry properties of the spin wave-function).
+Derive of the wave-functions for all the states in the octet.
+Matrices, Exponential Operators and Physical Applications 41
+1.5.4 Color and QCD
+Since the ﬁrst proposal of the formulation of the quark model it was
+argued, that the SU (3) classiﬁcation of hadrons, is not fully consistent with
+the basic principles of Quantum Mechanics. Baryons, composed by three
+quarks, can be accommodated in representations like octets and decuplets.
+As already remarked, the baryons belonging to the representation 10 re-
+ported in Fig. 1.23a, are symmetric in their quark composition. This fact
+implies that states like | Ω−⟩ =| sss ⟩ are not allowed by Pauli principle,
+if all three quarks are supposed to be in an S-state. This puzzle is solved if
+we assume that the quarks are characterized by a further quantum number,
+called color and that they come in three diﬀerent fundamental colors (red,
+blue and green) and that only three diﬀerent colors may constitute physical
+particles, as shown in Fig. 1.24 for the already quoted case of the particle Ω−.
+Figure 1.24: Ω− components with three diﬀerent colors of the constituent quarks.
+The use of the adjectives colored and colorless is just a way to indicate new
+internal degrees of freedom which label the quarks and may be exploited to
+characterize their interaction. The use of red, blue and green colors is jus-
+tiﬁed by the fact that, in Color Theory, they are called primary colors and
+have additive properties like those shown in Fig. 1.25.
+From a mathematical point of view, a physical state like Ω− will be characte-
+rized by a completely anti-symmetric function in the color variables, namely
+| Ω−⟩ = 1√
+6
+∑
+i,j,k
+εijk|sisjsk⟩, i,j,k = 1, 2, 3,
+i→R, j →G, k →B.
+(1.5.31)
+42 Mathematical Methods for Physicists
+Figure 1.25: Combination of primary additive colors, the overlapping of the three colors
+results in a “white” (colorless) image.
+The internal structure of a particle like a proton is represented in Fig. 1.26.
+The forces which glue the quarks are those carrying the color quantum num-
+bers. These forces are therefore mediated by massless particles called gluons,
+according to the scheme reported in Fig. 1.27.
+Figure 1.26: Internal structure and forces of a proton.
+A more thorough discussion is provided in Chapter 5 where we have reported
+the (very) elementary tools to deal with Feynman rules concerning diﬀer-
+ent types of interactions. The exchange mechanisms are perfectly equivalent
+to what happen in the electromagnetic, weak and strong interactions, as sum-
+marized in Fig. 1.28. In this picture, the dynamical theory based on the above
+picture is called Quantum Chromo Dynamics (QCD) and it is an exact the-
+ory, which parallels the QED. The interaction in QED is due to exhange of
+photons while inQCD it is carried by eight28 independent color states, which
+correspond to the “eight types” or “eight colors” of gluons. Because states
+28We do not include the singlet, for the reasons discussed in Chapter 5.
+Matrices, Exponential Operators and Physical Applications 43
+blue
+blue
+green
+green
+green-antiblue
+gluon
+Figure 1.27: Feynman diagram for an interaction between quarks generated by a gluon
+denoted by a curly line.
+can be mixed together as discussed above, there are many ways of presenting
+these states which are known as theSU (3) color octet (see Tab. 1.4) (verify for
+Exercise that they are linked to the Gell-Mann matrices).
+Figure 1.28: Fundamental interactions and associated exchange bosons.
+We will not add any further comment on QCD. The concepts we have
+just mentioned in this section will be sporadically touched on in the next
+parts of the book.
+1.6 Concluding Remarks
+In the previous sections, we have given an introductory idea of how very
+na¨ ıve mathematical tools like the evolution operator methods and 2× 2 or
+44 Mathematical Methods for Physicists
+Table 1.4: SU(3) color octet.
+(R ¯B +B ¯R)/
+√
+2 −i (R ¯B−B ¯R)/
+√
+2
+(R ¯G +G ¯R)/
+√
+2 −i (R ¯G−G ¯R)/
+√
+2
+(B ¯G−G ¯B )/
+√
+2 −i (B ¯G−G ¯B )/
+√
+2
+(R ¯R−B ¯B)/
+√
+2 (R ¯R + B ¯B− 2G ¯G )/
+√
+6
+3× 3 matrices, can be exploited to study diﬀerent physical problems, which
+can be viewed from a common point of view (at least formal).
+In this concluding section, we will ﬁll some gaps left open in the previous
+discussion by considering, among the other things, the extension of our anal-
+ysis to higher order matrices. We will start our discussion with a problem
+which can be treated with an extension of the evolution operator method.
+1.6.1 Vector Diﬀerential Equations and Matrices
+Heisenberg equations allow the derivation, from Hamiltonian eq. (1.2.21),
+of the spin components motion equations which can be cast in vector form
+d
+dt⃗ σ=−i
+ℏ
+[
+⃗ σ,ˆH
+]
+=⃗Ω×⃗ σ, (1.6.1)
+which follows from the Pauli matrices commutation properties and from the
+following form of vector product
+(
+⃗ a×⃗b
+)
+l
+=εjkl aj bk . (1.6.2)
+Eq. (1.6.1) is formally equivalent to the Euler equation for a rotating body
+and it is often used in problems concerning the nuclear magnetic resonance.
+From the mathematical point of view, eq. (1.6.1) is an initial value problem
+and, according to what we have learned so far, its solution can also be written
+applying the formalism of the evolution operator as
+⃗ σ(t) =et [⃗Ω]⃗ σ0, (1.6.3)
+Matrices, Exponential Operators and Physical Applications 45
+where the term in the square brackets denots the operator
+[⃗Ω] =⃗Ω×. (1.6.4)
+By following the same procedure as before, we expand the exponential oper-
+ator and write the solution as
+⃗ σ(t) =
+∞∑
+n=0
+tn
+n! [⃗Ω]n⃗ σ0 (1.6.5)
+which represents a series of iterated vector products. The successive powers
+of the operator (1.6.4) should be interpreted as follows
+[⃗Ω]0 = ˆ1, [⃗Ω]2 =⃗Ω×(⃗Ω×, [⃗Ω]3 =⃗Ω×(⃗Ω×(⃗Ω .... (1.6.6)
+The form of the solution reported in eq. (1.6.5)-(1.6.6) can be useful if trun-
+cated after few terms, i.e. if we are interested in solutions valid for short
+time intervals, but it is not practical for long time behaviors. The use of the
+following property of the internal vector product
+⃗ a× (⃗b×⃗ c) = (⃗ a·⃗ c)⃗b− (⃗ a·⃗b)⃗ c (1.6.7)
+yields the possibility of writing eq. (1.6.5) in the closed form
+⃗ σ(t) = cos(Ωt)⃗ σ0 + sin(Ωt) (⃗ n×⃗ σ0) + [1− cos(Ωt)] (⃗ n·⃗ σ0)⃗ n, (1.6.8)
+with ⃗ n=
+⃗Ω
+Ω. It is called Rodrigues rotation and its geometrical interpre-
+tation is reported in Fig. 1.29. The proof follows from the cyclical properties
+of the vector product and can be viewed as the result of the extension of the
+Euler formula (for further comments see Chapter 6).
+The extension of the above method of a vector diﬀerential equation so-
+lution to the non-homogeneous case is quite straightforward and indeed we
+ﬁnd that the solution of the problem 29
+d
+dt⃗ σ=⃗Ω×⃗ σ+⃗ γ (1.6.9)
+29The general problem of non homogeneous diﬀerential equations will be treated in
+the following sections. Here we note that, being the non homogeneous term independent
+of time, we can solve the problem quite easily by transforming it into a homogeneous
+equation. In fact, we have y′ =β−αy, setting η =y− β
+α we ﬁnd η′ =−αη.
+46 Mathematical Methods for Physicists
+Figure 1.29: Geometrical interpretation of the evolution of ⃗ σ(t). We have assumed for
+semplicity ⃗Ω⊥⃗ σ0.
+can be written (as the reader can easily prove) in the form
+⃗ σ(t) =et [⃗Ω]⃗ σ0 +
+∫ t
+0
+e(t−t′) [⃗Ω]⃗ γdt′ . (1.6.10)
+An interesting example of application of the previous result is a genuine
+classical problems, relevant to the equation of motion of a body falling under
+the inﬂuence of the gravity with the inclusion of the Coriolis’ force, namely
+d
+dt⃗ v=⃗ g− 2⃗Ω×⃗ v. (1.6.11)
+The Earth as a rotating frame is shown in Fig. 1.30 in which we have re-
+ported the “absolute” frame (XYZ ) and the rotating reference frame ( xyz)
+in which the rotation vector ⃗Ω is expressed in terms of the co-latitude angle
+λ, while the modulus of the vector is just linked to the Earth angular velocity.
+Eq. (1.6.11) is approximate in the sense that it does not contain the cen-
+trifugal term [ ⃗Ω]2⃗ rand therefore its validity is limited to ﬁrst order term
+only.
+Exercise 10. The use of eqs. (1.6.6) and (1.6.10) yields the following re-
+statement of the falling body law
+⃗ r(t) =⃗ r0 +⃗ v0 t + 1
+2⃗ gt2−⃗Ω×
+(
+⃗ v0 t2 + 1
+3⃗ gt3
+)
+. (1.6.12)
+Matrices, Exponential Operators and Physical Applications 47
+Figure 1.30: The ﬁxed and rotating reference frames on the Earth.
+Derive the above expression and ponder about its physical meaning.
+Find the solution of the equation
+d
+dt⃗ v=⃗ g− 2⃗Ω×⃗ v−β⃗ v (1.6.13)
+which diﬀers from eq. (1.6.11) for the inclusion of a friction contribution.
+We have already noted that in spite of the fact that eq. (1.6.1) has been
+derived using a quantum formalism, they hold in a classical context too. Such
+a statement can be easily veriﬁed by deriving the Euler equation of motion
+using the Hamilton formalism.
+1.6.2 Matrices, Vector Equations and Rotations
+By assuming that vector ⃗Ω is speciﬁed by components ⃗Ω≡ (Ω1, Ω2, Ω3),
+we can cast our equation in the following matrix form (we replace ⃗ σby ⃗S)
+d
+dt
+
+
+S1
+S2
+S3
+
+ =
+
+
+0 −Ω3 Ω2
+Ω3 0 −Ω1
+−Ω2 Ω1 0
+
+
+
+
+S1
+S2
+S3
+
+ (1.6.14)
+and the relevant solution as
+⃗S = ˆU(t)⃗S0, (1.6.15)
+\end{verbatim}

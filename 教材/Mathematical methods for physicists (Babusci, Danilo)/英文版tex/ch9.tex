@@ -1,0 +1,258 @@
+% ch9.tex — Special Functions, Umbral Methods and Applications (hand-typeset)
+\chapter{Special Functions, Umbral Methods and Applications}
+
+\section{Introduction to Umbral Methods and Relevant Applications}
+
+The umbral calculus treats an index-shifting operator $\hat\theta$ with
+$\hat\theta x^n = x\,x^{n-1}$ formally as a number. It turns special-polynomial
+identities into algebraic manipulations.
+
+For any polynomial family $P_n(x)$ with $\deg P_n=n$, introduce an
+umbral operator $\hat\theta$ such that
+\begin{equation}
+\hat\theta^n\cdot 1 = P_n(x),
+\label{eq:9.1.1}
+\end{equation}
+where the dot denotes the action on the ``vacuum'' $1$.
+
+Addition formula: if $P_n(x+y)=\sum_k\binom{n}{k}P_k(x)P_{n-k}(y)$ in umbral
+notation this becomes
+$(\hat\theta_1+\hat\theta_2)^n\cdot1 = \sum_k\binom{n}{k}\hat\theta_1^k\hat\theta_2^{n-k}\cdot1$.
+
+\begin{exercise}
+Show that the umbral method reproduces the binomial theorem for
+$(x+y)^n$ by identifying $\hat\theta$ with multiplication by $x$.
+\end{exercise}
+
+\section{Further Comments on Umbral Methods, Infinite Integrals and Borel Transform}
+
+The Borel transform of a formal series
+$f(z)=\sum_{n=0}^\infty a_n z^n$ is
+\begin{equation}
+\mathcal B[f](s) = \sum_{n=0}^\infty \frac{a_n}{n!}\,s^n.
+\label{eq:9.2.1}
+\end{equation}
+
+If $\mathcal B[f](s)$ has a non-zero radius of convergence, the original
+series can be recovered by the inverse Borel transform
+\begin{equation}
+f(z) = \int_0^\infty e^{-t}\,\mathcal B[f](zt)\,dt,
+\label{eq:9.2.2}
+\end{equation}
+provided the integral converges.
+
+The Borel transform converts factorially divergent perturbative series
+into convergent ones and underlies resummation of asymptotic expansions.
+
+\begin{exercise}
+Compute the Borel transform of $\sum_{n=0}^\infty n!\,z^n$ and show that
+the inverse Borel integral reproduces the original asymptotic series.
+\end{exercise}
+
+\section{Borel Transform and Applications}
+
+\subsection{Borel--Pad\'e}
+
+Pad\'e approximants to the Borel transform accelerate convergence and
+extract non-perturbative information from perturbative series.
+
+Given the Borel transform $B(s)=\sum b_n s^n$, construct the
+$[N/M]$ Pad\'e approximant $B_{[N/M]}(s)=P_N(s)/Q_M(s)$ and then
+\begin{equation}
+f_{\rm BP}(z) = \int_0^\infty e^{-t}\,B_{[N/M]}(zt)\,dt.
+\label{eq:9.3.1}
+\end{equation}
+
+This Borel--Pad\'e method is widely used in quantum field theory and
+statistical mechanics to sum divergent perturbation series.
+
+\begin{exercise}
+For $B(s)=1/(1-s)$, compute the $[1/1]$ Pad\'e approximant and
+evaluate the Borel--Pad\'e integral.
+\end{exercise}
+
+\section{Umbral Formalism and Laguerre Polynomials}
+
+Laguerre polynomials are umbrally represented as
+\begin{equation}
+L_n(x) = (\hat\theta)_n\,e^{-x\hat\theta},
+\qquad (\hat\theta)_n = \hat\theta(\hat\theta-1)\cdots(\hat\theta-n+1),
+\label{eq:9.4.1}
+\end{equation}
+making recurrences algebraic.
+
+The generating function becomes
+\begin{equation}
+\sum_{n=0}^\infty L_n(x)\,t^n
+= \frac{1}{1-t}\,\exp\!\left(-\frac{xt}{1-t}\right),
+\label{eq:9.4.2}
+\end{equation}
+which follows from the umbral shift by noting
+$e^{-x\hat\theta}\cdot(1-t)^{-\hat\theta}=e^{-x\hat\theta/(1-t)}$.
+
+Orthogonality:
+\begin{equation}
+\int_0^\infty e^{-x}L_n(x)L_m(x)\,dx = \delta_{nm}.
+\label{eq:9.4.3}
+\end{equation}
+
+\begin{exercise}
+Use the umbral representation to prove the three-term recurrence
+$(n+1)L_{n+1}(x)=(2n+1-x)L_n(x)-nL_{n-1}(x)$.
+\end{exercise}
+
+\section{Umbral Formalism and Hermite Polynomials}
+
+Hermite polynomials in umbral form:
+\begin{equation}
+H_n(x) = (\hat\theta+x)^n\cdot 1,
+\qquad \hat\theta\frac{d}{dx}=1.
+\label{eq:9.5.1}
+\end{equation}
+
+The generating function:
+\begin{equation}
+\sum_{n=0}^\infty H_n(x)\,\frac{t^n}{n!}
+= \exp(2xt-t^2),
+\label{eq:9.5.2}
+\end{equation}
+follows from $e^{t(\hat\theta+x)}\cdot1=e^{xt}e^{-t^2}$
+using $\hat\theta\cdot1=0$, $\hat\theta x^n=nx^{n-1}$.
+
+Orthogonality:
+\begin{equation}
+\int_{-\infty}^{\infty} e^{-x^2}H_n(x)H_m(x)\,dx
+= 2^n n!\sqrt{\pi}\,\delta_{nm}.
+\label{eq:9.5.3}
+\end{equation}
+
+\begin{exercise}
+Derive the recurrence $H_{n+1}(x)=2xH_n(x)-2nH_{n-1}(x)$ from the
+umbral representation.
+\end{exercise}
+
+\section{Umbral Formalism and Operator Ordering}
+
+Wei--Norman and Weyl orderings are streamlined: the umbral shift converts
+commutators into c-number coefficients.
+
+For $[\hat A,\hat B]=k\hat 1$, the Weyl identity
+$e^{\hat A+\hat B}=e^{\hat A}e^{\hat B}e^{-k/2}$
+is derived by noting that in umbral form the commutator becomes a
+simple shift.
+
+The Crofton identity in umbral notation:
+\begin{equation}
+e^{\xi\hat A}\hat B^n = (\hat B+\xi k)^n e^{\xi\hat A},
+\label{eq:9.6.1}
+\end{equation}
+which follows from $\hat A\hat B^n - \hat B^n\hat A = nk\hat B^{n-1}$.
+
+\begin{exercise}
+Use the umbral method to derive the BCH formula to second order:
+$e^{\hat A}e^{\hat B}=e^{\hat A+\hat B+\frac12[\hat A,\hat B]}$.
+\end{exercise}
+
+\section{Mittag-Leffler Function and Fractional Calculus Application}
+
+The Mittag-Leffler function generalises the exponential:
+\begin{equation}
+E_\alpha(z) = \sum_{n=0}^{\infty}\frac{z^n}{\Gamma(\alpha n+1)},
+\qquad \alpha>0.
+\label{eq:9.7.1}
+\end{equation}
+
+Special cases: $E_1(z)=e^z$, $E_2(z^2)=\cosh z$,
+$E_{1/2}(-\sqrt{z})=e^{-z}\erfc(\sqrt{z})$.
+
+Fractional differential equation:
+\begin{equation}
+\frac{d^\alpha}{dt^\alpha}F(t) = \lambda F(t), \qquad F(0)=1,
+\label{eq:9.7.2}
+\end{equation}
+has solution $F(t)=E_\alpha(\lambda t^\alpha)$.
+
+Fractional diffusion: $\partial_t^\alpha F = D\,\partial_x^2 F$ has fundamental
+solution expressed via $E_\alpha$ and the heat kernel.
+
+\begin{exercise}
+Show that $E_\alpha(z)$ with $\alpha=1/2$ reduces to the error function
+and solve the fractional relaxation equation for $\alpha=1/2$.
+\end{exercise}
+
+\section{Formalism of Negative Derivative and Definite Integrals}
+
+The negative derivative $\partial_x^{-1}$ acting on polynomials produces
+integrals: $\partial_x^{-1}x^n = x^{n+1}/(n+1)$.
+
+Iterating gives the Riemann--Liouville fractional integral:
+\begin{equation}
+\partial_x^{-\nu}f(x) = \frac{1}{\Gamma(\nu)}\int_0^x (x-t)^{\nu-1}f(t)\,dt,
+\qquad \nu>0.
+\label{eq:9.8.1}
+\end{equation}
+
+The fractional derivative is defined by $\partial_x^\alpha = \partial_x^n\circ\partial_x^{\alpha-n}$
+for $n-1<\alpha<n$.
+
+Umbrally, $\partial_x^{-\nu}$ corresponds to the shift operator
+$\hat\theta\mapsto\hat\theta+\nu$ in the appropriate basis.
+
+\begin{exercise}
+Compute $\partial_x^{-1/2}1$ and $\partial_x^{-1/2}x$ using the Riemann--Liouville
+definition.
+\end{exercise}
+
+\section{Umbral Formalism, Dual Numbers and Super-Gaussian Beam Transport}
+
+Dual numbers $(a+b\epsilon,\epsilon^2=0)$ combine with umbral shifts to model
+super-Gaussian laser beams and their ABCD transport.
+
+A dual number $\hat z_\pm = x\hat 1\pm\epsilon y$ acts on functions as
+\begin{equation}
+f(\hat z_\pm) = f(x)\hat 1 \pm \epsilon y\,f'(x).
+\label{eq:9.9.1}
+\end{equation}
+
+Matrix realisation:
+\begin{equation}
+f(\hat z_+) = \mat{f(x)&yf'(x)\\0&f(x)},\qquad
+f(\hat z_-) = \mat{f(x)&0\\yf'(x)&f(x)}.
+\label{eq:9.9.2}
+\end{equation}
+
+Super-Gaussian beam: intensity profile $I(r)=I_0\exp[-(r/w)^n]$ with
+$n>2$ (flat-top). The beam transport through optical elements is
+described by the ABCD law generalised to dual-number phase space.
+
+\begin{exercise}
+Show that the dual-number algebra implies
+$f(\hat z_+)g(\hat z_+) = (fg)(\hat z_+)$ (functional composition).
+\end{exercise}
+
+\begin{exercise}
+Use the dual-number formalism to derive the transport matrix for a
+super-Gaussian beam through a lens of focal length $f$.
+\end{exercise}
+
+% Figures
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig9_1.png}
+\caption{Mittag-Leffler function $E_\alpha(z)$ for various $\alpha$.}
+\label{fig:9.1}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig9_4.png}
+\caption{Fractional diffusion: solution profiles at different times.}
+\label{fig:9.4}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig9_9.png}
+\caption{Super-Gaussian beam transport through an optical system.}
+\label{fig:9.9}
+\end{figure}

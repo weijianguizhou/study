@@ -1,0 +1,247 @@
+% ch7.tex — Exercises and Complements III (hand-typeset)
+\chapter{Exercises and Complements III}
+
+\section{Second Solution of Hermite Equation}
+
+The Hermite equation
+\begin{equation}
+y'' - 2xy' + 2ny = 0
+\label{eq:7.1.1}
+\end{equation}
+has polynomial solutions $H_n(x)$ for integer $n$. The second independent
+solution (non-polynomial) is
+\begin{equation}
+y_2(x) = H_n(x)\int^x \frac{e^{t^2}}{H_n(t)^2}\,dt,
+\label{eq:7.1.2}
+\end{equation}
+obtained by the reduction-of-order method. For $n=0$,
+$y_2(x)=\erfi(x)$ (the imaginary error function).
+
+\begin{exercise}
+Verify that $y_2(x)$ in \eqref{eq:7.1.2} satisfies the Hermite equation
+when $y_1(x)=H_n(x)$.
+\end{exercise}
+
+\section{Higher Orders Hermite Polynomials}
+
+Generalised Hermite polynomials $H_n^{(m)}(x)$ are defined by the generating
+function
+\begin{equation}
+\sum_{n=0}^{\infty} H_n^{(m)}(x)\,\frac{t^n}{n!}
+= \exp\!\left(-t^m + m\,t\,x\right),
+\label{eq:7.2.1}
+\end{equation}
+and satisfy the higher-order heat equation
+\begin{equation}
+\frac{\partial F}{\partial t} = \frac{\partial^m F}{\partial x^m},
+\qquad F(x,0)=x^n.
+\label{eq:7.2.2}
+\end{equation}
+
+The explicit form:
+\begin{equation}
+H_n^{(m)}(x) = n!\sum_{r=0}^{\lfloor n/m\rfloor}
+\frac{(-1)^r x^{n-mr}}{(n-mr)!\,r!}.
+\label{eq:7.2.3}
+\end{equation}
+
+\begin{exercise}
+Show that $H_n^{(3)}(x)$ satisfies $\partial_t F = \partial_x^3 F$ and derive
+the recursion relation connecting $H_{n+1}^{(3)}$, $H_n^{(3)}$, and
+$H_{n-2}^{(3)}$.
+\end{exercise}
+
+\section{Multi-Index Hermite Polynomials}
+
+For a $d$-dimensional vector $\vect x=(x_1,\dots,x_d)$ and multi-index
+$\vect n=(n_1,\dots,n_d)$,
+\begin{equation}
+H_{\vect n}(\vect x) = (-1)^{|\vect n|}
+e^{x_1^2+\cdots+x_d^2}
+\frac{\partial^{|\vect n|}}{\partial x_1^{n_1}\cdots\partial x_d^{n_d}}
+e^{-(x_1^2+\cdots+x_d^2)},
+\label{eq:7.3.1}
+\end{equation}
+with $|\vect n|=n_1+\cdots+n_d$.
+
+Generating function:
+\begin{equation}
+\sum_{\vect n}\frac{\vect t^{\vect n}}{\vect n!}\,
+H_{\vect n}(\vect x)
+= \exp\!\left(\vect t\cdot\vect x - \tfrac12\vect t\cdot\vect t\right),
+\label{eq:7.3.2}
+\end{equation}
+where $\vect n! = n_1!\cdots n_d!$ and $\vect t^{\vect n}=t_1^{n_1}\cdots t_d^{n_d}$.
+
+\begin{exercise}
+Prove the multi-dimensional Rodrigues formula \eqref{eq:7.3.1} and
+derive the orthogonality relation with weight $e^{-|\vect x|^2}$.
+\end{exercise}
+
+\section{Creation-Annihilation Operators Algebra and Physical Applications}
+
+Ladder operators for the $d$-dimensional oscillator:
+\begin{equation}
+\hat a_i = \frac{1}{\sqrt{2}}\!\left(x_i + \frac{\partial}{\partial x_i}\right),\qquad
+\hat a_i^\dagger = \frac{1}{\sqrt{2}}\!\left(x_i - \frac{\partial}{\partial x_i}\right),
+\label{eq:7.4.1}
+\end{equation}
+with $[\hat a_i,\hat a_j^\dagger]=\delta_{ij}$, $[\hat a_i,\hat a_j]=0$.
+
+The Hamiltonian factorises:
+\begin{equation}
+\hat H = \frac12\sum_{i=1}^d (\hat a_i\hat a_i^\dagger + \hat a_i^\dagger\hat a_i)
+= \sum_{i=1}^d \left(\hat a_i^\dagger\hat a_i + \frac12\right).
+\label{eq:7.4.2}
+\end{equation}
+
+$SU(1,1)$ realisation:
+$\hat K_+=\frac12\hat a^\dagger\hat a^\dagger$,
+$\hat K_-=\frac12\hat a\hat a$,
+$\hat K_0=\frac14(\hat a^\dagger\hat a^\dagger\hat a\hat a + \hat a\hat a\hat a^\dagger\hat a^\dagger)$,
+satisfying $[\hat K_0,\hat K_\pm]=\pm\hat K_\pm$,
+$[\hat K_+,\hat K_-]=-2\hat K_0$.
+
+Squeezing operator:
+$\hat S(\xi)=\exp(\xi\hat K_+ - \xi^*\hat K_-)$,
+which transforms $\hat a\mapsto\cosh r\,\hat a + e^{i\theta}\sinh r\,\hat a^\dagger$.
+
+\begin{exercise}
+Show that the BCH formula gives
+$e^{\xi\hat K_+-\xi^*\hat K_-}=e^{\tau\hat K_+}\,e^{\ln(1-|\tau|^2)\hat K_0}\,e^{-\tau^*\hat K_-}$
+with $\tau = \tanh r\,e^{i\theta}$.
+\end{exercise}
+
+\section{Eisenstein Integers}
+
+The ring $\mathbb Z[\omega]$ with $\omega=e^{2\pi i/3}$ (Eisenstein integers)
+underlies the umbral shift calculus. Elements are $a+b\omega$ with
+$a,b\in\mathbb Z$ and $\omega^2+\omega+1=0$.
+
+The norm $N(a+b\omega)=a^2-ab+b^2$ is multiplicative.
+The units are $\{\pm1,\pm\omega,\pm\omega^2\}$.
+
+In umbral calculus, the shift operator $\hat\theta$ with $\hat\theta x^n = n x^{n-1}$
+can be formally identified with an Eisenstein integer, giving a discrete
+model for fractional derivatives:
+\begin{equation}
+\hat\theta^\alpha x^n = \frac{\Gamma(n+1)}{\Gamma(n-\alpha+1)}\,x^{n-\alpha},
+\qquad \alpha\in\mathbb Z[\omega].
+\label{eq:7.5.1}
+\end{equation}
+
+\begin{exercise}
+Verify the multiplication rules in $\mathbb Z[\omega]$ and show that the norm
+is multiplicative: $N(z_1z_2)=N(z_1)N(z_2)$.
+\end{exercise}
+
+\section{Harmonic Oscillator Hamiltonian Formal Aspects and Further Miscellaneous Considerations}
+
+Algebraic resolution via factorisation:
+\begin{equation}
+\hat H = \frac12(\hat a\hat a^\dagger + \hat a^\dagger\hat a)
+= \hat a^\dagger\hat a + \frac12,
+\qquad \hat a = \frac{1}{\sqrt{2}}\!\left(x+\frac{d}{dx}\right).
+\label{eq:7.6.1}
+\end{equation}
+
+Supersymmetric partner potentials:
+$\hat H_-=\hat a^\dagger\hat a$, $\hat H_+=\hat a\hat a^\dagger$,
+with $\hat H_+\psi_n^{(+)}=\psi_{n+1}^{(-)}$ etc.
+
+Coherent states $|\alpha\rangle=e^{-|\alpha|^2/2}\sum_{n=0}^\infty\frac{\alpha^n}{\sqrt{n!}}|n\rangle$
+satisfy $\hat a|\alpha\rangle=\alpha|\alpha\rangle$ and are eigenstates of the
+annihilation operator.
+
+\begin{exercise}
+Prove that coherent states are not orthogonal:
+$\langle\beta|\alpha\rangle = \exp(-\tfrac12|\alpha|^2-\tfrac12|\beta|^2+\beta^*\alpha)$.
+\end{exercise}
+
+\section{Time-Dependent Hamiltonians}
+
+For $\hat H(t)=\hbar\vect\Omega(t)\cdot\vect\sigma$, the evolution operator is a
+time-ordered exponential
+\begin{equation}
+\hat U(t) = \mathcal T\exp\!\left(-\frac{i}{\hbar}\int_0^t\hat H(t')\,dt'\right),
+\label{eq:7.7.1}
+\end{equation}
+disentangled by the Wei--Norman method of Chapter~2.
+
+For a Hamiltonian $\hat H(t)=\omega(t)\hat\sigma_z+\Omega(t)\hat\sigma_x$,
+the evolution operator can be written as
+$\hat U(t)=e^{i\alpha(t)\hat\sigma_z}e^{\beta(t)\hat\sigma_x}e^{i\gamma(t)\hat\sigma_z}$
+with $\alpha,\beta,\gamma$ determined by solving the equations of motion.
+
+\section{Dyson Series}
+
+The Dyson expansion of the evolution operator is
+\begin{equation}
+\hat U(t)=\hat 1+\sum_{n=1}^{\infty}(-i)^n\int_0^t dt_1\cdots\int_0^{t_{n-1}}dt_n\,
+\hat H(t_1)\cdots\hat H(t_n).
+\label{eq:7.8.1}
+\end{equation}
+This is the perturbative solution of $i\partial_t\hat U=\hat H\hat U$
+with $\hat U(0)=\hat 1$.
+
+\subsection{Beyond the Dyson Expansion}
+
+Magnus expansion:
+\begin{equation}
+\hat U(t) = \exp\!\left(\sum_{n=1}^{\infty}\hat\Omega_n(t)\right),
+\label{eq:7.8.2}
+\end{equation}
+where $\hat\Omega_1=-i\int_0^t\hat H(t_1)dt_1$,
+$\hat\Omega_2=-\frac12\int_0^t dt_1\int_0^{t_1}dt_2\,[\hat H(t_1),\hat H(t_2)]$, etc.
+
+Wei--Norman method: write $\hat U(t)=\prod_j e^{f_j(t)\hat G_j}$ where
+$\{\hat G_j\}$ is a Lie algebra basis; the functions $f_j(t)$ satisfy a
+closed system of first-order ODEs.
+
+BCH formula:
+\begin{equation}
+e^{\hat A}e^{\hat B} = \exp\!\left(\hat A+\hat B
++ \frac12[\hat A,\hat B]
++ \frac{1}{12}[\hat A,[\hat A,\hat B]]
++ \frac{1}{12}[\hat B,[\hat B,\hat A]]+\cdots\right).
+\label{eq:7.8.3}
+\end{equation}
+
+\begin{exercise}
+Derive the first two terms of the Magnus expansion from the Dyson series
+by requiring $\hat U(t)=\exp(\hat\Omega_1+\hat\Omega_2+\cdots)$ and matching
+order by order in $t$.
+\end{exercise}
+
+\section{Special Polynomials and Perturbation Theory}
+
+Hermite/Laguerre polynomials generate the matrix elements of perturbed
+oscillators, linking the algebraic method to Rayleigh--Schr\"odinger
+perturbation theory.
+
+For $\hat H = \hat H_0 + \lambda\hat V$, the $n$-th order correction to the
+energy is expressed in terms of matrix elements
+$\langle m|\hat V|n\rangle$, which for oscillator eigenstates are polynomials
+in $\lambda$ whose coefficients involve Hermite polynomials.
+
+The perturbation series
+$E_n(\lambda)=\sum_{k=0}^\infty E_n^{(k)}\lambda^k$
+has coefficients
+\begin{equation}
+E_n^{(k)} = \langle n|\hat V|n\rangle^{(k)},
+\label{eq:7.9.1}
+\end{equation}
+with the $k$-th order term built from lower-order wave-function corrections.
+
+\begin{exercise}
+For $\hat H_0=\frac12(\hat p^2+\hat x^2)$ and $\hat V=\hat x^4$,
+compute $E_0^{(1)}$ and $E_0^{(2)}$ using Hermite-polynomial matrix elements.
+\end{exercise}
+
+% Figures
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.85\linewidth,keepaspectratio]{fig7_1.png}
+\caption{Creation-annihilation operator algebra: level scheme.}
+\label{fig:7.1}
+\end{figure}

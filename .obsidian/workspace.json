@@ -4,19 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "a37ce19d2ee9b7d0",
+        "id": "abbef0e90148b5ad",
         "type": "tabs",
         "children": [
           {
-            "id": "8e7482653b34041d",
+            "id": "e781a751d8898528",
             "type": "leaf",
             "state": {
-              "type": "pdf",
-              "state": {
-                "file": "力学/流体力学/教材/流体力学 (吴望一) (z-library.sk, 1lib.sk, z-lib.sk).pdf"
-              },
-              "icon": "lucide-file-text",
-              "title": "流体力学 (吴望一) (z-library.sk, 1lib.sk, z-lib.sk)"
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "新标签页"
             }
           }
         ]
@@ -154,7 +152,6 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "力学/流体力学/教材/流体力学 (吴望一) (z-library.sk, 1lib.sk, z-lib.sk).pdf",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -171,6 +168,16 @@
               "state": {},
               "icon": "git-pull-request",
               "title": "Source Control"
+            }
+          },
+          {
+            "id": "8e2623d6f9c764f4",
+            "type": "leaf",
+            "state": {
+              "type": "opencode-conversations",
+              "state": {},
+              "icon": "message-circle",
+              "title": "Opencode conversations"
             }
           }
         ],
@@ -191,55 +198,58 @@
       "command-palette:打开命令面板": false,
       "bases:新建数据库": false,
       "obsidian-git:Open Git source control": false,
-      "oh-my-claudian:Open Oh My Claudian": false
+      "oh-my-claudian:Open Oh My Claudian": false,
+      "opencode:Opencode terminal": false,
+      "opencode:Opencode conversations": false
     }
   },
-  "active": "8e7482653b34041d",
+  "active": "e781a751d8898528",
   "lastOpenFiles": [
-    "力学/流体力学/教材/物理流体力学 (王先智).pdf",
-    "力学/流体力学/教材/流体力学 (吴望一) (z-library.sk, 1lib.sk, z-lib.sk).pdf",
-    "力学/流体力学/Figure/微元体上的表面力.png",
-    "力学/流体力学/Figure/一点的应力状态.png",
-    "力学/流体力学/Figure/有限体上的表面力.png",
-    "力学/流体力学/Figure/WPS图片(3).png",
-    "力学/流体力学/Figure/WPS图片(2).png",
-    "力学/流体力学/Figure/WPS图片(1).png",
-    "力学/流体力学/课件/0绪论.pdf",
-    "力学/流体力学/课件/b3cc3e0f2d5897a79fdae0d857b7c182.par.temp",
-    "力学/流体力学/流体力学笔记.pdf",
-    "教材/控制工程基础 第4版 (董景新).pdf",
-    "力学/流体力学/教材",
-    "力学/流体力学/课件",
-    "机械/机械设计/笔记/4.螺纹连接.md",
-    "机械/机械设计/笔记/3.摩擦磨损及润滑.md",
-    "机械/机械设计/diag4b.py",
-    "机械/机械设计/diag4.py",
-    "机械/机械设计/笔记/2.机械零件的强度.md",
-    "控制理论/控制工程基础/笔记/2. 控制系统的动态数学模型.md",
-    "控制理论/控制工程基础/Figure/机械平移系统及其力学模型.png",
-    "控制理论/控制工程基础/Figure/闭环控制系统.png",
-    "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/纵摇运动受力分析示意图.png",
-    "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/重心位置的确定.png",
-    "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/8.1汇报讲稿.md",
-    "数学建模/数学建模教程/11-数据分析/04-异常检测.md",
-    "数学建模/数学建模教程/11-数据分析/05-数据可视化.md",
-    "数学建模/数学建模教程/11-数据分析/03-特征工程.md",
-    "数学建模/数学建模教程/11-数据分析/02-降维方法.md",
-    "数学建模/数学建模教程/11-数据分析/01-数据清洗与预处理.md",
-    "数学建模/数学建模教程/12-论文写作/05-常见问题与避坑.md",
-    "数学建模/数学建模教程/12-论文写作/04-摘要写作技巧.md",
-    "数学建模/数学建模教程/12-论文写作/03-图表制作与美化.md",
-    "数学建模/数学建模教程/09-微分方程模型/07-生态动力学模型.md",
-    "数学建模/数学建模教程/09-微分方程模型/08-微分方程建模实例.md",
-    "数学建模/数学建模教程/12-论文写作/02-数学公式排版.md",
-    "数学建模/数学建模教程/12-论文写作/01-论文结构与规范.md",
-    "数学建模/数学建模教程/09-微分方程模型/06-反应扩散方程.md",
-    "数学建模/数学建模教程/09-微分方程模型/04-竞争排斥模型.md",
-    "数学建模/数学建模教程/09-微分方程模型/05-传染病网络模型.md",
-    "数学建模/数学建模教程/09-微分方程模型/03-捕食者猎物模型.md",
-    "数学建模/数学建模教程/09-微分方程模型/02-传染病模型.md",
-    "数学建模/数学建模教程/10-随机模型/05-随机微分方程.md",
-    "数学建模/数学建模教程/10-随机模型/04-博弈论基础.md",
-    "数学建模/数学建模教程/10-随机模型/06-马尔可夫链蒙特卡洛.md"
+    "数理基础/教材/工程数学 矢量分析与场论 (谢树艺).pdf",
+    "数理基础/教材",
+    "数理基础/新建文件夹",
+    "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/Figures/fig_1_7.png",
+    "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/Figures/fig_3_4.png",
+    "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/Figures/fig_1_11.png",
+    "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/Figures/fig_3_1.png",
+    "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/Figures/fig_2_1.png",
+    "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/Figures/fig_1_3.png",
+    "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/Figures/fig_2_2.png",
+    "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/Figures/fig_3_2.png",
+    "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/Figures/fig_2_5.png",
+    "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/Figures/fig_1_8.png",
+    "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/chapters/Ch1.tex",
+    "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/chapters/Ch3.tex",
+    "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/chapters/Ch6.tex",
+    "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/chapters/Ch_intro.tex",
+    "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/chapters/Ch4.tex",
+    "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/chapters/Ch2.tex",
+    "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/chapters/Ch5.tex",
+    "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/chapters/Ch7.tex",
+    "教材/控制理论/控制系统计算机辅助设计—MATLAB语言与应用/笔记/01控制系统仿真与CAD概述.md",
+    "教材/控制理论/控制系统计算机辅助设计—MATLAB语言与应用/笔记/02MATLAB语言程序设计基础.md",
+    "教材/Spacecraft_Dynamics/读书笔记/15-角速度与方向角.md",
+    "教材/Spacecraft_Dynamics/读书笔记/08-小角度旋转.md",
+    "教材/Spacecraft_Dynamics/读书笔记/17-瞬时轴.md",
+    "教材/Spacecraft_Dynamics/读书笔记/11-角速度矢量.md",
+    "教材/Spacecraft_Dynamics/读书笔记/13-角速度与欧拉参数.md",
+    "教材/Spacecraft_Dynamics/读书笔记/02-转轴和转角.md",
+    "教材/Spacecraft_Dynamics/读书笔记/09-螺旋运动.md",
+    "教材/Spacecraft_Dynamics/读书笔记/16-缓慢小转动.md",
+    "教材/Spacecraft_Dynamics/读书笔记/06-相继转动.md",
+    "教材/Spacecraft_Dynamics/读书笔记/19-偏角速度与偏速度.md",
+    "教材/Spacecraft_Dynamics/读书笔记/03-欧拉参数.md",
+    "教材/Spacecraft_Dynamics/读书笔记/07-间接定向法.md",
+    "教材/Spacecraft_Dynamics/读书笔记/04-欧拉角.md",
+    "教材/Spacecraft_Dynamics/读书笔记/14-辅助参考系.md",
+    "教材/Spacecraft_Dynamics/读书笔记/12-角速度分量.md",
+    "教材/Spacecraft_Dynamics/读书笔记/05-姿态广义坐标的其他形式.md",
+    "教材/Spacecraft_Dynamics/读书笔记/10-角速度矩阵.md",
+    "教材/Spacecraft_Dynamics/读书笔记/18-角加速度.md",
+    "教材/Spacecraft_Dynamics/读书笔记/MOC - 运动学基础.md",
+    "教材/Spacecraft_Dynamics/读书笔记/01-方向余弦.md",
+    "教材/控制理论/controls-engineering-in-frc/读书笔记——控制工程基础.md",
+    "教材/SystemDynamicsModelingAndSimulation/11读书笔记——多刚体系统拉格朗日方程递推形式.md",
+    "教材/Rigid body dynamics algorithms (Roy Featherstone)/GLOSSARY.md"
   ]
 }

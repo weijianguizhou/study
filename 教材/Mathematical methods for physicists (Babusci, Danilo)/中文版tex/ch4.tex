@@ -1,0 +1,682 @@
+% ch4.tex — Laguerre 多项式、积分算子及其应用（中文版）
+
+\chapter{Laguerre 多项式、积分算子及其应用}
+
+\section{引言}
+
+在本章中，我们将更深入地讨论特殊多项式及其在物理与数学问题中的相关应用。我们将处理 Laguerre 族并使用相应的双变量形式。正如在 Hermite 多项式的情形已经讨论过的，在经典多项式理论中引入额外变量特别有用。尽管可以通过简单的变换将其化为标准形式，但额外变量是发展基于算子形式体系的表述的关键工具。
+
+本章基本上由两部分组成。在第一部分，我们将通过引入 Laguerre 多项式（LP）继续讨论``流行''的正交集。在第二部分，我们将用更一般的视角讨论特殊多项式理论，涉及 Appell 与 Sheffer 分类。不过我们将采用``非正统''的表述。
+
+\section{Laguerre 多项式：定义与基本性质}
+
+我们回到负导数算子（NDO）的定义，它满足
+\begin{equation}
+\hat D_x^{-n}\,1 = \frac{x^n}{n!}.
+\label{eq:4.1.1}
+\end{equation}
+
+双变量 Laguerre 多项式定义为
+\begin{equation}
+L_n(x,y) = \bigl(y - \hat D_x^{-1}\bigr)^n 1.
+\label{eq:4.1.2}
+\end{equation}
+
+利用普通二项式展开得到
+\begin{equation}
+L_n(x,y) = \sum_{r=0}^{n} \binom{n}{r} (-1)^r y^{\,n-r} \hat D_x^{-r}\,1
+= \sum_{r=0}^{n} \frac{(-1)^r y^{\,n-r} x^r}{(n-r)!\,r!}.
+\label{eq:4.1.3}
+\end{equation}
+当 $y=1$ 时，它化为普通 Laguerre 多项式 $L_n(x)$。
+
+\begin{exercise}
+证明伸缩恒等式
+\begin{equation}
+L_n(x,y) = y^n L_n\!\left(\frac{x}{y}\right).
+\label{eq:4.1.4}
+\end{equation}
+\end{exercise}
+
+\begin{figure}[h]
+\centering
+% 注：原书 Fig.4.1 为两组曲线图（y=1 与 y=-1/2），此处用文字占位
+% 如有需要可补绘并替换为本地的 fig4_1a.pdf / fig4_1b.pdf
+\setlength{\fboxsep}{6pt}\framebox[\textwidth]{\rule{0pt}{1.2cm}
+  \textbf{图\,4.1（占位）：}前 5 个 Laguerre 多项式关于 $x$ 的图形，
+  其中 (a) $y=1$，(b) $y=-\tfrac12$。}
+\caption{前 5 个 Laguerre 多项式关于 $x$ 的图形：(a) $y=1$，(b) $y=-\tfrac12$。}
+\label{fig:4.1}
+\end{figure}
+
+\paragraph{注记 1.} NDO 是积分算子：
+$\hat D_x^{-1} f(x) = \int_a^x f(x')\,dx'$。
+若我们不指明积分下限，则意味着 $a=0$。在第 9 章我们将对 NDO 形式体系作进一步说明。
+
+\subsection*{拟单项性}
+
+按照第 3 章引入的``拟单项性''定义，LP 是拟单项式。相应的乘法算子与求导算子为
+\begin{equation}
+\hat M = y - \hat D_x^{-1},
+\qquad
+\hat P = \hat{\mathcal L}\!\hat D_x = -\partial_x \hat D_x^{-1}.
+\label{eq:4.1.7}
+\end{equation}
+
+因此 LP 可以用乘法算子定义为
+\begin{equation}
+L_n(x,y) = \hat M^n 1.
+\label{eq:4.1.8}
+\end{equation}
+
+我们还可以推进该形式体系，采用下列定义
+\begin{equation}
+\hat{\mathcal L}\!\hat D_x
+= -\partial_x \hat D_x^{-1},
+\label{eq:4.1.9}
+\end{equation}
+其中 $\hat{\mathcal L}\!\hat D_x$ 有时称为\emph{Laguerre 导数}。其有效性可以通过注意下式验证：
+\begin{equation}
+\hat{\mathcal L}\!\hat D_x\,L_n(x,y)
+= -\partial_x \hat D_x^{-1}(y-\hat D_x^{-1})^n 1
+= n(y-\hat D_x^{-1})^{n-1}1
+= n\,L_{n-1}(x,y).
+\label{eq:4.1.10}
+\end{equation}
+
+由 $\hat M$ 与 $\hat P$ 的定义可以推出 $L_n(x,y)$ 满足的微分方程。注意到 $\hat D_x^{-1}\partial_x = \hat 1$，我们得到
+\begin{equation}
+\hat M\hat P\,L_n(x,y) = n\,L_n(x,y)
+\label{eq:4.1.11}
+\end{equation}
+于是
+\begin{equation}
+y\,x\,L_n''(x,y) + (y-x)\,L_n'(x,y) = -n\,L_n(x,y).
+\label{eq:4.1.12}
+\end{equation}
+
+Laguerre 导数有下列显著性质
+\begin{equation}
+\bigl(\hat{\mathcal L}\!\hat D_x\bigr)^n
+= (-1)^n \partial_x^n x^n \partial_x^n,
+\label{eq:4.1.13}
+\end{equation}
+可用归纳法证明。
+
+\begin{exercise}
+用上述性质证明反转恒等式
+\begin{equation}
+\frac{x^n}{n!}
+= \sum_{s=0}^{n} \binom{n}{s} (-1)^s y^s L_{n-s}(x,y).
+\label{eq:4.1.14}
+\end{equation}
+\emph{提示：}注意 $\frac{x^n}{n!} = (y - (y-\hat D_x^{-1}))^n 1$。
+\end{exercise}
+
+根据式~\eqref{eq:4.1.13}，把 Laguerre 导数反复作用于单项式 $q_n(x) = (-1)^n \frac{x^n}{n!}$ 得到
+\begin{equation}
+\bigl(\hat{\mathcal L}\!\hat D_x\bigr)^m q_n(x)
+= \frac{n!}{(n-m)!}\,q_{n-m}(x), \qquad n>m.
+\label{eq:4.1.15}
+\end{equation}
+
+\begin{exercise}
+验证函数
+\begin{equation}
+C_0(x) = \sum_{l=0}^{\infty} \frac{q_l(x)}{l!}
+\label{eq:4.1.16}
+\end{equation}
+是 Laguerre 导数的本征函数。
+\end{exercise}
+
+函数 \eqref{eq:4.1.16} 称为\emph{0 阶 Tricomi--Bessel 函数}；其行为见图~\ref{fig:4.2}。
+
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.7\linewidth,keepaspectratio]{fig4_2.png}
+\caption{0 阶 Tricomi--Bessel 函数 $C_0(x)$。}
+\label{fig:4.2}
+\end{figure}
+
+在继续之前，应牢记下列对应关系：
+\begin{equation}
+\partial_x \;\longleftrightarrow\; \hat{\mathcal L}\!\hat D_x,
+\qquad
+x^n \;\longleftrightarrow\; q_n(x),
+\qquad
+e^x \;\longleftrightarrow\; C_0(x).
+\label{eq:4.1.17}
+\end{equation}
+
+双变量 LP 满足偏微分方程
+\begin{equation}
+\begin{cases}
+\partial_y L_n(x,y) = -\partial_x \hat D_x^{-1} L_n(x,y),\\[2pt]
+L_n(x,0) = q_n(x),
+\end{cases}
+\label{eq:4.1.18}
+\end{equation}
+利用恒等式 \eqref{eq:4.1.10} 可以很容易陈述。这是 Hermite 多项式满足的热方程的类比。
+
+由式~\eqref{eq:4.1.18}，我们还可以通过算子规则定义 LP
+\begin{equation}
+L_n(x,y) = e^{-y\,\partial_x \hat D_x^{-1}}
+\!\left[(-1)^n\frac{x^n}{n!}\right].
+\label{eq:4.1.20}
+\end{equation}
+
+\section{Laguerre 多项式的生成函数}
+
+根据生成函数的定义，我们写出
+\begin{equation}
+G_L(x,y,t) = \sum_{n=0}^{\infty} \frac{t^n}{n!}
+\bigl(y-\hat D_x^{-1}\bigr)^n 1
+= e^{y t}\,e^{-t \hat D_x^{-1}} 1.
+\label{eq:4.2.1}
+\end{equation}
+
+由于 $y$ 与 $\hat D_x^{-1}$ 对易，含逆导数算子的指数可以求和：
+\begin{equation}
+e^{-t \hat D_x^{-1}} 1
+= \sum_{n=0}^{\infty} \frac{t^n}{n!}\,(-1)^n \hat D_x^{-n} 1
+= \sum_{n=0}^{\infty} \frac{1}{n!}\,q_n(xt)
+= C_0(xt).
+\label{eq:4.2.2}
+\end{equation}
+于是
+\begin{equation}
+G_L(x,y,t) = e^{yt}\,C_0(xt).
+\label{eq:4.2.3}
+\end{equation}
+
+还可以用乘法算子导出另一个生成函数：
+\begin{equation}
+S_L(x,y,t) = \sum_{n=0}^{\infty} t^n L_n(x,y)
+= \frac{1}{1-yt}\,\exp\!\left(-\frac{xt}{1-yt}\right),
+\qquad |yt|<1.
+\label{eq:4.2.4}
+\end{equation}
+
+为证明此恒等式，由算子定义得到
+\begin{align}
+S_L(x,y,t)
+&= \sum_{n=0}^{\infty} (\hat M t)^n 1
+ = \frac{1}{1-\hat M t}\,1
+ = \frac{1}{1-yt}\,\frac{1}{1+\dfrac{\hat D_x^{-1}t}{1-yt}} \notag\\
+&= \frac{1}{1-yt}\,
+\sum_{r=0}^{\infty} \left(-\frac{\hat D_x^{-1}t}{1-yt}\right)^{\!r} 1
+ = \frac{1}{1-yt}\,\exp\!\left(-\frac{xt}{1-yt}\right).
+\label{eq:4.2.5}
+\end{align}
+
+利用上述生成函数与式~\eqref{eq:4.1.20} 可以推导恒等式
+\begin{equation}
+e^{-y\,\partial_x \hat D_x^{-1}} e^{-xt}
+= \frac{1}{1-yt}\,\exp\!\left(-\frac{xt}{1-yt}\right),
+\label{eq:4.2.6}
+\end{equation}
+这是涉及 Laguerre 导数指数算子的 Glaisher 恒等式（见式~\eqref{eq:2.2.18}）的类比。
+
+另一方面，式~\eqref{eq:4.2.5} 中的生成函数 $S_L$ 允许我们为双变量 LP 建立下列积分表示：
+\begin{equation}
+L_n(x,y) = \frac{e^{x/y}}{n!}\int_0^{\infty} e^{-s}\left(\frac{ys}{}\right)^{\!n}
+C_0\!\left(\frac{xs}{y}\right) ds,
+\label{eq:4.2.7}
+\end{equation}
+其有效性可以用生成函数 \eqref{eq:4.2.4} 验证。
+
+\section{Laguerre 多项式的正交性质}
+
+根据式~\eqref{eq:4.1.20}，Laguerre 多项式由与 Hermite 多项式类似的算子定义确定。下列恒等式是同一定义的副产品：
+\begin{equation}
+L_n(x,y+z) = e^{-z\,\partial_x \hat D_x^{-1}} L_n(x,y).
+\label{eq:4.3.1}
+\end{equation}
+
+现在我们可以证明 LP 构成一个正交集。我们从方程
+\begin{equation}
+\begin{cases}
+\partial_y F(x,y) = -\partial_x \hat D_x^{-1} F(x,y),\\[2pt]
+F(x,0) = g(x),
+\end{cases}
+\label{eq:4.3.2}
+\end{equation}
+的解出发，它在 Hermite 多项式情形中起热方程的作用。其解可以写成积分形式
+\begin{equation}
+F(x,y) = \frac{e^{x/y}}{y}\int_0^{\infty} e^{-\sigma}\,
+C_0\!\left(\frac{x\sigma}{y}\right) g(-y\sigma)\,d\sigma.
+\label{eq:4.3.3}
+\end{equation}
+
+若 $g(x) = \sum_{n=0}^{\infty} a_n \frac{x^n}{n!}$，我们可以写出
+\begin{equation}
+F(x,y) = e^{-y\,\partial_x \hat D_x^{-1}}
+\sum_{n=0}^{\infty} a_n \frac{x^n}{n!}
+= \sum_{n=0}^{\infty} a_n (-1)^n L_n(x,y).
+\label{eq:4.3.4}
+\end{equation}
+
+利用恒等式 \eqref{eq:4.2.7} 可以把上述方程改写为
+\begin{equation}
+F(x,y) = \sum_{n=0}^{\infty} (-1)^n a_n L_n(x,y)
+= \frac{e^{x/y}}{y}\int_0^{\infty} e^{-\sigma}\,
+C_0\!\left(\frac{x\sigma}{y}\right) g(-y\sigma)\,d\sigma,
+\label{eq:4.3.5}
+\end{equation}
+前提是可以交换求和与积分的次序。
+
+因此我们可以像上一节那样进行，得到与 Laguerre 族双正交的函数集。为简单起见，取 $y=1$，并假定 $g(x)$ 可以按 LP 展开为级数：
+\begin{equation}
+g(x) = \sum_{n=0}^{\infty} \alpha_n L_n(x).
+\label{eq:4.3.6}
+\end{equation}
+
+把 $\partial_x \hat D_x^{-1}$ 作用于该展开式得到
+\begin{equation}
+\partial_x \hat D_x^{-1} \Phi(x)
+= \sum_{n=0}^{\infty} \frac{\alpha_n}{n!}\,(-x)^n.
+\label{eq:4.3.7}
+\end{equation}
+
+利用 Weierstrass 变换得到
+\begin{equation}
+\partial_x \hat D_x^{-1} \Phi(x)
+= e^{-x}\int_0^{\infty} e^{-\sigma}\,C_0(-x\sigma)\,g(\sigma)\,d\sigma.
+\label{eq:4.3.8}
+\end{equation}
+
+这三个方程最终给出
+\begin{equation}
+\sum_{n=0}^{\infty} \frac{\alpha_n}{n!}\,(-x)^n
+= e^{-x}\int_0^{\infty} e^{-\sigma}\,C_0(-x\sigma)\,g(\sigma)\,d\sigma.
+\label{eq:4.3.9}
+\end{equation}
+
+用 0 阶 Tricomi--Bessel 函数表示 LP 的生成函数（见式~\eqref{eq:4.2.3}）使我们能够写出
+\begin{equation}
+\sum_{r=0}^{\infty} \frac{\alpha_r}{r!}\,(-x)^r
+= \sum_{n=0}^{\infty} \frac{(-x)^n}{n!}
+\int_0^{\infty} e^{-\sigma}\,L_n(\sigma)\,g(\sigma)\,d\sigma,
+\label{eq:4.3.10}
+\end{equation}
+从而
+\begin{equation}
+\alpha_n = \int_0^{\infty} e^{-\sigma}\,L_n(\sigma)\,g(\sigma)\,d\sigma.
+\label{eq:4.3.11}
+\end{equation}
+
+至此，不难得出与 Laguerre 多项式相关的双正交函数为
+\begin{equation}
+\varphi_n(x) = e^{-x} L_n(x),
+\label{eq:4.3.12}
+\end{equation}
+使得
+\begin{equation}
+\int_0^{\infty} \varphi_n(x)\,L_m(x)\,dx = \delta_{nm}.
+\label{eq:4.3.13}
+\end{equation}
+
+函数 $\varphi_n(x)$ 满足一个二阶微分方程，它可以直接由 LP 的微分方程推得。我们定义
+\begin{equation}
+\hat h_{\mathrm{lag}}\,L_n(x) = 0,
+\qquad
+\hat h_{\mathrm{lag}} = x\partial_x^2 + (1-x)\partial_x + n,
+\label{eq:4.3.14}
+\end{equation}
+以及厄米伴随
+\begin{equation}
+\hat h_{\mathrm{lag}}^\dagger \varphi_n(x) = 0,
+\qquad
+\hat h_{\mathrm{lag}}^\dagger = x\partial_x^2 + (1+x)\partial_x + n + 1.
+\label{eq:4.3.15}
+\end{equation}
+
+Laguerre 正交函数为
+\begin{equation}
+\ell_n(x) = e^{-x/2} L_n(x),
+\label{eq:4.3.16}
+\end{equation}
+它们在应用中（量子力学、光学……）所起的作用与 Hermite 正交函数相同。相应的 ODE 可以写成
+\begin{equation}
+x\,\ell_n''(x) + \ell_n'(x)
++ \left(n - \frac{x}{4} + \frac{1}{2}\right)\ell_n(x) = 0.
+\label{eq:4.3.17}
+\end{equation}
+
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.7\linewidth,keepaspectratio]{fig4_3.png}
+\caption{前 5 个 Laguerre 正交函数 $\ell_n(x)$。}
+\label{fig:4.3}
+\end{figure}
+
+在图~\ref{fig:4.3} 中我们给出了前几个 Laguerre 正交函数行为的一些例子。
+
+\section{Bessel 函数}
+
+我们已经引入了函数 $C_0(x)$，并证明它是 Laguerre 导数的本征函数。它是一族更一般的 Bessel 型函数的 0 阶。对 $C_0(x)$ 反复求导得到
+\begin{equation}
+\partial_x^n C_0(x) = (-1)^n C_n(x),
+\label{eq:4.4.1}
+\end{equation}
+其中
+\begin{equation}
+C_n(x) = \sum_{r=0}^{\infty} \frac{(-1)^r x^r}{r!\,(n+r)!}.
+\label{eq:4.4.2}
+\end{equation}
+函数 $C_n(x)$ 是 Tricomi 型的高阶 Bessel 型函数。
+
+显然，下列递推关系由式~\eqref{eq:4.4.1} 推出：
+\begin{equation}
+\partial_x C_n(x) = -C_{n+1}(x),
+\label{eq:4.4.3}
+\end{equation}
+而由式~\eqref{eq:4.4.2} 得到
+\begin{equation}
+n\,C_n(x) = C_{n-1}(x) - x\,\partial_x C_n(x)
+= C_{n-1}(x) + x\,C_{n+1}(x).
+\label{eq:4.4.4}
+\end{equation}
+
+由上述两个递推关系可以推导 Tricomi--Bessel 函数满足的微分方程。式~\eqref{eq:4.4.3}--\eqref{eq:4.4.4} 可以写成
+\begin{equation}
+\hat s_+ C_n(x) = C_{n+1}(x),
+\qquad
+\hat s_- C_n(x) = C_{n-1}(x),
+\label{eq:4.4.5}
+\end{equation}
+其中
+\begin{equation}
+\hat s_+ = -\partial_x,
+\qquad
+\hat s_- = \hat n + x\partial_x.
+\label{eq:4.4.6}
+\end{equation}
+算子 $\hat s_\pm$ 称为\emph{移位算子}，数算子 $\hat n$ 定义为
+\begin{equation}
+\hat n\,C_m(x) = m\,C_m(x).
+\label{eq:4.4.7}
+\end{equation}
+
+$C_n(x)$ 满足的 ODE 由
+\begin{equation}
+\hat s_+ \hat s_- C_n(x) = C_n(x),
+\label{eq:4.4.8}
+\end{equation}
+推出，它意味着
+\begin{equation}
+x\,C_n''(x) + (1+n)\,C_n'(x) + C_n(x) = 0.
+\label{eq:4.4.9}
+\end{equation}
+
+还可以很容易地证明 Tricomi--Bessel 函数由生成函数
+\begin{equation}
+B(x,t) = \sum_{n=-\infty}^{\infty} t^n C_n(x)
+= e^{\,t - x/t}.
+\label{eq:4.4.10}
+\end{equation}
+确定。
+
+此外，把式~\eqref{eq:4.4.4} 两边乘以 $t^{n-1}$ 得到
+\begin{equation}
+n\,t^{n-1} C_n = t^{n-1} C_{n-1} + \frac{x}{t^2}\,t^{n+1} C_{n+1},
+\label{eq:4.4.11}
+\end{equation}
+由此可以推导 $B(x,t)$ 满足的微分方程：
+\begin{equation}
+\begin{cases}
+\partial_t B(x,t) = \left(1 + \dfrac{x}{t^2}\right) B(x,t),\\[4pt]
+B(x,0) = 1.
+\end{cases}
+\label{eq:4.4.12}
+\end{equation}
+
+Tricomi--Bessel 函数与普通柱 Bessel 函数由恒等式
+\begin{equation}
+C_n(x) = \left(\frac{x}{2}\right)^{-n} J_n\!\left(2\sqrt{x}\right),
+\label{eq:4.4.13}
+\end{equation}
+联系，求逆得到
+\begin{equation}
+J_n(x) = \left(\frac{x}{2}\right)^{\!n}
+C_n\!\left(\frac{x^2}{4}\right).
+\label{eq:4.4.14}
+\end{equation}
+
+柱 Bessel 函数的性质可以直接由 Tricomi 函数的性质推得。兹总结如下。
+
+\subsection*{Bessel 函数 $J_n(x)$：关键性质}
+
+\begin{enumerate}
+\item \textbf{级数展开}
+\begin{equation}
+J_n(x) = \sum_{r=0}^{\infty}
+\frac{(-1)^r (x/2)^{n+2r}}{r!\,(n+r)!}.
+\label{eq:4.4.15}
+\end{equation}
+
+\item \textbf{反射性质}
+\begin{equation}
+J_{-n}(x) = J_n(-x) = (-1)^n J_n(x).
+\label{eq:4.4.16}
+\end{equation}
+
+\item \textbf{生成函数}
+\begin{equation}
+J(x,t) = \sum_{n=-\infty}^{\infty} t^n J_n(x)
+= \exp\!\left[\frac{x}{2}\left(t - \frac{1}{t}\right)\right].
+\label{eq:4.4.17}
+\end{equation}
+
+\item \textbf{递推关系}
+\begin{align}
+\partial_x J_n(x) &= \tfrac12\bigl(J_{n-1}(x) - J_{n+1}(x)\bigr),\\
+n\,J_n(x) &= \tfrac{x}{2}\bigl(J_{n-1}(x) + J_{n+1}(x)\bigr).
+\label{eq:4.4.18}
+\end{align}
+
+\item \textbf{Bessel 微分方程}
+\begin{equation}
+x^2 J_n''(x) + x\,J_n'(x) + (x^2 - n^2)\,J_n(x) = 0.
+\label{eq:4.4.19}
+\end{equation}
+
+\item \textbf{Jacobi 生成函数}
+\begin{equation}
+\sum_{n=-\infty}^{\infty} e^{in\vartheta} J_n(x) = e^{i x\sin\vartheta}.
+\label{eq:4.4.20}
+\end{equation}
+
+\item \textbf{积分表示}
+\begin{equation}
+J_n(x) = \frac{1}{\pi}\int_0^{\pi}
+\cos\!\bigl(x\sin\vartheta - n\vartheta\bigr)\,d\vartheta.
+\label{eq:4.4.21}
+\end{equation}
+\end{enumerate}
+
+\begin{figure}[h]
+\centering
+\begin{minipage}{0.48\linewidth}
+\includegraphics[max width=\linewidth,keepaspectratio]{fig4_4a.png}
+\subcaption{$C_n(x)$ 关于 $x$ 的图形。}
+\end{minipage}\hfill
+\begin{minipage}{0.48\linewidth}
+\includegraphics[max width=\linewidth,keepaspectratio]{fig4_4b.png}
+\subcaption{$C_n(x)$ 关于 $\log x$ 的图形（半对数图）。}
+\end{minipage}
+\caption{Tricomi--Bessel 函数 $C_n(x)$：(a) 前 3 个函数；(b) 对数-线性图，展示长期振荡行为。}
+\label{fig:4.4}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\setlength{\fboxsep}{6pt}\framebox[\textwidth]{\rule{0pt}{1.2cm}
+  \textbf{图\,4.5（占位）：}前三个 Tricomi--Bessel 函数 $C_n(x)$ 与 Bessel 函数 $J_n(x)$ 的比较。}
+\caption{前三个 Tricomi--Bessel 函数 $C_n(x)$ 与 Bessel 函数 $J_n(x)$ 的比较。}
+\label{fig:4.5}
+\end{figure}
+
+\section{连带 Laguerre 多项式}
+
+在前几节中，我们处理了 Laguerre 多项式理论，并看到它们的生成函数与 0 阶 Tricomi 函数相关。我们可能想知道，按如下方式修改生成函数能否得到新的 LP 族：
+\begin{equation}
+\sum_{n=0}^{\infty} \frac{t^n}{(n+m)!}\,L_n^{(m)}(x,y)
+= e^{yt}\,C_m(xt).
+\label{eq:4.5.1}
+\end{equation}
+
+可以直接验证
+\begin{equation}
+L_n^{(m)}(x,y)
+= \frac{(n+m)!}{n!}\,
+\sum_{r=0}^{n} \frac{(-1)^r y^{\,n-r} x^r}{(n-r)!\,(m+r)!\,r!}.
+\label{eq:4.5.2}
+\end{equation}
+
+上述定义也与算子形式
+\begin{equation}
+L_n^{(m)}(x,y)
+= (1 - y\partial_x)^m (y - \hat D_x^{-1})^n 1,
+\label{eq:4.5.3}
+\end{equation}
+相容，据此可以推导这一 LP 推广的多数性质，例如生成函数
+\begin{equation}
+\sum_{n=0}^{\infty} t^n L_n^{(m)}(x,y)
+= \frac{1}{(1-yt)^{m+1}}\,\exp\!\left(-\frac{xt}{1-yt}\right).
+\label{eq:4.5.4}
+\end{equation}
+
+对于连带 Laguerre 多项式，Laguerre 导数即满足
+\begin{equation}
+{}^{(m)}\!\hat{\mathcal L}\!\hat D_x\,
+L_n^{(m)}(x,y) = (n+m)\,L_{n-1}^{(m)}(x,y),
+\label{eq:4.5.5}
+\end{equation}
+的算子为
+\begin{equation}
+{}^{(m)}\!\hat{\mathcal L}\!\hat D_x
+= -\partial_x \hat D_x^{-1} - m\,\partial_x.
+\label{eq:4.5.6}
+\end{equation}
+
+相应的 ODE 可以由关系
+\begin{equation}
+L_n(x,y) = \frac{n!}{(n+m)!}\,\partial_x^m
+\bigl[x^m L_n^{(m)}(x,y)\bigr].
+\label{eq:4.5.7}
+\end{equation}
+十分简单地推出。
+
+利用乘法算子与普通（$m=0$）情形具有相同形式的事实，得到
+\begin{equation}
+y\,x\,\partial_x^2 L_n^{(m)}
++ \bigl((1+m)y - x\bigr)\partial_x L_n^{(m)}
++ n\,L_n^{(m)} = 0.
+\label{eq:4.5.8}
+\end{equation}
+
+我们现在已具备足够的能力来证明函数集（$y=1$）
+\begin{equation}
+\ell_n^{(m)}(x) = \sqrt{\frac{n!}{(n+m)!}}\,e^{-x/2} x^{m/2}
+L_n^{(m)}(x)
+\label{eq:4.5.9}
+\end{equation}
+是正交的。这些函数满足的微分方程为
+\begin{equation}
+x\,\ell_n^{(m)\prime\prime}
++ \ell_n^{(m)\prime}
++ \left[n + \frac{1}{2} - \frac{x}{4} - \frac{m(m-2x)}{4x}\right]
+\ell_n^{(m)} = 0.
+\label{eq:4.5.10}
+\end{equation}
+
+上述函数在不同 $m$ 值下行为的例子见图~\ref{fig:4.6}。
+
+\begin{figure}[h]
+\centering
+\includegraphics[max width=0.7\linewidth,keepaspectratio]{fig4_6.png}
+\caption{不同 $m$ 与 $n$ 值下的 Laguerre 正交函数 $\ell_n^{(m)}(x)$：(a) $n=3,\ m=0,4$；(b) $n=2,\ m=0,4$。}
+\label{fig:4.6}
+\end{figure}
+
+\section{Legendre 多项式}
+
+我们声称在定义 Laguerre 或 Hermite 函数时使用额外变量特别有用，因为它为形式体系提供了额外的自由度。对于 Legendre 多项式 $P_n(x)$，生成函数为
+\begin{equation}
+\frac{1}{\sqrt{1-2xt+t^2}} = \sum_{n=0}^{\infty} t^n P_n(x),
+\qquad |t|<1.
+\label{eq:4.6.1}
+\end{equation}
+
+Legendre 多项式满足正交关系
+\begin{equation}
+\int_{-1}^{1} P_n(x)\,P_m(x)\,dx = \frac{2}{2n+1}\,\delta_{nm},
+\label{eq:4.6.2}
+\end{equation}
+并且是 Legendre 微分方程
+\begin{equation}
+(1-x^2)P_n''(x) - 2x\,P_n'(x) + n(n+1)\,P_n(x) = 0.
+\label{eq:4.6.3}
+\end{equation}
+的解。
+
+\section{杂项应用与评论}
+
+Laguerre 与 Bessel 函数的应用包括多极展开、散射理论中的球 Bessel 函数，以及利用生成函数计算原子物理中的径向积分。连带 Laguerre 函数自然出现在氢原子径向波函数中，其中参数 $m$ 与轨道角动量量子数 $\ell$ 相关。
+
+关于 Bessel 函数及其应用的进一步说明见第 8--9 章。
+
+\section{Appell 多项式与最后评论}
+
+Appell 多项式 $A_n(x)$ 满足 $A_n'(x) = n\,A_{n-1}(x)$，构成第 9 章所处理 umbral 演算的支柱。本章引入的双变量 Laguerre 多项式确实是 Appell 分类的一个特例。
+
+在第 8 章我们将看到，同样的结果如何能通过基于``umbral''方法的互补技术实现。
+
+\section*{参考文献}
+
+\begin{thebibliography}{99}
+
+\bibitem{Lag1}
+G. Szeg\H{o}, \emph{Orthogonal Polynomials}, 4th ed.,
+Amer. Math. Soc. Colloq. Publ., Vol.~23, Providence, RI, 1975.
+
+\bibitem{Lag2}
+M. Abramowitz, I.A. Stegun (Eds.),
+\emph{Handbook of Mathematical Functions},
+Dover, New York, 1965.
+
+\bibitem{Lag3}
+W. Magnus, F. Oberhettinger, R.P. Soni,
+\emph{Formulas and Theorems for the Special Functions of Mathematical Physics},
+3rd ed., Springer, Berlin, 1966.
+
+\bibitem{Lag4}
+G. Dattoli, P.L. Ottaviani, A. Torre, L. Vazquez,
+``Evolution operator equations, integration with algebraic and finite difference
+methods: applications to physical problems in classical and quantum
+mechanics,''
+\emph{Riv. Nuovo Cimento} \textbf{20}, pp.~1--133, 1997.
+
+\bibitem{Lag5}
+G. Dattoli, S. Lorenzutta, A. Torre,
+``Theory of multi-index multivariable Bessel functions and Hermite
+polynomials,''
+\emph{Matematiche} (Catania) \textbf{52}, pp.~179--197, 1997.
+
+\bibitem{Lag6}
+G. Dattoli, H.M. Srivastava, K. Zhukovsky,
+``Orthogonality properties of the Hermite and related polynomials,''
+\emph{J. Comput. Appl. Math.} \textbf{182}(1), pp.~165--172, 2005.
+
+\bibitem{Lag7}
+F.G. Tricomi,
+\emph{Funzioni Ipergeometriche Confluenti},
+Cremonese, Roma, 1954.
+
+\bibitem{Lag8}
+N.N. Lebedev,
+\emph{Special Functions and Their Applications},
+Dover Books on Mathematics, 1972.
+
+\end{thebibliography}
