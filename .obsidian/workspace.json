@@ -152,7 +152,6 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "控制理论/控制工程基础/笔记/2. 控制系统的动态数学模型.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -172,11 +171,12 @@
             }
           }
         ],
-        "currentTab": 5
+        "currentTab": 4
       }
     ],
     "direction": "horizontal",
-    "width": 414.5
+    "width": 414.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
