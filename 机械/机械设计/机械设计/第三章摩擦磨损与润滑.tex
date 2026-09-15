@@ -1,0 +1,305 @@
+% !TeX root = 机械设计.tex
+% ============================================================
+%  第三章 摩擦、磨损及润滑
+%  来源：教材/机械设计《机械原理与机械设计（下）》读书笔记
+% ============================================================
+\chapter{摩擦、磨损及润滑}
+\label{chap:摩擦磨损及润滑}
+
+\section{摩擦}
+\label{sec:摩擦}
+
+\subsection{摩擦、磨损与润滑的概念}
+
+\begin{definition}[摩擦]
+\label{def:摩擦}
+\textbf{摩擦}：两接触物体在接触表面间相对滑动或有滑动趋势时，产生阻碍其发生相对滑动的切向阻力，这种现象称为摩擦。
+\end{definition}
+
+\begin{definition}[磨损]
+\label{def:磨损}
+\textbf{磨损}：由于摩擦引起的摩擦能耗和导致表面材料的不断损耗或转移，形成磨损。其后果是\textcolor{red}{精度、可靠性下降，效率下降，直至部件破坏}。
+\end{definition}
+
+\begin{definition}[润滑]
+\label{def:润滑}
+\textbf{润滑}：减少摩擦、降低磨损的一种有效手段。研究摩擦、磨损与润滑三者关系的学科称为\textbf{摩擦学（Tribology）}。
+\end{definition}
+
+\subsection{摩擦的分类}
+
+\begin{definition}[摩擦的分类]
+\label{def:摩擦分类}
+\begin{enumerate}
+	\item \textbf{内摩擦}；
+	\item \textbf{外摩擦}：
+	\begin{enumerate}
+		\item 静摩擦；
+		\item 动摩擦：
+		\begin{enumerate}
+			\item 滑动摩擦；
+			\item 滚动摩擦。
+		\end{enumerate}
+	\end{enumerate}
+\end{enumerate}
+\end{definition}
+
+\begin{note}
+本课程主要讨论\textcolor{red}{金属摩擦副的滑动摩擦}。
+\end{note}
+
+\subsection{摩擦的四种状态}
+
+\begin{definition}[摩擦的四种状态（按润滑状态分）]
+\label{def:摩擦四种状态}
+\begin{itemize}
+	\item \textbf{干摩擦}：表面间无任何润滑剂，表面微凸体直接接触，伴随弹性/塑性变形，\textcolor{red}{最不利}；
+	\item \textbf{边界摩擦}：表面间只有很薄的一层边界膜，是工程中\textcolor{red}{最低要求}（至少应保证的状态）；
+	\item \textbf{流体摩擦}：表面被一层流体膜完全隔开，\textcolor{red}{最理想}（摩擦系数极小、无磨损）；
+	\item \textbf{混合摩擦}：部分边界摩擦、部分流体摩擦，介于边界与流体之间（最低要求）。
+\end{itemize}
+\end{definition}
+
+\subsection{干摩擦}
+
+两固体表面直接接触，摩擦阻力由表面微凸体的相互嵌合、塑性变形和分子引力等产生。
+
+\begin{theorem}[库仑公式（经典摩擦定律）]
+\label{thm:库仑公式}
+\begin{equation}
+	F_f=f\cdot F_n
+	\label{eq:摩擦:库仑公式}
+\end{equation}
+其中，$F_f$ 为摩擦力，$F_n$ 为法向载荷，$f$ 为摩擦系数。
+\end{theorem}
+
+\begin{theorem}[简单粘着理论]
+\label{thm:简单粘着理论}
+\begin{equation}
+	F_f=A_r\tau_B=\frac{F_n}{\sigma_{sy}}\tau_B,\qquad f=\frac{\tau_B}{\sigma_{sy}}
+	\label{eq:摩擦:简单粘着理论}
+\end{equation}
+其中，$A_r$ 为真实接触面积，$\tau_B$ 为较软材料的剪切强度极限，$\sigma_{sy}$ 为较软材料的抗压屈服极限（压溃强度）。
+
+物理意义：真实接触面积 $A_r$ 由法向载荷与材料压溃强度决定，摩擦力即真实接触面积被剪切所需的力。
+\end{theorem}
+
+\subsection{边界摩擦与边界膜}
+
+表面间存在一层极薄的（$0.1\sim0.2\ \mu\mathrm{m}$ 左右）边界膜，将两表面隔开，摩擦系数主要取决于边界膜的性质。
+
+\begin{definition}[边界膜的类型]
+\label{def:边界膜}
+\begin{table}[H]
+\centering
+\caption{边界膜的类型与适用工况}
+\label{tab:摩擦:边界膜}
+\begin{tabular}{ll}
+	\toprule
+	类型 & 适用工况 \\
+	\midrule
+	物理吸附膜 & 常温、轻载、低速 \\
+	化学吸附膜 & 中等载荷、速度、温度 \\
+	化学反应膜 & 重载、高速、高温（膜强度最高） \\
+	\bottomrule
+\end{tabular}
+\end{table}
+\end{definition}
+
+\begin{note}
+边界膜只有三种：物理吸附膜、化学吸附膜、化学反应膜；\textcolor{red}{“物理反应膜”不存在}。
+\end{note}
+
+\subsection{混合摩擦与流体摩擦（膜厚比）}
+
+用\textbf{膜厚比} $\lambda$ 判别摩擦状态：
+
+\begin{theorem}[膜厚比]
+\label{thm:膜厚比}
+\begin{equation}
+	\lambda=\frac{h_{\min}}{R_{a1}+R_{a2}}
+	\label{eq:摩擦:膜厚比}
+\end{equation}
+其中，$h_{\min}$ 为最小油膜厚度，$R_{a1}$、$R_{a2}$ 为两表面轮廓算术平均偏差。
+
+$\lambda$ 越大，油膜承载能力越强，摩擦系数 $f$ 越小；\textcolor{red}{$\lambda>5$} 时形成全液体（流体）摩擦：$f$ 极小、\textcolor{red}{无磨损}。
+\end{theorem}
+
+\section{磨损}
+\label{sec:磨损}
+
+\subsection{磨损过程（三阶段）}
+
+\begin{definition}[磨损的三个阶段]
+\label{def:磨损三阶段}
+\begin{enumerate}
+	\item \textbf{磨合磨损阶段（running-in）}：初期磨损较快，随接触面积增大磨损速度下降；
+	\item \textbf{稳定磨损阶段}：磨损缓慢而均匀，为正常工作期（工作寿命的长短主要看这一阶段）；
+	\item \textbf{剧烈磨损阶段}：磨损急剧加快，精度下降、噪声振动增大，必须停机检修。
+\end{enumerate}
+\end{definition}
+
+\begin{note}
+磨合阶段是“跑合”过程，能改善表面接触质量；设计上应尽量延长稳定磨损阶段。
+\end{note}
+
+\subsection{磨损的基本类型}
+
+\begin{definition}[磨损的四种基本类型]
+\label{def:磨损类型}
+\begin{table}[H]
+\centering
+\caption{磨损的基本类型、机理与典型场合}
+\label{tab:磨损:基本类型}
+\begin{tabular}{p{2.2cm}p{6.8cm}p{3.4cm}}
+	\toprule
+	类型 & 机理与特点 & 典型场合 \\
+	\midrule
+	粘着磨损 & 接触点冷焊$\to$材料转移；严重时发展成\textbf{胶合} & \textcolor{red}{高速、重载}下常见失效 \\
+	磨粒磨损 & 硬颗粒或微凸体切削表面；\textcolor{red}{材料硬度越高，磨损量越小} & 含尘、含砂工况 \\
+	表面疲劳磨损 & 循环接触应力下表面产生裂纹、剥落（点蚀） & \textcolor{red}{滚动轴承、齿轮}常见 \\
+	腐蚀磨损 & 化学/电化学腐蚀与机械作用共同作用 & 腐蚀介质中工作的零件 \\
+	\bottomrule
+\end{tabular}
+\end{table}
+\end{definition}
+
+\subsection{其它磨损类型}
+
+\begin{definition}[其它磨损类型]
+\label{def:其它磨损类型}
+\begin{itemize}
+	\item \textbf{侵蚀磨损}：流体（含固体微粒）高速冲刷表面——水泵零件、水轮机叶片、\textcolor{red}{火箭尾喷管}；
+	\item \textbf{微动磨损}：接触表面间小幅相对振动——\textcolor{red}{过盈配合面、螺纹接合面}。
+\end{itemize}
+\end{definition}
+
+\section{润滑}
+\label{sec:润滑}
+
+\subsection{润滑剂}
+
+\subsubsection{润滑油}
+\begin{definition}[润滑油及其主要性能指标]
+\label{def:润滑油}
+种类：矿物油（机油）、合成油等。
+
+主要性能指标：\textcolor{red}{粘度、油性（润滑性）、凝点、闪点和燃点、极压性能、氧化稳定性}。
+\begin{itemize}
+	\item 粘度——最重要的指标；
+	\item 闪点——安全指标（闪点越低越易起火）；
+	\item 凝点——低温流动性指标。
+\end{itemize}
+\end{definition}
+
+\subsubsection{润滑脂}
+\begin{definition}[润滑脂及其主要性能指标]
+\label{def:润滑脂}
+形成：润滑油 + 稠化剂（皂基）形成的膏状润滑剂。种类：钙基脂、钠基脂、锂基脂等。
+
+主要性能指标：\textcolor{red}{针入度（锥入度）、滴点、安定性}。
+\begin{itemize}
+	\item 锥入度表示稠度：\textcolor{red}{载荷大时应选锥入度较小（较稠）的润滑脂}；
+	\item 滴点：润滑脂开始滴落的温度，衡量耐热性。
+\end{itemize}
+\end{definition}
+
+\subsubsection{固体润滑剂}
+\begin{definition}[固体润滑剂]
+\label{def:固体润滑剂}
+石墨、二硫化钼（$\mathrm{MoS}_2$）、氮化硼、蜡、聚氟乙烯、酚醛树脂等。适用于高温、重载、真空等不宜用油/脂的场合。
+\end{definition}
+
+\subsubsection{添加剂}
+\begin{definition}[添加剂]
+\label{def:添加剂}
+作用：改善润滑剂的性能（抗氧化、抗磨、极压、防锈等），如极压添加剂、油性添加剂等。
+\end{definition}
+
+\subsection{牛顿粘性定律与粘度}
+
+\begin{theorem}[牛顿粘性定律]
+\label{thm:牛顿粘性定律}
+流体做层流运动时，切应力与速度梯度成正比：
+\begin{equation}
+	\tau=-\eta\frac{\partial u}{\partial y}
+	\label{eq:润滑:牛顿粘性定律}
+\end{equation}
+其中，$\tau$ 为切应力，$\dfrac{\partial u}{\partial y}$ 为速度梯度（沿膜厚方向），$\eta$ 为动力粘度；负号表示切应力与速度梯度方向相反。
+\end{theorem}
+
+\begin{definition}[粘度的常用单位]
+\label{def:粘度单位}
+\begin{table}[H]
+\centering
+\caption{粘度的常用单位}
+\label{tab:润滑:粘度单位}
+\begin{tabular}{p{1.9cm}p{5.6cm}p{4.9cm}}
+	\toprule
+	名称 & 定义 & 单位 \\
+	\midrule
+	动力粘度 $\eta$ & 由粘性定律定义 & $\mathrm{N\cdot s/m^2}$（$\mathrm{Pa\cdot s}$） \\
+	运动粘度 $\nu$ & $\nu=\dfrac{\eta}{\rho}$ & $\mathrm{m^2/s}$；常用 $\mathrm{cm^2/s}$，$1\ \mathrm{cm^2/s}=1\ \mathrm{St}$（斯） \\
+	条件粘度 & 恩氏粘度等，用特定粘度计测出 & 相对值（$^\circ\mathrm{E}$） \\
+	\bottomrule
+\end{tabular}
+\end{table}
+\end{definition}
+
+\begin{keybox}[润滑油牌号]
+我国工业润滑油的\textcolor{red}{牌号是根据 40 ℃ 时的运动粘度}确定的。
+\end{keybox}
+
+\subsection{影响粘度的因素}
+
+\begin{definition}[温度与压力对粘度的影响]
+\label{def:影响粘度因素}
+\begin{enumerate}
+	\item \textbf{温度}：温度升高，粘度下降。\textcolor{red}{粘度指数（VI）越大，粘度随温度变化越小}，粘温性能越好。
+	\item \textbf{压力}：压力对粘度的影响较小，一般可忽略；但当 $p>10\ \mathrm{MPa}$ 时须考虑：
+	\begin{equation}
+		\eta_p=\eta_0\,e^{\alpha p}
+		\label{eq:润滑:粘压关系}
+	\end{equation}
+	压力升高，粘度增大（$p$ 越大 $\eta$ 越大）；$\alpha$ 为粘压系数。
+\end{enumerate}
+\end{definition}
+
+\subsection{流体润滑（三种）}
+
+\subsubsection{流体动力润滑（液体/气体动力润滑）}
+\begin{definition}[流体动力润滑]
+\label{def:流体动力润滑}
+依靠摩擦副相对运动在收敛油楔中自行产生压力油膜，将两表面完全隔开。
+
+\textbf{实现条件}：
+\begin{enumerate}
+	\item 两表面间形成\textcolor{red}{由大到小（收敛）的间隙}（油楔）；
+	\item 相对滑动速度 $v$ 足够大，且油楔中能连续供油、油量充足。
+\end{enumerate}
+特点：摩擦力小、磨损小；但必须满足上述条件才能实现。
+\end{definition}
+
+\subsubsection{弹性流体动力润滑（弹流润滑，EHL）}
+\begin{definition}[弹性流体动力润滑]
+\label{def:弹性流体动力润滑}
+在流体动力润滑基础上，同时考虑\textcolor{red}{接触表面的弹性变形}和\textcolor{red}{压力对粘度的影响}（粘度随压力升高而增大）。适用于高副接触（齿轮、滚动轴承等点/线接触）。
+\end{definition}
+
+\subsubsection{流体静力润滑}
+\begin{definition}[流体静力润滑]
+\label{def:流体静力润滑}
+由外部油泵将高压油强制送入摩擦表面，靠\textbf{外部供油}建立压力油膜，与相对运动无关。
+
+特点：速度适用范围广；寿命长、精度高；承载能力大、抗振性能好；不依赖油的粘度；但\textbf{费用较高}。应用：\textcolor{red}{重载精密机器的轴承、导轨、蜗杆副、传动螺旋}等。
+\end{definition}
+
+\section*{本章重点}
+\addcontentsline{toc}{section}{本章重点}
+
+\begin{enumerate}
+	\item \textbf{滑动摩擦的类型}（干、边界、流体、混合）及其特点；
+	\item \textbf{润滑油、润滑脂的性能指标}；
+	\item \textbf{粘度的常用单位}（动力粘度、运动粘度、条件粘度）及牌号确定方法；
+	\item \textbf{典型的磨损阶段}（磨合/稳定/剧烈）与\textbf{常见磨损类型}（粘着、磨粒、表面疲劳、腐蚀）。
+\end{enumerate}

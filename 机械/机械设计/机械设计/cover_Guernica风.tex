@@ -1,0 +1,205 @@
+% ============================================================
+%  课程笔记封面 —— 「格尔尼卡」风格
+%  取材：毕加索《格尔尼卡》(Guernica, 1937)：纯灰阶、碎裂平面、
+%        嘶鸣的马、电灯之眼、牛首、断剑与火焰等母题。
+%  版式与 cover_Impression风.tex 同构，直接 \input{} 复用：
+%      \input{cover_Guernica风}
+%
+%  配色定义在统一导言区 preamble.tex（gc* 前缀，全灰阶无色相），
+%  改深浅只需改 preamble，无需动本文件。
+%
+%  可用字段（在主文件导言区用 \newcommand 预定义即可覆盖缺省值）：
+%      \notename     主标题（必填，主模板已定义）
+%      \noteauthor   作者（必填，主模板已定义）
+%      \notecourseen 眉题英文（缺省 Course Notes，可填课程英文名）
+%      \notesubtitle 副标题（缺省「学习笔记」）
+%      \noteextra    底部附加信息（缺省不显示）
+% ============================================================
+
+% ---- 缺省字段（主文件已定义的同名命令不会被覆盖） ----
+\providecommand{\notecourseen}{Course Notes}
+\providecommand{\notesubtitle}{学\ 习\ 笔\ 记}
+\providecommand{\noteextra}{}
+
+\begin{titlepage}
+	\begin{tikzpicture}[remember picture, overlay]
+		% ============================================================
+		%  1. 画布底色（灰白，向下渐入灰）
+		% ============================================================
+		\shade[top color=gcPaper, bottom color=gcPaperDark]
+			(current page.south west) rectangle (current page.north east);
+
+		% ---- 全局使用页面左下角为原点的坐标系，确保所有 cm 坐标落在页面上 ----
+		\begin{scope}[shift={(current page.south west)}]
+
+		% ============================================================
+		%  2. 立体主义的碎裂平面（黑白灰三角块，切割整幅画面）
+		% ============================================================
+		\fill[gcChar,  opacity=0.20] (0,29.7) -- (7.0,29.7) -- (0,20.6) -- cycle;
+		\fill[gcLight, opacity=0.55] (21,29.7) -- (21,18.2) -- (13.2,29.7) -- cycle;
+		\fill[gcMid,   opacity=0.28] (0,20.0) -- (9.4,20.0) -- (0,12.6) -- cycle;
+		\fill[gcBone,  opacity=0.50] (21,17.6) -- (21,8.2) -- (11.6,14.2) -- cycle;
+		\fill[gcChar,  opacity=0.16] (0,12.0) -- (0,2.2) -- (6.2,6.4) -- cycle;
+		\fill[gcLight, opacity=0.42] (21,6.4) -- (21,0) -- (14.2,0) -- cycle;
+		\fill[gcMid,   opacity=0.24] (4.6,0) -- (11.8,0) -- (8.2,4.6) -- cycle;
+
+		% ---- 横贯画面的锯齿裂缝带 ----
+		\fill[gcLight, opacity=0.45]
+			(0,15.4) -- (2.4,16.2) -- (4.8,15.0) -- (7.2,16.0) -- (9.6,14.8)
+			-- (12.0,15.8) -- (14.4,14.6) -- (16.8,15.6) -- (19.2,14.4)
+			-- (21,15.2) -- (21,13.6) -- (0,13.8) -- cycle;
+
+		% ============================================================
+		%  3. 左上：嘶鸣的马首（长脸、尖耳、张口露齿、斜披鬃毛）
+		% ============================================================
+		\begin{scope}[shift={(0.3,0)}]
+		\fill[gcChar, opacity=0.85]
+			(1.2,21.8) -- (3.0,26.6) -- (4.8,28.2) -- (7.0,27.9) -- (7.5,26.4)
+			-- (6.2,26.0) -- (5.4,24.7) -- (6.8,24.4) -- (6.5,23.2)
+			-- (4.0,22.6) -- (2.6,21.4) -- cycle;
+		\fill[gcChar, opacity=0.85] (4.8,28.2) -- (5.0,29.5) -- (5.7,28.3) -- cycle;
+		\fill[gcChar, opacity=0.65] (3.9,27.1) -- (3.8,28.3) -- (4.6,27.5) -- cycle;
+		\foreach \a/\b in {3.0/26.4, 2.5/25.3, 2.0/24.2, 1.6/23.1}{
+			\draw[gcChar, opacity=0.55, line width=2.2pt, line cap=round]
+				(\a,\b) -- (\a-1.15,\b-0.55);
+		}
+		\fill[gcBone] (5.45,27.0) ellipse[x radius=0.32, y radius=0.18];
+		\fill[gcBlack] (5.48,27.0) circle[radius=0.11];
+		\draw[gcBone, line width=1.4pt] (6.52,24.52) -- (6.92,24.36);
+		\foreach \t in {0,0.22,0.44}{
+			\fill[gcBone] ({6.44+\t},{24.52-\t*0.55}) -- ({6.56+\t},{24.30-\t*0.55})
+				-- ({6.68+\t},{24.52-\t*0.55}) -- cycle;
+		}
+		\end{scope}
+
+		% ============================================================
+		%  4. 右上：电灯之眼（瞳孔 + 放射光芒 —— 原画最著名的母题）
+		% ============================================================
+		\foreach \i in {0,1,...,11}{
+			\draw[gcBlack, opacity=0.40, line width=1.5pt, line cap=round]
+				({15.6+1.40*cos(\i*30)},{25.4+1.40*sin(\i*30)})
+				-- ({15.6+2.45*cos(\i*30)},{25.4+2.45*sin(\i*30)});
+		}
+		\fill[gcBone, opacity=0.96]
+			(13.6,25.2) .. controls (14.6,26.95) and (16.6,26.95) .. (17.6,25.2)
+			.. controls (16.6,23.45) and (14.6,23.45) .. (13.6,25.2) -- cycle;
+		\draw[gcBlack, line width=2.0pt]
+			(13.6,25.2) .. controls (14.6,26.95) and (16.6,26.95) .. (17.6,25.2);
+		\fill[gcBlack] (15.6,25.2) circle[radius=0.54];
+		\fill[gcBone] (15.32,25.46) circle[radius=0.13];
+
+		% ============================================================
+		%  5. 右下：牛首（正面，双角、双眼、鼻梁）
+		% ============================================================
+		\fill[gcMid, opacity=0.55]
+			(15.4,10.2) -- (19.0,10.2) -- (18.4,14.4) -- (16.0,14.4) -- cycle;
+		\draw[gcChar, opacity=0.72, line width=3.0pt, line cap=round]
+			(15.7,14.3) .. controls (14.6,15.2) and (14.9,16.1) .. (16.0,15.9);
+		\draw[gcChar, opacity=0.72, line width=3.0pt, line cap=round]
+			(18.7,14.3) .. controls (19.8,15.2) and (19.5,16.1) .. (18.4,15.9);
+		\fill[gcBone] (16.5,12.5) ellipse[x radius=0.36, y radius=0.21];
+		\fill[gcBone] (17.9,12.5) ellipse[x radius=0.36, y radius=0.21];
+		\fill[gcBlack] (16.5,12.5) circle[radius=0.12];
+		\fill[gcBlack] (17.9,12.5) circle[radius=0.12];
+		\draw[gcChar, opacity=0.8, line width=1.4pt] (16.9,11.1) -- (17.5,11.1);
+
+		% ============================================================
+		%  6. 左下：倒地者、握断剑的手与小花
+		% ============================================================
+		\fill[gcChar, opacity=0.45] (1.0,3.4) -- (4.6,4.7) -- (5.0,4.0) -- (1.4,2.9) -- cycle;
+		\draw[gcChar, opacity=0.78, line width=3.4pt, line cap=round]
+			(0.9,5.0) -- (3.4,6.6) -- (5.0,7.9);
+		\fill[gcChar, opacity=0.85] (4.9,7.6) -- (5.9,7.5) -- (6.2,8.4) -- (5.2,8.6) -- cycle;
+		\draw[gcChar, opacity=0.85, line width=2.6pt, line cap=round] (5.9,8.5) -- (7.6,10.0);
+		\draw[gcChar, opacity=0.85, line width=2.6pt, line cap=round] (8.1,10.4) -- (9.6,11.6);
+		\draw[gcBone, opacity=0.9,  line width=1.2pt] (7.6,10.0) -- (8.1,10.4);
+		\fill[gcBone] (8.6,9.1) circle[radius=0.22];
+		\foreach \a in {45,135,225,315}{
+			\fill[gcBone] ({8.6+0.44*cos(\a)},{9.1+0.44*sin(\a)})
+				ellipse[x radius=0.22, y radius=0.13, rotate=\a];
+		}
+
+		% ============================================================
+		%  7. 底部：火焰（锯齿状升腾）
+		% ============================================================
+		\fill[gcChar, opacity=0.38]
+			(8.6,0.4) -- (9.0,1.5) -- (9.4,0.6) -- (9.9,1.9) -- (10.4,0.7)
+			-- (10.9,2.0) -- (11.4,0.7) -- (11.9,1.7) -- (12.4,0.6)
+			-- (12.9,1.4) -- (13.2,0.4) -- cycle;
+
+		% ============================================================
+		%  8. 立体主义的分割轮廓线（贯穿全幅的细直线）
+		% ============================================================
+		\draw[gcBlack, opacity=0.15, line width=1.0pt] (0,29.7) -- (10.5,14.8) -- (21,0);
+		\draw[gcBlack, opacity=0.13, line width=1.0pt] (0,8.8) -- (21,19.6);
+
+		% ============================================================
+		%  9. 标题衬底（一块浅色碎裂画布，保证文字可读）
+		% ============================================================
+		\fill[gcBone, opacity=0.62]
+			(3.8,16.9) -- (16.2,17.1) -- (16.8,22.6) -- (15.2,23.4) -- (3.2,22.7) -- cycle;
+
+		% ============================================================
+		% 10. 炭灰细边框
+		% ============================================================
+		\draw[gcChar, line width=0.7pt, opacity=0.55]
+			([shift={(0.85,0.85)}]current page.south west) rectangle
+			([shift={(-0.85,-0.85)}]current page.north east);
+
+		% ============================================================
+		% 11. 顶部眉题（课程英文小字 + 随文字长度自适应的炭灰短线）
+		% ============================================================
+		\node[anchor=north, text=gcChar, align=center]
+			(gcEyebrow) at ([yshift=-3.4cm]current page.north) {%
+			{\sffamily\fontsize{12}{15}\selectfont \uppercase{\notecourseen}}
+		};
+		\draw[gcChar, line width=1.0pt] ($(gcEyebrow.west)+(-0.25cm,0)$) -- ++(-1.1cm,0);
+		\draw[gcChar, line width=1.0pt] ($(gcEyebrow.east)+(0.25cm,0)$) -- ++(1.1cm,0);
+
+		% ============================================================
+		% 12. 主标题（居中，使用 \notename）
+		% ============================================================
+		\node[anchor=center, align=center, text=gcBlack]
+			at ([yshift=-8.3cm]current page.north) {%
+			{\fontsize{38}{48}\sffamily\bfseries \notename}
+		};
+
+		% ============================================================
+		% 13. 炭灰菱形 + 双细线
+		% ============================================================
+		\coordinate (C) at ([yshift=-11.6cm]current page.north);
+		\draw[gcChar, line width=1.1pt] (C) ++(-2.2cm,0) -- ++(1.55cm,0);
+		\draw[gcChar, line width=1.1pt] (C) ++(0.65cm,0) -- ++(1.55cm,0);
+		\node[fill=gcChar, minimum size=0.24cm, inner sep=0pt, rotate=45] at (C) {};
+
+		% ============================================================
+		% 14. 副标题（使用 \notesubtitle）
+		% ============================================================
+		\node[anchor=north, text=gcChar, align=center]
+			at ([yshift=-12.4cm]current page.north) {
+			{\fontsize{15}{20}\sffamily \notesubtitle}
+		};
+
+		% ============================================================
+		% 15. 底部作者、日期、附加信息
+		% ============================================================
+		\coordinate (B) at ([yshift=2.7cm]current page.south);
+		\draw[gcChar, line width=0.8pt, opacity=0.85] (B) ++(-1.1cm,0.95cm) -- ++(2.2cm,0);
+		\node[anchor=south, text=gcBlack, align=center] at (B) {
+			\begin{tabular}{c}
+				{\fontsize{19}{24}\sffamily\bfseries \noteauthor} \\[0.35cm]
+				{\large \sffamily \today}
+				\ifstrempty{\noteextra}{}{\\[0.3cm]{\normalsize\sffamily \noteextra}}
+			\end{tabular}
+		};
+
+		% ============================================================
+		% 16. 右下角落款（画作信息）
+		% ============================================================
+		\node[anchor=south east, text=gcChar, opacity=0.7, font=\footnotesize\itshape]
+			at ([shift={(-1.35,1.25)}]current page.south east)
+			{Pablo Picasso, Guernica, 1937};
+
+		\end{scope}
+	\end{tikzpicture}
+\end{titlepage}

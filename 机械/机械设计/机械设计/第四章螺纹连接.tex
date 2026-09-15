@@ -1,0 +1,731 @@
+% !TeX root = 机械设计.tex
+% ============================================================
+%  第四章 螺纹连接
+%  来源：教材/机械设计《机械原理与机械设计（下）》读书笔记
+% ============================================================
+\chapter{螺纹连接}
+\label{chap:螺纹连接}
+
+\section{螺纹}
+\label{sec:螺纹}
+
+\subsection{螺纹的形成}
+
+\begin{definition}[螺纹的形成]
+\label{def:螺纹形成}
+将直角三角形 $K$ 绕在圆柱体上，斜边在圆柱表面形成的空间曲线即\textbf{螺旋线}；沿螺旋线加工的沟槽即\textbf{螺纹}。改变原始三角形 $K$ 的形状（牙底形状），可得到矩形、梯形、锯齿形、管螺纹等不同牙型。
+\end{definition}
+
+\subsection{螺纹的分类}
+
+\begin{definition}[按牙型分类]
+\label{def:螺纹按牙型分类}
+\begin{itemize}
+	\item \textbf{联接螺纹}：\textcolor{red}{三角形螺纹（$60^\circ$）}、锥螺纹（$55^\circ$）、管螺纹（$55^\circ$）；
+	\item \textbf{传动螺纹}：矩形螺纹、梯形螺纹、锯齿形螺纹（工作侧牙型角 $3^\circ$）。
+\end{itemize}
+
+\textbf{粗牙与细牙}（同属三角形螺纹）：
+\begin{itemize}
+	\item \textbf{粗牙}：作一般紧固件使用；
+	\item \textbf{细牙}：同一公称直径下\textcolor{red}{螺距最小}，牙细而浅，\textcolor{red}{自锁性好}，强度较高，适于\textcolor{red}{薄壁零件、细小零件、受冲击振动及变载荷}的场合。
+\end{itemize}
+\end{definition}
+
+\begin{definition}[按位置、旋向与线数分类]
+\label{def:螺纹其它分类}
+\begin{itemize}
+	\item 按位置：\textbf{内螺纹}、\textbf{外螺纹}；
+	\item 按旋向：\textbf{右旋}（常用）、\textbf{左旋}（如\textcolor{red}{自行车脚踏曲柄上的螺纹为左旋}）；
+	\item 按螺旋线头数（线数）：\textbf{单线}（$n=1$，用于\textbf{联接}）；\textbf{双线、多线}（$n\ge2$，用于\textbf{传动}，升角大、效率高，一般 $n\le4$）。
+\end{itemize}
+\end{definition}
+
+\begin{theorem}[导程与螺距的关系]
+\label{thm:导程}
+\begin{equation}
+	L=nP
+	\label{eq:螺纹:导程}
+\end{equation}
+其中，$L$ 为导程，$P$ 为螺距，$n$ 为线数。
+\end{theorem}
+
+\subsection{螺纹的主要参数}
+
+\begin{definition}[螺纹的主要参数]
+\label{def:螺纹参数}
+\begin{table}[H]
+\centering
+\caption{螺纹的主要参数}
+\label{tab:螺纹:主要参数}
+\begin{tabular}{p{2.4cm}p{1.2cm}p{8.8cm}}
+	\toprule
+	参数 & 符号 & 定义 \\
+	\midrule
+	外径（大径） & $d$ & 与外螺纹牙顶相重合的假想圆柱面直径，亦称\textbf{公称直径} \\
+	内径（小径） & $d_1$ & 与外螺纹牙底相重合的假想圆柱面直径，\textcolor{red}{强度计算中为计算直径} \\
+	中径 & $d_2$ & 轴向剖面内牙厚与牙间宽相等处的假想圆柱面直径，$d_2\approx\dfrac{d+d_1}{2}$；确定螺纹几何参数和配合性质的直径 \\
+	螺距 & $P$ & 螺纹相邻两牙型上对应点间的轴向距离 \\
+	导程 & $L$ & 螺纹上任一点沿同一螺旋线旋转一周移动的轴向距离，$L=nP$ \\
+	线数 & $n$ & 螺纹螺旋线数目 \\
+	螺旋升角 & $\psi$ & 中径圆柱面上螺旋线的切线与垂直于螺纹轴线的平面间的夹角 \\
+	牙型角 & $\alpha$ & 螺纹轴向平面内螺纹牙型两侧边的夹角 \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+螺旋升角：
+\begin{equation}
+	\psi=\arctan\frac{L}{\pi d_2}=\arctan\frac{nP}{\pi d_2}
+	\label{eq:螺纹:螺旋升角}
+\end{equation}
+\end{definition}
+
+\begin{note}
+螺纹强度计算一律使用\textcolor{red}{小径 $d_1$}（危险截面直径），不是大径 $d$。
+\end{note}
+
+\section{螺纹连接的类型及螺纹连接件}
+\label{sec:螺纹连接类型}
+
+\subsection{螺纹连接的基本类型}
+
+\begin{definition}[螺纹连接的五种基本类型]
+\label{def:螺纹连接类型}
+\begin{table}[H]
+\centering
+\caption{螺纹连接的基本类型、结构特点与适用场合}
+\label{tab:连接:基本类型}
+\begin{tabular}{p{2.6cm}p{6.2cm}p{3.6cm}}
+	\toprule
+	类型 & 结构特点 & 适用场合 \\
+	\midrule
+	普通螺栓联接（受拉螺栓） & 被联接件开通孔（不带螺纹），孔与螺杆之间有间隙且工作中不许消失；结构简单、装拆方便 & 被联接件不太厚，应用最广 \\
+	铰制孔用螺栓联接（受剪螺栓） & 装配后\textbf{无间隙}，螺杆与孔壁直接接触（基孔制配合） & 主要承受\textbf{横向载荷}，也可作定位用 \\
+	双头螺柱联接 & 螺杆两端均有螺纹，一端旋入被联接件，另一端配螺母；拆装时只需拆螺母 & \textcolor{red}{常拆卸且被联接件之一较厚} \\
+	螺钉联接 & 不用螺母，直接旋入被联接件 & 被联接件之一较厚、受力不大、\textcolor{red}{不需经常装拆} \\
+	紧定螺钉联接 & 末端顶紧被联接件 & 固定两零件的相对位置，传递不大的力或力矩 \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{特殊用途螺钉}：吊环螺钉、地脚螺栓（固定机器于地基）。
+\end{definition}
+
+\subsection{螺纹联接件}
+
+\begin{definition}[螺栓、螺母与垫圈]
+\label{def:联接件}
+\begin{itemize}
+	\item \textbf{螺栓}：六角头螺栓（标准）、双头螺柱、螺钉；
+	\item \textbf{螺母}：六角螺母（标准/扁/厚）、圆螺母（与止退垫圈配合使用）；
+	\item \textbf{垫圈}：作用——\textcolor{red}{保护被联接件表面、增大接触面积、遮掩不平表面}。普通垫圈（平垫圈、斜垫圈）；弹簧垫圈——防止螺母松脱；止动垫圈——配合圆螺母用。
+\end{itemize}
+\end{definition}
+
+\section{螺纹连接的预紧和防松}
+\label{sec:预紧和防松}
+
+\subsection{预紧}
+
+\begin{definition}[松联接与紧联接]
+\label{def:松紧联接}
+\begin{itemize}
+	\item \textbf{松联接}：装配时不拧紧，只有受外载荷时才受力；
+	\item \textbf{紧联接}：装配时需拧紧，即承载时已预先受力（\textbf{预紧力} $Q_P$）。
+\end{itemize}
+\end{definition}
+
+\begin{definition}[预紧的目的]
+\label{def:预紧目的}
+预紧目的：\textcolor{red}{增大联接的刚度、紧密性，提高防松能力}。
+
+预紧力 $Q_P$：预先施加的轴向作用力（拉力）。预紧过紧，螺杆静载荷增大，降低螺杆强度；预紧过松，工作不可靠。
+\end{definition}
+
+\begin{theorem}[扳手拧紧力矩]
+\label{thm:拧紧力矩}
+\begin{equation}
+	T=F_H\cdot L=T_1+T_2
+	\label{eq:预紧:拧紧力矩}
+\end{equation}
+其中，$T_1$ 为螺纹摩擦阻力矩 $T_1=Q_P\tan(\psi+\varphi_v)\dfrac{d_2}{2}$；$T_2$ 为螺母端环形面与被联接件间的摩擦力矩 $T_2=f_cQ_P\cdot\dfrac{1}{3}\cdot\dfrac{D_1^3-d_0^3}{D_1^2-d_0^2}$。
+
+拧紧力矩系数
+\begin{equation}
+	K=\frac{1}{2}\left[\frac{d_2}{d}\tan(\psi+\varphi_v)+\frac{2f_c}{3d}\cdot\frac{D_1^3-d_0^3}{D_1^2-d_0^2}\right]
+	\label{eq:预紧:力矩系数}
+\end{equation}
+\begin{equation}
+	\therefore\quad T=KQ_P d,\qquad K=0.1\sim0.3
+	\label{eq:预紧:拧紧力矩简化}
+\end{equation}
+\end{theorem}
+
+\begin{definition}[预紧力 $Q_P$ 的控制方法]
+\label{def:预紧力控制}
+\begin{enumerate}
+	\item \textbf{测力矩扳手}——测出预紧力矩；
+	\item \textbf{定力矩扳手}——达到固定的拧紧力矩时卡盘不转动；
+	\item \textbf{测量预紧前后螺栓伸长量}——精度较高。
+\end{enumerate}
+\end{definition}
+
+\subsection{防松}
+
+\begin{definition}[防松的目的与原理]
+\label{def:防松}
+在振动、冲击、变载或温度变化时，螺纹副中正压力可能减小或瞬间消失，摩擦力为零，使螺纹联接松动；反复作用会使联接松驰而失效，必须防松。
+
+防松原理：\textcolor{red}{消除（或限制）螺纹副之间的相对运动，或增大相对运动的难度}。
+\end{definition}
+
+\begin{definition}[防松的方法]
+\label{def:防松方法}
+\begin{enumerate}
+	\item \textbf{摩擦防松}：双螺母（对顶螺母）、弹簧垫圈、自锁螺母（嵌尼龙圈、带颈收口、加金属防松装置）等；
+	\item \textbf{机械防松}：开槽螺母与开口销、止动垫片、串联钢丝（注意正确穿法）等；
+	\item \textbf{永久防松}：端铆、冲点、点焊、粘合。
+\end{enumerate}
+\end{definition}
+
+\section{单个螺栓连接的强度计算}
+\label{sec:单个螺栓强度}
+
+\subsection{受力形式、失效形式与设计准则}
+
+\begin{definition}[螺栓受力与失效形式]
+\label{def:螺栓失效形式}
+\begin{itemize}
+	\item \textbf{螺栓杆受力形式}：轴向拉力、扭转力矩或横向剪力。
+	\item \textbf{失效形式}：
+	\begin{itemize}
+		\item 受拉螺栓：螺栓杆和螺纹可能发生\textcolor{red}{塑性变形或断裂}；
+		\item 受剪螺栓：螺栓杆、孔壁可能发生\textcolor{red}{剪断或压溃}。
+	\end{itemize}
+\end{itemize}
+统计：90\% 以上的螺栓属于\textcolor{red}{疲劳破坏}，失效原因主要是应力集中促使疲劳裂纹的发生和发展。疲劳破坏位置：（1）螺母支承面第一、第二牙圈处占 \textcolor{red}{65\%}；（2）螺杆尾退刀槽处占 20\%；（3）钉头支承面处占 15\%。
+\end{definition}
+
+\begin{definition}[设计准则与计算方法]
+\label{def:螺栓设计准则}
+\begin{itemize}
+	\item 受拉螺栓——保证螺栓的\textcolor{red}{疲劳拉伸强度或静强度}；
+	\item 受剪螺栓——保证螺栓的\textcolor{red}{挤压强度和剪切强度}。
+\end{itemize}
+计算方法：由强度条件确定螺纹小径 $d_1$，按标准选相应的公称直径 $d$ 及螺距 $P$，其余尺寸按标准选取。
+\end{definition}
+
+\subsection{松螺栓联接（如吊钩螺栓）}
+
+工作前不拧紧，无预紧力 $Q_P$，只有工作载荷 $F$ 起拉伸作用：
+
+\begin{theorem}[松螺栓联接的强度条件]
+\label{thm:松螺栓}
+\begin{equation}
+	\sigma=\frac{F}{\dfrac{\pi}{4}d_1^2}\le[\sigma]\qquad\text{——验算用}
+	\label{eq:连接:松螺栓验算}
+\end{equation}
+\begin{equation}
+	d_1\ge\sqrt{\frac{4F}{\pi[\sigma]}}\qquad\text{——设计用}
+	\label{eq:连接:松螺栓设计}
+\end{equation}
+其中，$[\sigma]=\sigma_s/n$，$\sigma_s$ 查表 4-4，安全系数 $n$ 查表 4-5。
+\end{theorem}
+
+\subsection{紧螺栓联接——仅受预紧力（横向载荷的普通螺栓）}
+
+工作前拧紧，在预紧力和拧紧力矩联合作用下处于复合应力状态：预紧力 $Q_P$ 产生拉伸应力 $\sigma=\dfrac{Q_P}{\pi d_1^2/4}$，螺纹摩擦力矩 $T_1$ 产生剪应力 $\tau$，对 M10$\sim$M68 螺栓：
+
+\begin{theorem}[仅受预紧力的紧螺栓强度（简化计算法）]
+\label{thm:紧螺栓仅预紧}
+\begin{equation}
+	\tau\approx0.48\sigma\ (\text{或 }0.5\sigma)
+	\label{eq:连接:剪应力近似}
+\end{equation}
+按\textbf{第四强度理论}：
+\begin{equation}
+	\sigma_{ca}=\sqrt{\sigma^2+3\tau^2}\approx1.3\sigma
+	\label{eq:连接:第四强度理论}
+\end{equation}
+\begin{equation}
+	\sigma_{ca}=\frac{1.3Q_P}{\dfrac{\pi}{4}d_1^2}\le[\sigma]\quad\Rightarrow\quad d_1\ge\sqrt{\frac{1.3\times4Q_P}{\pi[\sigma]}}
+	\label{eq:连接:紧螺栓仅预紧}
+\end{equation}
+\end{theorem}
+
+\begin{keybox}[系数 1.3 的含义]
+系数 1.3 将外载荷提高 30\%，以考虑\textcolor{red}{螺纹扭转剪应力}对螺栓强度的影响，把拉扭复合应力状态简化为纯拉伸处理，故又称\textbf{简化计算法}。
+\end{keybox}
+
+\subsection{受横向载荷的紧螺栓联接}
+
+\textbf{（1）普通螺栓联接}——靠拧紧正压力 $Q_P$ 产生摩擦力平衡外载荷：
+
+\begin{theorem}[横向载荷普通螺栓的防滑条件]
+\label{thm:横向普通螺栓}
+不产生相对滑移条件：
+\begin{equation}
+	i\cdot f\cdot Q_P\ge K_sR\quad\Rightarrow\quad Q_P\ge\frac{K_sR}{f\cdot i}
+	\label{eq:连接:横向防滑}
+\end{equation}
+其中，$f$ 为接缝面摩擦系数；$i$ 为接合界面数目；$K_s$ 为防滑（可靠性）系数，$K_s=1.1\sim1.3$。然后按仅预紧的强度条件计算 $d_1$。
+\end{theorem}
+
+\textbf{（2）铰制孔用螺栓联接}——螺杆直接承受\textbf{挤压}和\textbf{剪切}平衡外载荷 $R$：
+
+\begin{theorem}[横向载荷铰制孔螺栓的强度条件]
+\label{thm:横向铰制孔}
+\begin{equation}
+	\tau=\frac{R}{\dfrac{\pi}{4}d_0^2}\le[\tau]\qquad\text{剪切强度条件}
+	\label{eq:连接:铰制孔剪切}
+\end{equation}
+\begin{equation}
+	\sigma_P=\frac{R}{d_0L_{\min}}\le[\sigma]_P\qquad\text{挤压强度条件}
+	\label{eq:连接:铰制孔挤压}
+\end{equation}
+其中，$R$ 为横向载荷，$d_0$ 为螺杆或孔直径，$L_{\min}$ 为被联接件中受挤压孔壁的最小长度，$[\tau]$ 为许用剪应力。
+\end{theorem}
+
+\subsection{受轴向载荷的紧螺栓联接（重点）}
+
+\begin{definition}[受轴向载荷紧螺栓的工作特点]
+\label{def:轴向紧螺栓特点}
+工作前拧紧（有 $Q_P$），工作后加上工作载荷 $F$，工作过程中载荷变化。靠螺杆抗拉强度平衡外载 $F$。
+\end{definition}
+
+\begin{definition}[受力变形分析]
+\label{def:变形分析}
+\begin{itemize}
+	\item \textbf{拧紧（预紧状态）}：螺栓受拉 $Q_P$，伸长 $\lambda_b$；被联接件受压 $Q_P$，压缩 $\lambda_m$；
+	\item \textbf{加载 $F$（工作状态）}：螺栓继续受拉，$Q_P\to Q=Q'_P+F$，总伸长 $\lambda'_b=\lambda_b+\Delta\lambda$；被联接件放松，$Q_P\to Q'_P$（\textbf{残余预紧力}），总压缩 $\lambda'_m=\lambda_m-\Delta\lambda$。
+\end{itemize}
+力—变形关系（螺栓刚度 $C_b$、被联接件刚度 $C_m$）：
+\begin{equation}
+	C_b=\tan\theta_b=\frac{Q_P}{\lambda_b}=\frac{\Delta F}{\Delta\lambda},\qquad C_m=\tan\theta_m=\frac{Q_P}{\lambda_m}=\frac{F-\Delta F}{\Delta\lambda}
+	\label{eq:连接:刚度}
+\end{equation}
+\end{definition}
+
+\begin{theorem}[螺栓相对刚度与总载荷]
+\label{thm:相对刚度}
+\textbf{螺栓相对刚度}：
+\begin{equation}
+	K_c=\frac{C_b}{C_b+C_m}
+	\label{eq:连接:相对刚度}
+\end{equation}
+\begin{equation}
+	\Delta F=\frac{C_b}{C_b+C_m}F=K_cF\qquad\text{——部分工作载荷}
+	\label{eq:连接:部分工作载荷}
+\end{equation}
+\textbf{螺栓总载荷}：
+\begin{equation}
+	Q=F+Q'_P=\Delta F+Q_P=Q_P+K_cF
+	\label{eq:连接:总载荷}
+\end{equation}
+\begin{equation}
+	Q_P=Q'_P+(1-K_c)F
+	\label{eq:连接:预紧力与残余预紧力}
+\end{equation}
+\end{theorem}
+
+\begin{definition}[残余预紧力 $Q'_P$ 的取法]
+\label{def:残余预紧力取法}
+\begin{table}[H]
+\centering
+\caption{残余预紧力 $Q'_P$ 的取法}
+\label{tab:连接:残余预紧力}
+\begin{tabular}{ll}
+	\toprule
+	工况 & $Q'_P$ \\
+	\midrule
+	有密封性要求 & $(1.5\sim1.8)F$ \\
+	一般稳定载荷 & $(0.2\sim0.6)F$ \\
+	一般不稳定载荷 & $(0.6\sim1.0)F$ \\
+	地脚螺栓 & $Q'_P>F$ \\
+	\bottomrule
+\end{tabular}
+\end{table}
+\end{definition}
+
+\begin{note}[$K_c$ 的讨论]
+\begin{itemize}
+	\item 最不利情况 $C_b\gg C_m$：$Q\approx Q_P+F$（外载几乎全由螺栓承受）；
+	\item 最理想情况 $C_b\ll C_m$：$Q\approx Q_P$（外载几乎全由被联接件承受）；
+	\item \textcolor{red}{不允许 $Q'_P<0$}（出现缝隙，联接失效）。
+\end{itemize}
+
+\textbf{降低螺栓受力的措施}：采用刚度较小的螺栓（\textcolor{red}{空心螺栓、加长螺栓、细颈}）+ 加硬垫片或拧紧凸缘（增大被联接件刚度）。
+\end{note}
+
+\subsection{轴向载荷紧螺栓的强度计算}
+
+计算时可任选其一：$Q=Q_P+\Delta F$ 或 $Q=Q'_P+F$。
+
+\textbf{a) 轴向静力紧螺栓联接}（静力 $F$ 不变，$Q$ 为静力，考虑补充拧紧——防断）：
+\begin{theorem}[轴向静力紧螺栓的强度条件]
+\label{thm:轴向静力}
+\begin{equation}
+	\sigma_{ca}=\frac{1.3Q}{\dfrac{\pi}{4}d_1^2}\le[\sigma]\quad\Rightarrow\quad d_1\ge\sqrt{\frac{1.3\times4Q}{\pi[\sigma]}}
+	\label{eq:连接:轴向静力}
+\end{equation}
+\end{theorem}
+
+\textbf{b) 轴向变载荷紧螺栓联接}：
+\begin{theorem}[轴向变载荷紧螺栓的应力校核]
+\label{thm:轴向变载荷}
+工作载荷：$0\to F\to0$；螺栓总载荷：$Q_P\to Q\to Q_P$；螺栓内拉应力变化：
+\begin{equation}
+	\sigma_{\max}=\frac{Q}{\dfrac{\pi}{4}d_1^2},\qquad \sigma_{\min}=\frac{Q_P}{\dfrac{\pi}{4}d_1^2}
+	\label{eq:连接:变载荷应力}
+\end{equation}
+按 $\sigma_{\min}=C$ 的规律计算疲劳安全系数 $S_\sigma$，或校核应力幅：
+\begin{equation}
+	\sigma_a\le[\sigma_a]
+	\label{eq:连接:应力幅校核}
+\end{equation}
+\end{theorem}
+
+\begin{note}[验算不满足时的措施]
+\begin{enumerate}
+	\item 增大直径：$d\uparrow\Rightarrow d_1\uparrow\Rightarrow\sigma_a\downarrow$；
+	\item 改善结构、降低应力集中，如 $C_m\uparrow$、$C_b\downarrow$。
+\end{enumerate}
+\end{note}
+
+\subsection{螺栓材料与许用应力}
+
+\subsubsection{材料（表 4-4）}
+
+\begin{table}[H]
+\centering
+\caption{常用螺栓材料及其力学性能}
+\label{tab:连接:螺栓材料}
+\begingroup
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lccccc}
+	\toprule
+	材料 & $\sigma_B$/MPa & $\sigma_s$/MPa & $\sigma_{-1}$/MPa & $\sigma_{-1tc}$/MPa \\
+	\midrule
+	10 & 340$\sim$420 & 210 & 160$\sim$220 & 120$\sim$150 \\
+	Q215 & 340$\sim$420 & 220 & --- & --- \\
+	Q235 & 410$\sim$470 & 240 & 170$\sim$220 & 120$\sim$160 \\
+	35 & 540 & 320 & 220$\sim$300 & 170$\sim$220 \\
+	45 & 610 & 360 & 250$\sim$340 & 190$\sim$250 \\
+	40Cr & 750$\sim$1000 & 650$\sim$900 & 320$\sim$440 & 240$\sim$340 \\
+	\bottomrule
+\end{tabular}
+\endgroup
+\end{table}
+
+\subsubsection{安全系数（表 4-5，摘录）}
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{螺栓联接的安全系数（摘录）}
+\label{tab:连接:安全系数}
+\begin{tabular}{p{3cm}p{1.6cm}p{8.4cm}}
+	\toprule
+	联接类型 & 工况 & 安全系数 \\
+	\midrule
+	松螺栓联接 & 静载荷 & $n=1.2\sim1.7$ \\
+	紧螺栓联接（不控制预紧力，碳钢） & 静载荷 & M6$\sim$M16：5$\sim$4；M16$\sim$M30：4$\sim$2.5；M30$\sim$M60：2.5$\sim$2 \\
+	& 变载荷 & M6$\sim$M16：12.5$\sim$8.5；M16$\sim$M30：8.5；M30$\sim$M60：8.5$\sim$12.5 \\
+	控制预紧力 & 静/变载荷 & $1.2\sim1.5$ \\
+	铰制孔用螺栓（钢） & 静载荷 & $n_\tau=2.5,\ n_P=1.25$ \\
+	& 变载荷 & $n_\tau=3.5\sim5,\ n_P=1.5$ \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{equation}
+	[\sigma]=\frac{\sigma_s}{n},\qquad [\tau]=\frac{\sigma_s}{n_\tau}
+	\label{eq:连接:许用应力}
+\end{equation}
+
+\subsubsection{强度级别（性能等级）}
+
+\begin{definition}[螺栓的强度级别]
+\label{def:强度级别}
+螺栓级别用带点数字表示：点前数字 $=\sigma_{B\min}/100$，点后数字 $=10\sigma_{s\min}/\sigma_{B\min}$；螺母级别 $=\sigma_{B\min}/100$。注意：\textcolor{red}{螺母的强度级别应低于螺栓的强度级别，螺母硬度稍低于螺栓硬度}（均低 20$\sim$40 HB）。
+\end{definition}
+
+\begin{note}[试算法]
+设计时先假设直径 $d$ 试算，选取一安全系数计算，将结果与估计直径比较，若仍在原先估计直径范围内即可，否则需重新估算。
+\end{note}
+
+\subsubsection{例题 1（轴向变载荷，课件原题）}
+
+\begin{longexample}[紧螺栓联接总载荷与直径设计]
+\label{ex:连接:轴向变载荷}
+紧螺栓联接：$Q_P=4000\ \mathrm{N}$，工作载荷 $F$ 在 $0\sim4000\ \mathrm{N}$ 间变化，$C_b=0.5C_m$，$[\sigma]=80\ \mathrm{MPa}$。求螺栓总载荷的最大、最小值及所需 $d_1$。
+
+\begin{solution}
+螺栓相对刚度：
+\begin{equation}
+	K_c=\frac{C_b}{C_b+C_m}=\frac{0.5C_m}{1.5C_m}=\frac{1}{3}
+	\label{eq:连接:例1相对刚度}
+\end{equation}
+部分工作载荷：
+\begin{equation}
+	\Delta F=K_cF=\frac{1}{3}\times4000=1333.3\ \mathrm{N}
+	\label{eq:连接:例1部分载荷}
+\end{equation}
+\begin{itemize}
+	\item 总载荷最大值：$Q_{\max}=Q_P+\Delta F=4000+1333.3=5333.3\ \mathrm{N}$；
+	\item 总载荷最小值：$Q_{\min}=Q_P=4000\ \mathrm{N}$；
+	\item 残余预紧力：$Q'_{P,\max}=4000\ \mathrm{N}$，$Q'_{P,\min}=Q_P-(1-K_c)F=4000-\dfrac{2}{3}\times4000=1333.3\ \mathrm{N}$。
+\end{itemize}
+按静强度（$Q_{\max}$）求 $d_1$：
+\begin{equation}
+	d_1\ge\sqrt{\frac{4\times1.3Q_{\max}}{\pi[\sigma]}}=\sqrt{\frac{4\times1.3\times5333.3}{\pi\times80}}\approx10.5\ \mathrm{mm}
+	\label{eq:连接:例1直径}
+\end{equation}
+\end{solution}
+\end{longexample}
+
+\begin{warnbox}[课件笔误]
+课件本页将相对刚度写作 $K_c=\dfrac{1}{2}$ 的中间算式，但按已知条件 $C_b=0.5C_m$ 正确计算应为 $K_c=\dfrac{1}{3}$，且后续结果 5333.3 N 也按 $\dfrac{1}{3}$ 得出。笔记按正确值记录。
+\end{warnbox}
+
+\subsubsection{例题 2（高压气缸螺栓组，课件原题）}
+
+\begin{longexample}[气缸螺栓组预紧力取值范围]
+\label{ex:连接:气缸螺栓组}
+气缸工作压力 $p=5\ \mathrm{MPa}$，内径 $D=120\ \mathrm{mm}$，用 14 个 M18 螺栓（$d_1=16.376\ \mathrm{mm}$），$[\sigma]=135\ \mathrm{MPa}$，$K_c=0.3$，要求残余预紧力 $Q'_P\ge1.7F$。确定预紧力 $Q_P$ 的取值范围。
+
+\begin{solution}
+每个螺栓的工作载荷：
+\begin{equation}
+	F=\frac{\dfrac{\pi}{4}D^2p}{14}=\frac{\dfrac{\pi}{4}\times120^2\times5}{14}\approx4037\ \mathrm{N}
+	\label{eq:连接:例2工作载荷}
+\end{equation}
+残余预紧力：
+\begin{equation}
+	Q'_P=1.7F=1.7\times4037=6862.9\ \mathrm{N}
+	\label{eq:连接:例2残余预紧力}
+\end{equation}
+部分工作载荷：
+\begin{equation}
+	\Delta F=K_cF=0.3\times4037=1211.1\ \mathrm{N}
+	\label{eq:连接:例2部分载荷}
+\end{equation}
+强度条件 $Q=Q'_P+F\le\dfrac{[\sigma]\dfrac{\pi}{4}d_1^2}{1.3}$，即
+\begin{equation}
+	Q'_P+F-\Delta F\ \le\ Q_P\ \le\ \frac{[\sigma]\dfrac{\pi}{4}d_1^2}{1.3}-\Delta F
+	\label{eq:连接:例2预紧力范围}
+\end{equation}
+\begin{equation}
+	\therefore\quad \boxed{9688.8\ \mathrm{N}\le Q_P\le20650\ \mathrm{N}}
+	\label{eq:连接:例2结果}
+\end{equation}
+\end{solution}
+\end{longexample}
+
+\section{螺栓组连接的设计与受力分析}
+\label{sec:螺栓组设计}
+
+工程中螺栓皆成组使用，单个使用极少；\textbf{单个螺栓计算是基础和前提条件}。螺栓组联接设计：选布局 $\to$ 定数目 $\to$ 力分析 $\to$ 设计尺寸。
+
+\subsection{结构设计原则}
+
+\begin{definition}[螺栓组结构设计原则]
+\label{def:结构设计原则}
+\begin{enumerate}
+	\item \textbf{布局尽量对称分布}，螺栓组中心与联接结合面形心重合（有利于分度、划线、钻孔），使受力均匀；
+	\item 受弯矩和扭矩作用的螺栓组，\textcolor{red}{螺栓应尽量远离对称轴}；
+	\item 合理间距、适当边距，以利用扳手装拆（保证扳手操作空间）。
+\end{enumerate}
+\end{definition}
+
+\subsection{受力分析基本假设}
+
+\begin{definition}[受力分析基本假设]
+\label{def:受力分析假设}
+\begin{enumerate}
+	\item 各螺栓的材料、尺寸、预紧力相同；
+	\item 被联接件是刚性的，结合面受力后仍保持平面；
+	\item 螺栓的变形在弹性范围内。
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[避免偏心载荷]
+\label{def:偏心载荷}
+偏心载荷的来源：支承面不平、螺母孔不正、被联接件刚度小、钩头螺栓。
+
+防止偏载的措施：\textcolor{red}{凸台、凹坑（鱼眼坑）、斜垫片}。
+\end{definition}
+
+\subsection{典型载荷工况的受力分析}
+
+\subsubsection{受轴向载荷（$P$ 通过螺栓组中心）}
+\begin{theorem}[受轴向载荷]
+\label{thm:螺栓组轴向}
+各螺栓平均分担：
+\begin{equation}
+	F=\frac{P}{Z}
+	\label{eq:螺栓组:轴向}
+\end{equation}
+\end{theorem}
+
+\subsubsection{受横向载荷（$R$ 通过螺栓组中心）}
+\begin{theorem}[受横向载荷]
+\label{thm:螺栓组横向}
+\begin{itemize}
+	\item 普通螺栓（受拉）：按防滑条件求 $Q_P$，再校核强度；
+	\item 铰制孔螺栓（受剪挤）：各螺栓平均分担
+	\begin{equation}
+		R=\frac{R_\Sigma}{Z}
+		\label{eq:螺栓组:横向}
+	\end{equation}
+\end{itemize}
+\end{theorem}
+
+\subsubsection{受旋转力矩 $T$}
+\begin{theorem}[受旋转力矩]
+\label{thm:螺栓组扭矩}
+\textbf{普通螺栓联接}——不滑动条件：
+\begin{equation}
+	\sum fQ_Pr_i\ge K_sT\quad\Rightarrow\quad Q_P\ge\frac{K_sT}{f\sum r_i}
+	\label{eq:螺栓组:扭矩普通}
+\end{equation}
+\textbf{铰制孔螺栓联接}——变形协调（$R_i/r_i=$ 常数）+ 力矩平衡：
+\begin{equation}
+	R_{\max}=\frac{T\,r_{\max}}{\sum r_i^2}
+	\label{eq:螺栓组:扭矩铰制孔}
+\end{equation}
+\end{theorem}
+
+\subsubsection{受倾覆力矩 $M$}
+\begin{theorem}[受倾覆力矩]
+\label{thm:螺栓组倾覆}
+变形协调：各螺栓所受载荷与其到倾覆轴线（转动中心）距离成正比，$F_i/L_i=$ 常数：
+\begin{equation}
+	F_{\max}=\frac{ML_{\max}}{\sum L_i^2}
+	\label{eq:螺栓组:倾覆力矩}
+\end{equation}
+\end{theorem}
+
+\begin{theorem}[接合面校核]
+\label{thm:接合面校核}
+右侧不压溃：
+\begin{equation}
+	\sigma_{P\max}=\frac{zQ_P}{A}+\frac{M}{W}\le[\sigma]_P
+	\label{eq:螺栓组:不压溃}
+\end{equation}
+左侧不开缝：
+\begin{equation}
+	\sigma_{P\min}=\frac{zQ_P}{A}-\frac{M}{W}>0
+	\label{eq:螺栓组:不开缝}
+\end{equation}
+\end{theorem}
+
+\subsection{螺栓组连接的总设计思路}
+
+\begin{definition}[总设计思路]
+\label{def:总设计思路}
+\begin{enumerate}
+	\item 结构设计（确定布局与数目）；
+	\item 受力分析（确定每个螺栓的载荷）；
+	\item 找出受力最大的螺栓；
+	\item 按最大载荷螺栓设计 $d_1$；
+	\item \textcolor{red}{全组螺栓取相同尺寸}（便于互换、安装）。
+\end{enumerate}
+\end{definition}
+
+\subsubsection{例题 3（边板螺栓组综合，课件原题）}
+
+\begin{longexample}[边板螺栓组综合计算]
+\label{ex:连接:边板螺栓组}
+边板用 4 个普通螺栓与立柱相连，外载荷 $F=18\ \mathrm{kN}$，作用点距螺栓组中心 400 mm，螺栓组尺寸 200 mm $\times$ 160 mm（图示），摩擦系数 $f=0.2$，$K_s=1.3$，$[\sigma]=80\ \mathrm{MPa}$。求受力最大螺栓的横向载荷及所需 $d_1$。
+
+\begin{solution}
+将 $F$ 向螺栓组中心简化：轴向分力 $F_1=\dfrac{F}{4}=\dfrac{18000}{4}=4500\ \mathrm{N}$（每螺栓），力矩 $T=F\times400=7200\ \mathrm{kN\cdot mm}$。
+
+距中心最远的螺栓（$r_{\max}=\sqrt{100^2+80^2}=128.06\ \mathrm{mm}$）由力矩产生的横向载荷：
+\begin{equation}
+	F_2=\frac{T}{4r_{\max}}=\frac{7200}{4\times128.06}\approx14\ \mathrm{kN}
+	\label{eq:螺栓组:例3力矩分力}
+\end{equation}
+两力夹角余弦 $\cos\theta=\dfrac{80}{\sqrt{100^2+80^2}}=0.625$，合成：
+\begin{align}
+	F_{s\max} &= \sqrt{F_1^2+F_2^2+2F_1F_2\cos\theta} \notag\\
+	&= \sqrt{4.5^2+14^2+2\times4.5\times14\times0.625}\approx17.175\ \mathrm{kN}
+	\label{eq:螺栓组:例3合力}
+\end{align}
+防滑条件：
+\begin{equation}
+	Q_P\ge\frac{K_sF_{s\max}}{f}=\frac{1.3\times17175}{0.2}\approx111.649\ \mathrm{kN}
+	\label{eq:螺栓组:例3预紧力}
+\end{equation}
+所需小径：
+\begin{equation}
+	d_1\ge\sqrt{\frac{4\times1.3Q_P}{\pi[\sigma]}}=\sqrt{\frac{4\times1.3\times111649}{\pi\times80}}\approx48\ \mathrm{mm}
+	\label{eq:螺栓组:例3直径}
+\end{equation}
+\end{solution}
+\end{longexample}
+
+\begin{note}
+此类题先“力向形心简化”，再求每个螺栓上“平移分力＋力矩分力”的矢量和，找最大者校核。
+\end{note}
+
+\section{提高螺栓连接强度的措施}
+\label{sec:提高螺栓强度}
+
+\subsection{改善牙间载荷分布}
+
+\begin{definition}[改善牙间载荷分布]
+\label{def:牙间载荷分布}
+机理：螺栓受拉伸长、螺母受压缩短，导致\textcolor{red}{第一圈螺纹受力最大}（约占总载荷 1/3），以后各圈递减；\textcolor{red}{加厚螺母并不能提高强度}。
+
+措施及效果：\textbf{悬置螺母}（受拉变形与螺栓一致，强度可提高约 +40\%）、\textbf{环槽螺母}（+30\%）、\textbf{内斜螺母}（+20\%）、环槽—内斜组合螺母。
+\end{definition}
+
+\subsection{减小应力集中}
+
+\begin{definition}[减小应力集中]
+\label{def:减小应力集中}
+\begin{itemize}
+	\item 加大过渡圆角（$r\approx0.2d$）；
+	\item 卸载槽、卸载过渡结构（$r_1\approx0.15d$、$r_2\approx1.0d$、$h\approx0.5d$）；
+	\item 退刀槽。
+\end{itemize}
+\end{definition}
+
+\subsection{降低螺栓应力幅 $\sigma_a$}
+
+\begin{definition}[降低螺栓应力幅]
+\label{def:降低应力幅}
+\begin{itemize}
+	\item \textbf{降低螺栓刚度 $C_b$}：空心螺栓、细长螺栓、柔性螺栓杆（$\theta_{b2}<\theta_{b1}$）；
+	\item \textbf{增大被联接件刚度 $C_m$}：用高硬度垫片、拧紧于铸铁表面（$\theta_{m2}>\theta_{m1}$）；
+	\item \textbf{理想方法}：$C_b\downarrow$ 与 $C_m\uparrow$ 双管齐下，并适当增大预紧力 $Q_P$（$\sigma_{a2}\ll\sigma_{a1}$）。
+\end{itemize}
+\end{definition}
+
+\subsection{合理的制造工艺}
+
+\begin{definition}[合理的制造工艺]
+\label{def:制造工艺}
+\begin{itemize}
+	\item 采用\textbf{挤压、滚压}方法制造螺纹（滚压螺纹）：疲劳强度提高 30\%$\sim$40\%；
+	\item \textbf{冷作硬化}（氰化、氮化、喷丸）；
+	\item \textcolor{red}{热处理后再滚压}：疲劳强度提高 70\%$\sim$100\%；
+	\item 控制螺距误差（制造与装配精度）。
+\end{itemize}
+\end{definition}
+
+\begin{warnbox}[注意]
+课件原文为“热处理后再滚压”（先热处理提高心部性能，再滚压获得表面残余压应力）。若选项为“滚压螺纹后再进行热处理”，顺序相反，是干扰项。
+\end{warnbox}
+
+\section*{本章重点}
+\addcontentsline{toc}{section}{本章重点}
+
+\begin{enumerate}
+	\item \textbf{重点}：单个螺栓联接强度计算（松螺栓、紧螺栓、受横向/轴向载荷）、螺栓组联接设计与受力分析；
+	\item \textbf{难点}：螺栓组联接强度计算（载荷简化、受力最大螺栓的确定与校核）。
+\end{enumerate}
