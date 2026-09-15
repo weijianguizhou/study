@@ -175,21 +175,21 @@
     opacity: 1;
 }
 
-.xterm-underline-1 { text-decoration: underline; }
-.xterm-underline-2 { text-decoration: underline; text-decoration-style: double; }
-.xterm-underline-3 { text-decoration: underline; text-decoration-style: wavy; }
-.xterm-underline-4 { text-decoration: underline; text-decoration-style: dotted; }
-.xterm-underline-5 { text-decoration: underline; text-decoration-style: dashed; }
+.xterm-underline-1,
+.xterm-underline-2,
+.xterm-underline-3,
+.xterm-underline-4,
+.xterm-underline-5 { text-decoration: underline; }
 
 .xterm-overline {
     text-decoration: overline;
 }
 
-.xterm-overline.xterm-underline-1 { text-decoration: underline overline; }
-.xterm-overline.xterm-underline-2 { text-decoration: underline overline; text-decoration-style: double; }
-.xterm-overline.xterm-underline-3 { text-decoration: underline overline; text-decoration-style: wavy; }
-.xterm-overline.xterm-underline-4 { text-decoration: underline overline; text-decoration-style: dotted; }
-.xterm-overline.xterm-underline-5 { text-decoration: underline overline; text-decoration-style: dashed; }
+.xterm-overline.xterm-underline-1,
+.xterm-overline.xterm-underline-2,
+.xterm-overline.xterm-underline-3,
+.xterm-overline.xterm-underline-4,
+.xterm-overline.xterm-underline-5 { text-decoration: underline; }
 
 .xterm-strikethrough {
     text-decoration: line-through;
@@ -268,6 +268,49 @@
 	background-color: transparent;
 }
 
+/* OpenCode owns message scrollback, so xterm's native scrollbar has no range. */
+.opencode-terminal.is-windows .xterm .xterm-viewport {
+	scrollbar-width: none;
+}
+
+.opencode-terminal.is-windows .xterm .xterm-viewport::-webkit-scrollbar {
+	display: none;
+}
+
+.opencode-terminal-scrollbar {
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 100%;
+	width: 14px;
+	z-index: 6;
+	display: none;
+	cursor: default;
+}
+
+.opencode-terminal-scrollbar.is-active {
+	display: block;
+}
+
+.opencode-terminal-scrollbar-thumb {
+	position: absolute;
+	right: 2px;
+	width: 8px;
+	min-height: 18px;
+	border-radius: 4px;
+	background: var(--scrollbar-thumb-bg);
+	cursor: grab;
+}
+
+.opencode-terminal-scrollbar-thumb:hover,
+.opencode-terminal-scrollbar.is-dragging .opencode-terminal-scrollbar-thumb {
+	background: var(--scrollbar-active-thumb-bg);
+}
+
+.opencode-terminal-scrollbar.is-dragging .opencode-terminal-scrollbar-thumb {
+	cursor: grabbing;
+}
+
 .opencode-terminal .xterm .xterm-screen canvas {
 	display: block;
 }
@@ -310,6 +353,12 @@
 	margin: 0;
 }
 
+.opencode-conversation-header-actions {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
 .opencode-conversation-main {
 	display: flex;
 	flex: 1;
@@ -317,14 +366,40 @@
 }
 
 .opencode-session-list {
-	width: 280px;
-	min-width: 200px;
-	border-right: 1px solid var(--background-modifier-border);
+	width: min(280px, 45%);
+	min-width: 140px;
+	flex: 0 0 auto;
 	overflow-y: auto;
+}
+
+.opencode-session-splitter {
+	position: relative;
+	width: 12px;
+	flex: 0 0 12px;
+	cursor: col-resize;
+	touch-action: none;
+}
+
+.opencode-session-splitter::after {
+	content: "";
+	position: absolute;
+	inset: 0 5px;
+	background: var(--background-modifier-border);
+}
+
+.opencode-session-splitter:hover::after,
+.opencode-session-splitter.is-resizing::after,
+.opencode-session-splitter:focus-visible::after {
+	background: var(--interactive-accent);
+}
+
+.opencode-session-splitter:focus-visible {
+	outline: none;
 }
 
 .opencode-session-detail {
 	flex: 1;
+	min-width: 0;
 	padding: 12px;
 	overflow-y: auto;
 }
@@ -357,13 +432,6 @@
 	color: var(--text-muted);
 	display: flex;
 	gap: 8px;
-}
-
-.opencode-session-dir {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	max-width: 120px;
 }
 
 .opencode-session-actions {
@@ -451,6 +519,29 @@
 .opencode-error {
 	padding: 20px;
 	color: var(--text-error);
+}
+
+.opencode-session-error-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	padding: 0 20px 20px;
+}
+
+.opencode-conversation-main.is-error .opencode-session-list {
+	width: auto;
+	min-width: 0;
+	flex: 1;
+}
+
+.opencode-conversation-main.is-error .opencode-session-splitter,
+.opencode-conversation-main.is-error .opencode-session-detail {
+	display: none;
+}
+
+.opencode-session-error {
+	max-width: 520px;
+	margin: 0 auto;
 }
 
 .opencode-suggest-title {
