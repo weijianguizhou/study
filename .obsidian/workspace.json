@@ -11,10 +11,14 @@
             "id": "6a542e3c432ef341",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "数理基础/矢量分析与场论/1. 矢量分析.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "新标签页"
+              "title": "1. 矢量分析"
             }
           }
         ]
@@ -203,8 +207,9 @@
       "opencode:Opencode conversations": false
     }
   },
-  "active": "437ab6934dc5f66d",
+  "active": "6a542e3c432ef341",
   "lastOpenFiles": [
+    "数理基础/矢量分析与场论/1. 矢量分析.md",
     "力学/流体力学/0.绪论.md",
     "机器人学/ROS2/使用CMake + ament编译ROS2节点.md",
     "数理基础/教材/工程数学 矢量分析与场论 (谢树艺).pdf",
