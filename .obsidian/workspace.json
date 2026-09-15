@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "b1a7a5bd139768cd",
+        "id": "1dafd14de5a2a927",
         "type": "tabs",
         "children": [
           {
-            "id": "c9f8e6e837e34b37",
+            "id": "6a542e3c432ef341",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "力学/流体力学/0.绪论.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "0.绪论"
+              "title": "新标签页"
             }
           }
         ]
@@ -207,8 +203,9 @@
       "opencode:Opencode conversations": false
     }
   },
-  "active": "b275d19387b88fb4",
+  "active": "437ab6934dc5f66d",
   "lastOpenFiles": [
+    "力学/流体力学/0.绪论.md",
     "机器人学/ROS2/使用CMake + ament编译ROS2节点.md",
     "数理基础/教材/工程数学 矢量分析与场论 (谢树艺).pdf",
     "数理基础/矢量分析与场论/教材/工程数学 矢量分析与场论 (谢树艺).pdf",
@@ -216,7 +213,6 @@
     "数理基础/矢量分析与场论/新建文件夹",
     "数理基础/矢量分析与场论",
     "数理基础/新建文件夹",
-    "力学/流体力学/0.绪论.md",
     "机器人学/ROS2",
     "数理基础/教材",
     "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/Figures/fig_1_7.png",
