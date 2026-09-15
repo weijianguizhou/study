@@ -11,10 +11,12 @@
             "id": "8e7482653b34041d",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
-              "icon": "lucide-file",
-              "title": "新标签页"
+              "type": "pdf",
+              "state": {
+                "file": "力学/流体力学/教材/流体力学 (吴望一) (z-library.sk, 1lib.sk, z-lib.sk).pdf"
+              },
+              "icon": "lucide-file-text",
+              "title": "流体力学 (吴望一) (z-library.sk, 1lib.sk, z-lib.sk)"
             }
           }
         ]
@@ -152,6 +154,7 @@
             "state": {
               "type": "outline",
               "state": {
+                "file": "力学/流体力学/教材/流体力学 (吴望一) (z-library.sk, 1lib.sk, z-lib.sk).pdf",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -171,12 +174,11 @@
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 5
       }
     ],
     "direction": "horizontal",
-    "width": 414.5,
-    "collapsed": true
+    "width": 414.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -195,10 +197,16 @@
   "active": "8e7482653b34041d",
   "lastOpenFiles": [
     "力学/流体力学/教材/物理流体力学 (王先智).pdf",
+    "力学/流体力学/教材/流体力学 (吴望一) (z-library.sk, 1lib.sk, z-lib.sk).pdf",
+    "力学/流体力学/Figure/微元体上的表面力.png",
+    "力学/流体力学/Figure/一点的应力状态.png",
+    "力学/流体力学/Figure/有限体上的表面力.png",
+    "力学/流体力学/Figure/WPS图片(3).png",
+    "力学/流体力学/Figure/WPS图片(2).png",
+    "力学/流体力学/Figure/WPS图片(1).png",
     "力学/流体力学/课件/0绪论.pdf",
     "力学/流体力学/课件/b3cc3e0f2d5897a79fdae0d857b7c182.par.temp",
     "力学/流体力学/流体力学笔记.pdf",
-    "力学/流体力学/教材/流体力学 (吴望一) (z-library.sk, 1lib.sk, z-lib.sk).pdf",
     "教材/控制工程基础 第4版 (董景新).pdf",
     "力学/流体力学/教材",
     "力学/流体力学/课件",
@@ -207,18 +215,11 @@
     "机械/机械设计/diag4b.py",
     "机械/机械设计/diag4.py",
     "机械/机械设计/笔记/2.机械零件的强度.md",
-    "机械/机械设计/课件/04章螺纹连接.pdf",
     "控制理论/控制工程基础/笔记/2. 控制系统的动态数学模型.md",
     "控制理论/控制工程基础/Figure/机械平移系统及其力学模型.png",
     "控制理论/控制工程基础/Figure/闭环控制系统.png",
     "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/纵摇运动受力分析示意图.png",
     "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/重心位置的确定.png",
-    "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/符号表.png",
-    "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/波浪能装置示意图.png",
-    "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/平行移轴和垂直轴定理.png",
-    "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/大地坐标系和固体坐标系示意图.png",
-    "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/垂荡运动受力分析示意图.png",
-    "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/Figure/fig_sim_08.png",
     "数学建模/数学建模教程/获奖论文和赛题/2026.8小组汇报/8.1汇报讲稿.md",
     "数学建模/数学建模教程/11-数据分析/04-异常检测.md",
     "数学建模/数学建模教程/11-数据分析/05-数据可视化.md",
