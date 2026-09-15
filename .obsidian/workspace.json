@@ -217,8 +217,12 @@
       "opencode:Opencode conversations": false
     }
   },
-  "active": "437ab6934dc5f66d",
+  "active": "6a542e3c432ef341",
   "lastOpenFiles": [
+    "机械/机械设计/机械设计/普通平键.png",
+    "机械/机械设计/笔记/2.机械零件的强度.md",
+    "机械/机械设计/笔记/4.轴毂连接.md",
+    "机械/机械设计/机械设计/Figure/几种键.png",
     "数理基础/矢量分析与场论/tex/矢量分析与场论.synctex(busy)",
     "数理基础/矢量分析与场论/tex/矢量分析与场论.synctex.gz",
     "数理基础/矢量分析与场论/tex/矢量分析与场论.pdf",
@@ -228,10 +232,8 @@
     "数理基础/矢量分析与场论/tex/矢量分析与场论.log",
     "机械/机械设计/课件/05轴毂连接(OCR).pdf",
     "机械/机械设计/笔记/3.螺纹连接.md",
-    "机械/机械设计/笔记/4.轴毂连接.md",
     "机械/机械设计/课件/08带传动.pdf",
     "机械/机械设计/课件/07章 滚动螺旋传动.pdf",
-    "机械/机械设计/课件/05轴毂连接.pdf",
     "数理基础/矢量分析与场论/1. 矢量分析.md",
     "Pasted image 20260915212909.png",
     "数理基础/矢量分析与场论/Figure/矢性函数的微分.png",
@@ -244,7 +246,6 @@
     "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/Figures/fig_1_11.png",
     "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/Figures/fig_3_1.png",
     "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/Figures/fig_2_1.png",
-    "教材/A Students Guide to Lagrangians and Hamiltonians (Patrick Hamill)/英文版tex/Figures/fig_1_3.png",
     "教材/控制理论/控制系统计算机辅助设计—MATLAB语言与应用/笔记/01控制系统仿真与CAD概述.md",
     "教材/控制理论/控制系统计算机辅助设计—MATLAB语言与应用/笔记/02MATLAB语言程序设计基础.md",
     "教材/Spacecraft_Dynamics/读书笔记/15-角速度与方向角.md",
@@ -263,7 +264,6 @@
     "教材/Spacecraft_Dynamics/读书笔记/14-辅助参考系.md",
     "教材/Spacecraft_Dynamics/读书笔记/12-角速度分量.md",
     "教材/Spacecraft_Dynamics/读书笔记/05-姿态广义坐标的其他形式.md",
-    "教材/Spacecraft_Dynamics/读书笔记/10-角速度矩阵.md",
-    "教材/Spacecraft_Dynamics/读书笔记/18-角加速度.md"
+    "教材/Spacecraft_Dynamics/读书笔记/10-角速度矩阵.md"
   ]
 }
