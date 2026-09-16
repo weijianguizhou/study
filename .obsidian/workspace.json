@@ -217,10 +217,11 @@
       "opencode:Opencode conversations": false
     }
   },
-  "active": "437ab6934dc5f66d",
+  "active": "449394a564e4de1b",
   "lastOpenFiles": [
-    "电类/模拟电路/场效应管.md",
+    "电类/数字电路/笔记/09-组合逻辑电路.md",
     "电类/数字电路/笔记/08-数字逻辑基础.md",
+    "电类/模拟电路/场效应管.md",
     "电类/数字电路/第8章数字逻辑基础.tex",
     "机械/机械设计/笔记/3.螺纹连接.md",
     "电类/数字电路/课件/第9章组合逻辑电路.pdf",
@@ -263,7 +264,6 @@
     "教材/Spacecraft_Dynamics/读书笔记/03-欧拉参数.md",
     "教材/Spacecraft_Dynamics/读书笔记/07-间接定向法.md",
     "教材/Spacecraft_Dynamics/读书笔记/04-欧拉角.md",
-    "教材/Spacecraft_Dynamics/读书笔记/14-辅助参考系.md",
-    "教材/Spacecraft_Dynamics/读书笔记/12-角速度分量.md"
+    "教材/Spacecraft_Dynamics/读书笔记/14-辅助参考系.md"
   ]
 }
