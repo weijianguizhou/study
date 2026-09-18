@@ -1,0 +1,542 @@
+\chapter{控制系统的动态数学模型}
+\label{sec:控制系统的动态数学模型}
+\section{数学模型的线性化}
+实际的机电物理系统往往存在各类非线性现象 例如机械系统中的高速阻尼器，阻尼力与速度的平方有关；具有铁芯的电感，电流与电压的非线性关系；晶体管等电子器件的非线性特性等 严格地讲，几乎所有实际物理系统都是非线性的 尽管线性系统的理论巳经相当成熟，但非线性系统的理论还不完善 另外，由千叠加原理不适用于非线性系统，这给解非线性系统带来了很大不便 ，故我们尽量对所研究的系统进行线性化处理，然后用线性理论进行分析。
+
+当非线性因素对系统影响很小时， 般可以予以忽略，将系统当作线性系统处理。另外，如果系统的变量只发生微小的偏移，可以通过取其线性主部，用切线法进行线性化，以求得其增量方程式 所谓增量指的不是各个变量的绝对数量，而是它们偏离平衡点的量于反馈系统不允许出现大的偏差，故这种情况的线性化对于闭环控制系统具有实际意义。
+
+而线性化方法通常是使用\textit{Taylor}展开取一次项。
+
+下面以单摆为例说明线性化过程。
+
+\begin{longexample}[单摆模型的线性化]
+\label{exam:单摆线性化}
+如图所示，质量为 $m$ 的摆球通过长为 $l$ 的无质量摆杆固定在支点 $O$ 上，摆杆可在竖直平面内自由转动。以竖直向下方向为基准，$\theta_{\mathrm{o}}(t)$ 为摆杆偏离该方向的角位移，$T_{\mathrm{i}}(t)$ 为施加在支点处的驱动力矩，$g$ 为重力加速度。设摆杆不可伸长，故摆球只作绕 $O$ 点的转动。
+
+\begin{center}
+\input{figures/fig_pendulum.tikz}
+\end{center}
+
+根据绕定轴的转动定律，驱动力矩 $T_{\mathrm{i}}(t)$ 与重力产生的恢复力矩 $-mgl\sin\theta_{\mathrm{o}}(t)$ 之和，等于摆球对 $O$ 点的转动惯量 $ml^{2}$ 与角加速度 $\ddot{\theta}_{\mathrm{o}}(t)$ 之积，即
+\begin{equation}
+T_{\mathrm{i}}(t)-m g l \sin \theta_{\mathrm{o}}(t)=m l^{2} \ddot{\theta}_{\mathrm{o}}(t).
+\label{eq:单摆非线性}
+\end{equation}
+其中含有 $\sin\theta_{\mathrm{o}}(t)$ 这样的非线性项，故式~\eqref{eq:单摆非线性} 是一个非线性微分方程，不能直接用线性系统理论求解，需先作线性化处理。
+
+\begin{solution}
+\begin{enumerate}
+\item \textbf{确定平衡点。} 取摆自然下垂的位置为平衡点，即 $\theta_{\mathrm{o}0}=0$，此时角加速度为零 $\ddot{\theta}_{\mathrm{o}0}=0$，代入式~\eqref{eq:单摆非线性} 得平衡输入力矩 $T_{\mathrm{i}0}=mgl\sin\theta_{\mathrm{o}0}=0$。
+
+\item \textbf{引入增量变量。} 令各变量相对平衡点的小偏移为
+\[
+\theta_{\mathrm{o}}(t)=\theta_{\mathrm{o}0}+\Delta\theta_{\mathrm{o}}(t),\qquad
+T_{\mathrm{i}}(t)=T_{\mathrm{i}0}+\Delta T_{\mathrm{i}}(t).
+\]
+
+\item \textbf{非线性项作 Taylor 展开并取线性主部。} 将 $\sin\theta_{\mathrm{o}}$ 在 $\theta_{\mathrm{o}0}$ 处展开，只保留一次项：
+\[
+\sin\theta_{\mathrm{o}}\approx \sin\theta_{\mathrm{o}0}+\cos\theta_{\mathrm{o}0}\,\Delta\theta_{\mathrm{o}}
+=\Delta\theta_{\mathrm{o}}\qquad(\theta_{\mathrm{o}0}=0).
+\]
+
+\item \textbf{作差消去平衡量。} 将上式代回式~\eqref{eq:单摆非线性}，再减去平衡方程 $T_{\mathrm{i}0}-mgl\sin\theta_{\mathrm{o}0}=0$，得增量方程
+\[
+\Delta T_{\mathrm{i}}(t)-m g l\,\Delta\theta_{\mathrm{o}}(t)=m l^{2}\,\Delta\ddot{\theta}_{\mathrm{o}}(t).
+\]
+
+\item \textbf{写成线性化模型。} 工程上习惯仍用原符号表示增量，即得线性化后的运动方程
+\[
+T_{\mathrm{i}}(t)-m g l\,\theta_{\mathrm{o}}(t)=m l^{2}\ddot{\theta}_{\mathrm{o}}(t),
+\]
+整理成标准形式为
+\[
+m l^{2}\ddot{\theta}_{\mathrm{o}}(t)+m g l\,\theta_{\mathrm{o}}(t)=T_{\mathrm{i}}(t).
+\]
+\end{enumerate}
+线性化后的方程是常系数二阶线性微分方程，其左端描述了一个典型的二阶系统，后续可直接用传递函数与线性系统理论分析。
+\end{solution}
+\end{longexample}
+
+\begin{remark}
+切线法（Taylor 展开取一次项）只在平衡点附近的微小范围内成立，因此上述线性化模型仅在 $|\Delta\theta_{\mathrm{o}}|\ll 1$，即摆角很小、$\sin\theta_{\mathrm{o}}\approx\theta_{\mathrm{o}}$ 时才与原非线性模型足够接近。当摆角较大时，非线性不可忽略，线性模型将产生明显误差。
+\end{remark}
+\section{传递函数以及典型环节的传递函数}
+\subsection{传递函数的定义和性质}
+\begin{definition}[传递函数]
+    在零初始条件下， 线性定常系统输出象函数$X_{o}(s)$输入象函数$X_{i}(s)$之比，称为系统的传递函数，用$G(s)$表示，即
+    \begin{equation}
+        G(s) \triangleq \frac{X_{o}(s)}{X_{i}(s)}
+    \end{equation}
+\end{definition}
+设描述线性定常系统的微分方程为:
+\begin{equation}
+  \begin{aligned}
+& a_{0} x_{\mathrm{o}}^{(n)}(t)+a_{1} x_{\mathrm{o}}^{(n-1)}(t)+\cdots+a_{n-1} \dot{x}_{\mathrm{o}}(t)+a_{n} x_{\mathrm{o}}(t) \\
+= & b_{0} x_{\mathrm{i}}^{(m)}(t)+b_{1} x_{\mathrm{i}}^{(m-1)}(t)+\cdots+b_{m-1} \dot{x}_{\mathrm{i}}(t)+b_{m} x_{\mathrm{i}}(t)
+\end{aligned}
+\end{equation}
+则零初始条件下，系统传递函数为
+\begin{equation}
+  G(s)=\frac{X_{\mathrm{o}}(s)}{X_{\mathrm{i}}(s)}=\frac{b_{0} s^{m}+b_{1} s^{m-1}+\cdots+b_{m-1} s+b_{m}}{a_{0} s^{n}+a_{1} s^{n-1}+\cdots+a_{n-1} s+a_{n}}
+\end{equation}
+
+\begin{definition}
+    对千传递函数，当 $s=0$ 时，有
+    $$G(0)=\frac{b_{m}}{a_{n}}=K$$
+    式中， $K$称为系统的静态放大系数或静态增益。
+\end{definition}
+
+
+\subsection{典型环节的传递函数}
+
+实际系统千差万别，但从动态特性的角度考察，构成系统的各元件（或环节）大多数可以用有限的几种基本形式来描述。这些基本形式称为\textbf{典型环节}。任何复杂的传递函数都可分解为若干典型环节之积，因此掌握典型环节是分析复杂系统的前提。
+
+\subsubsection{比例环节}
+
+\begin{definition}[比例环节]
+    比例环节又称放大环节，其传递函数为一个常数
+    \begin{equation}
+        G(s)=K,
+        \label{eq:比例环节传递函数}
+    \end{equation}
+    其中 $K$ 为常数，称为比例系数或静态增益。其传递函数的特征是：既无极点也无零点，幅频特性为常数 $K$，相频特性恒为零，输出与输入成正比，无惯性、无延迟。
+\end{definition}
+
+比例环节对应的输入输出微分方程为
+\begin{equation}
+    x_{\mathrm{o}}(t)=K\,x_{\mathrm{i}}(t),
+    \label{eq:比例环节时域}
+\end{equation}
+在零初始条件下取其拉氏变换，得 $X_{\mathrm{o}}(s)=KX_{\mathrm{i}}(s)$，代入传递函数定义即得式~\eqref{eq:比例环节传递函数}。
+
+\begin{longexample}[杠杆构成的比例环节]
+\label{exam:比例环节杠杆}
+考虑一根刚性、无质量的杠杆，可绕固定支点 $O$ 转动。设输入端到支点的距离为 $l_{1}$，输出端到支点的距离为 $l_{2}$，且两端位于支点的同一侧。当输入端产生小位移 $x_{\mathrm{i}}(t)$ 时，杠杆绕 $O$ 转过同一微小转角，由几何相似关系可知输出端位移为
+\[
+x_{\mathrm{o}}(t)=\frac{l_{2}}{l_{1}}x_{\mathrm{i}}(t).
+\]
+与式~\eqref{eq:比例环节时域} 比较可知，这是一个比例系数 $K=l_{2}/l_{1}$ 的比例环节，其传递函数为
+\[
+G(s)=\frac{l_{2}}{l_{1}}.
+\]
+可见杠杆通过改变力臂之比实现对位移（或力）的放大与缩小，输出立即跟随输入，不产生惯性滞后。
+\end{longexample}
+
+\begin{remark}
+    比例环节是最简单的环节，其输出能立即按比例复现输入，在时间响应中不产生相位滞后与波形失真。但理想比例环节要求输出瞬时跟随输入，实际元件因惯性往往只能在低频段近似为比例环节。
+\end{remark}
+
+\subsubsection{一阶惯性环节}
+
+\begin{definition}[一阶惯性环节]
+    一阶惯性环节（又称一阶非周期环节）的传递函数为
+    \begin{equation}
+        G(s)=\frac{K}{Ts+1},
+        \label{eq:一阶惯性传递函数}
+    \end{equation}
+    其中 $K$ 为放大系数，$T>0$ 为时间常数。其传递函数的特征是：无零点，在 $s=-1/T$ 处有一个负实极点，故时间响应无震荡，输出以指数规律逐渐趋于稳态；$T$ 越小，惯性越小、响应越快。
+\end{definition}
+
+该环节对应的微分方程为
+\begin{equation}
+    T\,\dot{x}_{\mathrm{o}}(t)+x_{\mathrm{o}}(t)=K\,x_{\mathrm{i}}(t),
+    \label{eq:一阶惯性时域}
+\end{equation}
+在零初始条件下取拉氏变换，利用微分定理 $\mathcal{L}\{\dot{x}_{\mathrm{o}}(t)\}=sX_{\mathrm{o}}(s)$，得
+\[
+(Ts+1)X_{\mathrm{o}}(s)=KX_{\mathrm{i}}(s),
+\]
+与式~\eqref{eq:一阶惯性传递函数} 一致。
+
+\begin{longexample}[弹簧-阻尼器构成的一阶惯性环节]
+\label{exam:一阶惯性弹簧阻尼}
+考虑一个由弹簧与粘性阻尼器并联组成的机械系统，弹簧刚度为 $k$，阻尼器阻尼系数为 $c$，其一端固定，另一端受外力 $F_{\mathrm{i}}(t)$ 作用，以该端的位移 $x_{\mathrm{o}}(t)$ 为输出。
+
+由力平衡可知，外力应克服弹簧的弹性恢复力 $kx_{\mathrm{o}}$ 与阻尼器的粘性阻力 $c\dot{x}_{\mathrm{o}}$，即
+\[
+F_{\mathrm{i}}(t)=k\,x_{\mathrm{o}}(t)+c\,\dot{x}_{\mathrm{o}}(t).
+\]
+取拉氏变换并整理得
+\[
+(cs+k)X_{\mathrm{o}}(s)=F_{\mathrm{i}}(s),
+\]
+故传递函数为
+\[
+G(s)=\frac{X_{\mathrm{o}}(s)}{F_{\mathrm{i}}(s)}=\frac{1}{cs+k}
+=\frac{1/k}{(c/k)s+1}.
+\]
+与式~\eqref{eq:一阶惯性传递函数} 比较，$K=1/k$，时间常数 $T=c/k$，说明该机械系统是一个一阶惯性环节。
+\end{longexample}
+
+\begin{property}[单位阶跃响应]
+    令式~\eqref{eq:一阶惯性传递函数} 中 $K=1$，输入为单位阶跃 $X_{\mathrm{i}}(s)=1/s$，则
+    \[
+    X_{\mathrm{o}}(s)=\frac{1}{Ts+1}\cdot\frac{1}{s}
+    =\frac{1}{s}-\frac{T}{Ts+1},
+    \]
+    取拉氏反变换得
+    \begin{equation}
+        x_{\mathrm{o}}(t)=1-\mathrm{e}^{-t/T}\qquad(t\ge 0).
+    \end{equation}
+    该曲线以指数规律单调上升，时间常数 $T$ 是输出上升到稳态值 $63.2\%$ 所需的时间；$t=3T\sim4T$ 时已基本达到稳态。
+\end{property}
+
+\subsubsection{微分环节}
+
+\begin{definition}[微分环节]
+    理想微分环节的传递函数为
+    \begin{equation}
+        G(s)=T_{\mathrm{d}}s,
+        \label{eq:理想微分传递函数}
+    \end{equation}
+    其中 $T_{\mathrm{d}}$ 为微分时间常数。其传递函数的特征是：无极点，在原点 $s=0$ 处有一个零点，幅频特性随频率线性增长，对高频信号有放大作用，因而能预示输入的变化趋势。
+\end{definition}
+
+对应的时域关系为输出正比于输入的变化率，即 $x_{\mathrm{o}}(t)=T_{\mathrm{d}}\dot{x}_{\mathrm{i}}(t)$，在零初始条件下取拉氏变换即得式~\eqref{eq:理想微分传递函数}。
+
+\begin{remark}
+    理想微分环节在实际中难以实现：当输入突变时输出为冲激，且高频增益随 $\omega$ 无限增长，会放大噪声。实际微分环节总伴有一阶惯性，常用下列两种形式近似：
+    \begin{itemize}
+        \item 具有惯性的微分环节：$G(s)=\dfrac{T_{\mathrm{d}}s}{Ts+1}$；
+        \item 一阶微分（比例微分）环节：$G(s)=Ts+1$。
+    \end{itemize}
+\end{remark}
+
+\begin{property}[微分作用的物理意义]
+    由 $\mathcal{L}\{\dot{x}_{\mathrm{i}}(t)\}=sX_{\mathrm{i}}(s)$ 可见，理想微分环节相当于对信号作微分运算，其作用是\textbf{预示}输入的变化趋势：输入刚开始上升时输出就已给出响应，因而能提高系统的快速性。
+\end{property}
+
+\subsubsection{积分环节}
+
+\begin{definition}[积分环节]
+    积分环节的传递函数为
+    \begin{equation}
+        G(s)=\frac{1}{T_{\mathrm{i}}s},
+        \label{eq:积分环节传递函数}
+    \end{equation}
+    其中 $T_{\mathrm{i}}$ 为积分时间常数。其传递函数的特征是：无零点，在原点 $s=0$ 处有一个极点，幅频特性随频率反比下降，输出为输入对时间的累积。
+\end{definition}
+
+对应的时域关系为输出正比于输入对时间的积分，即
+\begin{equation}
+    x_{\mathrm{o}}(t)=\frac{1}{T_{\mathrm{i}}}\int_{0}^{t}x_{\mathrm{i}}(\tau)\,\mathrm{d}\tau,
+    \label{eq:积分环节时域}
+\end{equation}
+利用积分定理 $\mathcal{L}\left\{\int_{0}^{t}x_{\mathrm{i}}(\tau)\,\mathrm{d}\tau\right\}=X_{\mathrm{i}}(s)/s$，在零初始条件下取拉氏变换即得式~\eqref{eq:积分环节传递函数}。
+
+\begin{property}[积分作用的特性]
+    当输入为单位阶跃时，$X_{\mathrm{o}}(s)=\dfrac{1}{T_{\mathrm{i}}s^{2}}$，反变换得 $x_{\mathrm{o}}(t)=t/T_{\mathrm{i}}$，即输出随时间线性增长，不能自发达到稳态。积分环节能消除稳态误差，但会引入 $90^{\circ}$ 的相位滞后，使系统稳定性变差。
+\end{property}
+
+\subsubsection{二阶震荡环节}
+
+\begin{definition}[二阶震荡环节]
+    二阶震荡环节的传递函数为
+    \begin{equation}
+        G(s)=\frac{K}{T^{2}s^{2}+2\zeta Ts+1},
+        \label{eq:二阶震荡传递函数}
+    \end{equation}
+    其中 $T$ 为时间常数，$\zeta>0$ 为阻尼比，$K$ 为放大系数。引入无阻尼自然频率 $\omega_{\mathrm{n}}=1/T$ 并令 $K=1$，可写成标准形式
+    \begin{equation}
+        G(s)=\frac{\omega_{\mathrm{n}}^{2}}{s^{2}+2\zeta\omega_{\mathrm{n}}s+\omega_{\mathrm{n}}^{2}},
+        \label{eq:二阶标准形式}
+    \end{equation}
+    其传递函数的特征是：无零点，有两个极点
+    \[
+    s_{1,2}=-\zeta\omega_{\mathrm{n}}\pm\omega_{\mathrm{n}}\sqrt{\zeta^{2}-1},
+    \]
+    极点的性质由阻尼比 $\zeta$ 决定（见下）；当 $0<\zeta<1$ 时为一对共轭复极点，时间响应为衰减震荡。
+\end{definition}
+
+该环节对应的微分方程为
+\begin{equation}
+    T^{2}\ddot{x}_{\mathrm{o}}(t)+2\zeta T\dot{x}_{\mathrm{o}}(t)+x_{\mathrm{o}}(t)=K\,x_{\mathrm{i}}(t),
+    \label{eq:二阶震荡时域}
+\end{equation}
+在零初始条件下取拉氏变换，得 $(T^{2}s^{2}+2\zeta Ts+1)X_{\mathrm{o}}(s)=KX_{\mathrm{i}}(s)$，与式~\eqref{eq:二阶震荡传递函数} 一致。
+
+\begin{definition}[阻尼比与响应类型]
+    极点性质由阻尼比 $\zeta$ 决定：
+    \begin{itemize}
+        \item $\zeta>1$：两互异负实极点，称为过阻尼，响应无震荡；
+        \item $\zeta=1$：两相等负实极点，称为临界阻尼；
+        \item $0<\zeta<1$：一对共轭复极点，称为欠阻尼，响应为衰减震荡，这是最常见的振荡情形；
+        \item $\zeta=0$：一对纯虚极点 $\pm\mathrm{j}\omega_{\mathrm{n}}$，称为无阻尼，响应为等幅震荡。
+    \end{itemize}
+\end{definition}
+
+\begin{longexample}[质量-弹簧-阻尼器构成的二阶震荡环节]
+\label{exam:二阶质量弹簧阻尼}
+考虑质量为 $m$ 的物体，通过刚度为 $k$ 的弹簧和阻尼系数为 $c$ 的粘性阻尼器与固定基座相连，物体在光滑水平面上运动。以外力 $F_{\mathrm{i}}(t)$ 为输入，物体的位移 $x_{\mathrm{o}}(t)$ 为输出。
+
+由牛顿第二定律，作用在物体上的外力、弹性恢复力与阻尼力之和等于其惯性力，即
+\[
+m\,\ddot{x}_{\mathrm{o}}(t)=F_{\mathrm{i}}(t)-k\,x_{\mathrm{o}}(t)-c\,\dot{x}_{\mathrm{o}}(t),
+\]
+整理得运动方程
+\[
+m\,\ddot{x}_{\mathrm{o}}(t)+c\,\dot{x}_{\mathrm{o}}(t)+k\,x_{\mathrm{o}}(t)=F_{\mathrm{i}}(t).
+\]
+取拉氏变换并整理得
+\[
+G(s)=\frac{X_{\mathrm{o}}(s)}{F_{\mathrm{i}}(s)}=\frac{1}{ms^{2}+cs+k}
+=\frac{1/k}{(m/k)s^{2}+(c/k)s+1}.
+\]
+与式~\eqref{eq:二阶震荡传递函数} 比较可知
+\[
+T=\sqrt{\frac{m}{k}},\qquad
+\zeta=\frac{c}{2\sqrt{mk}},\qquad
+\omega_{\mathrm{n}}=\sqrt{\frac{k}{m}}.
+\]
+当阻尼较小，即 $c<2\sqrt{mk}$（$\zeta<1$）时，系统的单位阶跃响应将出现衰减震荡。
+\end{longexample}
+
+\begin{remark}
+    二阶震荡环节是控制系统中极为重要的环节，很多机械、电气系统都可简化为二阶系统。当 $\zeta$ 较小时系统响应快但超调大、震荡次数多；$\zeta$ 较大时响应平稳但缓慢。工程上常取 $\zeta=0.4\sim0.8$，在快速性与平稳性之间折中。
+\end{remark}
+
+\subsubsection{延迟环节}
+
+\begin{definition}[延迟环节]
+    延迟环节（又称滞后环节或纯滞后环节）的传递函数为
+    \begin{equation}
+        G(s)=\mathrm{e}^{-\tau s},
+        \label{eq:延迟环节传递函数}
+    \end{equation}
+    其中 $\tau>0$ 称为延迟时间。其传递函数的特征是：不是 $s$ 的有理分式（为超越函数），幅频特性恒为 $1$，对信号幅值无影响，相频特性 $\varphi(\omega)=-\omega\tau$ 随频率成正比滞后。
+\end{definition}
+
+对应的时域关系为输出量比输入量滞后一个固定时间 $\tau$，即
+\begin{equation}
+    x_{\mathrm{o}}(t)=x_{\mathrm{i}}(t-\tau)\cdot 1(t-\tau),
+    \label{eq:延迟环节时域}
+\end{equation}
+由拉氏变换的时移定理 $\mathcal{L}\{x_{\mathrm{i}}(t-\tau)\cdot 1(t-\tau)\}=\mathrm{e}^{-\tau s}X_{\mathrm{i}}(s)$，在零初始条件下取拉氏变换即得式~\eqref{eq:延迟环节传递函数}。
+
+\begin{property}[延迟环节的幅频与相频特性]
+    令 $s=\mathrm{j}\omega$，得
+    \[
+    G(\mathrm{j}\omega)=\mathrm{e}^{-\mathrm{j}\omega\tau},
+    \]
+    其幅频特性恒为 $1$，即 $|G(\mathrm{j}\omega)|=1$；相频特性为 $\varphi(\omega)=-\omega\tau$，相位滞后与频率成正比。因此延迟环节对信号的幅值没有影响，只产生逐渐增大的相位滞后。
+\end{property}
+
+\begin{remark}
+    纯延迟环节的传递函数为超越函数 $\mathrm{e}^{-\tau s}$，不是 $s$ 的有理分式，不能用常规的有理传递函数方法直接分析。工程上常用一阶有理近似（如 Pad\'e 近似）
+    \[
+    \mathrm{e}^{-\tau s}\approx\frac{1-\tau s/2}{1+\tau s/2},
+    \]
+    将延迟环节近似为有理环节后再作分析。
+\end{remark}
+
+\begin{keybox}[典型环节传递函数汇总]
+    \centering
+    \begin{tabular}{c c c}
+        \hline
+        典型环节 & 微分方程 & 传递函数 $G(s)$ \\
+        \hline
+        比例环节 & $x_{\mathrm{o}}=Kx_{\mathrm{i}}$ & $K$ \\
+        一阶惯性环节 & $T\dot{x}_{\mathrm{o}}+x_{\mathrm{o}}=Kx_{\mathrm{i}}$ & $\dfrac{K}{Ts+1}$ \\
+        理想微分环节 & $x_{\mathrm{o}}=T_{\mathrm{d}}\dot{x}_{\mathrm{i}}$ & $T_{\mathrm{d}}s$ \\
+        积分环节 & $x_{\mathrm{o}}=\dfrac{1}{T_{\mathrm{i}}}\displaystyle\int x_{\mathrm{i}}\,\mathrm{d}t$ & $\dfrac{1}{T_{\mathrm{i}}s}$ \\
+        二阶震荡环节 & $T^{2}\ddot{x}_{\mathrm{o}}+2\zeta T\dot{x}_{\mathrm{o}}+x_{\mathrm{o}}=Kx_{\mathrm{i}}$ & $\dfrac{K}{T^{2}s^{2}+2\zeta Ts+1}$ \\
+        延迟环节 & $x_{\mathrm{o}}=x_{\mathrm{i}}(t-\tau)$ & $\mathrm{e}^{-\tau s}$ \\
+        \hline
+    \end{tabular}
+\end{keybox}
+\section{系统函数方块图及其简化}
+\label{sec:系统函数方块图及其简化}
+
+在分析复杂控制系统时，若直接从原始微分方程求解，往往十分繁琐且不易看出各环节之间的关系。如果把系统中每个环节的传递函数用一个方框表示，再按信号的流向用带箭头的信号线将它们连接起来，就得到系统的\textbf{方块图}（又称结构图）。方块图既能直观地反映系统中各环节的相互关系和信号的流动方向，又可通过等效简化方便地求出整个系统的传递函数，是控制工程中广泛使用的图形化建模工具。
+
+\subsection{方块图的组成}
+
+方块图由以下四种基本图形要素构成：
+\begin{enumerate}
+    \item \textbf{信号线}：带箭头的直线，表示信号的传递方向，线上可标注信号的时间函数或象函数；
+    \item \textbf{函数方块}：表示对信号进行数学运算（一般为乘以某传递函数）的环节，方框内写入该环节的传递函数 $G(s)$；
+    \item \textbf{相加点}（比较点、综合点）：用圆圈表示，它将两个或两个以上的信号在同一处进行代数相加，指向圆圈的箭头按其正负参与求和，实际绘制时常在箭头旁标注 $+$、$-$；
+    \item \textbf{分支点}（引出点）：表示信号的引出，由同一点引出的多条信号线携带的是同一信号，彼此之间不存在负载效应。
+\end{enumerate}
+
+绘制系统方块图的一般步骤为：先写出系统的运动微分方程；再对各式在零初始条件下取拉氏变换，整理成“输出象函数 $=$ 传递函数 $\times$ 输入象函数”的形式；最后按因果顺序用函数方块和信号线将它们连接起来，并在需要相加或引出之处画出相加点和分支点。
+
+\subsection{方块图的基本连接与等效}
+
+\subsubsection{串联连接}
+
+如图所示，环节 $G_{1}(s)$ 的输出作为 $G_{2}(s)$ 的输入，信号依次传递。
+
+\begin{center}
+\input{figures/fig_series_before.tikz}
+$\Longrightarrow$
+\input{figures/fig_series_after.tikz}
+\end{center}
+
+由
+\[
+X_{1}(s)=G_{1}(s)X_{\mathrm{i}}(s),\qquad
+X_{\mathrm{o}}(s)=G_{2}(s)X_{1}(s),
+\]
+消去中间信号 $X_{1}(s)$ 得
+\[
+X_{\mathrm{o}}(s)=G_{1}(s)G_{2}(s)X_{\mathrm{i}}(s),
+\]
+故等效传递函数为
+\begin{equation}
+    G(s)=G_{1}(s)G_{2}(s).
+    \label{eq:串联等效}
+\end{equation}
+即若干环节串联时，等效传递函数等于各串联环节传递函数之积。
+
+\subsubsection{并联连接}
+
+如图所示，同一输入信号同时作用于各环节，各环节的输出在相加点处代数相加。
+
+\begin{center}
+\input{figures/fig_parallel_before.tikz}
+$\Longrightarrow$
+\input{figures/fig_parallel_after.tikz}
+\end{center}
+
+各环节输出为 $G_{1}(s)X_{\mathrm{i}}(s)$ 与 $G_{2}(s)X_{\mathrm{i}}(s)$，相加得
+\[
+X_{\mathrm{o}}(s)=\bigl[G_{1}(s)+G_{2}(s)\bigr]X_{\mathrm{i}}(s),
+\]
+故等效传递函数为
+\begin{equation}
+    G(s)=G_{1}(s)+G_{2}(s).
+    \label{eq:并联等效}
+\end{equation}
+即若干环节并联时，等效传递函数等于各环节传递函数之代数和。
+
+\subsubsection{反馈连接}
+
+如图所示，$G(s)$ 为前向通道传递函数，$H(s)$ 为反馈通道传递函数，输入信号 $X_{\mathrm{i}}(s)$ 与反馈信号 $B(s)$ 在相加点相减后得到偏差信号 $E(s)$。
+
+\begin{center}
+\input{figures/fig_feedback_before.tikz}
+$\Longrightarrow$
+\input{figures/fig_feedback_after.tikz}
+\end{center}
+
+由方块图可写出
+\[
+E(s)=X_{\mathrm{i}}(s)-B(s),\qquad B(s)=H(s)X_{\mathrm{o}}(s),\qquad X_{\mathrm{o}}(s)=G(s)E(s).
+\]
+将后两式代入第一式并消去 $E(s)$、$B(s)$，得
+\[
+X_{\mathrm{o}}(s)=G(s)\bigl[X_{\mathrm{i}}(s)-H(s)X_{\mathrm{o}}(s)\bigr],
+\]
+即
+\[
+\bigl[1+G(s)H(s)\bigr]X_{\mathrm{o}}(s)=G(s)X_{\mathrm{i}}(s).
+\]
+于是闭环传递函数为
+\begin{equation}
+    \Phi(s)=\frac{X_{\mathrm{o}}(s)}{X_{\mathrm{i}}(s)}
+    =\frac{G(s)}{1+G(s)H(s)}.
+    \label{eq:闭环传递函数}
+\end{equation}
+相应地，偏差信号对输入的传递函数（误差传递函数）为
+\begin{equation}
+    \frac{E(s)}{X_{\mathrm{i}}(s)}=\frac{1}{1+G(s)H(s)}.
+\end{equation}
+式~\eqref{eq:闭环传递函数} 的分母 $1+G(s)H(s)=0$ 称为系统的\textbf{特征方程}，它决定了闭环系统的稳定性。
+
+\begin{keybox}[反馈连接的口诀]
+    \centering
+    \begin{tabular}{ll}
+        \hline
+        闭环传递函数 & $\Phi(s)=\dfrac{G(s)}{1+G(s)H(s)}$ \\[6pt]
+        误差传递函数 & $\dfrac{E(s)}{X_{\mathrm{i}}(s)}=\dfrac{1}{1+G(s)H(s)}$ \\[6pt]
+        特征方程 & $1+G(s)H(s)=0$ \\
+        \hline
+    \end{tabular}
+\end{keybox}
+
+\subsection{方块图的等效变换法则}
+
+当分支点或相加点与函数方块交叉时，方块图不能直接按串、并联或反馈化简，此时需按等效原则移动分支点或相加点。常用的变换法则如下：
+
+\begin{keybox}[常用等效变换法则]
+    \begin{itemize}
+        \item \textbf{相加点互换}：相邻的两个相加点可以互换位置，总输出不变；
+        \item \textbf{分支点互换}：相邻的两个分支点可以互换位置，各引出信号不变；
+        \item \textbf{相加点与分支点}：一般不能随意互换，需按下面的规则移动；
+        \item \textbf{分支点后移}（由方框输入端移到输出端）：引出支路中串入 $G(s)$；
+        \item \textbf{分支点前移}（由方框输出端移到输入端）：引出支路中串入 $1/G(s)$；
+        \item \textbf{相加点后移}（由方框输入端移到输出端）：移到输出端的那条支路串入 $G(s)$；
+        \item \textbf{相加点前移}（由方框输出端移到输入端）：移到输入端的那条支路串入 $1/G(s)$。
+    \end{itemize}
+\end{keybox}
+
+化简方块图的一般步骤为：
+\begin{enumerate}
+    \item 明确系统的输入量与输出量；
+    \item 通过移动分支点、相加点，消除方块之间的交叉，使结构尽可能化为串联、并联或反馈三种基本形式的组合；
+    \item 由内向外依次对基本结构作等效变换，逐步合并方框；
+    \item 最终化为一个方框，其传递函数即为所求的总传递函数。
+\end{enumerate}
+
+\begin{remark}
+    变换时必须保证变换前后引出点所引出的信号以及相加点处的信号关系完全不变，否则将得到错误的传递函数。消除交叉时，应优先移动那些被移动支路所串入的环节最简单的分支点或相加点。
+\end{remark}
+
+\subsection{方块图化简举例}
+
+\begin{longexample}[质量-弹簧-阻尼器系统的方块图化简]
+\label{exam:方块图化简机械}
+仍以质量-弹簧-阻尼器系统为例。设质量 $m$、阻尼系数 $c$、弹簧刚度 $k$，外力 $F_{\mathrm{i}}(t)$ 为输入，物体位移 $x_{\mathrm{o}}(t)$ 为输出。其运动方程为
+\[
+m\ddot{x}_{\mathrm{o}}(t)+c\dot{x}_{\mathrm{o}}(t)+kx_{\mathrm{o}}(t)=F_{\mathrm{i}}(t).
+\]
+将最高阶导数表示为
+\[
+\ddot{x}_{\mathrm{o}}(t)=\frac{1}{m}\bigl[F_{\mathrm{i}}(t)-c\dot{x}_{\mathrm{o}}(t)-kx_{\mathrm{o}}(t)\bigr],
+\]
+即加速度由合力经 $\dfrac{1}{m}$ 得到，再经两次积分分别得到速度 $v$ 与位移 $x_{\mathrm{o}}$；速度经阻尼系数 $c$、位移经弹簧刚度 $k$ 分别反馈到相加点。据此可画出方块图：
+
+\begin{center}
+\input{figures/fig_msd_blocks.tikz}
+\end{center}
+
+先化简由 $\frac{1}{m}$、第一个 $\frac{1}{s}$ 与 $c$ 构成的阻尼内环，再化简由前向通道与 $k$ 构成的弹性外环，简化过程为：
+
+\begin{center}
+\input{figures/fig_msd_step1.tikz}
+$\Longrightarrow$
+\input{figures/fig_msd_step2.tikz}
+\end{center}
+
+\begin{solution}
+设零初始条件，对各方框写象函数关系：
+\[
+V(s)=\frac{1}{ms}\bigl[F_{\mathrm{i}}(s)-cV(s)-kX_{\mathrm{o}}(s)\bigr],\qquad
+X_{\mathrm{o}}(s)=\frac{1}{s}V(s).
+\]
+
+\textbf{第一步：化简阻尼内环。} 以 $F_{\mathrm{i}}(s)-kX_{\mathrm{o}}(s)$ 为输入、$V(s)$ 为输出，围绕 $\frac{1}{m}$ 与第一个积分器 $\frac{1}{s}$ 构成的反馈回路，其前向通道为 $\dfrac{1}{ms}$、反馈通道为 $c$，由式~\eqref{eq:闭环传递函数} 得等效传递函数
+\[
+\frac{V(s)}{F_{\mathrm{i}}(s)-kX_{\mathrm{o}}(s)}
+=\frac{\dfrac{1}{ms}}{1+c\cdot\dfrac{1}{ms}}
+=\frac{1}{ms+c}.
+\]
+
+\textbf{第二步：化简弹性外环。} 此时系统化为以 $F_{\mathrm{i}}(s)$ 为输入、$X_{\mathrm{o}}(s)$ 为输出，前向通道为 $\dfrac{1}{s}\cdot\dfrac{1}{ms+c}$、反馈通道为 $k$ 的单回路，再次应用式~\eqref{eq:闭环传递函数}：
+\[
+\Phi(s)=\frac{X_{\mathrm{o}}(s)}{F_{\mathrm{i}}(s)}
+=\frac{\dfrac{1}{s}\cdot\dfrac{1}{ms+c}}
+{1+k\cdot\dfrac{1}{s}\cdot\dfrac{1}{ms+c}}
+=\frac{1}{ms^{2}+cs+k}.
+\]
+结果与直接由运动方程求得的传递函数完全一致。若进一步化为标准形式，有
+\[
+\Phi(s)=\frac{1/k}{\dfrac{m}{k}s^{2}+\dfrac{c}{k}s+1},
+\qquad
+\omega_{\mathrm{n}}=\sqrt{\frac{k}{m}},\quad
+\zeta=\frac{c}{2\sqrt{mk}}.
+\]
+\end{solution}
+\end{longexample}

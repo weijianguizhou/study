@@ -1,0 +1,17 @@
+% 单摆模型示意图
+\begin{tikzpicture}[>=Stealth,scale=1]
+  \draw[thick] (-1.5,0) -- (1.5,0);
+  \foreach \x in {-1.35,-1.05,-0.75,-0.45,-0.15,0.15,0.45,0.75,1.05,1.35}
+     \draw[thick] (\x,0) -- (\x-0.22,0.28);
+  \coordinate (O) at (0,0);
+  \fill (O) circle (1.8pt);
+  \node[above right=-1pt] at (O) {$O$};
+  \coordinate (V) at (0,-2.5);
+  \draw[dashed,gray] (O) -- (V);
+  \coordinate (M) at (300:2.4);
+  \draw[thick] (O) -- (M);
+  \fill (M) circle (4pt);
+  \node[right=2pt] at (M) {$m$};
+  \draw pic[draw,->,angle radius=0.95cm,angle eccentricity=1.35,"$\theta_{\mathrm{o}}(t)$" {font=\small}] {angle = V--O--M};
+  \draw[->,thick] (275:1.35) arc (275:335:1.35) node[right=1pt,pos=0.6] {$T_{\mathrm{i}}(t)$};
+\end{tikzpicture}

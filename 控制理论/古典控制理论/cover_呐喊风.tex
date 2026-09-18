@@ -1,0 +1,181 @@
+% ============================================================
+%  课程笔记封面模板 —— 「呐喊」风格
+%  取材：蒙克《呐喊》(The Scream, 1893)：血红色漩涡天空、对角木桥、
+%        扭曲的骷髅状人物、深蓝黑的峡湾水面。
+%  与 cover_Impression风.tex 同构（眉题 / 主标题 / 菱形饰线 /
+%  副标题 / 底部作者日期），直接 \input{} 复用：
+%      \input{cover_呐喊风}
+%
+%  配色：sk* 前缀（蒙克取色）。本文件用 \providecolor 兜底，
+%        单独复制到任何笔记本也能编译；想整体换调改这里即可。
+%
+%  注意：整幅画面绘于 \begin{scope}[shift={(current page.south west)}] 内，
+%        所有坐标以「页面左下角为原点、单位 cm」书写；脱离该 scope
+%        直接写 (x,y)，图形会落到页面外而不可见。
+%
+%  可用字段（在主文件导言区用 \newcommand 预定义即可覆盖缺省值）：
+%      \notename     主标题（必填，主模板已定义）
+%      \noteauthor   作者（必填，主模板已定义）
+%      \notecourseen 眉题英文（缺省 Course Notes）
+%      \notesubtitle 副标题（缺省「学习笔记」）
+%      \noteextra    底部附加信息（缺省不显示）
+% ============================================================
+
+% ---- 蒙克《呐喊》取色（血红天空 + 深蓝黑峡湾） ----
+\providecolor{skSkyTop}{RGB}{168,52,42}     % 天空：血红（上）
+\providecolor{skSkyBot}{RGB}{240,188,84}    % 天空：金黄（下）
+\providecolor{skStripe1}{RGB}{248,216,124}  % 漩涡条纹：亮黄
+\providecolor{skStripe2}{RGB}{190,70,48}    % 漩涡条纹：暗红
+\providecolor{skFjord}{RGB}{26,42,58}       % 峡湾：深蓝黑
+\providecolor{skFjordLight}{RGB}{74,98,118} % 峡湾：冷光面
+\providecolor{skBridge}{RGB}{88,58,38}      % 木桥：深褐
+\providecolor{skFigure}{RGB}{58,44,40}      % 人物：深褐
+\providecolor{skFace}{RGB}{230,208,178}     % 面部/衬底：苍白
+\providecolor{skInk}{RGB}{36,22,18}         % 墨褐（标题/眼/嘴）
+
+% ---- 缺省字段（主文件已定义的同名命令不会被覆盖） ----
+\providecommand{\notecourseen}{Course Notes}
+\providecommand{\notesubtitle}{学\ 习\ 笔\ 记}
+\providecommand{\noteextra}{}
+
+\begin{titlepage}
+	\begin{tikzpicture}[remember picture, overlay]
+		\begin{scope}[shift={(current page.south west)}]
+
+		% ============================================================
+		%  1. 血红天空（上：血红 → 下：金黄）
+		% ============================================================
+		\shade[top color=skSkyTop, bottom color=skSkyBot] (0,8.6) rectangle (21,29.7);
+
+		% ============================================================
+		%  2. 漩涡条纹（斜向波浪带，自右上向左下奔涌）
+		% ============================================================
+		\foreach \i/\c/\o/\s in {0/skStripe1/0.50/0.0,   1/skStripe2/0.34/1.35,
+		                         2/skStripe1/0.42/2.70,  3/skStripe2/0.30/4.05,
+		                         4/skStripe1/0.38/5.40,  5/skStripe2/0.26/6.75}{
+			\fill[\c, opacity=\o]
+				plot[domain=0:21, samples=70, smooth]
+					(\x, {24.2 - 0.62*\x + \s + 0.62*sin(deg(0.85*\x + 2.2*\i))})
+				-- plot[domain=21:0, samples=70, smooth]
+					(\x, {24.2 - 0.62*\x + \s - 1.10 + 0.62*sin(deg(0.85*\x + 2.2*\i))})
+				-- cycle;
+		}
+
+		% ============================================================
+		%  3. 峡湾（深蓝黑水面 + 冷光反射 + 远岸）
+		% ============================================================
+		\fill[skFjord] (0,0) rectangle (21,9.0);
+		\fill[skFjordLight, opacity=0.32]
+			plot[domain=0:21, samples=60, smooth] (\x, {7.4 + 0.35*sin(deg(1.5*\x))})
+			-- (21,4.4) -- (0,4.4) -- cycle;
+		\foreach \x/\w/\o in {2.2/2.6/0.28, 6.4/3.4/0.20, 12.0/2.8/0.24, 16.6/3.2/0.18}{
+			\draw[white, opacity=\o, line width=1.4pt, line cap=round] (\x,6.2) -- ++(\w,0);
+		}
+		\fill[skFjordLight, opacity=0.55]
+			plot[domain=0:21, samples=50, smooth] (\x, {8.7 + 0.42*sin(deg(0.8*\x + 40))})
+			-- (21,0) -- (0,0) -- cycle;
+
+		% ============================================================
+		%  4. 对角木桥（桥面 + 上栏杆 + 立柱）
+		% ============================================================
+		\draw[skBridge, line width=5.5pt, line cap=round] (0,5.4) -- (15.6,13.2);
+		\draw[skBridge, line width=2.6pt] (0,7.5) -- (15.6,15.3);
+		\foreach \t in {0.06,0.20,0.34,0.48,0.62,0.76,0.90}{
+			\draw[skBridge, line width=1.8pt]
+				({15.6*\t},{5.4+7.8*\t}) -- ({15.6*\t},{7.5+7.8*\t});
+		}
+
+		% ============================================================
+		%  5. 桥上远处的两个背影
+		% ============================================================
+		\fill[skInk, opacity=0.85] (12.6,12.6) ellipse[x radius=0.32, y radius=0.95];
+		\fill[skInk, opacity=0.85] (12.6,13.8) circle[radius=0.30];
+		\fill[skInk, opacity=0.70] (13.9,13.25) ellipse[x radius=0.28, y radius=0.88];
+		\fill[skInk, opacity=0.70] (13.9,14.45) circle[radius=0.26];
+
+		% ============================================================
+		%  6. 呐喊者（扭曲的长袍人形 + 骷髅状头 + 捂脸的双手）
+		% ============================================================
+		\fill[skFigure]
+			(7.6,9.2) .. controls (7.1,11.2) and (8.6,11.8) .. (8.4,13.2)
+			.. controls (8.25,14.1) and (10.95,14.1) .. (10.8,13.0)
+			.. controls (10.6,11.7) and (11.8,11.1) .. (11.2,11.0) -- cycle;
+		\fill[skFace] (9.6,15.2) ellipse[x radius=1.08, y radius=1.52];
+		\fill[skInk] (9.15,15.62) ellipse[x radius=0.24, y radius=0.40];
+		\fill[skInk] (10.05,15.62) ellipse[x radius=0.24, y radius=0.40];
+		\fill[skInk] (9.6,14.55) ellipse[x radius=0.30, y radius=0.56];
+		\draw[skFace, line width=6pt, line cap=round]
+			(8.35,13.6) .. controls (8.1,14.6) and (8.3,15.4) .. (9.0,15.3);
+		\draw[skFace, line width=6pt, line cap=round]
+			(10.85,13.6) .. controls (11.1,14.6) and (10.9,15.4) .. (10.2,15.3);
+
+		% ============================================================
+		%  7. 标题衬底（一块苍白的碎裂画布，保证文字可读）
+		% ============================================================
+		\fill[skFace, opacity=0.45]
+			(2.6,16.9) -- (17.4,17.3) -- (18.0,22.6) -- (16.4,23.6) -- (2.2,22.9) -- cycle;
+
+		% ============================================================
+		%  8. 细边框（深褐）
+		% ============================================================
+		\draw[skInk, line width=0.7pt, opacity=0.55]
+			([shift={(0.85,0.85)}]current page.south west) rectangle
+			([shift={(-0.85,-0.85)}]current page.north east);
+
+		% ============================================================
+		%  9. 顶部眉题（课程英文小字 + 自适应短线）
+		% ============================================================
+		\node[anchor=north, text=skInk, align=center]
+			(skEyebrow) at ([yshift=-3.4cm]current page.north) {%
+			{\sffamily\fontsize{12}{15}\selectfont \uppercase{\notecourseen}}
+		};
+		\draw[skInk, line width=1.0pt] ($(skEyebrow.west)+(-0.25cm,0)$) -- ++(-1.1cm,0);
+		\draw[skInk, line width=1.0pt] ($(skEyebrow.east)+(0.25cm,0)$) -- ++(1.1cm,0);
+
+		% ============================================================
+		% 10. 主标题（居中，使用 \notename）
+		% ============================================================
+		\node[anchor=center, align=center, text=skInk]
+			at ([yshift=-8.3cm]current page.north) {%
+			{\fontsize{38}{48}\sffamily\bfseries \notename}
+		};
+
+		% ============================================================
+		% 11. 菱形 + 双细线
+		% ============================================================
+		\coordinate (C) at ([yshift=-11.6cm]current page.north);
+		\draw[skInk, line width=1.1pt] (C) ++(-2.2cm,0) -- ++(1.55cm,0);
+		\draw[skInk, line width=1.1pt] (C) ++(0.65cm,0) -- ++(1.55cm,0);
+		\node[fill=skInk, minimum size=0.24cm, inner sep=0pt, rotate=45] at (C) {};
+
+		% ============================================================
+		% 12. 副标题（使用 \notesubtitle）
+		% ============================================================
+		\node[anchor=north, text=skInk, align=center]
+			at ([yshift=-12.4cm]current page.north) {
+			{\fontsize{15}{20}\sffamily \notesubtitle}
+		};
+
+		% ============================================================
+		% 13. 底部作者、日期、附加信息
+		% ============================================================
+		\coordinate (B) at ([yshift=2.7cm]current page.south);
+		\draw[skFace, line width=0.8pt, opacity=0.9] (B) ++(-1.1cm,0.95cm) -- ++(2.2cm,0);
+		\node[anchor=south, text=skFace, align=center] at (B) {
+			\begin{tabular}{c}
+				{\fontsize{19}{24}\sffamily\bfseries \noteauthor} \\[0.35cm]
+				{\large \sffamily \today}
+				\ifstrempty{\noteextra}{}{\\[0.3cm]{\normalsize\sffamily \noteextra}}
+			\end{tabular}
+		};
+
+		% ============================================================
+		% 14. 右下角落款（画作信息）
+		% ============================================================
+		\node[anchor=south east, text=skFace, opacity=0.75, font=\footnotesize\itshape]
+			at ([shift={(-1.35,1.25)}]current page.south east)
+			{Edvard Munch, The Scream, 1893};
+
+		\end{scope}
+	\end{tikzpicture}
+\end{titlepage}

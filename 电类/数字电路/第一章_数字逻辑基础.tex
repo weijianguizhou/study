@@ -1,0 +1,1087 @@
+% !TeX root = 数字电路.tex
+% ============================================================
+%  第一章 数字逻辑基础
+%  来源：课件《第8章数字逻辑基础》与笔记 08-数字逻辑基础.md
+% ============================================================
+\chapter{数字逻辑基础}
+\label{chap:数字逻辑基础}
+
+\section{数字信号与数字电路}
+\label{sec:数字信号与数字电路}
+
+\begin{definition}[模拟信号与数字信号]
+\label{def:模拟与数字信号}
+\begin{itemize}
+	\item \textbf{模拟信号}：在时间上和幅值上均连续的信号；
+	\item \textbf{数字信号}：在时间上和幅值上均离散的信号。
+\end{itemize}
+处理数字信号的电路称为\textbf{数字电路}。
+\end{definition}
+
+\textbf{数字电路的特点}：
+\begin{enumerate}
+	\item 工作信号是二进制表示的二值信号（具有“0”和“1”两种取值）；
+	\item 电路中器件工作于“开”和“关”两种状态，电路的输出和输入为逻辑关系；
+	\item 电路既能进行“代数”运算，也能进行“逻辑”运算；
+	\item 电路工作可靠，精度高，抗干扰性好。
+\end{enumerate}
+
+\section{数制与BCD码}
+\label{sec:数制与BCD码}
+
+所谓“数制”，指进位计数制，即用进位的方法来计数。数制包括计数符号（数码）和进位规则两个方面。常用数制有十进制、十二进制、十六进制、六十进制等。
+
+\subsection{常用数制}
+\label{sec:常用数制}
+
+\subsubsection{十进制}
+
+计数符号：$0,1,2,\cdots,9$；进位规则：逢十进一。例如
+\begin{equation}
+	1987.45=1\times10^{3}+9\times10^{2}+8\times10^{1}+7\times10^{0}+4\times10^{-1}+5\times10^{-2}
+	\label{eq:数制:十进制展开}
+\end{equation}
+十进制数按权展开式（$a_i$ 为系数，$10^{i}$ 为权）：
+\begin{equation}
+	(N)_{10}=\sum_{i=-m}^{n-1}a_i\times10^{i}
+	\label{eq:数制:十进制按权展开}
+\end{equation}
+
+\subsubsection{二进制}
+
+计数符号：$0,1$；进位规则：逢二进一。
+\begin{equation}
+	(N)_{2}=\sum_{i=-m}^{n-1}a_i\times2^{i}
+	\label{eq:数制:二进制按权展开}
+\end{equation}
+数字电路中采用二进制的原因：
+\begin{enumerate}
+	\item 数字装置简单可靠；
+	\item 二进制数运算规则简单；
+	\item 数字电路既可以进行算术运算，也可以进行逻辑运算。
+\end{enumerate}
+
+\subsubsection{十六进制和八进制}
+
+十六进制：计数符号为 $0\sim9$、$A\sim F$，逢十六进一：
+\begin{equation}
+	(N)_{16}=\sum_{i=-m}^{n-1}a_i\times16^{i}
+	\label{eq:数制:十六进制按权展开}
+\end{equation}
+例如
+\begin{equation}
+	(6D.4B)_{16}=6\times16^{1}+D\times16^{0}+4\times16^{-1}+B\times16^{-2}
+	=6\times16+13\times16^{0}+4\times16^{-1}+11\times16^{-2}
+	\label{eq:数制:十六进制展开例}
+\end{equation}
+八进制：计数符号为 $0\sim7$，逢八进一：
+\begin{equation}
+	(N)_{8}=\sum_{i=-m}^{n-1}a_i\times8^{i}
+	\label{eq:数制:八进制按权展开}
+\end{equation}
+例如 $(63.45)_{8}=6\times8^{1}+3\times8^{0}+4\times8^{-1}+5\times8^{-2}$。
+
+\subsubsection{二进制与十进制之间的转换}
+
+\textbf{（1）二进制数转换为十进制数（按权展开法）}
+\begin{equation}
+	(1011.101)_{2}=1\times2^{3}+1\times2^{1}+1\times2^{0}+1\times2^{-1}+1\times2^{-3}
+	=8+2+1+0.5+0.125=(11.625)_{10}
+	\label{eq:数制:二十转换}
+\end{equation}
+\textbf{（2）十进制数转换为二进制数（提取 2 的幂法）}
+\begin{equation}
+	\begin{aligned}
+		(45.5)_{10} &= 32+8+4+1+0.5 \\
+		&= 1\times2^{5}+0\times2^{4}+1\times2^{3}+1\times2^{2}+0\times2^{1}+1\times2^{0}+1\times2^{-1}\\
+		&=(101101.1)_{2}
+	\end{aligned}
+	\label{eq:数制:十二转换}
+\end{equation}
+数制转换还可以采用基数连乘、连除等方法。
+
+\subsubsection{二进制算术运算}
+
+算术运算规则与十进制相同，区别是逢二进一。其特点为：加、减、乘、除全部可以用\textbf{移位}和\textbf{相加}两种操作实现，电路结构简化，所以数字电路中普遍采用二进制算术运算。
+
+\textbf{加法}：逐位相加并处理进位。
+\begin{equation}
+	S_0=A_0+B_0\ (\text{进位} C_1),\quad
+	S_1=A_1+B_1+C_1\ (\text{进位} C_2),\quad \cdots
+	\label{eq:数制:逐位加法}
+\end{equation}
+设 $A=A_3A_2A_1A_0$、$B=B_3B_2B_1B_0$，两数之和为 $S=S_3S_2S_1S_0$，则
+\begin{equation}
+	A+B=C_4S_3S_2S_1S_0
+	\label{eq:数制:加法结果}
+\end{equation}
+\textbf{减法}：将减数 $B$ 变成补码后与被减数 $A$ 相加，若有进位则舍去，其和即为两数之差：
+\begin{equation}
+	Y=1000-0100=1000+(1011+1)=1000+1100=10100
+	\xrightarrow{\text{舍去进位}}0100
+	\label{eq:数制:减法用补码}
+\end{equation}
+\textbf{乘法}：乘以 2 相当于左移一位；方法有（1）按十进制的乘法过程；（2）采用移位相加的方法。
+
+\textbf{除法}：除以 2 相当于右移一位。例如 $00001011\div010=00000010_B$（商），余数为 $11_B$。
+
+\subsubsection{带符号数的表示：原码、反码和补码}
+
+计算机中的符号数可表示为：\textbf{符号位 + 真值}（合称机器数）。符号位用“0”表示正，用“1”表示负。
+
+\begin{definition}[原码]
+\label{def:原码}
+真值 $X$ 的原码记为 $[X]_{\text{原}}$。在原码表示法中，不论数的正负，数值部分均保持原真值不变；最高位为符号位。
+
+\textbf{优点}：真值和其原码表示之间的对应关系简单，容易理解；
+
+\textbf{缺点}：计算机中用原码进行加减运算比较困难，\textcolor{red}{0 的表示不唯一}。8 位数 0 的原码：$+0=0\,0000000$，$-0=1\,0000000$。
+\end{definition}
+
+\begin{definition}[反码]
+\label{def:反码}
+真值 $X$ 的反码记为 $[X]_{\text{反}}$。对一个机器数 $X$：若 $X>0$，则 $[X]_{\text{反}}=[X]_{\text{原}}$；若 $X<0$，则 $[X]_{\text{反}}$ 为对应原码的符号位不变、数值部分按位求反。即：\textcolor{red}{0 的反码也不唯一}：
+
+\begin{equation}
+	[+0]_{\text{反}}=00000000,\qquad [-0]_{\text{反}}=11111111
+	\label{eq:补码:反码0}
+\end{equation}
+例如 $X=-52=-0110100$：
+\begin{equation}
+	[X]_{\text{原}}=1\,0110100,\qquad [X]_{\text{反}}=1\,1001011
+	\label{eq:补码:反码例}
+\end{equation}
+\end{definition}
+
+\begin{definition}[补码]
+\label{def:补码}
+真值 $X$ 的补码记为 $[X]_{\text{补}}$。若 $X>0$，则 $[X]_{\text{补}}=[X]_{\text{反}}=[X]_{\text{原}}$；若 $X<0$，则
+\begin{equation}
+	[X]_{\text{补}}=[X]_{\text{反}}+1
+	\label{eq:补码:定义}
+\end{equation}
+例如 $X=-52=-0110100$：
+\begin{equation}
+	[X]_{\text{原}}=10110100,\qquad [X]_{\text{反}}=11001011,\qquad
+	[X]_{\text{补}}=[X]_{\text{反}}+1=11001100
+	\label{eq:补码:补码例}
+\end{equation}
+\end{definition}
+
+\textbf{0 的补码表示唯一}：
+\begin{equation}
+	[+0]_{\text{补}}=[+0]_{\text{原}}=00000000,\qquad
+	[-0]_{\text{补}}=[-0]_{\text{反}}+1=11111111+1=1\,00000000
+	\label{eq:补码:0的补码}
+\end{equation}
+对 8 位字长，进位被舍掉，故 $[-0]_{\text{补}}=00000000$。
+
+\textbf{特殊数 $10000000$}：
+\begin{itemize}
+	\item 该数在原码中定义为：$-0$；
+	\item 在反码中定义为：$-127$；
+	\item 在补码中定义为：$-128$；
+	\item 对无符号数，$(10000000)_B=128$。
+\end{itemize}
+
+\textbf{带符号数的表示范围（8 位二进制数）}：
+
+\begin{table}[H]
+\centering
+\caption{8 位带符号数的表示范围}
+\label{tab:补码:表示范围}
+\begin{tabular}{lc}
+	\toprule
+	编码 & 表示范围 \\
+	\midrule
+	原码 & $-127\sim+127$ \\
+	反码 & $-127\sim+127$ \\
+	补码 & $-128\sim+127$ \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{补码运算}：通过引进补码，可将减法运算转换为加法运算，即
+\begin{equation}
+	[X+Y]_{\text{补}}=[X]_{\text{补}}+[Y]_{\text{补}},\qquad
+	[X-Y]_{\text{补}}=[X]_{\text{补}}+[-Y]_{\text{补}}
+	\label{eq:补码:加减运算}
+\end{equation}
+
+\begin{longexample}[补码加法]
+\label{ex:补码加法}
+$X=-0110100$，$Y=+1110100$，求 $X+Y$。
+
+\begin{solution}
+	无论正负，真值不变：
+	\begin{equation}
+		\begin{aligned}
+			[X]_{\text{原}}&=10110100,\qquad [X]_{\text{补}}=[X]_{\text{反}}+1=11001100,\\
+			[Y]_{\text{补}}&=[Y]_{\text{原}}=01110100
+		\end{aligned}
+		\label{eq:补码:例补码}
+	\end{equation}
+	所以
+	\begin{equation}
+		[X+Y]_{\text{补}}=[X]_{\text{补}}+[Y]_{\text{补}}
+		=11001100+01110100=01000000
+		\label{eq:补码:例结果}
+	\end{equation}
+	即 $X+Y=(+1000000)_2=+64$。
+\end{solution}
+\end{longexample}
+
+\textbf{两个补码表示的二进制数相加时的符号位讨论}——用二进制补码运算求出 $13\pm10$、$-13\pm10$（6 位字长）：
+	\begin{equation}
+		\begin{aligned}
+			13+10 &= 0\,01101+0\,01010=0\,10111=23,\\
+			13-10 &= 0\,01101+1\,10110=0\,00011=3,\\
+			-13+10 &= 1\,10011+0\,01010=1\,11101=-3,\\
+			-13-10 &= 1\,10011+1\,10110=1\,01001=-23
+		\end{aligned}
+		\label{eq:补码:符号位讨论例}
+	\end{equation}
+
+\textbf{无符号数的表示范围}：
+\begin{equation}
+	0\le X\le 2^{n}-1
+	\label{eq:补码:无符号范围}
+\end{equation}
+若运算结果超出这个范围，则产生\textbf{溢出}。无符号数的溢出判断准则：运算时，当\textcolor{red}{最高位向更高位有进位（或借位）}时则产生溢出。
+
+\subsection{几种简单的编码}
+\label{sec:几种简单的编码}
+
+\subsubsection{二-十进制码（BCD 码）}
+
+用四位二进制代码来表示一位十进制数码，这样的代码称为二-十进制码（BCD 码，Binary Coded Decimal codes）。四位二进制有 16 种不同组合，可以在这 16 种代码中任选 10 种表示十进制数的 10 个不同符号，选择方法很多，选择方法不同就得到不同的编码形式。
+
+\begin{table}[H]
+\centering
+\caption{常用 BCD 码}
+\label{tab:编码:常用BCD码}
+\begin{tabular}{ccccc}
+	\toprule
+	十进制数 & 8421 码 & 5421 码 & 2421 码 & 余 3 码 \\
+	\midrule
+	0 & 0000 & 0000 & 0000 & 0011 \\
+	1 & 0001 & 0001 & 0001 & 0100 \\
+	2 & 0010 & 0010 & 0010 & 0101 \\
+	3 & 0011 & 0011 & 0011 & 0110 \\
+	4 & 0100 & 0100 & 0100 & 0111 \\
+	5 & 0101 & 1000 & 1011 & 1000 \\
+	6 & 0110 & 1001 & 1100 & 1001 \\
+	7 & 0111 & 1010 & 1101 & 1010 \\
+	8 & 1000 & 1011 & 1110 & 1011 \\
+	9 & 1001 & 1100 & 1111 & 1100 \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{definition}[有权 BCD 码]
+\label{def:有权BCD码}
+每位数码都有确定的位权的码，例如 8421 码、5421 码、2421 码。
+
+例：5421 码 $1011$ 代表 $5+0+2+1=8$；2421 码 $1100$ 代表 $2+4+0+0=6$。
+
+\textcolor{red}{5421 码和 2421 码不唯一}，例如 2421 码 $0110$ 也可表示 6。
+\end{definition}
+
+由表~\ref{tab:编码:常用BCD码}可见：
+\begin{enumerate}
+	\item 8421 码和代表 $0\sim9$ 的二进制数一一对应；
+	\item 5421 码的前 5 个码和 8421 码相同，后 5 个码在前 5 个码的基础上加 1000 构成；
+	\item 2421 码的前 5 个码和 8421 码相同，后 5 个码以中心对称取反，这样的码称为\textbf{自反代码}。例如 $4\to0100$、$5\to1011$；$0\to0000$、$9\to1111$。
+\end{enumerate}
+
+\begin{definition}[无权 BCD 码（余 3 码）]
+\label{def:余三码}
+每位数码无确定的位权，例如余 3 码。余 3 码的编码规律为：在 8421BCD 码上加 0011。例如 6 的余 3 码为 $0110+0011=1001$。
+\end{definition}
+
+\subsubsection{格雷码（Gray 码）}
+
+格雷码为无权码，特点为：\textcolor{red}{相邻两个代码之间仅有一位不同}，其余各位均相同，具有这种特点的代码称为\textbf{循环码}，格雷码是循环码。
+
+格雷码和四位二进制码之间的关系：设四位二进制码为 $B_3B_2B_1B_0$，格雷码为 $R_3R_2R_1R_0$，则
+\begin{equation}
+	R_3=B_3,\qquad R_2=B_3\oplus B_2,\qquad R_1=B_2\oplus B_1,\qquad R_0=B_1\oplus B_0
+	\label{eq:编码:格雷码}
+\end{equation}
+其中 $\oplus$ 为异或运算符，其运算规则为：若两运算数相同，结果为“0”；两运算数不同，结果为“1”。
+
+\subsubsection{计算机字符集}
+
+各种文字和符号的总称，包括各国家文字、标点符号、图形符号、数字等。常见字符集名称：
+\begin{itemize}
+	\item ASCII 字符集；
+	\item GB2312 字符集；
+	\item BIG5 字符集；
+	\item GB18030 字符集；
+	\item Unicode 字符集。
+\end{itemize}
+
+\section{逻辑代数基础}
+\label{sec:逻辑代数基础}
+
+数字电路的基础为逻辑代数，由英国数学家 George Boole 在 1847 年提出，逻辑代数也称布尔代数。
+
+\subsection{基本逻辑运算}
+\label{sec:基本逻辑运算}
+
+在逻辑代数中，变量常用字母 $A,B,C,\cdots$ 表示，变量的取值只能是“0”或“1”。逻辑代数中只有三种基本逻辑运算，即“与”、“或”、“非”。
+
+\begin{definition}[与逻辑运算]
+\label{def:与逻辑}
+只有决定一事件的全部条件都具备时，这件事才成立；如果有一个或一个以上条件不具备，则这件事就不成立。这样的因果关系称为“与”逻辑关系。其函数式为 $F=A\cdot B=AB$。
+
+与门逻辑功能概括：\textcolor{red}{有“0”出“0”，全“1”出“1”}。
+\end{definition}
+
+\begin{definition}[或逻辑运算]
+\label{def:或逻辑}
+在决定一事件的各种条件中，只要有一个或一个以上条件具备时，这件事就成立；只有所有的条件都不具备时，这件事才不成立。这样的因果关系称为“或”逻辑关系。其函数式为 $F=A+B$。
+
+或门逻辑功能概括：\textcolor{red}{有“1”出“1”，全“0”出“0”}。
+\end{definition}
+
+\begin{definition}[非逻辑运算]
+\label{def:非逻辑}
+假定事件 $F$ 成立与否同条件 $A$ 的具备与否有关，若 $A$ 具备则 $F$ 不成立；若 $A$ 不具备则 $F$ 成立。这种因果关系称为“非”逻辑关系，其函数式为 $F=\overline{A}$。
+\end{definition}
+
+\begin{table}[H]
+\centering
+\caption{与、或、非逻辑真值表}
+\label{tab:真值表:基本运算}
+\begin{tabular}{cc|ccc}
+	\toprule
+	\multicolumn{2}{c|}{输入} & \multicolumn{3}{c}{输出} \\
+	\cmidrule(lr){1-2}\cmidrule(lr){3-5}
+	$A$ & $B$ & $F=AB$（与） & $F=A+B$（或） & $F=\overline{A}$（非） \\
+	\midrule
+	0 & 0 & 0 & 0 & 1 \\
+	0 & 1 & 0 & 1 & 1 \\
+	1 & 0 & 0 & 1 & 0 \\
+	1 & 1 & 1 & 1 & 0 \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{note}
+	与门和或门均可以有多个输入端。
+\end{note}
+
+\subsection{复合逻辑运算}
+\label{sec:复合逻辑运算}
+
+\begin{definition}[与非逻辑与或非逻辑]
+\label{def:与非或非}
+\begin{itemize}
+	\item \textbf{与非逻辑}（将与逻辑和非逻辑组合而成）：$F=\overline{A\cdot B}=\overline{AB}$；
+	\item \textbf{或非逻辑}（将或逻辑和非逻辑组合而成）：$F=\overline{A+B}$；
+	\item \textbf{与或非逻辑}（由与、或、非三种逻辑组合而成）：$F=\overline{AB+CD}$。
+\end{itemize}
+\end{definition}
+
+\begin{definition}[异或逻辑与同或逻辑]
+\label{def:异或同或}
+\begin{itemize}
+	\item \textbf{异或逻辑}：$F=A\overline{B}+\overline{A}B=A\oplus B$，功能为\textcolor{red}{相同得“0”，相异得“1”}；
+	\item \textbf{同或逻辑}：$F=AB+\overline{A}\,\overline{B}=A\odot B$，功能为\textcolor{red}{相同得“1”，相异得“0”}。
+\end{itemize}
+对照异或和同或逻辑真值表可以发现：同或和异或互为反函数，即
+\begin{equation}
+	\overline{A\oplus B}=A\odot B
+	\label{eq:复合:异或同或互为反}
+\end{equation}
+\end{definition}
+
+\begin{table}[H]
+\centering
+\caption{复合逻辑运算真值表}
+\label{tab:真值表:复合运算}
+\begin{tabular}{cc|cccc}
+	\toprule
+	$A$ & $B$ & 与非 $F=\overline{AB}$ & 或非 $F=\overline{A+B}$ & 异或 $F=A\oplus B$ & 同或 $F=A\odot B$ \\
+	\midrule
+	0 & 0 & 1 & 1 & 0 & 1 \\
+	0 & 1 & 1 & 0 & 1 & 0 \\
+	1 & 0 & 1 & 0 & 1 & 0 \\
+	1 & 1 & 0 & 0 & 0 & 1 \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{note}
+	教材表 8.13 给出了门电路的几种表示方法，本课程中均采用“国标”。国外流行的电路符号常见于外文书籍中，特别是在我国引进的一些计算机辅助分析和设计软件中常使用这些符号。
+\end{note}
+
+\subsection{逻辑电平及正、负逻辑}
+\label{sec:逻辑电平}
+
+门电路的输入、输出为二值信号，用“0”和“1”表示，这里的“0”、“1”一般用两个不同电平值来表示：
+
+\begin{definition}[正逻辑与负逻辑]
+\label{def:正负逻辑}
+\begin{itemize}
+	\item \textbf{正逻辑}：用高电平 $V_H$ 表示逻辑“1”，用低电平 $V_L$ 表示逻辑“0”；
+	\item \textbf{负逻辑}：用高电平 $V_H$ 表示逻辑“0”，用低电平 $V_L$ 表示逻辑“1”。
+\end{itemize}
+在本课程中，如不作特殊说明，一般都采用正逻辑表示。
+\end{definition}
+
+$V_H$ 和 $V_L$ 的具体值由所使用的集成电路品种以及所加电源电压而定，有两种常用的集成电路：
+\begin{enumerate}
+	\item \textbf{TTL 电路}：电源电压为 5 伏，$V_H$ 约为 3 V 左右，$V_L$ 约为 0.2 伏左右；
+	\item \textbf{CMOS 电路}：电源电压范围较宽，CMOS 4000 系列的电源电压 $V_{DD}$ 为 $3\sim18$ 伏；CMOS 电路的 $V_H$ 约为 $0.9V_{DD}$，而 $V_L$ 约为 0 伏左右。
+\end{enumerate}
+
+对一个特定的逻辑门，采用不同的逻辑表示时，其门的名称也就不同。
+
+\begin{table}[H]
+\centering
+\caption{正负逻辑转换举例}
+\label{tab:逻辑电平:正负逻辑转换}
+\begin{tabular}{ccc|ccc|ccc}
+	\toprule
+	\multicolumn{3}{c|}{电平真值表} & \multicolumn{3}{c|}{正逻辑（与非门）} & \multicolumn{3}{c}{负逻辑（或非门）} \\
+	\cmidrule(lr){1-3}\cmidrule(lr){4-6}\cmidrule(lr){7-9}
+	$V_{i1}$ & $V_{i2}$ & $V_o$ & $A$ & $B$ & $Y$ & $A$ & $B$ & $Y$ \\
+	\midrule
+	$V_L$ & $V_L$ & $V_H$ & 0 & 0 & 1 & 1 & 1 & 0 \\
+	$V_L$ & $V_H$ & $V_H$ & 0 & 1 & 1 & 1 & 0 & 0 \\
+	$V_H$ & $V_L$ & $V_H$ & 1 & 0 & 1 & 0 & 1 & 0 \\
+	$V_H$ & $V_H$ & $V_L$ & 1 & 1 & 0 & 0 & 0 & 1 \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{基本定律和规则}
+\label{sec:基本定律和规则}
+
+\subsubsection{逻辑函数的相等}
+
+设有两个逻辑函数 $F_1=f_1(A_1,A_2,\cdots,A_n)$、$F_2=f_2(A_1,A_2,\cdots,A_n)$，如果对于 $A_1,A_2,\cdots,A_n$ 的任何一组取值（共 $2^n$ 组），$F_1$ 和 $F_2$ 均相等，则称 $F_1$ 和 $F_2$ 相等。因此，如两个函数的真值表相等，则这两个函数一定相等。
+
+\subsubsection{基本定律}
+
+\begin{table}[H]
+\centering
+\caption{逻辑代数的基本定律}
+\label{tab:定律:基本定律}
+\begin{tabular}{llll}
+	\toprule
+	定律 & 表达式 & 定律 & 表达式 \\
+	\midrule
+	0-1 律 & $A\cdot0=0$ & 0-1 律 & $A+1=1$ \\
+	自等律 & $A\cdot1=A$ & 自等律 & $A+0=A$ \\
+	重迭律 & $A\cdot A=A$ & 重迭律 & $A+A=A$ \\
+	互补律 & $A\cdot\overline{A}=0$ & 互补律 & $A+\overline{A}=1$ \\
+	交换律 & $A\cdot B=B\cdot A$ & 交换律 & $A+B=B+A$ \\
+	结合律 & $A(BC)=(AB)C$ & 结合律 & $A+(B+C)=(A+B)+C$ \\
+	分配律 & $A(B+C)=AB+AC$ & 分配律 & $A+BC=(A+B)(A+C)$ \\
+	反演律 & $\overline{A+B}=\overline{A}\cdot\overline{B}$ & 反演律 & $\overline{AB}=\overline{A}+\overline{B}$ \\
+	还原律 & $\overline{\overline{A}}=A$ &  &  \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+反演律也称\textbf{德·摩根定理}，是一个非常有用的定理。
+
+\subsubsection{逻辑代数的三条规则}
+
+\begin{definition}[代入规则]
+\label{def:代入规则}
+任何一个含有变量 $x$ 的等式，如果将所有出现 $x$ 的位置都用一个逻辑函数式 $F$ 代替，则等式仍然成立。
+
+例：已知等式 $\overline{A+B}=\overline{A}\cdot\overline{B}$，有函数式 $F=B+C$，则用 $F$ 代替等式中的 $B$，有
+\begin{equation}
+	\overline{A+(B+C)}=\overline{A}\cdot\overline{B+C}=\overline{A}\,\overline{B}\,\overline{C},
+	\qquad\text{即}\qquad \overline{A+B+C}=\overline{A}\,\overline{B}\,\overline{C}
+	\label{eq:规则:代入规则}
+\end{equation}
+由此可以证明反演定律对 $n$ 个变量仍然成立。
+\end{definition}
+
+\begin{definition}[反演规则]
+\label{def:反演规则}
+设 $F$ 为任意逻辑表达式，若将 $F$ 中所有运算符、常量及变量作如下变换：$\cdot\to+$、$+\to\cdot$、$0\to1$、$1\to0$、原变量$\to$反变量、反变量$\to$原变量，则所得新的逻辑式即为 $F$ 的反函数，记为 $\overline{F}$。
+\end{definition}
+
+\begin{longexample}[求反函数]
+\label{ex:反演规则}
+\begin{solution}
+	已知 $F=A\overline{B}+\overline{A}B$，根据上述规则可得
+	\begin{equation}
+		\overline{F}=(\overline{A}+B)(A+\overline{B})
+		\label{eq:规则:反演例1}
+	\end{equation}
+	已知 $F=A+B+C+D+E$，则
+	\begin{equation}
+		\overline{F}=\overline{A}\,\overline{B}\,\overline{C}\,\overline{D}\,\overline{E}
+		\label{eq:规则:反演例2}
+	\end{equation}
+	由 $F$ 求反函数注意：① 保持原式运算的优先次序；② 原式中的不属于单变量上的非号不变。
+\end{solution}
+\end{longexample}
+
+\begin{definition}[对偶规则]
+\label{def:对偶规则}
+设 $F$ 为任意逻辑表达式，若将 $F$ 中所有运算符和常量作如下变换：$\cdot\to+$、$+\to\cdot$、$0\to1$、$1\to0$，则所得新的逻辑表达式即为 $F$ 的对偶式，记为 $F'$。
+
+例：$F=AB+CD$，则 $F'=(A+B)(C+D)$；$F=A+B+C+D+E$，则 $F'=ABCDE$。
+
+对偶是相互的，$F$ 和 $F'$ 互为对偶式。求对偶式注意：① 保持原式运算的优先次序；② 原式中的长短“非”号不变；③ 单变量的对偶式为自己。
+
+\textbf{对偶规则}：若有两个逻辑表达式 $F$ 和 $G$ 相等，则各自的对偶式 $F'$ 和 $G'$ 也相等。使用对偶规则可使得某些表达式的证明更加方便，例如：
+\begin{equation}
+	A(B+C)=AB+AC
+	\quad\xrightarrow{\text{对偶关系}}\quad
+	A+BC=(A+B)(A+C)
+	\label{eq:规则:对偶关系}
+\end{equation}
+\end{definition}
+
+\subsubsection{常用公式}
+
+\begin{table}[H]
+\centering
+\caption{常用公式及其证明}
+\label{tab:公式:常用公式}
+\begin{tabular}{p{1.8cm}p{4.4cm}p{7.6cm}}
+	\toprule
+	名称 & 公式 & 证明（对偶关系） \\
+	\midrule
+	消去律 & $AB+A\overline{B}=A$ & $AB+A\overline{B}=A(B+\overline{B})=A\cdot1=A$；对偶：$(A+B)(A+\overline{B})=A$ \\
+	吸收律 1 & $A+AB=A$ & $A+AB=A(1+B)=A\cdot1=A$；对偶：$A(A+B)=A$ \\
+	吸收律 2 & $A+\overline{A}B=A+B$ & $A+\overline{A}B=(A+\overline{A})(A+B)=1\cdot(A+B)=A+B$；对偶：$A(\overline{A}+B)=AB$ \\
+	包含律 & $AB+\overline{A}C+BC=AB+\overline{A}C$ & 证明见式~\eqref{eq:公式:包含律证明} \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+包含律证明：
+\begin{equation}
+	\begin{aligned}
+		AB+\overline{A}C+BC
+		&=AB+\overline{A}C+(A+\overline{A})BC
+		=AB+\overline{A}C+ABC+\overline{A}BC\\
+		&=AB(1+C)+\overline{A}C(1+B)=AB+\overline{A}C
+	\end{aligned}
+	\label{eq:公式:包含律证明}
+\end{equation}
+其对偶关系为 $(A+B)(\overline{A}+C)(B+C)=(A+B)(\overline{A}+C)$。
+
+\begin{definition}[异或和同或运算的性质]
+\label{def:异或同或性质}
+对偶数个变量而言，有
+\begin{equation}
+	A_1\oplus A_2\oplus\cdots\oplus A_n=A_1\odot A_2\odot\cdots\odot A_n
+	\label{eq:公式:偶数个变量}
+\end{equation}
+对奇数个变量而言，有
+\begin{equation}
+	A_1\oplus A_2\oplus\cdots\oplus A_n=\overline{A_1\odot A_2\odot\cdots\odot A_n}
+	\label{eq:公式:奇数个变量}
+\end{equation}
+\end{definition}
+
+异或和同或的其他性质：
+
+\begin{table}[H]
+\centering
+\caption{异或与同或运算的性质}
+\label{tab:公式:异或同或性质}
+\begin{tabular}{ll|ll}
+	\toprule
+	异或 & & 同或 & \\
+	\midrule
+	$A\oplus0=A$ & & $A\odot1=A$ & \\
+	$A\oplus1=\overline{A}$ & & $A\odot0=\overline{A}$ & \\
+	$A\oplus A=0$ & & $A\odot A=1$ & \\
+	$A\oplus\overline{A}=1$ & & $A\odot\overline{A}=0$ & \\
+	$A\oplus(B\oplus C)=(A\oplus B)\oplus C$ & & $A\odot(B\odot C)=(A\odot B)\odot C$ & \\
+	$A(B\oplus C)=AB\oplus AC$ & & $A+(B\odot C)=(A+B)\odot(A+C)$ & \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+利用异或门可实现数字信号的\textbf{极性控制}；同或功能由异或门实现。
+
+\subsection{逻辑函数的标准形式}
+\label{sec:逻辑函数的标准形式}
+
+\subsubsection{函数的“与-或”式和“或-与”式}
+
+\begin{definition}[与-或式与或-与式]
+\label{def:与或式}
+\begin{itemize}
+	\item \textbf{“与-或”式}：一个函数表达式中包含若干个“与”项，这些“与”项的“或”表示这个函数。例：$F(A,B,C,D)=\overline{A}+BC+ABCD$；
+	\item \textbf{“或-与”式}：一个函数表达式中包含若干个“或”项，这些“或”项的“与”表示这个函数。例：$F(A,B,C,D)=(A+\overline{C}+D)(B+D)(A+\overline{B}+D)$。
+\end{itemize}
+\end{definition}
+
+\subsubsection{最小项与最大项}
+
+\begin{definition}[最小项]
+\label{def:最小项}
+最小项是“与”项：
+\begin{enumerate}
+	\item $n$ 个变量构成的每个最小项，一定是包含 $n$ 个因子的乘积项；
+	\item 在各个最小项中，每个变量必须以原变量或反变量形式作为因子出现一次，而且仅出现一次。
+\end{enumerate}
+\end{definition}
+
+例：有 $A$、$B$ 两变量的最小项共有四项（$2^2$）：$A\overline{B}$、$\overline{A}B$、$\overline{A}\,\overline{B}$、$AB$；有 $A$、$B$、$C$ 三变量的最小项共有八项（$2^3$）。
+
+\textbf{最小项编号}：任一最小项用 $m_i$ 表示，$m$ 表示最小项，下标 $i$ 为使该最小项为 1 的变量取值所对应的等效十进制数。
+
+\begin{example}[最小项编号]
+\label{ex:最小项编号}
+有最小项 $A\overline{B}C$，要使该最小项为 1，$A$、$B$、$C$ 的取值应为 1、0、1，二进制数 101 所等效的十进制数为 5，所以
+\begin{equation}
+	A\overline{B}C=m_5
+	\label{eq:标准:最小项编号例}
+\end{equation}
+\end{example}
+
+\textbf{最小项的性质}：
+\begin{enumerate}
+	\item 变量任取一组值，仅有一个最小项为 1，其他最小项为零；
+	\item $n$ 变量的全体最小项之和为 1；
+	\item 不同的最小项相与，结果为 0；
+	\item 两最小项相邻，相邻最小项相“或”，可以合并成一项，并可以消去一个变量因子。
+\end{enumerate}
+
+\textbf{相邻的概念}：两最小项如仅有一个变量因子不同，其他变量均相同，则称这两个最小项相邻。相邻最小项相“或”的情况：
+\begin{equation}
+	\overline{A}BC+ABC=BC
+	\label{eq:标准:相邻最小项合并}
+\end{equation}
+任一 $n$ 变量的最小项，必定和其他 $n$ 个不同最小项相邻。
+
+\begin{definition}[最大项]
+\label{def:最大项}
+最大项是“或”项：
+\begin{enumerate}
+	\item $n$ 个变量构成的每个最大项，一定是包含 $n$ 个因子的“或”项；
+	\item 在各个最大项中，每个变量必须以原变量或反变量形式作为因子出现一次，而且仅出现一次。
+\end{enumerate}
+\end{definition}
+
+例：有 $A$、$B$ 两变量的最大项共有四项：$A+B$、$A+\overline{B}$、$\overline{A}+B$、$\overline{A}\,\overline{B}$；有 $A$、$B$、$C$ 三变量的最大项共有八项。
+
+\textbf{最大项编号}：任一最大项用 $M_i$ 表示，$M$ 表示最大项，下标 $i$ 为使该最大项为 0 的变量取值所对应的等效十进制数。
+
+\begin{example}[最大项编号]
+\label{ex:最大项编号}
+有最大项 $\overline{A}+B+C$，要使该最大项为 0，$A$、$B$、$C$ 的取值应为 1、0、0，二进制数 100 所等效的十进制数为 4，所以
+\begin{equation}
+	\overline{A}+B+C=M_4
+	\label{eq:标准:最大项编号例}
+\end{equation}
+\end{example}
+
+\textbf{最大项的性质}：
+\begin{enumerate}
+	\item 变量任取一组值，仅有一个最大项为 0，其它最大项为 1；
+	\item $n$ 变量的全体最大项之积为 0；
+	\item 不同的最大项相或，结果为 1；
+	\item 两相邻的最大项相“与”，可以合并成一项，并可以消去一个变量因子。
+\end{enumerate}
+
+\textbf{相邻的概念}：两最大项如仅有一个变量因子不同，其他变量均相同，则称这两个最大项相邻。相邻最大项相“与”的情况：
+\begin{equation}
+	(A+B+\overline{C})(A+B+C)=A+B
+	\label{eq:标准:相邻最大项合并}
+\end{equation}
+任一 $n$ 变量的最大项，必定和其他 $n$ 个不同最大项相邻。
+
+\textbf{最小项和最大项的关系}：编号下标相同的最小项和最大项互为反函数，即
+\begin{equation}
+	M_i=\overline{m_i}
+	\label{eq:标准:最小项最大项关系}
+\end{equation}
+
+\subsubsection{逻辑函数的标准形式}
+
+\textbf{最小项之和形式}（“与或”式），例：
+\begin{equation}
+	F(A,B,C)=\overline{A}B\overline{C}+A\overline{B}\,\overline{C}+AB\overline{C}=\Sigma m(2,4,6)
+	\label{eq:标准:最小项之和例}
+\end{equation}
+任一逻辑函数都可以表达为最小项之和的形式，而且是唯一的。例：
+\begin{equation}
+	\begin{aligned}
+		F(A,B,C)&=AB+\overline{A}C=AB(C+\overline{C})+\overline{A}C(B+\overline{B})\\
+		&=ABC+AB\overline{C}+\overline{A}BC+\overline{A}\,\overline{B}C=\Sigma m(1,3,6,7)
+	\end{aligned}
+	\label{eq:标准:最小项之和例2}
+\end{equation}
+
+\textbf{最大项之积形式}（“或与”式），例：
+\begin{equation}
+	F(A,B,C)=(A+B+C)(A+\overline{B}+C)(\overline{A}+B+C)=\Pi M(0,2,4)
+	\label{eq:标准:最大项之积例}
+\end{equation}
+任一逻辑函数都可以表达为最大项之积的形式，而且是唯一的。例：
+\begin{equation}
+	\begin{aligned}
+		F(A,B,C)&=(\overline{A}+C)(B+\overline{C})=(\overline{A}+C+B\overline{B})(B+\overline{C}+A\overline{A})\\
+		&=(\overline{A}+B+C)(\overline{A}+\overline{B}+C)(A+B+\overline{C})(\overline{A}+B+\overline{C})=\Pi M(1,4,5,6)
+	\end{aligned}
+	\label{eq:标准:最大项之积例2}
+\end{equation}
+
+\textbf{最小项之和的形式和最大项之积的形式之间的关系}：若 $F=\Sigma m_i$，则
+\begin{equation}
+	\overline{F}=\sum_{j\neq i}m_j=\prod_{j\neq i}M_j
+	\label{eq:标准:两种形式关系}
+\end{equation}
+例：
+\begin{equation}
+	F(A,B,C)=\Sigma(1,3,4,6,7)=\Pi(0,2,5)
+	\label{eq:标准:两种形式关系例}
+\end{equation}
+
+\subsubsection{真值表与逻辑表达式}
+
+真值表与逻辑表达式都是表示逻辑函数的方法。
+
+\textbf{（1）由逻辑函数式列真值表}可采用三种方法：
+\begin{enumerate}
+	\item 将变量的所有取值的组合分别代入函数式，逐一算出函数值，填入真值表中；
+	\item 先将函数式表示为最小项之和的形式，再按最小项的性质填表；
+	\item 根据函数式的含义直接填表（较好，要熟练掌握）。
+\end{enumerate}
+
+\begin{example}[由逻辑函数式列真值表]
+\label{ex:列真值表}
+试列出逻辑函数式 $F(A,B,C)=AB+BC$ 的真值表。
+
+\begin{solution}
+	方法二：先化为最小项之和的形式
+	\begin{equation}
+		\begin{aligned}
+			F(A,B,C)&=AB+BC=AB(C+\overline{C})+BC(A+\overline{A})\\
+			&=ABC+AB\overline{C}+\overline{A}BC=\Sigma m(3,6,7)
+		\end{aligned}
+		\label{eq:真值表:最小项展开}
+	\end{equation}
+	再根据最小项的性质，在真值表中对应于 $ABC$ 取值为 011、110、111 处填“1”，其它位置填“0”，即得表~\ref{tab:真值表:例F1}。
+
+	方法三：根据函数式 $F=AB+BC$ 的含义直接填表：当 $A$ 和 $B$ 同时为“1”（即 $AB=1$）时 $F=1$；当 $B$ 和 $C$ 同时为“1”（即 $BC=1$）时 $F=1$；不满足上面两种情况时 $F=0$。
+\end{solution}
+\end{example}
+
+\begin{table}[H]
+\centering
+\caption{$F(A,B,C)=AB+BC$ 的真值表}
+\label{tab:真值表:例F1}
+\begin{tabular}{ccc|c}
+	\toprule
+	$A$ & $B$ & $C$ & $F$ \\
+	\midrule
+	0 & 0 & 0 & 0 \\
+	0 & 0 & 1 & 0 \\
+	0 & 1 & 0 & 0 \\
+	0 & 1 & 1 & 1 \\
+	1 & 0 & 0 & 0 \\
+	1 & 0 & 1 & 0 \\
+	1 & 1 & 0 & 1 \\
+	1 & 1 & 1 & 1 \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{example}[由复合函数列真值表]
+\label{ex:列真值表2}
+试列出 $F=(A\oplus B)(B\oplus C)$ 的真值表。
+
+\begin{solution}
+	令 $F_1=A\oplus B$，$F_2=B\oplus C$，$F=F_1F_2$，则真值表如表~\ref{tab:真值表:例F2}所示，同时给出了 $\overline{F}$ 的值。
+\end{solution}
+\end{example}
+
+\begin{table}[H]
+\centering
+\caption{$F=(A\oplus B)(B\oplus C)$ 的真值表}
+\label{tab:真值表:例F2}
+\begin{tabular}{ccc|cccc}
+	\toprule
+	$A$ & $B$ & $C$ & $F_1=A\oplus B$ & $F_2=B\oplus C$ & $F=F_1F_2$ & $\overline{F}$ \\
+	\midrule
+	0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+	0 & 0 & 1 & 0 & 1 & 0 & 1 \\
+	0 & 1 & 0 & 1 & 1 & 1 & 0 \\
+	0 & 1 & 1 & 1 & 0 & 0 & 1 \\
+	1 & 0 & 0 & 1 & 0 & 0 & 1 \\
+	1 & 0 & 1 & 1 & 1 & 1 & 0 \\
+	1 & 1 & 0 & 0 & 1 & 0 & 1 \\
+	1 & 1 & 1 & 0 & 0 & 0 & 1 \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{（2）由真值表写逻辑函数式}：根据最小项的性质，用观察法，可直接从真值表写出函数的最小项之和表达式。
+
+\begin{table}[H]
+\centering
+\caption{已知真值表}
+\label{tab:真值表:例F3}
+\begin{tabular}{ccc|c}
+	\toprule
+	$A$ & $B$ & $C$ & $F$ \\
+	\midrule
+	0 & 0 & 0 & 0 \\
+	0 & 0 & 1 & 0 \\
+	0 & 1 & 0 & 0 \\
+	0 & 1 & 1 & 1 \\
+	1 & 0 & 0 & 0 \\
+	1 & 0 & 1 & 1 \\
+	1 & 1 & 0 & 1 \\
+	1 & 1 & 1 & 1 \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{example}[由真值表写逻辑函数式]
+\label{ex:真值表写函数}
+由表~\ref{tab:真值表:例F3}所示的真值表求逻辑函数表达式。
+
+\begin{solution}
+	由真值表可见，当 $ABC$ 取 011、101、110、111 时 $F$ 为“1”，所以 $F$ 由 4 个最小项组成：
+	\begin{equation}
+		F(A,B,C)=\Sigma m(3,5,6,7)
+		=\overline{A}BC+A\overline{B}C+AB\overline{C}+ABC
+		\label{eq:真值表:观察法结果}
+	\end{equation}
+\end{solution}
+\end{example}
+
+\subsection{逻辑函数的化简}
+\label{sec:逻辑函数的化简}
+
+化简的意义：① 节省元器件，降低电路成本；② 提高电路可靠性；③ 减少连线，制作方便。
+
+\begin{definition}[逻辑函数的几种常用表达式]
+\label{def:常用表达式}
+以 $F(A,B,C)$ 为例：
+\begin{equation}
+	\begin{aligned}
+		F(A,B,C)&=AB+A\overline{C} &&\text{与或式}\\
+		&=(A+\overline{C})(A+B) &&\text{或与式（两次求对偶）}\\
+		&=\overline{\overline{AB}\cdot\overline{A\overline{C}}} &&\text{与非——与非式（两次求反）}\\
+		&=\overline{\overline{A+\overline{C}}+\overline{A+B}} &&\text{或非——或非式}\\
+		&=\overline{\overline{A}B+\overline{A}C} &&\text{与或非式}
+	\end{aligned}
+	\label{eq:化简:常用表达式}
+\end{equation}
+\end{definition}
+
+\textbf{最简与或表达式的标准}：
+\begin{enumerate}
+	\item 所得与或表达式中，乘积项（与项）数目最少；
+	\item 每个乘积项中所含的变量数最少。
+\end{enumerate}
+
+逻辑函数常用的化简方法有公式法、卡诺图法和列表法。本课程要求掌握\textbf{公式法}和\textbf{卡诺图法}。
+
+\subsubsection{公式化简法}
+
+针对某一逻辑式，反复运用逻辑代数公式消去多余的乘积项和每个乘积项中多余的因子，使函数式符合最简标准。化简中常用方法如表~\ref{tab:化简:公式法}所示。
+
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\caption{公式化简法常用方法}
+\label{tab:化简:公式法}
+\begin{tabular}{p{1.6cm}p{2.8cm}p{9.4cm}}
+	\toprule
+	方法 & 利用公式 & 例 \\
+	\midrule
+	并项法 & $AB+A\overline{B}=A$ & $F=\overline{A}\,\overline{B}C+\overline{A}BC+A\overline{B}C+ABC=(\overline{A}\,\overline{B}+\overline{A}B)C+(A\overline{B}+AB)C=\overline{A}C+AC=C$ \\
+	吸收法 & $A+AB=A$ & $F=A\overline{B}+A\overline{B}C=A\overline{B}$ \\
+	消项法 & $AB+\overline{A}C+BC=AB+\overline{A}C$ & $F=AB+\overline{A}C+BC=AB+\overline{A}C$ \\
+	消因子法 & $A+\overline{A}B=A+B$ & $F=A+\overline{A}BC=A+BC$ \\
+	配项法 & $A+\overline{A}=1$、$A\cdot1=A$ & $F=AB+\overline{A}C+BC=AB+\overline{A}C+(A+\overline{A})BC=AB+\overline{A}C+ABC+\overline{A}BC=AB(1+C)+\overline{A}C(1+B)=AB+\overline{A}C$ \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{note}
+	对比较复杂的函数式，要求熟练掌握上述方法，才能把函数化成最简。
+\end{note}
+
+\subsubsection{卡诺图化简法}
+
+该方法是将逻辑函数用一种称为“卡诺图”的图形来表示，然后在卡诺图上进行函数化简的方法。
+
+\textbf{（1）卡诺图的构成}：卡诺图是一种包含一些小方块的几何图形，图中每个小方块称为一个单元，每个单元对应一个最小项，两个相邻的最小项在卡诺图中也必须是相邻的。卡诺图中相邻的含义：
+\begin{enumerate}
+	\item \textbf{几何相邻性}，即几何位置上相邻，也就是左右紧挨着或者上下相接；
+	\item \textbf{对称相邻性}，即图形中对称位置的单元是相邻的。
+\end{enumerate}
+
+\begin{table}[H]
+\centering
+\caption{三变量卡诺图（行列标号按循环码排列）}
+\label{tab:卡诺图:三变量}
+\begin{tabular}{c|cccc}
+	\toprule
+	$A\backslash BC$ & 00 & 01 & 11 & 10 \\
+	\midrule
+	0 & $m_0$ & $m_1$ & $m_3$ & $m_2$ \\
+	1 & $m_4$ & $m_5$ & $m_7$ & $m_6$ \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{四变量卡诺图}
+\label{tab:卡诺图:四变量}
+\begin{tabular}{c|cccc}
+	\toprule
+	$AB\backslash CD$ & 00 & 01 & 11 & 10 \\
+	\midrule
+	00 & $m_0$ & $m_1$ & $m_3$ & $m_2$ \\
+	01 & $m_4$ & $m_5$ & $m_7$ & $m_6$ \\
+	11 & $m_{12}$ & $m_{13}$ & $m_{15}$ & $m_{14}$ \\
+	10 & $m_8$ & $m_9$ & $m_{11}$ & $m_{10}$ \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+二、四、五变量卡诺图与之类似，行列标号均按循环码（格雷码）排列，据此判断单元之间的相邻关系。
+
+\textbf{（2）逻辑函数的卡诺图表示法}：用卡诺图表示逻辑函数，只是把各组变量值所对应的逻辑函数 $F$ 的值，填在对应的小方格中（其实卡诺图是真值表的另一种画法）。
+
+\textbf{（3）在卡诺图上合并最小项的规则}：当卡诺图中有最小项相邻时（即有标 1 的方格相邻），可利用最小项相邻的性质对最小项合并：
+\begin{itemize}
+	\item 卡诺图上任何\textbf{两个}标 1 的方格相邻，可以合为 1 项，并可消去 1 个变量；
+	\item 任何\textbf{四个}标 1 方格相邻，可合并为一项，并可消去两个变量。四个标 1 方格相邻的特点：①同在一行或一列；②同在一田字格中；
+	\item 任何\textbf{八个}标 1 的方格相邻，可以并为一项，并可消去三个变量。
+\end{itemize}
+
+综上所述，在 $n$ 个变量的卡诺图中，只有 $2^i$ 个相邻的标 1 方格（必须排列成方形格或矩形格的形状）才能圈在一起，合并为一项，该项保留了原来各项中 $n-i$ 个相同的变量，消去 $i$ 个不同变量。
+
+\textbf{（4）用卡诺图化简逻辑函数（化为最简与或式）}
+
+最简标准：项数最少，意味着卡诺图中圈数最少；每项中的变量数最少，意味着卡诺图中的圈尽可能大。
+
+\begin{table}[H]
+\centering
+\caption{$F(A,B,C)=\Sigma m(3,4,5,6,7)$ 的卡诺图}
+\label{tab:卡诺图:例1}
+\begin{tabular}{c|cccc}
+	\toprule
+	$A\backslash BC$ & 00 & 01 & 11 & 10 \\
+	\midrule
+	0 & 0 & 0 & 1 & 0 \\
+	1 & 1 & 1 & 1 & 1 \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{example}[用卡诺图化简逻辑函数]
+\label{ex:卡诺图化简1}
+将 $F(A,B,C)=\Sigma m(3,4,5,6,7)$ 化为最简与或式，由表达式填卡诺图如表~\ref{tab:卡诺图:例1}所示。
+
+\begin{solution}
+	圈出第二行四个标 1 方格（对应变量 $A$）与第一行的 $m_3$、$m_7$（对应变量 $BC$），得最简与或式
+	\begin{equation}
+		F=A+BC
+		\label{eq:卡诺图:例1结果}
+	\end{equation}
+	若圈法不当（如分别圈 $AB$、$BC$、$A\overline{B}C$ 等），得 $F=AB+BC+A\overline{B}C$，为非最简式。
+\end{solution}
+\end{example}
+
+\begin{table}[H]
+\centering
+\caption{$F(A,B,C,D)=\Sigma m(0,1,3,7,8,10,13)$ 的卡诺图}
+\label{tab:卡诺图:例2}
+\begin{tabular}{c|cccc}
+	\toprule
+	$AB\backslash CD$ & 00 & 01 & 11 & 10 \\
+	\midrule
+	00 & 1 & 1 & 1 & 0 \\
+	01 & 0 & 0 & 1 & 0 \\
+	11 & 0 & 1 & 0 & 0 \\
+	10 & 1 & 0 & 0 & 1 \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{longexample}[用卡诺图化简逻辑函数（一般步骤）]
+\label{ex:卡诺图化简2}
+将 $F(A,B,C,D)=\Sigma m(0,1,3,7,8,10,13)$ 化为最简与或式，其卡诺图如表~\ref{tab:卡诺图:例2}所示。
+
+\begin{solution}
+	（1）由表达式填卡诺图；
+	（2）圈出孤立的标 1 方格（$m_{13}$）；
+	（3）找出只被一个最大的圈所覆盖的标 1 方格（$m_0,m_1$ 等），并圈出覆盖该标 1 方格的最大圈；
+	（4）将剩余的相邻标 1 方格，圈成尽可能少、而且尽可能大的圈；
+	（5）将各个对应的乘积项相加，写出最简与或式。
+
+	按上述圈法可得
+	\begin{equation}
+		F(A,B,C,D)=\overline{A}\,\overline{B}\,\overline{C}+\overline{A}CD+A\overline{B}\,\overline{D}+AB\overline{C}D
+		\label{eq:卡诺图:例2结果}
+	\end{equation}
+\end{solution}
+\end{longexample}
+
+\textbf{（5）化简中注意的问题}：
+\begin{enumerate}
+	\item 每一个标 1 的方格必须至少被圈一次；
+	\item 每个圈中包含的相邻小方格数，必须为 2 的整数次幂；
+	\item 为了得到尽可能大的圈，圈与圈之间可以重叠；
+	\item 若某个圈中的所有标 1 方格已经完全被其它圈所覆盖，则该圈为多余的。
+\end{enumerate}
+
+\textbf{（6）用卡诺图求反函数的最简与或式}：在卡诺图中合并标 0 方格，可得到反函数的最简与或式。常利用该方法求逻辑函数 $F$ 的最简与或非式，例如将 $\overline{F}$ 上的非号移到右边，就得到 $F$ 的最简与或非表达式。
+
+\textbf{（7）复杂逻辑函数的化简}：可将函数分解成多个部分，先将每个部分分别填入各自的卡诺图，然后通过卡诺图对应方格的运算，求出函数的卡诺图，再对卡诺图进行化简。
+
+\textbf{（8）不完全确定的逻辑函数及其化简}：在某些实际数字电路中，逻辑函数的输出只和一部分最小项有确定对应关系，而和余下的最小项无关，余下的最小项无论写入逻辑函数式还是不写入逻辑函数式，都不影响电路的逻辑功能，把这些最小项称为\textbf{无关项}，用英文字母 $d$（don't care）表示，对应的函数值记为“×”。包含无关项的逻辑函数称为\textbf{不完全确定的逻辑函数}。
+
+\begin{longexample}[奇偶判别电路（无关项的利用）]
+\label{ex:无关项}
+设计一个奇偶判别电路：电路输入为 8421BCD 码，当输入为偶数时输出为 0，当输入为奇数时输出为 1。
+
+\begin{solution}
+	由于 8421BCD 码中无 $1010\sim1111$ 这 6 个码，电路禁止输入这 6 个码，这 6 个码对应的最小项为无关项，故
+	\begin{equation}
+		F(A,B,C,D)=\Sigma m(1,3,5,7,9)+\Sigma d(10\sim15)
+		\label{eq:无关项:奇偶判别}
+	\end{equation}
+	若不利用无关项（即将卡诺图中的 × 均作 0 处理），则化简结果为
+	\begin{equation}
+		F(A,B,C,D)=\overline{A}D+\overline{B}\,\overline{C}D
+		\label{eq:无关项:不利用}
+	\end{equation}
+	若利用无关项（即将卡诺图中的 × 按化简的需要任意处理，将有些 × 当作 0，有些 × 当作 1），则化简结果为
+	\begin{equation}
+		F(A,B,C,D)=D,\qquad \Sigma d(10\sim15)=0
+		\label{eq:无关项:利用}
+	\end{equation}
+	可见利用无关项往往可以将函数化得更简单。
+\end{solution}
+\end{longexample}
+
+\subsubsection{Q-M 法（奎恩-麦克拉斯基法）}
+
+Q-M 法又称系统简化法，适用于任意多变量的函数，有较严格的算法，可借助于计算机解题。系统简化法分三个步骤进行：
+\begin{enumerate}
+	\item 求出函数的全部主要项；
+	\item 选出函数的必要项；
+	\item 选择主要项，使它与必要项一起包含给定函数的全部最小项，建立函数的最简与-或式。
+\end{enumerate}
+
+\begin{note}
+	在无特殊说明的情况下，为使逻辑函数化得更简单，均应按上述第二种方法（卡诺图化简）处理最小项。
+\end{note}

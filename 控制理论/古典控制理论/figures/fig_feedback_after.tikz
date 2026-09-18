@@ -1,0 +1,7 @@
+% 反馈连接：简化后
+\begin{tikzpicture}[>=Stealth,scale=0.9]
+\tikzset{b/.style={draw,thick,fill=white,minimum width=2.5cm,minimum height=0.85cm}}
+\node[b] (G) at (0,0) {$\dfrac{G(s)}{1+G(s)H(s)}$};
+\draw[->] (-1.8,0) -- (G.west) node[midway,above]{$X_{\mathrm{i}}$};
+\draw[->] (G.east) -- (1.8,0) node[midway,above]{$X_{\mathrm{o}}$};
+\end{tikzpicture}

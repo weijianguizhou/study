@@ -1,0 +1,13 @@
+% 并联连接：简化前
+\begin{tikzpicture}[>=Stealth,scale=0.9]
+\tikzset{b/.style={draw,thick,fill=white,minimum width=1.35cm,minimum height=0.7cm}}
+\node[b] (G1) at (1.5,1.0) {$G_{1}(s)$};
+\node[b] (G2) at (1.5,-1.0) {$G_{2}(s)$};
+\node[circle,draw,thick,inner sep=0.6pt] (sum) at (3.4,0) {$+$};
+\draw[->] (-1.4,0) -- (0,0) node[midway,above]{$X_{\mathrm{i}}$};
+\draw[->] (0,0) -- (0,1.0) -- (G1.west);
+\draw[->] (0,0) -- (0,-1.0) -- (G2.west);
+\draw[->] (G1.east) -- (3.4,1.0) -- (sum.north);
+\draw[->] (G2.east) -- (3.4,-1.0) -- (sum.south);
+\draw[->] (sum) -- (4.7,0) node[midway,above]{$X_{\mathrm{o}}$};
+\end{tikzpicture}

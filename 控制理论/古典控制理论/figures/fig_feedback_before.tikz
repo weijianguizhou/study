@@ -1,0 +1,15 @@
+% 反馈连接：简化前
+\begin{tikzpicture}[>=Stealth,scale=0.9]
+\tikzset{b/.style={draw,thick,fill=white,minimum width=1.3cm,minimum height=0.7cm}}
+\node[circle,draw,thick,inner sep=0.6pt] (sum) at (0,0) {$+$};
+\node[b] (G) at (2.2,0) {$G(s)$};
+\node[b] (H) at (2.2,-1.8) {$H(s)$};
+\draw[->] (-1.6,0) -- (sum) node[midway,above]{$X_{\mathrm{i}}$};
+\node at (-0.32,0.28) {$+$};
+\node at (-0.28,-0.32) {$-$};
+\draw[->] (sum) -- (G) node[midway,above]{$E$};
+\draw[->] (G) -- (4.6,0) node[midway,above]{$X_{\mathrm{o}}$};
+\draw[->] (3.7,0) -- (3.7,-1.8) -- (H.east);
+\draw[->] (H.west) -- (0,-1.8) -- (sum.south);
+\node at (2.2,-1.4) {$B$};
+\end{tikzpicture}

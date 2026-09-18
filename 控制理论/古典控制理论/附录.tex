@@ -1,0 +1,546 @@
+% ============================================================
+%  附录 A：拉普拉斯变换
+%  内容：定义 → 简单函数变换对 → 运算性质 → 留数法求反变换
+%  说明：「附录 A」前缀与章标题样式由主文件 \appendix 后的设置自动生成，
+%        本文件只写 section 及以下层级。
+% ============================================================
+
+拉普拉斯变换（简称拉氏变换）是本课程最核心的数学工具：它把描述线性定常系统的\textbf{时域微分方程}化为 $s$ 域的\textbf{代数方程}，把微分、积分运算化为乘法、除法运算，于是可以像解代数方程那样求系统的响应。本附录把散见于各章的结论集中起来，依次给出拉氏变换的定义、简单函数的变换对、常用的运算性质，以及用留数法求拉氏反变换的完整方法，便于随用随查。
+
+\section{拉氏变换的定义}
+\label{sec:拉氏变换的定义}
+
+\begin{definition}[单边拉氏变换]
+设函数 $f(t)$ 在 $t\ge 0$ 上有定义。若含参变量 $s$ 的积分 $\int_{0}^{\infty}f(t)\mathrm{e}^{-st}\,\mathrm{d}t$ 收敛，则称它为 $f(t)$ 的\textbf{拉氏变换}（也叫象函数），记作
+\begin{equation}
+F(s)=\mathcal{L}\left[f(t)\right]=\int_{0^{-}}^{\infty}f(t)\mathrm{e}^{-st}\,\mathrm{d}t
+\label{eq:拉氏变换定义}
+\end{equation}
+其中 $s=\sigma+\mathrm{j}\omega$ 是复变量，$\mathcal{L}[\;\cdot\;]$ 称为拉氏变换算子。$F(s)$ 称为 $f(t)$ 的\textbf{象函数}，$f(t)$ 称为 $F(s)$ 的\textbf{原函数}，两者构成一个\textbf{拉氏变换对}，常记作 $f(t)\leftrightarrow F(s)$。
+\end{definition}
+
+\begin{remark}
+式~\eqref{eq:拉氏变换定义} 中积分下限取 $0^{-}$，等价于约定 $t<0$ 时 $f(t)\equiv 0$，即只研究 $t\ge 0$ 这一段。这样做的好处是 $\delta(t)$ 及其各阶导数也能统一处理；对普通函数而言，下限取 $0^{-}$ 与 $0^{+}$ 结果相同。工程上的信号与系统的响应都是因果的（施加激励之前没有响应），因此单边拉氏变换足够用。
+\end{remark}
+
+\begin{definition}[拉氏反变换]
+已知象函数 $F(s)$，则 $t>0$ 时的原函数由反演积分（Bromwich 积分）给出：
+\begin{equation}
+f(t)=\mathcal{L}^{-1}\left[F(s)\right]=\frac{1}{2\pi\mathrm{j}}\int_{c-\mathrm{j}\infty}^{c+\mathrm{j}\infty}F(s)\mathrm{e}^{st}\,\mathrm{d}s
+\label{eq:拉氏反变换定义}
+\end{equation}
+其中 $c$ 为实常数，且大于 $F(s)$ 全部极点的实部，从而积分路径落在 $F(s)$ 的收敛域之内。
+\end{definition}
+
+\begin{remark}
+式~\eqref{eq:拉氏反变换定义} 是复变函数中的围道积分，直接计算相当困难。实际求反变换有两条等效路线：其一是\textbf{查表法}，把 $F(s)$ 拆成若干表中已有的项再逐项查表（即部分分式展开）；其二是\textbf{留数法}，把围道积分化为各个极点留数之和，见第~\ref{sec:用留数法计算拉氏反变换} 节。
+\end{remark}
+
+\begin{keybox}[变换存在的条件]
+若 $f(t)$ 满足下面两条，则它的拉氏变换存在：
+\begin{enumerate}
+\item 在 $t\ge 0$ 的任意有限区间上分段连续，且只有有限个第一类间断点；
+\item 增长不快于指数函数，即存在常数 $M>0$ 与 $\sigma_0\ge 0$，使 $\left|f(t)\right|\le M\mathrm{e}^{\sigma_0 t}$ 对一切 $t\ge 0$ 成立。
+\end{enumerate}
+此时积分在复平面 $\operatorname{Re}s>\sigma_0$ 的半平面内一致收敛，该半平面称为收敛域，$\sigma_0$ 称为收敛横坐标。工程中的阶跃、斜坡、指数、正弦等信号都满足上述条件，本课程不再逐次验证存在性。
+\end{keybox}
+
+\begin{tipbox}[为什么要用拉氏变换]
+一句话概括它替我们做的三件事：把微分方程化为代数方程（引出传递函数 $G(s)$）；把时域卷积化为 $s$ 域乘积（引出由冲激响应求响应）；初始条件自动进入变换式，不必像时域解法那样单独处理（初值、终值定理可直接校核）。本课程后面所有基于 $G(s)$ 的分析，根子都在这里。
+\end{tipbox}
+
+\section{简单函数的拉氏变换}
+\label{sec:简单函数的拉氏变换}
+
+\subsection{阶跃函数与脉冲函数}
+
+\textbf{单位阶跃函数} $1(t)=\begin{cases}1, & t\ge 0\\ 0, & t<0\end{cases}$，由定义直接积分：
+\begin{equation}
+\mathcal{L}\left[1(t)\right]=\int_{0}^{\infty}\mathrm{e}^{-st}\,\mathrm{d}t=\left[-\frac{\mathrm{e}^{-st}}{s}\right]_{0}^{\infty}=\frac{1}{s}
+\qquad(\operatorname{Re}s>0)
+\label{eq:阶跃变换}
+\end{equation}
+
+\textbf{单位脉冲函数} $\delta(t)$（单位冲激）是宽度趋于零、面积为 $1$ 的脉冲的极限。由它的抽样性质 $\int_{0^{-}}^{0^{+}}\delta(t)\,\mathrm{d}t=1$ 可得
+\begin{equation}
+\mathcal{L}\left[\delta(t)\right]=\int_{0^{-}}^{\infty}\delta(t)\mathrm{e}^{-st}\,\mathrm{d}t=\left.\mathrm{e}^{-st}\right|_{t=0}=1
+\label{eq:脉冲变换}
+\end{equation}
+结果与 $s$ 无关，这是「脉冲输入的响应就是冲激响应」的数学依据；强度为 $A$ 的脉冲的变换则为 $A$。
+
+\begin{remark}
+把式~\eqref{eq:阶跃变换} 与式~\eqref{eq:脉冲变换} 用下一节的微分性质串起来可以自检：因为 $\mathrm{d}1(t)/\mathrm{d}t=\delta(t)$ 且 $1(0^{-})=0$，故 $\mathcal{L}\left[\delta(t)\right]=s\cdot\dfrac{1}{s}-0=1$，与式~\eqref{eq:脉冲变换} 一致。
+\end{remark}
+
+\subsection{指数函数与幂函数}
+
+\textbf{指数函数} $\mathrm{e}^{-at}$（$a$ 为实常数，也可为复数）：
+\begin{equation}
+\mathcal{L}\left[\mathrm{e}^{-at}\right]=\int_{0}^{\infty}\mathrm{e}^{-(s+a)t}\,\mathrm{d}t=\frac{1}{s+a}
+\qquad(\operatorname{Re}s>-a)
+\label{eq:指数变换}
+\end{equation}
+
+\textbf{幂函数} $t^{n}$：先算 $n=1$，$\mathcal{L}\left[t\right]=\int_{0}^{\infty}t\mathrm{e}^{-st}\,\mathrm{d}t=\dfrac{1}{s^{2}}$；再用分部积分可得递推关系 $\mathcal{L}\left[t^{n}\right]=\dfrac{n}{s}\mathcal{L}\left[t^{n-1}\right]$，逐步递推即得
+\begin{equation}
+\mathcal{L}\left[t^{n}\right]=\frac{n!}{s^{\,n+1}}\qquad(n=1,2,\cdots)
+\label{eq:幂函数变换}
+\end{equation}
+特别地 $\mathcal{L}[t]=1/s^{2}$，$\mathcal{L}[t^{2}]=2/s^{3}$。（若直接记结果，也可由 $\int_{0}^{\infty}t^{n}\mathrm{e}^{-st}\mathrm{d}t=\Gamma(n+1)/s^{n+1}=n!/s^{n+1}$ 得到。）
+
+\subsection{正弦函数与余弦函数}
+
+借助欧拉公式 $\mathrm{e}^{\mathrm{j}\omega t}=\cos\omega t+\mathrm{j}\sin\omega t$，先求复指数的变换：
+\begin{equation}
+\mathcal{L}\left[\mathrm{e}^{\mathrm{j}\omega t}\right]=\int_{0}^{\infty}\mathrm{e}^{-(s-\mathrm{j}\omega)t}\,\mathrm{d}t=\frac{1}{s-\mathrm{j}\omega}=\frac{s+\mathrm{j}\omega}{s^{2}+\omega^{2}}
+\label{eq:复指数变换}
+\end{equation}
+由于拉氏变换是线性运算（见下一节），可以对式~\eqref{eq:复指数变换} 两边取实部、虚部，得到
+\begin{equation}
+\mathcal{L}\left[\cos\omega t\right]=\frac{s}{s^{2}+\omega^{2}},\qquad
+\mathcal{L}\left[\sin\omega t\right]=\frac{\omega}{s^{2}+\omega^{2}}
+\label{eq:正余弦变换}
+\end{equation}
+
+衰减振荡（欠阻尼响应中的标准形状）只需在式~\eqref{eq:正余弦变换} 中作 $s\to s+a$ 的平移（见位移性质）：
+\begin{equation}
+\mathcal{L}\left[\mathrm{e}^{-at}\sin\omega t\right]=\frac{\omega}{(s+a)^{2}+\omega^{2}},\qquad
+\mathcal{L}\left[\mathrm{e}^{-at}\cos\omega t\right]=\frac{s+a}{(s+a)^{2}+\omega^{2}}
+\label{eq:衰减振荡变换}
+\end{equation}
+
+\subsection{常用变换对}
+\label{sec:常用变换对}
+
+把上面各条连同后面要用到的组合整理成表~\ref{tab:常用拉氏变换对}，表中 $a>0$、$\omega>0$、$n=1,2,\cdots$，其余字母为实常数。
+
+\begin{table}[H]
+\centering
+\caption{常用拉氏变换对}
+\label{tab:常用拉氏变换对}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{cc}
+\toprule
+原函数 $f(t)$ & 象函数 $F(s)$ \\
+\midrule
+$\delta(t)$（单位脉冲） & $1$ \\
+$1(t)$（单位阶跃） & $\dfrac{1}{s}$ \\
+$t$ & $\dfrac{1}{s^{2}}$ \\
+$t^{n}$ & $\dfrac{n!}{s^{\,n+1}}$ \\
+$\mathrm{e}^{-at}$ & $\dfrac{1}{s+a}$ \\
+$t\,\mathrm{e}^{-at}$ & $\dfrac{1}{(s+a)^{2}}$ \\
+$1-\mathrm{e}^{-at}$ & $\dfrac{a}{s(s+a)}$ \\
+$\sin\omega t$ & $\dfrac{\omega}{s^{2}+\omega^{2}}$ \\
+$\cos\omega t$ & $\dfrac{s}{s^{2}+\omega^{2}}$ \\
+$\mathrm{e}^{-at}\sin\omega t$ & $\dfrac{\omega}{(s+a)^{2}+\omega^{2}}$ \\
+$\mathrm{e}^{-at}\cos\omega t$ & $\dfrac{s+a}{(s+a)^{2}+\omega^{2}}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{tipbox}[这张表怎么用]
+遇到有理分式求反变换，绝大多数题目可以「查表＋拆分」解决：先看分母能否分解成 $s$、$(s+a)$、$(s+a)^{2}+\omega^{2}$ 这几类因子，再配合下一节的性质（尤其是位移性质和延迟性质）凑成表中的标准项。只有分母含重因子、或需要直接给出时间表达式时，留数法更省事（见第~\ref{sec:用留数法计算拉氏反变换} 节）。
+\end{tipbox}
+
+\section{拉氏变换的性质}
+\label{sec:拉氏变换的性质}
+
+以下设 $\mathcal{L}[f(t)]=F(s)$，$\mathcal{L}[g(t)]=G(s)$。
+
+\subsection{线性性质}
+
+\begin{property}[线性性质]
+若 $a$、$b$ 为常数，则
+\begin{equation}
+\mathcal{L}\left[af(t)+bg(t)\right]=aF(s)+bG(s)
+\label{eq:线性性质}
+\end{equation}
+\end{property}
+
+\begin{proof}[推导]
+由积分的线性性直接得到。式~\eqref{eq:线性性质} 有两个方向的用途：正用时可以逐项变换；反用时可以把 $F(s)$ 拆成若干已知象函数之和再逐项查表，这是求反变换的第一步。
+\end{proof}
+
+\subsection{微分性质}
+
+\begin{property}[时域微分]
+\begin{equation}
+\mathcal{L}\left[f'(t)\right]=sF(s)-f(0)
+\label{eq:一阶微分}
+\end{equation}
+\begin{equation}
+\mathcal{L}\left[f''(t)\right]=s^{2}F(s)-sf(0)-f'(0)
+\label{eq:二阶微分}
+\end{equation}
+一般地
+\begin{equation}
+\mathcal{L}\left[f^{(n)}(t)\right]=s^{n}F(s)-\sum_{k=0}^{n-1}s^{\,n-1-k}f^{(k)}(0)
+\label{eq:n阶微分}
+\end{equation}
+式中 $f^{(k)}(0)$ 为 $t=0$ 处的初值（按 $0^{-}$ 取值）。
+\end{property}
+
+\begin{proof}[推导（以一阶为例）]
+分部积分，并注意 $f(t)\mathrm{e}^{-st}\to 0$（$t\to\infty$）：
+\[
+\mathcal{L}\left[f'(t)\right]=\int_{0}^{\infty}f'(t)\mathrm{e}^{-st}\,\mathrm{d}t
+=\underbrace{\left[f(t)\mathrm{e}^{-st}\right]_{0}^{\infty}}_{-\,f(0)}+s\int_{0}^{\infty}f(t)\mathrm{e}^{-st}\,\mathrm{d}t=sF(s)-f(0)
+\]
+反复使用式~\eqref{eq:一阶微分} 即得式~\eqref{eq:二阶微分} 与式~\eqref{eq:n阶微分}。注意初值项是「自动」出现的，这正是用拉氏变换解微分方程时不必另设通解的原因。
+\end{proof}
+
+\begin{keybox}[这一步就是传递函数的来源]
+设线性定常系统由 $n$ 阶微分方程描述
+\[
+a_ny^{(n)}+\cdots+a_1y'+a_0y=b_mu^{(m)}+\cdots+b_1u'+b_0u
+\]
+在\textbf{零初始条件}（$y(0)=y'(0)=\cdots=0$，$u$ 同理）下两边取拉氏变换，由式~\eqref{eq:n阶微分} 得
+\[
+\left(a_ns^{n}+\cdots+a_1s+a_0\right)Y(s)=\left(b_ms^{m}+\cdots+b_1s+b_0\right)U(s)
+\]
+于是 $G(s)=\dfrac{Y(s)}{U(s)}=\dfrac{b_ms^{m}+\cdots+b_1s+b_0}{a_ns^{n}+\cdots+a_1s+a_0}$。可见\textbf{传递函数就是把微分方程的系数照抄成 $s$ 多项式}，这条「系数对应」是后面所有环节传递函数的计算依据。
+\end{keybox}
+
+\begin{property}[象函数微分]
+\begin{equation}
+\mathcal{L}\left[tf(t)\right]=-\frac{\mathrm{d}F(s)}{\mathrm{d}s},\qquad
+\mathcal{L}\left[t^{n}f(t)\right]=(-1)^{n}\frac{\mathrm{d}^{n}F(s)}{\mathrm{d}s^{n}}
+\label{eq:象函数微分}
+\end{equation}
+\end{property}
+
+\begin{proof}[推导]
+对定义式关于 $s$ 求导（积分与求导可交换）：$\dfrac{\mathrm{d}F(s)}{\mathrm{d}s}=\int_{0}^{\infty}f(t)\left(-t\right)\mathrm{e}^{-st}\mathrm{d}t=-\mathcal{L}\left[tf(t)\right]$。重复 $n$ 次即得式~\eqref{eq:象函数微分}。例如由 $\mathcal{L}[1(t)]=1/s$ 立刻得到 $\mathcal{L}[t]=1/s^{2}$。
+\end{proof}
+
+\subsection{积分性质}
+
+\begin{property}[时域积分]
+\begin{equation}
+\mathcal{L}\left[\int_{0}^{t}f(\tau)\,\mathrm{d}\tau\right]=\frac{F(s)}{s}
+\label{eq:时域积分}
+\end{equation}
+\end{property}
+
+\begin{proof}[推导]
+记 $g(t)=\int_{0}^{t}f(\tau)\mathrm{d}\tau$，则 $g'(t)=f(t)$ 且 $g(0)=0$。对 $g(t)$ 用式~\eqref{eq:一阶微分}：$\mathcal{L}[g'(t)]=sG(s)-g(0)=sG(s)$，左边等于 $F(s)$，故 $G(s)=F(s)/s$。
+\end{proof}
+
+\begin{property}[象函数积分]
+\begin{equation}
+\mathcal{L}\left[\frac{f(t)}{t}\right]=\int_{s}^{\infty}F(\sigma)\,\mathrm{d}\sigma
+\label{eq:象函数积分}
+\end{equation}
+积分沿 $\operatorname{Re}\sigma\to\infty$ 的收敛域内进行。
+\end{property}
+
+\begin{proof}[推导]
+由 $\int_{s}^{\infty}F(\sigma)\mathrm{d}\sigma=\int_{s}^{\infty}\!\left(\int_{0}^{\infty}f(t)\mathrm{e}^{-\sigma t}\mathrm{d}t\right)\mathrm{d}\sigma=\int_{0}^{\infty}\frac{f(t)}{t}\mathrm{e}^{-st}\mathrm{d}t$ 交换积分次序得到。例如由 $\mathcal{L}[\sin\omega t]=\omega/(s^{2}+\omega^{2})$ 可得 $\mathcal{L}\left[\dfrac{\sin\omega t}{t}\right]=\arctan\dfrac{\omega}{s}$。
+\end{proof}
+
+\subsection{延迟性质（时移定理）}
+
+\begin{property}[延迟性质]
+设 $\tau>0$，则
+\begin{equation}
+\mathcal{L}\left[f(t-\tau)\cdot 1(t-\tau)\right]=\mathrm{e}^{-s\tau}F(s)
+\label{eq:延迟性质}
+\end{equation}
+\end{property}
+
+\begin{proof}[推导]
+作代换 $u=t-\tau$：$\int_{0}^{\infty}f(t-\tau)1(t-\tau)\mathrm{e}^{-st}\mathrm{d}t=\int_{0}^{\infty}f(u)\mathrm{e}^{-s(u+\tau)}\mathrm{d}u=\mathrm{e}^{-s\tau}F(s)$。这里 $1(t-\tau)$ 的作用是把 $t<\tau$ 的部分置零，从而保证被积函数整体延迟了 $\tau$。
+\end{proof}
+
+\begin{warnbox}[最容易写错的一条]
+式~\eqref{eq:延迟性质} 中必须写成 $f(t-\tau)\cdot 1(t-\tau)$，不能只把 $f(t)$ 换成 $f(t-\tau)$。例如 $\mathcal{L}\left[t-1\right]\neq \mathrm{e}^{-s}/s^{2}$：后者是 $(t-1)1(t-1)$ 的变换，而 $t-1$ 在 $t<1$ 处并不为零。判断办法是看 $t=0$ 处函数值是否为零。
+\end{warnbox}
+
+\begin{note}
+延迟性质是纯延迟环节 $\mathrm{e}^{-s\tau}$ 的来历，也说明一条很实用的结论：\textbf{输入延迟 $\tau$，响应整体往后平移 $\tau$}，波形形状不变，只是起始时刻推迟到 $\tau$。
+\end{note}
+
+\subsection{位移性质（$s$ 域平移）}
+
+\begin{property}[位移性质]
+设 $a$ 为常数（可为复数），则
+\begin{equation}
+\mathcal{L}\left[\mathrm{e}^{-at}f(t)\right]=F(s+a)
+\label{eq:位移性质}
+\end{equation}
+\end{property}
+
+\begin{proof}[推导]
+代入定义：$\int_{0}^{\infty}\mathrm{e}^{-at}f(t)\mathrm{e}^{-st}\mathrm{d}t=\int_{0}^{\infty}f(t)\mathrm{e}^{-(s+a)t}\mathrm{d}t=F(s+a)$。这正是式~\eqref{eq:衰减振荡变换} 的来源，也解释了极点为什么能决定响应的形态：\textbf{极点实部决定衰减快慢，虚部决定振荡频率}。
+\end{proof}
+
+\subsection{尺度变换性质}
+
+\begin{property}[尺度变换]
+设 $a>0$，则
+\begin{equation}
+\mathcal{L}\left[f\left(\frac{t}{a}\right)\right]=aF(as)
+\label{eq:尺度变换}
+\end{equation}
+\end{property}
+
+\begin{proof}[推导]
+令 $t=a\tau$，则 $\mathcal{L}\left[f(t/a)\right]=\int_{0}^{\infty}f(\tau)\mathrm{e}^{-sa\tau}a\,\mathrm{d}\tau=aF(as)$。含义是：时间尺度压缩 $a$ 倍，$s$ 域尺度展宽 $a$ 倍（快的过程对应高频成分）。
+\end{proof}
+
+\subsection{初值定理与终值定理}
+
+\begin{property}[初值定理与终值定理]
+\textbf{初值定理}：若 $f(t)$ 及其导数存在拉氏变换，且 $\lim_{s\to\infty}sF(s)$ 存在，则
+\begin{equation}
+f(0^{+})=\lim_{s\to\infty}sF(s)
+\label{eq:初值定理}
+\end{equation}
+\textbf{终值定理}：若 $sF(s)$ 的极点全部位于 $s$ 左半平面（允许在原点处有一个极点），则
+\begin{equation}
+\lim_{t\to\infty}f(t)=\lim_{s\to0}sF(s)
+\label{eq:终值定理}
+\end{equation}
+\end{property}
+
+\begin{proof}[推导思路]
+两式都由微分性质出发：$\mathcal{L}[f'(t)]=sF(s)-f(0)$，令 $s\to\infty$ 时左边积分在 $t\to 0^{+}$ 附近被 $\mathrm{e}^{-st}$ 压成零，得 $0=\lim_{s\to\infty}sF(s)-f(0)$，即式~\eqref{eq:初值定理}；令 $s\to0$ 时 $\int_{0}^{\infty}f'(t)\mathrm{d}t=f(\infty)-f(0)$，得 $f(\infty)-f(0)=\lim_{s\to0}sF(s)-f(0)$，即式~\eqref{eq:终值定理}。
+\end{proof}
+
+\begin{tipbox}[省力的两把尺子]
+这两个定理不必求反变换，直接由 $F(s)$ 读出响应的起点与稳态值，因此几乎每道题都应用来校核：算完 $f(t)$ 后代 $t=0^{+}$ 与 $t\to\infty$，与 $\lim\limits_{s\to\infty}sF(s)$、$\lim\limits_{s\to0}sF(s)$ 对照，能立刻发现漏项、符号错误和重极点算错。求稳态误差时也常用式~\eqref{eq:终值定理}。
+\end{tipbox}
+
+\begin{warnbox}[终值定理的条件不能省]
+若 $sF(s)$ 在虚轴上有非原点极点（例如含因子 $s^{2}+\omega^{2}$），则 $\lim_{t\to\infty}f(t)$ 并不存在，此时用式~\eqref{eq:终值定理} 会得到错误结论。例如 $F(s)=\dfrac{\omega}{s^{2}+\omega^{2}}$ 对应 $f(t)=\sin\omega t$，而 $\lim\limits_{s\to0}sF(s)=0$，显然不能说明 $\sin\omega t$ 趋于零。
+\end{warnbox}
+
+\subsection{卷积定理}
+
+\begin{property}[卷积定理]
+\begin{equation}
+\mathcal{L}\left[\int_{0}^{t}f(\tau)g(t-\tau)\,\mathrm{d}\tau\right]=F(s)G(s)
+\label{eq:卷积定理}
+\end{equation}
+\end{property}
+
+\begin{proof}[推导]
+按定义写出 $\int_{0}^{\infty}\!\left(\int_{0}^{t}f(\tau)g(t-\tau)\mathrm{d}\tau\right)\mathrm{e}^{-st}\mathrm{d}t$，把积分区域 $(0\le\tau\le t<\infty)$ 换序为 $(0\le\tau<\infty,\ \tau\le t<\infty)$，再对 $t$ 令 $u=t-\tau$，即得 $F(s)G(s)$。
+\end{proof}
+
+\begin{keybox}[卷积定理的用处]
+记时域卷积为 $f(t)*g(t)$。设系统传递函数为 $G(s)$、输入为 $u(t)$，则
+\[
+y(t)=\mathcal{L}^{-1}\left[G(s)U(s)\right]=g(t)*u(t),\qquad g(t)=\mathcal{L}^{-1}\left[G(s)\right]
+\]
+即\textbf{冲激响应与输入的卷积就是响应}。这样一来，时域中难算的卷积，在 $s$ 域里只是两个象函数相乘，这是本课程用 $G(s)$ 代替微分方程分析系统的关键一步。
+\end{keybox}
+
+\subsection{性质一览表}
+
+把上面的性质汇总为表~\ref{tab:拉氏变换性质}，表中设 $\mathcal{L}[f(t)]=F(s)$、$\mathcal{L}[g(t)]=G(s)$，$a$、$b$、$\tau>0$ 均为实常数。
+
+\begin{table}[H]
+\centering
+\caption{拉氏变换常用性质一览（前两列分别为时域、s 域结果）}
+\label{tab:拉氏变换性质}
+\renewcommand{\arraystretch}{1.45}
+\begin{tabular}{lll}
+\toprule
+性质 & 时域 & $s$ 域 \\
+\midrule
+线性 & $af(t)+bg(t)$ & $aF(s)+bG(s)$ \\
+时域微分 & $f'(t)$ & $sF(s)-f(0)$ \\
+时域积分 & $\displaystyle\int_{0}^{t}f(\tau)\,\mathrm{d}\tau$ & $\dfrac{F(s)}{s}$ \\
+延迟（时移） & $f(t-\tau)1(t-\tau)$ & $\mathrm{e}^{-s\tau}F(s)$ \\
+位移（$s$ 域平移） & $\mathrm{e}^{-at}f(t)$ & $F(s+a)$ \\
+尺度变换 & $f(t/a)$ & $aF(as)$ \\
+乘以 $t$ & $tf(t)$ & $-\dfrac{\mathrm{d}F(s)}{\mathrm{d}s}$ \\
+除以 $t$ & $\dfrac{f(t)}{t}$ & $\displaystyle\int_{s}^{\infty}F(\sigma)\,\mathrm{d}\sigma$ \\
+卷积 & $\displaystyle\int_{0}^{t}f(\tau)g(t-\tau)\,\mathrm{d}\tau$ & $F(s)G(s)$ \\
+初值定理 & $f(0^{+})$ & $\displaystyle\lim_{s\to\infty}sF(s)$ \\
+终值定理 & $f(\infty)$ & $\displaystyle\lim_{s\to0}sF(s)$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{用留数法计算拉氏反变换}
+\label{sec:用留数法计算拉氏反变换}
+
+\subsection{基本思路与公式}
+
+反演积分式~\eqref{eq:拉氏反变换定义} 是复变函数的围道积分，直接积分不可行。但由留数定理，若补一个左半平面的大圆弧把 $F(s)\mathrm{e}^{st}$ 的全部极点包围在内，沿闭合围道的积分就等于各极点留数之和（大圆弧上的积分在 $t>0$ 时趋于零），于是\textbf{求反变换变成了求留数这一纯代数运算}。
+
+\begin{keybox}[留数法基本公式]
+设 $F(s)=\dfrac{B(s)}{A(s)}$ 为 $s$ 的有理真分式（分子次数 $m$ 小于分母次数 $n$），则 $A(s)=0$ 的 $n$ 个根 $s_1,s_2,\cdots,s_n$ 就是 $F(s)$ 的全部极点。若各极点互不相同（均为单极点），则
+\begin{equation}
+\begin{aligned}
+f(t)&=\mathcal{L}^{-1}\left[F(s)\right]=\sum_{i=1}^{n}\operatorname{Res}\left[F(s)\mathrm{e}^{st},\,s_i\right]\\
+&=\sum_{i=1}^{n}\lim_{s\to s_i}(s-s_i)F(s)\mathrm{e}^{st}
+\end{aligned}
+\label{eq:留数法单极点}
+\end{equation}
+即：\textbf{对每一项 $F(s)\mathrm{e}^{st}$ 求留数，再把它们相加}。注意 $\mathrm{e}^{st}$ 必须一起参与运算，否则求出的只是常数而不是关于 $t$ 的函数。
+\end{keybox}
+
+\begin{property}[重极点处的留数]
+若 $s_i$ 是 $F(s)$ 的 $r$ 重极点，则
+\begin{equation}
+\operatorname{Res}\left[F(s)\mathrm{e}^{st},\,s_i\right]
+=\frac{1}{(r-1)!}\lim_{s\to s_i}\frac{\mathrm{d}^{\,r-1}}{\mathrm{d}s^{\,r-1}}\left[(s-s_i)^{r}F(s)\mathrm{e}^{st}\right]
+\label{eq:留数法重极点}
+\end{equation}
+\end{property}
+
+\begin{note}
+两个补充说明。（1）本课程 $F(s)$ 的系数都是实数，因此复极点一定共轭成对出现，两个极点处的留数也互为共轭，把一对留数相加时可直接写成 $2\operatorname{Re}\left[\;\cdot\;\right]$，结果必为实函数。（2）若 $F(s)$ 不是真分式（$m\ge n$），先用多项式长除法把它拆成「多项式 $+$ 真分式」，多项式部分对应 $\delta(t)$ 及其各阶导数，再用式~\eqref{eq:留数法单极点} 或式~\eqref{eq:留数法重极点} 求剩余部分的原函数。
+\end{note}
+
+\subsection{与部分分式法的一致性}
+
+把 $\mathrm{e}^{st}$ 暂时放在一边，单极点处的留数
+\[
+A_i=\lim_{s\to s_i}(s-s_i)F(s)
+\]
+正是部分分式展开的待定系数：$F(s)=\sum\limits_{i}\dfrac{A_i}{s-s_i}+\left(\text{重极点项}\right)$，逐项查表即得 $f(t)=\sum\limits_{i}A_i\mathrm{e}^{s_it}$。因此两条路线完全等价：
+
+\begin{itemize}
+\item 查表法（部分分式）：先求系数 $A_i$，再逐项查变换对表，最后由线性性质相加。
+\item 留数法：把 $\mathrm{e}^{st}$ 一起代进去，一次求极限直接得到时间函数，省去「求系数、再查表」两步。
+\end{itemize}
+
+极点全为单极点时留数法通常更快；出现重极点时两种方法都要用到导数公式，结果必然相同（例~\ref{exam:重极点} 会做一个对照）。
+
+\subsection{例题}
+
+\begin{longexample}[单实极点]
+\label{exam:单极点}
+已知 $F(s)=\dfrac{s+3}{(s+1)(s+2)}$，用留数法求 $f(t)$。
+\begin{solution}
+极点为一对互不相同的单极点 $s_1=-1$、$s_2=-2$。按式~\eqref{eq:留数法单极点}：
+\[
+f(t)=\lim_{s\to-1}(s+1)F(s)\mathrm{e}^{st}+\lim_{s\to-2}(s+2)F(s)\mathrm{e}^{st}
+=\lim_{s\to-1}\frac{s+3}{s+2}\mathrm{e}^{st}+\lim_{s\to-2}\frac{s+3}{s+1}\mathrm{e}^{st}
+\]
+即
+\[
+f(t)=\frac{2}{1}\mathrm{e}^{-t}+\frac{1}{-1}\mathrm{e}^{-2t}=2\mathrm{e}^{-t}-\mathrm{e}^{-2t}
+\]
+\textbf{校核}：$f(0^{+})=2-1=1$，而 $\displaystyle\lim_{s\to\infty}sF(s)=\lim_{s\to\infty}\frac{s(s+3)}{(s+1)(s+2)}=1$，满足初值定理；$\displaystyle\lim_{s\to0}sF(s)=0=f(\infty)$，满足终值定理。结果可靠。
+\end{solution}
+\end{longexample}
+
+\begin{longexample}[重极点]
+\label{exam:重极点}
+已知 $F(s)=\dfrac{s+2}{s(s+1)^{2}}$，用留数法求 $f(t)$，并用部分分式法核对。
+\begin{solution}
+极点为 $s_1=0$（单极点）与 $s_2=-1$（二重极点，$r=2$）。
+
+\textbf{（1）单极点 $s_1=0$ 处}
+\[
+\operatorname{Res}\left[F(s)\mathrm{e}^{st},0\right]=\lim_{s\to0}sF(s)\mathrm{e}^{st}=\left.\frac{s+2}{(s+1)^{2}}\mathrm{e}^{st}\right|_{s=0}=2
+\]
+
+\textbf{（2）二重极点 $s_2=-1$ 处}（$r=2$，用式~\eqref{eq:留数法重极点}）
+\[
+\begin{aligned}
+\operatorname{Res}\left[F(s)\mathrm{e}^{st},-1\right]
+&=\lim_{s\to-1}\frac{\mathrm{d}}{\mathrm{d}s}\left[\frac{s+2}{s}\mathrm{e}^{st}\right]
+=\lim_{s\to-1}\left[-\frac{2}{s^{2}}+\frac{(s+2)t}{s}\right]\mathrm{e}^{st}\\
+&=-(t+2)\mathrm{e}^{-t}
+\end{aligned}
+\]
+两留数相加得
+\[
+f(t)=2-(t+2)\mathrm{e}^{-t}
+\]
+\textbf{（3）用部分分式法核对}：设 $\dfrac{s+2}{s(s+1)^{2}}=\dfrac{A}{s}+\dfrac{B}{s+1}+\dfrac{C}{(s+1)^{2}}$，则
+$C=\lim\limits_{s\to-1}(s+1)^{2}F(s)=-1$；$A=\lim\limits_{s\to0}sF(s)=2$；
+再由 $s\to\infty$ 时两边同阶系数的关系 $1=A+B$ 得 $B=-1$。于是
+$F(s)=\dfrac{2}{s}-\dfrac{1}{s+1}-\dfrac{1}{(s+1)^{2}}$，查表得 $f(t)=2-\mathrm{e}^{-t}-t\mathrm{e}^{-t}$，与留数法结果一致。
+
+\textbf{（4）校核}：$f(0^{+})=2-2=0$，$\lim\limits_{s\to\infty}sF(s)=\lim\limits_{s\to\infty}\dfrac{s+2}{(s+1)^{2}}=0$；$\lim\limits_{s\to0}sF(s)=2=f(\infty)$。
+\end{solution}
+\end{longexample}
+
+\begin{longexample}[共轭复极点]
+\label{exam:复极点}
+已知 $F(s)=\dfrac{s+3}{s^{2}+2s+5}$，用留数法求 $f(t)$。
+\begin{solution}
+分母的根为 $s_{1,2}=-1\pm\mathrm{j}2$，是一对共轭单极点。先求 $s_1=-1+\mathrm{j}2$ 处的留数，注意 $s^{2}+2s+5=(s-s_1)(s-s_2)$：
+\[
+\operatorname{Res}\left[F(s)\mathrm{e}^{st},s_1\right]=\lim_{s\to s_1}(s-s_1)F(s)\mathrm{e}^{st}
+=\frac{s_1+3}{s_1-s_2}\mathrm{e}^{s_1t}=\frac{2+\mathrm{j}2}{\mathrm{j}4}\mathrm{e}^{(-1+\mathrm{j}2)t}
+=\frac{1-\mathrm{j}}{2}\mathrm{e}^{-t}\mathrm{e}^{\mathrm{j}2t}
+\]
+另一个极点处的留数与之共轭，两个留数相加即取二倍实部：
+\[
+\begin{aligned}
+f(t)&=2\operatorname{Re}\left[\frac{1-\mathrm{j}}{2}\mathrm{e}^{-t}\mathrm{e}^{\mathrm{j}2t}\right]
+=\mathrm{e}^{-t}\operatorname{Re}\left[(1-\mathrm{j})(\cos2t+\mathrm{j}\sin2t)\right]\\
+&=\mathrm{e}^{-t}\left(\cos2t+\sin2t\right)
+\end{aligned}
+\]
+也可写成 $\sqrt{2}\,\mathrm{e}^{-t}\cos(2t-\pi/4)$。\textbf{校核}：$f(0^{+})=1$，而 $\lim\limits_{s\to\infty}sF(s)=\lim\limits_{s\to\infty}\dfrac{s(s+3)}{s^{2}+2s+5}=1$，一致。
+\end{solution}
+\end{longexample}
+
+\begin{longexample}[综合应用：二阶欠阻尼系统的单位阶跃响应]
+\label{exam:二阶阶跃}
+设 $0<\zeta<1$，系统输出的象函数为
+\[
+F(s)=\frac{\omega_n^{2}}{s\left(s^{2}+2\zeta\omega_n s+\omega_n^{2}\right)}
+\]
+用留数法求 $f(t)$。
+\begin{solution}
+极点为 $s_1=0$ 与 $s_{2,3}=-\zeta\omega_n\pm\mathrm{j}\omega_d$，其中阻尼振荡角频率 $\omega_d=\omega_n\sqrt{1-\zeta^{2}}$。
+
+\textbf{（1）实极点 $s_1=0$ 处}
+\[
+\operatorname{Res}\left[F(s)\mathrm{e}^{st},0\right]=\lim_{s\to0}sF(s)\mathrm{e}^{st}=\frac{\omega_n^{2}}{\omega_n^{2}}=1
+\]
+
+\textbf{（2）共轭复极点处}。因为 $s^{2}+2\zeta\omega_n s+\omega_n^{2}=(s-s_2)(s-s_3)$ 且 $s_2-s_3=\mathrm{j}2\omega_d$，
+\[
+\begin{aligned}
+\operatorname{Res}\left[F(s)\mathrm{e}^{st},s_2\right]
+&=\frac{\omega_n^{2}\mathrm{e}^{s_2t}}{s_2\left(s_2-s_3\right)}\\
+&=\frac{\omega_n^{2}\mathrm{e}^{s_2t}}{\mathrm{j}2\omega_d s_2}
+\end{aligned}
+\]
+两个共轭留数相加取二倍实部。记 $s_2=\omega_n\mathrm{e}^{\mathrm{j}\theta}$（其模为 $\omega_n$），并令 $\beta=\arccos\zeta$，则 $\theta=\pi-\beta$，于是
+\[
+\operatorname{Res}\left[F(s)\mathrm{e}^{st},s_2\right]+\operatorname{Res}\left[F(s)\mathrm{e}^{st},s_3\right]
+=\frac{\omega_n}{\omega_d}\mathrm{e}^{-\zeta\omega_n t}\sin\left(\omega_d t-\theta\right)
+\]
+其中 $\dfrac{\omega_n}{\omega_d}=\dfrac{1}{\sqrt{1-\zeta^{2}}}$，且 $\sin(\omega_d t-\theta)=-\sin(\omega_d t+\beta)$。三项相加得
+\begin{equation}
+f(t)=1-\frac{\mathrm{e}^{-\zeta\omega_n t}}{\sqrt{1-\zeta^{2}}}\sin\left(\omega_d t+\beta\right)
+=1-\mathrm{e}^{-\zeta\omega_n t}\left(\cos\omega_d t+\frac{\zeta}{\sqrt{1-\zeta^{2}}}\sin\omega_d t\right)
+\label{eq:二阶阶跃响应}
+\end{equation}
+\textbf{（3）校核}：$f(0^{+})=1-1=0$（用左端表达式，$\sin\beta=\sqrt{1-\zeta^{2}}$）；$\lim\limits_{s\to0}sF(s)=1=f(\infty)$，说明稳态值为 $1$，与单位阶跃输入的期望一致。
+
+\textbf{（4）读结果}：式~\eqref{eq:二阶阶跃响应} 中，包络 $\mathrm{e}^{-\zeta\omega_n t}$ 决定衰减快慢（$\zeta$ 越大衰减越快），$\omega_d$ 决定振荡频率，常值 $1$ 就是稳态分量。这与时域中直接解二阶微分方程、或「部分分式＋查表」所得的标准结果完全一致，但用留数法可以一步得到时间表达式，不必先求待定系数。
+\end{solution}
+\end{longexample}
+
+\subsection{解题步骤与易错点}
+
+\begin{tipbox}[留数法解题步骤]
+\begin{enumerate}
+\item 检查 $F(s)$ 是否真分式，不是就先做多项式除法，把多项式部分单独处理；
+\item 解 $A(s)=0$ 求出全部极点，判明哪些是单极点、哪些是重极点；
+\item 按极点类型选公式：单极点用式~\eqref{eq:留数法单极点}，$r$ 重极点用式~\eqref{eq:留数法重极点}，共轭极点成对求和并用 $2\operatorname{Re}\left[\;\cdot\;\right]$ 化简；
+\item 把各极点处的留数相加，得到 $f(t)$ 的完整表达式；
+\item 用初值定理、终值定理（或直接代 $t=0^{+}$）校核，并检查量纲与物理意义（衰减、稳态值）是否合理。
+\end{enumerate}
+\end{tipbox}
+
+\begin{warnbox}[三个易错点]
+\begin{enumerate}
+\item \textbf{漏写 $\mathrm{e}^{st}$}：只对 $F(s)$ 求留数得到的是常数，对 $F(s)\mathrm{e}^{st}$ 求留数才是时间函数；
+\item \textbf{重极点套用单极点公式}：$r$ 重极点必须用式~\eqref{eq:留数法重极点}，求导次数是 $r-1$，前面的系数是 $1/(r-1)!$；
+\item \textbf{复极点只留一半}：$s_2$ 与 $s_3$ 的留数必须都算（或直接取二倍实部），只取一个会得到含 $\mathrm{j}$ 的、物理上无意义的结果。
+\end{enumerate}
+\end{warnbox}

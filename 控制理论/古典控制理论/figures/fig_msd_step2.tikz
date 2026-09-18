@@ -1,0 +1,8 @@
+% 质量-弹簧-阻尼器系统方块图：第二次化简后
+\begin{tikzpicture}[>=Stealth,scale=0.9]
+\tikzset{b/.style={draw,thick,fill=white,minimum width=2.8cm,minimum height=0.85cm}}
+\node[b] (g) at (0,0) {$\dfrac{1}{ms^{2}+cs+k}$};
+\draw[->] (-2.0,0) -- (g.west) node[midway,above]{$F_{\mathrm{i}}$};
+\draw[->] (g.east) -- (2.0,0) node[midway,above]{$x_{\mathrm{o}}$};
+\node at (0,-1.0) {\small 第二次化简后};
+\end{tikzpicture}

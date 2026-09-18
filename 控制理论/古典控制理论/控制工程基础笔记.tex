@@ -1,0 +1,110 @@
+% ============================================================
+%  课程笔记模板 —— LaTeX book + 中文课堂笔记排版
+%  样式源自《装备系统动力学建模与仿真》笔记（2026 更新版）
+%
+%  编译方式: XeLaTeX（中文推荐），需编译 2~3 遍生成目录与交叉引用
+%  用法:
+%    1. 替换所有 【】 标记内容；
+%    2. 每章一个 .tex 文件，在 \notebody 中用 \input{} 引入；
+%    3. 数学记号与编辑规范遵循《符号约定与工作要求.md》；
+%    4. 定理/定义/例题等环境与公式写法见 控制系统基础知识.tex；
+%    5. 封面只保留「呐喊风」；其余备用封面与预览已移入 封面存档/。
+% ============================================================
+\documentclass[12pt,a4paper]{book}
+\input{preamble}            % 样式：字体、颜色、定理/定义/例题环境、章节格式
+
+% ============================================================
+%\t笔记元信息（替换【】内容）
+% ============================================================
+\newcommand{\notename}{控制工程基础}   % 封面大标题
+\newcommand{\noteauthor}{爱吃烧饼的大熊猫} % 封面作者
+% 封面可选字段（想改就在此预定义，封面内的缺省值会被覆盖）：
+%   \notecourseen 眉题英文（缺省 Course Notes）
+%   \notesubtitle 副标题（缺省「学习笔记」）
+%   \noteextra    底部附加信息，如「2026 秋季学期」
+
+% 正文骨架：按需增删 \input{}；附录样式在 \appendix 后自动切换
+\newcommand{\notebody}{
+	% 前言（可留空或填一段课程介绍）
+	\chapter*{前言}
+	\input{前言}
+
+	% 绪论：含符号说明小节（可替换为课程自己的符号表）
+	\chapter{绪论}
+	\input{绪论}
+
+	% 正文各章（每章一个 .tex 文件）
+	\input{控制系统的动态数学模型}   % ← 章节文件（原名 第一章示例.tex）
+	% \chapter{第二章}
+	% \input{第二章}
+	% \chapter{第三章}
+	% \input{第三章}
+
+	% ============================================================
+	% 附录（样式自动切换为“附录 x”格式）
+	% ============================================================
+	\appendix
+	% 附录页眉：否则 \chaptermark 会把 \thechapter=A 译成「第零章」
+	\renewcommand{\chaptermark}[1]{\markboth{附录 \thechapter\quad ##1}{}}
+	\titleformat{\chapter}[display]
+	{\normalfont}
+	{\centering{\color{gold}\rule[-0.5ex]{2.2em}{1.6pt}}\hspace{1.2em}{\color{structurecolor}\large\kaishu 附录 \thechapter}\hspace{1.2em}{\color{gold}\rule[-0.5ex]{2.2em}{1.6pt}}}
+	{1.6ex}
+	{\color{structurecolor}\centering\Huge\heiti}
+	[{\vspace{1.2ex}{\color{gold}\titlerule[1.2pt]}\vspace{-3.6pt}{\color{structurecolor!45}\titlerule[0.4pt]}}]
+	\titlecontents{chapter}[0em]{\addvspace{0.8em}}
+	{\color{structurecolor}\large\heiti 附录\ \thecontentslabel\quad}{}{\hfill\color{structurecolor}\contentspage}
+	\titleformat{\section}[hang]
+	{\normalfont\Large\heiti\color{structurecolor}}
+	{{\color{gold}\Large\S}\,\thesection\hspace{1em}}{0pt}{}
+	[{\vspace{0.4ex}{\color{gold!85!black}\titlerule[0.9pt]}\vspace{-2.8pt}{\color{structurecolor!35}\titlerule[0.4pt]}}]
+	\titleformat{\subsection}[hang]
+	{\normalfont\large\heiti\color{structurecolor}}
+	{{\color{gold}\rule[-0.3ex]{0.85em}{2.2pt}}\hspace{0.6em}\thesubsection\hspace{0.6em}}{0pt}{}
+	\titleformat{\subsubsection}[hang]
+	{\normalfont\normalsize\heiti\color{structurecolor!90}}
+	{{\color{gold}\small$\blacksquare$}\hspace{0.5em}\thesubsubsection\hspace{0.6em}}{0pt}{}
+
+	% 附录：每册附录一个 .tex（标题即附录名，前缀「附录 A/B/…」由上面的样式自动生成）
+	\chapter{拉普拉斯变换}
+	\input{附录}
+}
+
+\begin{document}
+	% 封面：蒙克《呐喊》风（唯一保留的封面）
+	\input{cover_呐喊风}
+	% 备用封面已移入 封面存档/，需要时把文件移回根目录再取消注释：
+	% \input{封面存档/cover}                   % 深蓝学科插图风
+	% \input{封面存档/cover_Impression风}      % 莫奈《日出·印象》
+	% \input{封面存档/cover_Guernica风}        % 毕加索《格尔尼卡》
+	% \input{封面存档/cover_向日葵风}          % 梵高《向日葵》
+	% \input{封面存档/cover_蒙娜丽莎风}        % 达·芬奇《蒙娜丽莎》
+	% \input{封面存档/cover_雾海漫游者风}      % 弗里德里希《雾海上的漫游者》
+	% \input{封面存档/cover_富春山居图风}      % 黄公望《富春山居图》
+	% \input{封面存档/cover_千里江山图风}      % 王希孟《千里江山图》
+	% \input{封面存档/cover_墨竹图风}          % 文同《墨竹图》
+	% \input{封面存档/cover_墨梅图风}          % 王冕《墨梅图》
+
+	\newpage
+
+	% 第 2 页：格言页（居中，可删）
+	\thispagestyle{empty}
+	\vspace*{\fill}
+	\begin{center}
+		{\kaishu\fontsize{18}{28}\selectfont We don't need to be perfect; we just need to be good enough to meet our specifications.}
+	\end{center}
+	\vfill
+	\newpage
+
+	% 正文页眉页脚样式（金色细线 + 章节名，见 preamble）
+	\pagestyle{mainstyle}
+
+	\setcounter{tocdepth}{3}
+
+	\tableofcontents
+
+	\setcounter{page}{0}
+	\thispagestyle{empty}
+	\newpage
+	\notebody
+\end{document}

@@ -1,0 +1,7 @@
+% 串联连接：简化后
+\begin{tikzpicture}[>=Stealth,scale=0.9]
+\tikzset{b/.style={draw,thick,fill=white,minimum width=1.9cm,minimum height=0.7cm}}
+\node[b] (G) at (0,0) {$G_{1}(s)G_{2}(s)$};
+\draw[->] (-1.5,0) -- (G.west) node[midway,above]{$X_{\mathrm{i}}$};
+\draw[->] (G.east) -- (1.5,0) node[midway,above]{$X_{\mathrm{o}}$};
+\end{tikzpicture}
