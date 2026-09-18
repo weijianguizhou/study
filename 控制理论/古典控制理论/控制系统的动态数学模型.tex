@@ -540,3 +540,153 @@ X_{\mathrm{o}}(s)=\frac{1}{s}V(s).
 \]
 \end{solution}
 \end{longexample}
+
+\section{信号流图及其梅逊公式}
+\label{sec:信号流图}
+控制系统的方框图可以直观地表示控制过程，但是计算传递函数时往往需要对方框图进行简化，而简化过程极其繁琐。于是美国数学家梅逊（Mason）提出了信号流图，并给出梅逊公式，可以直接利用信号流图计算传递函数。
+
+信号流图其实是表示线性方程组变量间关系的一种图示方法。将信号流图用于控制理论中，可不必求解方程就得到各变量之间的关系，既直观又形象；当系统方框图比较复杂时，可以将它转化为信号流图，并据此采用梅逊公式求出系统的传递函数。
+
+\subsection{信号流图的定义}
+\begin{definition}[信号流图]
+信号流图是一种表示一组联立线性代数方程的图，它表明了系统中各信号的关系，包含了结构图中所包含的全部信息，与结构图一一对应。
+\end{definition}
+
+考虑如下简单等式：$x_{\mathrm{o}}=g\,x_{\mathrm{i}}$。用 Laplace 变换投影到复平面上，有 $X_{\mathrm{o}}(s)=G\,X_{\mathrm{i}}(s)$。
+
+变量 $X_{\mathrm{o}}$、$X_{\mathrm{i}}$ 用节点“$\circ$”来表示，传输函数用一有向有权的线段（称为支路）来表示，支路上箭头表示信号的流向，信号只能单方向流动，如图~\ref{fig:最简单的信号流图} 所示。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.55\textwidth]{figures/最简单的控制流图.png}
+\caption{最简单的信号流图}
+\label{fig:最简单的信号流图}
+\end{figure}
+
+\subsection{信号流图的术语}
+信号流图涉及的常用术语如下：
+
+\begin{itemize}
+    \item \textbf{节点}：表示变量或信号的点，用“$\circ$”表示。
+    \item \textbf{支路}：连接两个节点之间的有向有权线段，方向用箭头表示，权值用传输函数表示。
+    \item \textbf{输入支路}：指向节点的支路。
+    \item \textbf{输出支路}：离开节点的支路。
+    \item \textbf{输入节点（源节点）}：只有输出支路的节点，如图~\ref{fig:一般信号流图} 中的节点 $X_1$。
+    \item \textbf{输出节点（汇节点）}：只有输入支路的节点，如图~\ref{fig:一般信号流图} 中的节点 $X_7$。
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/一般信号流图.jpg}
+\caption{一般信号流图}
+\label{fig:一般信号流图}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{混合节点}：既有输入支路、又有输出支路的节点，如图~\ref{fig:一般信号流图} 中的 $X_2$、$X_3$、$X_4$、$X_5$、$X_6$。
+    \item \textbf{通道（路径）}：沿着支路箭头方向通过各个相连支路的路径，并且每个节点至多通过一次。如 $X_1\to X_2\to X_3\to X_4$，或 $X_2\to X_3$ 又反馈回 $X_2$。
+    \item \textbf{前向通道}：从输入节点（源节点）到汇节点、且每个节点至多通过一次的通道。如图 $X_1\to X_2\to X_3\to X_4\to X_5\to X_6\to X_7$ 为一条前向通道，$X_1\to X_2\to X_3\to X_5\to X_6\to X_7$ 为另一条前向通道。
+    \item \textbf{回环}：起点和终点在同一个节点、且信号通过任一节点不多于一次的闭合通路。
+    \item \textbf{自回环}：单一支路的闭通道，如图中的 $-H_3$ 构成自回环。
+    \item \textbf{通道传输（通道增益）}：沿着通道的各支路传输的乘积。如从 $X_1$ 到 $X_7$ 前向通道的增益为 $G_1G_2G_3G_4G_5G_6$。
+    \item \textbf{不接触回环}：如果一些回环没有任何公共的节点，称它们为不接触回环，如 $-G_2H_1$ 与 $-G_4H_2$。
+\end{itemize}
+
+\subsection{信号流图的绘制}
+对于线性系统，信号流图的绘制应包括以下步骤：
+\begin{enumerate}
+    \item 将描述系统的微分方程转换为以 $s$ 为变量的代数方程。
+    \item 按因果关系将代数方程写成如下形式：
+    \begin{equation}
+    \begin{array}{c}
+    x_{1}=a_{11}x_{1}+a_{12}x_{2}+\cdots+a_{1n}x_{n} \\
+    \vdots \\
+    x_{n}=a_{n1}x_{1}+a_{n2}x_{2}+\cdots+a_{nn}x_{n}
+    \end{array}
+    \label{eq:信号流图代数方程}
+    \end{equation}
+    \item 用节点“$\circ$”表示 $n$ 个变量或信号，用支路表示变量与变量之间的关系。通常把输入变量放在图形左端，输出变量放在图形右端。
+\end{enumerate}
+
+\subsection{信号流图的性质}
+\begin{enumerate}
+    \item 信号流图只适用于线性系统；
+    \item 信号流图所依据的方程式，一定为因果函数形式的代数方程；
+    \item 信号只能按箭头表示的方向沿支路传递；
+    \item 节点上可把所有输入支路的信号叠加，并把总和信号传送到所有输出支路；
+    \item 具有输入和输出支路的混合节点，通过增加一个具有单位传输的支路，可把其变为输出节点，即汇节点；
+    \item 对于给定的系统，其信号流图不是唯一的。
+\end{enumerate}
+
+\subsubsection{由方块图绘制信号流图}
+以上面这个流程方框图为例，研究方块图转换为信号流图的过程。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/控制系统方框图.png}
+\caption{控制系统方框图}
+\label{fig:控制系统方框图}
+\end{figure}
+
+转换步骤如下：第一步，用小圆圈表示各变量对应的节点；第二步，在比较点之后的引出节点 $A_1$、$A_2$ 只需要在比较点的后面设置一个节点便可，即可以与它前面的比较点共用一个节点；第三步，在比较点之前的引出点 $B$ 需设置两个节点，分别表示引出点和比较点，注意图中的 $e_1$ 和 $e_2$。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/控制系统方框图转换的信号流图.png}
+\caption{由控制系统方框图转换得到的信号流图}
+\label{fig:控制系统方框图转换的信号流图}
+\end{figure}
+
+\subsection{梅逊公式}
+美国数学家梅逊（Mason）提出信号流图的同时，给出了信号流图的梅逊公式
+\begin{equation}
+T=\frac{\sum P_{k}\Delta_{k}}{\Delta},
+\label{eq:梅逊公式}
+\end{equation}
+其中：
+\begin{itemize}
+    \item $T$：输出和输入之间的增益或传递函数；
+    \item $P_{k}$：第 $k$ 条前向通道的增益或传输函数；
+    \item $\Delta$：信号流图的特征式，定义为
+    \begin{equation}
+    \Delta=1-\sum_{a}L_{a}+\sum_{b,c}L_{b}L_{c}-\sum_{d,e,f}L_{d}L_{e}L_{f}+\cdots,
+    \label{eq:信号流图特征式}
+    \end{equation}
+    其中 $\sum_{a}L_{a}$ 为所有不同回环的传递函数之和，$\sum_{b,c}L_{b}L_{c}$ 为每 2 个互不接触回环传递函数的乘积之和，$\sum_{d,e,f}L_{d}L_{e}L_{f}$ 为每 3 个互不接触回环传递函数之积的和；
+    \item $\Delta_{k}$：与第 $k$ 条前向通道不接触的那部分信号流图的 $\Delta$，称为第 $k$ 条前向通道特征式的余子式。
+\end{itemize}
+
+\subsubsection{梅逊公式应用举例}
+下面通过一个例题说明梅逊公式的具体应用，该系统的信号流图如图所示。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/利用梅逊公式的例题.jpg}
+\caption{利用梅逊公式的例题}
+\label{fig:利用梅逊公式的例题}
+\end{figure}
+
+\begin{enumerate}
+    \item \textbf{先找前向通道}：
+    \begin{enumerate}
+        \item $P_1=G_1G_2G_3G_4G_5$，$\Delta_1=1$；
+        \item $P_2=G_1G_6G_4G_4G_5$，$\Delta_2=1$；
+        \item $P_3=G_1G_2G_7G_5$，$\Delta_3=1$。
+    \end{enumerate}
+    \item \textbf{图中有六个回环}：
+    \begin{enumerate}
+        \item $L_1=-G_3H_2$；
+        \item $L_2=-G_5H_1$；
+        \item $L_3=-G_2G_3G_4G_5H_3$；
+        \item $L_4=-G_6G_4G_5H_3$；
+        \item $L_5=-G_2G_7G_5H_3$；
+        \item $L_6=G_5G_6G_7H_2H_3$。
+    \end{enumerate}
+    \item 其中 $L_1$ 与 $L_2$ 是互不接触的，其增益之积为 $L_1L_2$。
+    \item 系统的特征式 $\Delta$ 为
+    \begin{equation}
+    \Delta=1-(L_1+L_2+L_3+L_4+L_5+L_6)+L_1L_2.
+    \label{eq:例题的特征式}
+    \end{equation}
+    \item 将各前向通道增益与余子式代入梅逊公式~\eqref{eq:梅逊公式}，即可计算出系统的传递函数 $T$，这里从略。
+\end{enumerate}
