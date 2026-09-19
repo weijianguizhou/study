@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "机械/机械设计/笔记/一些零碎的常识.md",
+                "file": "机器人学/刚体运动.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "一些零碎的常识"
+              "title": "刚体运动"
             }
           }
         ]
@@ -219,24 +219,27 @@
   },
   "active": "c2e48d35be344476",
   "lastOpenFiles": [
+    "教材/The Craft of Scientific Writing.pdf",
+    "教材/Writing and publishing a scientific research paper.pdf",
+    "教材/Writing a Paper by Whitesides.pdf",
+    "教材/The Craft of Scientific Writing.pdf.kdtmp",
+    "教材/Writing a Paper by Whitesides.pdf.kdtmp",
+    "教材/Writing and publishing a scientific research paper.pdf.kdtmp",
+    "力学/流体力学/课件/~$补充1：张量代数(绪论后).pptx",
+    "机器人学/DH参数法/DH参数法.md",
+    "机器人学/刚体运动.md",
     "机械/机械设计/笔记/5.带传动.md",
+    "机器人学/教材/Modern Robotics Mechanics, Planning, and Control (Kevin M. Lynch, Frank C. Park).pdf",
+    "机器人学/教材",
+    "机器人学/新建文件夹",
     "机械/机械设计/笔记/一些零碎的常识.md",
     "力学/流体力学/课件/补充1：张量代数(绪论后).pdf",
-    "力学/流体力学/课件/~$补充1：张量代数(绪论后).pptx",
-    "力学/流体力学/课件/补充1：张量代数(绪论后).pptx",
-    "力学/流体力学/课件/14403c5196c414bb7de4aca823f7e5c8.par.temp",
-    "机械/机械设计/机械设计/机械设计.synctex.gz",
-    "机械/机械设计/机械设计/机械设计.synctex(busy)",
-    "力学/流体力学/流体力学笔记.synctex(busy)",
-    "机械/机械设计/机械设计/第六章带传动.tex",
-    "机械/机械设计/机械设计/机械设计.pdf",
     "c5ff17dc-864d-44dc-bb05-7ecb863d66c9.png",
     "机械/机械设计/机械设计/Figure/带传动各参数示例.png",
     "机械/机械设计/机械设计/Figure/c5ff17dc-864d-44dc-bb05-7ecb863d66c9.png",
     "机械/机械设计/机械设计/Figure/V带的摩擦受力分析.png",
     "机械/机械设计/机械设计/Figure/44f92f19-99cc-4b87-bca7-c002db948799.png",
     "机械/机械设计/机械设计/Figure/传送带组成.png",
-    "机械/机械设计/机械设计/Figure/~$$传送带组成.~vsdx",
     "数理基础/矢量分析与场论/2.场论.md",
     "数理基础/矢量分析与场论/1. 矢量分析.md",
     "力学/流体力学/张量代数基础.md",
@@ -261,9 +264,6 @@
     "教材/Spacecraft_Dynamics/读书笔记/08-小角度旋转.md",
     "教材/Spacecraft_Dynamics/读书笔记/17-瞬时轴.md",
     "教材/Spacecraft_Dynamics/读书笔记/11-角速度矢量.md",
-    "教材/Spacecraft_Dynamics/读书笔记/13-角速度与欧拉参数.md",
-    "教材/Spacecraft_Dynamics/读书笔记/02-转轴和转角.md",
-    "教材/Spacecraft_Dynamics/读书笔记/09-螺旋运动.md",
-    "教材/Spacecraft_Dynamics/读书笔记/16-缓慢小转动.md"
+    "教材/Spacecraft_Dynamics/读书笔记/13-角速度与欧拉参数.md"
   ]
 }
