@@ -7,6 +7,7 @@
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{array}
 \usepackage[hidelinks]{hyperref}
 
 % 定理类环境：编号随章（如“定义 1.1”）
@@ -16,3 +17,34 @@
 \newtheorem{definition}[theorem]{定义}
 \newtheorem{example}[theorem]{例题}
 \renewcommand{\proofname}{证明}
+
+% 代码排版（listings）：注意保持代码为 ASCII，中文说明写在代码环境之外
+\usepackage{xcolor}
+\usepackage{listings}
+
+\definecolor{codebg}{RGB}{246,246,246}
+\definecolor{codecomment}{RGB}{0,128,0}
+\definecolor{codestring}{RGB}{163,21,21}
+\definecolor{codekeyword}{RGB}{0,0,180}
+
+\lstdefinestyle{code}{
+	basicstyle=\ttfamily\small,
+	backgroundcolor=\color{codebg},
+	frame=single,
+	framerule=0.4pt,
+	rulecolor=\color{black!30},
+	breaklines=true,
+	columns=fullflexible,
+	keepspaces=true,
+	showstringspaces=false,
+	tabsize=2,
+	commentstyle=\color{codecomment}\itshape,
+	stringstyle=\color{codestring},
+	keywordstyle=\color{codekeyword}
+}
+
+\lstdefinestyle{xml}{
+	style=code,
+	language=XML,
+	morecomment=[s]{<!--}{-->}
+}

@@ -1,0 +1,292 @@
+% !TeX root = 数字电路.tex
+% ============================================================
+%  第一章 数制与 BCD 码
+%  来源：笔记《数制与 BCD 码.md》
+% ============================================================
+\chapter{数制与 BCD 码}
+\label{chap:数制与BCD码}
+
+\textbf{数制}（进位计数制）：用进位的方法来计数，包括\textbf{计数符号（数码）}和\textbf{进位规则}两个方面。常用的有十进制、二进制、八进制、十六进制等。
+
+\section{常用数制}
+\label{sec:常用数制}
+
+\subsection{常用数制一览}
+\label{sec:常用数制一览}
+
+\begin{table}[H]
+\centering
+\caption{常用数制一览}
+\label{tab:数制:常用数制}
+\begin{tabular}{llll}
+	\toprule
+	数制 & 计数符号 & 进位规则 & 按权展开式 \\
+	\midrule
+	十进制 & $0\sim9$ & 逢十进一 & $(N)_{10}=\sum\limits_{i=-m}^{n-1}a_i\times10^{i}$ \\
+	二进制 & $0,1$ & 逢二进一 & $(N)_{2}=\sum\limits_{i=-m}^{n-1}a_i\times2^{i}$ \\
+	八进制 & $0\sim7$ & 逢八进一 & $(N)_{8}=\sum\limits_{i=-m}^{n-1}a_i\times8^{i}$ \\
+	十六进制 & $0\sim9$、$A\sim F$ & 逢十六进一 & $(N)_{16}=\sum\limits_{i=-m}^{n-1}a_i\times16^{i}$ \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+其中 $a_i$ 为系数、$R^{i}$ 为权（$R$ 为基数）。
+
+\textbf{例}：
+\begin{equation}
+	1987.45=1\times10^{3}+9\times10^{2}+8\times10^{1}+7\times10^{0}
+	+4\times10^{-1}+5\times10^{-2}
+	\label{eq:数制:十进制展开例}
+\end{equation}
+\begin{equation}
+	(6D.4B)_{16}=6\times16^{1}+13\times16^{0}+4\times16^{-1}+11\times16^{-2}
+	\qquad (D=13,\ B=11)
+	\label{eq:数制:十六进制展开例}
+\end{equation}
+\begin{equation}
+	(63.45)_{8}=6\times8^{1}+3\times8^{0}+4\times8^{-1}+5\times8^{-2}
+	\label{eq:数制:八进制展开例}
+\end{equation}
+
+\textbf{数字电路中采用二进制的原因}：
+\begin{enumerate}
+	\item 数字装置简单可靠；
+	\item 二进制数运算规则简单；
+	\item 数字电路既可以进行算术运算，也可以进行逻辑运算。
+\end{enumerate}
+
+\subsection{二进制与十进制之间的转换}
+\label{sec:二进制与十进制之间的转换}
+
+\textbf{（1）二进制数转换为十进制数（按权展开法）}
+\begin{equation}
+	\begin{aligned}
+		(1011.101)_{2} &= 1\times2^{3}+0\times2^{2}+1\times2^{1}+1\times2^{0}
+		+1\times2^{-1}+0\times2^{-2}+1\times2^{-3} \\
+		&= 8+2+1+0.5+0.125=(11.625)_{10}
+	\end{aligned}
+	\label{eq:数制:二十转换}
+\end{equation}
+\textbf{（2）十进制数转换为二进制数（提取 2 的幂法）}
+\begin{equation}
+	\begin{aligned}
+		(45.5)_{10} &= 32+8+4+1+0.5 \\
+		&= 1\times2^{5}+0\times2^{4}+1\times2^{3}+1\times2^{2}+0\times2^{1}+1\times2^{0}+1\times2^{-1} \\
+		&= (101101.1)_{2}
+	\end{aligned}
+	\label{eq:数制:十二转换}
+\end{equation}
+数制转换还可以采用\textbf{基数连除、连乘}（除基数取余、乘基数取整）等方法。
+
+\subsection{二进制算术运算}
+\label{sec:二进制算术运算}
+
+算术运算规则与十进制相同，区别是\textbf{逢二进一}。其特点是：加、减、乘、除全部可以用\textbf{移位}和\textbf{相加}两种操作实现，电路结构简化，所以数字电路中普遍采用二进制算术运算。
+
+\textbf{加法}：逐位相加并处理进位。
+\begin{equation}
+	S_0=A_0+B_0\ (\text{进位 }C_1),\quad
+	S_1=A_1+B_1+C_1\ (\text{进位 }C_2),\quad \cdots
+	\label{eq:数制:逐位加法}
+\end{equation}
+设 $A=A_3A_2A_1A_0$、$B=B_3B_2B_1B_0$，两数之和为 $S=S_3S_2S_1S_0$，则
+\begin{equation}
+	A+B=C_4S_3S_2S_1S_0
+	\label{eq:数制:加法结果}
+\end{equation}
+
+\textbf{减法}：将减数 $B$ 变成补码后与被减数 $A$ 相加，若有进位则舍去，其和即为两数之差。例：
+\begin{equation}
+	\begin{aligned}
+		Y &= (1000)_{2}-(0100)_{2}=(1000)_{2}+\left[(1011)_{2}+1\right] \\
+		&= (1000)_{2}+(1100)_{2}=(10100)_{2}
+		\xrightarrow{\text{舍去进位}}(0100)_{2}
+	\end{aligned}
+	\label{eq:数制:减法用补码}
+\end{equation}
+
+\textbf{乘法}：乘以 2 相当于\textbf{左移一位}。方法有：（1）按十进制的乘法过程；（2）采用移位相加的方法。
+
+\textbf{除法}：除以 $2^{k}$ 相当于\textbf{右移 $k$ 位}。例（$k=2$，即除以 4）：
+\begin{equation}
+	(00001011)_{2}\div(100)_{2}=(00000010)_{2}\ \text{（商）},\qquad
+	\text{余数}=(11)_{2}
+	\label{eq:数制:除法}
+\end{equation}
+
+\subsection{带符号数的表示：原码、反码和补码}
+\label{sec:带符号数的表示}
+
+计算机中的带符号数表示为\textbf{符号位 + 真值}（合称\textbf{机器数}），符号位用“0”表示正、“1”表示负。
+
+\begin{definition}[原码]
+	\label{def:原码}
+	真值 $X$ 的原码记为 $[X]_{\text{原}}$：最高位为符号位，其余为真值部分；不论数的正负，数值部分均保持原真值不变。
+
+	\textbf{优点}：正负号与原真值之间的对应关系简单，容易理解；
+
+	\textbf{缺点}：用原码进行加减运算比较困难，\textcolor{red}{0 的表示不唯一}——$+0=0\,0000000$，$-0=1\,0000000$。
+\end{definition}
+
+\begin{definition}[反码]
+	\label{def:反码}
+	真值 $X$ 的反码记为 $[X]_{\text{反}}$：若 $X>0$，则 $[X]_{\text{反}}=[X]_{\text{原}}$；若 $X<0$，则符号位不变、数值部分按位取反。\textcolor{red}{0 的反码也不唯一}：$[+0]_{\text{反}}=00000000$，$[-0]_{\text{反}}=11111111$。
+\end{definition}
+
+\begin{definition}[补码]
+	\label{def:补码}
+	真值 $X$ 的补码记为 $[X]_{\text{补}}$：若 $X>0$，则 $[X]_{\text{补}}=[X]_{\text{反}}=[X]_{\text{原}}$；若 $X<0$，则
+	\begin{equation}
+		[X]_{\text{补}}=[X]_{\text{反}}+1
+		\label{eq:补码:定义}
+	\end{equation}
+	补码的符号位与 $[X]_{\text{原}}$ 相同，\textcolor{red}{0 的表示唯一}，且可将减法运算转换为加法运算。
+\end{definition}
+
+\textbf{例}（$X=-52=-0110100$）：
+\begin{equation}
+	[X]_{\text{原}}=1\,0110100,\qquad [X]_{\text{反}}=1\,1001011,\qquad
+	[X]_{\text{补}}=[X]_{\text{反}}+1=11001100
+	\label{eq:补码:三种编码例}
+\end{equation}
+
+\textbf{0 的编码}：8 位原码中 $+0=0\,0000000$、$-0=1\,0000000$，不唯一；补码表示唯一：
+\begin{equation}
+	[-0]_{\text{补}}=[-0]_{\text{反}}+1=11111111+1=1\,00000000
+	\xrightarrow{\text{8 位字长舍去进位}}00000000
+	\label{eq:补码:0的补码}
+\end{equation}
+
+\textbf{特殊数 $10000000$}：
+\begin{itemize}
+	\item 原码中定义为 $-0$；
+	\item 反码中定义为 $-127$；
+	\item 补码中定义为 $-128$；
+	\item 作为无符号数时 $(10000000)_{2}=128$。
+\end{itemize}
+
+\textbf{表示范围（8 位）}：
+
+\begin{table}[H]
+\centering
+\caption{8 位数的表示范围}
+\label{tab:补码:表示范围}
+\begin{tabular}{lc}
+	\toprule
+	编码 & 表示范围 \\
+	\midrule
+	原码 / 反码 & $-127\sim+127$ \\
+	补码 & $-128\sim+127$ \\
+	无符号数 & $0\le X\le 2^{n}-1$ \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{补码运算}：通过引进补码，可将减法运算转换为加法运算，即
+\begin{equation}
+	[X+Y]_{\text{补}}=[X]_{\text{补}}+[Y]_{\text{补}},\qquad
+	[X-Y]_{\text{补}}=[X]_{\text{补}}+[-Y]_{\text{补}}
+	\label{eq:补码:加减运算}
+\end{equation}
+
+\begin{longexample}[补码加法]
+	\label{ex:补码加法}
+	$X=-0110100$，$Y=+1110100$，求 $X+Y$。
+
+	\begin{solution}
+		\begin{equation}
+			[X]_{\text{补}}=11001100,\qquad [Y]_{\text{补}}=01110100
+			\label{eq:补码:例补码}
+		\end{equation}
+		所以
+		\begin{equation}
+			[X+Y]_{\text{补}}=[X]_{\text{补}}+[Y]_{\text{补}}
+			=11001100+01110100=01000000
+			\label{eq:补码:例结果}
+		\end{equation}
+	\end{solution}
+\end{longexample}
+
+\textbf{符号位讨论}——用二进制补码求 $13\pm10$、$-13\pm10$（6 位字长）：
+\begin{equation}
+	\begin{aligned}
+		13+10 &= 0\,01101+0\,01010=0\,10111=23,\\
+		13-10 &= 0\,01101+1\,10110=0\,00011=3,\\
+		-13+10 &= 1\,10011+0\,01010=1\,11101=-3,\\
+		-13-10 &= 1\,10011+1\,10110=1\,01001=-23
+	\end{aligned}
+	\label{eq:补码:符号位讨论例}
+\end{equation}
+
+\textbf{无符号数的溢出}：无符号数的范围为 $0\le X\le 2^{n}-1$，若运算结果超出这个范围，则产生\textbf{溢出}。溢出判断准则：运算时，当\textcolor{red}{最高位向更高位有进位（或借位）}时则产生溢出。
+
+\section{几种简单的编码}
+\label{sec:几种简单的编码}
+
+\subsection{二-十进制码（BCD 码）}
+\label{sec:BCD码}
+
+\begin{definition}[二-十进制码（BCD 码）]
+	\label{def:BCD码}
+	用四位二进制代码来表示一位十进制数码，这样的代码称为二-十进制码（BCD 码，Binary Coded Decimal codes）。四位二进制有 16 种不同组合，可以在这 16 种代码中任选 10 种表示十进制数的 10 个不同符号，选择方法不同，就得到不同的编码形式。常见的有 8421 码、5421 码、2421 码、余 3 码等。
+\end{definition}
+
+\begin{table}[H]
+\centering
+\caption{常用 BCD 码}
+\label{tab:编码:常用BCD码}
+\begin{tabular}{ccccc}
+	\toprule
+	十进制数 & 8421 码 & 5421 码 & 2421 码 & 余 3 码 \\
+	\midrule
+	0 & 0000 & 0000 & 0000 & 0011 \\
+	1 & 0001 & 0001 & 0001 & 0100 \\
+	2 & 0010 & 0010 & 0010 & 0101 \\
+	3 & 0011 & 0011 & 0011 & 0110 \\
+	4 & 0100 & 0100 & 0100 & 0111 \\
+	5 & 0101 & 1000 & 1011 & 1000 \\
+	6 & 0110 & 1001 & 1100 & 1001 \\
+	7 & 0111 & 1010 & 1101 & 1010 \\
+	8 & 1000 & 1011 & 1110 & 1011 \\
+	9 & 1001 & 1100 & 1111 & 1100 \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{definition}[有权 BCD 码]
+	\label{def:有权BCD码}
+	每位数码都有确定的位权的码，例如 8421 码、5421 码、2421 码。
+
+	例：5421 码 $1011$ 代表 $5+0+2+1=8$；2421 码 $1100$ 代表 $2+4+0+0=6$。
+
+	\textcolor{red}{5421 码与 2421 码的编码不唯一}，例如 2421 码 $0110$ 也可表示 6。
+\end{definition}
+
+由表~\ref{tab:编码:常用BCD码}可见：
+\begin{enumerate}
+	\item 8421 码与代表 $0\sim9$ 的二进制数一一对应；
+	\item 5421 码前 5 个码与 8421 码相同，后 5 个码在前 5 个码的基础上加 1000 构成；
+	\item 2421 码前 5 个码与 8421 码相同，后 5 个码以中心对称取反，这样的码称为\textbf{自反代码}。例如 $4\to0100$、$5\to1011$；$0\to0000$、$9\to1111$。
+\end{enumerate}
+
+\begin{definition}[无权 BCD 码（余 3 码）]
+	\label{def:余三码}
+	每位数码无确定的位权，例如余 3 码。余 3 码的编码规律为：在 8421 码上加 0011。例如 6 的余 3 码为 $0110+0011=1001$。
+\end{definition}
+
+\subsection{格雷码（Gray 码）}
+\label{sec:格雷码}
+
+格雷码为无权码，特点为：\textcolor{red}{相邻两个代码之间仅有一位不同}，其余各位均相同，具有这种特点的代码称为\textbf{循环码}，格雷码是循环码。
+
+格雷码与四位二进制码之间的关系：设四位二进制码为 $B_3B_2B_1B_0$，格雷码为 $R_3R_2R_1R_0$，则
+\begin{equation}
+	R_3=B_3,\qquad R_2=B_3\oplus B_2,\qquad R_1=B_2\oplus B_1,\qquad R_0=B_1\oplus B_0
+	\label{eq:编码:格雷码}
+\end{equation}
+其中 $\oplus$ 为异或运算符，运算规则：两运算数相同结果为“0”，不同结果为“1”。
+
+\subsection{计算机字符集}
+\label{sec:计算机字符集}
+
+各种文字和符号的总称，包括各国家文字、标点符号、图形符号、数字等。常见字符集：ASCII、GB2312、BIG5、GB18030、Unicode。

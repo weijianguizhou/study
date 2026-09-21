@@ -1,0 +1,456 @@
+% ============================================================
+%  通用机器人描述格式（URDF）
+%  内容依据笔记《通用机器人描述格式(URDF).md》
+%  记号约定：向量用 \boldsymbol{}；代码用 listings 的 code/xml 样式
+% ============================================================
+
+\textbf{URDF}（\textit{Unified Robot Description Format}，统一机器人描述格式）是 ROS 中基于 XML 的机器人模型描述格式，用来描述机器人的\textbf{运动学与动力学结构}：有哪些连杆、连杆之间通过什么关节连接、每个连杆的外观与惯性。rviz 的可视化、Gazebo 的仿真、\texttt{robot\_state\_publisher} 的坐标变换发布、MoveIt 的运动规划都以 URDF 为模型来源。
+
+\section{树：连杆与关节}
+
+URDF 只用两种元素搭建机器人：
+
+\begin{definition}[连杆（\textit{link}）]
+	刚体部件，如底盘、大臂、小臂、轮子。
+\end{definition}
+
+\begin{definition}[关节（\textit{joint}）]
+	连接两个连杆的运动副，决定两连杆之间允许的相对运动。
+\end{definition}
+
+整体构成一棵\textbf{树}：有且只有一个根连杆，除根连杆外每个连杆有且只有一个父关节，但可以有任意多个子关节：
+{\small
+\begin{verbatim}
+base_link
+  +-- joint1 (revolute) --> link1
+        +-- joint2 (revolute) --> link2
+              +-- tool_joint (fixed) --> tool0
+\end{verbatim}
+}
+
+\textbf{与位形空间的联系}：无闭环时每个关节变量都是独立的，自由度就是所有关节自由度之和：
+\begin{equation}
+	\label{eq:URDF:自由度}
+	\mathrm{dof}=\sum_{i=1}^{J}f_{i}
+\end{equation}
+这正是式~\eqref{eq:自由度:格鲁布勒公式} 中格鲁布勒公式在无闭环（$N-1=J$）时的结果。关节变量组成的向量 $\boldsymbol{q}$ 就是位形空间的坐标。
+
+这棵树同时是 \textbf{TF 坐标变换树}：每个 link 对应一个坐标系，每个 joint 对应父子坐标系之间的变换。\texttt{robot\_state\_publisher} 根据 URDF 与关节状态计算出所有连杆的位形并发布到 TF（固定关节也会发布）。
+
+\section{XML 语法}
+
+\subsection{根元素}
+
+\begin{lstlisting}[style=xml]
+<?xml version="1.0"?>
+<robot name="my_robot">
+  <!-- links and joints go here -->
+</robot>
+\end{lstlisting}
+
+\subsection{link}
+
+一个 link 由三部分描述，均为可选但用途不同：
+
+\begin{lstlisting}[style=xml]
+<link name="base_link">
+  <!-- 1. inertia: for dynamic simulation -->
+  <inertial>
+    <origin xyz="0 0 0.05" rpy="0 0 0"/>
+    <mass value="3.0"/>
+    <inertia ixx="0.0073" ixy="0" ixz="0"
+             iyy="0.0073" iyz="0" izz="0.0096"/>
+  </inertial>
+
+  <!-- 2. appearance: for visualization -->
+  <visual>
+    <origin xyz="0 0 0.05" rpy="0 0 0"/>
+    <geometry>
+      <cylinder radius="0.08" length="0.10"/>
+    </geometry>
+    <material name="steel"/>
+  </visual>
+
+  <!-- 3. collision body: for collision checking -->
+  <collision>
+    <origin xyz="0 0 0.05" rpy="0 0 0"/>
+    <geometry>
+      <cylinder radius="0.08" length="0.10"/>
+    </geometry>
+  </collision>
+</link>
+\end{lstlisting}
+
+\begin{itemize}
+	\item \texttt{inertial}：\texttt{origin} 给出\textbf{质心坐标系}相对 link 坐标系的位形；\texttt{inertia} 是相对质心坐标系的惯性张量，只需写对称矩阵的上三角 6 个分量
+	\begin{equation}
+		\label{eq:URDF:惯性张量}
+		\boldsymbol{I}=\begin{bmatrix}
+			I_{xx} & I_{xy} & I_{xz}\\
+			I_{xy} & I_{yy} & I_{yz}\\
+			I_{xz} & I_{yz} & I_{zz}
+		\end{bmatrix}
+	\end{equation}
+	惯性张量必须\textbf{正定}；把各部件的惯性搬到同一坐标系时，要使用齐次变换与\textbf{平行轴定理}。
+	\item \texttt{visual} 与 \texttt{collision}：\texttt{origin} 是几何体坐标系相对 link 坐标系的位形。两者几何体\textbf{不必相同}——可视化可用精细的 mesh，碰撞体常用简化形状（如包围盒）以节省计算。两者都可以出现多次，用来拼出一个复杂连杆。
+	\item \texttt{material}：用颜色（\texttt{<color rgba="r g b a"/>}）或纹理定义外观；可以就地定义，也可以在 \texttt{<robot>} 下统一定义后用 \texttt{name} 引用。
+\end{itemize}
+
+几何体类型如表~\ref{tab:URDF:几何体} 所示。
+
+\begin{table}[H]
+	\centering
+	\caption{URDF 支持的几何体类型}
+	\label{tab:URDF:几何体}
+	\footnotesize
+	\begin{tabular}{llp{5.5cm}}
+		\hline
+		形状 & 写法 & 说明 \\
+		\hline
+		长方体 & \texttt{<box size="x y z"/>} & size 为三个方向的全长 \\
+		圆柱 & \texttt{<cylinder radius="r" length="l"/>} & 轴沿 $z$ 轴 \\
+		球 & \texttt{<sphere radius="r"/>} & \\
+		网格 & \texttt{<mesh filename="..."/>} & 支持 STL/DAE 等 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\textbf{注意}：三种描述用途不同——只在 rviz 中看模型，\texttt{visual} 足够；做碰撞检测，需要 \texttt{collision}；做动力学仿真，必须有正确的 \texttt{inertial}，质量为 0 或惯性矩阵不正定会让 Gazebo 等仿真器报错或产生荒谬的结果。
+
+\subsection{joint}
+
+\begin{lstlisting}[style=xml]
+<joint name="joint1" type="revolute">
+  <parent link="base_link"/>
+  <child link="link1"/>
+  <origin xyz="0 0 0.1" rpy="0 0 0"/>
+  <axis xyz="0 0 1"/>
+  <limit lower="-3.1416" upper="3.1416" effort="50" velocity="2.0"/>
+  <dynamics damping="0.5" friction="0.1"/>
+</joint>
+\end{lstlisting}
+
+各子元素的含义如表~\ref{tab:URDF:joint子元素} 所示。
+
+\begin{table}[H]
+	\centering
+	\caption{joint 的子元素}
+	\label{tab:URDF:joint子元素}
+	\begin{tabular}{lp{9.5cm}}
+		\hline
+		子元素 & 含义 \\
+		\hline
+		\texttt{parent} / \texttt{child} & 父、子连杆，确定树的拓扑 \\
+		\texttt{origin} & 零位时子连杆坐标系在父连杆坐标系中的位形 \\
+		\texttt{axis} & 运动轴（单位向量），表达在关节坐标系（即零位时的子连杆坐标系）中；缺省为 \texttt{1 0 0} \\
+		\texttt{limit} & \texttt{lower}/\texttt{upper} 位置上下限（rad 或 m）、\texttt{velocity} 最大速度、\texttt{effort} 最大力矩/推力 \\
+		\texttt{dynamics} & \texttt{damping} 黏性阻尼、\texttt{friction} 静摩擦 \\
+		\texttt{calibration} & \texttt{rising}/\texttt{falling} 编码器零点标定 \\
+		\texttt{mimic} & 该关节按 $q=\text{multiplier}\cdot q_{\text{src}}+\text{offset}$ 跟随另一关节（如夹爪），$q_{\text{src}}$ 为所跟随关节的角度 \\
+		\texttt{safety\_controller} & 软限位与安全停车参数 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+关节类型如表~\ref{tab:URDF:关节类型} 所示。
+
+\begin{table}[H]
+	\centering
+	\caption{URDF 的关节类型}
+	\label{tab:URDF:关节类型}
+	\footnotesize
+	\begin{tabular}{llcc}
+		\hline
+		type & 含义 & 自由度 & 是否需要 \texttt{limit} \\
+		\hline
+		\texttt{fixed} & 固定连接，两连杆焊死 & 0 & 不允许有 \\
+		\texttt{revolute} & 转动关节，有限位 & 1 & 必须（含 lower/upper） \\
+		\texttt{continuous} & 转动关节，无限位，如车轮 & 1 & 只需 effort/velocity \\
+		\texttt{prismatic} & 移动（直线）关节，有限位 & 1 & 必须（含 lower/upper） \\
+		\texttt{planar} & 垂直于某轴的平面内平移并绕该轴转动 & 3 & 不允许有 \\
+		\texttt{floating} & 自由浮动 & 6 & 不允许有 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\textbf{与理论关节分类的对照}：对照表~\ref{tab:自由度:常见关节}，\texttt{revolute}/\texttt{continuous} 对应转动关节 R，\texttt{prismatic} 对应移动关节 P，\texttt{floating} 对应自由刚体（6 自由度），\texttt{planar} 对应平面内的移动与转动；球铰 S、圆柱关节 C、螺旋关节 H 在 URDF 中没有单一对应的关节类型，需要多个关节串联近似或改用其它格式。
+
+\subsection{完整示例：二自由度机械臂}
+
+\begin{lstlisting}[style=xml]
+<?xml version="1.0"?>
+<robot name="two_link_arm">
+
+  <material name="steel"><color rgba="0.7 0.7 0.75 1.0"/></material>
+  <material name="orange"><color rgba="1.0 0.5 0.0 1.0"/></material>
+
+  <!-- base -->
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0.05" rpy="0 0 0"/>
+      <geometry><cylinder radius="0.08" length="0.10"/></geometry>
+      <material name="steel"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.05" rpy="0 0 0"/>
+      <geometry><cylinder radius="0.08" length="0.10"/></geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0 0 0.05" rpy="0 0 0"/>
+      <mass value="3.0"/>
+      <inertia ixx="0.0073" ixy="0" ixz="0"
+               iyy="0.0073" iyz="0" izz="0.0096"/>
+    </inertial>
+  </link>
+
+  <!-- upper arm: length 0.30, rotates about z -->
+  <link name="link1">
+    <visual>
+      <origin xyz="0 0 0.15" rpy="0 0 0"/>
+      <geometry><box size="0.05 0.05 0.30"/></geometry>
+      <material name="orange"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.15" rpy="0 0 0"/>
+      <geometry><box size="0.05 0.05 0.30"/></geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0 0 0.15" rpy="0 0 0"/>
+      <mass value="2.0"/>
+      <inertia ixx="0.0154" ixy="0" ixz="0"
+               iyy="0.0154" iyz="0" izz="0.0008"/>
+    </inertial>
+  </link>
+
+  <!-- forearm: length 0.25, rotates about y -->
+  <link name="link2">
+    <visual>
+      <origin xyz="0 0 0.125" rpy="0 0 0"/>
+      <geometry><box size="0.04 0.04 0.25"/></geometry>
+      <material name="orange"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.125" rpy="0 0 0"/>
+      <geometry><box size="0.04 0.04 0.25"/></geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0 0 0.125" rpy="0 0 0"/>
+      <mass value="1.0"/>
+      <inertia ixx="0.0053" ixy="0" ixz="0"
+               iyy="0.0053" iyz="0" izz="0.0003"/>
+    </inertial>
+  </link>
+
+  <!-- tool frame: an empty link that only provides a frame -->
+  <link name="tool0"/>
+
+  <!-- joints -->
+  <joint name="joint1" type="revolute">
+    <parent link="base_link"/>
+    <child link="link1"/>
+    <origin xyz="0 0 0.10" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-3.1416" upper="3.1416" effort="50" velocity="2.0"/>
+    <dynamics damping="0.5" friction="0.1"/>
+  </joint>
+
+  <joint name="joint2" type="revolute">
+    <parent link="link1"/>
+    <child link="link2"/>
+    <origin xyz="0 0 0.30" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-2.0944" upper="2.0944" effort="20" velocity="2.0"/>
+    <dynamics damping="0.3"/>
+  </joint>
+
+  <joint name="tool_joint" type="fixed">
+    <parent link="link2"/>
+    <child link="tool0"/>
+    <origin xyz="0 0 0.25" rpy="0 0 0"/>
+  </joint>
+
+</robot>
+\end{lstlisting}
+
+\section{坐标系约定与正运动学}
+
+\subsection{origin 就是齐次变换矩阵}
+
+\texttt{origin} 的 \texttt{xyz} 是平移向量 $\boldsymbol{p}$，\texttt{rpy} 是\textbf{固定轴} XYZ 外旋角（先绕 $x$ 转 roll，再绕 $y$ 转 pitch，最后绕 $z$ 转 yaw）：
+\begin{equation}
+	\label{eq:URDF:RPY}
+	\boldsymbol{A}=R_{z}(\gamma)R_{y}(\beta)R_{x}(\alpha),\qquad
+	\boldsymbol{T}_{\text{origin}}=\begin{bmatrix}
+		\boldsymbol{A} & \boldsymbol{p}\\
+		0 & 1
+	\end{bmatrix}
+\end{equation}
+即 \texttt{origin} 给出的位形恰好是齐次变换矩阵。
+
+\subsection{关节引入的运动}
+
+设关节变量为 $q$，则子连杆在父连杆坐标系中的位形为
+\begin{equation}
+	\label{eq:URDF:关节变换}
+	\boldsymbol{T}_{pc}(q)=\boldsymbol{T}_{\text{origin}}\,\boldsymbol{T}_{\text{motion}}(q)
+\end{equation}
+其中 $\boldsymbol{T}_{\text{motion}}(q)$ 由关节类型决定：
+
+\begin{table}[H]
+	\centering
+	\caption{关节运动对应的变换}
+	\label{tab:URDF:关节变换}
+	\begin{tabular}{ll}
+		\hline
+		关节类型 & $\boldsymbol{T}_{\text{motion}}(q)$ \\
+		\hline
+		revolute / continuous & 绕轴转 $q$：$\mathrm{Rot}(\boldsymbol{a},q)$ \\
+		prismatic & 沿轴平移 $q$：$\mathrm{Trans}(\boldsymbol{a}q)$ \\
+		fixed & $\boldsymbol{I}$ \\
+		\hline
+	\end{tabular}
+\end{table}
+
+串联链从基座到末端依次相乘就得到正运动学。以二自由度机械臂为例，
+\begin{equation}
+	\label{eq:URDF:2R正运动学}
+	\boldsymbol{T}_{\text{base,tool}}
+	=\boldsymbol{T}_{\text{origin},1}\,\mathrm{Rot}(\boldsymbol{z},q_{1})\,
+	\boldsymbol{T}_{\text{origin},2}\,\mathrm{Rot}(\boldsymbol{y},q_{2})\,
+	\boldsymbol{T}_{\text{origin},3}
+\end{equation}
+其中 $\boldsymbol{T}_{\text{origin},1}=\mathrm{Trans}(0,0,0.1)$、$\boldsymbol{T}_{\text{origin},2}=\mathrm{Trans}(0,0,0.3)$、$\boldsymbol{T}_{\text{origin},3}=\mathrm{Trans}(0,0,0.25)$，可得末端位置
+\begin{equation}
+	\label{eq:URDF:2R末端位置}
+	\boldsymbol{p}_{\text{tool}}=\begin{bmatrix}
+		0.25\sin q_{2}\cos q_{1}\\
+		0.25\sin q_{2}\sin q_{1}\\
+		0.4+0.25\cos q_{2}
+	\end{bmatrix}
+\end{equation}
+
+\textbf{与 DH 参数法的比较}：DH 参数法用四个参数（$a,\alpha,d,\theta$）规则化地描述串联链的每一段——参数少、便于手推正运动学；URDF 的 \texttt{origin} 是任意 6 参数位形、\texttt{axis} 也可任取，表达更自由，还能描述树形分支。两者在一定条件下可以互相转换：URDF 面向机器读取与仿真，DH 面向手工推导。
+
+\section{xacro：URDF 的“宏语言”}
+
+手写 URDF 冗长、不能定义变量、不能复用、不能做算术。\textbf{xacro} 是 URDF 的扩展：
+\begin{itemize}
+	\item \texttt{<xacro:property>}：定义常量，用 \texttt{\$\{表达式\}} 引用并计算；
+	\item \texttt{<xacro:macro>}：定义带参数的可复用片段；
+	\item \texttt{<xacro:include>}：把模型拆成多个文件；
+	\item \texttt{<xacro:if>} / \texttt{<xacro:unless>}：条件包含；
+	\item \texttt{<xacro:arg>} / \texttt{\$(arg 名)}：从命令行传入参数。
+\end{itemize}
+
+xacro 文件本质上是合法 URDF（只是多了 \texttt{xmlns:xacro} 命名空间），预处理后就是普通 URDF：
+
+\begin{lstlisting}[style=xml]
+<?xml version="1.0"?>
+<robot name="two_link_arm" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:property name="L1" value="0.30"/>
+  <xacro:property name="L2" value="0.25"/>
+
+  <!-- a rod link: visual + inertia computed from cylinder formulas -->
+  <xacro:macro name="rod_link" params="name length mass radius">
+    <link name="${name}">
+      <visual>
+        <origin xyz="0 0 ${length/2}" rpy="0 0 0"/>
+        <geometry><cylinder radius="${radius}" length="${length}"/></geometry>
+      </visual>
+      <inertial>
+        <origin xyz="0 0 ${length/2}" rpy="0 0 0"/>
+        <mass value="${mass}"/>
+        <!-- Ixx=Iyy=m(3r^2+l^2)/12, Izz=mr^2/2 -->
+        <inertia ixx="${mass*(3*radius*radius+length*length)/12}" ixy="0" ixz="0"
+                 iyy="${mass*(3*radius*radius+length*length)/12}" iyz="0"
+                 izz="${mass*radius*radius/2}"/>
+      </inertial>
+    </link>
+  </xacro:macro>
+
+  <xacro:rod_link name="link1" length="${L1}" mass="2.0" radius="0.025"/>
+  <xacro:rod_link name="link2" length="${L2}" mass="1.0" radius="0.020"/>
+
+  <joint name="joint1" type="revolute">
+    <parent link="base_link"/>
+    <child link="link1"/>
+    <origin xyz="0 0 0.1"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-3.1416" upper="3.1416" effort="50" velocity="2.0"/>
+  </joint>
+
+  <joint name="joint2" type="revolute">
+    <parent link="link1"/>
+    <child link="link2"/>
+    <origin xyz="0 0 ${L1}"/>   <!-- joint sits at the end of link1 -->
+    <axis xyz="0 1 0"/>
+    <limit lower="-2.0944" upper="2.0944" effort="20" velocity="2.0"/>
+  </joint>
+
+</robot>
+\end{lstlisting}
+
+\textbf{意义}：改一个几何参数（如 $L_{1}$），所有用到它的地方（连杆尺寸、关节安装位置、惯性）自动更新；把电机、传感器、夹爪等做成 macro 后，搭建新机器人就成了“搭积木”。
+
+\section{常用工具与工作流}
+
+\begin{table}[H]
+	\centering
+	\caption{URDF 常用工具}
+	\label{tab:URDF:工具}
+	\begin{tabular}{lp{8cm}}
+		\hline
+		工具 & 作用 \\
+		\hline
+		\texttt{xacro model.urdf.xacro} & 把 xacro 展开成纯 URDF \\
+		\texttt{check\_urdf model.urdf} & 检查语法与树结构，打印连杆树 \\
+		\texttt{urdf\_to\_graphiz model.urdf} & 生成结构图（pdf） \\
+		\texttt{robot\_state\_publisher} & 由 URDF 与关节状态发布 TF \\
+		\texttt{joint\_state\_publisher\_gui} & 滑动条手动给关节角，快速查看模型 \\
+		\texttt{rviz2} & 可视化模型与 TF \\
+		Gazebo / MoveIt / ros2\_control & 仿真、运动规划、控制 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+ROS 2 下快速预览：
+
+\begin{lstlisting}[style=code, language=bash]
+xacro robot.urdf.xacro > robot.urdf
+check_urdf robot.urdf
+ros2 launch urdf_tutorial display.launch.py model:=/path/to/robot.urdf
+\end{lstlisting}
+
+\section{局限与常见坑}
+
+\textbf{URDF 描述不了的}：
+\begin{itemize}
+	\item \textbf{闭环机构}（并联机器人、四连杆、平行四边形机构）——树结构天生无法表达，需要 SDF、MJCF（MuJoCo）、USD（Isaac Sim）等格式；
+	\item \textbf{柔性体、变形体}；
+	\item \textbf{传感器与执行器}——要通过 Gazebo 插件标签或 \texttt{ros2\_control} 配置另行描述；
+	\item \textbf{接触摩擦、材质光学参数}等物理细节，Gazebo 下要用 \texttt{<gazebo>} 标签扩展。
+\end{itemize}
+
+常见的坑如表~\ref{tab:URDF:常见坑} 所示。
+
+\begin{table}[H]
+	\centering
+	\caption{URDF 常见坑}
+	\label{tab:URDF:常见坑}
+	\begin{tabular}{>{\raggedright\arraybackslash}p{3.1cm}>{\raggedright\arraybackslash}p{4.6cm}>{\raggedright\arraybackslash}p{5.6cm}}
+		\hline
+		现象 & 原因 & 解决 \\
+		\hline
+		模型加载失败或树不完整 & 出现环（一个 link 有两个父关节）或多个根连杆 & 用 \texttt{check\_urdf} 检查，改回树形结构 \\
+		仿真中抖动、飞出去 & 惯性缺失或非正定、质量过小 & 补全 \texttt{inertial}，检查惯性矩阵 \\
+		mesh 不显示 & 路径不对或包未安装 & 用 \texttt{package://包名/...}，并确认模型已安装到包的 \texttt{share/} 中 \\
+		visual 朝向不对 & 对 \texttt{rpy} 固定轴外旋约定理解有误 & 与齐次变换一章的 RPY 约定对照 \\
+		continuous 关节不动 & 误写了位置限位或缺少 \texttt{effort}/\texttt{velocity} & \texttt{continuous} 不写 lower/upper，只写 effort/velocity \\
+		关节转的方向与预期相反 & \texttt{axis} 方向取反 & 翻转 \texttt{axis} 的符号 \\
+		单位错误 & 长度用了 mm、角度用了度 & URDF 统一用 SI：m、rad、N、N$\cdot$m、kg \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\textbf{参考}：URDF 的完整 XML 规范见 ROS wiki 的 \href{https://wiki.ros.org/urdf/XML}{urdf/XML} 页面，xacro 见 \href{https://wiki.ros.org/xacro}{xacro} 页面。

@@ -1,0 +1,320 @@
+% ============================================================
+%  刚体运动
+%  内容依据笔记《刚体运动.md》
+%  记号约定：向量（含希腊字母）用 \boldsymbol{}；$\tilde{\cdot}$ 表示反对称矩阵
+% ============================================================
+
+我们知道，要描述一个刚体在三维空间中的位置与姿态至少需要 6 个参数。
+
+由 \textit{Chasles--Mozzi} 定理，任意刚体运动都可以通过绕某一螺旋轴旋转一定的角度并沿该轴平移来实现。
+
+\section{刚体运动与运动旋量}
+
+\subsection{齐次变换矩阵}
+
+接下来，我们探讨刚体姿态与位置联合表示的构建方法。一种自然的选择是使用旋转矩阵 $\boldsymbol{A}\in SO(3)$ 来表示体坐标系 $\{b\}$ 在固定坐标系 $\{s\}$ 中的朝向，以及使用向量 $\boldsymbol{p}\in\mathbb{R}^{3}$ 来表示 $\{b\}$ 的原点在 $\{s\}$ 中的位置。而非将 $\boldsymbol{A}$ 与 $\boldsymbol{p}$ 分别表示，我们可以将它们封装成一个单一矩阵。
+
+\begin{definition}[特殊欧几里得群 $SE(3)$]
+	特殊欧几里得群 $SE(3)$（亦称刚体运动群或 $\mathbb{R}^{3}$ 中的齐次变换矩阵群）是指所有形如以下形式的 $4\times4$ 实矩阵 $\boldsymbol{T}$ 的集合：
+	\begin{equation}
+		\label{eq:齐次变换:SE3}
+		\boldsymbol{T}=\begin{bmatrix}
+			\boldsymbol{A} & \boldsymbol{p}\\
+			0 & 1
+		\end{bmatrix}=\begin{bmatrix}
+			a_{11} & a_{12} & a_{13} & p_{1}\\
+			a_{21} & a_{22} & a_{23} & p_{2}\\
+			a_{31} & a_{32} & a_{33} & p_{3}\\
+			0 & 0 & 0 & 1
+		\end{bmatrix}
+	\end{equation}
+	有时齐次变换矩阵 $\boldsymbol{T}$ 也会用这样一种表达方式：$(\boldsymbol{A},\boldsymbol{p})$。
+\end{definition}
+
+\subsection{齐次变换矩阵的性质}
+
+\subsubsection{性质一}
+
+齐次变换矩阵的逆也是齐次变换矩阵：
+\begin{equation}
+	\label{eq:性质:逆}
+	\boldsymbol{T}^{-1}=\begin{bmatrix}
+		\boldsymbol{A} & \boldsymbol{p}\\
+		0 & 1
+	\end{bmatrix}^{-1}=\begin{bmatrix}
+		\boldsymbol{A}^{\mathrm{T}} & -\boldsymbol{A}^{\mathrm{T}}\boldsymbol{p}\\
+		0 & 1
+	\end{bmatrix}
+\end{equation}
+
+\subsubsection{性质二}
+
+两个齐次变换矩阵的乘积也是齐次变换矩阵。
+
+\subsubsection{性质三}
+
+齐次变换矩阵的乘法满足结合律，但一般不满足交换律。
+
+\subsubsection{性质四}
+
+\textbf{齐次坐标}：称
+\begin{equation}
+	\label{eq:性质:齐次坐标}
+	\begin{bmatrix}
+		\boldsymbol{x}\\
+		1
+	\end{bmatrix}
+\end{equation}
+为齐次坐标。则有：
+\begin{equation}
+	\label{eq:性质:齐次坐标变换}
+	\boldsymbol{T}\begin{bmatrix}
+		\boldsymbol{x}\\
+		1
+	\end{bmatrix}=\begin{bmatrix}
+		\boldsymbol{A} & \boldsymbol{p}\\
+		0 & 1
+	\end{bmatrix}\begin{bmatrix}
+		\boldsymbol{x}\\
+		1
+	\end{bmatrix}=\begin{bmatrix}
+		\boldsymbol{A}\boldsymbol{x}+\boldsymbol{p}\\
+		1
+	\end{bmatrix}
+\end{equation}
+在不引起歧义的情况下，$\boldsymbol{T}\boldsymbol{x}=\boldsymbol{A}\boldsymbol{x}+\boldsymbol{p}$。
+
+给定 $\boldsymbol{T}=(\boldsymbol{A},\boldsymbol{p})\in SE(3)$ 以及 $\boldsymbol{x},\boldsymbol{y}\in\mathbb{R}^{3}$，下列结论成立：
+\begin{enumerate}
+	\item[(a)] $\|\boldsymbol{T}\boldsymbol{x}-\boldsymbol{T}\boldsymbol{y}\|=\|\boldsymbol{x}-\boldsymbol{y}\|$，其中 $\|\cdot\|$ 表示 $\mathbb{R}^{3}$ 中的标准欧几里得范数，即 $\|\boldsymbol{x}\|=\sqrt{\boldsymbol{x}^{\mathrm{T}}\boldsymbol{x}}$；
+	\item[(b)] 对所有 $\boldsymbol{z}\in\mathbb{R}^{3}$，有 $\langle\boldsymbol{T}\boldsymbol{x}-\boldsymbol{T}\boldsymbol{z},\ \boldsymbol{T}\boldsymbol{y}-\boldsymbol{T}\boldsymbol{z}\rangle=\langle\boldsymbol{x}-\boldsymbol{z},\ \boldsymbol{y}-\boldsymbol{z}\rangle$，其中 $\langle\cdot,\cdot\rangle$ 表示 $\mathbb{R}^{3}$ 中的标准欧几里得内积，$\langle\boldsymbol{x},\boldsymbol{y}\rangle=\boldsymbol{x}^{\mathrm{T}}\boldsymbol{y}$。
+\end{enumerate}
+
+由上述描述其实可以看出，齐次变换矩阵 $\boldsymbol{T}$ 能将一个点 $\boldsymbol{x}$ 变换到 $\boldsymbol{T}\boldsymbol{x}$；结论（a）表明这个变换是等距的，而结论（b）表明这个变换是保角的。
+
+\subsection{齐次变换矩阵的用途}
+
+齐次变换矩阵 $\boldsymbol{T}\in SE(3)$ 除了表示位形，还可以作为算子作用到向量和坐标系上，主要有以下三种用途。
+
+\subsubsection{表示一个刚体的位形}
+
+设 $\{s\}$ 为固定坐标系，$\{b\}$ 为固连在刚体上的体坐标系，则
+\begin{equation}
+	\label{eq:用途:位形}
+	\boldsymbol{T}_{sb}=\begin{bmatrix}
+		\boldsymbol{A}_{sb} & \boldsymbol{p}_{sb}\\
+		0 & 1
+	\end{bmatrix}
+\end{equation}
+表示了 $\{b\}$ 相对 $\{s\}$ 的位形：其中 $\boldsymbol{A}_{sb}\in SO(3)$ 给出 $\{b\}$ 在 $\{s\}$ 中的姿态，$\boldsymbol{p}_{sb}\in\mathbb{R}^{3}$ 给出 $\{b\}$ 的原点在 $\{s\}$ 中的位置。由于刚体的位形由其固连坐标系相对参考系的位形完全确定，$\boldsymbol{T}_{sb}$ 也就是刚体位形的表示：3 个参数来自 $\boldsymbol{p}_{sb}$，3 个来自 $\boldsymbol{A}_{sb}$，与开头“至少需要 6 个参数”的说法一致。
+
+由位形空间一章的讨论可知，三维刚体的位形空间是 $\mathbb{R}^{3}\times SO(3)$（6 维），$SE(3)$ 正是这一位形空间——每个 $\boldsymbol{T}_{sb}$ 都对应位形空间中的一个点。
+
+\subsubsection{变换参考坐标系}
+
+同一个向量或坐标系在不同参考系中表达时数值不同，$\boldsymbol{T}$ 可以实现两种表达之间的转换。
+
+\textbf{向量}：设向量在 $\{b\}$ 中的表示为 $\boldsymbol{v}_{b}\in\mathbb{R}^{3}$，则它在 $\{s\}$ 中的表示为
+\begin{equation}
+	\label{eq:用途:向量变换}
+	\boldsymbol{v}_{s}=\boldsymbol{A}_{sb}\boldsymbol{v}_{b}
+\end{equation}
+可见（自由）向量的坐标变换只用到旋转部分。
+
+\textbf{位置向量（点）}：除旋转外，还要加上两个坐标系原点之间的平移：
+\begin{equation}
+	\label{eq:用途:点变换}
+	\boldsymbol{x}_{s}=\boldsymbol{A}_{sb}\boldsymbol{x}_{b}+\boldsymbol{p}_{sb}
+	\qquad\Longleftrightarrow\qquad
+	\begin{bmatrix}
+		\boldsymbol{x}_{s}\\
+		1
+	\end{bmatrix}=\boldsymbol{T}_{sb}\begin{bmatrix}
+		\boldsymbol{x}_{b}\\
+		1
+	\end{bmatrix}
+\end{equation}
+
+\textbf{坐标系}：设 $\{b\}$ 相对 $\{s\}$ 的位形为 $\boldsymbol{T}_{sb}$，$\{c\}$ 相对 $\{b\}$ 的位形为 $\boldsymbol{T}_{bc}$，则 $\{c\}$ 相对 $\{s\}$ 的位形为
+\begin{equation}
+	\label{eq:用途:坐标系复合}
+	\boldsymbol{T}_{sc}=\boldsymbol{T}_{sb}\boldsymbol{T}_{bc}
+\end{equation}
+即“下标相消”：相乘时相邻的中间下标 $b$ 相互抵消。
+
+\subsubsection{表示一个向量或者坐标系的位移}
+
+反过来，也可以把 $\boldsymbol{T}$ 看作一个位移算子：它对作用对象先转动 $\boldsymbol{A}$、再平移 $\boldsymbol{p}$。
+
+\textbf{对向量的位移}：由性质四，点 $\boldsymbol{x}$ 的齐次坐标左乘 $\boldsymbol{T}$ 得
+\begin{equation}
+	\label{eq:用途:位移}
+	\boldsymbol{T}\begin{bmatrix}
+		\boldsymbol{x}\\
+		1
+	\end{bmatrix}=\begin{bmatrix}
+		\boldsymbol{A}\boldsymbol{x}+\boldsymbol{p}\\
+		1
+	\end{bmatrix}
+\end{equation}
+即点被位移到新位置 $\boldsymbol{x}'=\boldsymbol{A}\boldsymbol{x}+\boldsymbol{p}$。
+
+\textbf{对坐标系的位移}：设坐标系 $\{b\}$ 的位形为 $\boldsymbol{T}_{sb}$，用同一个 $\boldsymbol{T}$ 作用：
+\begin{itemize}
+	\item 左乘 $\boldsymbol{T}\boldsymbol{T}_{sb}$：位移在固定坐标系 $\{s\}$ 中描述，相当于绕 $\{s\}$ 的轴转动、沿 $\{s\}$ 的轴平移；
+	\item 右乘 $\boldsymbol{T}_{sb}\boldsymbol{T}$：位移在体坐标系 $\{b\}$ 自身中描述，相当于绕自身轴转动、沿自身轴平移。
+\end{itemize}
+一般地，\textbf{左乘表示在固定坐标系中运动，右乘表示在体坐标系中运动}。
+
+\subsection{运动旋量（\textit{Twist}）}
+
+\textbf{空间速度（\textit{spatial velocity}）或运动旋量}：定义
+\begin{equation}
+	\label{eq:运动旋量:定义}
+	\mathcal{V}=\begin{bmatrix}
+		\boldsymbol{\omega}\\
+		\boldsymbol{v}
+	\end{bmatrix}\in\mathbb{R}^{6}
+\end{equation}
+这样就有
+\begin{equation}
+	\label{eq:运动旋量:体旋量}
+	\begin{aligned}
+		\boldsymbol{T}^{-1}\dot{\boldsymbol{T}}
+		&=\begin{bmatrix}
+			\boldsymbol{A}^{\mathrm{T}} & -\boldsymbol{A}^{\mathrm{T}}\boldsymbol{p}\\
+			0 & 1
+		\end{bmatrix}
+		\begin{bmatrix}
+			\dot{\boldsymbol{A}} & \dot{\boldsymbol{p}}\\
+			0 & 0
+		\end{bmatrix}\\
+		&=\begin{bmatrix}
+			\boldsymbol{A}^{\mathrm{T}}\dot{\boldsymbol{A}} & \boldsymbol{A}^{\mathrm{T}}\dot{\boldsymbol{p}}\\
+			0 & 0
+		\end{bmatrix}
+		=\begin{bmatrix}
+			\tilde{\boldsymbol{\omega}}_{b} & \boldsymbol{v}_{b}\\
+			0 & 0
+		\end{bmatrix}
+		=\tilde{\mathcal{V}}_{b}
+	\end{aligned}
+\end{equation}
+称 $\mathcal{V}_{b}$ 为连体坐标系下的空间速度。
+\begin{equation}
+	\label{eq:运动旋量:空间旋量}
+	\begin{aligned}
+		\dot{\boldsymbol{T}}\boldsymbol{T}^{-1}
+		&=\begin{bmatrix}
+			\dot{\boldsymbol{A}} & \dot{\boldsymbol{p}}\\
+			0 & 0
+		\end{bmatrix}
+		\begin{bmatrix}
+			\boldsymbol{A}^{\mathrm{T}} & -\boldsymbol{A}^{\mathrm{T}}\boldsymbol{p}\\
+			0 & 1
+		\end{bmatrix}\\
+		&=\begin{bmatrix}
+			\dot{\boldsymbol{A}}\boldsymbol{A}^{\mathrm{T}} & \dot{\boldsymbol{p}}-\dot{\boldsymbol{A}}\boldsymbol{A}^{\mathrm{T}}\boldsymbol{p}\\
+			0 & 0
+		\end{bmatrix}
+		=\begin{bmatrix}
+			\tilde{\boldsymbol{\omega}}_{s} & \boldsymbol{v}_{s}\\
+			0 & 0
+		\end{bmatrix}
+		=\tilde{\mathcal{V}}_{s}
+	\end{aligned}
+\end{equation}
+称 $\mathcal{V}_{s}$ 为世界坐标系下的空间速度。
+
+若将运动物体视为具有无限大尺寸，则 $\mathcal{V}_{s}$ 与 $\mathcal{V}_{b}$ 之间存在着一种极具吸引力且自然的对称性：
+\begin{equation}
+	\label{eq:运动旋量:对称性}
+	\tilde{\mathcal{V}}_{b}=\boldsymbol{T}^{-1}\tilde{\mathcal{V}}_{s}\boldsymbol{T}
+\end{equation}
+
+\textbf{伴随变换矩阵}：给定 $\boldsymbol{T}=(\boldsymbol{A},\boldsymbol{p})$，其伴随变换矩阵 $[\mathrm{Ad}_{T}]$ 定义为
+\begin{equation}
+	\label{eq:运动旋量:伴随矩阵}
+	[\mathrm{Ad}_{T}]=\begin{bmatrix}
+		\boldsymbol{A} & 0\\
+		\tilde{\boldsymbol{p}}\boldsymbol{A} & \boldsymbol{A}
+	\end{bmatrix}
+\end{equation}
+对于任一 $\mathcal{V}\in\mathbb{R}^{6}$，有\textbf{伴随映射}：
+\begin{equation}
+	\label{eq:运动旋量:伴随映射}
+	\mathcal{V}'=[\mathrm{Ad}_{T}]\mathcal{V}
+\end{equation}
+伴随映射有如下特性：
+\begin{enumerate}
+	\item $[\mathrm{Ad}_{T_{1}}][\mathrm{Ad}_{T_{2}}]\mathcal{V}=[\mathrm{Ad}_{T_{1}T_{2}}]\mathcal{V}$；
+	\item $[\mathrm{Ad}_{T}]^{-1}=[\mathrm{Ad}_{T^{-1}}]$。
+\end{enumerate}
+
+\section{力旋量}
+
+运动旋量刻画刚体的运动，与之\textbf{对偶}的是刻画作用在刚体上的力与力矩的\textbf{力旋量（\textit{wrench}）}。由 \textit{Poinsot} 定理，作用在刚体上的任意力系都可以等效为沿某条直线的单力与绕该直线的力偶；用某个参考系描述时，它表示为一个合力 $\boldsymbol{f}$ 与关于该参考系原点的合力矩 $\boldsymbol{m}$，将两者打包成六维向量：
+\begin{equation}
+	\label{eq:力旋量:定义}
+	\mathcal{F}=\begin{bmatrix}
+		\boldsymbol{m}\\
+		\boldsymbol{f}
+	\end{bmatrix}\in\mathbb{R}^{6}
+\end{equation}
+（本笔记采用“矩在前、力在后”的排列，与运动旋量 $\mathcal{V}=[\boldsymbol{\omega};\boldsymbol{v}]$ 的排列相对应。）
+
+\textbf{瞬时功率}：力旋量作用在以运动旋量 $\mathcal{V}$ 运动的刚体上，产生的瞬时功率为两者的内积
+\begin{equation}
+	\label{eq:力旋量:功率}
+	P=\mathcal{V}^{\mathrm{T}}\mathcal{F}=\boldsymbol{\omega}^{\mathrm{T}}\boldsymbol{m}+\boldsymbol{v}^{\mathrm{T}}\boldsymbol{f}
+\end{equation}
+功率是标量，与参考坐标系的选择无关，故有
+\begin{equation}
+	\label{eq:力旋量:功率不变}
+	\mathcal{V}_{b}^{\mathrm{T}}\mathcal{F}_{b}=\mathcal{V}_{s}^{\mathrm{T}}\mathcal{F}_{s}
+\end{equation}
+
+\textbf{力旋量的坐标变换}：将 $\mathcal{V}_{s}=[\mathrm{Ad}_{T_{sb}}]\mathcal{V}_{b}$ 代入上式，得
+\begin{equation}
+	\label{eq:力旋量:代入}
+	\mathcal{V}_{b}^{\mathrm{T}}\mathcal{F}_{b}=\mathcal{V}_{b}^{\mathrm{T}}[\mathrm{Ad}_{T_{sb}}]^{\mathrm{T}}\mathcal{F}_{s}
+\end{equation}
+该式对任意 $\mathcal{V}_{b}$ 均成立，于是
+\begin{equation}
+	\label{eq:力旋量:变换}
+	\begin{aligned}
+		\mathcal{F}_{b}&=[\mathrm{Ad}_{T_{sb}}]^{\mathrm{T}}\mathcal{F}_{s}\\
+		\Longleftrightarrow\qquad
+		\mathcal{F}_{s}&=[\mathrm{Ad}_{T_{sb}}]^{-\mathrm{T}}\mathcal{F}_{b}
+		=[\mathrm{Ad}_{T_{bs}}]^{\mathrm{T}}\mathcal{F}_{b}
+	\end{aligned}
+\end{equation}
+也就是说：由连体坐标系到世界坐标系，运动旋量用 $[\mathrm{Ad}_{T_{sb}}]$ 变换，而力旋量用 $[\mathrm{Ad}_{T_{bs}}]^{\mathrm{T}}$（即伴随矩阵的逆转置）变换，两者互为\textbf{对偶（余伴随）变换}。
+
+写成显式矩阵：
+\begin{equation}
+	\label{eq:力旋量:变换矩阵}
+	[\mathrm{Ad}_{T_{sb}}]^{-\mathrm{T}}=\begin{bmatrix}
+		\boldsymbol{A}_{sb} & \tilde{\boldsymbol{p}}_{sb}\boldsymbol{A}_{sb}\\
+		0 & \boldsymbol{A}_{sb}
+	\end{bmatrix}
+\end{equation}
+于是
+\begin{equation}
+	\label{eq:力旋量:分量形式}
+	\boldsymbol{f}_{s}=\boldsymbol{A}_{sb}\boldsymbol{f}_{b},\qquad
+	\boldsymbol{m}_{s}=\boldsymbol{A}_{sb}\boldsymbol{m}_{b}+\tilde{\boldsymbol{p}}_{sb}\boldsymbol{A}_{sb}\boldsymbol{f}_{b}
+\end{equation}
+物理意义：力只随姿态旋转；力矩除了随姿态旋转，还要加上力绕 $\{s\}$ 原点的矩 $\boldsymbol{p}_{sb}\times(\boldsymbol{A}_{sb}\boldsymbol{f}_{b})$。
+
+\textbf{例}：设 $\{b\}$ 原点处作用纯力 $\boldsymbol{f}_{b}$，即 $\mathcal{F}_{b}=[\boldsymbol{0};\ \boldsymbol{f}_{b}]$，则
+\begin{equation}
+	\label{eq:力旋量:纯力例}
+	\mathcal{F}_{s}=\begin{bmatrix}
+		\tilde{\boldsymbol{p}}_{sb}\boldsymbol{A}_{sb}\boldsymbol{f}_{b}\\
+		\boldsymbol{A}_{sb}\boldsymbol{f}_{b}
+	\end{bmatrix}
+\end{equation}
+与直观一致：在 $\{s\}$ 中力为 $\boldsymbol{A}_{sb}\boldsymbol{f}_{b}$，它作用在 $\boldsymbol{p}_{sb}$ 处，对 $\{s\}$ 原点产生的矩正是 $\boldsymbol{p}_{sb}\times(\boldsymbol{A}_{sb}\boldsymbol{f}_{b})$。
+
+从线性代数的角度看，运动旋量构成线性空间，力旋量构成它的\textbf{对偶空间}，内积 $P=\mathcal{V}^{\mathrm{T}}\mathcal{F}$ 就是两者之间的配对，这正是力旋量变换矩阵取运动旋量变换矩阵的转置逆（余伴随）的原因。

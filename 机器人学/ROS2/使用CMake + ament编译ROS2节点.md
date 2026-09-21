@@ -164,7 +164,7 @@ export PATH=/usr/bin:$PATH
 [INFO] ... [rclcpp]: signal_handler(signum=15)
 ```
 
-> 注意：本机ROS2发行版是lyrical，不是老教程误写的humble，安装目录是`/opt/ros/lyrical`。
+> 注意：本机ROS2发行版是lyrical，安装目录是`/opt/ros/lyrical`。
 
 ## 常见坑汇总
 | 报错 | 原因 | 解决 |
