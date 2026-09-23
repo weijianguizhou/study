@@ -1,30 +1,196 @@
-\usepackage{ctex}
+% ============================================================
+%  preamble.tex —— 「李思风」极简学术笔记样式
+%  参照《线性代数：原理与应用》（李思，清华大学）讲义排版：
+%    · 正文方正宋体 11pt、1.3 倍行距、首行缩进 2 字符
+%    · 章标题居中加粗特大、节标题居中、小节左对齐，纯黑无装饰
+%    · 定义/定理/命题/引理/推论 = 圆角细边框白底盒（行内加粗彩色标签）
+%    · 例/练习/注/证明 = 无框，黑色加粗行内标签（注用楷体）
+%    · 页码底部居中、无页眉；目录默认点线引导 + 蓝色超链接
+%  编译方式：XeLaTeX（Fandol 字体随 TeX Live 提供，跨平台一致）
+% ============================================================
+
+% ------------------------------------------------------------%
+% 基础：字体、页面
+% ------------------------------------------------------------%
+\usepackage[fontset=fandol]{ctex}   % 方正宋体/楷体/黑体，与参照讲义同款
 \usepackage{geometry,graphicx,xcolor,color,subcaption}
-\geometry{a4paper, top=2.5cm, bottom=2.5cm, left=2.8cm, right=2.8cm, headheight=14.5pt}
-\usepackage{amssymb,amsmath,amsthm}                             % 数学字体
-\usepackage{cancel}                                             % 数学划线（\cancel）
-\usepackage{booktabs}   % 提供 \toprule, \midrule, \bottomrule    % 采用 Palatino 风格字体
-\usepackage{multirow}   % 表格合并行（\multirow）
+\geometry{a4paper, margin=2.54cm, headheight=14.5pt}
+
+% ------------------------------------------------------------%
+% 数学与表格
+% ------------------------------------------------------------%
+\usepackage{amssymb,amsmath,amsthm}
+\usepackage{cancel}
+\usepackage{booktabs}
+\usepackage{multirow}
 \usepackage{newclude,ulem}
+
+% ------------------------------------------------------------%
+% 配色：绿=定义，蓝=定理，深蓝=命题/引理，橙=推论（李思讲义取色）
+% ------------------------------------------------------------%
+\definecolor{LiSiDef}{RGB}{0,191,0}       % 定义：绿
+\definecolor{LiSiThm}{RGB}{0,0,191}       % 定理：蓝
+\definecolor{LiSiPro}{RGB}{0,0,153}       % 命题/引理：深蓝
+\definecolor{LiSiCor}{RGB}{191,96,0}      % 推论：橙
+\definecolor{LiSiWarn}{RGB}{191,0,0}      % 注意：红
+
+% 兼容旧配色名（艺术封面与历史章节文件仍引用）
 \definecolor{winered}{rgb}{0.5,0,0}
-\definecolor{structurecolor}{RGB}{24,44,82}     % 深藏青：章/节标题主色（与封面同系）
-\definecolor{gold}{RGB}{168,132,74}             % 雅金：装饰线与点缀
+\definecolor{structurecolor}{RGB}{24,44,82}
+\definecolor{gold}{RGB}{168,132,74}
 \definecolor{main}{rgb}{0.5,0,0}
 \definecolor{second}{RGB}{115,45,2}
 \definecolor{third}{RGB}{0,80,80}
-% --- 盒子配色（标签签颜色 + 同系浅底） ---
-\definecolor{thmColor}{RGB}{24,44,82}     \definecolor{thmBg}{RGB}{240,243,249}
-\definecolor{defColor}{RGB}{172,88,40}    \definecolor{defBg}{RGB}{253,248,238}
-\definecolor{exColor}{RGB}{56,108,160}    \definecolor{exBg}{RGB}{240,246,252}
-\definecolor{proColor}{RGB}{20,104,98}    \definecolor{proBg}{RGB}{236,247,246}
-\definecolor{keyColor}{RGB}{148,111,55}   \definecolor{keyBg}{RGB}{250,245,235}
-\definecolor{tipColor}{RGB}{46,120,70}    \definecolor{tipBg}{RGB}{238,247,240}
-\definecolor{warnColor}{RGB}{188,64,54}   \definecolor{warnBg}{RGB}{252,240,238}
-\usepackage[colorlinks,linkcolor = structurecolor]{hyperref}           % 定义引用的颜色
+\colorlet{thmColor}{LiSiThm}
+\colorlet{defColor}{LiSiDef}
+\colorlet{proColor}{LiSiPro}
+\colorlet{exColor}{LiSiPro}
+\colorlet{keyColor}{LiSiPro}
+\colorlet{tipColor}{LiSiDef}
+\colorlet{warnColor}{LiSiWarn}
+\colorlet{thmBg}{white}
+\colorlet{defBg}{white}
+\colorlet{exBg}{white}
+\colorlet{proBg}{white}
+\colorlet{keyBg}{white}
+\colorlet{tipBg}{white}
+\colorlet{warnBg}{white}
+
+\usepackage[colorlinks,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+% ------------------------------------------------------------%
+% 计数器：定理类（定义/定理/命题/引理/推论）共用；例/练习独立
+% 章号为中文「第一章」仅用于显示，编号仍为阿拉伯数字（1.1、2.3.1）
+% ------------------------------------------------------------%
+\makeatletter
+\@ifundefined{c@chapter}{%
+    % ---------- article 类：无章，节为最高级 ----------
+    \newcounter{theorem}%
+    \newcounter{example}%
+}{%
+    % ---------- book 类：章为最高级 ----------
+    \renewcommand{\thechapter}{第\chinese{chapter}章}       % 章号：第一章、第二章（用于标题、目录与引用）
+    \renewcommand{\thesection}{\arabic{chapter}.\arabic{section}}
+    \renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+    \renewcommand{\thesubsubsection}{\thesubsection.\arabic{subsubsection}}
+    \renewcommand{\theequation}{\arabic{chapter}.\arabic{equation}}
+    \renewcommand{\thefigure}{\arabic{chapter}.\arabic{figure}}
+    \renewcommand{\thetable}{\arabic{chapter}.\arabic{table}}
+    \newcounter{theorem}[chapter]
+    \renewcommand{\thetheorem}{\arabic{chapter}.\arabic{theorem}}
+    \newcounter{example}[chapter]
+    \renewcommand{\theexample}{\arabic{chapter}.\arabic{example}}
+}
+\makeatother
+
+% ------------------------------------------------------------%
+% 定理类环境：圆角细边框白底盒 + 行内加粗彩色标签
+% ------------------------------------------------------------%
+\usepackage{etoolbox}
 \usepackage{tcolorbox}
 \tcbuselibrary{skins,breakable}
+
+\tcbset{
+    lisiBox/.style={
+        enhanced, breakable,
+        colback=white, boxrule=1.4pt, arc=4pt,
+        left=4mm, right=4mm, top=2mm, bottom=2mm,
+        before skip=1.3em, after skip=1.3em,
+        fontupper=\linespread{1.4}\selectfont
+    }
+}
+
+% 生成带编号的定理类环境：#1 环境名，#2 标签中文，#3 边框/标签色
+\newcommand{\newlisiThm}[3]{%
+    \newenvironment{#1}[1][]{%
+        \refstepcounter{theorem}\par
+        \begin{tcolorbox}[lisiBox, colframe=#3]%
+        \noindent{\bfseries\songti\color{#3}#2\ \thetheorem\ifstrempty{##1}{}{（##1）}}%
+        \hspace{0.4em}\ignorespaces
+    }{\end{tcolorbox}}%
+}
+\newlisiThm{definition}{定义}{LiSiDef}
+\newlisiThm{axiom}{公理}{LiSiDef}
+\newlisiThm{theorem}{定理}{LiSiThm}
+\newlisiThm{proposition}{命题}{LiSiPro}
+\newlisiThm{lemma}{引理}{LiSiPro}
+\newlisiThm{property}{性质}{LiSiPro}
+\newlisiThm{corollary}{推论}{LiSiCor}
+
+% 例题 / 练习：无框，黑色加粗行内标签（例 x.y.z.）
+\newenvironment{example}[1][]{%
+    \par\vspace{0.5em}\refstepcounter{example}%
+    \noindent{\bfseries 例\ \theexample.\ifstrempty{#1}{}{\ #1}}\hspace{0.4em}\ignorespaces
+}{\par\vspace{0.2em}}
+\newenvironment{longexample}[1][]{%
+    \par\vspace{0.5em}\refstepcounter{example}%
+    \noindent{\bfseries 例\ \theexample.\ifstrempty{#1}{}{\ #1}}\hspace{0.4em}\ignorespaces
+}{\par\vspace{0.2em}}
+\newenvironment{exercise}[1][]{%
+    \par\vspace{0.5em}\refstepcounter{example}%
+    \noindent{\bfseries 练习\ \theexample.\ifstrempty{#1}{}{\ #1}}\hspace{0.4em}\ignorespaces
+}{\par\vspace{0.2em}}
+
+% 无编号盒子：重点 / 技巧 / 注意（细边框 + 行内加粗标签）
+\newtcolorbox{keybox}[1][重点]{lisiBox, colframe=LiSiPro,
+    before upper={\noindent{\bfseries\songti\color{LiSiPro}#1}\hspace{0.4em}}}
+\newtcolorbox{tipbox}[1][技巧]{lisiBox, colframe=LiSiDef,
+    before upper={\noindent{\bfseries\songti\color{LiSiDef}#1}\hspace{0.4em}}}
+\newtcolorbox{warnbox}[1][注意]{lisiBox, colframe=LiSiWarn,
+    before upper={\noindent{\bfseries\songti\color{LiSiWarn}#1}\hspace{0.4em}}}
+\newtcolorbox{myTheorem}[1]{lisiBox, colframe=LiSiPro,
+    before upper={\noindent{\bfseries\songti\color{LiSiPro}#1}\hspace{0.4em}}}
+\newtcolorbox{mydefinition}[1]{lisiBox, colframe=LiSiDef,
+    before upper={\noindent{\bfseries\songti\color{LiSiDef}#1}\hspace{0.4em}}}
+\newtcolorbox{myhypothesis}[1]{lisiBox, colframe=LiSiCor,
+    before upper={\noindent{\bfseries\songti\color{LiSiCor}#1}\hspace{0.4em}}}
+
+% 公式强调框（无标题，内容居中）
+\newtcolorbox{myformula}[1][]{
+    enhanced, breakable, colback=white, boxrule=1pt, arc=4pt,
+    colframe=black!35,
+    before skip=1.2em, after skip=1.2em,
+    center upper,
+    top=2.4mm, bottom=2.4mm, left=4mm, right=4mm,
+    #1
+}
+
+% ------------------------------------------------------------%
+% 证明 / 解 / 注 / 引言落款
+% ------------------------------------------------------------%
+\renewenvironment{proof}[1][证明]{%
+    \par\vspace{0.5em}\noindent{\bfseries\songti #1：}\hspace{0.3em}\ignorespaces
+}{\hfill$\square$\par\vspace{0.3em}}
+\newenvironment{solution}[1][解]{%
+    \par\vspace{0.5em}\noindent{\bfseries\songti #1．}\hspace{0.3em}\ignorespaces
+}{\par\vspace{0.3em}}
+\newenvironment{remark}[1][注]{%
+    \par\vspace{0.5em}\noindent{\bfseries\songti #1．}\hspace{0.3em}\kaishu\ignorespaces
+}{\par\vspace{0.3em}}
+\newenvironment{note}[1][注]{%
+    \par\vspace{0.5em}\noindent{\bfseries\songti #1：}\hspace{0.3em}\kaishu\ignorespaces
+}{\par\vspace{0.3em}}
+\newcommand{\intro}[1]{\rightline{\parbox[t]{5cm}{\footnotesize\fangsong\quad\quad #1}}}
+
+% ------------------------------------------------------------%
+% 列表：默认黑色编号/圆点，紧凑间距
+% ------------------------------------------------------------%
+\usepackage{enumerate}
+\usepackage{enumitem}
+\setlist{topsep=0.35em, itemsep=0.2em, parsep=0.15em, partopsep=0.1em}
+\setlist[enumerate,1]{label=\arabic*.}
+\setlist[enumerate,2]{label=(\arabic*)}
+\setlist[enumerate,3]{label=\Roman*.}
+\setlist[enumerate,4]{label=\Alph*.}
+
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{angles, quotes, arrows.meta, calc}
+
+% ------------------------------------------------------------%
+% 代码（Python）
+% ------------------------------------------------------------%
 \usepackage{listings}
-\usepackage{xcolor}
 \lstdefinestyle{pythonstyle}{
     language=Python,
     basicstyle=\ttfamily\small,
@@ -45,173 +211,86 @@
 }
 \lstset{style=pythonstyle}
 
-
 % ------------------------------------------------------------%
-% 定理/定义/例题环境：圆角彩色标题签 + 柔色底 + 柔和投影（tcolorbox）
-\usepackage{etoolbox}
-\newcounter{theorem}[chapter]
-\renewcommand{\thetheorem}{\thechapter.\arabic{theorem}}
+% 标题格式：章居中特大加粗、节居中、小节左对齐，纯黑无装饰
+% ------------------------------------------------------------%
+\usepackage{titlesec}
+\usepackage{titletoc}
+\linespread{1.3}
 
-\tcbset{
-    commonbox/.style={
-        enhanced,
-        coltitle=white,
-        fonttitle=\heiti,
-        attach boxed title to top left={xshift=5mm, yshift*=-\tcboxedtitleheight/2},
-        boxed title style={
-            frame hidden, opacityback=1,
-            rounded corners, arc=4pt,
-            top=1.2mm, bottom=1.2mm, left=2.5mm, right=2.5mm
-        },
-        boxrule=0pt, frame hidden,
-        rounded corners, arc=9pt,
-        drop fuzzy shadow=black!18!white,
-        left=9mm, right=5mm, top=4.2mm, bottom=4.5mm,
-        middle=1em,
-        before skip=1.6em, after skip=1.1em,
-        fontupper=\linespread{1.45}\selectfont
-    }
+% 目录：章条目「第一章 标题」（章号不做定宽盒，避免中文标签重叠）
+\makeatletter
+\@ifundefined{c@chapter}{}{%
+    \titlecontents{chapter}[0em]{\addvspace{1.1em}\bfseries}
+        {\thecontentslabel\hspace{1em}}{}{\hfill\contentspage}
+
+    \titleformat{\chapter}[block]
+        {\normalfont\centering\bfseries\songti\fontsize{20.7}{26}\selectfont}
+        {\thechapter}{1em}{}
+    \titlespacing*{\chapter}{0pt}{52pt plus 4pt minus 4pt}{40pt plus 4pt minus 4pt}%
 }
+\makeatother
 
-% 定理类盒子：#1=额外选项 #2=名称 #3=标题注记
-\newtcolorbox{thmBox}[3][]{commonbox,
-    colback=thmBg, colbacktitle=thmColor,
-    before title={\refstepcounter{theorem}},
-    title={{#2}\ \thetheorem\ifstrempty{#3}{}{（#3）}}, #1}
-\newenvironment{theorem}[1][]{\begin{thmBox}{定理}{#1}}{\end{thmBox}}
-\newenvironment{lemma}[1][]{\begin{thmBox}{引理}{#1}}{\end{thmBox}}
-\newenvironment{corollary}[1][]{\begin{thmBox}{推论}{#1}}{\end{thmBox}}
+\titleformat{\section}[block]
+    {\normalfont\centering\bfseries\songti\Large}
+    {\thesection}{1em}{}
+\titlespacing*{\section}{0pt}{18pt plus 3pt minus 3pt}{10pt plus 2pt minus 2pt}
 
-% 定义类盒子
-\newtcolorbox{defBox}[3][]{commonbox,
-    colback=defBg, colbacktitle=defColor,
-    before title={\refstepcounter{theorem}},
-    title={{#2}\ \thetheorem\ifstrempty{#3}{}{（#3）}}, #1}
-\newenvironment{definition}[1][]{\begin{defBox}{定义}{#1}}{\end{defBox}}
-\newenvironment{axiom}[1][]{\begin{defBox}{公理}{#1}}{\end{defBox}}
+\titleformat{\subsection}[hang]
+    {\normalfont\bfseries\songti\large}
+    {\thesubsection}{1em}{}
+\titlespacing*{\subsection}{0pt}{14pt plus 2pt minus 2pt}{6pt plus 2pt minus 2pt}
 
-% 命题类盒子
-\newtcolorbox{proBox}[3][]{commonbox,
-    colback=proBg, colbacktitle=proColor,
-    before title={\refstepcounter{theorem}},
-    title={{#2}\ \thetheorem\ifstrempty{#3}{}{（#3）}}, #1}
-\newenvironment{proposition}[1][]{\begin{proBox}{命题}{#1}}{\end{proBox}}
-\newenvironment{property}[1][]{\begin{proBox}{性质}{#1}}{\end{proBox}}
+\titleformat{\subsubsection}[hang]
+    {\normalfont\bfseries\songti\normalsize}
+    {\thesubsubsection}{1em}{}
+\titlespacing*{\subsubsection}{0pt}{10pt plus 2pt minus 2pt}{4pt plus 1pt minus 1pt}
 
-% 例题类盒子（longexample 可跨页）
-\newtcolorbox{exBox}[3][]{commonbox,
-    colback=exBg, colbacktitle=exColor,
-    before title={\refstepcounter{theorem}},
-    title={{#2}\ \thetheorem\ifstrempty{#3}{}{（#3）}}, #1}
-\newtcolorbox{longexBox}[3][]{breakable, commonbox,
-    colback=exBg, colbacktitle=exColor,
-    before title={\refstepcounter{theorem}},
-    title={{#2}\ \thetheorem\ifstrempty{#3}{}{（#3）}}, #1}
-\newenvironment{example}[1][]{\begin{exBox}{例题}{#1}}{\end{exBox}}
-\newenvironment{longexample}[1][]{\begin{longexBox}{例题}{#1}}{\end{longexBox}}
-\newenvironment{exercise}[1][]{\begin{exBox}{练习}{#1}}{\end{exBox}}
-
-% 无编号强调盒：重点公式 / 技巧 / 注意
-\newtcolorbox{keybox}[1][重点]{commonbox, colback=keyBg,  colbacktitle=keyColor,  title={#1}}
-\newtcolorbox{tipbox}[1][技巧]{commonbox, colback=tipBg,  colbacktitle=tipColor,  title={#1}}
-\newtcolorbox{warnbox}[1][注意]{commonbox, colback=warnBg, colbacktitle=warnColor, title={#1}}
-
-% 证明 / 解 / 注 / 引言落款
-\renewenvironment{proof}[1][推导]{\par\vspace{0.6em}\noindent{\heiti\color{structurecolor}#1：}\;\songti}{\hfill\textcolor{gold}{\rule{0.55em}{0.55em}}\par\vspace{0.3em}}
-\newenvironment{solution}{\par\vspace{0.4em}\noindent\underline{{\heiti 解.}} \;\kaishu}{\par\vspace{0.4em}}
-\newenvironment{remark}{\par\vspace{0.4em}\noindent\underline{{\heiti 注.}} \;\fangsong}{\par\vspace{0.4em}}
-\newenvironment{note}{\par\vspace{0.4em}\noindent{\heiti\color{proColor}注：}\;}{\par\vspace{0.4em}}
-\newcommand{\intro}[1]{\rightline{\parbox[t]{5cm}{\footnotesize \fangsong\quad\quad #1 }}}
 % ------------------------------------------------------------%
-
-\usepackage{enumerate}
-\usepackage{enumitem}
-\setlist[enumerate,1]{label=\color{structurecolor}\arabic*.}
-\setlist[enumerate,2]{label=\color{structurecolor}(\arabic*).}
-\setlist[enumerate,3]{label=\color{structurecolor}\Roman*.}
-\setlist[enumerate,4]{label=\color{structurecolor}\Alph*.}
-\usepackage{float}
-\usepackage{tikz}
-\usetikzlibrary{angles, quotes, arrows.meta, calc}
-% 设置章形式
-% ---------------------------------- %
-% \setlength{\parindent}{0pt}
-\usepackage{titlesec, titletoc}
-\linespread{1.5}
-
+% 页眉页脚：无页眉，页码底部居中（plain / mainstyle 同为该样式）
+% ------------------------------------------------------------%
 \usepackage{fancyhdr}
 \fancypagestyle{plain}{%
-	\fancyhf{} % clear all header and footer fields
-	\fancyfoot[C]{\small\color{structurecolor!80}\thepage}
-	\renewcommand{\headrulewidth}{0pt}
-	\renewcommand{\footrulewidth}{0pt}
+    \fancyhf{}
+    \fancyfoot[C]{\normalsize\thepage}
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0pt}
 }
-% 正文页眉：章/节名 + 金色细线；页脚居中页码
-\renewcommand{\chaptermark}[1]{\markboth{第\zhnumber{\thechapter}章\quad #1}{}}
-\renewcommand{\sectionmark}[1]{\markright{§\thesection\quad #1}}
 \fancypagestyle{mainstyle}{%
-	\fancyhf{}
-	\fancyhead[OC]{\small\kaishu\color{structurecolor!80}\rightmark}
-	\fancyhead[EC]{\small\kaishu\color{structurecolor!80}\leftmark}
-	\fancyfoot[C]{\small\color{structurecolor!80}\thepage}
-	\renewcommand{\headrulewidth}{0.6pt}
-	\renewcommand{\headrule}{{\color{gold}\hrule width\headwidth height 0.6pt}}
-	\renewcommand{\footrulewidth}{0pt}
+    \fancyhf{}
+    \fancyfoot[C]{\normalsize\thepage}
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0pt}
 }
+\pagestyle{plain}
 
-\titlecontents{chapter}[0em]{\addvspace{0.8em}}
-	{\color{structurecolor}\large\heiti 第 \thecontentslabel 章\quad}{}{\hfill\color{structurecolor}\contentspage}
-\titlecontents{section}[2.5em]{}
-	{\thecontentslabel\quad}{}{\titlerule*[0.6pc]{ .}\;\color{structurecolor}\contentspage}
-
-% 章标题：金色饰线夹「第 x 章」+ 特大黑体标题 + 金/灰双线收底
-\titleformat{\chapter}[display]
-	{\normalfont}
-	{\centering{\color{gold}\rule[-0.5ex]{2.2em}{1.6pt}}\hspace{1.2em}{\color{structurecolor}\large\kaishu 第 \zhnumber{\arabic{chapter}} 章}\hspace{1.2em}{\color{gold}\rule[-0.5ex]{2.2em}{1.6pt}}}
-	{1.6ex}
-	{\color{structurecolor}\centering\Huge\heiti}
-	[{\vspace{1.2ex}{\color{gold}\titlerule[1.2pt]}\vspace{-3.6pt}{\color{structurecolor!45}\titlerule[0.4pt]}}]
-
-% 节标题：金色 § 编号 + 黑体 + 金/灰双细线
-\titleformat{\section}[hang]
-	{\normalfont\Large\heiti\color{structurecolor}}
-	{{\color{gold}\Large\S}\,\thesection\hspace{1em}}{0pt}{}
-	[{\vspace{0.4ex}{\color{gold!85!black}\titlerule[0.9pt]}\vspace{-2.8pt}{\color{structurecolor!35}\titlerule[0.4pt]}}]
-
-\titlespacing*{\section}{1pc}{*7}{*2.3}[1pc]
-% 小节：金色短杠 + 深藏青黑体
-\titleformat{\subsection}[hang]
-	{\normalfont\large\heiti\color{structurecolor}}
-	{{\color{gold}\rule[-0.3ex]{0.85em}{2.2pt}}\hspace{0.6em}\thesubsection\hspace{0.6em}}{0pt}{}
-% 子小节：金色方块 + 黑体
-\titleformat{\subsubsection}[hang]
-	{\normalfont\normalsize\heiti\color{structurecolor!90}}
-	{{\color{gold}\small$\blacksquare$}\hspace{0.5em}\thesubsubsection\hspace{0.6em}}{0pt}{}
-
-% 与主题统一的通用盒子（标题由用户输入，供自定义题型）
-% 导言区定义格式
-\newtcolorbox{myTheorem}[1]{commonbox,
-    colback=thmBg, colbacktitle=thmColor, title={#1}}
-\newtcolorbox{myhypothesis}[1]{commonbox,
-    colback=tipBg, colbacktitle=tipColor, title={#1}}
-\newtcolorbox{mydefinition}[1]{commonbox,
-    colback=defBg, colbacktitle=defColor, title={#1}}
-
-% 公式强调框（无标题，居中）
-\tcbuselibrary{skins, breakable, theorems}
-\newtcolorbox{myformula}[1][]{
-    enhanced, frame hidden, boxrule=0pt,
-    colback=keyBg,
-    rounded corners, arc=9pt,
-    drop fuzzy shadow=black!18!white,
-    before skip=1.2em, after skip=1.2em,
-    halign=center, valign=center,
-    top=3mm, bottom=3mm, left=4mm, right=4mm,
-    #1
-}
+% ------------------------------------------------------------%
+% 封面主题色（默认封面 cover.tex 使用；其余封面在各自文件内定义）
+% ------------------------------------------------------------%
 \definecolor{DarkBlue}{RGB}{0,0,139}
 
-% 校对点提示框（主题化：橙色标题签）
-\newtcolorbox{proofnote}[1][]{commonbox,
-    colback=warnBg, colbacktitle=warnColor,
-    title={校对点}, #1}
+% --- 「印象·日出」封面配色（cover_Impression风.tex 使用，莫奈《日出·印象》取色） ---
+\definecolor{imSky}{RGB}{247,242,232}       % 晨空米白（画面基底）
+\definecolor{imMist}{RGB}{210,203,192}      % 远景晨雾灰
+\definecolor{imSun}{RGB}{224,110,84}        % 日出橙红（太阳主体）
+\definecolor{imSunGlow}{RGB}{238,160,120}   % 太阳柔光晕
+\definecolor{imSea}{RGB}{74,104,128}        % 海面青灰蓝（水面主色）
+\definecolor{imSeaDark}{RGB}{52,78,100}     % 海面深蓝灰（波纹暗部/剪影）
+\definecolor{imSeaLight}{RGB}{142,168,186}  % 海面浅蓝灰（波纹亮部）
+
+% --- 「格尔尼卡」封面配色（cover_Guernica风.tex 使用，毕加索《格尔尼卡》取色：纯灰阶） ---
+\definecolor{gcPaper}{RGB}{235,232,226}     % 灰白画布（画面基底）
+\definecolor{gcPaperDark}{RGB}{206,202,194} % 画布暗部（下缘）
+\definecolor{gcBone}{RGB}{247,245,241}      % 骨白（受光碎片/提亮）
+\definecolor{gcLight}{RGB}{192,188,180}     % 浅灰（中间调碎片）
+\definecolor{gcMid}{RGB}{130,128,124}       % 中灰（暗部碎片）
+\definecolor{gcChar}{RGB}{62,62,64}         % 炭灰（剪影/线条）
+\definecolor{gcBlack}{RGB}{24,24,26}        % 墨黑（重点剪影/标题）
+
+
+% ============================================================
+%  项目补充：常微分方程
+% ============================================================
+% 校对点提示框（行内红色标签）
+\newtcolorbox{proofnote}[1][]{lisiBox, colframe=LiSiWarn,
+    before upper={\noindent{\bfseries\songti\color{LiSiWarn}校对点}\hspace{0.4em}}, #1}

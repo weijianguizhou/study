@@ -15,8 +15,8 @@
 	\end{enumerate}
 \end{myTheorem}
 
-\begin{tipbox}[如何使用这些盒子]
-左侧彩色标题签的颜色标识内容类型：藏青为定理类、赭石为定义类、青色为命题类、钢蓝为例题练习类，金色为重点公式。全部环境名见 \texttt{preamble.tex}。
+\begin{tipbox}[如何使用这些环境]
+标签颜色标识内容类型：\textbf{绿}为定义类、\textbf{蓝}为定理、\textbf{深蓝}为命题/引理、\textbf{橙}为推论；例、练习、注、证明为无框行内标签（黑色）。全部环境名见 \texttt{preamble.tex}。
 \end{tipbox}
 
 \section{定理与例题}
@@ -35,8 +35,16 @@
 两个正交矩阵的乘积仍是正交矩阵。
 \end{proposition}
 
+\begin{lemma}[正交化的保持性]
+正交变换保持向量的内积与长度不变。
+\end{lemma}
+
+\begin{corollary}
+正交矩阵的逆矩阵仍为正交矩阵。
+\end{corollary}
+
 \begin{remark}
-正交变换保持内积与长度不变，这是刚体运动数学描述的核心事实。
+正交变换保持内积与长度不变，这是刚体运动数学描述的核心事实（注环境正文用楷体）。
 \end{remark}
 
 \begin{example}[求正交化验证]
@@ -54,7 +62,7 @@
 \end{solution}
 
 \begin{note}
-保号性一类"注"可用 \texttt{note} 环境排版；跨页的长例题请改用 \texttt{longexample} 环境。
+例、练习、注等环境不带边框，以加粗行内标签区分；跨页的长例题请改用 \texttt{longexample} 环境。
 \end{note}
 
 \section{重点与提示}

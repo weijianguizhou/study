@@ -1,6 +1,7 @@
 % ============================================================
-%  课程笔记模板 —— LaTeX book + 中文课堂笔记排版
-%  样式源自《装备系统动力学建模与仿真》笔记（2026 更新版）
+%  课程笔记模板 —— LaTeX book + 中文课堂笔记排版（李思风）
+%  样式参照《线性代数：原理与应用》（李思，清华大学）讲义：
+%  极简学术排版 —— 方正宋体、细边框圆角定理盒、行内加粗标签
 %
 %  编译方式: XeLaTeX（中文推荐），需编译 2~3 遍生成目录与交叉引用
 %  用法:
@@ -9,7 +10,7 @@
 %    3. 数学记号与编辑规范遵循《符号约定与工作要求.md》；
 %    4. 定理/定义/例题等环境与公式写法见 第一章示例.tex。
 % ============================================================
-\documentclass[12pt,a4paper]{book}
+\documentclass[11pt,a4paper,openany]{book}
 \input{preamble}            % 样式：字体、颜色、定理/定义/例题环境、章节格式
 
 % ============================================================
@@ -29,7 +30,7 @@
 	\input{绪论}
 
 	% 正文各章（每章一个 .tex 文件）
-	\chapter{第一章}
+	\chapter{示例章节}
 	\input{第一章示例}
 	% \chapter{第二章}
 	% \input{第二章}
@@ -37,35 +38,27 @@
 	% \input{第三章}
 
 	% ============================================================
-	% 附录（样式自动切换为“附录 x”格式）
+	% 附录（样式自动切换为「附录 A」格式，章号 A、B、C…）
 	% ============================================================
 	\appendix
-	\titleformat{\chapter}[display]
-	{\normalfont}
-	{\centering{\color{gold}\rule[-0.5ex]{2.2em}{1.6pt}}\hspace{1.2em}{\color{structurecolor}\large\kaishu 附录 \thechapter}\hspace{1.2em}{\color{gold}\rule[-0.5ex]{2.2em}{1.6pt}}}
-	{1.6ex}
-	{\color{structurecolor}\centering\Huge\heiti}
-	[{\vspace{1.2ex}{\color{gold}\titlerule[1.2pt]}\vspace{-3.6pt}{\color{structurecolor!45}\titlerule[0.4pt]}}]
-	\titlecontents{chapter}[0em]{\addvspace{0.8em}}
-	{\color{structurecolor}\large\heiti 附录\ \thecontentslabel\quad}{}{\hfill\color{structurecolor}\contentspage}
-	\titleformat{\section}[hang]
-	{\normalfont\Large\heiti\color{structurecolor}}
-	{{\color{gold}\Large\S}\,\thesection\hspace{1em}}{0pt}{}
-	[{\vspace{0.4ex}{\color{gold!85!black}\titlerule[0.9pt]}\vspace{-2.8pt}{\color{structurecolor!35}\titlerule[0.4pt]}}]
-	\titleformat{\subsection}[hang]
-	{\normalfont\large\heiti\color{structurecolor}}
-	{{\color{gold}\rule[-0.3ex]{0.85em}{2.2pt}}\hspace{0.6em}\thesubsection\hspace{0.6em}}{0pt}{}
-	\titleformat{\subsubsection}[hang]
-	{\normalfont\normalsize\heiti\color{structurecolor!90}}
-	{{\color{gold}\small$\blacksquare$}\hspace{0.5em}\thesubsubsection\hspace{0.6em}}{0pt}{}
+	\renewcommand{\thechapter}{附录\Alph{chapter}}
+	\titleformat{\chapter}[block]
+	{\normalfont\centering\bfseries\songti\fontsize{20.7}{26}\selectfont}
+	{\thechapter}{1em}{}
+	\renewcommand{\thesection}{\Alph{chapter}.\arabic{section}}
+	\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+	\renewcommand{\theequation}{\Alph{chapter}.\arabic{equation}}
+	\renewcommand{\thetheorem}{\Alph{chapter}.\arabic{theorem}}
+	\renewcommand{\theexample}{\Alph{chapter}.\arabic{example}}
 
-	\chapter{附录}
+	\chapter{补充材料}
 	\input{附录}
 }
 
 \begin{document}
-	% 封面（一次只启用一个；全部可选封面见 封面模板索引.md，预览见 封面预览/）
-	\input{cover}                 % 默认：深蓝学科插图风
+	% 封面（一次只启用一个；全部可选封面见 封面模板索引.md）
+	\input{cover_李思风}          % 默认：李思风极简学术封面
+	% \input{cover}                 % 深蓝学科插图风
 	% \input{cover_Impression风}    % 莫奈《日出·印象》
 	% \input{cover_Guernica风}      % 毕加索《格尔尼卡》
 	% \input{cover_向日葵风}        % 梵高《向日葵》
@@ -89,10 +82,10 @@
 	\vfill
 	\newpage
 
-	% 正文页眉页脚样式（金色细线 + 章节名，见 preamble）
-	\pagestyle{mainstyle}
+	% 正文页码样式（底部居中，见 preamble）
+	\pagestyle{plain}
 
-	\setcounter{tocdepth}{3}
+	\setcounter{tocdepth}{2}
 
 	\tableofcontents
 

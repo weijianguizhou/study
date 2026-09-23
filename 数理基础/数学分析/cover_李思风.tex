@@ -1,0 +1,55 @@
+% ============================================================
+%  封面：李思风（极简学术）—— 白底、居中标题、无装饰边框
+%  参照《线性代数：原理与应用》（李思，清华大学）封面版式
+%
+%  可用字段（在主文件导言区 \newcommand 预定义即可覆盖）：
+%    \notename      主标题（必填，主文件定义）
+%    \noteauthor    作者（必填，主文件定义）
+%    \notesubtitle  标题下方小字，默认 \today（日期/版本行）
+%    \noteextra     底部单位/学院行，默认不显示
+%
+%  说明：中部线稿为可删装饰，整段 \begin{tikzpicture}...\end{tikzpicture}
+%        删除后即为纯文字极简封面。
+% ============================================================
+\begin{titlepage}
+	\thispagestyle{empty}
+	\providecommand{\notesubtitle}{\today}
+	\providecommand{\noteextra}{}
+	\begin{center}
+		\vspace*{4.7cm}
+
+		% ---- 主标题 ----
+		{\bfseries\songti\fontsize{24.8}{30}\selectfont \notename\par}
+
+		\vspace{4.1cm}
+
+		% ---- 日期 / 版本行 ----
+		{\songti\fontsize{14.4}{18}\selectfont （\notesubtitle）\par}
+
+		\vspace{3.4cm}
+
+		% ---- 手绘风极简线稿（可整段删除）----
+		\begin{tikzpicture}[line width=0.8pt, line cap=round]
+			\draw[-{Stealth}, shorten >=1pt] (-2.1,0) -- (2.1,0);
+			\draw[-{Stealth}, shorten >=1pt] (0,-0.9) -- (0,1.9);
+			\draw[domain=-1.9:1.9, samples=80, smooth]
+				plot (\x, {0.75*sin(deg(1.35*\x))+0.35});
+			\draw[dashed, line width=0.6pt] (-1.25,-0.85) -- (-1.25,1.25);
+			\node[font=\footnotesize] at (2.25,0.12) {$x$};
+			\node[font=\footnotesize] at (0.14,2.0) {$y$};
+			\node[font=\footnotesize] at (-1.45,1.32) {$f(x)$};
+		\end{tikzpicture}
+
+		\vspace{4.3cm}
+
+		% ---- 作者（楷体）----
+		{\kaishu\fontsize{24.8}{30}\selectfont \noteauthor\par}
+
+		\vspace{1.8cm}
+
+		% ---- 单位 / 学院（未定义则不显示）----
+		{\songti\fontsize{20.7}{26}\selectfont \noteextra\par}
+
+		\vspace*{1.6cm}
+	\end{center}
+\end{titlepage}

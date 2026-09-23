@@ -1,0 +1,210 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{NJUST}[2026/09/23 Minimalist NJUST Beamer theme, based on minimalist-pku-beamer-2026]
+
+\mode<presentation>
+
+\newif\ifbeamer@secheader
+\beamer@secheaderfalse
+
+\ProcessOptionsBeamer
+
+% ============================ 颜色（南理工主题色） ============================
+% 南理工紫：学校视觉形象识别（VI）标准色 C54 M96 Y0 K0 / RGB 153,0,153 /
+% Pantone 248 / #990099，取自《南京理工大学视觉形象识别手册》。
+% 辅助色：VI 手册中的辅助蓝（R28 G79 B161）与辅助银灰（R180 G180 B180）。
+\definecolor{njust}{RGB}{153,0,153}       % 南理工紫（主色）
+\definecolor{njust_blue}{RGB}{28,79,161}  % 辅助蓝（定义/引用）
+\definecolor{njust_gold}{RGB}{178,140,52} % 紫金（定理类区块）
+\definecolor{njust_gray}{RGB}{180,180,180}
+\definecolor{njust_red}{RGB}{210,26,66}
+\definecolor{njust_green}{RGB}{0,127,0}
+
+% 便捷文本颜色命令（沿用旧版模板）
+\providecommand{\red}[1]{{\color{njust_red}{#1}}}
+\providecommand{\green}[1]{{\color{njust_green}{#1}}}
+
+% ============================ 顶栏 / 页脚 ============================
+\useoutertheme[subsection=false]{smoothbars}
+\makeatletter
+\newcommand{\frameofframes}{/}
+\newcommand{\setframeofframes}[1]{\renewcommand{\frameofframes}{#1}}
+\setbeamertemplate{footline}
+  {%
+    \begin{beamercolorbox}[colsep=1.5pt]{upper separation line foot}
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[ht=2.5ex,dp=1ex,%
+      leftskip=.3cm,rightskip=.3cm plus1fil]{author in head/foot}%
+      {\usebeamerfont{author in head/foot}\insertshortauthor}%
+      \hfill%
+      {\usebeamerfont{title in head/foot}\insertshorttitle}%
+      \hfill%
+      {\usebeamerfont{frame number}\usebeamercolor[fg]{frame number}\insertframenumber~\frameofframes~\inserttotalframenumber}
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[colsep=1.5pt]{lower separation line foot}
+    \end{beamercolorbox}
+  }
+\makeatother
+
+\useinnertheme{circles}
+
+% ---- 固定高度顶栏（对 smoothbars 的修补）----
+% ① 去掉原版顶栏/标题条之间的模糊渐变过渡；② 固定条带高度（原版无标题的
+% 分节目录页会比正文页高一截）；③ 配色统一为南理工紫。
+% 右上角校徽（logo/NJUST.png，墨迹紧贴画布）以墨迹对齐标题文字：
+% 高度 = 当前标题的墨迹高度（\settoheight + \settodepth），
+% 顶边锚定在标题墨迹顶线，与标题文字严格同高对齐。
+\makeatletter
+\newlength{\njust@headheight}
+\newlength{\njust@titleht}
+\newlength{\njust@titledp}
+\newlength{\njust@logoheight}
+\newlength{\njust@logowidth}
+\newlength{\njust@logoyshift}
+% 顶部导航条统一为主题紫
+\setbeamercolor{section in head/foot}{bg=njust,fg=white}
+\setbeamercolor{section in head/foot shaded}{bg=njust,fg=white!55!njust}
+% 条带高度：内容块（tab 文字 + mini-frame 圆点行）上下各留 ~1pt 呼吸空间，
+% 像素校准为 11.6pt
+\AtBeginDocument{\global\njust@headheight=11.6pt}
+\setbeamertemplate{headline}
+{%
+  \begin{beamercolorbox}[wd=\paperwidth,colsep=0pt,ht=\njust@headheight,dp=0ex,vmode]{section in head/foot}%
+    \vbox to \njust@headheight{%
+      {\vskip0.52pt}%
+      \insertnavigation{\paperwidth}%
+      \vss}%
+  \end{beamercolorbox}%
+}
+\setbeamertemplate{frametitle}
+{%
+  \nointerlineskip
+  \usebeamerfont*{frametitle}%
+  \settoheight{\njust@titleht}{\insertframetitle}%
+  \settodepth{\njust@titledp}{\insertframetitle}%
+  \njust@logoheight=\dimexpr\njust@titleht+\njust@titledp\relax
+  \settowidth{\njust@logowidth}{\includegraphics[height=\njust@logoheight]{logo/NJUST.png}}%
+  \begin{beamercolorbox}[wd=\paperwidth,sep=0.3cm,%
+    rightskip=\dimexpr\njust@logowidth+0.4cm\relax]{frametitle}%
+    \strut\insertframetitle
+    \ifx\insertframesubtitle\@empty\else
+      \par{\usebeamerfont*{framesubtitle}\usebeamercolor[fg]{framesubtitle}\strut\insertframesubtitle}%
+    \fi
+  \end{beamercolorbox}%
+  \nointerlineskip
+  \njust@logoyshift=\njust@headheight
+  \addtolength{\njust@logoyshift}{0.3cm}%
+  \addtolength{\njust@logoyshift}{\ht\strutbox}%
+  \addtolength{\njust@logoyshift}{-\njust@titleht}%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=north east,inner sep=0pt]
+      at ([yshift=-\njust@logoyshift,xshift=-0.3cm]current page.north east)
+      {\includegraphics[height=\njust@logoheight]{logo/NJUST.png}};
+  \end{tikzpicture}%
+}
+\makeatother
+
+% 三线表（booktabs）主题：头尾粗线 1.2pt，中间线 0.5pt；
+% 表头建议用 \textbf 加粗（默认即黑色，不继承任何主题色）。
+\makeatletter
+\AtEndPreamble{\@ifpackageloaded{booktabs}{%
+  \setlength{\heavyrulewidth}{1.2pt}%
+  \setlength{\lightrulewidth}{0.5pt}%
+}{}}
+\makeatother
+
+% ============================ 中文定理环境 ============================
+% beamer 的定理/定义/证明等名称由 translator 词典决定。
+% ctex 随发行版提供了中文定理词典（translator-theorem-dictionary-ChineseUTF8），
+% 在此启用，使定理名显示为“定理/定义/引理/证明”等。
+\uselanguage{ChineseUTF8}
+\usedictionary{translator-theorem-dictionary}
+\languagepath{ChineseUTF8,English}
+% 图表题注名（beamer 经 translator 取 \figurename / \tablename）
+\deftranslation[to=ChineseUTF8]{Figure}{图}
+\deftranslation[to=ChineseUTF8]{Table}{表}
+% 题注编号与名称之间使用全角冒号
+\defbeamertemplate{caption label separator}{cncolon}{：}
+\setbeamertemplate{caption label separator}[cncolon]
+\makeatletter
+\AtBeginDocument{%
+  \@ifpackageloaded{ctex}{\ctexset{proofname=证明}}{}%
+}
+\makeatother
+\setbeamertemplate{theorems}[numbered]
+
+% ============================ 主题配色 ============================
+\setbeamercolor{footline}{bg=njust}
+\setbeamercolor{frametitle}{bg=white,fg=njust}
+\setbeamercolor{title}{bg=njust}
+\setbeamerfont{frametitle}{series=\bfseries,size=\large}
+\setbeamerfont{footline}{series=\bfseries}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{bibliography item}[text]
+\setbeamertemplate{caption}[numbered]
+
+\beamertemplateshadingbackground{white!5}{white}
+
+\setbeamercolor{palette primary}{use=structure,fg=white,bg=structure.fg}
+\setbeamercolor{palette secondary}{use=structure,fg=white,bg=structure.fg!95!black}
+\setbeamercolor{palette tertiary}{use=structure,fg=white,bg=structure.fg!90!black}
+\setbeamercolor{palette quaternary}{fg=white,bg=structure.fg!85!black}
+\setbeamercolor{titlelike}{parent=palette primary}
+
+%% 区块配色
+\setbeamercolor{block title}{bg=njust_blue,fg=white}
+\setbeamercolor{block body}{bg=njust_blue!10}
+
+\BeforeBeginEnvironment{definition}{%
+    \setbeamercolor{block title}{bg=njust_blue,fg=white}
+    \setbeamercolor{block body}{bg=njust_blue!10}
+}
+\AfterEndEnvironment{definition}{
+ \setbeamercolor{block title}{bg=njust_blue,fg=white}
+ \setbeamercolor{block body}{bg=njust_blue!10}
+}
+
+\BeforeBeginEnvironment{theorem}{%
+    \setbeamercolor{block title}{bg=njust_gold,fg=white}
+    \setbeamercolor{block body}{bg=njust_gold!10}
+}
+\AfterEndEnvironment{theorem}{
+ \setbeamercolor{block title}{bg=njust_blue,fg=white}
+ \setbeamercolor{block body}{bg=njust_blue!10}
+}
+
+\BeforeBeginEnvironment{proposition}{%
+    \setbeamercolor{block title}{bg=njust_gold,fg=white}
+    \setbeamercolor{block body}{bg=njust_gold!10}
+}
+\AfterEndEnvironment{proposition}{
+ \setbeamercolor{block title}{bg=njust_blue,fg=white}
+ \setbeamercolor{block body}{bg=njust_blue!10}
+}
+
+% 强调（\alert）与 alertblock 用紫金
+\setbeamercolor{alerted text}{fg=njust_gold!85!black}
+\setbeamercolor{block title alerted}{use=alerted text,fg=white,bg=alerted text.fg}
+\setbeamercolor{block body alerted}{parent=normal text,use=block title alerted,bg=block title alerted.bg!10!bg}
+
+\setbeamercolor*{block title example}{use={normal text,example text},bg=white!70!njust_gold,fg=njust}
+\setbeamercolor{fine separation line}{}
+\setbeamercolor{item projected}{fg=white}
+\setbeamercolor{palette sidebar primary}{use=normal text,fg=normal text.fg}
+\setbeamercolor{palette sidebar quaternary}{use=structure,fg=structure.fg}
+\setbeamercolor{palette sidebar secondary}{use=structure,fg=structure.fg}
+\setbeamercolor{palette sidebar tertiary}{use=normal text,fg=normal text.fg}
+\setbeamercolor{separation line}{}
+\setbeamercolor{sidebar}{bg=njust}
+\setbeamercolor{sidebar}{parent=palette primary}
+\setbeamercolor{structure}{fg=njust}
+\AtBeginSection[]{
+	\begin{frame}
+		\tableofcontents[sectionstyle=show/shaded,subsectionstyle=hide,subsubsectionstyle=hide]
+	\end{frame}
+}
+\setbeamercolor{postgreen}{fg=black,bg=example text.fg!75!black!10!bg}
+\setbeamercolor{postred}{fg=black,bg=white!70!njust_gold}
+\setbeamercolor{postblue}{fg=black,bg=njust_blue!10}
+
+\mode
+<all>

@@ -14,7 +14,7 @@
 如图所示，质量为 $m$ 的摆球通过长为 $l$ 的无质量摆杆固定在支点 $O$ 上，摆杆可在竖直平面内自由转动。以竖直向下方向为基准，$\theta_{\mathrm{o}}(t)$ 为摆杆偏离该方向的角位移，$T_{\mathrm{i}}(t)$ 为施加在支点处的驱动力矩，$g$ 为重力加速度。设摆杆不可伸长，故摆球只作绕 $O$ 点的转动。
 
 \begin{center}
-\input{figures/fig_pendulum.tikz}
+\figplaceholder[0.45\textwidth]{单摆系统示意图（质量 $m$、杆长 $l$、支点 $O$、偏角 $\theta_{\mathrm{o}}$）}
 \end{center}
 
 根据绕定轴的转动定律，驱动力矩 $T_{\mathrm{i}}(t)$ 与重力产生的恢复力矩 $-mgl\sin\theta_{\mathrm{o}}(t)$ 之和，等于摆球对 $O$ 点的转动惯量 $ml^{2}$ 与角加速度 $\ddot{\theta}_{\mathrm{o}}(t)$ 之积，即
@@ -369,9 +369,9 @@ T=\sqrt{\frac{m}{k}},\qquad
 如图所示，环节 $G_{1}(s)$ 的输出作为 $G_{2}(s)$ 的输入，信号依次传递。
 
 \begin{center}
-\input{figures/fig_series_before.tikz}
+\figplaceholder[0.34\textwidth]{串联连接·化简前方框图}
 $\Longrightarrow$
-\input{figures/fig_series_after.tikz}
+\figplaceholder[0.26\textwidth]{串联连接·化简后方框图}
 \end{center}
 
 由
@@ -395,9 +395,9 @@ X_{\mathrm{o}}(s)=G_{1}(s)G_{2}(s)X_{\mathrm{i}}(s),
 如图所示，同一输入信号同时作用于各环节，各环节的输出在相加点处代数相加。
 
 \begin{center}
-\input{figures/fig_parallel_before.tikz}
+\figplaceholder[0.34\textwidth]{并联连接·化简前方框图}
 $\Longrightarrow$
-\input{figures/fig_parallel_after.tikz}
+\figplaceholder[0.26\textwidth]{并联连接·化简后方框图}
 \end{center}
 
 各环节输出为 $G_{1}(s)X_{\mathrm{i}}(s)$ 与 $G_{2}(s)X_{\mathrm{i}}(s)$，相加得
@@ -416,9 +416,9 @@ X_{\mathrm{o}}(s)=\bigl[G_{1}(s)+G_{2}(s)\bigr]X_{\mathrm{i}}(s),
 如图所示，$G(s)$ 为前向通道传递函数，$H(s)$ 为反馈通道传递函数，输入信号 $X_{\mathrm{i}}(s)$ 与反馈信号 $B(s)$ 在相加点相减后得到偏差信号 $E(s)$。
 
 \begin{center}
-\input{figures/fig_feedback_before.tikz}
+\figplaceholder[0.34\textwidth]{反馈连接·化简前方框图}
 $\Longrightarrow$
-\input{figures/fig_feedback_after.tikz}
+\figplaceholder[0.26\textwidth]{反馈连接·化简后方框图}
 \end{center}
 
 由方块图可写出
@@ -499,15 +499,15 @@ m\ddot{x}_{\mathrm{o}}(t)+c\dot{x}_{\mathrm{o}}(t)+kx_{\mathrm{o}}(t)=F_{\mathrm
 即加速度由合力经 $\dfrac{1}{m}$ 得到，再经两次积分分别得到速度 $v$ 与位移 $x_{\mathrm{o}}$；速度经阻尼系数 $c$、位移经弹簧刚度 $k$ 分别反馈到相加点。据此可画出方块图：
 
 \begin{center}
-\input{figures/fig_msd_blocks.tikz}
+\figplaceholder[0.7\textwidth]{质量--弹簧--阻尼系统方框图（$\frac{1}{m}$、$\frac{1}{s}$、$c$、$k$ 环节）}
 \end{center}
 
 先化简由 $\frac{1}{m}$、第一个 $\frac{1}{s}$ 与 $c$ 构成的阻尼内环，再化简由前向通道与 $k$ 构成的弹性外环，简化过程为：
 
 \begin{center}
-\input{figures/fig_msd_step1.tikz}
+\figplaceholder[0.34\textwidth]{方框图化简第一步}
 $\Longrightarrow$
-\input{figures/fig_msd_step2.tikz}
+\figplaceholder[0.34\textwidth]{方框图化简结果}
 \end{center}
 
 \begin{solution}

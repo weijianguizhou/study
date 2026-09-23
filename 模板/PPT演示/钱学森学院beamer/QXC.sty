@@ -1,0 +1,211 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{QXC}[2026/09/23 Minimalist Qian Xuesen College Beamer theme, based on minimalist NJUST/PKU beamer]
+
+\mode<presentation>
+
+\newif\ifbeamer@secheader
+\beamer@secheaderfalse
+
+\ProcessOptionsBeamer
+
+% ============================ 颜色（钱学森学院主题色） ============================
+% 主色取钱学森学院院徽中的院徽洋红（#A30282，院徽条形图正中竖条颜色）。
+% 辅助色沿用学校视觉形象识别（VI）体系：辅助蓝（定义/引用）与辅助灰
+% （院徽条形图两侧竖条 #999A9A）；定理/强调用紫金，示例区块用浅紫金。
+\definecolor{qxc}{RGB}{163,2,130}         % 钱院洋红（主色）
+\definecolor{qxc_deep}{RGB}{120,0,96}     % 深洋红（备用）
+\definecolor{qxc_blue}{RGB}{28,79,161}    % 辅助蓝（定义/引用）
+\definecolor{qxc_gold}{RGB}{178,140,52}   % 紫金（定理类区块）
+\definecolor{qxc_gray}{RGB}{153,154,154}  % 院徽灰（院徽条形图灰）
+\definecolor{qxc_red}{RGB}{210,26,66}
+\definecolor{qxc_green}{RGB}{0,127,0}
+
+% 便捷文本颜色命令
+\providecommand{\red}[1]{{\color{qxc_red}{#1}}}
+\providecommand{\green}[1]{{\color{qxc_green}{#1}}}
+
+% ============================ 顶栏 / 页脚 ============================
+\useoutertheme[subsection=false]{smoothbars}
+\makeatletter
+\newcommand{\frameofframes}{/}
+\newcommand{\setframeofframes}[1]{\renewcommand{\frameofframes}{#1}}
+\setbeamertemplate{footline}
+  {%
+    \begin{beamercolorbox}[colsep=1.5pt]{upper separation line foot}
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[ht=2.5ex,dp=1ex,%
+      leftskip=.3cm,rightskip=.3cm plus1fil]{author in head/foot}%
+      {\usebeamerfont{author in head/foot}\insertshortauthor}%
+      \hfill%
+      {\usebeamerfont{title in head/foot}\insertshorttitle}%
+      \hfill%
+      {\usebeamerfont{frame number}\usebeamercolor[fg]{frame number}\insertframenumber~\frameofframes~\inserttotalframenumber}
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[colsep=1.5pt]{lower separation line foot}
+    \end{beamercolorbox}
+  }
+\makeatother
+
+\useinnertheme{circles}
+
+% ---- 固定高度顶栏（对 smoothbars 的修补）----
+% ① 去掉原版顶栏/标题条之间的模糊渐变过渡；② 固定条带高度（原版无标题的
+% 分节目录页会比正文页高一截）；③ 配色统一为钱院洋红。
+% 右上角院徽组合标识（logo/QXC.png，墨迹紧贴画布）以墨迹对齐标题文字：
+% 高度 = 当前标题的墨迹高度（\settoheight + \settodepth），
+% 顶边锚定在标题墨迹顶线，与标题文字严格同高对齐。
+\makeatletter
+\newlength{\qxc@headheight}
+\newlength{\qxc@titleht}
+\newlength{\qxc@titledp}
+\newlength{\qxc@logoheight}
+\newlength{\qxc@logowidth}
+\newlength{\qxc@logoyshift}
+% 顶部导航条统一为主题色
+\setbeamercolor{section in head/foot}{bg=qxc,fg=white}
+\setbeamercolor{section in head/foot shaded}{bg=qxc,fg=white!55!qxc}
+% 条带高度：内容块（tab 文字 + mini-frame 圆点行）上下各留 ~1pt 呼吸空间，
+% 像素校准为 11.6pt
+\AtBeginDocument{\global\qxc@headheight=11.6pt}
+\setbeamertemplate{headline}
+{%
+  \begin{beamercolorbox}[wd=\paperwidth,colsep=0pt,ht=\qxc@headheight,dp=0ex,vmode]{section in head/foot}%
+    \vbox to \qxc@headheight{%
+      {\vskip0.52pt}%
+      \insertnavigation{\paperwidth}%
+      \vss}%
+  \end{beamercolorbox}%
+}
+\setbeamertemplate{frametitle}
+{%
+  \nointerlineskip
+  \usebeamerfont*{frametitle}%
+  \settoheight{\qxc@titleht}{\insertframetitle}%
+  \settodepth{\qxc@titledp}{\insertframetitle}%
+  \qxc@logoheight=\dimexpr\qxc@titleht+\qxc@titledp\relax
+  \settowidth{\qxc@logowidth}{\includegraphics[height=\qxc@logoheight]{logo/QXC.png}}%
+  \begin{beamercolorbox}[wd=\paperwidth,sep=0.3cm,%
+    rightskip=\dimexpr\qxc@logowidth+0.4cm\relax]{frametitle}%
+    \strut\insertframetitle
+    \ifx\insertframesubtitle\@empty\else
+      \par{\usebeamerfont*{framesubtitle}\usebeamercolor[fg]{framesubtitle}\strut\insertframesubtitle}%
+    \fi
+  \end{beamercolorbox}%
+  \nointerlineskip
+  \qxc@logoyshift=\qxc@headheight
+  \addtolength{\qxc@logoyshift}{0.3cm}%
+  \addtolength{\qxc@logoyshift}{\ht\strutbox}%
+  \addtolength{\qxc@logoyshift}{-\qxc@titleht}%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=north east,inner sep=0pt]
+      at ([yshift=-\qxc@logoyshift,xshift=-0.3cm]current page.north east)
+      {\includegraphics[height=\qxc@logoheight]{logo/QXC.png}};
+  \end{tikzpicture}%
+}
+\makeatother
+
+% 三线表（booktabs）主题：头尾粗线 1.2pt，中间线 0.5pt；
+% 表头建议用 \textbf 加粗（默认即黑色，不继承任何主题色）。
+\makeatletter
+\AtEndPreamble{\@ifpackageloaded{booktabs}{%
+  \setlength{\heavyrulewidth}{1.2pt}%
+  \setlength{\lightrulewidth}{0.5pt}%
+}{}}
+\makeatother
+
+% ============================ 中文定理环境 ============================
+% beamer 的定理/定义/证明等名称由 translator 词典决定。
+% ctex 随发行版提供了中文定理词典（translator-theorem-dictionary-ChineseUTF8），
+% 在此启用，使定理名显示为“定理/定义/引理/证明”等。
+\uselanguage{ChineseUTF8}
+\usedictionary{translator-theorem-dictionary}
+\languagepath{ChineseUTF8,English}
+% 图表题注名（beamer 经 translator 取 \figurename / \tablename）
+\deftranslation[to=ChineseUTF8]{Figure}{图}
+\deftranslation[to=ChineseUTF8]{Table}{表}
+% 题注编号与名称之间使用全角冒号
+\defbeamertemplate{caption label separator}{cncolon}{：}
+\setbeamertemplate{caption label separator}[cncolon]
+\makeatletter
+\AtBeginDocument{%
+  \@ifpackageloaded{ctex}{\ctexset{proofname=证明}}{}%
+}
+\makeatother
+\setbeamertemplate{theorems}[numbered]
+
+% ============================ 主题配色 ============================
+\setbeamercolor{footline}{bg=qxc}
+\setbeamercolor{frametitle}{bg=white,fg=qxc}
+\setbeamercolor{title}{bg=qxc}
+\setbeamerfont{frametitle}{series=\bfseries,size=\large}
+\setbeamerfont{footline}{series=\bfseries}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{bibliography item}[text]
+\setbeamertemplate{caption}[numbered]
+
+\beamertemplateshadingbackground{white!5}{white}
+
+\setbeamercolor{palette primary}{use=structure,fg=white,bg=structure.fg}
+\setbeamercolor{palette secondary}{use=structure,fg=white,bg=structure.fg!95!black}
+\setbeamercolor{palette tertiary}{use=structure,fg=white,bg=structure.fg!90!black}
+\setbeamercolor{palette quaternary}{fg=white,bg=structure.fg!85!black}
+\setbeamercolor{titlelike}{parent=palette primary}
+
+%% 区块配色
+\setbeamercolor{block title}{bg=qxc_blue,fg=white}
+\setbeamercolor{block body}{bg=qxc_blue!10}
+
+\BeforeBeginEnvironment{definition}{%
+    \setbeamercolor{block title}{bg=qxc_blue,fg=white}
+    \setbeamercolor{block body}{bg=qxc_blue!10}
+}
+\AfterEndEnvironment{definition}{
+ \setbeamercolor{block title}{bg=qxc_blue,fg=white}
+ \setbeamercolor{block body}{bg=qxc_blue!10}
+}
+
+\BeforeBeginEnvironment{theorem}{%
+    \setbeamercolor{block title}{bg=qxc_gold,fg=white}
+    \setbeamercolor{block body}{bg=qxc_gold!10}
+}
+\AfterEndEnvironment{theorem}{
+ \setbeamercolor{block title}{bg=qxc_blue,fg=white}
+ \setbeamercolor{block body}{bg=qxc_blue!10}
+}
+
+\BeforeBeginEnvironment{proposition}{%
+    \setbeamercolor{block title}{bg=qxc_gold,fg=white}
+    \setbeamercolor{block body}{bg=qxc_gold!10}
+}
+\AfterEndEnvironment{proposition}{
+ \setbeamercolor{block title}{bg=qxc_blue,fg=white}
+ \setbeamercolor{block body}{bg=qxc_blue!10}
+}
+
+% 强调（\alert）与 alertblock 用紫金
+\setbeamercolor{alerted text}{fg=qxc_gold!85!black}
+\setbeamercolor{block title alerted}{use=alerted text,fg=white,bg=alerted text.fg}
+\setbeamercolor{block body alerted}{parent=normal text,use=block title alerted,bg=block title alerted.bg!10!bg}
+
+\setbeamercolor*{block title example}{use={normal text,example text},bg=white!70!qxc_gold,fg=qxc}
+\setbeamercolor{fine separation line}{}
+\setbeamercolor{item projected}{fg=white}
+\setbeamercolor{palette sidebar primary}{use=normal text,fg=normal text.fg}
+\setbeamercolor{palette sidebar quaternary}{use=structure,fg=structure.fg}
+\setbeamercolor{palette sidebar secondary}{use=structure,fg=structure.fg}
+\setbeamercolor{palette sidebar tertiary}{use=normal text,fg=normal text.fg}
+\setbeamercolor{separation line}{}
+\setbeamercolor{sidebar}{bg=qxc}
+\setbeamercolor{sidebar}{parent=palette primary}
+\setbeamercolor{structure}{fg=qxc}
+\AtBeginSection[]{
+	\begin{frame}
+		\tableofcontents[sectionstyle=show/shaded,subsectionstyle=hide,subsubsectionstyle=hide]
+	\end{frame}
+}
+\setbeamercolor{postgreen}{fg=black,bg=example text.fg!75!black!10!bg}
+\setbeamercolor{postred}{fg=black,bg=white!70!qxc_gold}
+\setbeamercolor{postblue}{fg=black,bg=qxc_blue!10}
+
+\mode
+<all>

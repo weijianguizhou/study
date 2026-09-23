@@ -10,7 +10,7 @@
 %    4. 定理/定义/例题等环境与公式写法见 控制系统基础知识.tex；
 %    5. 封面只保留「呐喊风」；其余备用封面与预览已移入 封面存档/。
 % ============================================================
-\documentclass[12pt,a4paper]{book}
+\documentclass[11pt,a4paper,openany]{book}
 \input{preamble}            % 样式：字体、颜色、定理/定义/例题环境、章节格式
 
 % ============================================================
@@ -44,35 +44,23 @@
 	% 附录（样式自动切换为“附录 x”格式）
 	% ============================================================
 	\appendix
-	% 附录页眉：否则 \chaptermark 会把 \thechapter=A 译成「第零章」
-	\renewcommand{\chaptermark}[1]{\markboth{附录 \thechapter\quad ##1}{}}
-	\titleformat{\chapter}[display]
-	{\normalfont}
-	{\centering{\color{gold}\rule[-0.5ex]{2.2em}{1.6pt}}\hspace{1.2em}{\color{structurecolor}\large\kaishu 附录 \thechapter}\hspace{1.2em}{\color{gold}\rule[-0.5ex]{2.2em}{1.6pt}}}
-	{1.6ex}
-	{\color{structurecolor}\centering\Huge\heiti}
-	[{\vspace{1.2ex}{\color{gold}\titlerule[1.2pt]}\vspace{-3.6pt}{\color{structurecolor!45}\titlerule[0.4pt]}}]
-	\titlecontents{chapter}[0em]{\addvspace{0.8em}}
-	{\color{structurecolor}\large\heiti 附录\ \thecontentslabel\quad}{}{\hfill\color{structurecolor}\contentspage}
-	\titleformat{\section}[hang]
-	{\normalfont\Large\heiti\color{structurecolor}}
-	{{\color{gold}\Large\S}\,\thesection\hspace{1em}}{0pt}{}
-	[{\vspace{0.4ex}{\color{gold!85!black}\titlerule[0.9pt]}\vspace{-2.8pt}{\color{structurecolor!35}\titlerule[0.4pt]}}]
-	\titleformat{\subsection}[hang]
-	{\normalfont\large\heiti\color{structurecolor}}
-	{{\color{gold}\rule[-0.3ex]{0.85em}{2.2pt}}\hspace{0.6em}\thesubsection\hspace{0.6em}}{0pt}{}
-	\titleformat{\subsubsection}[hang]
-	{\normalfont\normalsize\heiti\color{structurecolor!90}}
-	{{\color{gold}\small$\blacksquare$}\hspace{0.5em}\thesubsubsection\hspace{0.6em}}{0pt}{}
-
-	% 附录：每册附录一个 .tex（标题即附录名，前缀「附录 A/B/…」由上面的样式自动生成）
+	\appendix
+	\renewcommand{\thechapter}{附录\Alph{chapter}}
+	\titleformat{\chapter}[block]
+	{\normalfont\centering\bfseries\songti\fontsize{20.7}{26}\selectfont}
+	{\thechapter}{1em}{}
+	\renewcommand{\thesection}{\Alph{chapter}.\arabic{section}}
+	\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+	\renewcommand{\theequation}{\Alph{chapter}.\arabic{equation}}
+	\renewcommand{\thetheorem}{\Alph{chapter}.\arabic{theorem}}
+	\renewcommand{\theexample}{\Alph{chapter}.\arabic{example}}
 	\chapter{拉普拉斯变换}
 	\input{附录}
 }
 
 \begin{document}
 	% 封面：蒙克《呐喊》风（唯一保留的封面）
-	\input{cover_呐喊风}
+	\input{cover_李思风}
 	% 备用封面已移入 封面存档/，需要时把文件移回根目录再取消注释：
 	% \input{封面存档/cover}                   % 深蓝学科插图风
 	% \input{封面存档/cover_Impression风}      % 莫奈《日出·印象》
@@ -99,7 +87,7 @@
 	% 正文页眉页脚样式（金色细线 + 章节名，见 preamble）
 	\pagestyle{mainstyle}
 
-	\setcounter{tocdepth}{3}
+	\setcounter{tocdepth}{2}
 
 	\tableofcontents
 
