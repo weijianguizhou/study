@@ -363,3 +363,332 @@
 \end{figure}
 
 则所得新的逻辑表达式即为 $F$ 的对偶式，记为 $F'$。
+
+\section{常用公式}
+\label{sec:常用公式}
+
+\subsection{消去律}
+\label{sec:消去律}
+
+\begin{theorem}[消去律]
+	\begin{equation}
+		AB+A\overline{B}=A
+		\label{eq:常用公式:消去律}
+	\end{equation}
+\end{theorem}
+
+\begin{proof}
+	\begin{equation}
+		AB+A\overline{B}=A(B+\overline{B})=A\cdot1=A
+		\xrightarrow{\text{对偶关系}}(A+B)(A+\overline{B})=A
+	\end{equation}
+\end{proof}
+
+\subsection{吸收律1}
+\label{sec:吸收律1}
+
+\begin{theorem}[吸收律1]
+	\begin{equation}
+		A+AB=A
+		\label{eq:常用公式:吸收律1}
+	\end{equation}
+\end{theorem}
+
+\begin{proof}
+	\begin{equation}
+		A+AB=A(1+B)=A\cdot1=A
+		\xrightarrow{\text{对偶关系}}A(A+B)=A
+	\end{equation}
+\end{proof}
+
+\subsection{吸收律2}
+\label{sec:吸收律2}
+
+\begin{theorem}[吸收律2]
+	\begin{equation}
+		A+\overline{A}B=A+B
+		\label{eq:常用公式:吸收律2}
+	\end{equation}
+\end{theorem}
+
+\begin{proof}
+	\begin{equation}
+		\begin{aligned}
+			A+\overline{A}B &= (A+\overline{A})(A+B)=1\cdot(A+B)
+			\xrightarrow{\text{对偶关系}}A(\overline{A}+B)=AB \\
+			&= A+B
+		\end{aligned}
+	\end{equation}
+\end{proof}
+
+\subsection{包含律}
+\label{sec:包含律}
+
+\begin{theorem}[包含律]
+	\begin{equation}
+		AB+\overline{A}C+BC=AB+\overline{A}C
+		\label{eq:常用公式:包含律}
+	\end{equation}
+\end{theorem}
+
+\begin{proof}
+	\begin{equation}
+		\begin{aligned}
+			&AB+\overline{A}C+BC \\
+			&=AB+\overline{A}C+(A+\overline{A})BC \\
+			&=AB+\overline{A}C+ABC+\overline{A}BC \\
+			&=AB(1+C)+\overline{A}C(1+B)
+		\end{aligned}
+	\end{equation}
+	由对偶关系，可得
+	\begin{equation}
+		(A+B)(\overline{A}+C)(B+C)=(A+B)(\overline{A}+C)
+	\end{equation}
+\end{proof}
+
+\subsection{关于异或和同或运算}
+\label{sec:关于异或和同或运算}
+
+\begin{property}[对偶数个变量]
+	\begin{equation}
+		A_1\oplus A_2\oplus\cdots\oplus A_n
+		=\overline{A_1\odot A_2\odot\cdots\odot A_n}
+		\label{eq:常用公式:异或同或:偶数个变量}
+	\end{equation}
+\end{property}
+
+\begin{property}[对奇数个变量]
+	\begin{equation}
+		A_1\oplus A_2\oplus\cdots\oplus A_n
+		=A_1\odot A_2\odot\cdots\odot A_n
+		\label{eq:常用公式:异或同或:奇数个变量}
+	\end{equation}
+\end{property}
+
+异或和同或的其他性质如表~\ref{tab:常用公式:异或同或性质} 所示。
+
+\begin{table}[H]
+\centering
+\caption{异或和同或的其他性质}
+\label{tab:常用公式:异或同或性质}
+\begin{tabular}{ll}
+	\toprule
+	异或 & 同或 \\
+	\midrule
+	$A\oplus0=A$ & $A\odot1=A$ \\
+	$A\oplus1=\overline{A}$ & $A\odot0=\overline{A}$ \\
+	$A\oplus A=0$ & $A\odot A=1$ \\
+	$A\oplus(B\oplus C)=(A\oplus B)\oplus C$ & $A\odot(B\odot C)=(A\odot B)\odot C$ \\
+	$A(B\oplus C)=AB\oplus AC$ & $A+(B\odot C)=(A+B)\odot(A+C)$ \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\section{逻辑函数的标准形式}
+\label{sec:逻辑函数的标准形式}
+
+\subsection{函数的“与--或”式和“或--与”式}
+\label{sec:与或式和或与式}
+
+\begin{definition}[“与--或”式]
+	“与--或”式指一个函数表达式中包含若干个“与”项，这些“与”项的“或”表示这个函数，如
+	\begin{equation}
+		F(A,B,C,D)=A+B\overline{C}+ABC\overline{D}
+		\label{eq:标准形式:与或式}
+	\end{equation}
+\end{definition}
+
+\begin{definition}[“或--与”式]
+	“或--与”式指一个函数表达式中包含若干个“或”项，这些“或”项的“与”表示这个函数，如
+	\begin{equation}
+		F(A,B,C,D)=(A+C+D)(\overline{B}+D)(A+\overline{B}+\overline{D})
+		\label{eq:标准形式:或与式}
+	\end{equation}
+\end{definition}
+
+\subsection{最小项}
+\label{sec:最小项}
+
+\begin{definition}[最小项]
+	最小项是“与”项，具有以下特点：
+	\begin{enumerate}
+		\item $n$ 个变量构成的每个最小项一定包含 $n$ 个因子的乘积项；
+		\item 每个变量必须以原变量或反变量形式作为因子出现\textbf{一次且仅一次}。
+	\end{enumerate}
+	例如：两变量有 $2^2=4$ 个最小项：$A\overline{B}$、$\overline{A}B$、$\overline{A}\,\overline{B}$、$AB$；三变量有 $2^3=8$ 个最小项。
+\end{definition}
+
+\begin{definition}[最小项的编号]
+	任一最小项用 $m_i$ 表示，$m$ 表示最小项，下标 $i$ 为使该最小项为 1 的变量取值所对应的等效十进制数。
+
+	例如：使最小项 $A\overline{B}C$ 为 1 的取值 $A,B,C=1,0,1$，二进制数 101 等效十进制数为 5，所以 $A\overline{B}C=m_5$。
+\end{definition}
+
+\begin{property}[最小项的性质]
+	\begin{enumerate}
+		\item 变量任取一组值，仅有一个最小项为 1，其他最小项为零；
+		\item $n$ 变量的全体最小项之和为 1；
+		\item 不同的最小项相与，结果为 0；
+		\item 相邻最小项相“或”可以合并成一项，并消去一个变量因子。
+	\end{enumerate}
+\end{property}
+
+\begin{definition}[最小项相邻]
+	两最小项如仅有一个变量因子不同，其他变量均相同，则称这两个最小项相邻。例如 $\overline{A}BC+ABC=BC$。任一 $n$ 变量的最小项，必定和其他 $n$ 个不同最小项相邻。
+\end{definition}
+
+\subsection{最大项}
+\label{sec:最大项}
+
+\begin{definition}[最大项]
+	最大项是“或”项，具有以下特点：
+	\begin{enumerate}
+		\item 每个最大项一定包含 $n$ 个因子的“或”项；
+		\item 每个变量必须以原变量或反变量形式出现\textbf{一次且仅一次}。
+	\end{enumerate}
+	例如：两变量有 $A+B$、$A+\overline{B}$、$\overline{A}+B$、$\overline{A}\,\overline{B}$ 四个最大项。
+\end{definition}
+
+\begin{definition}[最大项的编号]
+	任一最大项用 $M_i$ 表示，下标 $i$ 为使该最大项为 \textbf{0} 的变量取值所对应的等效十进制数。
+
+	例如：使最大项 $\overline{A}+B+C$ 为 0 的取值为 $A,B,C=1,0,0$，二进制数 100 等效十进制数为 4，所以 $\overline{A}+B+C=M_4$。
+\end{definition}
+
+\begin{property}[最大项的性质]
+	\begin{enumerate}
+		\item 变量任取一组值，仅有一个最大项为 0，其他最大项为 1；
+		\item $n$ 变量的全体最大项之积为 0；
+		\item 不同的最大项相或，结果为 1；
+		\item 两相邻的最大项相“与”可以合并成一项，并消去一个变量因子。例如 $(A+B+\overline{C})(A+B+C)=A+B$。任一 $n$ 变量的最大项，必定和其他 $n$ 个不同最大项相邻。
+	\end{enumerate}
+\end{property}
+
+\subsection{最小项和最大项的关系}
+\label{sec:最小项和最大项的关系}
+
+\begin{theorem}[最小项与最大项的关系]
+	编号下标相同的最小项和最大项互为反函数，即
+	\begin{equation}
+		M_i=\overline{m_i}
+		\label{eq:标准形式:最小项最大项关系}
+	\end{equation}
+\end{theorem}
+
+\subsection{逻辑函数的最小项之和形式}
+\label{sec:逻辑函数的最小项之和形式}
+
+\begin{theorem}[最小项之和形式]
+	最小项之和式为“与或”式，任一逻辑函数都可以表达为最小项之和的形式，而且是\textbf{唯一}的。例如
+	\begin{equation}
+		F(A,B,C)=\overline{A}B\overline{C}+A\overline{B}\,\overline{C}+AB\overline{C}=\Sigma m(2,4,6)
+		\label{eq:标准形式:最小项之和}
+	\end{equation}
+\end{theorem}
+
+\begin{example}
+	将 $F(A,B,C)=AB+\overline{A}C$ 化为最小项之和的形式：
+	\begin{equation}
+		\begin{aligned}
+			F(A,B,C) &= AB+\overline{A}C \\
+			&= AB(C+\overline{C})+\overline{A}C(B+\overline{B}) \\
+			&= ABC+AB\overline{C}+\overline{A}BC+\overline{A}\,\overline{B}C \\
+			&= \Sigma m(1,3,6,7)
+		\end{aligned}
+		\label{eq:标准形式:最小项之和例}
+	\end{equation}
+\end{example}
+
+\subsection{逻辑函数的最大项之积形式}
+\label{sec:逻辑函数的最大项之积形式}
+
+\begin{theorem}[最大项之积形式]
+	最大项之积式为“或与”式，任一逻辑函数都可以表达为最大项之积的形式，而且是\textbf{唯一}的。例如
+	\begin{equation}
+		F(A,B,C)=(A+B+C)(A+\overline{B}+C)(\overline{A}+B+C)=\Pi M(0,2,4)
+		\label{eq:标准形式:最大项之积}
+	\end{equation}
+\end{theorem}
+
+\begin{example}
+	将 $F(A,B,C)=(\overline{A}+C)(B+\overline{C})$ 化为最大项之积的形式：
+	\begin{equation}
+		\begin{aligned}
+			F(A,B,C) &= (\overline{A}+C)(B+\overline{C}) \\
+			&= (\overline{A}+C+B\overline{B})(B+\overline{C}+A\overline{A}) \\
+			&= (\overline{A}+B+C)(\overline{A}+\overline{B}+C)(A+B+\overline{C})(\overline{A}+B+\overline{C}) \\
+			&= \Pi M(1,4,5,6)
+		\end{aligned}
+		\label{eq:标准形式:最大项之积例}
+	\end{equation}
+\end{example}
+
+\subsection{两种标准形式之间的关系}
+\label{sec:两种标准形式之间的关系}
+
+\begin{theorem}[两种标准形式之间的关系]
+	若 $F=\Sigma m_i$，则
+	\begin{equation}
+		\overline{F}=\sum_{j\neq i}m_j=\prod_{j\neq i}M_j
+		\label{eq:标准形式:两种形式关系}
+	\end{equation}
+\end{theorem}
+
+\begin{example}
+	$F(A,B,C)=\Sigma(1,3,4,6,7)=\Pi(0,2,5)$
+\end{example}
+
+\section{真值表与逻辑表达式}
+\label{sec:真值表与逻辑表达式}
+
+真值表与逻辑表达式都是表示逻辑函数的方法。
+
+\subsection{由逻辑函数式列真值表}
+\label{sec:由逻辑函数式列真值表}
+
+\begin{example}
+	试列出逻辑函数式 $F(A,B,C)=AB+BC$ 的真值表。
+
+	\textbf{方法一}（直接代入法）：把 $A,B,C$ 三个变量所有取值的组合分别代入函数式，算出函数值，填进真值表，适用于变量较少的情况。
+
+	\textbf{方法二}：先将函数式 $F$ 表示为最小项之和的形式：
+	\begin{equation}
+		\begin{aligned}
+			F(A,B,C) &= AB+BC \\
+			&= AB(C+\overline{C})+BC(A+\overline{A}) \\
+			&= ABC+AB\overline{C}+\overline{A}BC \\
+			&= \Sigma m(3,6,7)
+		\end{aligned}
+		\label{eq:真值表:最小项之和}
+	\end{equation}
+	最后根据最小项的性质，在真值表中对应于 $ABC$ 取值为 011、110、111 处填“1”，其它位置填“0”，即
+
+	\begin{table}[H]
+	\centering
+	\caption{$F(A,B,C)=AB+BC$ 的真值表}
+	\label{tab:真值表:AB加BC}
+	\begin{tabular}{ccc|c}
+		\toprule
+		$A$ & $B$ & $C$ & $F$ \\
+		\midrule
+		0 & 0 & 0 & 0 \\
+		0 & 0 & 1 & 0 \\
+		0 & 1 & 0 & 0 \\
+		0 & 1 & 1 & 1 \\
+		1 & 0 & 0 & 0 \\
+		1 & 0 & 1 & 0 \\
+		1 & 1 & 0 & 1 \\
+		1 & 1 & 1 & 1 \\
+		\bottomrule
+	\end{tabular}
+	\end{table}
+
+	\textbf{方法三}：根据函数式 $F$ 的含义，直接填表。
+\end{example}
+
+\subsection{由真值表写逻辑函数式}
+\label{sec:由真值表写逻辑函数式}
+
+\begin{keybox}[方法]
+	根据最小项的性质，用观察法，可直接从真值表写出函数的最小项之和表达式。
+\end{keybox}

@@ -13,6 +13,7 @@
 % 基础：字体、页面
 % ------------------------------------------------------------%
 \usepackage[fontset=fandol]{ctex}   % 方正宋体/楷体/黑体，与参照讲义同款
+\xeCJKDeclareCharClass{CJK}{"2460 -> "24FF}  % 带圈数字 ①~⑳ 归入中文字体，避免 Latin 字体缺字
 \usepackage{geometry,graphicx,xcolor,color,subcaption}
 \geometry{a4paper, margin=2.54cm, headheight=14.5pt}
 
