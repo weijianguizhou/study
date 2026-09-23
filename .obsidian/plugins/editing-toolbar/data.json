@@ -1,6 +1,6 @@
 {
   "lastVersion": "4.1.1",
-  "aestheticStyle": "default",
+  "aestheticStyle": "custom",
   "positionStyle": "top",
   "menuCommands": [
     {
@@ -422,9 +422,9 @@
       "icon": "lucide-sparkles"
     }
   ],
-  "enableMultipleConfig": false,
+  "enableMultipleConfig": true,
   "enableTopToolbar": true,
-  "enableFollowingToolbar": false,
+  "enableFollowingToolbar": true,
   "enableFixedToolbar": false,
   "appendMethod": "workspace",
   "shouldShowMenuOnSelect": false,
@@ -434,8 +434,8 @@
   "cMenuWidth": 610,
   "cMenuFontColor": "#0070c0",
   "cMenuBackgroundColor": "#d3f8b6",
-  "autohide": false,
-  "Iscentered": false,
+  "autohide": true,
+  "Iscentered": true,
   "custom_bg1": "#FFB78B8C",
   "custom_bg2": "#CDF4698C",
   "custom_bg3": "#A0CCF68C",
@@ -456,14 +456,14 @@
     "top": {
       "toolbarBackgroundColor": "rgba(var(--background-secondary-rgb), 0.7)",
       "toolbarIconColor": "var(--text-normal)",
-      "toolbarIconSize": 18,
-      "aestheticStyle": "default"
+      "toolbarIconSize": 20,
+      "aestheticStyle": "custom"
     },
     "following": {
       "toolbarBackgroundColor": "rgba(var(--background-secondary-rgb), 0.7)",
       "toolbarIconColor": "var(--text-normal)",
-      "toolbarIconSize": 18,
-      "aestheticStyle": "default"
+      "toolbarIconSize": 27,
+      "aestheticStyle": "custom"
     },
     "fixed": {
       "toolbarBackgroundColor": "rgba(var(--background-secondary-rgb), 0.7)",
@@ -480,7 +480,7 @@
   },
   "toolbarBackgroundColor": "rgba(var(--background-secondary-rgb), 0.7)",
   "toolbarIconColor": "var(--text-normal)",
-  "toolbarIconSize": 18,
+  "toolbarIconSize": 20,
   "useCurrentLineForRegex": false,
   "ai": {
     "enabled": true,

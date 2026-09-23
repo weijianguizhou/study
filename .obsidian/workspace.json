@@ -8,21 +8,21 @@
         "type": "tabs",
         "children": [
           {
-            "id": "480e237e30f81cd2",
+            "id": "7f3237e9f0b86543",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "机器人学/ROS2/使用CMake + ament编译ROS2节点.md",
+                "file": "电类/数字电路/笔记/08-数字逻辑基础.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "使用CMake + ament编译ROS2节点"
+              "title": "08-数字逻辑基础"
             }
           },
           {
-            "id": "7f3237e9f0b86543",
+            "id": "bfb51bb9d5f7601e",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -171,7 +171,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "机器人学/笔记/刚体运动.md",
+                "file": "电类/数字电路/笔记/布尔代数.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -188,26 +188,6 @@
               "state": {},
               "icon": "git-pull-request",
               "title": "Source Control"
-            }
-          },
-          {
-            "id": "8e2623d6f9c764f4",
-            "type": "leaf",
-            "state": {
-              "type": "opencode-conversations",
-              "state": {},
-              "icon": "message-circle",
-              "title": "Opencode conversations"
-            }
-          },
-          {
-            "id": "a1cb4d1fb8fffc40",
-            "type": "leaf",
-            "state": {
-              "type": "opencode-terminal",
-              "state": {},
-              "icon": "terminal",
-              "title": "Opencode"
             }
           }
         ],
@@ -229,11 +209,14 @@
       "bases:新建数据库": false,
       "obsidian-git:Open Git source control": false,
       "opencode:Opencode terminal": false,
-      "opencode:Opencode conversations": false
+      "opencode:Opencode conversations": false,
+      "oh-my-claudian:Open Oh My Claudian": false
     }
   },
   "active": "437ab6934dc5f66d",
   "lastOpenFiles": [
+    "电类/数字电路/笔记/08-数字逻辑基础.md",
+    "电类/数字电路/笔记/布尔代数.md",
     "模板/PPT演示/钱学森学院beamer/QXC-slides.pdf",
     "模板/PPT演示/钱学森学院beamer/xelatex12704.fls",
     "模板/PPT演示/钱学森学院beamer/xelatex38004.fls",
@@ -244,7 +227,6 @@
     "模板/PPT演示/钱学森学院beamer/QXC-slides.toc",
     "模板/PPT演示/钱学森学院beamer/QXC-slides.nav",
     "模板/PPT演示/钱学森学院beamer/QXC-slides.xdv",
-    "模板/PPT演示/钱学森学院beamer/QXC-slides.out",
     "模板/PPT演示/钱学森学院beamer/figure/njust-emblem.png",
     "模板/PPT演示/钱学森学院beamer/README.md",
     "模板/PPT演示/钱学森学院beamer/image/equation.jpg",
@@ -266,8 +248,6 @@
     "机器人学/DH参数法/DH参数法.md",
     "机器人学/笔记/位形空间.md",
     "电类/数字电路/笔记/数制与 BCD 码.md",
-    "电类/数字电路/笔记/布尔代数.md",
-    "电类/数字电路/笔记/08-数字逻辑基础.md",
     "电类/数字电路/笔记/09-组合逻辑电路.md",
     "教材/Mathematical methods for physicists (Babusci, Danilo)/第一章 矩阵、指数算子与物理应用.md",
     "教材/Mathematical methods for physicists (Babusci, Danilo)/读书笔记.md",
