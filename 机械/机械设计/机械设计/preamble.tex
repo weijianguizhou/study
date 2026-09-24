@@ -1,17 +1,3 @@
-% ============================================================
-%  preamble.tex —— 「李思风」极简学术笔记样式
-%  参照《线性代数：原理与应用》（李思，清华大学）讲义排版：
-%    · 正文方正宋体 11pt、1.3 倍行距、首行缩进 2 字符
-%    · 章标题居中加粗特大、节标题居中、小节左对齐，纯黑无装饰
-%    · 定义/定理/命题/引理/推论 = 圆角细边框白底盒（行内加粗彩色标签）
-%    · 例/练习/注/证明 = 无框，黑色加粗行内标签（注用楷体）
-%    · 页码底部居中、无页眉；目录默认点线引导 + 蓝色超链接
-%  编译方式：XeLaTeX（Fandol 字体随 TeX Live 提供，跨平台一致）
-% ============================================================
-
-% ------------------------------------------------------------%
-% 基础：字体、页面
-% ------------------------------------------------------------%
 \usepackage[fontset=fandol]{ctex}   % 方正宋体/楷体/黑体，与参照讲义同款
 \usepackage{geometry,graphicx,xcolor,color,subcaption}
 \geometry{a4paper, margin=2.54cm, headheight=14.5pt}
@@ -21,6 +7,7 @@
 % ------------------------------------------------------------%
 \usepackage{amssymb,amsmath,amsthm}
 \usepackage{cancel}
+\usepackage{array}   % 提供 >{...} / <{...} 列修饰，用于表格内居中、换行等
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{newclude,ulem}
@@ -116,6 +103,9 @@
 \newlisiThm{lemma}{引理}{LiSiPro}
 \newlisiThm{property}{性质}{LiSiPro}
 \newlisiThm{corollary}{推论}{LiSiCor}
+\newlisiThm{feature}{特征}{LiSiDef}
+\newlisiThm{formula}{公式}{LiSiCor}
+
 
 % 例题 / 练习：无框，黑色加粗行内标签（例 x.y.z.）
 \newenvironment{example}[1][]{%

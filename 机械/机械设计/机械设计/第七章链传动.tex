@@ -31,6 +31,152 @@
     \item 滚子和套筒之间采用间隙配合
 \end{itemize}
 
-\begin{proposition}
-    滚子链的接头型式
-\end{proposition}
+\begin{feature}[滚子链的接头型式]
+    当链节为偶数时,接头处用开口销或弹簧卡片来固定。链节数最好取偶数:以使链条联成环形时,正好是外链板和内链板相接。若连接数为奇数，则需在接头处用一个过渡链节来连接。但过渡链节工作时受附加弯矩，尽量避免使用。
+\end{feature}
+
+滚子链的基本参数有链节数、节距、链轮齿数、链条长度、链条宽度等。其中节距$p$是主要参数。
+
+\begin{formula}[节距]
+    $$p=\text{链号}\times \frac{25.4}{16}$$
+\end{formula}
+
+\section{齿形链}
+齿形链是由一组带有两个齿的链板左右交错并列铰接而成。
+齿形链有如下优点：
+\begin{itemize}
+    \item 传动平稳、无噪声,承受冲击性能好, 铰接 工作可靠;
+    \item 高速传动、传动比大和中心距较小的场合;
+    \item 结构复杂,价格较高多用于高速或运动精度较高的传动装置
+\end{itemize}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.3\textwidth]{Figure/齿形链.jpg}
+    \caption{齿形链}
+    \label{fig:齿形链}
+\end{figure}
+
+\section{链轮}
+\subsection{链轮的基本参数及主要尺寸}
+\begin{itemize}
+    \item 配用链条的节距$p$
+    \item 套筒的最大外径$d_1$
+    \item 链轮的齿数$z$
+    \item 排距$p_t$·
+\end{itemize}
+\begin{table}[htbp]
+\centering
+\renewcommand{\arraystretch}{1.5} % 增加行高，让公式显示更清晰
+\begin{tabular}{|c|c|>{\centering\arraybackslash}p{6.2cm}|p{4.2cm}|}
+\hline
+名称 & 代号 & \multicolumn{1}{c|}{计算公式} & \multicolumn{1}{c|}{备注} \\
+\hline
+分度圆直径 & \(d\) & \(d = p / \sin(180^\circ / z)\) & \\
+\hline
+齿顶圆直径 & \(d_a\) &
+\(d_{a\max} = d + 1.25p - d_1\) \newline
+\(d_{a\min} = d + \left(1 - \frac{1.6}{z}\right)p - d_1\) \newline
+若为三圆弧一直线齿形，则 \newline
+\(d_a = p \left(0.54 + \text{ctg} \frac{180^\circ}{z}\right)\)
+&
+可在 \(d_{a\max}\)、\(d_{a\min}\) 范围内任意选取，但选用 \(d_{a\max}\) 时，应考虑采用展成法加工有发生顶切的可能性。 \\
+\hline
+分度圆弦齿高 & \(h_a\) &
+\(h_{a\max} = \left(0.625 + \frac{0.8}{z}\right)p - 0.5d_1\) \newline
+\(h_{a\min} = 0.5(p - d_1)\) \newline
+若为三圆弧一直线齿形，则 \(h_a = 0.27p\)
+&
+\(h_a\) 是为简化放大齿形图的绘制而引入的辅助尺寸。\newline
+\(h_{a\max}\) 相应于 \(d_{a\max}\)，\newline
+\(h_{a\min}\) 相应于 \(d_{a\min}\)。 \\
+\hline
+齿根圆直径 & \(d_f\) & \(d_f = d - d_1\) & \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{链轮齿形}
+三圆弧一直线(凹齿形),如下图\ref{fig:三圆弧一直线}所示。
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.3\textwidth]{Figure/三圆弧一直线.png}
+    \caption{链轮齿形}
+    \label{fig:三圆弧一直线}
+\end{figure}
+优点是：接触应力小、冲击小、磨损少、不易跳齿和脱链。
+
+\subsection{链轮的材料}
+链轮的材料应该具有足够的轮齿接触强度和耐磨性，同时小链轮的材料要优于大链轮。
+\begin{enumerate}
+    \item 冲击载荷时,低碳钢和低碳合金钢。
+    \item 无剧烈冲击,中等速度,中碳钢和中碳合金钢
+    \item 中小功率,普通或优质碳素钢;大功率,合金钢
+\end{enumerate}
+\section{传动链的几何计算}
+\begin{definition}[链节线]
+    在链条（如滚子链、无声链）中，链节线是一条假想的直线，其核心定义是：当链条处于直线状态时，穿过所有连接销轴（或摇轴）接触点中心的一条线
+\end{definition}
+链条线长度计算公式($\pi D_1=z_1p$和$\pi D_2=z_2p$是链轮的外径)：
+$$L_P=2 a+\frac{\pi}{2}\left(D_{1}+D_{2}\right)+\frac{\left(D_{2}-D_{1}\right)^{2}}{4 a}=2 a+\frac{\left(z_{1}+z_{2}\right) p}{2}+\left(\frac{z_{2}-z_{1}}{2 \pi}\right)^{2} \cdot \frac{p^{2}}{a}$$
+
+链节数$$N_P=\frac{\left(z_{1}+z_{2}\right)}{2}+\frac{2 a}{p}+\left(\frac{z_{2}-z_{1}}{2 \pi}\right)^{2} \cdot \frac{p}{a}$$
+中心距:
+$$a=\frac{P}{4}\left[\left(L_{P}-\frac{Z_{1}+Z_{2}}{2}\right)+\sqrt{\left(L_{P}-\frac{Z_{1}+Z_{2}}{2}\right)^{2}-8\left(\frac{Z_{2}-Z_{1}}{2 \pi}\right)^{2}}\right]$$
+\section{链传动的运动特性}
+在链传动中，链条进入链轮后形成折线，相当于两个正多边形之间的传动，正多边形的边长等于链条的节距 $p$。链节在运动中忽上忽下、忽快忽慢，使链速和瞬时传动比都作有规律的周期性波动。
+
+本节符号：$z_1$、$z_2$ 为主、从动轮齿数；$n_1$、$n_2$ 为主、从动轮转速；$p$ 为链条节距；$d_1$、$d_2$ 为主、从动轮分度圆直径；$\omega_1$、$\omega_2$ 为主、从动轮角速度；$\beta$、$\gamma$ 为主、从动轮相位角；$\varphi_1$、$\varphi_2$ 为分度圆上相邻两齿所对的中心角。
+
+\subsection{平均链速与平均传动比}
+链轮每转过一个齿，链条就移动一个节距，故链条的平均速度
+\begin{equation}
+    v=\frac{z_1pn_1}{60\times1000}=\frac{z_2pn_2}{60\times1000},
+    \label{eq:链传动:平均链速}
+\end{equation}
+式中 $v$ 的单位为 m/s，$p$ 的单位为 mm，$n_1$、$n_2$ 的单位为 r/min。由此得平均传动比
+\begin{equation}
+    i=\frac{n_1}{n_2}=\frac{z_2}{z_1}=\text{常数},
+    \label{eq:链传动:平均传动比}
+\end{equation}
+即链传动的\textbf{平均传动比准确}；但由于链条在链轮上呈折线分布，瞬时传动比并不是定值。
+
+\subsection{瞬时链速与瞬时传动比}
+\textbf{主动轮}。设主动轮分度圆直径为 $d_1$，角速度为 $\omega_1$，则链节销轴中心随主动轮转动的圆周速度
+\begin{equation}
+    v_1=\frac{\omega_1d_1}{2},
+    \label{eq:链传动:主动轮圆周速度}
+\end{equation}
+它沿链条方向的分量即为链速 $v$，垂直方向的分量 $v'$ 则使链条上下抖动：
+\begin{equation}
+    v=v_1\cos\beta=\frac{\omega_1d_1}{2}\cos\beta,\qquad
+    v'=v_1\sin\beta=\frac{\omega_1d_1}{2}\sin\beta,
+    \label{eq:链传动:瞬时链速}
+\end{equation}
+式中 $\beta$ 为主动轮的相位角，其变化范围为
+\begin{equation}
+    \beta\in\left[-\frac{\varphi_1}{2},+\frac{\varphi_1}{2}\right],\qquad
+    \varphi_1=\frac{360^\circ}{z_1}.
+    \label{eq:链传动:主动轮相位角}
+\end{equation}
+
+可见在啮合过程中，链速 $v$ 与垂直分量 $v'$ 都在周期性地变化：
+\begin{itemize}
+    \item 开始啮合（$\beta=-\varphi_1/2$）：$v$ 最小，$v'$ 最大（链条向上抖动）；
+    \item 销轴位于分度圆最高点（$\beta=0$）：$v$ 最大，$v'=0$；
+    \item 退出啮合（$\beta=+\varphi_1/2$）：$v$ 最小，$v'$ 最大（链条向下抖动）。
+\end{itemize}
+
+\textbf{从动轮}。同理，从动轮分度圆上的圆周速度 $v_2$ 与链速满足 $v=v_2\cos\gamma$，故
+\begin{equation}
+    v_2=\frac{\omega_2d_2}{2}=\frac{v}{\cos\gamma}=\frac{\omega_1d_1\cos\beta}{2\cos\gamma},
+    \label{eq:链传动:从动轮圆周速度}
+\end{equation}
+式中 $\gamma$ 为从动轮的相位角，$\gamma\in\left[-\frac{\varphi_2}{2},+\frac{\varphi_2}{2}\right]$，$\varphi_2=\frac{360^\circ}{z_2}$。由此得瞬时传动比
+\begin{equation}
+    i_t=\frac{\omega_1}{\omega_2}=\frac{d_2\cos\gamma}{d_1\cos\beta}\neq\text{常数}.
+    \label{eq:链传动:瞬时传动比}
+\end{equation}
+
+\begin{definition}[多边形效应]
+    链条绕在链轮上形成正多边形，使瞬时链速与瞬时传动比随相位角 $\beta$、$\gamma$ 周期性波动，这种现象称为\textbf{多边形效应}。
+\end{definition}
