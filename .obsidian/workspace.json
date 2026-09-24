@@ -20,23 +20,8 @@
               "icon": "lucide-file",
               "title": "08-数字逻辑基础"
             }
-          },
-          {
-            "id": "bfb51bb9d5f7601e",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "电类/数字电路/笔记/布尔代数.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "布尔代数"
-            }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -208,26 +193,29 @@
       "command-palette:打开命令面板": false,
       "bases:新建数据库": false,
       "obsidian-git:Open Git source control": false,
-      "opencode:Opencode terminal": false,
-      "opencode:Opencode conversations": false,
       "oh-my-claudian:Open Oh My Claudian": false
     }
   },
-  "active": "bfb51bb9d5f7601e",
+  "active": "7f3237e9f0b86543",
   "lastOpenFiles": [
-    "电类/数字电路/xelatex41736.fls",
-    "电类/数字电路/xelatex33908.fls",
-    "电类/数字电路/xelatex5680.fls",
-    "电类/数字电路/xelatex34536.fls",
-    "电类/数字电路/笔记/08-数字逻辑基础.md",
+    "机械/机械设计/机械设计/机械设计.synctex(busy)",
+    "机械/机械设计/课件/09链传动(OCR).pdf",
+    "机械/机械设计/机械设计/机械设计.synctex.gz",
+    "机械/机械设计/机械设计/机械设计.fdb_latexmk",
+    "数理基础/数理统计/数理统计学习笔记.fdb_latexmk",
+    "机械/机械设计/机械设计/机械设计.xdv",
+    "数理基础/数理统计/数理统计学习笔记.xdv",
+    "机械/机械设计/机械设计/机械设计.fls",
+    "数理基础/数理统计/数理统计学习笔记.fls",
+    "机械/机械设计/机械设计/xelatex47624.fls",
+    "数理基础/数理统计/xelatex4044.fls",
+    "机械/机械设计/机械设计/Figure/滚子链结构.jpg",
+    "机械/机械设计/机械设计/Figure/滚子链结构.png",
+    "机械/机械设计/机械设计/Figure/892dc4d8-162c-4f7b-a044-f6d514bfb407.png",
+    "机械/机械设计/笔记/5.带传动.md",
+    "格言摘抄.md",
     "电类/数字电路/笔记/布尔代数.md",
-    "模板/PPT演示/钱学森学院beamer/QXC-slides.pdf",
-    "模板/PPT演示/钱学森学院beamer/xelatex12704.fls",
-    "模板/PPT演示/钱学森学院beamer/xelatex38004.fls",
-    "模板/PPT演示/钱学森学院beamer/xelatex55932.fls",
-    "模板/PPT演示/钱学森学院beamer/QXC-slides.bbl",
-    "模板/PPT演示/钱学森学院beamer/QXC-slides.blg",
-    "模板/PPT演示/钱学森学院beamer/QXC-slides.snm",
+    "电类/数字电路/笔记/08-数字逻辑基础.md",
     "模板/PPT演示/钱学森学院beamer/figure/njust-emblem.png",
     "模板/PPT演示/钱学森学院beamer/README.md",
     "模板/PPT演示/钱学森学院beamer/image/equation.jpg",
@@ -236,11 +224,7 @@
     "模板/PPT演示/钱学森学院beamer/image/toc.jpg",
     "模板/PPT演示/钱学森学院beamer/image/qxc-beamer.jpg",
     "模板/PPT演示/钱学森学院beamer/image/_q-13.png",
-    "模板/PPT演示/钱学森学院beamer/image/_q-12.png",
-    "模板/PPT演示/钱学森学院beamer/image/_q-11.png",
-    "模板/PPT演示/钱学森学院beamer/image/_q-10.png",
     "机器人学/笔记/刚体运动.md",
-    "格言摘抄.md",
     "机器人学/ROS2/使用CMake + ament编译ROS2节点.md",
     "读书笔记.md",
     "计算机类/Anaconda教程/Anaconda 使用教程.md",
@@ -255,7 +239,6 @@
     "教材/Spacecraft_Dynamics/读书笔记/11-角速度矢量.md",
     "机器人学/位形空间.md",
     "机器人学/机器人学/位形空间.md",
-    "机械/机械设计/笔记/5.带传动.md",
     "机械/机械设计/笔记/一些零碎的常识.md",
     "数理基础/矢量分析与场论/2.场论.md",
     "数理基础/矢量分析与场论/1. 矢量分析.md",
