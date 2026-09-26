@@ -1,0 +1,137 @@
+\contentsline {chapter}{\numberline {第一章}机械设计概论}{2}{chapter.1}%
+\contentsline {section}{\numberline {1.1}机器、机械与机械零件}{2}{section.1.1}%
+\contentsline {section}{\numberline {1.2}标准化、系列化与通用化}{5}{section.1.2}%
+\contentsline {section}{\numberline {1.3}机械设计的基本要求}{5}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}对机器设计的基本要求}{5}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}对机械零件设计的基本要求}{6}{subsection.1.3.2}%
+\contentsline {section}{\numberline {1.4}机械设计的一般程序}{6}{section.1.4}%
+\contentsline {subsection}{\numberline {1.4.1}机器设计的一般程序}{6}{subsection.1.4.1}%
+\contentsline {subsection}{\numberline {1.4.2}机械零件设计的一般步骤}{7}{subsection.1.4.2}%
+\contentsline {subsection}{\numberline {1.4.3}设计计算与校核计算}{8}{subsection.1.4.3}%
+\contentsline {section}{\numberline {1.5}机械零件的主要失效形式和设计计算准则}{8}{section.1.5}%
+\contentsline {subsection}{\numberline {1.5.1}机械零件的失效形式}{8}{subsection.1.5.1}%
+\contentsline {subsection}{\numberline {1.5.2}机械零件的计算准则}{9}{subsection.1.5.2}%
+\contentsline {section}{\numberline {1.6}机械零件的常用材料}{11}{section.1.6}%
+\contentsline {subsection}{\numberline {1.6.1}常用材料}{11}{subsection.1.6.1}%
+\contentsline {subsubsection}{黑色金属（铁基）}{11}{subsection.1.6.1}%
+\contentsline {subsubsection}{有色金属（非铁金属）}{11}{figure.caption.7}%
+\contentsline {subsubsection}{非金属材料}{12}{figure.caption.8}%
+\contentsline {subsubsection}{复合材料}{12}{figure.caption.9}%
+\contentsline {subsection}{\numberline {1.6.2}机械零件材料的选用要求}{12}{subsection.1.6.2}%
+\contentsline {chapter}{\numberline {第二章}机械零件的强度}{14}{chapter.2}%
+\contentsline {section}{\numberline {2.1}载荷与应力的分类}{14}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}载荷的分类}{14}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}应力的分类}{14}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}稳定循环变应力的基本参数}{17}{subsection.2.1.3}%
+\contentsline {subsection}{\numberline {2.1.4}名义应力和计算应力}{18}{subsection.2.1.4}%
+\contentsline {section}{\numberline {2.2}静应力时机械零件的强度计算}{18}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}静应力下机械零件的强度}{18}{subsection.2.2.1}%
+\contentsline {subsubsection}{单向应力下的塑性材料零件}{18}{subsection.2.2.1}%
+\contentsline {subsubsection}{复合应力时的塑性材料零件（弯扭联合作用）}{19}{equation.2.6}%
+\contentsline {subsubsection}{脆性材料和低塑性材料零件}{19}{equation.2.9}%
+\contentsline {section}{\numberline {2.3}机械零件的疲劳强度计算}{20}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}变应力作用下机械零件的失效特征}{20}{subsection.2.3.1}%
+\contentsline {subsubsection}{失效形式}{20}{subsection.2.3.1}%
+\contentsline {subsubsection}{疲劳破坏特征}{20}{figure.caption.18}%
+\contentsline {subsubsection}{疲劳破坏的机理与影响因素}{21}{Item.54}%
+\contentsline {subsection}{\numberline {2.3.2}材料的疲劳曲线和疲劳极限}{21}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}材料的疲劳极限应力图（$\sigma _m-\sigma _a$ 图）}{22}{subsection.2.3.3}%
+\contentsline {subsection}{\numberline {2.3.4}影响机械零件疲劳强度的主要因素和零件极限应力图}{24}{subsection.2.3.4}%
+\contentsline {subsubsection}{应力集中的影响——有效应力集中系数 $k_\sigma (k_\tau )$}{24}{subsection.2.3.4}%
+\contentsline {subsubsection}{零件尺寸的影响——尺寸系数 $\varepsilon _\sigma (\varepsilon _\tau )$}{25}{equation.2.16}%
+\contentsline {subsubsection}{表面状态的影响}{25}{theorem.2.24}%
+\contentsline {subsubsection}{综合影响系数 $K_\sigma (K_\tau )$ 和零件的极限应力图}{25}{table.caption.22}%
+\contentsline {subsection}{\numberline {2.3.5}单向稳定变应力时的疲劳强度计算}{27}{subsection.2.3.5}%
+\contentsline {subsubsection}{$\gamma = \dfrac {\sigma _{\min }}{\sigma _{\max }} = C$}{27}{Item.67}%
+\contentsline {subsubsection}{$\sigma _m = C$}{27}{equation.2.26}%
+\contentsline {subsubsection}{$\sigma _{\min } = C$}{28}{equation.2.29}%
+\contentsline {subsubsection}{例题 1（课件原题）}{29}{Item.71}%
+\contentsline {subsection}{\numberline {2.3.6}双向稳定变应力时的疲劳强度计算}{30}{subsection.2.3.6}%
+\contentsline {section}{\numberline {2.4}机械零件的接触强度}{30}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}接触应力}{31}{subsection.2.4.1}%
+\contentsline {subsubsection}{两圆柱体接触}{31}{subsection.2.4.1}%
+\contentsline {subsubsection}{两球接触}{32}{figure.caption.24}%
+\contentsline {subsection}{\numberline {2.4.2}失效形式}{35}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.3}提高接触疲劳强度的措施}{35}{subsection.2.4.3}%
+\contentsline {section}{本章重点}{35}{Item.79}%
+\contentsline {chapter}{\numberline {第三章}螺纹连接}{36}{chapter.3}%
+\contentsline {section}{\numberline {3.1}螺纹}{36}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}螺纹的形成}{36}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}螺纹的分类}{36}{subsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.1.3}螺纹的主要参数}{37}{subsection.3.1.3}%
+\contentsline {section}{\numberline {3.2}螺纹连接的类型及螺纹连接件}{38}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}螺纹连接的基本类型}{38}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}螺纹联接件}{39}{subsection.3.2.2}%
+\contentsline {section}{\numberline {3.3}螺纹连接的预紧和防松}{40}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}预紧}{40}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}防松}{41}{subsection.3.3.2}%
+\contentsline {section}{\numberline {3.4}单个螺栓连接的强度计算}{41}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}受力形式、失效形式与设计准则}{41}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}松螺栓联接（如吊钩螺栓）}{42}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}紧螺栓联接——仅受预紧力（横向载荷的普通螺栓）}{42}{subsection.3.4.3}%
+\contentsline {subsection}{\numberline {3.4.4}受横向载荷的紧螺栓联接}{43}{subsection.3.4.4}%
+\contentsline {subsection}{\numberline {3.4.5}普通螺栓联接}{43}{subsection.3.4.5}%
+\contentsline {subsection}{\numberline {3.4.6}铰制孔用螺栓联接}{44}{subsection.3.4.6}%
+\contentsline {subsection}{\numberline {3.4.7}受轴向载荷的紧螺栓联接（重点）}{44}{subsection.3.4.7}%
+\contentsline {section}{\numberline {3.5}螺栓组连接的设计与受力分析}{46}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}受轴向载荷螺栓组联接}{46}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}受横向载荷螺栓组联接}{46}{subsection.3.5.2}%
+\contentsline {subsection}{\numberline {3.5.3}受扭矩螺栓组联接——传力方式与受横向载荷的螺栓组相同}{47}{subsection.3.5.3}%
+\contentsline {subsection}{\numberline {3.5.4}受倾覆（纵向）力矩螺栓组联接}{49}{subsection.3.5.4}%
+\contentsline {subsection}{\numberline {3.5.5}螺栓组四种受力状态对比与小结}{51}{subsection.3.5.5}%
+\contentsline {chapter}{\numberline {第四章}轴毂连接}{52}{chapter.4}%
+\contentsline {section}{\numberline {4.1}键连接的类型及应用}{52}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}平键}{52}{subsection.4.1.1}%
+\contentsline {subsubsection}{普通平键}{52}{subsection.4.1.1}%
+\contentsline {subsubsection}{薄型平键}{52}{figure.caption.40}%
+\contentsline {subsubsection}{导向键和滑键}{53}{figure.caption.40}%
+\contentsline {subsection}{\numberline {4.1.2}半圆键连接}{53}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.1.3}楔键连接}{53}{subsection.4.1.3}%
+\contentsline {subsection}{\numberline {4.1.4}切向键}{55}{subsection.4.1.4}%
+\contentsline {section}{\numberline {4.2}键的选择和键连接的强度计算}{56}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}键的类型选择}{56}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}键的尺寸选择}{56}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}普通平键的强度计算}{57}{subsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.2.4}导向键和滑键连接强度计算}{57}{subsection.4.2.4}%
+\contentsline {subsection}{\numberline {4.2.5}半圆键的剪切强度条件}{57}{subsection.4.2.5}%
+\contentsline {section}{\numberline {4.3}花键连接}{57}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}花键连接的类型、特点及应用}{57}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}花键连接的强度计算}{58}{subsection.4.3.2}%
+\contentsline {section}{\numberline {4.4}无键连接}{59}{section.4.4}%
+\contentsline {section}{\numberline {4.5}销连接}{59}{section.4.5}%
+\contentsline {section}{本章重点}{59}{theorem.4.5}%
+\contentsline {chapter}{\numberline {第五章}带传动}{61}{chapter.5}%
+\contentsline {section}{\numberline {5.1}概述}{61}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}带传动的工作原理及特点}{61}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}带传动的类型与应用}{62}{subsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.1.3}V 带及其标准}{63}{subsection.5.1.3}%
+\contentsline {section}{\numberline {5.2}带传动的工作情况分析}{63}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}带传动的受力分析}{64}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}带传动的最大有效拉力及其影响因素}{64}{subsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.2.3}带的应力分析}{65}{subsection.5.2.3}%
+\contentsline {subsection}{\numberline {5.2.4}带的弹性滑动和打滑}{66}{subsection.5.2.4}%
+\contentsline {section}{\numberline {5.3}V 带传动的设计计算}{66}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}设计准则和单根 V 带的基本额定功率}{66}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}V 带传动的设计步骤和方法}{67}{subsection.5.3.2}%
+\contentsline {section}{\numberline {5.4}V 带轮的设计}{68}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}设计要求}{68}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}带轮材料}{69}{subsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4.3}带轮的结构尺寸}{69}{subsection.5.4.3}%
+\contentsline {section}{\numberline {5.5}带传动的张紧与维护}{69}{section.5.5}%
+\contentsline {subsection}{\numberline {5.5.1}带的张紧}{69}{subsection.5.5.1}%
+\contentsline {subsection}{\numberline {5.5.2}带的维护}{69}{subsection.5.5.2}%
+\contentsline {section}{\numberline {5.6}同步带传动}{69}{section.5.6}%
+\contentsline {section}{本章重点}{69}{section.5.6}%
+\contentsline {chapter}{\numberline {第六章}链传动}{71}{chapter.6}%
+\contentsline {section}{\numberline {6.1}传动链的结构}{71}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}滚子链结构}{71}{subsection.6.1.1}%
+\contentsline {section}{\numberline {6.2}齿形链}{72}{section.6.2}%
+\contentsline {section}{\numberline {6.3}链轮}{73}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}链轮的基本参数及主要尺寸}{73}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}链轮齿形}{73}{subsection.6.3.2}%
+\contentsline {subsection}{\numberline {6.3.3}链轮的材料}{74}{subsection.6.3.3}%
+\contentsline {section}{\numberline {6.4}传动链的几何计算}{74}{section.6.4}%
+\contentsline {section}{\numberline {6.5}链传动的运动特性}{74}{section.6.5}%
+\contentsline {subsection}{\numberline {6.5.1}平均链速与平均传动比}{74}{subsection.6.5.1}%
+\contentsline {subsection}{\numberline {6.5.2}瞬时链速与瞬时传动比}{75}{subsection.6.5.2}%
+\contentsfinish 

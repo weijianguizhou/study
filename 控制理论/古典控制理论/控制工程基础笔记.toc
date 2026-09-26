@@ -1,0 +1,52 @@
+\contentsline {chapter}{\numberline {第一章}绪论}{2}{chapter.1}%
+\contentsline {section}{\numberline {1.1}符号说明}{2}{section.1.1}%
+\contentsline {chapter}{\numberline {第二章}控制系统的动态数学模型}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}数学模型的线性化}{3}{section.2.1}%
+\contentsline {section}{\numberline {2.2}传递函数以及典型环节的传递函数}{4}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}传递函数的定义和性质}{4}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}典型环节的传递函数}{4}{subsection.2.2.2}%
+\contentsline {subsubsection}{比例环节}{5}{subsection.2.2.2}%
+\contentsline {subsubsection}{一阶惯性环节}{5}{example.2.2}%
+\contentsline {subsubsection}{微分环节}{6}{equation.2.9}%
+\contentsline {subsubsection}{积分环节}{7}{theorem.2.7}%
+\contentsline {subsubsection}{二阶震荡环节}{7}{theorem.2.9}%
+\contentsline {subsubsection}{延迟环节}{9}{example.2.4}%
+\contentsline {section}{\numberline {2.3}系统函数方块图及其简化}{10}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}方块图的组成}{10}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}方块图的基本连接与等效}{10}{subsection.2.3.2}%
+\contentsline {subsubsection}{串联连接}{10}{subsection.2.3.2}%
+\contentsline {subsubsection}{并联连接}{11}{equation.2.18}%
+\contentsline {subsubsection}{反馈连接}{11}{equation.2.19}%
+\contentsline {subsection}{\numberline {2.3.3}方块图的等效变换法则}{12}{subsection.2.3.3}%
+\contentsline {subsection}{\numberline {2.3.4}方块图化简举例}{14}{subsection.2.3.4}%
+\contentsline {section}{\numberline {2.4}信号流图及其梅逊公式}{15}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}信号流图的定义}{15}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}信号流图的术语}{15}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.3}信号流图的绘制}{16}{subsection.2.4.3}%
+\contentsline {subsection}{\numberline {2.4.4}信号流图的性质}{16}{subsection.2.4.4}%
+\contentsline {subsubsection}{由方块图绘制信号流图}{17}{Item.22}%
+\contentsline {subsection}{\numberline {2.4.5}梅逊公式}{18}{subsection.2.4.5}%
+\contentsline {subsubsection}{梅逊公式应用举例}{18}{equation.2.24}%
+\contentsline {chapter}{\numberline {附录A}拉普拉斯变换}{20}{appendix.A}%
+\contentsline {section}{\numberline {A.1}拉氏变换的定义}{20}{section.A.1}%
+\contentsline {section}{\numberline {A.2}简单函数的拉氏变换}{21}{section.A.2}%
+\contentsline {subsection}{\numberline {A.2.1}阶跃函数与脉冲函数}{21}{subsection.A.2.1}%
+\contentsline {subsection}{\numberline {A.2.2}指数函数与幂函数}{21}{subsection.A.2.2}%
+\contentsline {subsection}{\numberline {A.2.3}正弦函数与余弦函数}{22}{subsection.A.2.3}%
+\contentsline {subsection}{\numberline {A.2.4}常用变换对}{22}{subsection.A.2.4}%
+\contentsline {section}{\numberline {A.3}拉氏变换的性质}{23}{section.A.3}%
+\contentsline {subsection}{\numberline {A.3.1}线性性质}{23}{subsection.A.3.1}%
+\contentsline {subsection}{\numberline {A.3.2}微分性质}{23}{subsection.A.3.2}%
+\contentsline {subsection}{\numberline {A.3.3}积分性质}{24}{subsection.A.3.3}%
+\contentsline {subsection}{\numberline {A.3.4}延迟性质（时移定理）}{24}{subsection.A.3.4}%
+\contentsline {subsection}{\numberline {A.3.5}位移性质（$s$ 域平移）}{25}{subsection.A.3.5}%
+\contentsline {subsection}{\numberline {A.3.6}尺度变换性质}{25}{subsection.A.3.6}%
+\contentsline {subsection}{\numberline {A.3.7}初值定理与终值定理}{25}{subsection.A.3.7}%
+\contentsline {subsection}{\numberline {A.3.8}卷积定理}{26}{subsection.A.3.8}%
+\contentsline {subsection}{\numberline {A.3.9}性质一览表}{26}{subsection.A.3.9}%
+\contentsline {section}{\numberline {A.4}用留数法计算拉氏反变换}{27}{section.A.4}%
+\contentsline {subsection}{\numberline {A.4.1}基本思路与公式}{27}{subsection.A.4.1}%
+\contentsline {subsection}{\numberline {A.4.2}与部分分式法的一致性}{28}{subsection.A.4.2}%
+\contentsline {subsection}{\numberline {A.4.3}例题}{28}{subsection.A.4.3}%
+\contentsline {subsection}{\numberline {A.4.4}解题步骤与易错点}{30}{subsection.A.4.4}%
+\contentsfinish 

@@ -1,0 +1,43 @@
+\contentsline {chapter}{\numberline {第一章}概率论的基础知识}{2}{chapter.1}%
+\contentsline {section}{\numberline {1.1}随机试验}{2}{section.1.1}%
+\contentsline {section}{\numberline {1.2}样本空间、随机事件}{2}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}事件的运算}{3}{subsection.1.2.1}%
+\contentsline {section}{\numberline {1.3}古典概型与概率}{3}{section.1.3}%
+\contentsline {section}{\numberline {1.4}条件概率、独立性}{4}{section.1.4}%
+\contentsline {section}{\numberline {1.5}全概率公式与贝叶斯公式}{4}{section.1.5}%
+\contentsline {section}{\numberline {1.6}错题}{5}{section.1.6}%
+\contentsline {chapter}{\numberline {第二章}随机变量及其分布}{7}{chapter.2}%
+\contentsline {section}{\numberline {2.1}随机变量}{7}{section.2.1}%
+\contentsline {section}{\numberline {2.2}离散型随机变量的分布律}{7}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}常见的离散型随机变量的分布律}{7}{subsection.2.2.1}%
+\contentsline {section}{\numberline {2.3}随机变量的分布函数}{8}{section.2.3}%
+\contentsline {section}{\numberline {2.4}连续型随机变量及其概率密度}{9}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}几个常用的连续型分布}{9}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}无记忆性}{10}{subsection.2.4.2}%
+\contentsline {section}{\numberline {2.5}随机变量函数的分布}{11}{section.2.5}%
+\contentsline {chapter}{\numberline {第三章}多维随机变量及其分布}{12}{chapter.3}%
+\contentsline {section}{\numberline {3.1}二维随机变量的分布}{12}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}二维离散型随机变量}{13}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}二维连续型随机变量}{13}{subsection.3.1.2}%
+\contentsline {subsubsection}{两个常用的二维连续型分布}{14}{equation.3.11}%
+\contentsline {section}{\numberline {3.2}边缘分布}{15}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}边缘分布函数}{15}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}边缘分布律}{15}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}边缘密度函数的几何理解}{16}{subsection.3.2.3}%
+\contentsline {section}{\numberline {3.3}随机变量的独立性}{16}{section.3.3}%
+\contentsline {section}{\numberline {3.4}两个随机变量函数的分布}{16}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}二维离散型随机变量函数的分布律}{16}{subsection.3.4.1}%
+\contentsline {subsubsection}{常见函数类型的分布}{17}{equation.3.21}%
+\contentsline {subsection}{\numberline {3.4.2}多个连续型随机变量函数的密度函数}{17}{subsection.3.4.2}%
+\contentsline {subsubsection}{常见特定函数的结论}{18}{equation.3.28}%
+\contentsline {chapter}{\numberline {第四章}随机变量的数字特征}{19}{chapter.4}%
+\contentsline {section}{\numberline {4.1}随机变量的数学期望（均值）}{19}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}期望的性质}{19}{subsection.4.1.1}%
+\contentsline {subsubsection}{常见随机变量的期望参考表}{21}{equation.4.8}%
+\contentsline {section}{\numberline {4.2}方差}{21}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}切比雪夫不等式}{21}{subsection.4.2.1}%
+\contentsline {section}{\numberline {4.3}协方差与相关系数}{22}{section.4.3}%
+\contentsline {chapter}{\numberline {第五章}大数定律与中心极限定理}{23}{chapter.5}%
+\contentsline {section}{\numberline {5.1}大数定律}{23}{section.5.1}%
+\contentsline {section}{\numberline {5.2}中心极限定理}{23}{section.5.2}%
+\contentsfinish 

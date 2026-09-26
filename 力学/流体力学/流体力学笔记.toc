@@ -1,0 +1,35 @@
+\contentsline {chapter}{\numberline {第一章}绪论}{2}{chapter.1}%
+\contentsline {section}{\numberline {1.1}流体力学的研究对象和内容}{2}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}流体力学是什么}{2}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}研究对象}{2}{subsection.1.1.2}%
+\contentsline {section}{\numberline {1.2}流体力学的研究方法}{2}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}理论研究}{2}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}实验研究}{2}{subsection.1.2.2}%
+\contentsline {subsection}{\numberline {1.2.3}数值研究}{2}{subsection.1.2.3}%
+\contentsline {subsection}{\numberline {1.2.4}人工智能：科学研究的新范式}{3}{subsection.1.2.4}%
+\contentsline {chapter}{\numberline {第二章}张量代数基础}{4}{chapter.2}%
+\contentsline {section}{\numberline {2.1}标量、向量与张量}{4}{section.2.1}%
+\contentsline {section}{\numberline {2.2}张量的指标表示}{4}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}向量的表示}{4}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}矩阵的表示}{4}{subsection.2.2.2}%
+\contentsline {section}{\numberline {2.3}张量运算}{5}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}点乘}{5}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}缩并：降两阶的手段}{5}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}并积}{5}{subsection.2.3.3}%
+\contentsline {subsection}{\numberline {2.3.4}指标表示规则}{5}{subsection.2.3.4}%
+\contentsline {section}{\numberline {2.4}向量乘法与指标运算}{5}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Kronecker $\delta $ 符号}{6}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}置换符号 $\varepsilon $}{6}{subsection.2.4.2}%
+\contentsline {chapter}{\numberline {第三章}流体的物理性质}{7}{chapter.3}%
+\contentsline {section}{\numberline {3.1}流体的连续介质模型}{7}{section.3.1}%
+\contentsline {section}{\numberline {3.2}作用在流体上的体积力和表面力}{8}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}体积力和体积力强度}{8}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}表面力和应力}{8}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}一点的应力张量及其性质}{10}{subsection.3.2.3}%
+\contentsline {subsection}{\numberline {3.2.4}应力张量的对称性}{12}{subsection.3.2.4}%
+\contentsline {subsection}{\numberline {3.2.5}理想流体的应力张量}{14}{subsection.3.2.5}%
+\contentsline {section}{\numberline {3.3}流体的粘性和压缩性}{15}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}粘性}{15}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}压缩性}{16}{subsection.3.3.2}%
+\contentsline {chapter}{\numberline {附录A}补充材料}{17}{appendix.A}%
+\contentsfinish 

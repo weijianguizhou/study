@@ -1,0 +1,33 @@
+\contentsline {chapter}{\numberline {第一章\hspace {.3em}}位形空间}{4}{chapter.1}%
+\contentsline {section}{\numberline {1.1}自由度}{4}{section.1.1}%
+\contentsline {section}{\numberline {1.2}位形空间的拓扑结构与表示法}{5}{section.1.2}%
+\contentsline {section}{\numberline {1.3}位形与速度约束}{6}{section.1.3}%
+\contentsline {section}{\numberline {1.4}任务空间和工作空间}{7}{section.1.4}%
+\contentsline {chapter}{\numberline {第二章\hspace {.3em}}刚体运动}{8}{chapter.2}%
+\contentsline {section}{\numberline {2.1}刚体运动与运动旋量}{8}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}齐次变换矩阵}{8}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}齐次变换矩阵的性质}{8}{subsection.2.1.2}%
+\contentsline {subsubsection}{性质一}{8}{subsection.2.1.2}%
+\contentsline {subsubsection}{性质二}{8}{equation.2.2}%
+\contentsline {subsubsection}{性质三}{8}{equation.2.2}%
+\contentsline {subsubsection}{性质四}{9}{equation.2.2}%
+\contentsline {subsection}{\numberline {2.1.3}齐次变换矩阵的用途}{9}{subsection.2.1.3}%
+\contentsline {subsubsection}{表示一个刚体的位形}{9}{subsection.2.1.3}%
+\contentsline {subsubsection}{变换参考坐标系}{9}{equation.2.5}%
+\contentsline {subsubsection}{表示一个向量或者坐标系的位移}{10}{equation.2.8}%
+\contentsline {subsection}{\numberline {2.1.4}运动旋量（\textit {Twist}）}{10}{subsection.2.1.4}%
+\contentsline {section}{\numberline {2.2}力旋量}{11}{section.2.2}%
+\contentsline {chapter}{\numberline {第三章\hspace {.3em}}通用机器人描述格式（URDF）}{13}{chapter.3}%
+\contentsline {section}{\numberline {3.1}树：连杆与关节}{13}{section.3.1}%
+\contentsline {section}{\numberline {3.2}XML 语法}{13}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}根元素}{13}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}link}{14}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}joint}{15}{subsection.3.2.3}%
+\contentsline {subsection}{\numberline {3.2.4}完整示例：二自由度机械臂}{16}{subsection.3.2.4}%
+\contentsline {section}{\numberline {3.3}坐标系约定与正运动学}{19}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}origin 就是齐次变换矩阵}{19}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}关节引入的运动}{19}{subsection.3.3.2}%
+\contentsline {section}{\numberline {3.4}xacro：URDF 的“宏语言”}{19}{section.3.4}%
+\contentsline {section}{\numberline {3.5}常用工具与工作流}{21}{section.3.5}%
+\contentsline {section}{\numberline {3.6}局限与常见坑}{21}{section.3.6}%
+\contentsfinish 

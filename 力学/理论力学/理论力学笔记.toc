@@ -1,0 +1,214 @@
+\contentsline {chapter}{绪论}{1}{chapter*.3}%
+\contentsline {section}{\numberline {0.1}四大力学与理论力学的研究对象}{1}{section.0.1}%
+\contentsline {section}{\numberline {0.2}理论力学的学科分支}{1}{section.0.2}%
+\contentsline {section}{\numberline {0.3}力学问题研究的建模闭环}{1}{section.0.3}%
+\contentsline {section}{\numberline {0.4}力学模型的分类}{2}{section.0.4}%
+\contentsline {section}{\numberline {0.5}理论力学的研究方法}{2}{section.0.5}%
+\contentsline {section}{\numberline {0.6}力学在现代中的地位}{2}{section.0.6}%
+\contentsline {section}{\numberline {0.7}课程要求与考试内容}{2}{section.0.7}%
+\ttl@change@i {\@ne }{part}{0em}{\addvspace {1em}\bfseries }{第\ \thecontentslabel \ 篇\quad }{}{\hfill \contentspage }\relax 
+\ttl@change@v {part}{}{}{}\relax 
+\contentsline {part}{I\hspace {1em}静力学}{4}{part.1}%
+\contentsline {chapter}{\numberline {第一章}静力学基本公理及受力分析}{5}{chapter.1}%
+\contentsline {section}{\numberline {1.1}静力学五公理及推论}{5}{section.1.1}%
+\contentsline {section}{\numberline {1.2}约束和约束力}{8}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}约束的概念}{8}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}常见的约束类型}{8}{subsection.1.2.2}%
+\contentsline {section}{\numberline {1.3}物体的受力分析}{9}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}力系的分类}{9}{subsection.1.3.1}%
+\contentsline {chapter}{\numberline {第二章}平面力系}{10}{chapter.2}%
+\contentsline {section}{\numberline {2.1}平面汇交力系}{10}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}合成与平衡的几何法}{10}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}合成与平衡的解析法}{11}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2}平面力偶系}{12}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}力对点的矩（平面）}{12}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}平行力系的合成}{13}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}平面力偶理论}{13}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}平面力偶等效定理}{13}{subsection.2.2.4}%
+\contentsline {subsection}{\numberline {2.2.5}平面力偶系的合成与平衡}{13}{subsection.2.2.5}%
+\contentsline {section}{\numberline {2.3}平面一般力系的简化}{14}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}力线平移定理}{14}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}主矢与主矩}{14}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}固定端约束}{14}{subsection.2.3.3}%
+\contentsline {section}{\numberline {2.4}简化结果的讨论与合力矩定理}{15}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}简化结果}{15}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}合力矩定理}{15}{subsection.2.4.2}%
+\contentsline {section}{\numberline {2.5}平面一般力系的平衡条件与平衡方程}{15}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}平衡方程的形式}{16}{subsection.2.5.1}%
+\contentsline {subsubsection}{一矩式}{16}{subsection.2.5.1}%
+\contentsline {subsubsection}{二矩式}{16}{equation.2.49}%
+\contentsline {subsubsection}{三矩式}{16}{equation.2.50}%
+\contentsline {subsection}{\numberline {2.5.2}物体系的平衡}{17}{subsection.2.5.2}%
+\contentsline {subsection}{\numberline {2.5.3}平面一般力系平衡的解题类型}{17}{subsection.2.5.3}%
+\contentsline {section}{\numberline {2.6}平面静定桁架的内力分析}{18}{section.2.6}%
+\contentsline {subsubsection}{简单桁架与组合桁架}{18}{Item.35}%
+\contentsline {subsubsection}{简单桁架一定是静定桁架}{19}{Item.35}%
+\contentsline {subsubsection}{1. 节点法}{19}{equation.2.68}%
+\contentsline {subsubsection}{判断零杆的方法}{19}{equation.2.73}%
+\contentsline {subsubsection}{2. 截面法}{19}{equation.2.75}%
+\contentsline {chapter}{\numberline {第三章}空间力系}{21}{chapter.3}%
+\contentsline {section}{\numberline {3.1}空间汇交力系}{21}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}力在坐标轴上的投影}{21}{subsection.3.1.1}%
+\contentsline {section}{\numberline {3.2}力对点的矩和力对轴的矩}{22}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}力对点的矩}{22}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}力对轴的矩}{22}{subsection.3.2.2}%
+\contentsline {paragraph}{特殊情况}{22}{subsection.3.2.2}%
+\contentsline {section}{\numberline {3.3}空间力偶系}{23}{section.3.3}%
+\contentsline {section}{\numberline {3.4}空间一般力系的简化}{23}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}力线平移定理}{23}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}简化结果（主矢与主矩）}{23}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}空间固定端}{23}{subsection.3.4.3}%
+\contentsline {paragraph}{以飞机为例（六分量命名）}{24}{subsection.3.4.3}%
+\contentsline {subsection}{\numberline {3.4.4}空间一般力系的简化结果}{24}{subsection.3.4.4}%
+\contentsline {section}{\numberline {3.5}空间一般力系的平衡}{24}{section.3.5}%
+\contentsline {section}{\numberline {3.6}物体的重心}{25}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}重心坐标的公式}{25}{subsection.3.6.1}%
+\contentsline {subsection}{\numberline {3.6.2}重心的求法}{25}{subsection.3.6.2}%
+\contentsline {subsection}{\numberline {3.6.3}组合法}{25}{subsection.3.6.3}%
+\contentsline {paragraph}{三角形的重心}{25}{subsection.3.6.3}%
+\contentsline {paragraph}{① 分割法}{26}{equation.3.34}%
+\contentsline {paragraph}{② 负面积法}{26}{equation.3.35}%
+\contentsline {chapter}{\numberline {第四章}摩擦}{27}{chapter.4}%
+\contentsline {section}{\numberline {4.1}摩擦的基本概念}{27}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}摩擦现象}{27}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}摩擦的分类}{27}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.1.3}滑动摩擦产生的原因}{28}{subsection.4.1.3}%
+\contentsline {subsection}{\numberline {4.1.4}摩擦的防止与利用}{28}{subsection.4.1.4}%
+\contentsline {section}{\numberline {4.2}滑动摩擦力}{28}{section.4.2}%
+\contentsline {section}{\numberline {4.3}摩擦角、平衡范围、自锁与不自锁}{28}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}摩擦角}{28}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}平衡范围}{29}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}自锁与不自锁}{29}{subsection.4.3.3}%
+\contentsline {section}{\numberline {4.4}考虑摩擦时的平衡问题}{29}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}判断物体是否平衡}{29}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}摩擦力方向的判断}{30}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.3}平衡范围}{30}{subsection.4.4.3}%
+\contentsline {subsection}{\numberline {4.4.4}翻倒问题}{31}{subsection.4.4.4}%
+\contentsline {subsection}{\numberline {4.4.5}滚动摩擦}{33}{subsection.4.4.5}%
+\contentsline {subsection}{\numberline {4.4.6}多处摩擦问题}{33}{subsection.4.4.6}%
+\contentsline {part}{II\hspace {1em}运动学}{35}{part.2}%
+\contentsline {chapter}{\numberline {第五章}运动学基础}{36}{chapter.5}%
+\contentsline {section}{\numberline {5.1}运动学的任务}{36}{section.5.1}%
+\contentsline {section}{\numberline {5.2}运动学与机构运动分析}{36}{section.5.2}%
+\contentsline {section}{\numberline {5.3}运动学的模型和运动形式}{37}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}模型：点、刚体}{37}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}运动形式}{37}{subsection.5.3.2}%
+\contentsline {subsubsection}{点的运动形式}{37}{subsection.5.3.2}%
+\contentsline {subsubsection}{刚体的运动形式}{37}{subsection.5.3.2}%
+\contentsline {section}{\numberline {5.4}矢量导数及动参考系}{37}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}矢量导数}{37}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}动参考系}{38}{subsection.5.4.2}%
+\contentsline {chapter}{\numberline {第六章}点的运动学}{39}{chapter.6}%
+\contentsline {section}{\numberline {6.1}矢量法}{39}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}运动方程}{39}{subsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.1.2}点的速度}{39}{subsection.6.1.2}%
+\contentsline {subsection}{\numberline {6.1.3}点的加速度}{39}{subsection.6.1.3}%
+\contentsline {subsection}{\numberline {6.1.4}变矢量导数的几何意义}{39}{subsection.6.1.4}%
+\contentsline {section}{\numberline {6.2}直角坐标法}{40}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}运动方程}{40}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}点的速度}{40}{subsection.6.2.2}%
+\contentsline {subsection}{\numberline {6.2.3}点的加速度}{40}{subsection.6.2.3}%
+\contentsline {section}{\numberline {6.3}弧坐标法（自然坐标法）}{41}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}运动方程}{41}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}点的速度}{41}{subsection.6.3.2}%
+\contentsline {subsection}{\numberline {6.3.3}点的加速度}{41}{subsection.6.3.3}%
+\contentsline {section}{\numberline {6.4}例题}{42}{section.6.4}%
+\contentsline {chapter}{\numberline {第七章}刚体的基本运动}{45}{chapter.7}%
+\contentsline {section}{\numberline {7.1}刚体的平行移动}{45}{section.7.1}%
+\contentsline {section}{\numberline {7.2}刚体的定轴转动}{46}{section.7.2}%
+\contentsline {subsection}{\numberline {7.2.1}刚体的运动方程}{46}{subsection.7.2.1}%
+\contentsline {subsection}{\numberline {7.2.2}转动角速度}{47}{subsection.7.2.2}%
+\contentsline {subsection}{\numberline {7.2.3}转动角加速度}{47}{subsection.7.2.3}%
+\contentsline {section}{\numberline {7.3}定轴转动刚体上各点的速度和加速度}{47}{section.7.3}%
+\contentsline {section}{\numberline {7.4}轮系传动}{48}{section.7.4}%
+\contentsline {subsection}{\numberline {7.4.1}齿轮传动}{48}{subsection.7.4.1}%
+\contentsline {subsection}{\numberline {7.4.2}定带传动}{48}{subsection.7.4.2}%
+\contentsline {section}{\numberline {7.5}用角速度和角加速度矢量表示点的速度和加速度}{49}{section.7.5}%
+\contentsline {subsection}{\numberline {7.5.1}刚体绕固定轴 $z$ 轴转动（泊松公式）}{49}{subsection.7.5.1}%
+\contentsline {chapter}{\numberline {第八章}点的合成运动}{51}{chapter.8}%
+\contentsline {section}{\numberline {8.1}合成运动的概念}{51}{section.8.1}%
+\contentsline {subsection}{\numberline {8.1.1}运动的描述依赖于参考系}{51}{subsection.8.1.1}%
+\contentsline {subsection}{\numberline {8.1.2}一点、二系、三运动}{51}{subsection.8.1.2}%
+\contentsline {subsection}{\numberline {8.1.3}运动的合成与分解}{52}{subsection.8.1.3}%
+\contentsline {section}{\numberline {8.2}绝对运动速度和相对运动速度的关系}{52}{section.8.2}%
+\contentsline {subsection}{\numberline {8.2.1}矢量法}{52}{subsection.8.2.1}%
+\contentsline {subsection}{\numberline {8.2.2}直角坐标法}{52}{subsection.8.2.2}%
+\contentsline {section}{\numberline {8.3}速度合成定理}{53}{section.8.3}%
+\contentsline {subsection}{\numberline {8.3.1}绝对导数、相对导数及其关系}{53}{subsection.8.3.1}%
+\contentsline {subsection}{\numberline {8.3.2}绝对速度、相对速度和牵连速度}{53}{subsection.8.3.2}%
+\contentsline {subsection}{\numberline {8.3.3}速度合成定理的证明（几何法）}{54}{subsection.8.3.3}%
+\contentsline {subsection}{\numberline {8.3.4}几个说明}{54}{subsection.8.3.4}%
+\contentsline {subsection}{\numberline {8.3.5}动点选择的原则}{54}{subsection.8.3.5}%
+\contentsline {section}{\numberline {8.4}加速度合成}{55}{section.8.4}%
+\contentsline {subsection}{\numberline {8.4.1}动系作平动时的加速度合成定理}{55}{subsection.8.4.1}%
+\contentsline {subsection}{\numberline {8.4.2}动系作转动时的加速度合成定理}{56}{subsection.8.4.2}%
+\contentsline {subsection}{\numberline {8.4.3}加速度合成定理的严格数学证明}{57}{subsection.8.4.3}%
+\contentsline {subsection}{\numberline {8.4.4}例题：牛头刨床机构}{58}{subsection.8.4.4}%
+\contentsline {chapter}{\numberline {第九章}刚体的平面运动}{60}{chapter.9}%
+\contentsline {section}{\numberline {9.1}刚体的平面运动}{60}{section.9.1}%
+\contentsline {subsection}{\numberline {9.1.1}基本概念}{60}{subsection.9.1.1}%
+\contentsline {subsubsection}{平面运动的定义}{60}{subsection.9.1.1}%
+\contentsline {subsubsection}{平面运动的简化}{60}{theorem.9.1}%
+\contentsline {subsection}{\numberline {9.1.2}平面运动分解为平动和转动}{62}{subsection.9.1.2}%
+\contentsline {subsection}{\numberline {9.1.3}求平面图形上各点的速度}{63}{subsection.9.1.3}%
+\contentsline {subsubsection}{基点法（速度合成定理）}{63}{Item.67}%
+\contentsline {subsubsection}{速度投影定理}{64}{equation.9.21}%
+\contentsline {subsubsection}{速度瞬心法}{65}{equation.9.23}%
+\contentsline {subsection}{\numberline {9.1.4}求平面图形上各点的加速度}{67}{subsection.9.1.4}%
+\contentsline {subsection}{\numberline {9.1.5}运动学综合问题举例}{68}{subsection.9.1.5}%
+\contentsline {part}{III\hspace {1em}动力学}{72}{part.3}%
+\contentsline {chapter}{\numberline {第十章}质点动力学的基本方程}{73}{chapter.10}%
+\contentsline {section}{\numberline {10.1}质点动力学的基本方程}{73}{section.10.1}%
+\contentsline {subsection}{\numberline {10.1.1}动力学基本定律}{73}{subsection.10.1.1}%
+\contentsline {subsection}{\numberline {10.1.2}质点的运动微分方程}{73}{subsection.10.1.2}%
+\contentsline {subsection}{\numberline {10.1.3}在直角坐标轴上的投影}{73}{subsection.10.1.3}%
+\contentsline {subsection}{\numberline {10.1.4}在自然轴上的投影}{73}{subsection.10.1.4}%
+\contentsline {chapter}{\numberline {第十一章}动量定理}{75}{chapter.11}%
+\contentsline {section}{\numberline {11.1}动量定理}{75}{section.11.1}%
+\contentsline {subsection}{\numberline {11.1.1}动量}{75}{subsection.11.1.1}%
+\contentsline {subsection}{\numberline {11.1.2}冲量}{75}{subsection.11.1.2}%
+\contentsline {subsection}{\numberline {11.1.3}动量定理}{76}{subsection.11.1.3}%
+\contentsline {subsection}{\numberline {11.1.4}质点系动量定理}{76}{subsection.11.1.4}%
+\contentsline {subsection}{\numberline {11.1.5}质点系动量守恒定律}{76}{subsection.11.1.5}%
+\contentsline {subsection}{\numberline {11.1.6}质心运动定理}{77}{subsection.11.1.6}%
+\contentsline {chapter}{\numberline {第十二章}动量矩定理}{78}{chapter.12}%
+\contentsline {section}{\numberline {12.1}动量矩定理}{78}{section.12.1}%
+\contentsline {subsection}{\numberline {12.1.1}动量矩}{78}{subsection.12.1.1}%
+\contentsline {subsection}{\numberline {12.1.2}动量矩定理与常用投影式}{79}{subsection.12.1.2}%
+\contentsline {subsection}{\numberline {12.1.3}质点系动量矩定理与动量矩守恒定律}{79}{subsection.12.1.3}%
+\contentsline {subsection}{\numberline {12.1.4}面积速度定理}{80}{subsection.12.1.4}%
+\contentsline {subsection}{\numberline {12.1.5}刚体绕定轴的转动微分方程}{80}{subsection.12.1.5}%
+\contentsline {subsection}{\numberline {12.1.6}回转半径}{81}{subsection.12.1.6}%
+\contentsline {subsection}{\numberline {12.1.7}平行轴定理}{81}{subsection.12.1.7}%
+\contentsline {subsection}{\numberline {12.1.8}质点系相对于质心的动量矩定理}{82}{subsection.12.1.8}%
+\contentsline {subsection}{\numberline {12.1.9}对固定点取矩与动量矩的合成}{82}{subsection.12.1.9}%
+\contentsline {subsection}{\numberline {12.1.10}刚体的平面运动微分方程}{83}{subsection.12.1.10}%
+\contentsline {chapter}{\numberline {第十三章}动能定理}{84}{chapter.13}%
+\contentsline {section}{\numberline {13.1}力的功}{84}{section.13.1}%
+\contentsline {subsection}{\numberline {13.1.1}功与元功}{84}{subsection.13.1.1}%
+\contentsline {subsection}{\numberline {13.1.2}力在全路程上做的功}{84}{subsection.13.1.2}%
+\contentsline {subsection}{\numberline {13.1.3}内力的功}{84}{subsection.13.1.3}%
+\contentsline {section}{\numberline {13.2}刚体的动能}{85}{section.13.2}%
+\contentsline {subsection}{\numberline {13.2.1}平面运动刚体的动能}{85}{subsection.13.2.1}%
+\contentsline {section}{\numberline {13.3}任意运动质点系的动能}{85}{section.13.3}%
+\contentsline {section}{\numberline {13.4}动能定理}{86}{section.13.4}%
+\contentsline {subsection}{\numberline {13.4.1}质点的动能定理}{86}{subsection.13.4.1}%
+\contentsline {subsection}{\numberline {13.4.2}质点系的动能定理}{86}{subsection.13.4.2}%
+\contentsline {section}{\numberline {13.5}功率、功率方程与机械效率}{87}{section.13.5}%
+\contentsline {subsection}{\numberline {13.5.1}功率}{87}{subsection.13.5.1}%
+\contentsline {subsection}{\numberline {13.5.2}功率方程}{87}{subsection.13.5.2}%
+\contentsline {subsection}{\numberline {13.5.3}机械效率}{87}{subsection.13.5.3}%
+\contentsline {section}{\numberline {13.6}势力场与势能}{87}{section.13.6}%
+\contentsline {subsection}{\numberline {13.6.1}重力场中的势能}{88}{subsection.13.6.1}%
+\contentsline {subsection}{\numberline {13.6.2}弹性力场中的势能}{88}{subsection.13.6.2}%
+\contentsline {subsection}{\numberline {13.6.3}万有引力场中的势能}{88}{subsection.13.6.3}%
+\contentsline {section}{\numberline {13.7}机械能守恒定律}{89}{section.13.7}%
+\contentsline {section}{\numberline {13.8}势力场的其他性质}{89}{section.13.8}%
+\contentsline {chapter}{\numberline {第十四章}达朗贝尔原理}{91}{chapter.14}%
+\contentsline {section}{\numberline {14.1}惯性力}{91}{section.14.1}%
+\contentsline {section}{\numberline {14.2}质点的达朗贝尔原理}{91}{section.14.2}%
+\contentsline {section}{\numberline {14.3}质点系的达朗贝尔原理}{92}{section.14.3}%
+\contentsline {section}{\numberline {14.4}动力学等价形式与结论}{92}{section.14.4}%
+\contentsline {chapter}{\numberline {附录A}综合复习题（静力学·运动学）}{94}{appendix.A}%
+\contentsline {section}{\numberline {A.1}综合复习题}{94}{section.A.1}%
+\contentsfinish 

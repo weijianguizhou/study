@@ -2,11 +2,9 @@
 \chapter{控制系统的动态数学模型}
 \label{sec:控制系统的动态数学模型}
 \section{数学模型的线性化}
-实际的机电物理系统往往存在各类非线性现象 例如机械系统中的高速阻尼器，阻尼力与速度的平方有关；具有铁芯的电感，电流与电压的非线性关系；晶体管等电子器件的非线性特性等 严格地讲，几乎所有实际物理系统都是非线性的 尽管线性系统的理论巳经相当成熟，但非线性系统的理论还不完善 另外，由千叠加原理不适用于非线性系统，这给解非线性系统带来了很大不便 ，故我们尽量对所研究的系统进行线性化处理，然后用线性理论进行分析。
+实际的物理系统中往往存在非线性项。而为了使用叠加原理对数学模型进行求解，往往需要进行线性化。
 
-当非线性因素对系统影响很小时， 般可以予以忽略，将系统当作线性系统处理。另外，如果系统的变量只发生微小的偏移，可以通过取其线性主部，用切线法进行线性化，以求得其增量方程式 所谓增量指的不是各个变量的绝对数量，而是它们偏离平衡点的量于反馈系统不允许出现大的偏差，故这种情况的线性化对于闭环控制系统具有实际意义。
-
-而线性化方法通常是使用\textit{Taylor}展开取一次项。
+线性化方法通常是使用\textit{Taylor}展开取一次项。
 
 下面以单摆为例说明线性化过程。
 
@@ -466,12 +464,52 @@ X_{\mathrm{o}}(s)=G(s)\bigl[X_{\mathrm{i}}(s)-H(s)X_{\mathrm{o}}(s)\bigr],
         \item \textbf{相加点互换}：相邻的两个相加点可以互换位置，总输出不变；
         \item \textbf{分支点互换}：相邻的两个分支点可以互换位置，各引出信号不变；
         \item \textbf{相加点与分支点}：一般不能随意互换，需按下面的规则移动；
-        \item \textbf{分支点后移}（由方框输入端移到输出端）：引出支路中串入 $G(s)$；
-        \item \textbf{分支点前移}（由方框输出端移到输入端）：引出支路中串入 $1/G(s)$；
+        \item \textbf{分支点后移}（由方框输入端移到输出端）：引出支路中串入 $1/G(s)$；
+        \item \textbf{分支点前移}（由方框输出端移到输入端）：引出支路中串入 $G(s)$；
         \item \textbf{相加点后移}（由方框输入端移到输出端）：移到输出端的那条支路串入 $G(s)$；
         \item \textbf{相加点前移}（由方框输出端移到输入端）：移到输入端的那条支路串入 $1/G(s)$。
     \end{itemize}
 \end{keybox}
+
+上述四种移动规则的等效变换过程如图~\ref{fig:分支点移动}、图~\ref{fig:相加点移动} 所示。
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.46\textwidth}
+        \centering
+        \figplaceholder[0.42\textwidth]{分支点后移：引出点由输入端移到输出端，引出支路串入 $1/G(s)$}
+        \caption{分支点后移}
+        \label{fig:分支点后移}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.46\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/引出点前移.png}
+        \caption{分支点前移}
+        \label{fig:分支点前移}
+    \end{subfigure}
+    \caption{分支点（引出点）的移动规则}
+    \label{fig:分支点移动}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.46\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/比较点后移.png}
+        \caption{相加点后移}
+        \label{fig:相加点后移}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.46\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/比较点前移.png}
+        \caption{相加点前移}
+        \label{fig:相加点前移}
+    \end{subfigure}
+    \caption{相加点（比较点）的移动规则}
+    \label{fig:相加点移动}
+\end{figure}
 
 化简方块图的一般步骤为：
 \begin{enumerate}

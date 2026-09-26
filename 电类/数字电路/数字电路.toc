@@ -1,0 +1,47 @@
+\contentsline {chapter}{\numberline {第一章}数制与 BCD 码}{2}{chapter.1}%
+\contentsline {section}{\numberline {1.1}常用数制}{2}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}常用数制一览}{2}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}二进制与十进制之间的转换}{3}{subsection.1.1.2}%
+\contentsline {subsection}{\numberline {1.1.3}二进制算术运算}{3}{subsection.1.1.3}%
+\contentsline {subsection}{\numberline {1.1.4}带符号数的表示：原码、反码和补码}{3}{subsection.1.1.4}%
+\contentsline {section}{\numberline {1.2}几种简单的编码}{5}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}二-十进制码（BCD 码）}{5}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}格雷码（Gray 码）}{6}{subsection.1.2.2}%
+\contentsline {subsection}{\numberline {1.2.3}计算机字符集}{6}{subsection.1.2.3}%
+\contentsline {chapter}{\numberline {第二章}布尔代数}{7}{chapter.2}%
+\contentsline {section}{\numberline {2.1}基本逻辑运算}{7}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}与逻辑运算}{7}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}或逻辑运算}{8}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}非逻辑运算}{8}{subsection.2.1.3}%
+\contentsline {section}{\numberline {2.2}复合逻辑运算}{9}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}与非逻辑}{9}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}或非逻辑}{9}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}与或非逻辑}{10}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}异或逻辑}{10}{subsection.2.2.4}%
+\contentsline {subsection}{\numberline {2.2.5}同或逻辑}{11}{subsection.2.2.5}%
+\contentsline {section}{\numberline {2.3}逻辑电平及正、负逻辑}{11}{section.2.3}%
+\contentsline {section}{\numberline {2.4}基本定律和规则}{12}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}逻辑函数的相等}{12}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}基本定律}{12}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.3}逻辑代数的三条规则}{12}{subsection.2.4.3}%
+\contentsline {subsubsection}{代入规则}{12}{subsection.2.4.3}%
+\contentsline {subsubsection}{反演规则}{12}{subsection.2.4.3}%
+\contentsline {subsubsection}{对偶规则}{13}{Item.8}%
+\contentsline {section}{\numberline {2.5}常用公式}{13}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}消去律}{13}{subsection.2.5.1}%
+\contentsline {subsection}{\numberline {2.5.2}吸收律1}{14}{subsection.2.5.2}%
+\contentsline {subsection}{\numberline {2.5.3}吸收律2}{14}{subsection.2.5.3}%
+\contentsline {subsection}{\numberline {2.5.4}包含律}{14}{subsection.2.5.4}%
+\contentsline {subsection}{\numberline {2.5.5}关于异或和同或运算}{15}{subsection.2.5.5}%
+\contentsline {section}{\numberline {2.6}逻辑函数的标准形式}{15}{section.2.6}%
+\contentsline {subsection}{\numberline {2.6.1}函数的“与--或”式和“或--与”式}{15}{subsection.2.6.1}%
+\contentsline {subsection}{\numberline {2.6.2}最小项}{16}{subsection.2.6.2}%
+\contentsline {subsection}{\numberline {2.6.3}最大项}{16}{subsection.2.6.3}%
+\contentsline {subsection}{\numberline {2.6.4}最小项和最大项的关系}{17}{subsection.2.6.4}%
+\contentsline {subsection}{\numberline {2.6.5}逻辑函数的最小项之和形式}{17}{subsection.2.6.5}%
+\contentsline {subsection}{\numberline {2.6.6}逻辑函数的最大项之积形式}{17}{subsection.2.6.6}%
+\contentsline {subsection}{\numberline {2.6.7}两种标准形式之间的关系}{18}{subsection.2.6.7}%
+\contentsline {section}{\numberline {2.7}真值表与逻辑表达式}{18}{section.2.7}%
+\contentsline {subsection}{\numberline {2.7.1}由逻辑函数式列真值表}{18}{subsection.2.7.1}%
+\contentsline {subsection}{\numberline {2.7.2}由真值表写逻辑函数式}{19}{subsection.2.7.2}%
+\contentsfinish 
