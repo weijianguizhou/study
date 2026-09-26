@@ -109,18 +109,6 @@ m l^{2}\ddot{\theta}_{\mathrm{o}}(t)+m g l\,\theta_{\mathrm{o}}(t)=T_{\mathrm{i}
 \end{equation}
 在零初始条件下取其拉氏变换，得 $X_{\mathrm{o}}(s)=KX_{\mathrm{i}}(s)$，代入传递函数定义即得式~\eqref{eq:比例环节传递函数}。
 
-\begin{longexample}[杠杆构成的比例环节]
-\label{exam:比例环节杠杆}
-考虑一根刚性、无质量的杠杆，可绕固定支点 $O$ 转动。设输入端到支点的距离为 $l_{1}$，输出端到支点的距离为 $l_{2}$，且两端位于支点的同一侧。当输入端产生小位移 $x_{\mathrm{i}}(t)$ 时，杠杆绕 $O$ 转过同一微小转角，由几何相似关系可知输出端位移为
-\[
-x_{\mathrm{o}}(t)=\frac{l_{2}}{l_{1}}x_{\mathrm{i}}(t).
-\]
-与式~\eqref{eq:比例环节时域} 比较可知，这是一个比例系数 $K=l_{2}/l_{1}$ 的比例环节，其传递函数为
-\[
-G(s)=\frac{l_{2}}{l_{1}}.
-\]
-可见杠杆通过改变力臂之比实现对位移（或力）的放大与缩小，输出立即跟随输入，不产生惯性滞后。
-\end{longexample}
 
 \begin{remark}
     比例环节是最简单的环节，其输出能立即按比例复现输入，在时间响应中不产生相位滞后与波形失真。但理想比例环节要求输出瞬时跟随输入，实际元件因惯性往往只能在低频段近似为比例环节。
@@ -148,25 +136,6 @@ G(s)=\frac{l_{2}}{l_{1}}.
 \]
 与式~\eqref{eq:一阶惯性传递函数} 一致。
 
-\begin{longexample}[弹簧-阻尼器构成的一阶惯性环节]
-\label{exam:一阶惯性弹簧阻尼}
-考虑一个由弹簧与粘性阻尼器并联组成的机械系统，弹簧刚度为 $k$，阻尼器阻尼系数为 $c$，其一端固定，另一端受外力 $F_{\mathrm{i}}(t)$ 作用，以该端的位移 $x_{\mathrm{o}}(t)$ 为输出。
-
-由力平衡可知，外力应克服弹簧的弹性恢复力 $kx_{\mathrm{o}}$ 与阻尼器的粘性阻力 $c\dot{x}_{\mathrm{o}}$，即
-\[
-F_{\mathrm{i}}(t)=k\,x_{\mathrm{o}}(t)+c\,\dot{x}_{\mathrm{o}}(t).
-\]
-取拉氏变换并整理得
-\[
-(cs+k)X_{\mathrm{o}}(s)=F_{\mathrm{i}}(s),
-\]
-故传递函数为
-\[
-G(s)=\frac{X_{\mathrm{o}}(s)}{F_{\mathrm{i}}(s)}=\frac{1}{cs+k}
-=\frac{1/k}{(c/k)s+1}.
-\]
-与式~\eqref{eq:一阶惯性传递函数} 比较，$K=1/k$，时间常数 $T=c/k$，说明该机械系统是一个一阶惯性环节。
-\end{longexample}
 
 \begin{property}[单位阶跃响应]
     令式~\eqref{eq:一阶惯性传递函数} 中 $K=1$，输入为单位阶跃 $X_{\mathrm{i}}(s)=1/s$，则
@@ -265,31 +234,6 @@ G(s)=\frac{X_{\mathrm{o}}(s)}{F_{\mathrm{i}}(s)}=\frac{1}{cs+k}
     \end{itemize}
 \end{definition}
 
-\begin{longexample}[质量-弹簧-阻尼器构成的二阶震荡环节]
-\label{exam:二阶质量弹簧阻尼}
-考虑质量为 $m$ 的物体，通过刚度为 $k$ 的弹簧和阻尼系数为 $c$ 的粘性阻尼器与固定基座相连，物体在光滑水平面上运动。以外力 $F_{\mathrm{i}}(t)$ 为输入，物体的位移 $x_{\mathrm{o}}(t)$ 为输出。
-
-由牛顿第二定律，作用在物体上的外力、弹性恢复力与阻尼力之和等于其惯性力，即
-\[
-m\,\ddot{x}_{\mathrm{o}}(t)=F_{\mathrm{i}}(t)-k\,x_{\mathrm{o}}(t)-c\,\dot{x}_{\mathrm{o}}(t),
-\]
-整理得运动方程
-\[
-m\,\ddot{x}_{\mathrm{o}}(t)+c\,\dot{x}_{\mathrm{o}}(t)+k\,x_{\mathrm{o}}(t)=F_{\mathrm{i}}(t).
-\]
-取拉氏变换并整理得
-\[
-G(s)=\frac{X_{\mathrm{o}}(s)}{F_{\mathrm{i}}(s)}=\frac{1}{ms^{2}+cs+k}
-=\frac{1/k}{(m/k)s^{2}+(c/k)s+1}.
-\]
-与式~\eqref{eq:二阶震荡传递函数} 比较可知
-\[
-T=\sqrt{\frac{m}{k}},\qquad
-\zeta=\frac{c}{2\sqrt{mk}},\qquad
-\omega_{\mathrm{n}}=\sqrt{\frac{k}{m}}.
-\]
-当阻尼较小，即 $c<2\sqrt{mk}$（$\zeta<1$）时，系统的单位阶跃响应将出现衰减震荡。
-\end{longexample}
 
 \begin{remark}
     二阶震荡环节是控制系统中极为重要的环节，很多机械、电气系统都可简化为二阶系统。当 $\zeta$ 较小时系统响应快但超调大、震荡次数多；$\zeta$ 较大时响应平稳但缓慢。工程上常取 $\zeta=0.4\sim0.8$，在快速性与平稳性之间折中。
