@@ -1,7 +1,6 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2026.2.15)  23 SEP 2026 22:56
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2026.2.15)  28 SEP 2026 10:07
 entering extended mode
  restricted \write18 enabled.
- file:line:error style messages enabled.
  %&-line parsing enabled.
 **数字电路.tex
 (./数字电路.tex
@@ -938,6 +937,14 @@ File: pgflibraryarrows.meta.code.tex 2023-01-15 v3.1.10 (3.1.10)
 (d:/Latex/R/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrary
 calc.code.tex
 File: tikzlibrarycalc.code.tex 2023-01-15 v3.1.10 (3.1.10)
+)
+(d:/Latex/R/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrary
+matrix.code.tex
+File: tikzlibrarymatrix.code.tex 2023-01-15 v3.1.10 (3.1.10)
+)
+(d:/Latex/R/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrary
+fit.code.tex
+File: tikzlibraryfit.code.tex 2023-01-15 v3.1.10 (3.1.10)
 ) (d:/Latex/R/texmf-dist/tex/latex/listings/listings.sty
 \lst@mode=\count368
 \lst@gtempboxa=\box89
@@ -1159,13 +1166,13 @@ t;"
 (fontspec)             <->"[FandolSong-Bold.otf]/OT:script=hani;language=dflt;"
 
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 38.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 39.
 
 
 (d:/Latex/R/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 38.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 39.
 
 
 (d:/Latex/R/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -1256,70 +1263,76 @@ File: Figure/或非逻辑电路.png Graphic file (type bmp)
 [9]
 File: Figure/与或非门逻辑符号.png Graphic file (type bmp)
 <Figure/与或非门逻辑符号.png>
-File: Figure/异或逻辑电路.png Graphic file (type bmp)
-<Figure/异或逻辑电路.png>
 
-Underfull \vbox (badness 4144) has occurred while \output is active []
-
-
-
-[10]
-File: Figure/同或逻辑电路.png Graphic file (type bmp)
-<Figure/同或逻辑电路.png>
-
-
-[11]
-File: Figure/反函数定义.png Graphic file (type bmp)
-<Figure/反函数定义.png>
-
-
-[12]
-File: Figure/对偶式定义.png Graphic file (type bmp)
-<Figure/对偶式定义.png>
-
-Underfull \vbox (badness 1337) has occurred while \output is active []
-
-
-
-[13]
-Underfull \vbox (badness 1412) has occurred while \output is active []
-
-
-
-[14]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
+[10]
+File: Figure/异或逻辑电路.png Graphic file (type bmp)
+<Figure/异或逻辑电路.png>
+
+
+[11]
+File: Figure/同或逻辑电路.png Graphic file (type bmp)
+<Figure/同或逻辑电路.png>
+
+Underfull \vbox (badness 2050) has occurred while \output is active []
+
+
+
+[12]
+File: Figure/反函数定义.png Graphic file (type bmp)
+<Figure/反函数定义.png>
+
+
+[13]
+File: Figure/对偶式定义.png Graphic file (type bmp)
+<Figure/对偶式定义.png>
+
+
+[14]
+
 [15]
+Underfull \vbox (badness 2521) has occurred while \output is active []
+
+
 
 [16]
-Underfull \vbox (badness 7888) has occurred while \output is active []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
 [17]
-Underfull \vbox (badness 4846) has occurred while \output is active []
+Underfull \vbox (badness 6461) has occurred while \output is active []
 
 
 
-[18])
+[18]
 
-[19] (./数字电路.aux)
+[19]
+
+[20]
+
+[21]
+
+[22])
+
+[23] (./数字电路.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2022/08/05>
  ***********
 Package rerunfilecheck Info: File `数字电路.out' has not changed.
-(rerunfilecheck)             Checksum: 5FAD5CDDC976BD3CC72AAF250748FBA8;5015.
+(rerunfilecheck)             Checksum: 5B9E10B2A28383B1405E1F9347362E49;5306.
  ) 
 Here is how much of TeX's memory you used:
- 35185 strings out of 473832
- 780864 string characters out of 5735453
- 1355916 words of memory out of 5000000
- 57660 multiletter control sequences out of 15000+600000
- 568063 words of font info for 102 fonts, out of 8000000 for 9000
+ 36111 strings out of 473832
+ 801737 string characters out of 5735453
+ 1369519 words of memory out of 5000000
+ 58574 multiletter control sequences out of 15000+600000
+ 569157 words of font info for 112 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 107i,17n,115p,541b,1103s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 107i,17n,115p,541b,1146s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on 数字电路.xdv (24 pages, 289484 bytes).
+Output written on 数字电路.xdv (28 pages, 395908 bytes).

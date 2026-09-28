@@ -1,10 +1,10 @@
 # Fdb version 4
-["xdvipdfmx"] 1790175379.65621 "数字电路.xdv" "数字电路.pdf" "数字电路" 1790175380.52438 0
-  "数字电路.xdv" 1790175379 289484 a0d115339ad7c98c74c2231c959b5930 "xelatex"
+["xdvipdfmx"] 1790561248.83112 "数字电路.xdv" "数字电路.pdf" "数字电路" 1790561250.31851 0
+  "数字电路.xdv" 1790561248 395908 54a6dd81bd18374ad3302604dccdf53a "xelatex"
   (generated)
   "数字电路.pdf"
   (rewritten before read)
-["xelatex"] 1790175377.44669 "数字电路.tex" "数字电路.xdv" "数字电路" 1790175380.50807 0
+["xelatex"] 1790561245.48509 "数字电路.tex" "数字电路.xdv" "数字电路" 1790561250.29168 0
   "Figure/对偶式定义.png" 1789903961 43316 fdab26eb0bd7bc27f41c3102b1129236 ""
   "Figure/反函数定义.png" 1789903830 110704 ec6cb14b62313cbd5fe6d12b988e64a1 ""
   "Figure/非逻辑电路.png" 1789900851 1675 7ab30f23b5cb5b38a838afa11db80d10 ""
@@ -15,7 +15,7 @@
   "Figure/与非逻辑电路.png" 1789901098 2000 729f77bace2e2329100e73e44798ce4e ""
   "Figure/与或非门逻辑符号.png" 1789901752 10257 4a70b8203de0a64f073427acaad2081a ""
   "Figure/与逻辑电路.png" 1789900271 1814 9560bfad1a2ea0cbe43fd2f99f989bb2 ""
-  "cover_李思风.tex" 1790081991 1997 b244e14997aeb36cee7db77bcb837b66 ""
+  "cover_李思风.tex" 1790229563 2028 fdfec32c67acf50c8f17c61b9bd568a4 ""
   "d:/Latex/R/texmf-dist/fonts/map/fontname/texfonts.map" 1771167510 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "d:/Latex/R/texmf-dist/fonts/tfm/adobe/zapfding/pzdr.tfm" 1771168505 1528 7e12f4c0fcf5a072cebdcfbfc610f54c ""
   "d:/Latex/R/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1771167096 1004 54797486969f23fa377b128694d548df ""
@@ -73,6 +73,8 @@
   "d:/Latex/R/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransparency.code.tex" 1771167984 8893 e851de2175338fdf7c17f3e091d94618 ""
   "d:/Latex/R/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryangles.code.tex" 1771167984 3644 e9b9c24022f5a439aa80f5032fb9b6c6 ""
   "d:/Latex/R/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarycalc.code.tex" 1771167984 15929 463535aa2c4268fead6674a75c0e8266 ""
+  "d:/Latex/R/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryfit.code.tex" 1771167984 3626 2d87dc681257fa32d07a8b3934b10f88 ""
+  "d:/Latex/R/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarymatrix.code.tex" 1771167984 4228 c39d423dc1a80da31c8c67bf1067f384 ""
   "d:/Latex/R/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryquotes.code.tex" 1771167984 3970 c199216b190c70e45bff870bacf0da00 ""
   "d:/Latex/R/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarytopaths.code.tex" 1771167984 11518 738408f795261b70ce8dd47459171309 ""
   "d:/Latex/R/texmf-dist/tex/generic/pgf/frontendlayer/tikz/tikz.code.tex" 1771167984 186782 af500404a9edec4d362912fe762ded92 ""
@@ -222,14 +224,14 @@
   "d:/Latex/R/texmf-dist/web2c/texmf.cnf" 1771167061 42148 61becc7c670cd061bb319c643c27fdd4 ""
   "d:/Latex/R/texmf-var/web2c/xetex/xelatex.fmt" 1771168654 5639623 05d5d41d00fc0cf0978e95514f336aa2 ""
   "d:/Latex/R/texmf.cnf" 1771168516 755 639003dd4ad18b875b8369800f2abbde ""
-  "preamble.tex" 1790175370 12635 93aba621f91414e95b96e6aa026bf7e8 ""
-  "第二章_布尔代数.tex" 1790175305 20406 f52f40de9609e2884fe3297d5f2f845f ""
+  "preamble.tex" 1790561143 12648 8836e850e354621b401b4846b41bd60d ""
+  "第二章_布尔代数.tex" 1790561224 31372 c4a7378ff7bfe841ad04695224f131d7 ""
   "第一章_数制与BCD码.tex" 1789904324 11333 cc23f4ae66fadaba0da48c0ea3b5fcb4 ""
-  "前言.tex" 1789904548 287 171571f393e63904497241d12973c8ca ""
-  "数字电路.aux" 1790175379 19629 0d2fe67ae15ba69a8d7206d151b8a0da "xelatex"
-  "数字电路.out" 1790175379 5015 5fad5cddc976bd3cc72aaf250748fba8 "xelatex"
+  "前言.tex" 1790229563 318 99f2bb9da3448d01e42e725191caab9e ""
+  "数字电路.aux" 1790561248 23850 746ec11a9cd2c845c8d3e137577c556c "xelatex"
+  "数字电路.out" 1790561248 5306 5b9e10b2a28383b1405e1f9347362e49 "xelatex"
   "数字电路.tex" 1790085175 1746 057fb18e5d91f8c770cac6615bf7139a ""
-  "数字电路.toc" 1790175379 4041 b6790fef513f3f087b55e6df313f6381 "xelatex"
+  "数字电路.toc" 1790561248 4960 a5adae64b2191c6d1829996a5b2ed32e "xelatex"
   (generated)
   "数字电路.aux"
   "数字电路.log"

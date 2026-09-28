@@ -8,6 +8,22 @@
 
 数字电路的基础为逻辑代数，由英国数学家 George Boole 在 1847 年提出，逻辑代数也称布尔代数。
 
+% ------------------------------------------------------------%
+%  卡诺图绘制样式（本章局部）
+% ------------------------------------------------------------%
+\tikzset{
+	kmapcell/.style={
+		draw=black!35, minimum width=0.92cm, minimum height=0.7cm,
+		inner sep=2pt, font=\small, anchor=center
+	},
+	kmaphead/.style={kmapcell, fill=black!7, font=\small\bfseries},
+	kmap/.style={
+		matrix of nodes, row sep=-\pgflinewidth, column sep=-\pgflinewidth,
+		nodes={kmapcell}
+	},
+	kmapgroup/.style={rounded corners=7pt, thick, inner sep=1pt}
+}
+
 \section{基本逻辑运算}
 \label{sec:基本逻辑运算}
 
@@ -197,6 +213,36 @@
 	\caption{与或非门逻辑符号}
 	\label{fig:与或非门逻辑符号}
 \end{figure}
+
+与或非逻辑真值表如下：
+
+\begin{table}[H]
+\centering
+\caption{与或非逻辑真值表}
+\label{tab:真值表:与或非}
+\begin{tabular}{cccc|c}
+	\toprule
+	$A$ & $B$ & $C$ & $D$ & $F=\overline{AB+CD}$ \\
+	\midrule
+	0 & 0 & 0 & 0 & 1 \\
+	0 & 0 & 0 & 1 & 1 \\
+	0 & 0 & 1 & 0 & 1 \\
+	0 & 0 & 1 & 1 & 0 \\
+	0 & 1 & 0 & 0 & 1 \\
+	0 & 1 & 0 & 1 & 1 \\
+	0 & 1 & 1 & 0 & 1 \\
+	0 & 1 & 1 & 1 & 0 \\
+	1 & 0 & 0 & 0 & 1 \\
+	1 & 0 & 0 & 1 & 1 \\
+	1 & 0 & 1 & 0 & 1 \\
+	1 & 0 & 1 & 1 & 0 \\
+	1 & 1 & 0 & 0 & 0 \\
+	1 & 1 & 0 & 1 & 0 \\
+	1 & 1 & 1 & 0 & 0 \\
+	1 & 1 & 1 & 1 & 0 \\
+	\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{异或逻辑}
 \label{sec:异或逻辑}
@@ -692,3 +738,230 @@
 \begin{keybox}[方法]
 	根据最小项的性质，用观察法，可直接从真值表写出函数的最小项之和表达式。
 \end{keybox}
+
+\section{逻辑函数的化简}
+\label{sec:逻辑函数的化简}
+
+\begin{keybox}[最简与或表达式的标准]
+	\begin{enumerate}
+		\item 所得与或表达式中，乘积项（与项）数目最少；
+		\item 每个乘积项中所含的变量数最少。
+	\end{enumerate}
+\end{keybox}
+
+\subsection{公式法}
+\label{sec:公式法}
+
+公式法化简就是反复运用逻辑代数公式消去多余的乘积项和每个乘积项中多余的因子，使函数式符合最简标准。常用方法如表~\ref{tab:化简:公式法} 所示。
+
+\begin{table}[H]
+\centering
+\caption{公式法化简的常用方法}
+\label{tab:化简:公式法}
+\small
+\begin{tabular}{@{}p{1.5cm}p{4.1cm}p{9.3cm}@{}}
+	\toprule
+	方法 & 利用公式 & 例 \\
+	\midrule
+	\textbf{并项法} & $AB+A\overline{B}=A$ &
+	$F=\overline{A}\,\overline{B}C+\overline{A}BC+A\overline{B}C+ABC
+	=(\overline{A}\,\overline{B}+\overline{A}B)C+(A\overline{B}+AB)C
+	=\overline{A}C+AC=C$ \\
+	\textbf{吸收法} & $A+AB=A$ &
+	$F=A\overline{B}+A\overline{B}C=A\overline{B}$ \\
+	\textbf{消项法} & $AB+\overline{A}C+BC=AB+\overline{A}C$ &
+	$F=AB+\overline{A}C+BC=AB+\overline{A}C$ \\
+	\textbf{消因子法} & $A+\overline{A}B=A+B$ &
+	$F=A+\overline{A}BC=A+BC$ \\
+	\textbf{配项法} & $A+\overline{A}=1$、$A\cdot1=A$ &
+	$F=AB+\overline{A}C+BC=AB+\overline{A}C+(A+\overline{A})BC
+	=AB(1+C)+\overline{A}C(1+B)=AB+\overline{A}C$ \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{note}
+	对比较复杂的函数式，要求熟练掌握上述方法，才能把函数化成最简。
+\end{note}
+
+\subsection{卡诺图法}
+\label{sec:卡诺图法}
+
+将逻辑函数用\textbf{卡诺图}表示，然后在卡诺图上进行化简。卡诺图是一种包含小方块的几何图形，每个小方块称为一个\textbf{单元}，每个单元对应一个最小项，两个相邻的最小项在卡诺图中也必须相邻。
+
+\subsubsection{卡诺图的构成}
+\label{sec:卡诺图的构成}
+
+\begin{itemize}
+	\item 相邻的含义：① \textbf{几何相邻性}（左右紧挨或者上下相接）；② \textbf{对称相邻性}（图形中对称位置的单元是相邻的）；
+	\item 行列标号按\textbf{循环码}（格雷码）排列。
+\end{itemize}
+
+三变量卡诺图与四变量卡诺图分别如图~\ref{fig:卡诺图:三变量} 和图~\ref{fig:卡诺图:四变量} 所示。
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+		\matrix (K31) [kmap] {
+			|[kmaphead]| $A\backslash BC$ & |[kmaphead]| 00 & |[kmaphead]| 01 & |[kmaphead]| 11 & |[kmaphead]| 10 \\
+			|[kmaphead]| 0 & $m_0$ & $m_1$ & $m_3$ & $m_2$ \\
+			|[kmaphead]| 1 & $m_4$ & $m_5$ & $m_7$ & $m_6$ \\
+		};
+	\end{tikzpicture}
+	\caption{三变量卡诺图}
+	\label{fig:卡诺图:三变量}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+		\matrix (K41) [kmap] {
+			|[kmaphead]| $AB\backslash CD$ & |[kmaphead]| 00 & |[kmaphead]| 01 & |[kmaphead]| 11 & |[kmaphead]| 10 \\
+			|[kmaphead]| 00 & $m_0$ & $m_1$ & $m_3$ & $m_2$ \\
+			|[kmaphead]| 01 & $m_4$ & $m_5$ & $m_7$ & $m_6$ \\
+			|[kmaphead]| 11 & $m_{12}$ & $m_{13}$ & $m_{15}$ & $m_{14}$ \\
+			|[kmaphead]| 10 & $m_8$ & $m_9$ & $m_{11}$ & $m_{10}$ \\
+		};
+	\end{tikzpicture}
+	\caption{四变量卡诺图}
+	\label{fig:卡诺图:四变量}
+\end{figure}
+
+二变量、五变量卡诺图类似，标号同样按循环码排列。
+
+\subsubsection{逻辑函数的卡诺图表示法}
+\label{sec:逻辑函数的卡诺图表示法}
+
+把各组变量值所对应的逻辑函数 $F$ 的值填在对应的小方格中（卡诺图实质是真值表的另一种画法）。
+
+\subsubsection{在卡诺图上合并最小项的规则}
+\label{sec:在卡诺图上合并最小项的规则}
+
+\begin{itemize}
+	\item 任何\textbf{两个}标 1 方格相邻，可合并为 1 项，消去 1 个变量；
+	\item 任何\textbf{四个}标 1 方格相邻，可合并为一项，消去 2 个变量（四个标 1 方格相邻的特点：① 同在一行或一列；② 同在一个田字格中）；
+	\item 任何\textbf{八个}标 1 方格相邻，可并成一项，消去 3 个变量。
+\end{itemize}
+
+\textbf{一般规律}：在 $n$ 个变量的卡诺图中，只有 $2^i$ 个相邻的标 1 方格（必须排列成方形格或矩形格）才能圈在一起合并为一项，该项保留原来各项中 $n-i$ 个相同的变量，消去 $i$ 个不同的变量。
+
+\subsubsection{用卡诺图化简逻辑函数}
+\label{sec:用卡诺图化简逻辑函数}
+
+最简标准：项数最少（圈数最少）；每项中变量数最少（圈尽可能大）。
+
+\begin{example}
+	将 $F(A,B,C)=\Sigma m(3,4,5,6,7)$ 化为最简与或式。
+
+	\begin{figure}[H]
+		\centering
+		\begin{tikzpicture}
+			\matrix (K32) [kmap] {
+				|[kmaphead]| $A\backslash BC$ & |[kmaphead]| 00 & |[kmaphead]| 01 & |[kmaphead]| 11 & |[kmaphead]| 10 \\
+				|[kmaphead]| 0 & 0 & 0 & 1 & 0 \\
+				|[kmaphead]| 1 & 1 & 1 & 1 & 1 \\
+			};
+			\node[kmapgroup, draw=LiSiThm, fill=LiSiThm, fill opacity=0.06,
+				fit=(K32-3-2)(K32-3-5)] {};
+			\node[kmapgroup, draw=LiSiWarn, fill=LiSiWarn, fill opacity=0.06,
+				fit=(K32-2-4)(K32-3-4)] {};
+		\end{tikzpicture}
+		\caption{例~\theexample 的卡诺图及圈法}
+		\label{fig:化简:例1}
+	\end{figure}
+
+	\begin{solution}
+		将 $A=1$ 的 4 个标 1 方格圈为一组（图中蓝色圈），合并为乘积项 $A$；将 $BC=11$ 的 $m_3$、$m_7$ 两个标 1 方格圈为一组（图中红色圈），合并为乘积项 $BC$。两圈已覆盖全部标 1 方格，故最简与或式为
+		\begin{equation}
+			F(A,B,C)=A+BC
+			\label{eq:化简:例1}
+		\end{equation}
+	\end{solution}
+\end{example}
+
+\begin{example}
+	将 $F(A,B,C,D)=\Sigma m(0,1,3,7,8,10,13)$ 化为最简与或式。
+
+	\begin{figure}[H]
+		\centering
+		\begin{tikzpicture}
+			\matrix (K42) [kmap] {
+				|[kmaphead]| $AB\backslash CD$ & |[kmaphead]| 00 & |[kmaphead]| 01 & |[kmaphead]| 11 & |[kmaphead]| 10 \\
+				|[kmaphead]| 00 & 1 & 1 & 1 & 0 \\
+				|[kmaphead]| 01 & 0 & 0 & 1 & 0 \\
+				|[kmaphead]| 11 & 0 & 1 & 0 & 0 \\
+				|[kmaphead]| 10 & 1 & 0 & 0 & 1 \\
+			};
+			\node[kmapgroup, draw=LiSiThm, fill=LiSiThm, fill opacity=0.06,
+				fit=(K42-2-2)(K42-2-3)] {};
+			\node[kmapgroup, draw=LiSiWarn, fill=LiSiWarn, fill opacity=0.06,
+				fit=(K42-2-4)(K42-3-4)] {};
+			\node[kmapgroup, draw=LiSiCor, fill=LiSiCor, fill opacity=0.06,
+				fit=(K42-5-2), inner sep=2pt] {};
+			\node[kmapgroup, draw=LiSiCor, fill=LiSiCor, fill opacity=0.06,
+				fit=(K42-5-5), inner sep=2pt] {};
+			\node[kmapgroup, draw=LiSiDef, fill=LiSiDef, fill opacity=0.06,
+				fit=(K42-4-3)] {};
+		\end{tikzpicture}
+		\caption{例~\theexample 的卡诺图及圈法}
+		\label{fig:化简:例2}
+	\end{figure}
+
+	\begin{solution}
+		先圈出孤立的标 1 方格，再圈出覆盖其余标 1 方格的最大圈：
+		\begin{enumerate}
+			\item $m_0,m_1$ 相邻，圈为一组（蓝色圈），合并为 $\overline{A}\,\overline{B}\,\overline{C}$；
+			\item $m_3,m_7$ 相邻，圈为一组（红色圈），合并为 $\overline{A}CD$；
+			\item $m_8,m_{10}$ 位于同一行两端、左右相邻（卷绕相邻），圈为一组（橙色圈），合并为 $A\overline{B}\,\overline{D}$；
+			\item $m_{13}$ 孤立，单独圈出（绿色圈），为 $AB\overline{C}D$。
+		\end{enumerate}
+		将各乘积项相加，得最简与或式
+		\begin{equation}
+			F(A,B,C,D)=\overline{A}\,\overline{B}\,\overline{C}+\overline{A}CD+A\overline{B}\,\overline{D}+AB\overline{C}D
+			\label{eq:化简:例2}
+		\end{equation}
+	\end{solution}
+\end{example}
+
+\subsubsection{化简中注意的问题}
+\label{sec:化简中注意的问题}
+
+\begin{enumerate}
+	\item 每一个标 1 的方格必须至少被圈一次；
+	\item 每个圈中包含的相邻小方格数必须为 2 的整数次幂；
+	\item 为了得到尽可能大的圈，圈与圈之间可以重叠；
+	\item 若某个圈中的所有标 1 方格已经完全被其他圈所覆盖，则该圈为多余的。
+\end{enumerate}
+
+\subsubsection{用卡诺图求反函数的最简与或式}
+\label{sec:用卡诺图求反函数的最简与或式}
+
+在卡诺图中合并标 \textbf{0} 方格，可得到反函数的最简与或式；常利用该方法求逻辑函数 $F$ 的最简与或非式（将 $\overline{F}$ 上的非号移到右边）。
+
+\subsubsection{复杂逻辑函数}
+\label{sec:复杂逻辑函数}
+
+可将函数分解成多个部分，先将每个部分分别填入各自的卡诺图，然后通过卡诺图对应方格的运算（与、或、异或等）求出函数的卡诺图，再进行化简。
+
+\subsubsection{不完全确定的逻辑函数及其化简（无关项）}
+\label{sec:不完全确定的逻辑函数}
+
+\begin{definition}[无关项]
+	在某些实际数字电路中，逻辑函数的输出只和一部分最小项有确定对应关系，而和余下的最小项无关；余下的最小项无论写入函数式与否都不影响电路的逻辑功能。这些最小项称为\textbf{无关项}，用字母 $d$（don't care）表示，对应的函数值记为“$\times$”。
+\end{definition}
+
+包含无关项的逻辑函数称为\textbf{不完全确定的逻辑函数}。利用无关项往往可以把函数化得更简单。
+
+\begin{example}
+	设计一个奇偶判别电路，输入为 8421BCD 码，输入为偶数时输出 0，输入为奇数时输出 1。由于 8421BCD 码中无 $1010\sim1111$ 这 6 个码，电路禁止输入这 6 个码，它们对应的最小项为无关项：
+	\begin{equation}
+		F(A,B,C,D)=\Sigma m(1,3,5,7,9)+\Sigma d(10\sim15)
+		\label{eq:化简:无关项例}
+	\end{equation}
+	\begin{itemize}
+		\item 若不利用无关项（将卡诺图中的 $\times$ 均作 0 处理），化简结果为
+		$F(A,B,C,D)=\overline{A}D+\overline{B}\,\overline{C}D$；
+		\item 若利用无关项（将 $\times$ 按化简需要处理，有的作 0、有的作 1），化简结果为
+		$F(A,B,C,D)=D$。
+	\end{itemize}
+\end{example}

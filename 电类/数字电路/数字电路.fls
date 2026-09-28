@@ -322,6 +322,10 @@ INPUT d:/Latex/R/texmf-dist/tex/generic/pgf/libraries/pgflibraryarrows.meta.code
 INPUT d:/Latex/R/texmf-dist/tex/generic/pgf/libraries/pgflibraryarrows.meta.code.tex
 INPUT d:/Latex/R/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarycalc.code.tex
 INPUT d:/Latex/R/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarycalc.code.tex
+INPUT d:/Latex/R/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarymatrix.code.tex
+INPUT d:/Latex/R/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarymatrix.code.tex
+INPUT d:/Latex/R/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryfit.code.tex
+INPUT d:/Latex/R/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryfit.code.tex
 INPUT d:/Latex/R/texmf-dist/tex/latex/listings/listings.sty
 INPUT d:/Latex/R/texmf-dist/tex/latex/listings/listings.sty
 INPUT d:/Latex/R/texmf-dist/tex/latex/listings/lstpatch.sty
@@ -443,6 +447,11 @@ INPUT ./Figure/反函数定义.png
 INPUT ./Figure/对偶式定义.png
 INPUT ./Figure/对偶式定义.png
 INPUT ./Figure/对偶式定义.png
+INPUT d:/Latex/R/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
+INPUT d:/Latex/R/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam10.tfm
+INPUT d:/Latex/R/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam7.tfm
+INPUT d:/Latex/R/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
+INPUT d:/Latex/R/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm7.tfm
 INPUT 数字电路.aux
 INPUT ./数字电路.out
 INPUT ./数字电路.out
