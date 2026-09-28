@@ -1,0 +1,71 @@
+% 齿轮传动设计准则流程图
+\begin{tikzpicture}[
+    node distance=1.2cm and 1.5cm,
+    >=latex,
+    box/.style={
+        rectangle,
+        draw,
+        fill=#1,
+        minimum height=0.8cm,
+        minimum width=3.2cm,
+        align=center,
+        font=\small\bfseries
+    },
+    box/.default=blue!20,
+    graybox/.style={
+        rectangle,
+        draw,
+        fill=gray!40,
+        minimum height=0.7cm,
+        minimum width=3cm,
+        align=center,
+        font=\small
+    },
+    greenbox/.style={
+        rectangle,
+        draw,
+        fill=green!15,
+        minimum height=0.7cm,
+        minimum width=3.5cm,
+        align=center,
+        font=\small
+    },
+    arrow/.style={
+        ->,
+        thick,
+        >=latex
+    }
+]
+
+% 顶部节点
+\node[box] (top) {闭式齿轮传动};
+
+% 第二层节点
+\node[box, below left=1.2cm and 1.5cm of top] (soft) {软齿面齿轮\\(HBS$\leqslant$350)};
+\node[box, below right=1.2cm and 1.5cm of top] (hard) {硬齿面齿轮\\(HBS$>$350)};
+
+% 第三层节点
+\node[graybox, below=of soft] (soft_fail) {齿面疲劳点蚀};
+\node[graybox, below=of hard] (hard_fail) {齿根弯曲疲劳折断};
+
+% 第四层节点
+\node[greenbox, below=of soft_fail] (soft_rule) {齿面接触疲劳强度准则};
+\node[greenbox, below=of hard_fail] (hard_rule) {齿根弯曲疲劳强度准则};
+
+% 开式齿轮传动
+\node[box, below left=1.2cm and 2cm of soft_rule] (open) {开式齿轮传动};
+\node[graybox, right=of open] (open_fail) {齿面磨损};
+\node[greenbox, below right=0.8cm and 0.5cm of open_fail] (open_rule) {增大m和降低许用弯曲应力};
+
+% 连接线
+\draw[arrow] (top) -- (soft);
+\draw[arrow] (top) -- (hard);
+\draw[arrow] (soft) -- (soft_fail);
+\draw[arrow] (hard) -- (hard_fail);
+\draw[arrow] (soft_fail) -- (soft_rule);
+\draw[arrow] (hard_fail) -- (hard_rule);
+\draw[arrow] (open) -- (open_fail);
+\draw[arrow] (open_fail) -- (open_rule);
+\draw[arrow] (open_fail) -- (hard_rule);
+
+\end{tikzpicture}
