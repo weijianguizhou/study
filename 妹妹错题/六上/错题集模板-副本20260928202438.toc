@@ -1,3 +1,0 @@
-\contentsline {chapter}{\numberline {第一章}往期错题}{1}{chapter.1}%
-\contentsline {chapter}{\numberline {第二章}中秋练习}{17}{chapter.2}%
-\contentsfinish 
