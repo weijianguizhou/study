@@ -1,0 +1,288 @@
+% !TeX root = MuJoCo使用指南.tex
+% ============================================================
+%  第七章　SolidWorks 建模与模型导出
+%  内容：MuJoCo 对模型的要求、SolidWorks 建模约定、
+%        SW2URDF 插件导出 URDF、直接导出 OBJ/STL、
+%        单位与坐标系换算、两条路线对照与常见坑
+% ============================================================
+
+前六章用的是官方自带模型。真正的研究与项目里，模型往往来自 CAD。本章解决「怎么从 SolidWorks 里把 MuJoCo 要的东西拿出来」，第八章解决「拿出来之后怎么写进 MJCF」。
+
+\section{先明确 MuJoCo 要什么}
+
+一次成功的导出，本质是交付下面四样东西：
+
+\begin{enumerate}
+	\item \textbf{一套网格}：每个连杆一个（或一组）三角网格，格式为 \texttt{OBJ} 或二进制 \texttt{STL}（MuJoCo 还支持自家的二进制 \texttt{MSH}，但旧格式已废弃，不建议使用）；
+	\item \textbf{一棵运动学树}：谁是谁的父连杆、关节装在哪里、绕哪个轴转、限位多少；
+	\item \textbf{一套惯性参数}：质量、质心、惯性张量；
+	\item \textbf{一个统一的空间约定}：长度单位为米、\textbf{$z$ 轴向上}、右手系。
+\end{enumerate}
+
+\begin{definition}[MuJoCo 的空间与角度约定]
+	MuJoCo 的默认世界朝向是\textbf{$z$ 轴向上}，坐标系为右手系，姿态用四元数表示且\textbf{分量顺序为 $w\,x\,y\,z$}（单位四元数为 \texttt{"1 0 0 0"}）。MJCF 中角度默认按\textbf{度}解释（\texttt{compiler} 的 \texttt{angle} 属性），而 URDF 一律按\textbf{弧度}解释；但编译进 \texttt{mjModel} 之后，所有角度量都是弧度。
+	\label{def:MuJoCo:空间约定}
+\end{definition}
+
+\begin{note}
+	SolidWorks 与 URDF 同样使用 $z$ 轴向上的右手系，因此\textbf{通常不需要做 $y$ 轴向上到 $z$ 轴向上的旋转}。若模型导入后整体「躺倒」，先检查是不是自己在导出时选了一个额外的输出坐标系，而不是怀疑引擎做了自动旋转。
+\end{note}
+
+\section{SolidWorks 侧的六个建模约定}
+
+这六条决定了后续工作量的大小。装配体越「干净」，MJCF 越短。
+
+\subsection{单位：毫米建模，米导出}
+
+工程上习惯用毫米建模，而 MuJoCo 需要一个自洽的单位制，实践中统一用\textbf{米--千克--秒}。两种做法：
+
+\begin{itemize}
+	\item \textbf{推荐}：SolidWorks 里仍用毫米（图纸、加工都方便），导出网格后在 MJCF 里用 \texttt{scale} 把网格缩放 $0.001$ 倍，其余数值（关节位置、限位、质量）直接按米填写；
+	\item 也可以把文档单位直接改成米（\textit{工具 $\rightarrow$ 选项 $\rightarrow$ 文档属性 $\rightarrow$ 单位}），导出即为米，但后续与图纸、加工数据交接时容易出错。
+\end{itemize}
+
+\begin{lstlisting}[style=xml]
+<asset>
+  <mesh name="base_link" file="base_link.STL" scale="0.001 0.001 0.001"/>
+</asset>
+\end{lstlisting}
+
+\begin{warnbox}[最常见的一个错误]
+	忘记写 \texttt{scale}，结果机器人被放大 $1000$ 倍：看不见、一放手就飞出去、接触力大到发散。\textbf{判断口诀：如果模型数值上「大得离谱」，先查单位。}
+\end{warnbox}
+
+\subsection{坐标系：原点放在关节轴线上}
+
+每个连杆都需要一个参考坐标系，它决定了：
+
+\begin{itemize}
+	\item 网格自身坐标系的原点与朝向（由\textbf{导出时选择的输出坐标系}决定）；
+	\item 关节的位置（MJCF 里 \texttt{body} 的 \texttt{pos} 或关节所在的 body 原点）。
+\end{itemize}
+
+实践建议：\textbf{在每个连杆与父连杆的连接处（关节中心）建一个参考坐标系}，命名为 \texttt{CS\_<link>}，导出时以它为输出坐标系。这样每个连杆的网格原点就落在关节中心上，MJCF 里写关节位置时只需写父连杆末端到子连杆关节中心的偏移，几何直观、不易出错。
+
+\begin{tipbox}[装配体 vs 零件]
+	从零件导出时，「输出坐标系」通常只能选零件的原点或用户坐标系；从装配体导出时可以选择任意参考坐标系。
+	如果零件自身的原点不在关节轴线上，最省事的办法是\textbf{在装配体里导出}，或者接受偏移、在 MJCF 里用引用网格的 \texttt{geom} 的 \texttt{pos} 做补偿。
+\end{tipbox}
+
+\subsection{拆分：一个连杆一个子装配体}
+
+MuJoCo 的物体（\texttt{body}）是运动学树上的节点，网格只是挂在它上面的几何体。因此要按\textbf{运动学意义上的连杆}来组织装配体：
+
+\begin{itemize}
+	\item 同一连杆的所有零件（本体、法兰、螺栓、电机外壳）放进一个\textbf{子装配体}；
+	\item 相邻连杆之间不要有共享零件，否则无法拆分；
+	\item 紧固件、垫片、铭牌等对动力学没有影响的零件\textbf{直接压缩掉}（用显示状态隐藏，见 7.3.6 节）。
+\end{itemize}
+
+\subsection{命名：让 XML 里的名字和 CAD 一致}
+
+命名混乱是后期调试最大的时间黑洞。建议：
+
+\begin{itemize}
+	\item 连杆名用 \texttt{base\_link}、\texttt{link1}、\texttt{link2}……或语义名 \texttt{upper\_arm}、\texttt{forearm}；
+	\item 关节名与连杆对应：\texttt{joint1}、\texttt{joint2}；
+	\item 参考坐标系加前缀：\texttt{CS\_link1}；
+	\item 网格文件名与连杆名一致：\texttt{link1.STL}。
+\end{itemize}
+
+这样在 MJCF、Python、C++ 里引用同一件事时用的是同一个字符串，模型改动时改动量最小。
+
+\subsection{质量属性：材质密度必须真实}
+
+MuJoCo 可以由几何体\textbf{反推}质量与惯量（用密度乘以体积），也可以直接给 \texttt{inertial}。无论哪种，前提是 CAD 里的质量属性是可信的：
+
+\begin{itemize}
+	\item 给每个零件指定\textbf{真实材质}（密度），不要用默认的「普通碳钢」；
+	\item 不要用「覆盖质量属性」手改质量而不改惯量；
+	\item 导出的 URDF 里 \texttt{inertial} 一旦缺失或非正定，MuJoCo 编译时会报错或给出不合理结果。
+\end{itemize}
+
+\subsection{碰撞体：单独做简化件}
+
+MuJoCo 的碰撞检测\textbf{只使用网格的凸包}。直接拿外形复杂的精模当碰撞体，会同时带来三个问题：慢、结果失真、非凸部分「填实」。正确做法是：
+
+\begin{itemize}
+	\item 为每个连杆单独做一个\textbf{包络件}（skin part），用圆柱、长方体等简单形状把真实外形包住；
+	\item 包络件材质设为「空气」或质量置零，并对质量属性计算做排除（\texttt{Exclude from BOM} 与质量属性里的「不包括」），使它不影响惯性；
+	\item 精模只用于显示（visual），包络件只用于碰撞（collision）。
+\end{itemize}
+
+\begin{tipbox}[为什么值得多花这一步]
+	一个几十万面的网格当碰撞体，凸包计算和接触求解都会明显变慢；而包含大量细节的凸包还会让相邻连杆「粘」在一起。
+	官方在整理 SW2URDF 大装配体的教程里给的建议与此一致：用包络件做粗碰撞几何，用 MeshLab 之类的工具减面。
+\end{tipbox}
+
+\section{方案 A：用 SW2URDF 插件导出 URDF}
+
+这条路线能\textbf{保留运动学树}：插件让你在 SolidWorks 里逐个连杆指定组成零件、命名关节、选择关节类型与参考轴，最后导出一个标准 URDF 包。之后 MuJoCo 可以直接加载 \texttt{.urdf} 并另存为 MJCF（8.4 节）。
+
+\subsection{获取与安装}
+
+\begin{itemize}
+	\item 官方名称是 \textbf{SolidWorks to URDF Exporter}，托管在 GitHub 的 \texttt{ros} 组织下（仓库名 \texttt{solidworks\_urdf\_exporter}），安装后在插件列表里显示为 \textbf{SW2URDF}；
+	\item 在 GitHub 的 Releases 页面下载安装包，或用 Visual Studio 自行编译其中的 C\# 源码；
+	\item 环境要求：\textbf{.NET Framework 4.7.2 及以上}；\textbf{仅支持 64 位} SolidWorks；安装程序会往 SolidWorks 安装目录写文件，需要管理员权限；
+	\item 已知缺陷：SolidWorks 2018 \textbf{Service Pack 4 及更早}存在 STL 导出 bug，会让该插件无法使用，请升级到 SP5 或改用 2019 及更高版本。
+\end{itemize}
+
+安装后在 \textit{工具 $\rightarrow$ 插件} 里能看到 SW2URDF，勾选后即可使用。
+
+\subsection{导出步骤}
+
+\begin{enumerate}
+	\item 打开装配体，把各个关节\textbf{摆到你希望作为零位的姿态}（导出的 URDF 会以当前姿态为基准）；
+	\item 选择 \textit{工具 $\rightarrow$ Export to URDF}（1.5.1 及更早的版本在 \textit{文件 $\rightarrow$ Export to URDF}），界面左侧出现插件的属性管理器；
+	\item 先指定\textbf{基座连杆}（base link）：给它起名、勾选属于它的零件或子装配体。基座没有关节字段；
+	\item 逐个添加连杆：每个连杆都要有唯一的\textbf{连杆名}与\textbf{关节名}，勾选属于它的组件，选择\textbf{关节类型}（旋转 / 移动 / 固定等）；
+	\item 需要精确控制关节位置与轴向时，先在 SolidWorks 里建好\textbf{参考坐标系}和\textbf{参考轴}，再在插件界面里从下拉列表中选择它们；
+	\item 用右键菜单与拖拽维护连杆树，直到与真实机器人的拓扑一致；
+	\item 点击 \textit{Preview and Export...}，选择输出目录，插件会生成 URDF 包。
+\end{enumerate}
+
+\begin{warnbox}[三个容易卡住的限制]
+	\begin{enumerate}
+		\item \textbf{只能在设计树里选组件}：在图形区点选通常只能选到零件，选不到子装配体。
+		\item \textbf{只能选到两层深度}：出于性能考虑，插件只允许选择装配体中两层以内的零件或子装配体。更深的层级要先在 SolidWorks 里提升层次。
+		\item \textbf{关节属性页的修改不会保存}：在这一页里改的关节原点、轴向等信息不会被记住，下次还要重填。若对自动生成的参考坐标系/轴不满意，应在该页点\textbf{取消}（此时连杆名会保存），回到 SolidWorks 修改参考几何，再重新执行一次导出。
+	\end{enumerate}
+\end{warnbox}
+
+\subsection{导出产物}
+
+插件写出的是一个 ROS 风格的包：\texttt{urdf} 文件、\texttt{package.xml} 清单，以及\textbf{网格与纹理目录}。内容大致如下（目录名以实际导出为准）：
+
+\begin{lstlisting}[style=code]
+robot_description/
+|-- package.xml
+|-- urdf/
+|   `-- robot.urdf
+|-- meshes/
+|   |-- base_link.STL
+|   |-- link1.STL
+|   `-- ...
+`-- textures/
+\end{lstlisting}
+
+\begin{warnbox}[路径必须改]
+	URDF 里的网格路径是 ROS 的 \texttt{package://} 形式，\textbf{MuJoCo 不认识这种路径}。
+	两种处理办法：把网格文件与 URDF 放到同一目录树里并改写为相对路径（推荐，配合 \texttt{meshdir}）；或者把模型整体存成 \texttt{.mjz} 归档，让网格跟着 XML 一起走。
+\end{warnbox}
+
+\subsection{大装配体的整理技巧}
+
+官方在「为大装配体整理 SolidWorks 模型」的教程里给了几条很实用的建议：
+
+\begin{itemize}
+	\item \textbf{用显示状态（Display States）隐藏紧固件}，\textbf{不要用配置（Configuration）}。理由是插件计算质量属性时会忽略被压缩的组件，而配置恰恰通过「压缩组件或特征」实现隐藏，容易连累配合关系；
+	\item \textbf{为每个连杆建一个包络件}做碰撞几何，材质设为「空气」；
+	\item \textbf{网格减面}：SolidWorks 最粗的 STL 细分精度对仿真来说仍然太细，用 MeshLab 之类的工具做减面；
+	\item \textbf{视觉网格与碰撞网格要跑两遍导出}（一次导出精模、一次导出包络件），然后手工把两组 \texttt{<collision>} 合并到同一个连杆里。
+\end{itemize}
+
+\section{方案 B：直接导出 OBJ / STL}
+
+如果关节树你打算自己写（或者模型很简单），可以只要网格：在 SolidWorks 里用 \textit{文件 $\rightarrow$ 另存为} 选择 \texttt{OBJ} 或 \texttt{STL}，并在对话框的 \textit{选项} 里设置导出参数。
+
+\begin{warnbox}[对话框字段随后续版本变化]
+	SolidWorks 各版本的 OBJ/STL 导出对话框字段并不完全一致，官方帮助文档也未公开可检索。因此请以你本机对话框上的实际名称为准，逐项确认下面这几件事：
+	\begin{enumerate}
+		\item \textbf{单位}：导出的是毫米还是米（决定要不要写 \texttt{scale="0.001 ..."}）；
+		\item \textbf{输出坐标系}：以零件原点、装配体原点，还是某个参考坐标系为基准；
+		\item \textbf{精度 / 分辨率}：三角面越多越精细，也越慢；碰撞体不要用最高精度；
+		\item \textbf{装配体是否输出为单一文件}：应选择\textbf{按零件分别输出}，否则整个装配体会被合并成一个网格，无法按连杆使用；
+		\item \textbf{是否三角化}：MuJoCo 只接受三角网格。
+	\end{enumerate}
+\end{warnbox}
+
+两种格式在 MuJoCo 侧的区别见表~\ref{tab:Cad:格式}。简单结论是：\textbf{只做显示和碰撞时两者都行；需要贴纹理时必须用 OBJ}（因为只有 OBJ/MSH 能携带纹理坐标）。
+
+\begin{table}[H]
+	\centering
+	\caption{OBJ 与 STL 在 MuJoCo 中的差别}
+	\label{tab:Cad:格式}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{1.8cm}>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{5.0cm}}
+		\hline
+		格式 & 纹理坐标 & 法线 & 备注 \\
+		\hline
+		OBJ & 支持 & 支持 & 可以携带 UV；但 \textbf{MuJoCo 不读 MTL 材质文件}，颜色与纹理要在 XML 里用 \texttt{material} 重新指定 \\
+		STL & 不支持 & 不支持 & 二进制 STL 会做重复顶点合并；STL 无法携带纹理坐标，贴图无从谈起 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\section{导出之后：先量一量}
+
+不管走哪条路线，拿到文件后\textbf{先做一次量化检查}，比在 MJCF 里盲猜要快得多。用 Python 读一次网格的包围盒与顶点数：
+
+\begin{lstlisting}[style=code, language=Python]
+import numpy as np
+
+def read_stl_bounds(path):
+    with open(path, "rb") as f:
+        f.seek(80)
+        n = int.from_bytes(f.read(4), "little")
+        data = np.frombuffer(f.read(n * 50), dtype=np.uint8).reshape(n, 50)
+    tri = data[:, 12:48].copy().view("<f4").reshape(n * 3, 3)
+    print("triangles:", n)
+    print("min:", tri.min(axis=0))
+    print("max:", tri.max(axis=0))
+    print("size:", tri.max(axis=0) - tri.min(axis=0))
+
+read_stl_bounds("meshes/link1.STL")
+\end{lstlisting}
+
+\begin{itemize}
+	\item \texttt{size} 应当在\textbf{米}的量级（例如 $0.30$ 表示 $30$ cm）。若是 $300$ 这样的数，说明导出的是毫米，MJCF 里必须写 \texttt{scale="0.001 0.001 0.001"}；
+	\item \texttt{min} 与 \texttt{max} 告诉你要在 MJCF 里把网格平移多少——但如果导出时把坐标系选在了关节中心上，这一步就可以省略；
+	\item \texttt{triangles} 过大（例如超过 $10$ 万）时应减面，尤其是碰撞网格。
+\end{itemize}
+
+\section{两条路线对照与常见坑}
+
+\begin{table}[H]
+	\centering
+	\caption{两条导出路线对照}
+	\label{tab:Cad:两条路线}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{2.4cm}>{\raggedright\arraybackslash}p{5.4cm}>{\raggedright\arraybackslash}p{5.4cm}}
+		\hline
+		对比项 & 方案 A：SW2URDF & 方案 B：直接导出网格 \\
+		\hline
+		产出 & URDF + 网格 + 清单 & 只有网格文件 \\
+		运动学树 & 插件里可视化搭建，可保留 & 全部手写 \\
+		适合场合 & 多自由度机器人、关节多、结构复杂 & 简单机构、单连杆、只要几何 \\
+		上手成本 & 需要理解插件界面与参考几何 & 立刻可用 \\
+		后续维护 & 改结构后在 SolidWorks 里改一次、重新导出 & 改结构要同时改网格与 XML \\
+		与 MJCF 的衔接 & 用 MuJoCo 直接编译 URDF，再另存为 MJCF（8.4 节） & 直接写 MJCF，用 \texttt{<mesh>} 引入网格 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\caption{CAD 导出阶段的常见坑}
+	\label{tab:Cad:常见坑}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{4.6cm}>{\raggedright\arraybackslash}p{6.2cm}}
+		\hline
+		现象 & 原因 & 解决 \\
+		\hline
+		机器人被放大 $1000$ 倍 & 网格单位是毫米而没写 \texttt{scale} & 加 \texttt{scale="0.001 0.001 0.001"} \\
+		整个机器人是一个刚体 & 装配体被导出成一个合并网格 & 按零件/子装配体分别导出，或改用 SW2URDF \\
+		模型「躺倒」 & 导出时选了带旋转的输出坐标系 & 检查输出坐标系，重新导出一份纯平移的 \\
+		贴图不显示 & 用了 STL，或指望 MTL 生效 & 改用 OBJ 并携带 UV；在 XML 里用 \texttt{<texture>} 与 \texttt{<material>} 指定 \\
+		加载时报「翻转的面」 & 部分三角面的法线朝内 & 在 CAD 或 MeshLab 里统一法线朝外；MuJoCo 会对 OBJ/XML 网格检查翻转面并报错 \\
+		阴影出现条纹 & 存在重复面（同一面正反各一份） & 在 MeshLab 里删除重复面 \\
+		编译报错、指向某个网格 & 存在面积过小的退化三角形 & 删除退化面后重新导出 \\
+		仿真中相邻连杆互相「粘住」 & 碰撞体用了精模，凸包把间隙填实 & 用包络件做碰撞体，或把碰撞体放进不参与碰撞的组 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{tipbox}[下一步]
+	文件已经有了，第八章把它们组织成一个能编译、能跑的 MJCF 模型：目录怎么摆、\texttt{<mesh>} 怎么写、材质与纹理怎么设、URDF 怎么转成 MJCF。
+\end{tipbox}

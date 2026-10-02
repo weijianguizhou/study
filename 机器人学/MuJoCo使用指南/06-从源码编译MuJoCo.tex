@@ -1,0 +1,170 @@
+% !TeX root = MuJoCo使用指南.tex
+% ============================================================
+%  第六章　从源码编译 MuJoCo（可选）
+%  内容：什么时候需要自己编译、依赖与工具链准备、CMake 选项、
+%        构建与安装、产物验证、常见编译失败
+%  说明：CMake 选项取自官方根目录 CMakeLists.txt（3.14 开发分支）。
+% ============================================================
+
+第四章与第五章用的都是官方预编译库。绝大多数情况下这就够了，官方也明确建议「不打算修改引擎核心代码的用户使用预编译库」。本章说明\textbf{什么情况下才值得自己编译}，以及怎么做。
+
+\section{什么时候需要自己编译}
+
+\begin{table}[H]
+	\centering
+	\caption{需要自行编译的场合}
+	\label{tab:Build:场合}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{4.4cm}>{\raggedright\arraybackslash}p{9.8cm}}
+		\hline
+		目的 & 说明 \\
+		\hline
+		修改引擎 & 改动力学、接触模型、求解器，或加自己的传感器/执行器（后者更推荐用插件机制，不必改引擎源码） \\
+		换渲染后端 & 用 Filament 渲染器（\texttt{MUJOCO\_USE\_FILAMENT=ON}）或开启它的 \texttt{mjr} 兼容层 \\
+		接 OpenUSD & 编译带 USD 支持的目标（\texttt{MUJOCO\_WITH\_USD=ON}） \\
+		要一份完整安装 & 需要一个带完整 CMake 包配置的「标准前缀」安装（5.7 节），供多个工程共享 \\
+		性能调优 & 用 Clang 自行构建，官方指出 Windows 上 Clang 的性能优于 MSVC \\
+		固定版本 / 内部魔改 & 需要冻结某个提交，或在公司内网维护自己的分支 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{warnbox}[不要为了「装 Python 绑定」而编译]
+	\texttt{pip install mujoco} 的 wheel 已经自带引擎，\textbf{不需要}先编译 C++ 库。
+	只有在你修改了 Python 绑定本身时，才需要按官方文档从源码构建 Python 包（那是一条独立且相当繁琐的流程）。
+\end{warnbox}
+
+\section{准备工作}
+
+\begin{table}[H]
+	\centering
+	\caption{源码编译所需的工具}
+	\label{tab:Build:工具}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{3.4cm}>{\raggedright\arraybackslash}p{4.0cm}>{\raggedright\arraybackslash}p{6.8cm}}
+		\hline
+		工具 & 版本 & 说明 \\
+		\hline
+		Git & 任意近期版本 & 克隆源码 \\
+		CMake & \textbf{3.16 及以上} & 这是官方源码里写明的下限；实际使用建议 3.24 以上 \\
+		C++17 编译器 & MSVC（VS2019+）/ Clang / GCC & 官方对 Windows 的要求是 VS2019 或更高，且 \textbf{Windows SDK 版本不低于 10.0.22000} \\
+		网络 & —— & 构建系统会用 CMake 的 \texttt{FetchContent} 从上游仓库\textbf{自动下载依赖}（ccd、qhull、tinyobjloader、tinyxml2、lodepng、GLFW 等），因此首次配置必须联网 \\
+		磁盘与内存 & 约 5 GB 空闲 & 依赖树与中间产物不小；并行构建时内存占用较高 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{tipbox}[先克隆，不用 \texttt{--recursive}]
+	MuJoCo 的依赖不是 git 子模块，而是配置阶段用 \texttt{FetchContent} 拉取的。因此
+	\texttt{git clone https://github.com/google-deepmind/mujoco.git} 即可，不需要（也没有）\texttt{--recursive}。
+	若所在网络访问 GitHub 受限，可以在配置时给 Git 设置代理，或提前把依赖仓库镜像到内网并用 \texttt{FETCHCONTENT\_SOURCE\_DIR} 指过去。
+\end{tipbox}
+
+\section{配置、构建与安装}
+
+\begin{lstlisting}[style=shell]
+git clone https://github.com/google-deepmind/mujoco.git
+cd mujoco
+
+cmake -S . -B build -G "Visual Studio 17 2022" -A x64 ^
+      -DCMAKE_BUILD_TYPE=Release ^
+      -DCMAKE_INSTALL_PREFIX=D:/mujoco/install
+
+cmake --build build --config Release --parallel
+
+cmake --install build --config Release
+\end{lstlisting}
+
+四步分别对应：克隆、配置（生成工程）、构建、安装到指定前缀。安装完成后的目录符合 CMake 的标准前缀布局：
+
+\begin{lstlisting}[style=code]
+D:/mujoco/install/
+|-- bin/                 mujoco.dll
+|-- include/mujoco/      headers
+|-- lib/                 mujoco.lib
+|   `-- cmake/mujoco/    mujocoConfig.cmake, mujocoTargets.cmake, ...
+`-- share/mujoco/        model collection
+\end{lstlisting}
+
+有了这个前缀，第五章的模板 A 只要把 \texttt{CMAKE\_PREFIX\_PATH} 指过去就能用：
+
+\begin{lstlisting}[style=shell]
+cmake -S my_sim -B my_sim/build -G "Visual Studio 17 2022" -A x64 ^
+      -DCMAKE_PREFIX_PATH=D:/mujoco/install
+\end{lstlisting}
+
+\section{常用 CMake 选项}
+
+\begin{table}[H]
+	\centering
+	\caption{官方根 CMakeLists.txt 中的主要选项}
+	\label{tab:Build:选项}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{5.2cm}>{\raggedright\arraybackslash}p{1.6cm}>{\raggedright\arraybackslash}p{7.4cm}}
+		\hline
+		选项 & 默认 & 作用 \\
+		\hline
+		\texttt{MUJOCO\_BUILD\_EXAMPLES} & ON & 构建 \texttt{sample} 目录下的示例程序 \\
+		\texttt{MUJOCO\_BUILD\_SIMULATE} & ON & 构建交互式查看器 \texttt{simulate} \\
+		\texttt{MUJOCO\_BUILD\_TESTS} & ON & 构建单元测试；只想要库时关掉可显著缩短构建时间 \\
+		\texttt{MUJOCO\_TEST\_PYTHON\_UTIL} & ON & 构建 Python 绑定的工具库（依赖 Python） \\
+		\texttt{MUJOCO\_BUILD\_STUDIO} & OFF & 构建实验性的 MuJoCo Studio \\
+		\texttt{MUJOCO\_USE\_FILAMENT} & OFF & 使用 Filament 渲染器替换经典 OpenGL 渲染器 \\
+		\texttt{MUJOCO\_USE\_FILAMENT\_MJR\_COMPAT} & OFF & Filament 的 \texttt{mjr} 兼容层 \\
+		\texttt{MUJOCO\_WITH\_USD} & OFF & 编译 OpenUSD 相关目标 \\
+		\texttt{CMAKE\_INSTALL\_PREFIX} & —— & 安装前缀，见上一节 \\
+		\texttt{CMAKE\_BUILD\_TYPE} & —— & 单配置生成器下务必设为 \texttt{Release} \\
+		\hline
+	\end{tabular}
+\end{table}
+
+只想要一个干净、够用的库时，一条命令即可（关掉测试与示例）：
+
+\begin{lstlisting}[style=shell]
+cmake -S . -B build -G "Visual Studio 17 2022" -A x64 ^
+      -DCMAKE_BUILD_TYPE=Release ^
+      -DMUJOCO_BUILD_TESTS=OFF ^
+      -DMUJOCO_BUILD_EXAMPLES=OFF ^
+      -DMUJOCO_TEST_PYTHON_UTIL=OFF ^
+      -DCMAKE_INSTALL_PREFIX=D:/mujoco/install
+\end{lstlisting}
+
+\begin{tipbox}[查全部选项]
+	配置一次之后，构建目录里的 \texttt{CMakeCache.txt} 记录了所有选项；
+	也可以用 \texttt{cmake -LAH -S . -B build} 让 CMake 打印带说明的选项列表。
+\end{tipbox}
+
+\section{验证构建结果}
+
+\begin{enumerate}
+	\item 到 \texttt{build/bin/Release}（或安装前缀的 \texttt{bin}）下运行 \texttt{simulate.exe}，打开自带模型验证渲染；
+	\item 用第五章的模板 A 编译一个最小程序，确认 \texttt{find\_package(mujoco)} 能找到你刚安装的前缀；
+	\item 在程序里检查版本一致性：\texttt{mjVERSION\_HEADER} 与 \texttt{mj\_version()} 应当相等。
+\end{enumerate}
+
+\section{常见编译失败}
+
+\begin{table}[H]
+	\centering
+	\caption{源码构建常见问题}
+	\label{tab:Build:排错}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{5.0cm}>{\raggedright\arraybackslash}p{4.4cm}>{\raggedright\arraybackslash}p{4.8cm}}
+		\hline
+		现象 & 原因 & 处理 \\
+		\hline
+		配置阶段卡在下载依赖 & 网络无法访问 GitHub & 配置 Git 代理；或把依赖镜像到内网后用 \texttt{FETCHCONTENT\_SOURCE\_DIR} 指定本地副本 \\
+		\texttt{CMake 3.16 or higher is required} & CMake 版本过低 & 安装新版 CMake \\
+		MSVC 报 Windows SDK 相关错误 & SDK 版本低于 10.0.22000 & 在 VS 安装器里补装新版 Windows SDK \\
+		\texttt{cl} 找不到 & 没在开发者命令行里运行 & 见 4.2.2 节 \\
+		编译到一半内存耗尽 & 并行度过高、或同时构建测试与 Filament & 降低并行度（\texttt{--parallel 4}），关掉 \texttt{MUJOCO\_BUILD\_TESTS} \\
+		运行时报非法指令 & CPU 不支持 AVX & 换机器；官方预编译库与默认构建都要求 AVX \\
+		Filament 构建失败 & 额外依赖很重、平台差异多 & 除非确实需要，否则保持 \texttt{MUJOCO\_USE\_FILAMENT=OFF} \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{tipbox}[建议]
+	先用官方预编译库把项目跑通，确认是「模型/代码的问题」而不是「构建的问题」，再考虑自行编译。
+	自行编译带来的收益主要体现在改引擎与性能调优上，而这部分工作只占实际项目的一小部分时间。
+\end{tipbox}

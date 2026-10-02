@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2026.2.15)  28 SEP 2026 20:06
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2026.2.15)  1 OCT 2026 11:30
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -1051,6 +1051,8 @@ Chapter 第一章.
 
 ]
 Chapter 第二章.
+File: figures/单摆模型示意图.png Graphic file (type bmp)
+<figures/单摆模型示意图.png>
 
 
 [3
@@ -1062,26 +1064,25 @@ Chapter 第二章.
 [5]
 
 [6]
+
+[7]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
-
-[7]
 
 [8]
 
 [9]
 
 [10]
+File: figures/引出点后移.png Graphic file (type bmp)
+<figures/引出点后移.png>
 File: figures/引出点前移.png Graphic file (type bmp)
 <figures/引出点前移.png>
 File: figures/比较点后移.png Graphic file (type bmp)
 <figures/比较点后移.png>
 File: figures/比较点前移.png Graphic file (type bmp)
 <figures/比较点前移.png>
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
 
 
 [11]
@@ -1102,10 +1103,16 @@ File: figures/控制系统方框图.png Graphic file (type bmp)
 File: figures/控制系统方框图转换的信号流图.png Graphic file (type bmp)
 <figures/控制系统方框图转换的信号流图.png>
 
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
 
 [15]
 File: figures/利用梅逊公式的例题.jpg Graphic file (type bmp)
 <figures/利用梅逊公式的例题.jpg>
+
+Underfull \vbox (badness 5847) has occurred while \output is active []
+
 
 
 [16]) (./时域瞬态响应分析.tex
@@ -1329,14 +1336,17 @@ L3 programming layer <2022/08/05>
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
  ) 
 Here is how much of TeX's memory you used:
- 35647 strings out of 473832
- 800734 string characters out of 5735453
+ 35629 strings out of 473832
+ 798555 string characters out of 5735453
  1351874 words of memory out of 5000000
- 58084 multiletter control sequences out of 15000+600000
+ 58064 multiletter control sequences out of 15000+600000
  571994 words of font info for 130 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 107i,14n,115p,541b,1099s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 107i,14n,115p,541b,1084s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on 控制工程基础笔记.pdf (46 pages).

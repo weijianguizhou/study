@@ -3,56 +3,64 @@
 \contentsline {subsection}{\numberline {1.1.1}常用数制一览}{2}{subsection.1.1.1}%
 \contentsline {subsection}{\numberline {1.1.2}二进制与十进制之间的转换}{3}{subsection.1.1.2}%
 \contentsline {subsection}{\numberline {1.1.3}二进制算术运算}{3}{subsection.1.1.3}%
-\contentsline {subsection}{\numberline {1.1.4}带符号数的表示：原码、反码和补码}{3}{subsection.1.1.4}%
-\contentsline {section}{\numberline {1.2}几种简单的编码}{5}{section.1.2}%
-\contentsline {subsection}{\numberline {1.2.1}二-十进制码（BCD 码）}{5}{subsection.1.2.1}%
-\contentsline {subsection}{\numberline {1.2.2}格雷码（Gray 码）}{6}{subsection.1.2.2}%
-\contentsline {subsection}{\numberline {1.2.3}计算机字符集}{6}{subsection.1.2.3}%
-\contentsline {chapter}{\numberline {第二章}布尔代数}{7}{chapter.2}%
-\contentsline {section}{\numberline {2.1}基本逻辑运算}{7}{section.2.1}%
-\contentsline {subsection}{\numberline {2.1.1}与逻辑运算}{7}{subsection.2.1.1}%
-\contentsline {subsection}{\numberline {2.1.2}或逻辑运算}{8}{subsection.2.1.2}%
-\contentsline {subsection}{\numberline {2.1.3}非逻辑运算}{8}{subsection.2.1.3}%
-\contentsline {section}{\numberline {2.2}复合逻辑运算}{9}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1}与非逻辑}{9}{subsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.2.2}或非逻辑}{9}{subsection.2.2.2}%
-\contentsline {subsection}{\numberline {2.2.3}与或非逻辑}{10}{subsection.2.2.3}%
-\contentsline {subsection}{\numberline {2.2.4}异或逻辑}{11}{subsection.2.2.4}%
-\contentsline {subsection}{\numberline {2.2.5}同或逻辑}{12}{subsection.2.2.5}%
-\contentsline {section}{\numberline {2.3}逻辑电平及正、负逻辑}{12}{section.2.3}%
-\contentsline {section}{\numberline {2.4}基本定律和规则}{13}{section.2.4}%
-\contentsline {subsection}{\numberline {2.4.1}逻辑函数的相等}{13}{subsection.2.4.1}%
-\contentsline {subsection}{\numberline {2.4.2}基本定律}{13}{subsection.2.4.2}%
-\contentsline {subsection}{\numberline {2.4.3}逻辑代数的三条规则}{13}{subsection.2.4.3}%
-\contentsline {subsubsection}{代入规则}{13}{subsection.2.4.3}%
-\contentsline {subsubsection}{反演规则}{13}{subsection.2.4.3}%
-\contentsline {subsubsection}{对偶规则}{14}{Item.8}%
-\contentsline {section}{\numberline {2.5}常用公式}{14}{section.2.5}%
-\contentsline {subsection}{\numberline {2.5.1}消去律}{14}{subsection.2.5.1}%
-\contentsline {subsection}{\numberline {2.5.2}吸收律1}{14}{subsection.2.5.2}%
-\contentsline {subsection}{\numberline {2.5.3}吸收律2}{15}{subsection.2.5.3}%
-\contentsline {subsection}{\numberline {2.5.4}包含律}{15}{subsection.2.5.4}%
-\contentsline {subsection}{\numberline {2.5.5}关于异或和同或运算}{15}{subsection.2.5.5}%
-\contentsline {section}{\numberline {2.6}逻辑函数的标准形式}{16}{section.2.6}%
-\contentsline {subsection}{\numberline {2.6.1}函数的“与--或”式和“或--与”式}{16}{subsection.2.6.1}%
-\contentsline {subsection}{\numberline {2.6.2}最小项}{16}{subsection.2.6.2}%
-\contentsline {subsection}{\numberline {2.6.3}最大项}{17}{subsection.2.6.3}%
-\contentsline {subsection}{\numberline {2.6.4}最小项和最大项的关系}{18}{subsection.2.6.4}%
-\contentsline {subsection}{\numberline {2.6.5}逻辑函数的最小项之和形式}{18}{subsection.2.6.5}%
-\contentsline {subsection}{\numberline {2.6.6}逻辑函数的最大项之积形式}{18}{subsection.2.6.6}%
-\contentsline {subsection}{\numberline {2.6.7}两种标准形式之间的关系}{19}{subsection.2.6.7}%
-\contentsline {section}{\numberline {2.7}真值表与逻辑表达式}{19}{section.2.7}%
-\contentsline {subsection}{\numberline {2.7.1}由逻辑函数式列真值表}{19}{subsection.2.7.1}%
-\contentsline {subsection}{\numberline {2.7.2}由真值表写逻辑函数式}{20}{subsection.2.7.2}%
-\contentsline {section}{\numberline {2.8}逻辑函数的化简}{20}{section.2.8}%
-\contentsline {subsection}{\numberline {2.8.1}公式法}{20}{subsection.2.8.1}%
-\contentsline {subsection}{\numberline {2.8.2}卡诺图法}{20}{subsection.2.8.2}%
-\contentsline {subsubsection}{卡诺图的构成}{20}{subsection.2.8.2}%
-\contentsline {subsubsection}{逻辑函数的卡诺图表示法}{21}{figure.caption.29}%
-\contentsline {subsubsection}{在卡诺图上合并最小项的规则}{21}{figure.caption.29}%
-\contentsline {subsubsection}{用卡诺图化简逻辑函数}{21}{figure.caption.29}%
-\contentsline {subsubsection}{化简中注意的问题}{22}{equation.2.24}%
-\contentsline {subsubsection}{用卡诺图求反函数的最简与或式}{22}{Item.30}%
-\contentsline {subsubsection}{复杂逻辑函数}{22}{Item.30}%
-\contentsline {subsubsection}{不完全确定的逻辑函数及其化简（无关项）}{23}{Item.30}%
+\contentsline {subsection}{\numberline {1.1.4}带符号数的表示：原码、反码和补码}{4}{subsection.1.1.4}%
+\contentsline {section}{\numberline {1.2}几种简单的编码}{6}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}二-十进制码（BCD 码）}{6}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}格雷码（Gray 码）}{8}{subsection.1.2.2}%
+\contentsline {subsection}{\numberline {1.2.3}计算机字符集}{8}{subsection.1.2.3}%
+\contentsline {chapter}{\numberline {第二章}布尔代数}{9}{chapter.2}%
+\contentsline {section}{\numberline {2.1}基本逻辑运算}{9}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}与逻辑运算}{9}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}或逻辑运算}{10}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}非逻辑运算}{11}{subsection.2.1.3}%
+\contentsline {section}{\numberline {2.2}复合逻辑运算}{11}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}与非逻辑}{11}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}或非逻辑}{12}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}与或非逻辑}{12}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}异或逻辑}{14}{subsection.2.2.4}%
+\contentsline {subsection}{\numberline {2.2.5}同或逻辑}{15}{subsection.2.2.5}%
+\contentsline {section}{\numberline {2.3}逻辑电平及正、负逻辑}{16}{section.2.3}%
+\contentsline {section}{\numberline {2.4}基本定律和规则}{16}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}逻辑函数的相等}{16}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}基本定律}{17}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.3}逻辑代数的三条规则}{17}{subsection.2.4.3}%
+\contentsline {subsubsection}{代入规则}{17}{subsection.2.4.3}%
+\contentsline {subsubsection}{反演规则}{17}{subsection.2.4.3}%
+\contentsline {subsubsection}{对偶规则}{18}{Item.8}%
+\contentsline {section}{\numberline {2.5}常用公式}{18}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}消去律}{18}{subsection.2.5.1}%
+\contentsline {subsection}{\numberline {2.5.2}吸收律1}{19}{subsection.2.5.2}%
+\contentsline {subsection}{\numberline {2.5.3}吸收律2}{19}{subsection.2.5.3}%
+\contentsline {subsection}{\numberline {2.5.4}包含律}{19}{subsection.2.5.4}%
+\contentsline {subsection}{\numberline {2.5.5}关于异或和同或运算}{20}{subsection.2.5.5}%
+\contentsline {section}{\numberline {2.6}逻辑函数的标准形式}{21}{section.2.6}%
+\contentsline {subsection}{\numberline {2.6.1}函数的“与--或”式和“或--与”式}{21}{subsection.2.6.1}%
+\contentsline {subsection}{\numberline {2.6.2}最小项}{21}{subsection.2.6.2}%
+\contentsline {subsection}{\numberline {2.6.3}最大项}{22}{subsection.2.6.3}%
+\contentsline {subsection}{\numberline {2.6.4}最小项和最大项的关系}{23}{subsection.2.6.4}%
+\contentsline {subsection}{\numberline {2.6.5}逻辑函数的最小项之和形式}{23}{subsection.2.6.5}%
+\contentsline {subsection}{\numberline {2.6.6}逻辑函数的最大项之积形式}{23}{subsection.2.6.6}%
+\contentsline {subsection}{\numberline {2.6.7}两种标准形式之间的关系}{24}{subsection.2.6.7}%
+\contentsline {section}{\numberline {2.7}真值表与逻辑表达式}{24}{section.2.7}%
+\contentsline {subsection}{\numberline {2.7.1}由逻辑函数式列真值表}{24}{subsection.2.7.1}%
+\contentsline {subsection}{\numberline {2.7.2}由真值表写逻辑函数式}{25}{subsection.2.7.2}%
+\contentsline {section}{\numberline {2.8}逻辑函数的化简}{25}{section.2.8}%
+\contentsline {subsection}{\numberline {2.8.1}公式法}{25}{subsection.2.8.1}%
+\contentsline {subsection}{\numberline {2.8.2}卡诺图法}{26}{subsection.2.8.2}%
+\contentsline {subsubsection}{卡诺图的构成}{26}{subsection.2.8.2}%
+\contentsline {subsubsection}{逻辑函数的卡诺图表示法}{27}{figure.caption.29}%
+\contentsline {subsubsection}{在卡诺图上合并最小项的规则}{27}{figure.caption.29}%
+\contentsline {subsubsection}{用卡诺图化简逻辑函数}{27}{figure.caption.29}%
+\contentsline {subsubsection}{化简中注意的问题}{28}{equation.2.24}%
+\contentsline {subsubsection}{用卡诺图求反函数的最简与或式}{29}{Item.30}%
+\contentsline {subsubsection}{复杂逻辑函数}{29}{Item.30}%
+\contentsline {subsubsection}{不完全确定的逻辑函数及其化简（无关项）}{29}{Item.30}%
+\contentsline {chapter}{\numberline {第三章}组合逻辑电路基础}{30}{chapter.3}%
+\contentsline {section}{\numberline {3.1}由基本逻辑门构成的组合电路的设计与分析}{30}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}一般分析方法}{30}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}一般设计方法}{31}{subsection.3.1.2}%
+\contentsline {section}{\numberline {3.2}MSI构成的组合逻辑电路}{33}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}自顶向下的模块化设计方法}{33}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}编码器}{35}{subsection.3.2.2}%
+\contentsline {subsubsection}{二进制编码器}{35}{subsection.3.2.2}%
 \contentsfinish 

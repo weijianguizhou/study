@@ -1,0 +1,189 @@
+%!TEX root = 数字电路.tex
+\chapter{组合逻辑电路基础}
+\begin{definition}[组合逻辑电路]
+    电路在任意时刻的输出状态仅由当前输入状态决定，与之前的输出状态和输入状态无关。
+\end{definition}
+\section{由基本逻辑门构成的组合电路的设计与分析}
+\subsection{一般分析方法}
+分析步骤：
+\begin{enumerate}
+    \item 根据逻辑电路，写出输出逻辑函数的表达式
+    \item 列出真值表
+    \item 由真值表或表达式分析电路功能
+\end{enumerate}
+以下题为例：
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Figure/组合逻辑电路例题.png}
+\end{figure}
+
+采取从后往前分析的方法，把逻辑门输出结果分别标出为$\mathbf{P}_1$、$\mathbf{P}_2$、$\mathbf{P}_3$、$\mathbf{P}_4$。
+从后往前分析每一个逻辑门：
+$$\mathbf{F}=\overline{\mathbf{P}_2+\mathbf{P}_3+\mathbf{P}_4}$$
+$$\mathbf{P}_2=\mathbf{A}\mathbf{P}_1$$
+$$\mathbf{P}_3=\mathbf{B}\mathbf{P}_1$$
+$$\mathbf{P}_4=\mathbf{C}\mathbf{P}_1$$
+$$\mathbf{P}_1=\overline{\mathbf{A}\mathbf{B}\mathbf{C}}$$
+$$\mathbf{F}=\overline{(\mathbf{A}+\mathbf{B}+\mathbf{C})\cdot\overline{\mathbf{A}\mathbf{B}\mathbf{C}}}=\mathbf{A}\mathbf{B}\mathbf{C}+\overline{\mathbf{A}}\,\overline{\mathbf{B}}\,\overline{\mathbf{C}}$$
+
+由表达式列出真值表，其中 $\mathbf{P}_1\sim\mathbf{P}_4$ 为图中各逻辑门输出：
+
+\begin{table}[H]
+	\centering
+	\caption{组合逻辑电路例题真值表}
+	\label{tab:真值表:组合逻辑例题}
+	\begin{tabular}{ccc|cccc|c}
+		\toprule
+		$\mathbf{A}$ & $\mathbf{B}$ & $\mathbf{C}$ & $\mathbf{P}_1$ & $\mathbf{P}_2$ & $\mathbf{P}_3$ & $\mathbf{P}_4$ & $\mathbf{F}=\overline{\mathbf{P}_2+\mathbf{P}_3+\mathbf{P}_4}$ \\
+		\midrule
+		0 & 0 & 0 & 1 & 0 & 0 & 0 & 1 \\
+		0 & 0 & 1 & 1 & 0 & 0 & 1 & 0 \\
+		0 & 1 & 0 & 1 & 0 & 1 & 0 & 0 \\
+		0 & 1 & 1 & 1 & 0 & 1 & 1 & 0 \\
+		1 & 0 & 0 & 1 & 1 & 0 & 0 & 0 \\
+		1 & 0 & 1 & 1 & 1 & 0 & 1 & 0 \\
+		1 & 1 & 0 & 1 & 1 & 1 & 0 & 0 \\
+		1 & 1 & 1 & 0 & 0 & 0 & 0 & 1 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+由真值表可知：当且仅当 $\mathbf{A}=\mathbf{B}=\mathbf{C}$ 时 $\mathbf{F}=1$，否则 $\mathbf{F}=0$。即该电路的三个输入取值一致时输出为 1，不一致时输出为 0，实现三变量的“一致”判断（同或）功能。
+
+\subsection{一般设计方法}
+一般步骤：
+\begin{enumerate}
+    \item 由实际问题列出真值表
+    \item 由真值表写出逻辑表达式
+    \item 化简、变换输出逻辑表达式
+    \item 画出逻辑图
+\end{enumerate}
+如果现在要设计用与非门的一个三变量表决电路,表决规则为少数服从多数，怎么设计？
+
+设由$\mathbf{A} $、$\mathbf{B}$、$\mathbf{C} $表示三个输入变量，$\mathbf{F}$表示表决结果。并设$\mathbf{A} $、$\mathbf{B}$、$\mathbf{C}$为1表示赞成，为0表示反对；$\mathbf{F}$为1表示表决通过，为0 表示不通过。
+列出真值表：
+
+\begin{table}[H]
+	\centering
+	\caption{三变量表决器真值表}
+	\label{tab:真值表:表决器}
+	\begin{tabular}{ccc|c}
+		\toprule
+		$\mathbf{A}$ & $\mathbf{B}$ & $\mathbf{C}$ & $\mathbf{F}$ \\
+		\midrule
+		0 & 0 & 0 & 0 \\
+		0 & 0 & 1 & 0 \\
+		0 & 1 & 0 & 0 \\
+		0 & 1 & 1 & 1 \\
+		1 & 0 & 0 & 0 \\
+		1 & 0 & 1 & 1 \\
+		1 & 1 & 0 & 1 \\
+		1 & 1 & 1 & 1 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+由表决规则，三个输入中有两个或两个以上为 1 时表决通过，故 $\mathbf{F}=1$ 对应 $\mathbf{A}\mathbf{B}\mathbf{C}$ 取 $011$、$101$、$110$、$111$ 四种情况。
+
+将 $\mathbf{F}=1$ 的四个最小项 $m_3$、$m_5$、$m_6$、$m_7$ 填入卡诺图并圈组，如图所示：
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+		\matrix (K31) [kmap] {
+			|[kmaphead]| $\mathbf{A}\backslash\mathbf{B}\mathbf{C}$ & |[kmaphead]| 00 & |[kmaphead]| 01 & |[kmaphead]| 11 & |[kmaphead]| 10 \\
+			|[kmaphead]| 0 & 0 & 0 & 1 & 0 \\
+			|[kmaphead]| 1 & 0 & 1 & 1 & 1 \\
+		};
+		\node[kmapgroup, draw=LiSiThm, fill=LiSiThm, fill opacity=0.06,
+			fit=(K31-2-4)(K31-3-4)] {};
+		\node[kmapgroup, draw=LiSiWarn, fill=LiSiWarn, fill opacity=0.06,
+			fit=(K31-3-3)(K31-3-4)] {};
+		\node[kmapgroup, draw=LiSiCor, fill=LiSiCor, fill opacity=0.06,
+			fit=(K31-3-5)(K31-3-4)] {};
+	\end{tikzpicture}
+	\caption{三变量表决电路的卡诺图及圈法}
+	\label{fig:卡诺图:表决器}
+\end{figure}
+
+图中三个圈分别合并为 $\mathbf{B}\mathbf{C}$、$\mathbf{A}\mathbf{C}$、$\mathbf{A}\mathbf{B}$，故最简与或式为
+$$\mathbf{F}=\mathbf{A}\mathbf{B}+\mathbf{B}\mathbf{C}+\mathbf{A}\mathbf{C}=\overline{\overline{\mathbf{A}\mathbf{B}}\cdot\overline{\mathbf{B}\mathbf{C}}\cdot\overline{\mathbf{A}\mathbf{C}}}$$
+下一步画出逻辑图，如下图~\ref{fig:逻辑图:表决器}所示：
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Figure/组合逻辑电路设计例题.png}
+    \caption{三变量表决电路的逻辑图}
+    \label{fig:逻辑图:表决器}
+\end{figure}
+
+\section{MSI构成的组合逻辑电路}
+\subsection{自顶向下的模块化设计方法}
+\textcolor{red}{顶}: 指系统功能,即系统总要求,较抽象。
+
+\textcolor{red}{向下}:指根据系统总要求,将系统分解为若干个子系统,再将每个子系统分解为若干个功能模块,直至分成许多各具特定功能的基本模块为止。
+
+如果我现在想设计一个数据检测系统，功能表如下：
+
+\begin{table}[H]
+	\centering
+	\caption{数据检测系统的功能表}
+	\label{tab:功能表:数据检测系统}
+	\begin{tabular}{cc|c}
+		\toprule
+		$\mathbf{S}_1$ & $\mathbf{S}_2$ & 输出功能 \\
+		\midrule
+		0 & 0 & $\mathbf{A}+\mathbf{B}$ \\
+		0 & 1 & $\mathbf{A}-\mathbf{B}$ \\
+		1 & 0 & $\mathrm{Min}(\mathbf{A},\mathbf{B})$ \\
+		1 & 1 & $\mathrm{Max}(\mathbf{A},\mathbf{B})$ \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+其中 $\mathbf{S}_1$、$\mathbf{S}_2$ 为两个子系统，$\mathbf{A}$、$\mathbf{B}$ 为传感器数据输入。
+
+\begin{figure}[H]
+	\centering
+	\resizebox{\textwidth}{!}{\input{Figure/分层设计树}}
+	\caption{数据检测系统的分层设计树}
+	\label{fig:分层设计树}
+\end{figure}
+
+各模块之间的信号连接关系如图~\ref{fig:分层方框图}所示：
+
+\begin{figure}[H]
+	\centering
+	\resizebox{\textwidth}{!}{\input{Figure/分层方框图}}
+	\caption{数据检测系统的分层方框图}
+	\label{fig:分层方框图}
+\end{figure}
+
+这样，我们就完成了一个系统的模块化设计。
+
+\subsection{编码器}
+编码器能够将信息(如数和字符等)转换成符合一定规则的二进制代码。
+
+\subsubsection{二进制编码器}
+用$n$位二进制代码对$N=2^n$个特定信息进行编码的逻辑电路.
+
+下面说明一下二进制编码器的设计方法。
+
+假设咱们现在需要设计一个具有互相排斥输入条件的编码器。
+
+输入为$\mathbf{X_0}$、$\mathbf{X_1}$、$\mathbf{X_2}$、$\mathbf{X_3}$，输出为$\mathbf{A_0}$、$\mathbf{A_1}$。
+具有如下对应关系：
+\begin{table}[H]
+	\centering
+	\caption{二进制编码器的输入输出对应关系}
+	\label{tab:二进制编码器输入输出对应关系}
+	\begin{tabular}{c|cc}
+		\toprule
+		输入 &$\mathbf{A_1}$  & $\mathbf{A_0}$ \\
+		\midrule
+		$\mathbf{X_0}$ & 0 & 0 \\
+		$\mathbf{X_1}$ & 0 & 1 \\
+		$\mathbf{X_2}$ & 1 & 0 \\
+		$\mathbf{X_3}$ & 1 & 1 \\
+		\bottomrule
+	\end{tabular}
+\end{table}

@@ -1,0 +1,33 @@
+\documentclass[14pt,a4paper,openany]{book}
+\input{preamble}
+\newcommand{\notename}{多体系统动力学}   % 封面大标题
+\newcommand{\noteauthor}{爱吃烧饼的大熊猫} % 封面作者
+\newcommand{\notebody}{
+	\input{系统树形拓扑描述}
+}
+
+\begin{document}
+	\input{cover}
+	\newpage
+
+	% 第 2 页：格言页（居中，可删）
+	\thispagestyle{empty}
+	\vspace*{\fill}
+	\begin{center}
+		{\kaishu\fontsize{18}{28}\selectfont }
+	\end{center}
+	\vfill
+	\newpage
+
+	% 正文页眉页脚样式（金色细线 + 章节名，见 preamble）
+	\pagestyle{mainstyle}
+
+	\setcounter{tocdepth}{2}
+
+	\tableofcontents
+
+	\setcounter{page}{0}
+	\thispagestyle{empty}
+	\newpage
+	\notebody
+\end{document}

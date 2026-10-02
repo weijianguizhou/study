@@ -1,0 +1,99 @@
+% ============================================================
+%  Figure/分层设计树.tex
+%  数据检测系统的分层设计树（自顶向下设计方法的分解过程）
+%
+%  用法（在章节 .tex 中）：
+%    \begin{figure}[H]
+%        \centering
+%        \resizebox{\textwidth}{!}{\input{Figure/分层设计树}}
+%        \caption{数据检测系统的分层设计树}
+%        \label{fig:分层设计树}
+%    \end{figure}
+%
+%  说明：本文件只含一个 tikzpicture，不含 figure 环境，也不排版标题，
+%        便于在正文任意位置插入；外面套 \resizebox 可自适应版心宽度。
+%        坐标单位为 cm：横向间距按 14pt 基准下各框的实际宽度留出约 0.5cm 空隙
+%        （B23/B24 的子节点用横向总线向左扇出，避免整体过宽导致缩放后字太小）。
+%        框内字号用 \footnotesize；要整体放大/缩小，只改 box 样式里的 font。
+%  依赖：preamble.tex 中的 tikz、xcolor，以及 LiSiThm / LiSiCor / LiSiWarn 配色。
+% ============================================================
+\providecolor{treeDeep}{RGB}{128,0,176}   % 第三层连线：紫（前两层复用讲义配色）
+
+\begin{tikzpicture}[
+	box/.style={draw, thick, align=center, inner sep=3pt, font=\footnotesize},
+	leafmark/.style={font=\large},           % 注意：不能叫 mark，TikZ 已占用该键名
+	toplink/.style={thick, draw=LiSiThm},    % 顶层 → 子系统：蓝
+	midlink/.style={thick, draw=LiSiCor},    % 子系统 → 功能模块：橙
+	deeplink/.style={thick, draw=treeDeep}   % 功能模块 → 基本模块：紫
+]
+
+	% ------------------------------------------------------------
+	%  结点：B 为系统，B1~B3 为子系统，B11~B24 为功能模块，
+	%        B231…B242 为基本模块（叶结点）
+	% ------------------------------------------------------------
+	\node[box] (B)   at (10.56,5.6)  {$\mathbf{B}$: 数据检测系统};
+
+	\node[box] (B1)  at (2.61,3.6)   {$\mathbf{B}_1$: 输入\\传感器数据};
+	\node[box] (B2)  at (10.56,3.6)  {$\mathbf{B}_2$\\计算值};
+	\node[box] (B3)  at (16.84,3.6)  {$\mathbf{B}_3$\\选择输出};
+
+	\node[box] (B11) at (1.16,1.6)   {$\mathbf{B}_{11}$\\传感器$\mathbf{A}$};
+	\node[box] (B12) at (4.05,1.6)   {$\mathbf{B}_{12}$\\传感器$\mathbf{B}$};
+	\node[box] (B21) at (6.93,1.6)   {$\mathbf{B}_{21}$\\$\mathbf{A}+\mathbf{B}$};
+	\node[box] (B22) at (9.06,1.6)   {$\mathbf{B}_{22}$\\$\mathbf{A}-\mathbf{B}$};
+	\node[box] (B23) at (11.44,1.6)  {$\mathbf{B}_{23}$\\$\mathrm{Min}(\mathbf{A},\mathbf{B})$};
+	\node[box] (B24) at (14.19,1.6)  {$\mathbf{B}_{24}$\\$\mathrm{Max}(\mathbf{A},\mathbf{B})$};
+
+	\node[box] (B231) at (8.60,-1.6)  {$\mathbf{B}_{231}$\\比较\\$\mathbf{A}$和$\mathbf{B}$};
+	\node[box] (B232) at (10.60,-1.6) {$\mathbf{B}_{232}$\\选择\\$\mathrm{Min}$};
+	\node[box] (B241) at (12.60,-1.6) {$\mathbf{B}_{241}$\\比较\\$\mathbf{A}$和$\mathbf{B}$};
+	\node[box] (B242) at (14.60,-1.6) {$\mathbf{B}_{242}$\\选择\\$\mathrm{Max}$};
+
+	% ------------------------------------------------------------
+	%  连线：竖线 + 横向总线，逐层分解
+	% ------------------------------------------------------------
+	% 顶层 → B1、B2、B3
+	\draw[toplink] (B.south) -- (10.56,4.7);
+	\draw[toplink] (2.61,4.7) -- (16.84,4.7);
+	\draw[toplink] (2.61,4.7)  -- (B1.north);
+	\draw[toplink] (10.56,4.7) -- (B2.north);
+	\draw[toplink] (16.84,4.7) -- (B3.north);
+
+	% B1 → B11、B12
+	\draw[midlink] (B1.south) -- (2.61,2.7);
+	\draw[midlink] (1.16,2.7) -- (4.05,2.7);
+	\draw[midlink] (1.16,2.7) -- (B11.north);
+	\draw[midlink] (4.05,2.7) -- (B12.north);
+
+	% B2 → B21…B24
+	\draw[midlink] (B2.south) -- (10.56,2.7);
+	\draw[midlink] (6.93,2.7) -- (14.19,2.7);
+	\draw[midlink] (6.93,2.7)  -- (B21.north);
+	\draw[midlink] (9.06,2.7)  -- (B22.north);
+	\draw[midlink] (11.44,2.7) -- (B23.north);
+	\draw[midlink] (14.19,2.7) -- (B24.north);
+
+	% B23 → B231、B232（子节点向左扇出，两条横线错开高度以免交叉）
+	\draw[deeplink] (B23.south) -- (11.44,-0.15);
+	\draw[deeplink] (8.60,-0.15) -- (11.44,-0.15);
+	\draw[deeplink] (8.60,-0.15)  -- (B231.north);
+	\draw[deeplink] (10.60,-0.15) -- (B232.north);
+
+	% B24 → B241、B242
+	\draw[deeplink] (B24.south) -- (14.19,-0.45);
+	\draw[deeplink] (12.60,-0.45) -- (14.60,-0.45);
+	\draw[deeplink] (12.60,-0.45) -- (B241.north);
+	\draw[deeplink] (14.60,-0.45) -- (B242.north);
+
+	% ------------------------------------------------------------
+	%  叶结点标记与图例
+	% ------------------------------------------------------------
+	\foreach \x/\y in {%
+		1.16/0.5, 4.05/0.5, 6.93/0.5, 9.06/0.5, 16.84/2.55,%
+		8.60/-3.1, 10.60/-3.1, 12.60/-3.1, 14.60/-3.1}{%
+		\node[leafmark] at (\x,\y) {$\ast$};%
+	}
+	\node[anchor=west, font=\footnotesize] at (0.1,-3.1) {$\ast$：叶结点};
+	\node[anchor=west, font=\footnotesize\bfseries, text=LiSiWarn] at (12.5,5.6) {顶层};
+
+\end{tikzpicture}

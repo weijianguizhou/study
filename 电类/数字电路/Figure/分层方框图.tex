@@ -1,0 +1,126 @@
+% ============================================================
+%  Figure/分层方框图.tex
+%  数据检测系统的分层方框图（各模块之间的信号互联关系）
+%
+%  用法（在章节 .tex 中）：
+%    \begin{figure}[H]
+%        \centering
+%        \resizebox{\textwidth}{!}{\input{Figure/分层方框图}}
+%        \caption{数据检测系统的分层方框图}
+%        \label{fig:分层方框图}
+%    \end{figure}
+%
+%  说明：本文件只含一个 tikzpicture，不含 figure 环境，也不排版标题。
+%        坐标单位 cm，整体按课件原图比例布置（约 16cm × 10cm），
+%        外层 \resizebox 保证缩放后正好占满版心。
+%        自定义样式统一带 d 前缀，避免与 TikZ 内置键重名（如内置的 mark / port）。
+%  依赖：preamble.tex 的 tikz、xcolor 与 LiSiThm / LiSiWarn 配色；本文件自带 shapes.symbols。
+% ============================================================
+\usetikzlibrary{shapes.symbols}   % 输入/输出端口用的 signal（五边形）形状
+
+\begin{tikzpicture}[
+	dblk/.style={draw, thick, align=center, font=\footnotesize, inner sep=2pt},
+	dwire/.style={thick, -{Stealth[length=1.6mm, width=1.2mm]}},
+	dbus/.style={thick},
+	dgrp/.style={thick, dotted},
+	dbgrp/.style={thick, dashed},
+	din/.style={signal, draw, thick, signal to=east, font=\footnotesize,
+	           minimum height=0.55cm, minimum width=0.90cm, inner sep=1pt},
+	dout/.style={signal, draw, thick, signal to=south, font=\footnotesize,
+	             minimum height=0.60cm, minimum width=0.55cm, inner sep=0pt},
+	dred/.style={font=\footnotesize\bfseries, text=LiSiWarn},
+	dblue/.style={font=\footnotesize, text=LiSiThm},
+	dlab/.style={font=\footnotesize}
+]
+
+	% ------------------------------------------------------------
+	%  输入 / 输出端口
+	% ------------------------------------------------------------
+	\node[din] (A)  at (1.00,8.76) {$\mathbf{A}$};
+	\node[din] (B)  at (1.00,7.36) {$\mathbf{B}$};
+	\node[din] (S1) at (1.05,2.21) {$\mathbf{S}_1$};
+	\node[din] (S2) at (1.05,1.61) {$\mathbf{S}_2$};
+	\node[dout] (OUT) at (7.85,0.00) {};
+
+	% ------------------------------------------------------------
+	%  各级模块方框
+	% ------------------------------------------------------------
+	\node[dblk, minimum width=1.60cm, minimum height=1.05cm] (B11) at (2.65,8.76)  {$\mathbf{B}_{11}$\\转换$\mathbf{A}$};
+	\node[dblk, minimum width=1.60cm, minimum height=1.05cm] (B12) at (2.65,7.36)  {$\mathbf{B}_{12}$\\转换$\mathbf{B}$};
+	\node[dblk, minimum width=1.55cm, minimum height=1.55cm] (B21) at (4.72,5.71)  {$\mathbf{B}_{21}$\\二进制\\加法};
+	\node[dblk, minimum width=1.55cm, minimum height=1.55cm] (B22) at (6.78,5.71)  {$\mathbf{B}_{22}$\\二进制\\减法};
+	\node[dblk, minimum width=1.50cm, minimum height=1.10cm] (B231) at (8.85,4.21)  {$\mathbf{B}_{231}$\\比较};
+	\node[dblk, minimum width=1.50cm, minimum height=1.10cm] (B232) at (10.85,4.21) {$\mathbf{B}_{232}$\\选择};
+	\node[dblk, minimum width=1.50cm, minimum height=1.10cm] (B241) at (13.10,4.21) {$\mathbf{B}_{241}$\\比较};
+	\node[dblk, minimum width=1.50cm, minimum height=1.10cm] (B242) at (15.00,4.21) {$\mathbf{B}_{242}$\\选择};
+	\node[dblk, minimum width=3.90cm, minimum height=1.25cm] (B3)   at (7.85,1.79)  {$\mathbf{B}_3$\\输出选择};
+
+	% ------------------------------------------------------------
+	%  分组虚线/点线框
+	% ------------------------------------------------------------
+	\draw[dgrp]  (1.75,6.66) rectangle (3.55,9.46);      % B1：输入
+	\draw[dbgrp] (3.85,3.10) rectangle (16.00,9.50);     % B2：计算
+	\draw[dgrp]  (7.95,3.31) rectangle (11.80,5.81);     % B23：min
+	\draw[dgrp]  (12.15,3.31) rectangle (15.90,5.81);    % B24：max
+
+	% ------------------------------------------------------------
+	%  连线：A、B 两条总线分别送到六个功能模块
+	%  （A 总线在上、B 总线在下；A 的下引线穿过 B 总线处为不连接的交叉）
+	% ------------------------------------------------------------
+	\draw[dbus] (B11.east) -- (14.50,8.76);   % A 总线
+	\draw[dbus] (B12.east) -- (15.40,7.36);   % B 总线
+
+	% A 总线 → 各模块左侧输入
+	\draw[dwire] (4.30,8.76)  -- (4.30,6.485);    % B21
+	\draw[dwire] (6.35,8.76)  -- (6.35,6.485);    % B22
+	\draw[dwire] (8.35,8.76)  -- (8.35,4.76);     % B231
+	\draw[dwire] (10.35,8.76) -- (10.35,4.76);    % B232
+	\draw[dwire] (12.90,8.76) -- (12.90,4.76);    % B241
+	\draw[dwire] (14.50,8.76) -- (14.50,4.76);    % B242
+
+	% B 总线 → 各模块右侧输入
+	\draw[dwire] (5.15,7.36)  -- (5.15,6.485);    % B21
+	\draw[dwire] (7.20,7.36)  -- (7.20,6.485);    % B22
+	\draw[dwire] (9.20,7.36)  -- (9.20,4.76);     % B231
+	\draw[dwire] (11.05,7.36) -- (11.05,4.76);    % B232
+	\draw[dwire] (13.55,7.36) -- (13.55,4.76);    % B241
+	\draw[dwire] (15.40,7.36) -- (15.40,4.76);    % B242
+
+	% 传感器 → B11、B12
+	\draw[dwire] (A.east) -- (B11.west);
+	\draw[dwire] (B.east) -- (B12.west);
+
+	% 比较 → 选择
+	\draw[dwire] (B231.east) -- (B232.west);
+	\draw[dwire] (B241.east) -- (B242.west);
+
+	% 加法、减法 → 输出选择
+	\draw[dwire] (4.72,4.935) -- (4.72,2.95) -- (6.55,2.95) -- (6.55,2.415);
+	\draw[dwire] (6.78,4.935) -- (6.78,2.80) -- (7.15,2.80) -- (7.15,2.415);
+
+	% min、max 的选择结果 → 输出选择（两条横线错开高度，避免重叠）
+	\draw[dwire] (10.85,3.66) -- (10.85,3.22) -- (8.45,3.22) -- (8.45,2.415);
+	\draw[dwire] (15.00,3.66) -- (15.00,2.88) -- (9.35,2.88) -- (9.35,2.415);
+
+	% 功能选择 S1、S2 → 输出选择
+	\draw[dwire] (S1.east) -- (5.90,2.21);
+	\draw[dwire] (S2.east) -- (5.90,1.61);
+
+	% 输出选择 → 输出端口
+	\draw[dwire] (7.85,1.165) -- (7.85,0.35);
+
+	% ------------------------------------------------------------
+	%  文字标注（红字为课件上的分组名，蓝字为被测量的物理量）
+	% ------------------------------------------------------------
+	\node[dred]  at (2.65,6.30)   {$\mathbf{B}_1$: 输入};
+	\node[dred]  at (11.60,9.20)  {$\mathbf{B}_2$: 计算};
+	\node[dred]  at (1.45,0.95)   {功能选择};
+	\node[dred, anchor=west] at (8.35,0.05) {输出};
+	\node[dblue, rotate=90] at (0.40,6.65) {传感器};
+
+	\node[dlab] at (9.78,5.45)  {\textbf{min}};
+	\node[dlab] at (11.45,5.45) {$\mathbf{B}_{23}$};
+	\node[dlab] at (12.42,5.45) {$\mathbf{B}_{24}$};
+	\node[dlab] at (13.98,5.45) {\textbf{max}};
+
+\end{tikzpicture}

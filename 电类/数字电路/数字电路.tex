@@ -4,7 +4,9 @@
 %
 %  编译方式: XeLaTeX（中文推荐），需编译 2~3 遍生成目录与交叉引用
 % ============================================================
-\documentclass[11pt,a4paper,openany]{book}
+% 注意：book 类只接受 10pt/11pt/12pt，写 14pt 会被静默忽略并退回 10pt（字号反而变小）。
+% 更大的正文字号在 preamble.tex 里用 scrextend 的 fontsize 选项设置。
+\documentclass[12pt,a4paper,openany]{book}
 \input{preamble}            % 样式：字体、颜色、定义/例题环境、章节格式
 
 % ============================================================
@@ -25,6 +27,8 @@
 	\input{第一章_数制与BCD码}
 
 	\input{第二章_布尔代数}
+
+	\input{组合逻辑电路基础}
 }
 
 \begin{document}
@@ -37,7 +41,12 @@
 	\thispagestyle{empty}
 	\vspace*{\fill}
 	\begin{center}
-		{\kaishu\fontsize{18}{28}\selectfont 在这里写入你的格言}
+		% 乔布斯 2005 年斯坦福毕业典礼演讲结尾引用的《全球概览》封底语；中文为该句通行译法
+		{\fontsize{18}{28}\selectfont Stay hungry. Stay foolish.\par}
+		\vspace{0.9em}
+		{\kaishu\fontsize{14}{20}\selectfont 求知若饥，虚心若愚\par}
+		\vspace{1.2em}
+		{\kaishu\fontsize{13}{19}\selectfont —— 史蒂夫·乔布斯（Steve Jobs）\par}
 	\end{center}
 	\vfill
 	\newpage

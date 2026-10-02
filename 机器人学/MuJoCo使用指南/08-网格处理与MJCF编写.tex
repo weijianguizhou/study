@@ -1,0 +1,393 @@
+% !TeX root = MuJoCo使用指南.tex
+% ============================================================
+%  第八章　网格处理与 MJCF 模型编写
+%  内容：工程目录组织、asset 中的网格与材质、最小可运行模型、
+%        URDF 转 MJCF、obj2mjcf、碰撞几何与凸分解、
+%        视觉与碰撞分离、常见 MJCF 错误
+%  说明：属性取自官方 XML Reference；代码清单使用 ASCII 字符。
+% ============================================================
+
+第七章解决「把网格拿出来」，本章解决「把它组织成一个能编译、能跑的模型」。MuJoCo 的模型描述语言叫 \textbf{MJCF}（\textit{MuJoCo XML Format}），它比 URDF 表达能力强得多：闭环约束、肌腱、柔体、执行器与传感器的内部动力学都能直接写。好消息是\textbf{大多数属性都有合理的默认值}，一个能跑的模型往往只有几十行。
+
+\section{工程目录组织}
+
+\subsection{推荐布局}
+
+官方模型库 MuJoCo Menagerie 的做法值得直接照搬：\textbf{机器人本体一个 XML，网格放在 \texttt{assets}，再用一个 \texttt{scene.xml} 把它装进场景}。
+
+\begin{lstlisting}[style=code]
+two_link_arm/
+|-- arm.xml              robot only: bodies, joints, geoms, actuators
+|-- scene.xml            include arm.xml + floor + lights + textures
+`-- assets/
+    |-- link1.STL
+    |-- link2.STL
+    `-- base.STL
+\end{lstlisting}
+
+\texttt{arm.xml} 开头用 \texttt{meshdir} 指明网格目录：
+
+\begin{lstlisting}[style=xml]
+<mujoco model="two_link_arm">
+  <compiler angle="radian" meshdir="assets"/>
+  ...
+\end{lstlisting}
+
+\texttt{scene.xml} 则只是一个小外壳，用 \texttt{<include>} 把本体装进来，再加上地面、光照与天空盒：
+
+\begin{lstlisting}[style=xml]
+<mujoco model="two_link_arm scene">
+  <include file="arm.xml"/>
+  <visual>
+    <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>
+    <global azimuth="120" elevation="-20"/>
+  </visual>
+  <asset>
+    <texture type="skybox" builtin="gradient"
+             rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge"
+             rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
+             markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane"
+              texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+  </asset>
+  <worldbody>
+    <light pos="0 0 1.5" dir="0 0 -1" directional="true"/>
+    <geom name="floor" size="0 0 0.05" type="plane" material="groundplane"/>
+  </worldbody>
+</mujoco>
+\end{lstlisting}
+
+这样拆分的好处是：\textbf{同一个机器人可以配多个场景}（空场景、带障碍物的场景、带相机的场景），而本体只维护一份。
+
+\subsection{资源搜索规则}
+
+网格与纹理找不到，是 MJCF 最常见的报错来源。MuJoCo 的搜索顺序是确定的：
+
+\begin{enumerate}
+	\item \texttt{file} 里写的是\textbf{绝对路径} $\rightarrow$ 直接使用，不再做任何拼接；
+	\item \texttt{meshdir}（或 \texttt{texturedir}）已设置且\textbf{本身是绝对路径} $\rightarrow$ 用它拼接文件名；
+	\item 否则 $\rightarrow$ \textbf{主 MJCF 文件所在目录}，拼接 \texttt{meshdir}（若设置了），再拼接文件名。
+\end{enumerate}
+
+其中 \texttt{assetdir} 会同时设置 \texttt{meshdir} 与 \texttt{texturedir}，而这两个属性各自的取值\textbf{优先于} \texttt{assetdir}。另外：
+
+\begin{itemize}
+	\item \texttt{<include file="...">} 的路径\textbf{相对于主 MJCF 文件所在目录}；
+	\item \texttt{compiler} 的 \texttt{strippath="true"} 会丢弃文件名里的路径信息，用于「换机器后路径全变了」的场合；
+	\item 模型存成 \texttt{.mjz}（zip 归档）时，网格与纹理随包携带，彻底避开路径问题——这也是交付模型时最稳的做法。
+\end{itemize}
+
+\begin{tipbox}[三个属性，一条口诀]
+	\texttt{meshdir} 管网格、\texttt{texturedir} 管纹理、\texttt{assetdir} 一管两个。
+	不确定时先写 \texttt{<compiler assetdir="assets"/>}，再把网格放进去。
+\end{tipbox}
+
+\section{网格与材质的写法}
+
+\subsection{网格元素}
+
+\begin{table}[H]
+	\centering
+	\caption{\texttt{<mesh>} 的常用属性}
+	\label{tab:Mjcf:mesh属性}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{3.1cm}>{\raggedright\arraybackslash}p{3.4cm}>{\raggedright\arraybackslash}p{7.8cm}}
+		\hline
+		属性 & 默认值 & 说明 \\
+		\hline
+		\texttt{file} & —— & 网格文件，扩展名必须是 \texttt{obj}、\texttt{stl} 或 \texttt{msh}（不区分大小写），格式由扩展名决定 \\
+		\texttt{name} & 文件名 & 省略时取「去掉路径与扩展名的文件名」 \\
+		\texttt{scale} & \texttt{1 1 1} & 三个方向分别缩放；毫米转米就靠它 \\
+		\texttt{smoothnormal} & \texttt{false} & 为真时对顶点法线做平滑，否则保留面的硬边 \\
+		\texttt{maxhullvert} & \texttt{-1} & 碰撞凸包的顶点数上限（\texttt{-1} 表示不限） \\
+		\texttt{inertia} & \texttt{legacy} & 由网格推算惯量的方式，推荐 \texttt{convex}；\texttt{exact} 要求网格水密，否则直接报错 \\
+		\texttt{material} & —— & 网格未指定材质时的兜底材质 \\
+		\texttt{content\_type} & 由扩展名推断 & 显式指定媒体类型，一般不用写 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{warnbox}[\texttt{<mesh>} 没有 \texttt{pos} 与 \texttt{quat}]
+	把网格摆到正确位置，用的是\textbf{引用它的 \texttt{geom} 的 \texttt{pos}/\texttt{quat}}，而不是 \texttt{<mesh>} 自己的属性。
+	初学时容易在 \texttt{<mesh>} 上找一个 \texttt{pos} 属性而找不到，原因就在这里。
+\end{warnbox}
+
+\subsection{外观：材质与纹理}
+
+MuJoCo 的网格\textbf{本身没有颜色}，颜色来自引用它的几何体所指定的材质。这一点与常见三维软件的习惯不同，务必注意：
+
+\begin{itemize}
+	\item \texttt{OBJ} 附带的 \texttt{MTL} 材质文件\textbf{不会被读取}；
+	\item \texttt{<texture>} 只支持 \textbf{PNG} 与 \textbf{KTX} 两种图像格式，或使用 \texttt{builtin} 生成程序化纹理（棋盘、渐变、天空盒等）；
+	\item 纹理坐标只能来自 \texttt{OBJ}、\texttt{MSH} 或在 XML 里显式给出的 \texttt{texcoord}，\textbf{STL 无法携带}，且这几种方式不能混用；
+	\item 一次只能给一个网格指定一种材质，复合材质（一个 OBJ 里有多个 \texttt{o}/\texttt{g} 组或多个材质）需要先拆分——这正是 8.5 节 \texttt{obj2mjcf} 存在的原因。
+\end{itemize}
+
+\begin{lstlisting}[style=xml]
+<asset>
+  <texture type="2d" name="metal_tex" file="metal.png"/>
+  <material name="metal" texture="metal_tex" texrepeat="2 2" reflectance="0.3"/>
+  <material name="plastic" rgba="0.9 0.4 0.1 1"/>
+  <mesh name="link1" file="link1.STL" scale="0.001 0.001 0.001" inertia="convex"/>
+</asset>
+
+<worldbody>
+  <body name="link1" pos="0 0 0.1">
+    <joint name="joint1" axis="0 0 1"/>
+    <geom name="link1_v" type="mesh" mesh="link1" material="metal"/>
+  </body>
+</worldbody>
+\end{lstlisting}
+
+\section{最小可运行模型}
+
+先用基本几何体（不需要任何网格文件）把结构跑通，再换成网格。下面这个二连杆机械臂\textbf{可以直接复制运行}，后面的章节都以它为例。
+
+\begin{lstlisting}[style=xml]
+<mujoco model="two_link_arm">
+  <compiler angle="radian"/>
+
+  <default>
+    <geom type="capsule" rgba="0.7 0.7 0.75 1"/>
+    <joint type="hinge" damping="0.1" armature="0.01"/>
+  </default>
+
+  <asset>
+    <material name="steel"  rgba="0.65 0.65 0.70 1"/>
+    <material name="orange" rgba="1.00 0.50 0.05 1"/>
+  </asset>
+
+  <worldbody>
+    <light pos="0 0 2" dir="0 0 -1" directional="true"/>
+    <geom name="floor" type="plane" size="2 2 0.05" rgba="0.3 0.35 0.4 1"/>
+
+    <body name="base" pos="0 0 0.1">
+      <geom name="base_geom" type="cylinder" size="0.06 0.05" material="steel"/>
+
+      <body name="link1" pos="0 0 0.05">
+        <joint name="joint1" axis="0 0 1" range="-3.1416 3.1416"/>
+        <geom name="link1_geom" fromto="0 0 0 0 0 0.3" size="0.025" material="orange"/>
+
+        <body name="link2" pos="0 0 0.3">
+          <joint name="joint2" axis="0 1 0" range="-2.6 2.6"/>
+          <geom name="link2_geom" fromto="0 0 0 0.25 0" size="0.02" material="steel"/>
+          <site name="tool" pos="0.25 0 0" size="0.01"/>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <position name="act1" joint="joint1" kp="100" kv="5"/>
+    <position name="act2" joint="joint2" kp="50"  kv="2"/>
+  </actuator>
+
+  <sensor>
+    <jointpos name="j1_pos" joint="joint1"/>
+    <jointpos name="j2_pos" joint="joint2"/>
+    <jointvel name="j1_vel" joint="joint1"/>
+  </sensor>
+
+  <keyframe>
+    <key name="home" qpos="0 0"/>
+  </keyframe>
+</mujoco>
+\end{lstlisting}
+
+\subsection{逐段解读}
+
+\begin{description}
+	\item[\texttt{compiler}] \texttt{angle="radian"} 让所有角度按弧度解释。MJCF 的默认是\textbf{度}，而 URDF 与编程接口一律用弧度，显式写成弧度可以避免「$90$ 与 $1.57$ 搞混」这类错误。
+	\item[\texttt{default}] 「默认值机制」是 MJCF 最省事的设计：\texttt{<default>} 里设定的属性会自动应用到其后的所有同类元素，作用类似 HTML 中内联的 CSS。这里统一了几何体类型、颜色与关节阻尼，后面就不必重复写。
+	\item[\texttt{asset}] 只放\textbf{被引用的资源}：材质、纹理、网格。材质必须要有名字，因为只能按名字引用。
+	\item[\texttt{worldbody}] 运动学树的根。世界本身是第 0 号物体；地面用 \texttt{plane} 挂在世界上。
+	\item[\texttt{body}] 树上的节点。\texttt{pos} 是\textbf{相对父物体坐标系}的位置。注意关节与几何体都写在所属 \texttt{body} 内部，它们默认位于该 \texttt{body} 的原点。
+	\item[\texttt{joint}] 关节\textbf{增加}自由度。\texttt{range} 是位置限位（这里是弧度），\texttt{damping} 是黏性阻尼，\texttt{armature} 是等效到关节上的转动惯量——后两者在数值稳定性上很有用（见第九章）。
+	\item[\texttt{geom}] 几何体只有两种用途：\textbf{外观与碰撞}，或者用 \texttt{contype}/\texttt{conaffinity} 关掉碰撞而只做外观。\texttt{fromto} 让胶囊体由两个端点定义，比先摆位置再定朝向直观得多。
+	\item[\texttt{site}] 「轻量几何体」：有位置与朝向，但不参与碰撞、不贡献质量，专门用来标记参考点（工具中心点、传感器安装点、肌腱路径点）。这里用它标出末端执行器位置。
+	\item[\texttt{actuator}] 执行器。\texttt{position} 是内置的位置伺服（就是 PD），\texttt{kp}/\texttt{kv} 分别是比例与微分增益。用它比自己在外层写 PD 更省事，也让模型自带控制律。
+	\item[\texttt{sensor}] 传感器。读数按声明顺序排列在 \texttt{data.sensordata} 中，可以用命名访问取用。
+	\item[\texttt{keyframe}] 关键帧，保存一组完整的初始状态（位置、速度、控制、时间等）。\texttt{qpos="0 0"} 表示两个关节角都为 $0$，配合 \texttt{mj\_resetDataKeyframe} 可以一键回到初始姿态。
+\end{description}
+
+\subsection{验证}
+
+\begin{lstlisting}[style=code, language=Python]
+import mujoco
+
+m = mujoco.MjModel.from_xml_path("scene.xml")
+d = mujoco.MjData(m)
+
+print("nq =", m.nq, "nv =", m.nv, "nu =", m.nu, "nsensordata =", m.nsensordata)
+print("body masses =", m.body_mass)
+
+mujoco.mj_resetDataKeyframe(m, d, 0)
+for _ in range(1000):
+    d.ctrl[:] = [0.5, -0.8]
+    mujoco.mj_step(m, d)
+
+print("joint1 =", d.joint("joint1").qpos[0])
+print("joint2 =", d.joint("joint2").qpos[0])
+print("tool   =", d.site("tool").xpos)
+\end{lstlisting}
+
+\texttt{body\_mass} 是校验模型是否「装对」的第一站：数值量级不对（例如抓手比整条手臂还重）说明密度或单位出了问题。
+
+\section{从 URDF 转成 MJCF}
+
+\subsection{直接加载}
+
+MuJoCo 的解析器\textbf{原生支持 URDF}，因此第七章导出的 \texttt{robot.urdf} 可以直接打开：
+
+\begin{lstlisting}[style=code, language=Python]
+import mujoco
+
+m = mujoco.MjModel.from_xml_path("robot.urdf")   # 直接编译 URDF
+mujoco.mj_saveLastXML("robot.xml")               # 存成 MJCF
+\end{lstlisting}
+
+存成 MJCF 之后再改，比每次改 URDF 更方便——因为 MJCF 能表达 URDF 表达不了的东西。
+
+\subsection{转换时的默认值变化}
+
+导入 URDF 时，MuJoCo 会调整若干编译器默认值，这些差异解释了「为什么转过来以后模型看起来不一样」：
+
+\begin{table}[H]
+	\centering
+	\caption{URDF 导入时的默认值差异}
+	\label{tab:Mjcf:URDF默认}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{3.4cm}>{\raggedright\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{8.2cm}}
+		\hline
+		属性 & URDF 下的默认 & 影响与处理 \\
+		\hline
+		\texttt{discardvisual} & \texttt{true} & 纯视觉的几何体（\texttt{contype=conaffinity=0}）、材质与纹理\textbf{会被丢弃}。想要保留外观，在 URDF 里加 \texttt{<mujoco><compiler discardvisual="false"/></mujoco>} \\
+		\texttt{fusestatic} & \texttt{true} & 与父级之间没有自由度的「静态物体」会被\textbf{合并进父级}，这是针对 URDF 里大量无用的 dummy link 的优化；需要保留结构时关掉它 \\
+		\texttt{angle} & 强制为弧度 & URDF 一律弧度，无需处理 \\
+		\texttt{balanceinertia} & \texttt{false} & 部分 URDF 的惯量在数值上不满足三角不等式，MuJoCo 会拒绝编译；置 \texttt{true} 让编译器自行修补 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{lstlisting}[style=xml]
+<robot name="robot">
+  <mujoco>
+    <compiler meshdir="../meshes" discardvisual="false" balanceinertia="true"/>
+  </mujoco>
+  ...
+</robot>
+\end{lstlisting}
+
+\begin{note}
+	URDF 扩展标签 \texttt{<mujoco>} 是官方支持的写法，主要用途之一就是\textbf{指定网格目录}——因为 URDF 里的 \texttt{package://} 路径 MuJoCo 不认识。
+\end{note}
+
+\begin{warnbox}[URDF 不做模式校验]
+	MuJoCo 解析 URDF 时\textbf{不会校验属性名是否合法}：拼错的属性会被\textbf{静默忽略}，结果就是「明明写了却没生效」。
+	转换后发现某个设置没起作用时，先怀疑拼写，再怀疑语义。
+\end{warnbox}
+
+\subsection{转换后必须手工补的东西}
+
+URDF 只能表达 MuJoCo 能力的一个子集。转成 MJCF 之后，通常还需要手工加上：
+
+\begin{itemize}
+	\item \textbf{执行器}：URDF 只描述「关节能出多大力」，不描述控制方式；要做仿真必须自己写 \texttt{<actuator>}；
+	\item \textbf{传感器}：同上，URDF 里没有传感器概念；
+	\item \textbf{接触参数}：摩擦系数、\texttt{solref}/\texttt{solimp} 等；
+	\item \textbf{关键帧}：一个合理的初始姿态；
+	\item \textbf{场景}：地面、光照、相机。
+\end{itemize}
+
+推荐的流程是：\textbf{在 URDF 里只保留几何与运动学，其余全部在 MJCF 里补}，并用 \texttt{<include>} 把公共部分拆出去复用。
+
+\section{用 obj2mjcf 处理复合网格}
+
+SolidWorks 导出的装配体网格、或从网上下载的 OBJ，常见两个问题：一个文件里有多个材质分组、纹理是 JPG。\texttt{obj2mjcf} 就是为此写的工具，MuJoCo Menagerie 的模型网格也是用它处理的。
+
+\begin{lstlisting}[style=shell]
+pip install --upgrade obj2mjcf
+obj2mjcf --help
+\end{lstlisting}
+
+它做的事很明确：
+
+\begin{enumerate}
+	\item 遍历目录里的每个 \texttt{*.obj}，按 \textbf{MTL 中引用的材质}把网格\textbf{拆成若干子网格}，输出到以文件名为名的子目录；
+	\item 把纹理复制到该目录，并把 \texttt{.jpg/.jpeg} \textbf{转成 PNG}（因为 MuJoCo 只支持 PNG）；
+	\item 生成一个\textbf{预填好 \texttt{materials}、\texttt{meshes}、\texttt{geom} 的 MJCF}，可以直接当作建模起点；
+	\item 加上 \texttt{--decompose} 时，调用 \textbf{CoACD} 做凸分解，生成 \texttt{*\_collision\_*.obj} 用于碰撞。
+\end{enumerate}
+
+常用参数（名称取自其源码，实际拼写以 \texttt{--help} 为准）：\texttt{--obj-dir}、\texttt{--obj-filter}（正则筛选）、\texttt{--save-mjcf}（保存示例 XML）、\texttt{--compile-model}（试编译以检查错误）、\texttt{--decompose}、\texttt{--texture-resize-percent}、\texttt{--overwrite}、\texttt{--add-free-joint}。
+
+\begin{tipbox}[典型用法]
+	先把 CAD 导出的 OBJ 放进 \texttt{assets/}，然后
+	\texttt{obj2mjcf --obj-dir assets --save-mjcf --compile-model}，
+	得到一个已经能编译的骨架，再往里面加关节、执行器与传感器。
+\end{tipbox}
+
+\section{碰撞几何}
+
+\subsection{碰撞只用凸包}
+
+官方文档的原话是：\textbf{任何三角形集合都可以作为网格加载并渲染，但碰撞检测使用的是网格的凸包}。由此推出两条实践规则：
+
+\begin{enumerate}
+	\item \textbf{连杆外形非凸时}（例如带凹槽的机械臂），直接用外形网格当碰撞体会让凹处被「填实」，相邻连杆容易互相卡住；正确做法是把非凸外形\textbf{分解成若干个凸体}，都挂在同一个 \texttt{body} 上；
+	\item \textbf{网格越简单越好}：碰撞网格与显示网格分开，碰撞用包围盒/圆柱/胶囊或减面后的粗网格，显示才用精模。
+\end{enumerate}
+
+\texttt{maxhullvert} 用于限制凸包的顶点数上限，模型很大时可以用它控制编译时间与内存；\texttt{inertia=\allowbreak"convex"} 对非凸网格也能给出合理的惯量，是推荐设置。
+
+\subsection{视觉与碰撞分离的写法}
+
+\texttt{contype} 与 \texttt{conaffinity} 是两个「碰撞位掩码」：只有当两个几何体的位掩码按位与的结果非零时才会发生碰撞。把两个都设为 $0$ 就是纯视觉几何体；反之，碰撞几何体可以放进默认不显示的渲染组（\texttt{group}），做到「看不见但确实在碰撞」。
+
+\begin{lstlisting}[style=xml]
+<body name="link1" pos="0 0 0.05">
+  <joint name="joint1" axis="0 0 1"/>
+
+  <!-- visual: precise mesh, no collision -->
+  <geom name="link1_visual" type="mesh" mesh="link1"
+        material="orange" contype="0" conaffinity="0" group="1"/>
+
+  <!-- collision: coarse capsule, hidden by default -->
+  <geom name="link1_collision" type="capsule"
+        fromto="0 0 0 0 0 0.3" size="0.03"
+        group="3" rgba="1 0 0 0.3"/>
+</body>
+\end{lstlisting}
+
+\begin{itemize}
+	\item \texttt{contype=conaffinity=0} 的几何体在导入 URDF 时会被 \texttt{discardvisual} 丢掉——所以想让外观保留，一定要把该选项设为 \texttt{false}；
+	\item 碰撞几何体默认\textbf{仍然参与质量与惯量的计算}，若它只是包络件，应显式给出质量或密度，或者用 \texttt{mass="0"} 排除；
+	\item 调试时把碰撞几何体打开显示（\texttt{simulate} 里切换渲染组），能一眼看出「卡住」的原因。
+\end{itemize}
+
+\section{常见 MJCF 错误}
+
+\begin{table}[H]
+	\centering
+	\caption{MJCF 编译期常见错误}
+	\label{tab:Mjcf:报错}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{5.0cm}>{\raggedright\arraybackslash}p{4.4cm}>{\raggedright\arraybackslash}p{4.8cm}}
+		\hline
+		报错或现象 & 原因 & 处理 \\
+		\hline
+		\texttt{could not open file} & \texttt{meshdir} 不对，或工作目录不是 XML 所在目录 & 按 8.1.2 节的搜索顺序逐一排查；或改用绝对路径/存成 \texttt{.mjz} \\
+		\texttt{Error: repeated name} & 同一类元素重名 & 名字只需在同类元素内唯一；检查是否有两个 \texttt{<geom name="...">} 同名 \\
+		\texttt{Error: unknown attribute} & 属性名拼写错误 & 对照官方 XML Reference 的对应元素 \\
+		翻转面报错 & OBJ/XML 网格里有法线朝内的面 & 在 CAD 或 MeshLab 里统一法线 \\
+		退化三角形报错 & 存在面积小于 $10^{-14}$ 的三角形 & 删除退化面 \\
+		模型位置不对 & 把 \texttt{pos} 写在了 \texttt{<mesh>} 上（不存在的属性） & 改写在引用它的 \texttt{geom} 上 \\
+		一启动就抖动 & 初始姿态互相穿插、时间步过大 & 见第九章 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{tipbox}[下一步]
+	模型能编译、能动了，但「动得对不对」是另一回事。第九章讲怎么量化地检查模型、怎么调参数，以及一张按报错信息索引的排错表。
+\end{tipbox}

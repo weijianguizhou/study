@@ -4,25 +4,25 @@
 \contentsline {section}{\numberline {2.1}数学模型的线性化}{3}{section.2.1}%
 \contentsline {section}{\numberline {2.2}传递函数以及典型环节的传递函数}{4}{section.2.2}%
 \contentsline {subsection}{\numberline {2.2.1}传递函数的定义和性质}{4}{subsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.2.2}典型环节的传递函数}{4}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.2}典型环节的传递函数}{5}{subsection.2.2.2}%
 \contentsline {subsubsection}{比例环节}{5}{subsection.2.2.2}%
 \contentsline {subsubsection}{一阶惯性环节}{5}{equation.2.6}%
 \contentsline {subsubsection}{微分环节}{6}{equation.2.9}%
 \contentsline {subsubsection}{积分环节}{6}{theorem.2.7}%
 \contentsline {subsubsection}{二阶震荡环节}{7}{theorem.2.9}%
 \contentsline {subsubsection}{延迟环节}{8}{theorem.2.11}%
-\contentsline {section}{\numberline {2.3}系统函数方块图及其简化}{8}{section.2.3}%
+\contentsline {section}{\numberline {2.3}系统函数方块图及其简化}{9}{section.2.3}%
 \contentsline {subsection}{\numberline {2.3.1}方块图的组成}{9}{subsection.2.3.1}%
 \contentsline {subsection}{\numberline {2.3.2}方块图的基本连接与等效}{9}{subsection.2.3.2}%
 \contentsline {subsubsection}{串联连接}{9}{subsection.2.3.2}%
-\contentsline {subsubsection}{并联连接}{9}{equation.2.18}%
+\contentsline {subsubsection}{并联连接}{10}{equation.2.18}%
 \contentsline {subsubsection}{反馈连接}{10}{equation.2.19}%
-\contentsline {subsection}{\numberline {2.3.3}方块图的等效变换法则}{11}{subsection.2.3.3}%
+\contentsline {subsection}{\numberline {2.3.3}方块图的等效变换法则}{10}{subsection.2.3.3}%
 \contentsline {subsection}{\numberline {2.3.4}方块图化简举例}{12}{subsection.2.3.4}%
 \contentsline {section}{\numberline {2.4}信号流图及其梅逊公式}{13}{section.2.4}%
 \contentsline {subsection}{\numberline {2.4.1}信号流图的定义}{13}{subsection.2.4.1}%
-\contentsline {subsection}{\numberline {2.4.2}信号流图的术语}{14}{subsection.2.4.2}%
-\contentsline {subsection}{\numberline {2.4.3}信号流图的绘制}{15}{subsection.2.4.3}%
+\contentsline {subsection}{\numberline {2.4.2}信号流图的术语}{13}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.3}信号流图的绘制}{14}{subsection.2.4.3}%
 \contentsline {subsection}{\numberline {2.4.4}信号流图的性质}{15}{subsection.2.4.4}%
 \contentsline {subsubsection}{由方块图绘制信号流图}{15}{Item.22}%
 \contentsline {subsection}{\numberline {2.4.5}梅逊公式}{16}{subsection.2.4.5}%

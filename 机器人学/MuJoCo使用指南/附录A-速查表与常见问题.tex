@@ -1,0 +1,216 @@
+% !TeX root = MuJoCo使用指南.tex
+% ============================================================
+%  附录 A　速查表与常见问题
+%  内容：目录模板、环境变量、命令速查、版本与默认值、
+%        MJCF 元素速查、资源链接、常见问答
+% ============================================================
+
+\section{工程目录模板}
+
+\begin{lstlisting}[style=code]
+my_project/
+|-- CMakeLists.txt          CMake 工程定义
+|-- main.cc                 C++ 入口
+|-- scripts/
+|   |-- run_sim.py          Python 仿真脚本
+|   `-- check_model.py      质量、惯量、警告自检
+|-- model/
+|   |-- scene.xml           场景（include 机器人 + 地面 + 光照 + 相机）
+|   |-- robot.xml           机器人本体
+|   `-- assets/             网格与纹理
+|       |-- link1.STL
+|       `-- link2.STL
+`-- build/                  构建目录（不提交到版本库）
+\end{lstlisting}
+
+三条约定值得坚持：\textbf{模型与代码分离}、\textbf{场景与本体分离}、\textbf{构建目录不进版本库}（加 \texttt{.gitignore}）。
+
+\section{环境变量与路径速查}
+
+\begin{table}[H]
+	\centering
+	\caption{常用环境变量与路径}
+	\label{tab:App:环境变量}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{4.6cm}>{\raggedright\arraybackslash}p{9.6cm}}
+		\hline
+		名称 & 用途 \\
+		\hline
+		\texttt{PATH} & 加入 \texttt{<SDK>\textbackslash{}bin} 后，程序才能找到 \texttt{mujoco.dll} \\
+		\texttt{mujoco\_DIR} & CMake 变量，指向含 \texttt{mujocoConfig.cmake} 的目录 \\
+		\texttt{CMAKE\_PREFIX\_PATH} & CMake 变量，指向安装前缀；比 \texttt{mujoco\_DIR} 更宽松 \\
+		\texttt{MUJOCO\_SDK} & 自定义变量（建议），在 \texttt{CMakePresets.json} 里用 \texttt{\$env\{...\}} 引用 \\
+		\texttt{MUJOCO\_PATH} / \texttt{MUJOCO\_PLUGIN\_PATH} & 从源码构建 Python 绑定时使用，普通用户不需要 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\section{命令速查}
+
+\begin{lstlisting}[style=shell]
+:: Python
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install mujoco
+python -c "import mujoco; print(mujoco.__version__)"
+python -m mujoco.viewer --mjcf=scene.xml
+
+:: 预编译库
+.\bin\simulate.exe ..\model\humanoid\humanoid.xml
+
+:: CMake（多配置生成器）
+cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_PREFIX_PATH=D:/mujoco/install
+cmake --build build --config Release
+.\build\Release\demo.exe
+
+:: CMake（Ninja，需在 VS 开发者命令行中）
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=D:/mujoco/install
+cmake --build build
+
+:: CMake Presets
+cmake --preset vs2022-release
+cmake --build --preset vs2022-release
+
+:: 源码安装
+git clone https://github.com/google-deepmind/mujoco.git
+cmake -S mujoco -B mujoco/build -G "Visual Studio 17 2022" -A x64 -DCMAKE_INSTALL_PREFIX=D:/mujoco/install
+cmake --build mujoco/build --config Release
+cmake --install mujoco/build --config Release
+
+:: 网格工具
+pip install --upgrade obj2mjcf
+obj2mjcf --obj-dir assets --save-mjcf --compile-model
+\end{lstlisting}
+
+\section{版本与默认值速查}
+
+\begin{table}[H]
+	\centering
+	\caption{版本基准与工具链要求}
+	\label{tab:App:版本}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{4.0cm}>{\raggedright\arraybackslash}p{10.2cm}}
+		\hline
+		项目 & 数值 \\
+		\hline
+		本指南版本基准 & MuJoCo 3.14.0（2026-09-22 发布） \\
+		Windows 安装包 & \texttt{mujoco-3.14.0-\allowbreak windows-x86\_64.zip}（约 $22$ MB） \\
+		Python & 官方 wheel 覆盖 3.10 \textasciitilde{} 3.15，仅 64 位；实践推荐 3.12 / 3.13 \\
+		C++ 编译器 & Visual Studio 2019 或更高；C++17；需支持 AVX 的 CPU \\
+		Windows SDK & 10.0.22000 及以上 \\
+		CMake & 官方源码下限 3.16，本指南建议 3.24 及以上 \\
+		CMake 导入目标 & \texttt{mujoco::mujoco}；\textbf{没有} \texttt{mujoco::glfw}（GLFW 是 \texttt{glfw}） \\
+		OpenGL & 1.5 兼容模式 + \texttt{ARB\_framebuffer\_object}、\texttt{ARB\_vertex\_buffer\_object}；Windows 上由系统与显卡驱动提供 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\caption{必须记住的默认值与约定}
+	\label{tab:App:默认值}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{4.6cm}>{\raggedright\arraybackslash}p{9.6cm}}
+		\hline
+		项目 & 默认值 / 约定 \\
+		\hline
+		单位 & 引擎\textbf{不强制}单位制，推荐米--千克--秒（MKS） \\
+		重力 & \texttt{0 0 -9.81} \\
+		默认密度 & $1000$（水的密度），用于由几何体反推质量 \\
+		时间步长 & $0.002$ s \\
+		世界朝向 & $z$ 轴向上，右手系 \\
+		四元数顺序 & $w\,x\,y\,z$，单位四元数 \texttt{"1 0 0 0"} \\
+		角度 & MJCF 默认\textbf{度}；URDF 一律\textbf{弧度}；\texttt{mjModel}/\texttt{mjData} 内一律弧度 \\
+		坐标 & 所有元素的位置与姿态都相对\textbf{父物体}表达 \\
+		接触 & 只使用几何体的\textbf{凸包}；父子物体之间默认不检测碰撞 \\
+		颜色 & 网格本身无色，颜色来自引用它的 \texttt{geom} 的材质 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\section{MJCF 元素速查}
+
+\begin{table}[H]
+	\centering
+	\caption{最常用的顶层元素}
+	\label{tab:App:MJCF}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{3.4cm}>{\raggedright\arraybackslash}p{10.8cm}}
+		\hline
+		元素 & 作用 \\
+		\hline
+		\texttt{compiler} & 编译期选项：\texttt{angle}（度/弧度）、\texttt{meshdir}/\texttt{assetdir}、\texttt{discardvisual} 等 \\
+		\texttt{option} & 运行期选项：\texttt{timestep}、\texttt{gravity}、\texttt{integrator}、\texttt{impratio} \\
+		\texttt{size} & 各种上限：\texttt{nconmax}、\texttt{nkey} 等 \\
+		\texttt{default} & 默认值与默认类，作用类似 CSS \\
+		\texttt{asset} & 资源：\texttt{mesh}、\texttt{texture}、\texttt{material}、\texttt{hfield}、\texttt{skin} \\
+		\texttt{worldbody} & 运动学树的根，含 \texttt{body}/\texttt{geom}/\texttt{site}/\texttt{light}/\texttt{camera} \\
+		\texttt{actuator} & 执行器：\texttt{motor}、\texttt{position}、\texttt{velocity}、\texttt{general} 等 \\
+		\texttt{sensor} & 传感器：\texttt{jointpos}、\texttt{jointvel}、\texttt{imu}、\texttt{force}、\texttt{rangefinder} 等 \\
+		\texttt{tendon} & 肌腱（定长与空间路径），可做耦合与限位 \\
+		\texttt{equality} & 等式约束：\texttt{connect}、\texttt{weld}、\texttt{joint}、\texttt{tendon} \\
+		\texttt{contact} & 接触微调：\texttt{pair}（指定接触对）与 \texttt{exclude}（排除接触） \\
+		\texttt{keyframe} & 关键帧：保存完整的初始状态 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\section{资源}
+
+\begin{table}[H]
+	\centering
+	\caption{官方与社区资源}
+	\label{tab:App:资源}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{4.4cm}>{\raggedright\arraybackslash}p{9.8cm}}
+		\hline
+		资源 & 地址 \\
+		\hline
+		官网 & \url{https://mujoco.org} \\
+		源码仓库 & \url{https://github.com/google-deepmind/mujoco} \\
+		发布下载 & \url{https://github.com/google-deepmind/mujoco/releases} \\
+		文档 & \url{https://mujoco.readthedocs.io} \\
+		XML 属性字典 & \url{https://mujoco.readthedocs.io/en/stable/XMLreference.html} \\
+		Python 教程笔记本 & \url{https://github.com/google-deepmind/mujoco/blob/main/python/tutorial.ipynb} \\
+		模型库 Menagerie & \url{https://github.com/google-deepmind/mujoco_menagerie} \\
+		SolidWorks 导出插件 & \url{https://github.com/ros/solidworks_urdf_exporter} \\
+		插件使用教程 & \url{https://wiki.ros.org/sw_urdf_exporter} \\
+		OBJ 处理工具 & \url{https://github.com/kevinzakka/obj2mjcf} \\
+		MeshLab（减面/修面） & \url{https://www.meshlab.net} \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\section{常见问答}
+
+\begin{enumerate}
+	\item \textbf{到底该学 Python 还是 C++？}\\
+	      先用 Python 把模型和控制逻辑跑通，再按需要把性能敏感的部分用 C++ 重写。两者的模型文件与数值结果是一致的。
+
+	\item \textbf{必须装 Visual Studio 吗？}\\
+	      只有走 C++ 路线才需要。Python 路线下 \texttt{pip install mujoco} 自带引擎，连编译器都不需要。
+
+	\item \textbf{没有独立显卡能跑吗？}\\
+	      纯计算可以，而且性能只取决于 CPU。只有需要窗口显示或离屏渲染时才需要可用的 OpenGL 驱动。
+
+	\item \textbf{Windows 上能用 EGL / OSMesa 做无头渲染吗？}\\
+	      不能。这两个后端只在 Linux 上提供；Windows 与 macOS 使用系统自带的 OpenGL 实现，因此必须有一个（可以是隐藏的）窗口上下文。
+
+	\item \textbf{能不能直接加载 SolidWorks 文件？}\\
+	      不能。必须先从 SolidWorks 导出为 OK 的中间格式（URDF 或 OBJ/STL），再由 MuJoCo 编译（第七章）。
+
+	\item \textbf{一个 MJCF 里可以放多个模型吗？}\\
+	      一个 MJCF 就是一个模型。要同时仿真两个机器人，把它们写进同一个模型的 \texttt{worldbody} 下即可；要分别仿真，则用多个 \texttt{MjModel}。
+
+	\item \textbf{怎么把仿真录成视频？}\\
+	      用 \texttt{mujoco.Renderer} 逐帧取图，再用 \texttt{imageio} 写成 MP4；或者用预编译包里的 \texttt{record} 示例程序（C++）。
+
+	\item \textbf{为什么仿真结果和 Gazebo / Isaac Sim 不一致？}\\
+	      三个引擎的接触模型、积分器与默认参数都不同。MuJoCo 的约束是\textbf{软}的，接触处会有可观测的柔顺与滑移；这在 MuJoCo 内部是自洽的，拿来做控制与学习都没有问题，但不要指望它与其他引擎逐位对齐。
+
+	\item \textbf{要不要装 \texttt{mujoco-py}？}\\
+	      不要。它是为旧版引擎写的第三方封装，已废弃；新版 \texttt{mujoco} 包不需要任何许可证密钥。
+
+	\item \textbf{模型建好之后，最该做的一件事是什么？}\\
+	      在程序里查一遍 \texttt{data.warning} 与 \texttt{body\_mass}（第九章）。这两项检查能在几分钟内发现绝大多数建模错误。
+\end{enumerate}

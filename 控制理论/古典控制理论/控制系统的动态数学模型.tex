@@ -12,9 +12,12 @@
 \label{exam:单摆线性化}
 如图所示，质量为 $m$ 的摆球通过长为 $l$ 的无质量摆杆固定在支点 $O$ 上，摆杆可在竖直平面内自由转动。以竖直向下方向为基准，$\theta_{\mathrm{o}}(t)$ 为摆杆偏离该方向的角位移，$T_{\mathrm{i}}(t)$ 为施加在支点处的驱动力矩，$g$ 为重力加速度。设摆杆不可伸长，故摆球只作绕 $O$ 点的转动。
 
-\begin{center}
-\figplaceholder[0.45\textwidth]{单摆系统示意图（质量 $m$、杆长 $l$、支点 $O$、偏角 $\theta_{\mathrm{o}}$）}
-\end{center}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.3\textwidth]{figures/单摆模型示意图.png}
+    \caption{单摆模型示意图}
+    \label{fig:单摆模型示意图}
+\end{figure}
 
 根据绕定轴的转动定律，驱动力矩 $T_{\mathrm{i}}(t)$ 与重力产生的恢复力矩 $-mgl\sin\theta_{\mathrm{o}}(t)$ 之和，等于摆球对 $O$ 点的转动惯量 $ml^{2}$ 与角加速度 $\ddot{\theta}_{\mathrm{o}}(t)$ 之积，即
 \begin{equation}
@@ -308,13 +311,7 @@ m l^{2}\ddot{\theta}_{\mathrm{o}}(t)+m g l\,\theta_{\mathrm{o}}(t)=T_{\mathrm{i}
 
 \subsubsection{串联连接}
 
-如图所示，环节 $G_{1}(s)$ 的输出作为 $G_{2}(s)$ 的输入，信号依次传递。
-
-\begin{center}
-\figplaceholder[0.34\textwidth]{串联连接·化简前方框图}
-$\Longrightarrow$
-\figplaceholder[0.26\textwidth]{串联连接·化简后方框图}
-\end{center}
+环节 $G_{1}(s)$ 的输出作为 $G_{2}(s)$ 的输入，信号依次传递。
 
 由
 \[
@@ -334,13 +331,7 @@ X_{\mathrm{o}}(s)=G_{1}(s)G_{2}(s)X_{\mathrm{i}}(s),
 
 \subsubsection{并联连接}
 
-如图所示，同一输入信号同时作用于各环节，各环节的输出在相加点处代数相加。
-
-\begin{center}
-\figplaceholder[0.34\textwidth]{并联连接·化简前方框图}
-$\Longrightarrow$
-\figplaceholder[0.26\textwidth]{并联连接·化简后方框图}
-\end{center}
+同一输入信号同时作用于各环节，各环节的输出在相加点处代数相加。
 
 各环节输出为 $G_{1}(s)X_{\mathrm{i}}(s)$ 与 $G_{2}(s)X_{\mathrm{i}}(s)$，相加得
 \[
@@ -355,13 +346,7 @@ X_{\mathrm{o}}(s)=\bigl[G_{1}(s)+G_{2}(s)\bigr]X_{\mathrm{i}}(s),
 
 \subsubsection{反馈连接}
 
-如图所示，$G(s)$ 为前向通道传递函数，$H(s)$ 为反馈通道传递函数，输入信号 $X_{\mathrm{i}}(s)$ 与反馈信号 $B(s)$ 在相加点相减后得到偏差信号 $E(s)$。
-
-\begin{center}
-\figplaceholder[0.34\textwidth]{反馈连接·化简前方框图}
-$\Longrightarrow$
-\figplaceholder[0.26\textwidth]{反馈连接·化简后方框图}
-\end{center}
+$G(s)$ 为前向通道传递函数，$H(s)$ 为反馈通道传递函数，输入信号 $X_{\mathrm{i}}(s)$ 与反馈信号 $B(s)$ 在相加点相减后得到偏差信号 $E(s)$。
 
 由方块图可写出
 \[
@@ -420,16 +405,16 @@ X_{\mathrm{o}}(s)=G(s)\bigl[X_{\mathrm{i}}(s)-H(s)X_{\mathrm{o}}(s)\bigr],
     \centering
     \begin{subfigure}[b]{0.46\textwidth}
         \centering
-        \figplaceholder[0.42\textwidth]{分支点后移：引出点由输入端移到输出端，引出支路串入 $1/G(s)$}
-        \caption{分支点后移}
-        \label{fig:分支点后移}
+        \includegraphics[width=\textwidth]{figures/引出点后移.png}
+        \caption{引出点后移}
+        \label{fig:引出点后移}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.46\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/引出点前移.png}
-        \caption{分支点前移}
-        \label{fig:分支点前移}
+        \caption{引出点前移}
+        \label{fig:引出点前移}
     \end{subfigure}
     \caption{分支点（引出点）的移动规则}
     \label{fig:分支点移动}

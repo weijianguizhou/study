@@ -1,0 +1,201 @@
+% !TeX root = MuJoCo使用指南.tex
+% ============================================================
+%  第一章　MuJoCo 简介与 Windows 环境准备
+%  内容：引擎定位、三种使用路线、硬件与软件要求、目录规划、环境自检
+%  记号约定：向量/矩阵用 \boldsymbol{}；命令行用 listings 的 shell 样式
+% ============================================================
+
+\textbf{MuJoCo}（\textit{Multi-Joint dynamics with Contact}）是一个面向\textbf{多关节刚体系统与接触}的通用物理引擎。它最初由华盛顿大学的 Emo Todorov 开发，用于神经科学与机器人控制的仿真研究；2021 年 10 月起以 Apache 2.0 许可完全开源，现由 Google DeepMind 维护，是强化学习、机器人控制、生物力学与最优控制领域使用最广的仿真引擎之一。
+
+本指南面向 \textbf{Windows 平台}，覆盖三条主线：\textbf{Python 端}调用（第 2、3 章）、\textbf{C++ 端}调用与 CMake 工程配置（第 4、5、6 章）、以及把 \textbf{SolidWorks} 中的 CAD 模型导入 MuJoCo（第 7、8 章）。全书以 \textbf{MuJoCo 3.14.0}（2026-09-22 发布）为版本基准。
+
+\section{引擎定位与设计特点}
+
+MuJoCo 求解的动力学方程为
+\begin{equation}
+	\boldsymbol{M}(\boldsymbol{q})\,\ddot{\boldsymbol{q}}+\boldsymbol{c}(\boldsymbol{q},\dot{\boldsymbol{q}})
+	=\boldsymbol{\tau}+\boldsymbol{J}^{\mathrm{T}}\boldsymbol{f}
+	\label{eq:MuJoCo:运动方程}
+\end{equation}
+其中 $\boldsymbol{q}$ 为广义坐标，$\boldsymbol{M}(\boldsymbol{q})$ 为质量矩阵，$\boldsymbol{c}(\boldsymbol{q},\dot{\boldsymbol{q}})$ 为科氏力、离心力与重力项之和，$\boldsymbol{\tau}$ 为广义力（执行器与关节阻尼），$\boldsymbol{J}$ 为接触点的雅可比矩阵，$\boldsymbol{f}$ 为接触力。与多数通用物理引擎不同，MuJoCo 的接触力 $\boldsymbol{f}$ 不是由碰撞冲量逐点求解，而是由\textbf{带约束的凸优化}一次性求出，这也是它数值稳定、适合做最优控制与强化学习的原因。
+
+\begin{definition}[广义坐标]
+	系统的位形用\textbf{广义坐标} $\boldsymbol{q}\in\mathbb{R}^{n_{q}}$ 描述，速度用 $\dot{\boldsymbol{q}}\in\mathbb{R}^{n_{v}}$ 描述。对只有转动与移动关节的机械臂有 $n_{q}=n_{v}$；对含自由关节（浮基）与四元数的系统，$n_{q}>n_{v}$，此时 $\dot{\boldsymbol{q}}$ 与 $\boldsymbol{q}$ 的维数不同，编程时必须区分 \texttt{model.nq} 与 \texttt{model.nv}。
+	\label{def:MuJoCo:广义坐标}
+\end{definition}
+
+引擎的四个关键设计如下：
+
+\begin{enumerate}
+	\item \textbf{软约束}：接触、关节限位、等式约束都以「弹簧--阻尼」形式软化处理，避免刚性约束带来的求解困难，参数用 \texttt{solref}、\texttt{solimp} 调节。
+	\item \textbf{隐式积分}：阻尼与部分力项隐式处理，配合可选的 \texttt{implicitfast} 积分器，允许比显式积分更大的时间步长（默认 \texttt{timestep}=0.002 s）。
+	\item \textbf{MJCF 模型格式}：基于 XML 的场景描述语言，可直接手写，也可由 URDF、SolidWorks 模型转换或程序化生成。
+	\item \textbf{一套引擎两套接口}：Python 绑定与 C 语言 API 共用同一份求解器代码，模型文件与数值结果完全一致。
+\end{enumerate}
+
+\begin{table}[H]
+	\centering
+	\caption{MuJoCo 与常见仿真器的定位对比}
+	\label{tab:MuJoCo:对比}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{2.1cm}>{\raggedright\arraybackslash}p{3.5cm}>{\raggedright\arraybackslash}p{3.2cm}>{\raggedright\arraybackslash}p{5.4cm}}
+		\hline
+		引擎 & 模型格式 & 许可证 & 定位与典型用途 \\
+		\hline
+		MuJoCo & MJCF（可读 URDF） & Apache 2.0 & 接触丰富、需要快速稳定仿真的场合：强化学习环境、机械臂与足式机器人控制、最优控制 \\
+		PyBullet & URDF / SDF / MJCF & zlib & 上手快、生态偏 RL，接触精度与求解速度不如 MuJoCo \\
+		Isaac Sim / PhysX & USD & 专有（免费） & GPU 大规模并行、渲染逼真，硬件要求高、部署重 \\
+		Gazebo & SDF / URDF & Apache 2.0 & ROS 生态的完整机器人仿真（传感器、插件、通信），实时性一般 \\
+		Drake & URDF / SDF & BSD-3 & 侧重优化与验证的机器人工具箱，学习曲线较陡 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{tipbox}[版本与兼容性]
+	MuJoCo 3.x 的次版本号更新较快（3.14.0 于 2026-09-22 发布）。小版本之间\textbf{不保证 API 完全兼容}：例如 3.14.0 修改了 \texttt{mj\_readCtrl} 的函数签名，并使 \texttt{spec} 的 \texttt{signature} 语义发生变化。升级版本后若编译报错，先查官方 Release Notes 的 \textit{Breaking API changes} 一节。
+\end{tipbox}
+
+\section{三种使用方式}
+
+同一份引擎有三种用法，选择取决于你要把仿真\textbf{嵌到哪里}（图~\ref{fig:MuJoCo:路线}）。
+
+\begin{table}[H]
+	\centering
+	\caption{MuJoCo 的三种使用方式}
+	\label{tab:MuJoCo:三种方式}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{2.4cm}>{\raggedright\arraybackslash}p{3.4cm}>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{4.8cm}}
+		\hline
+		方式 & 安装 & 需要的工具链 & 适用场合 \\
+		\hline
+		Python 绑定 & \texttt{pip install mujoco} & 无（wheel 自带引擎与渲染后端） & 算法验证、强化学习、数据处理、教学；\textbf{推荐所有人先走这条路} \\
+		C++ 预编译库 & 下载 \texttt{mujoco-3.14.0-\allowbreak windows-x86\_64.zip} & Visual Studio 2022 + CMake & 把仿真嵌进自己的 C++ 程序；实时控制、自研求解器、无 Python 的部署环境 \\
+		C++ 源码编译 & \texttt{git clone}（依赖由 FetchContent 拉取） & 同上 + Git + 网络 & 需要修改引擎、自定义渲染、给 MuJoCo 提交代码 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[
+			box/.style={draw, rounded corners=2pt, align=center, font=\small\songti,
+					inner sep=5pt, minimum height=9mm, minimum width=2.6cm},
+			arr/.style={-{Stealth[length=2mm]}, draw=black!70}
+		]
+		\node[box, minimum width=3.4cm] (root) {你的仿真要跑在哪里？};
+		\node[box, below=11mm of root, xshift=-5.4cm] (py) {Python 脚本\\[1pt] 第 2、3 章};
+		\node[box, below=11mm of root] (cpp) {自己的 C++ 程序\\[1pt] 第 4、5 章};
+		\node[box, below=11mm of root, xshift=5.4cm] (src) {改引擎源码\\[1pt] 第 6 章};
+		\node[box, below=13mm of cpp, minimum width=4.4cm] (cad) {模型从哪来？第 7、8 章};
+		\node[box, below=11mm of cad, minimum width=4.4cm] (dbg) {模型验证与排错\\[1pt] 第 9 章};
+
+		\draw[arr] (root.south) -- (py.north);
+		\draw[arr] (root.south) -- (cpp.north);
+		\draw[arr] (root.south) -- (src.north);
+		\draw[arr] (cad.north) -- (cpp.south);
+		\draw[arr] (dbg.north) -- (cad.south);
+	\end{tikzpicture}
+	\caption{按用途选择阅读路线}
+	\label{fig:MuJoCo:路线}
+\end{figure}
+
+\begin{note}
+	三条路线并不互斥。实际项目里常见「Python 里调模型、C++ 里跑控制器」的组合，此时两边加载的是\textbf{同一个 MJCF 文件}，只要引擎版本一致，模型编译结果就一致。
+\end{note}
+
+\section{Windows 环境要求}
+
+\begin{table}[H]
+	\centering
+	\caption{硬件与系统要求}
+	\label{tab:MuJoCo:硬件}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{4.2cm}>{\raggedright\arraybackslash}p{7.2cm}}
+		\hline
+		项目 & 要求 & 说明 \\
+		\hline
+		操作系统 & Windows 10 1809 及以上 / Windows 11 & 仅 64 位；官方不提供 32 位与 ARM 版 Windows 构建 \\
+		CPU & x86\_64，支持 SSE2 & 引擎为单线程 C 代码，主频与单核性能决定仿真速度；大规模并行要靠多进程而非多线程 \\
+		显卡 & 支持 \textbf{OpenGL 1.5} 与 \texttt{ARB\_framebuffer\_object}、\texttt{ARB\_vertex\_buffer\_object} 扩展的显卡驱动 & 仅\textbf{交互式可视化}需要。纯计算（不加界面地跑 \texttt{mj\_step}）不需要显卡，也不需要 OpenGL \\
+		内存 & 8 GB & 复杂场景与大规模并行采样建议 16 GB 以上 \\
+		磁盘 & 约 1 GB & 预编译包约 22 MB，Python wheel 约 60 MB，另加编译工具链 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{warnbox}[远程桌面与虚拟机]
+	通过 Windows 远程桌面（RDP）连接时，系统报告的 OpenGL 版本可能被降级到 1.1，导致 \texttt{simulate} 或 \texttt{mujoco.viewer} 启动时报
+	\texttt{GLFW error: WGL: The driver does not appear to support OpenGL}。
+	解决办法：在本机运行界面，或改用无界面模式（Python 端可用 \texttt{mujoco.osmesa} 后端做离屏渲染，详见 3.4 节），
+	或使用支持 OpenGL 直通的远程方案。
+\end{warnbox}
+
+\section{软件清单与安装顺序}
+
+\begin{table}[H]
+	\centering
+	\caption{本指南涉及的软件}
+	\label{tab:MuJoCo:软件清单}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{3.3cm}>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{4.0cm}}
+		\hline
+		软件 & 建议版本 & 用途 & 必需性 \\
+		\hline
+		Python & 3.10 \textasciitilde{} 3.14 & Python 端仿真与模型转换 & 走 Python 路线时必需 \\
+		MuJoCo wheel & 3.14.0 & \texttt{pip install mujoco} 自动安装 & 同上 \\
+		Visual Studio 2022 & 17.x（v143 工具集） & C++ 编译器与调试器 & 走 C++ 路线时必需，安装时勾选「使用 C++ 的桌面开发」 \\
+		CMake & 3.24 及以上 & 生成与构建 C++ 工程 & 走 C++ 路线时必需 \\
+		MuJoCo 预编译包 & 3.14.0（\texttt{windows-x86\_64}） & C++ 的头文件、导入库与 DLL & 走 C++ 路线时必需 \\
+		Git & 任意近期版本 & 拉取 MuJoCo 源码与示例模型 & 仅源码编译与克隆模型库时需要 \\
+		SolidWorks & 2020 及以上 & 提供 CAD 模型；SW2URDF 插件导出 URDF & 仅第 7 章需要 \\
+		TeX Live & 2025 & 编译本笔记（XeLaTeX） & 仅需要重新编译本文档时 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+推荐按下面的顺序安装，每装完一项立即做一次自检，避免问题堆积：
+
+\begin{enumerate}
+	\item 装 Python，并在命令行确认 \texttt{python --version}；
+	\item \texttt{pip install mujoco}，确认 \texttt{python -c "import mujoco"}（见 2.4 节）；
+	\item （走 C++ 路线）装 Visual Studio 2022，确认 \texttt{cl} 可用；
+	\item 装 CMake，确认 \texttt{cmake --version}；
+	\item 解压 MuJoCo 预编译包，编译官方示例，确认能出现可视化窗口。
+\end{enumerate}
+
+\section{目录规划与环境自检}
+
+Windows 上的路径问题绝大多数来自三处：\textbf{中文路径}、\textbf{空格路径}、\textbf{过长的路径}。建议把工具链与模型放在一个短路径下，例如：
+
+\begin{lstlisting}[style=code]
+D:\mujoco\                      (root: toolchain and SDK)
+|-- mujoco-3.14.0\              (extracted release archive)
+|   |-- bin\                    (mujoco.dll, simulate.exe, ...)
+|   |-- doc\                    (README.txt, REFERENCE.txt)
+|   |-- include\mujoco\         (headers needed to build)
+|   |-- model\                  (bundled MJCF models)
+|   |-- sample\                 (C++ samples + CMakeLists.txt)
+|   `-- lib\                    (import libs; check your archive)
+`-- projects\
+    `-- my_sim\                 (your own project)
+        |-- CMakeLists.txt
+        |-- main.cc
+        `-- model\
+\end{lstlisting}
+
+官方文档给出的目录说明只有五项：\texttt{bin}（动态库、可执行文件、\texttt{MUJOCO\_LOG.TXT}）、\texttt{doc}（说明与 API 参考）、\texttt{include}（头文件）、\texttt{model}（模型库）、\texttt{sample}（示例与 \texttt{CMakeLists.txt}）。MSVC 链接需要导入库（\texttt{mujoco.lib}），因此实际压缩包里通常还会有一个 \texttt{lib} 目录或等价的 CMake 包配置——\textbf{解压后请先看一眼实际有哪些目录}，第五章会按「有 CMake 包配置」和「只有头文件与导入库」两种情况分别给出写法。
+
+\textbf{环境自检}：打开一个新的 PowerShell 窗口，逐条执行下列命令，确认都能正常输出（\texttt{cl} 需要「x64 Native Tools Command Prompt for VS 2022」或已执行过 \texttt{vcvars64.bat}）：
+
+\begin{lstlisting}[style=shell]
+python --version            # expect: Python 3.10 - 3.14
+python -c "import mujoco; print(mujoco.__version__)"   # expect: 3.14.0
+cmake --version             # expect: 3.24 or later
+cl                          # expect: Microsoft (R) C/C++ Optimizing Compiler 19.3x
+echo %MUJOCO_DIR%           # if you set the SDK path manually, it echoes back
+\end{lstlisting}
+
+\begin{tipbox}[为什么要用短路径]
+	MuJoCo 通过 XML 中的相对路径寻找网格与纹理文件，路径中一旦出现中文或空格，\texttt{mj\_loadXML} 在部分版本与编码环境下会报
+	\texttt{Error: could not open file}。把模型放在纯英文短路径下可以从根本上绕开这一类问题。
+\end{tipbox}

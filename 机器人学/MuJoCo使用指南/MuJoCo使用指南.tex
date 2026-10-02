@@ -1,0 +1,84 @@
+% !TeX program = xelatex
+% !TeX root = MuJoCo使用指南.tex
+% ============================================================
+%  MuJoCo 使用指南（Windows）—— 主文件
+%  模板：模板/课程笔记（「李思风」极简学术排版）
+%  编译：xelatex 连续两遍（或 latexmk -xelatex）
+%      xelatex -interaction=nonstopmode "MuJoCo使用指南.tex"
+%      xelatex -interaction=nonstopmode "MuJoCo使用指南.tex"
+%  版本基准：MuJoCo 3.14.0（2026-09-22），Windows 10/11 x64
+%  字号：正文 12pt（模板默认 11pt，本指南整体放大一档）
+% ============================================================
+\documentclass[12pt,a4paper,openany]{ctexbook}
+\input{preamble}            % 样式：字体、颜色、定理/定义/例题环境、章节格式
+
+% ============================================================
+%	笔记元信息
+% ============================================================
+\newcommand{\notename}{MuJoCo 使用指南}      % 封面大标题
+\newcommand{\noteauthor}{魏舟}               % 封面作者
+\newcommand{\notesubtitle}{Windows 平台 · 版本 3.14.0}  % 封面日期/版本行
+
+\begin{document}
+	% 封面（「李思风」极简学术风；其余封面见 模板/课程笔记/封面模板索引.md）
+	\input{cover_李思风}
+
+	\newpage
+
+	% 正文页码样式（底部居中，见 preamble）
+	\pagestyle{plain}
+
+	\setcounter{tocdepth}{2}
+	\tableofcontents
+
+	\setcounter{page}{0}
+	\thispagestyle{empty}
+	\newpage
+
+	% ============================================================
+	%	正文：每章一个 .tex 文件，用 \input{} 引入
+	% ============================================================
+	\chapter{MuJoCo 简介与 Windows 环境准备}
+	\input{01-MuJoCo简介与环境准备}
+
+	\chapter{Python 环境与 mujoco 库安装}
+	\input{02-Python环境与mujoco库安装}
+
+	\chapter{Python 基础用法与可视化}
+	\input{03-Python基础用法与可视化}
+
+	\chapter{C++ 开发环境与第一个程序}
+	\input{04-C++开发环境与第一个程序}
+
+	\chapter{CMake 工程配置}
+	\input{05-CMake工程配置}
+
+	\chapter{从源码编译 MuJoCo（可选）}
+	\input{06-从源码编译MuJoCo}
+
+	\chapter{SolidWorks 建模与模型导出}
+	\input{07-SolidWorks建模与模型导出}
+
+	\chapter{网格处理与 MJCF 模型编写}
+	\input{08-网格处理与MJCF编写}
+
+	\chapter{模型验证、调参与排错}
+	\input{09-模型验证与排错}
+
+	% ============================================================
+	% 附录（样式自动切换为「附录 A」格式，章号 A、B、C…）
+	% ============================================================
+	\appendix
+	\renewcommand{\thechapter}{附录\Alph{chapter}}
+	\titleformat{\chapter}[block]
+	{\normalfont\centering\bfseries\songti\fontsize{20.7}{26}\selectfont}
+	{\thechapter}{1em}{}
+	\renewcommand{\thesection}{\Alph{chapter}.\arabic{section}}
+	\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+	\renewcommand{\theequation}{\Alph{chapter}.\arabic{equation}}
+	\renewcommand{\thetheorem}{\Alph{chapter}.\arabic{theorem}}
+	\renewcommand{\theexample}{\Alph{chapter}.\arabic{example}}
+
+	\chapter{速查表与常见问题}
+	\input{附录A-速查表与常见问题}
+\end{document}

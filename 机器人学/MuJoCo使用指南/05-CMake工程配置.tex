@@ -1,0 +1,367 @@
+% !TeX root = MuJoCo使用指南.tex
+% ============================================================
+%  第五章　CMake 工程配置
+%  内容：CMake 安装与生成器选择、SDK 形态判别、find_package 用法、
+%        完整 CMakeLists 模板、手写导入库、构建命令、Presets、vcpkg、
+%        源码安装后的配置、排错表
+% ============================================================
+
+第四章结尾提到，手写 \texttt{cl} 命令很快就会难以维护：源文件变多、需要 Debug 与 Release 两套配置、要链接 GLFW、要把 DLL 复制到输出目录……这些正是 CMake 的职责。本章给出\textbf{可以直接复制使用}的完整配置，并解释每一行的作用。
+
+\section{安装 CMake}
+
+\subsection{三种来源}
+
+\begin{table}[H]
+	\centering
+	\caption{CMake 的获取方式}
+	\label{tab:CMake:安装}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}p{5.6cm}>{\raggedright\arraybackslash}p{5.4cm}}
+		\hline
+		方式 & 说明 & 建议 \\
+		\hline
+		官网安装包 & 下载 \texttt{cmake-*-windows-x86\_64.msi}，安装时勾选 \textit{Add CMake to the system PATH} & \textbf{推荐}，版本最新 \\
+		winget & \texttt{winget install Kitware.CMake} & 适合习惯命令行的用户 \\
+		Visual Studio 自带 & 随「使用 C++ 的桌面开发」一起安装 & 版本往往偏旧，遇到「CMake 版本过低」再单独装新版 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{lstlisting}[style=shell]
+cmake --version
+where cmake
+\end{lstlisting}
+
+若 \texttt{where cmake} 列出多个路径，说明同时存在多份 CMake，注意实际生效的是第一个。
+
+\subsection{生成器怎么选}
+
+CMake 本身不编译代码，它生成「另一套构建系统」的工程文件。Windows 上常用两种：
+
+\begin{table}[H]
+	\centering
+	\caption{常用生成器}
+	\label{tab:CMake:生成器}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{4.6cm}>{\raggedright\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{6.8cm}}
+		\hline
+		生成器 & 配置数 & 特点 \\
+		\hline
+		\texttt{Visual Studio 17 2022} & 多配置 & 生成的 \texttt{.sln} 可用 VS 打开调试；\textbf{每个配置单独构建}，必须用 \texttt{--config} 指定 \\
+		\texttt{Ninja} & 单配置 & 构建最快；需要在「x64 Native Tools 命令提示符」里运行，配置时用 \texttt{-DCMAKE\_BUILD\_TYPE} 指定配置 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+初学者建议先用 \texttt{Visual Studio 17 2022}：出错时可以直接在 IDE 里看调用栈。
+
+\section{先确认 SDK 提供了什么}
+
+MuJoCo 的预编译包能否被 \texttt{find\_package} 直接找到，取决于包里有没有 CMake 包配置文件。解压后先看一眼：
+
+\begin{lstlisting}[style=shell]
+Get-ChildItem D:\mujoco\mujoco-3.14.0 -Depth 1 | Select-Object FullName
+Get-ChildItem D:\mujoco\mujoco-3.14.0 -Recurse -Filter *Config.cmake | Select-Object FullName
+Get-ChildItem D:\mujoco\mujoco-3.14.0 -Recurse -Filter mujoco*.lib   | Select-Object FullName
+\end{lstlisting}
+
+根据第二条命令的结果分两种写法（表~\ref{tab:CMake:两种形态}）：
+
+\begin{table}[H]
+	\centering
+	\caption{两种 SDK 形态与对应写法}
+	\label{tab:CMake:两种形态}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{5.0cm}>{\raggedright\arraybackslash}p{5.4cm}}
+		\hline
+		形态 & 判据 & 写法 \\
+		\hline
+		带 CMake 包配置 & 找到 \texttt{mujocoConfig.cmake} 或 \texttt{mujoco-config.cmake} & 用 5.3 节的 \texttt{find\_package(mujoco)} + \texttt{mujoco::mujoco} \\
+		只有头文件与导入库 & 有 \texttt{include/mujoco}、\texttt{lib/mujoco.lib}、\texttt{bin/mujoco.dll} & 用 5.4 节手工声明一个 \texttt{IMPORTED} 目标 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{note}
+	官方文档对预编译包只列出了 \texttt{bin}、\texttt{doc}、\texttt{include}、\texttt{model}、\texttt{sample} 五个目录，没有明确写 \texttt{lib} 与 CMake 配置文件；而 MSVC 链接必须有导入库。因此\textbf{以你解压后看到的实际内容为准}——这两种情况本指南都给了完整写法，不必纠结。
+\end{note}
+
+\section{用法一：find\_package（推荐）}
+
+\subsection{导入目标的名字}
+
+MuJoCo 的 CMake 包（config 模式）导出的目标是：
+
+\begin{table}[H]
+	\centering
+	\caption{MuJoCo 导出的 CMake 目标}
+	\label{tab:CMake:目标}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{5.4cm}>{\raggedright\arraybackslash}p{8.8cm}}
+		\hline
+		目标 & 含义 \\
+		\hline
+		\texttt{mujoco::mujoco} & 引擎共享库，\textbf{99\% 的情况下只需要它} \\
+		\texttt{mujoco::libmujoco\_simulate} & 官方交互式查看器的静态库（由 \texttt{simulate} 子项目导出） \\
+		\texttt{mujoco::filament} & 只在用 \texttt{MUJOCO\_USE\_FILAMENT=ON} 构建时存在 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{warnbox}[没有 mujoco::glfw 这个目标]
+	这是一个高频错误：\textbf{MuJoCo 不导出名为 \texttt{mujoco::glfw} 的目标}。GLFW 是它自己的依赖，官方示例链接的写法是
+	\texttt{target\_link\_libraries(basic mujoco::mujoco glfw Threads::Threads)}——注意 \texttt{glfw} 是\textbf{不带命名空间}的目标名。
+\end{warnbox}
+
+\subsection{告诉 CMake 去哪里找}
+
+\texttt{find\_package} 在 config 模式下会按标准规则搜索 \texttt{<前缀>/lib/cmake/mujoco/} 一类的目录。SDK 不在系统默认位置时，用下面任一方式指路：
+
+\begin{lstlisting}[style=shell]
+cmake -S . -B build -Dmujoco_DIR="D:/mujoco/mujoco-3.14.0/lib/cmake/mujoco"
+cmake -S . -B build -DCMAKE_PREFIX_PATH="D:/mujoco/mujoco-3.14.0"
+\end{lstlisting}
+
+\texttt{mujoco\_DIR} 要指向\textbf{含有 \texttt{mujocoConfig.cmake} 的那个目录}；\texttt{CMAKE\_PREFIX\_PATH} 指向\textbf{安装前缀}，CMake 会自己往下找。路径统一用正斜杠 \texttt{/} 或双反斜杠，避免转义问题。
+
+\section{完整模板 A：find\_package 版}
+
+工程目录：
+
+\begin{lstlisting}[style=code]
+my_sim/
+|-- CMakeLists.txt
+|-- main.cc
+`-- model/
+    `-- hello.xml
+\end{lstlisting}
+
+\texttt{CMakeLists.txt}：
+
+\begin{lstlisting}[style=cmake]
+cmake_minimum_required(VERSION 3.24)
+project(my_sim LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# ---- MuJoCo ----
+find_package(mujoco CONFIG REQUIRED)
+
+# ---- GLFW（只在需要可视化时）----
+# find_package(glfw3 3.3 CONFIG REQUIRED)
+
+# ---- 可执行文件 ----
+add_executable(demo main.cc)
+target_link_libraries(demo PRIVATE mujoco::mujoco)
+# target_link_libraries(demo PRIVATE glfw)          # 需要可视化时打开
+
+# ---- 把模型目录拷到可执行文件旁边，便于按相对路径加载 ----
+add_custom_command(TARGET demo POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${CMAKE_CURRENT_SOURCE_DIR}/model"
+            "$<TARGET_FILE_DIR:demo>/model")
+
+# ---- 自动拷贝 MuJoCo 动态库 ----
+add_custom_command(TARGET demo POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "$<TARGET_FILE:mujoco::mujoco>"
+            "$<TARGET_FILE_DIR:demo>")
+\end{lstlisting}
+
+逐条解释：
+
+\begin{itemize}
+	\item \texttt{CONFIG REQUIRED}：只接受 config 模式的包（即必须找到官方导出的 \texttt{mujocoConfig.\allowbreak cmake}），找不到就立即报错而不是悄悄回退到「猜路径」的 module 模式。写死这一条能让问题在配置阶段暴露。
+	\item \texttt{target\_link\_libraries(... PRIVATE ...)}：\texttt{mujoco::mujoco} 同时携带了头文件目录与链接信息，因此\textbf{不需要}手写 \texttt{include\_directories} 或 \texttt{link\_directories}。这正是现代 CMake 的用法。
+	\item \texttt{\$<TARGET\_FILE:\allowbreak mujoco::\allowbreak mujoco>} 在 Windows 上会展开成 \texttt{mujoco.dll} 的完整路径，\texttt{\$<TARGET\_FILE\_DIR:\allowbreak demo>} 则是输出目录。两行 \texttt{POST\_BUILD} 就解决了「每次手动拷 DLL」和「模型找不到」两个问题。
+	\item \texttt{CMAKE\_CXX\_STANDARD 17}：MuJoCo 的官方要求就是 C++17。
+\end{itemize}
+
+\section{完整模板 B：手工导入库版}
+
+若 SDK 里没有 CMake 配置文件，就自己声明一个 \texttt{IMPORTED} 目标。把下面这段放在 \texttt{find\_package} 的位置即可，其余部分与模板 A 完全相同：
+
+\begin{lstlisting}[style=cmake]
+# MuJoCo SDK 根目录，可在命令行覆盖：-DMUJOCO_DIR=...
+set(MUJOCO_DIR "D:/mujoco/mujoco-3.14.0" CACHE PATH "MuJoCo SDK root")
+
+if(NOT EXISTS "${MUJOCO_DIR}/include/mujoco/mujoco.h")
+    message(FATAL_ERROR "MUJOCO_DIR 指向不对: ${MUJOCO_DIR}")
+endif()
+
+add_library(mujoco_imported SHARED IMPORTED GLOBAL)
+set_target_properties(mujoco_imported PROPERTIES
+    IMPORTED_LOCATION             "${MUJOCO_DIR}/bin/mujoco.dll"
+    IMPORTED_IMPLIB               "${MUJOCO_DIR}/lib/mujoco.lib"
+    INTERFACE_INCLUDE_DIRECTORIES "${MUJOCO_DIR}/include"
+    INTERFACE_COMPILE_DEFINITIONS "MUJOCO_DLL")
+
+add_library(mujoco::mujoco ALIAS mujoco_imported)
+\end{lstlisting}
+
+这样命名之后，后续的 \texttt{target\_link\_libraries} 与模板 A \textbf{写法完全一致}（都用 \texttt{mujoco::mujoco}），以后 SDK 升级成带 CMake 包的版本，只要删掉这一段、换回 \texttt{find\_package} 即可。
+
+\begin{itemize}
+	\item \texttt{IMPORTED\_LOCATION} 是\textbf{运行时}用的 DLL，\texttt{IMPORTED\_IMPLIB} 是\textbf{链接时}用的导入库。两者都要写，而且要分清楚，这是 Windows 上独有的概念。
+	\item \texttt{GLOBAL} 让该目标在子目录里也可见；多目录工程里需要。
+	\item 开头那个 \texttt{EXISTS} 检查是廉价而有效的防线：路径写错时立刻报错，而不是等到链接期报一堆 \texttt{LNK2019}。
+\end{itemize}
+
+\section{构建与运行}
+
+\subsection{Visual Studio 生成器（多配置）}
+
+\begin{lstlisting}[style=shell]
+cmake -S . -B build -G "Visual Studio 17 2022" -A x64 ^
+      -Dmujoco_DIR="D:/mujoco/mujoco-3.14.0/lib/cmake/mujoco"
+
+cmake --build build --config Release
+
+.\build\Release\demo.exe
+\end{lstlisting}
+
+\begin{warnbox}[多配置生成器的两个坑]
+	\begin{enumerate}
+		\item \texttt{-DCMAKE\_BUILD\_TYPE=Release} \textbf{对多配置生成器无效}，必须在构建时用 \texttt{--config Release}。忘了写就会得到 Debug 版，仿真速度差数倍。
+		\item Debug 与 Release 的运行时库不同（\texttt{/MDd} 与 \texttt{/MD}）。\textbf{不要}把 Debug 版程序和 Release 版 DLL 混用，也不要拿 Debug 版的 \texttt{.lib} 去链接 Release 版工程，否则会出现 \texttt{LNK2038} 或运行期随机崩溃。
+	\end{enumerate}
+\end{warnbox}
+
+\subsection{Ninja 生成器（单配置）}
+
+在「x64 Native Tools Command Prompt for VS 2022」中：
+
+\begin{lstlisting}[style=shell]
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release ^
+      -Dmujoco_DIR="D:/mujoco/mujoco-3.14.0/lib/cmake/mujoco"
+cmake --build build
+.\build\demo.exe
+\end{lstlisting}
+
+Ninja 下 \texttt{CMAKE\_BUILD\_TYPE} 是有效的，且增量构建明显更快；缺点是必须在配好 \texttt{cl} 环境的窗口里运行。
+
+\subsection{在 Visual Studio 里打开}
+
+两种方式：直接双击 \texttt{build} 目录下的 \texttt{my\_sim.sln}；或者用 VS 的「打开本地文件夹」功能选中工程根目录（VS 会直接读 \texttt{CMakeLists.txt}，无需先生成工程文件，改 \texttt{CMakeLists.txt} 会自动重新配置）。后者更适合经常改构建配置的场合。
+
+\section{CMakePresets.json：把命令行固化下来}
+
+每次手打一长串 \texttt{-D} 参数既繁琐又容易写错。\texttt{CMakePresets.json} 把这些参数固化进仓库，团队里每个人、以及 CI，用的都是同一套配置。放在工程根目录：
+
+\begin{lstlisting}[style=code]
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "vs2022-release",
+      "displayName": "VS2022 x64 Release",
+      "generator": "Visual Studio 17 2022",
+      "architecture": "x64",
+      "binaryDir": "${sourceDir}/build/vs2022",
+      "cacheVariables": {
+        "CMAKE_PREFIX_PATH": "D:/mujoco/mujoco-3.14.0"
+      }
+    },
+    {
+      "name": "ninja-release",
+      "displayName": "Ninja Release",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_PREFIX_PATH": "D:/mujoco/mujoco-3.14.0"
+      }
+    }
+  ],
+  "buildPresets": [
+    { "name": "vs2022-release", "configurePreset": "vs2022-release", "configuration": "Release" },
+    { "name": "ninja-release",  "configurePreset": "ninja-release" }
+  ]
+}
+\end{lstlisting}
+
+之后命令缩短为：
+
+\begin{lstlisting}[style=shell]
+cmake --preset vs2022-release
+cmake --build --preset vs2022-release
+\end{lstlisting}
+
+\begin{tipbox}[把路径交给环境变量]
+	\texttt{CMakePresets.json} 里可以写 \texttt{"\$env{MUJOCO\_SDK}"} 引用环境变量，这样配置文件就能进入版本库而不绑定某台机器的路径：先 \texttt{setx MUJOCO\_SDK D:\textbackslash{}mujoco\textbackslash{}mujoco-3.14.0}，再在 \texttt{cacheVariables} 里引用它。
+\end{tipbox}
+
+\section{路线三：vcpkg 与源码安装}
+
+\subsection{vcpkg}
+
+vcpkg 是一个 C++ 包管理器，装上之后 MuJoCo 与 GLFW 都能一条命令到位，并由它生成 CMake 配置，工程侧只需要标准的 \texttt{find\_package}：
+
+\begin{lstlisting}[style=shell]
+git clone https://github.com/microsoft/vcpkg
+.\vcpkg\bootstrap-vcpkg.bat
+.\vcpkg\vcpkg install mujoco glfw3
+
+cmake -S . -B build -G "Visual Studio 17 2022" -A x64 ^
+      -DCMAKE_TOOLCHAIN_FILE=D:/vcpkg/scripts/buildsystems/vcpkg.cmake
+\end{lstlisting}
+
+此时 \texttt{CMakeLists.txt} 里写官方文档给出的两行即可：
+
+\begin{lstlisting}[style=cmake]
+find_package(mujoco CONFIG REQUIRED)
+target_link_libraries(main PRIVATE mujoco::mujoco)
+\end{lstlisting}
+
+\begin{warnbox}[vcpkg 的两个注意点]
+	\begin{enumerate}
+		\item \textbf{版本滞后}：vcpkg 仓库里的 MuJoCo 版本通常落后于官方最新发布（例如仓库里是 3.10.0 而官方已到 3.14.0）。需要新特性时应改用官方预编译包或源码安装。
+		\item \textbf{Windows 上不支持静态链接}：该 port 声明了 \texttt{supports: !(windows \& static)}，因此只能用动态库（这也正是要拷 DLL 的原因）。
+	\end{enumerate}
+\end{warnbox}
+
+\subsection{从源码安装到自己的目录}
+
+需要修改引擎、或者想要一份带完整 CMake 包配置的安装时，把 MuJoCo 编译并\textbf{安装}到一个自定义前缀：
+
+\begin{lstlisting}[style=shell]
+git clone https://github.com/google-deepmind/mujoco.git
+cmake -S mujoco -B mujoco/build -G "Visual Studio 17 2022" -A x64 ^
+      -DCMAKE_INSTALL_PREFIX=D:/mujoco/install ^
+      -DCMAKE_BUILD_TYPE=Release
+cmake --build mujoco/build --config Release
+cmake --install mujoco/build --config Release
+\end{lstlisting}
+
+安装后的目录布局是标准的 CMake 前缀：头文件在 \texttt{include/mujoco}，DLL 在 \texttt{bin}，CMake 包配置在 \texttt{lib/cmake/mujoco}。于是工程侧只要：
+
+\begin{lstlisting}[style=shell]
+cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_PREFIX_PATH=D:/mujoco/install
+\end{lstlisting}
+
+就能直接用模板 A。\textbf{这是三种方式里最"标准"的一条路}，代价是要先花时间编译一次。
+
+\section{排错表}
+
+\begin{table}[H]
+	\centering
+	\caption{CMake 配置与构建常见问题}
+	\label{tab:CMake:排错}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{5.2cm}>{\raggedright\arraybackslash}p{4.0cm}>{\raggedright\arraybackslash}p{5.2cm}}
+		\hline
+		现象 & 原因 & 处理 \\
+		\hline
+		\texttt{Could not find a package configuration file provided by "mujoco"} & \texttt{mujoco\_DIR} 没给或指错 & 用 5.2 节的命令找到 \texttt{*Config.cmake} 所在目录；或改用模板 B \\
+		\texttt{Target "mujoco::mujoco" not found} & 包没找到，但 \texttt{target\_link\_libraries} 照写了 & 先解决上一条；确认 \texttt{find\_package(mujoco CONFIG REQUIRED)} 在 \texttt{add\_executable} 之前 \\
+		\texttt{Target "mujoco::glfw" not found} & 目标名不存在 & 改为 \texttt{glfw}，并单独准备 GLFW（4.4.2 节） \\
+		\texttt{LNK2019} / \texttt{LNK2038} & 架构或配置不一致 & 统一 x64、统一 Release；模板 B 下检查 \texttt{IMPORTED\_IMPLIB} \\
+		\texttt{CMake Error: could not find CMAKE\_CXX\_COMPILER} & 没装 C++ 工具链 & 装「使用 C++ 的桌面开发」工作负载 \\
+		\texttt{CMake 3.x is required} & 版本过低 & 装新版 CMake，注意 \texttt{where cmake} 的顺序 \\
+		运行时\texttt{找不到 mujoco.dll} & 只拷了 exe & 用模板 A 的 \texttt{POST\_BUILD} 自动拷贝 \\
+		改了 \texttt{CMakeLists.txt} 但没生效 & 多配置生成器的缓存 & 删掉 \texttt{build} 目录重新配置（最省事），或 \texttt{cmake --fresh} \\
+		\hline
+	\end{tabular}
+\end{table}

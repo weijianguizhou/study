@@ -1,0 +1,355 @@
+% !TeX root = MuJoCo使用指南.tex
+% ============================================================
+%  第四章　C++ 开发环境与第一个程序
+%  内容：预编译库的下载与解压、Visual Studio 工具链、无界面最小程序、
+%        GLFW 可视化程序、DLL 部署、编译与运行问题
+%  说明：官方 sample/basic.cc 为示例骨架，代码清单使用 ASCII 字符。
+% ============================================================
+
+Python 路线适合验证算法，但真正要嵌进实时控制系统、要和已有的 C++ 工程共用一个进程、或者要在没有 Python 的机器上部署时，就需要直接用 C/C++ 调 MuJoCo。MuJoCo 的运行时是一个\textbf{编译器无关的 C 动态库}，对外只暴露一个稳定的 C API；用 C++ 写只是更方便，链接的东西完全一样。
+
+\section{获取预编译库}
+
+\subsection{下载}
+
+官方推荐不修改引擎源码的用户直接使用预编译库，理由是「自带的依赖版本经过测试，编译选项也做过性能调优，并且几乎完全自包含——除标准 C 运行时外不需要任何其他库」。Windows 的下载地址为：
+
+\begin{lstlisting}[style=shell]
+https://github.com/google-deepmind/mujoco/releases/download/3.14.0/mujoco-3.14.0-windows-x86_64.zip
+https://github.com/google-deepmind/mujoco/releases/download/3.14.0/mujoco-3.14.0-windows-x86_64.zip.sha256
+\end{lstlisting}
+
+压缩包约 $22$ MB，附带一个 \texttt{.sha256} 文件用于校验完整性：
+
+\begin{lstlisting}[style=shell]
+Get-FileHash .\mujoco-3.14.0-windows-x86_64.zip -Algorithm SHA256
+Get-Content .\mujoco-3.14.0-windows-x86_64.zip.sha256
+\end{lstlisting}
+
+两行输出应当一致（比较时忽略大小写）。校验通过后解压到短路径，例如 \texttt{D:\textbackslash{}mujoco\textbackslash{}}。
+
+\begin{warnbox}[CPU 必须支持 AVX]
+	MuJoCo 的动态库\textbf{要求处理器支持 AVX 指令集}。2011 年之后的 Intel / AMD 处理器基本都支持；在虚拟机里运行时，需要把宿主机的 AVX 指令集透传给虚拟机，否则加载 DLL 时会直接崩溃。
+\end{warnbox}
+
+\subsection{先跑通官方程序}
+
+解压后进入 \texttt{bin} 目录，用自带模型验证库本身是好的：
+
+\begin{lstlisting}[style=shell]
+cd D:\mujoco\mujoco-3.14.0\bin
+.\simulate.exe ..\model\humanoid\humanoid.xml
+\end{lstlisting}
+
+若出现一个人形机器人并且可以旋转、缩放、拖动，说明运行库、OpenGL 与模型库都正常。\texttt{simulate} 是官方交互式查看器，它的源码在 \texttt{sample/simulate.cc}，也是自己写可视化程序时最好的参考。
+
+\begin{note}
+	程序运行目录下会自动生成 \texttt{MUJOCO\_LOG.TXT}，里面记录错误与警告信息。程序崩溃或行为异常时，第一件事是打开它看最后几行。
+\end{note}
+
+\section{编译工具链}
+
+\subsection{Visual Studio 2022}
+
+安装「Visual Studio 2022 生成工具」或完整版 IDE，安装时必须勾选\textbf{使用 C++ 的桌面开发}工作负载，其中包含 MSVC 编译器（\texttt{cl.exe}）与 Windows SDK。版本要求：
+
+\begin{table}[H]
+	\centering
+	\caption{C++ 工具链要求}
+	\label{tab:Cpp:工具链}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{3.4cm}>{\raggedright\arraybackslash}p{4.2cm}>{\raggedright\arraybackslash}p{6.6cm}}
+		\hline
+		组件 & 版本要求 & 说明 \\
+		\hline
+		MSVC & Visual Studio 2019 或更高（推荐 2022） & 官方文档明确要求；2022 的工具集为 v143 \\
+		Windows SDK & 10.0.22000 及以上 & 低于该版本会在链接期出问题（对应官方 issue \#862） \\
+		C++ 标准 & C++17 & 头文件与 CMake 配置都按 C++17 编写 \\
+		CMake & 3.24 及以上（官方最低 3.16） & 见第五章 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\subsection{让命令行认识 cl}
+
+\texttt{cl.exe} 不在系统 PATH 里，必须先进入工具链环境。两种做法：
+
+\begin{enumerate}
+	\item 从开始菜单打开 \textbf{x64 Native Tools Command Prompt for VS 2022}，该窗口已经配置好全部环境变量；
+	\item 在普通 PowerShell 里手动引入：
+\end{enumerate}
+
+\begin{lstlisting}[style=shell]
+& "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
+cl
+\end{lstlisting}
+
+路径中的 \texttt{Community} 按实际安装的版本替换（\texttt{Community} / \texttt{Professional} / \texttt{Enterprise} / \texttt{BuildTools}）。\texttt{cl} 能打印版本号即表示环境就绪。
+
+\begin{tipbox}[官方性能提示]
+	官方文档指出：\textbf{在 Windows 上用 Clang 编译比用 MSVC 性能更好}，官方发布版也是用 Clang 构建的。
+	若对仿真速度敏感，可以安装 LLVM 后用 \texttt{clang-cl} 工具链（CMake 下 \texttt{-T ClangCL}），但\textbf{先用 MSVC 把流程跑通}，再考虑换编译器。
+\end{tipbox}
+
+\section{第一个程序：无界面的仿真}
+
+先不碰界面，用最短的代码确认「能编译、能链接、能加载模型」。
+
+\subsection{代码}
+
+\begin{lstlisting}[style=code, language=C++]
+#include <cstdio>
+#include <mujoco/mujoco.h>
+
+int main() {
+  // version guard: header and library must match
+  if (mjVERSION_HEADER != mj_version()) {
+    std::printf("version mismatch: header %d, library %d\n",
+                mjVERSION_HEADER, mj_version());
+    return 1;
+  }
+
+  // load and compile the model
+  char error[1000] = "could not load binary model";
+  mjModel* m = mj_loadXML("hello.xml", nullptr, error, 1000);
+  if (!m) {
+    std::printf("load error: %s\n", error);
+    return 1;
+  }
+
+  // allocate data
+  mjData* d = mj_makeData(m);
+
+  // simulate 10 seconds
+  while (d->time < 10.0) {
+    mj_step(m, d);
+  }
+  std::printf("time = %.3f  qpos[2] = %.4f\n", d->time, d->qpos[2]);
+
+  // free resources, in reverse order
+  mj_deleteData(d);
+  mj_deleteModel(m);
+  return 0;
+}
+\end{lstlisting}
+
+这段代码里只有四个函数，却构成了所有 MuJoCo 程序的主干：
+
+\begin{itemize}
+	\item \texttt{mj\_loadXML}：解析并\textbf{编译}模型，返回 \texttt{mjModel*}；失败时返回 \texttt{nullptr}，错误信息写进 \texttt{error} 缓冲区。第二个参数是虚拟文件系统，不需要时传 \texttt{nullptr}。
+	\item \texttt{mj\_makeData}：按模型规模分配 \texttt{mjData}，此后运行期不再分配内存。
+	\item \texttt{mj\_step}：推进一个时间步。
+	\item \texttt{mj\_deleteData} / \texttt{mj\_deleteModel}：释放资源。二者的顺序不能颠倒。
+\end{itemize}
+
+\begin{tipbox}[版本一致性检查]
+	官方建议在程序里断言头文件版本与库版本一致：
+	\texttt{if (mjVERSION\_HEADER != mj\_version()) complain();}。
+	头文件与 DLL 来自不同版本时，编译器与链接器不一定报错，但运行结果可能莫名其妙——这一行检查能省下大量排查时间。
+\end{tipbox}
+
+\subsection{用命令行编译}
+
+假设头文件在 \texttt{include}、导入库在 \texttt{lib}、DLL 在 \texttt{bin}（请按实际解压结果调整；若压缩包里没有 \texttt{lib} 目录，见 4.5 节）：
+
+\begin{lstlisting}[style=shell]
+cl /nologo /std:c++17 /EHsc /O2 /I D:\mujoco\mujoco-3.14.0\include ^
+   hello.cc /link /LIBPATH:D:\mujoco\mujoco-3.14.0\lib mujoco.lib
+\end{lstlisting}
+
+编译成功后得到 \texttt{hello.exe}。直接双击运行会提示找不到 \texttt{mujoco.dll}，因此运行前把 \texttt{bin} 目录加进当前窗口的 PATH：
+
+\begin{lstlisting}[style=shell]
+set PATH=D:\mujoco\mujoco-3.14.0\bin;%PATH%
+hello.exe
+\end{lstlisting}
+
+期望输出形如 \texttt{time = 10.000  qpos[2] = 0.3000}：方块下落后静止在地面上。
+
+\begin{note}
+	上面的 \texttt{/link /LIBPATH:...} 只是把库目录告诉链接器。工程一旦不止一个源文件，就应该改用第五章的 CMake 写法——手写 \texttt{cl} 命令很快会难以维护。
+\end{note}
+
+\section{可视化程序}
+
+\subsection{可视化管线的两段式结构}
+
+MuJoCo 的渲染分成两级，理解这一点是看懂示例代码的关键：
+
+\begin{enumerate}
+	\item \textbf{抽象可视化（\texttt{mjv}）}：把 \texttt{mjModel} 与 \texttt{mjData} 变成一串「抽象的几何体」存进 \texttt{mjvScene}，并提供相机、鼠标交互的抽象接口。这一层\textbf{不依赖任何图形库}，换渲染引擎时可以只替换下一层。
+	\item \textbf{OpenGL 渲染（\texttt{mjr}）}：把 \texttt{mjvScene} 画出来，还提供二维文字、矩形、图像读写等辅助功能。它需要一个\textbf{已经创建并置为当前}的 OpenGL 上下文。
+\end{enumerate}
+
+使用 \texttt{mjr\_} 系列函数就需要一个窗口库来创建 OpenGL 上下文。官方示例用 GLFW，本指南同样如此。
+
+\subsection{GLFW 从哪里来}
+
+官方预编译包里\textbf{没有}给用户工程使用的 GLFW CMake 目标，需要自己准备，三种方式任选：
+
+\begin{table}[H]
+	\centering
+	\caption{获取 GLFW 的三种方式}
+	\label{tab:Cpp:GLFW}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{3.2cm}>{\raggedright\arraybackslash}p{5.4cm}>{\raggedright\arraybackslash}p{5.6cm}}
+		\hline
+		方式 & 做法 & 说明 \\
+		\hline
+		vcpkg & \texttt{vcpkg install glfw3} & 与 CMake 配合最省事，目标名 \texttt{glfw}；见 5.5 节 \\
+		官方预编译包 & 下载 \texttt{glfw-3.4.bin.WIN64.zip} & 自带 \texttt{include/GLFW}、\texttt{lib-vc2022/glfw3.lib} 与 \texttt{glfw3.dll} \\
+		随 MuJoCo 示例一起构建 & 直接构建 \texttt{sample} 目录 & 示例的 CMake 会用 FetchContent 自动拉取 GLFW 源码；需要网络与 Git \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\subsection{最小可视化程序}
+
+下面的代码是官方样例 \texttt{sample/basic.cc} 的骨架（去掉部分鼠标细节），完整版会随预编译包一起发布，建议对照阅读。
+
+\begin{lstlisting}[style=code, language=C++]
+#include <cstdio>
+#include <cstring>
+#include <GLFW/glfw3.h>
+#include <mujoco/mujoco.h>
+
+mjModel*  m   = nullptr;   // model
+mjData*   d   = nullptr;   // data
+mjvCamera cam;             // abstract camera
+mjvOption opt;             // visualization options
+mjvScene  scn;             // abstract scene
+mjrContext con;            // GPU context
+
+// keyboard: backspace resets the simulation
+void keyboard(GLFWwindow* window, int key, int, int act, int) {
+  if (act == GLFW_PRESS && key == GLFW_KEY_BACKSPACE) {
+    mj_resetData(m, d);
+    mj_forward(m, d);
+  }
+}
+
+int main(int argc, const char** argv) {
+  if (argc != 2) {
+    std::printf("usage: demo modelfile\n");
+    return 1;
+  }
+
+  // 1. load and compile the model
+  char error[1000] = "could not load model";
+  m = mj_loadXML(argv[1], nullptr, error, 1000);
+  if (!m) {
+    std::printf("load error: %s\n", error);
+    return 1;
+  }
+  d = mj_makeData(m);
+
+  // 2. create a window with an OpenGL context and make it current
+  if (!glfwInit()) {
+    std::printf("could not initialize GLFW\n");
+    return 1;
+  }
+  GLFWwindow* window = glfwCreateWindow(1200, 900, "MuJoCo demo", nullptr, nullptr);
+  glfwMakeContextCurrent(window);
+  glfwSwapInterval(1);            // vsync
+
+  // 3. initialize visualization structures and upload GPU resources
+  mjv_defaultCamera(&cam);
+  mjv_defaultOption(&opt);
+  mjv_defaultScene(&scn);
+  mjr_defaultContext(&con);
+  mjv_makeScene(m, &scn, 2000);            // capacity: 2000 abstract geoms
+  mjr_makeContext(m, &con, mjFONTSCALE_150);
+
+  glfwSetKeyCallback(window, keyboard);
+
+  // 4. main loop: simulate 1/60 s, then render one frame
+  while (!glfwWindowShouldClose(window)) {
+    mjtNum simstart = d->time;
+    while (d->time - simstart < 1.0 / 60.0) {
+      mj_step(m, d);
+    }
+
+    mjrRect viewport = {0, 0, 0, 0};
+    glfwGetFramebufferSize(window, &viewport.width, &viewport.height);
+
+    mjv_updateScene(m, d, &opt, nullptr, &cam, mjCAT_ALL, &scn);
+    mjr_render(viewport, &scn, &con);
+
+    glfwSwapBuffers(window);
+    glfwPollEvents();
+  }
+
+  // 5. teardown, in reverse order
+  mjv_freeScene(&scn);
+  mjr_freeContext(&con);
+  mj_deleteData(d);
+  mj_deleteModel(m);
+  glfwTerminate();
+  return 0;
+}
+\end{lstlisting}
+
+几个\textbf{顺序不能换}的地方，是初学阶段最容易踩的坑：
+
+\begin{enumerate}
+	\item \texttt{glfwMakeContextCurrent} 必须在 \texttt{mjr\_makeContext} 之前：后者要把网格与纹理上传到 GPU，没有当前上下文就没有 GPU 可用。
+	\item 每帧的顺序是 \texttt{mjv\_updateScene} $\rightarrow$ \texttt{mjr\_render}；前者根据可视化选项决定「画什么」，后者负责「怎么画」。
+	\item 退出时先 \texttt{mjv\_freeScene}、\texttt{mjr\_freeContext}（释放 GPU 资源），再删模型与数据，最后 \texttt{glfwTerminate}。
+	\item 帧缓冲尺寸用 \texttt{glfwGetFramebufferSize} 而不是 \texttt{glfwGetWindowSize}：在高分屏缩放的系统上两者不相等，用错会导致画面只画在左下角。反过来，鼠标位移归一化要用窗口尺寸。
+\end{enumerate}
+
+\subsection{常用交互控制}
+
+\texttt{simulate} 里那些顺手的操作，原理都对应一个函数，自己写时按需接上即可：
+
+\begin{table}[H]
+	\centering
+	\caption{相机与扰动的常用接口}
+	\label{tab:Cpp:交互}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{4.4cm}>{\raggedright\arraybackslash}p{9.8cm}}
+		\hline
+		接口 & 作用 \\
+		\hline
+		\texttt{mjv\_moveCamera} & 鼠标钩子：旋转、平移、缩放；配合 \texttt{mjtMouse} 的动作枚举使用 \\
+		\texttt{mjv\_select} & 由窗口坐标反查被点中的几何体，用于「点选物体」 \\
+		\texttt{mjv\_movePerturb}、\texttt{mjv\_applyPerturbForce} & 施加外部扰动力，即按住 Ctrl 拖动效果 \\
+		\texttt{mjv\_defaultPerturb} & 初始化扰动对象 \\
+		\texttt{mjv\_updateCamera} & 只更新相机、不重建几何体列表（相机快速移动时更省） \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\section{DLL 部署}
+
+Windows 上「编译通过但一运行就报错」绝大多数是动态库找不到。三种处理方式：
+
+\begin{enumerate}
+	\item \textbf{临时}：在当前命令行窗口里 \texttt{set PATH=<SDK>\textbackslash{}bin;\%PATH\%}（只对该窗口有效）；
+	\item \textbf{随程序分发}：把 \texttt{mujoco.dll}（若使用 GLFW 且它是动态链接的，还有 \texttt{glfw3.dll}）拷到 \texttt{.exe} 所在目录；
+	\item \textbf{自动拷贝}：在 CMake 里用 \texttt{POST\_BUILD} 自定义命令，构建后自动把 DLL 复制到输出目录——这是工程化的推荐做法，写法见 5.7 节。
+\end{enumerate}
+
+\begin{table}[H]
+	\centering
+	\caption{编译与运行阶段常见问题}
+	\label{tab:Cpp:报错}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{4.4cm}>{\raggedright\arraybackslash}p{4.4cm}>{\raggedright\arraybackslash}p{5.4cm}}
+		\hline
+		现象 & 原因 & 处理 \\
+		\hline
+		\texttt{Cannot open include file: 'mujoco/mujoco.h'} & 头文件目录没给对 & 检查 \texttt{/I} 或 CMake 里的 \texttt{target\_include\_directories} 指向的是 \texttt{include} 这一层 \\
+		\texttt{LNK2019 unresolved external symbol} & 没链接导入库，或架构不一致 & 确认链接了 \texttt{mujoco.lib}；确认 \texttt{x64} 与 SDK 的 64 位一致 \\
+		\texttt{找不到 mujoco.dll} & DLL 不在搜索路径 & 见本节前三条 \\
+		\texttt{0xc000007b} & 32/64 位混用 & 统一用 x64 工具链重新编译 \\
+		\texttt{Cannot open include file: 'GLFW/glfw3.h'} & 缺 GLFW & 见 4.4.2 节 \\
+		\texttt{undefined reference to glfwInit} & GLFW 的链接名不对 & MSVC 下是 \texttt{glfw3.lib}；MinGW 下是 \texttt{libglfw3.a} 或 \texttt{glfw3dll} \\
+		运行瞬间退出、没有输出 & 模型路径不对或 XML 报错 & 打开同目录的 \texttt{MUJOCO\_LOG.TXT} \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{tipbox}[下一步]
+	单文件的手写 \texttt{cl} 命令到此为止。第五章把工程交给 CMake 管理：找库、链接、自动拷贝 DLL、多配置构建，一次配置好，之后只写业务代码。
+\end{tipbox}

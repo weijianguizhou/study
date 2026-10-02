@@ -1,0 +1,234 @@
+% !TeX root = MuJoCo使用指南.tex
+% ============================================================
+%  第二章　Python 环境与 mujoco 库安装
+%  内容：Python 版本选择与安装、虚拟环境、pip 安装与镜像、安装验证、
+%        与 mujoco-py / gymnasium / dm_control / MJX 的关系、常见报错
+%  说明：代码清单一律使用 ASCII 字符（中文说明写在清单之外），
+%        避免 listings 在 XeLaTeX 下处理中日韩字符的排版问题。
+% ============================================================
+
+Python 路线是上手 MuJoCo 最快的路径：官方提供的 \texttt{mujoco} 包\textbf{自带你所需的引擎动态库}，不需要另外下载 SDK，也不需要编译器。本章只解决「把环境装对、装干净」这一件事，具体怎么用见第三章。
+
+\section{Python 版本选择与安装}
+
+\subsection{版本要求}
+
+\mujoco{} 3.14.0 的官方 wheel 覆盖 \textbf{Python 3.10 \textasciitilde{} 3.15}，且只有 \textbf{64 位 Windows}（\texttt{win\_amd64}）的构建，没有 32 位版本。实践中的选择建议见表~\ref{tab:Python:版本}。
+
+\begin{table}[H]
+	\centering
+	\caption{Python 版本选择建议}
+	\label{tab:Python:版本}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{3.4cm}>{\raggedright\arraybackslash}p{8.4cm}}
+		\hline
+		版本 & 评价 & 说明 \\
+		\hline
+		3.10 / 3.11 & 可用 & 部分老牌强化学习库仍以它们为主要测试版本 \\
+		3.12 / 3.13 & \textbf{推荐} & 与 NumPy、PyTorch、gymnasium 等生态的兼容性最稳 \\
+		3.14 / 3.15 & 可用 & mujoco 官方已出 wheel，但周边库（尤其是深度学习框架）可能还没跟上 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\subsection{三种安装方式}
+
+\begin{enumerate}
+	\item \textbf{python.org 官方安装包}（推荐）：下载 Windows installer (64-bit)，安装时务必勾选
+	      \textit{Add python.exe to PATH}，并在 \textit{Customize installation} 中确认勾选 \texttt{pip} 与 \texttt{tcl/tk}。
+	\item \textbf{Miniconda / Anaconda}：注意 conda 渠道里也有一个叫 \texttt{mujoco} 的包（\texttt{conda install -c conda-forge mujoco}），它装出来的是 C/C++ 库与仿真程序，\textbf{不含} Python 绑定；Python 绑定请仍然用 \texttt{pip install mujoco}。
+	\item \textbf{Microsoft Store 版}：不推荐。它的安装路径与权限模型和普通 Python 不同，容易与 \texttt{pip} 的脚本目录冲突。
+\end{enumerate}
+
+\begin{warnbox}[安装路径不要带中文与空格]
+	把 Python 装在 \texttt{D:\textbackslash{}Python312} 这类纯英文短路径下。装在「\texttt{C:\textbackslash{}Users\textbackslash{}张三\textbackslash{}我的 软件\textbackslash{}Python}」下时，\texttt{pip} 的脚本、\texttt{.pth} 文件与部分编译型包都会出现难以定位的路径问题。
+\end{warnbox}
+
+\subsection{验证 Python 与多版本共存}
+
+\begin{lstlisting}[style=shell]
+python --version
+where python
+pip --version
+py -0
+\end{lstlisting}
+
+其中 \texttt{py -0} 会列出本机安装的所有 Python 版本（\texttt{py} 是 Windows 自带的版本启动器）。若装了多个版本，可以显式指定解释器来创建环境，例如 \texttt{py -3.12 -m venv .venv}。
+
+\section{虚拟环境}
+
+\subsection{为什么必须用}
+
+\texttt{pip install mujoco} 默认装进当前解释器的 \texttt{site-packages}。不加隔离时，不同项目对 NumPy、PyTorch 的版本要求会互相打架，而 \texttt{mujoco} 又恰好会连带安装 \texttt{numpy}、\texttt{absl-py}、\texttt{etils}、\texttt{glfw}、\texttt{pyopengl} 等一批依赖。每个项目一个虚拟环境是成本最低的隔离方式。
+
+\subsection{conda：跨语言环境}
+
+\begin{lstlisting}[style=shell]
+conda create -n mujoco python=3.12 -y
+conda activate mujoco
+python -m pip install mujoco
+\end{lstlisting}
+
+\section{安装 mujoco}
+
+\subsection{基本安装}
+
+在已激活的虚拟环境中：
+
+\begin{lstlisting}[style=shell]
+pip install mujoco
+pip install mujoco==3.14.0
+pip install --upgrade mujoco
+pip index versions mujoco
+\end{lstlisting}
+
+四条命令依次是：装最新版、装指定版本、升级、查询可用版本。要做可复现的实验，建议在项目里固定版本，并导出依赖清单：
+
+\begin{lstlisting}[style=shell]
+pip freeze > requirements.txt
+pip install -r requirements.txt
+\end{lstlisting}
+
+\subsection{国内镜像加速}
+
+清华 TUNA 镜像适合一次性使用：
+
+\begin{lstlisting}[style=shell]
+pip install mujoco -i https://pypi.tuna.tsinghua.edu.cn/simple
+\end{lstlisting}
+
+也可以永久写入配置（写入 \texttt{\textasciitilde{}/pip/pip.ini}，即 \texttt{\%APPDATA\%\textbackslash{}pip\textbackslash{}pip.ini}）：
+
+\begin{lstlisting}[style=shell]
+pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+pip config set global.trusted-host pypi.tuna.tsinghua.edu.cn
+pip config list
+\end{lstlisting}
+
+\begin{tipbox}[内网与离线机器]
+	先在一台能联网的同版本机器上把 wheel 下载下来，再拷进内网安装：
+	\texttt{pip download mujoco -d .\textbackslash{}wheels} 与
+	\texttt{pip install --no-index --find-links .\textbackslash{}wheels mujoco}。
+	注意 \texttt{mujoco} 的 wheel 是\textbf{与 Python 版本、平台绑定}的，下载机的 Python 次版本必须与目标机一致。
+\end{tipbox}
+
+\subsection{不要装 mujoco-py}
+
+\begin{warnbox}[mujoco-py 已废弃]
+	\texttt{mujoco-py} 是 OpenAI 为旧版 MuJoCo 2.1 写的第三方封装，依赖已失效的许可证文件与旧版引擎，\textbf{不要}安装它。
+	网上大量「\texttt{pip install mujoco-py} 报错」的教程都已过时。判断方法：
+	\texttt{mujoco-py} 需要 \texttt{MJKEY} 或 \texttt{\textasciitilde{}/.mujoco/mjkey.txt}，而现代的 \texttt{mujoco} 包\textbf{不需要任何密钥}。
+\end{warnbox}
+
+\section{安装验证}
+
+\subsection{四步自检}
+
+\begin{lstlisting}[style=shell]
+python -c "import mujoco, sys; print('mujoco', mujoco.__version__); print('python', sys.version)"
+python -c "import mujoco; print('header', mujoco.mjVERSION_HEADER)"
+python -c "import mujoco, numpy; print(numpy.__version__)"
+python -c "import mujoco; print(mujoco.__file__)"
+\end{lstlisting}
+
+第三条确认 NumPy 可用，第四条确认当前解释器加载的到底是哪一个 \texttt{mujoco}（排除「装到了另一个 Python 里」）。前两条的输出应当满足「库版本与头文件版本一致」，即 \texttt{mujoco.\_\_version\_\_} 对应的整数与 \texttt{mjVERSION\_HEADER} 相同。
+
+\subsection{跑通第一个模型}
+
+把下面的内容存成 \texttt{hello.xml}（本章目录下即可），它是官方文档首页的示例模型：一个固定在世界里的地面、一个光源，以及一个自由下落的方块。
+
+\begin{lstlisting}[style=xml]
+<mujoco>
+  <worldbody>
+    <light diffuse=".5 .5 .5" pos="0 0 3" dir="0 0 -1"/>
+    <geom type="plane" size="1 1 0.1" rgba=".9 0 0 1"/>
+    <body pos="0 0 1">
+      <joint type="free"/>
+      <geom type="box" size=".1 .2 .3" rgba="0 .9 0 1"/>
+    </body>
+  </worldbody>
+</mujoco>
+\end{lstlisting}
+
+\begin{lstlisting}[style=code, language=Python]
+import mujoco
+
+model = mujoco.MjModel.from_xml_path("hello.xml")
+data = mujoco.MjData(model)
+
+print("nq =", model.nq, " nv =", model.nv, " nu =", model.nu)
+print("timestep =", model.opt.timestep)
+
+while data.time < 1.0:
+    mujoco.mj_step(model, data)
+
+print("time =", data.time)
+print("qpos =", data.qpos)
+\end{lstlisting}
+
+期望输出：\texttt{nq = 7}、\texttt{nv = 6}、\texttt{nu = 0}。这正是定义~\ref{def:MuJoCo:广义坐标} 中 $n_{q}>n_{v}$ 的典型情形——自由关节的位置是 3 个平移加 4 个四元数共 7 个数，速度是 3 个线速度加 3 个角速度共 6 个数。仿真结束后 \texttt{qpos[2]} 应当接近方块的半高 $0.3$（方块落在地面上）。
+
+\subsection{打开交互窗口}
+
+\begin{lstlisting}[style=shell]
+python -m mujoco.viewer
+python -m mujoco.viewer --mjcf=hello.xml
+python -m mujoco.viewer --mjcf=C:\mujoco\mujoco-3.14.0\model\humanoid\humanoid.xml
+\end{lstlisting}
+
+第一条启动空会话，之后可以把 MJCF 文件直接拖进窗口；第二条打开指定模型。窗口内的常用操作：左键拖拽旋转、右键拖拽平移、滚轮缩放、双击物体选中并按住 \texttt{Ctrl} 拖动施加外力、\texttt{Tab} 收起左右面板。
+
+\begin{note}
+	上面第二条命令中的 \texttt{humanoid.xml} 来自\textbf{预编译 SDK 的 \texttt{model} 目录}（见 4.1 节），\texttt{pip} 安装的 \texttt{mujoco} 包本身\textbf{不带}这套模型集合。
+	想用官方模型库时，可以克隆 MuJoCo Menagerie（\texttt{git clone https://github.com/google-deepmind/mujoco\_menagerie}），或者下载预编译 zip 只取其中的 \texttt{model} 目录。
+\end{note}
+
+\section{与周边生态的关系}
+
+装好 \texttt{mujoco} 之后，往上还有一层「用起来更省事」的库。它们的定位见表~\ref{tab:Python:生态}，选择原则是：\textbf{先直接用 \texttt{mujoco}，缺什么再往上加}。
+
+\begin{table}[H]
+	\centering
+	\caption{Python 生态中的常见搭配}
+	\label{tab:Python:生态}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{2.9cm}>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{8.0cm}}
+		\hline
+		库 & 安装 & 定位 \\
+		\hline
+		\texttt{mujoco} & \texttt{pip install mujoco} & 官方底层绑定，直接对应 C API；本指南的主角 \\
+		\texttt{mujoco-py} & 不要安装 & 已废弃的第三方封装，见 2.3.3 节 \\
+		\texttt{gymnasium} & \texttt{pip install "gymnasium[mujoco]"} & 强化学习环境接口，\texttt{gym.make("Ant-v5")} 即可用 MuJoCo 环境 \\
+		\texttt{dm\_control} & \texttt{pip install dm\_control} & DeepMind 的物理与任务库，依赖 \texttt{mujoco}，含大量现成任务 \\
+		MJX & \texttt{pip install mujoco-mjx} & MuJoCo 的 JAX 后端，可在 GPU 上批量仿真，适合大规模并行与可微仿真 \\
+		MuJoCo Warp & 见官方文档 & NVIDIA Warp 后端，同样是 GPU 批量仿真 \\
+		\texttt{mujoco.rollout} & 随 \texttt{mujoco} 附带 & 把「循环 \texttt{mj\_step}」搬到 C++ 层并用线程池并行，采样提速明显 \\
+		\texttt{mujoco[usd]} & \texttt{pip install mujoco[usd]} & 把场景与轨迹导出成 USD，交给 Omniverse / Blender 渲染 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\section{常见安装问题}
+
+\begin{table}[H]
+	\centering
+	\caption{pip 安装阶段常见问题}
+	\label{tab:Python:安装报错}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{5.4cm}>{\raggedright\arraybackslash}p{4.4cm}>{\raggedright\arraybackslash}p{4.6cm}}
+		\hline
+		现象 & 原因 & 处理 \\
+		\hline
+		\texttt{Could not find a version that satisfies the requirement mujoco} & Python 版本不在支持范围，或用了 32 位 Python & 用 \texttt{platform.architecture()} 确认是 64 位，且版本在 3.10 \textasciitilde{} 3.15 \\
+		\texttt{ERROR: Could not build wheels}（开始编译源码） & 没有匹配当前 Python 版本的 wheel，pip 退回到源码编译 & 换用受支持的 Python 次版本；不要试图在 Windows 上从源码装 Python 绑定 \\
+		下载卡住或超时 & 直连 PyPI 不稳定 & 用 3.3.2 节的镜像，或配置代理 \texttt{pip --proxy http://host:port install mujoco} \\
+		\texttt{Access is denied} & 装进了系统 Python 的 \texttt{Program Files} 目录 & 在虚拟环境里装，不要用管理员权限的全局安装 \\
+		\texttt{import mujoco} 报 \texttt{DLL load failed} & 加载到了错误或残缺的安装；或混装了多个版本 & 打印 \texttt{mujoco.\_\_file\_\_} 确认路径；卸载后重装 \texttt{pip uninstall mujoco -y \&\& pip install mujoco} \\
+		同时存在 conda 的 \texttt{mujoco} 与 pip 的 \texttt{mujoco} & 两套文件互相覆盖 & 只保留一套：conda 渠道的包用于 C++，Python 绑定用 pip 装进独立环境 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{tipbox}[下一步]
+	环境就绪后进入第三章：加载模型、推进仿真、读取状态，以及把画面显示出来或渲染成图片。
+\end{tipbox}

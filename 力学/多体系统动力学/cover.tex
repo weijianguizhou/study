@@ -1,0 +1,49 @@
+% !TeX root = 控制工程基础笔记.tex
+% ============================================================
+%  封面：李思风（极简学术）—— 白底、居中标题、无装饰边框
+%  参照《线性代数：原理与应用》（李思，清华大学）封面版式
+%
+%  可用字段（在主文件导言区 \newcommand 预定义即可覆盖）：
+%    \notename      主标题（必填，主文件定义）
+%    \noteauthor    作者（必填，主文件定义）
+%    \notesubtitle  标题下方小字，默认 \today（日期/版本行）
+%    \noteextra     底部单位/学院行，默认不显示
+%
+%  说明：中部插图为「子昕手绘」（由 figures/prep_cover_image.m 预处理，
+%        见 figures/子昕手绘_封面.png），整段 \includegraphics 删除后
+%        即为纯文字极简封面。
+% ============================================================
+\begin{titlepage}
+	\thispagestyle{empty}
+	\providecommand{\notesubtitle}{\today}
+	\providecommand{\noteextra}{}
+	\begin{center}
+		\vspace*{3.8cm}
+
+		% ---- 主标题 ----
+		{\bfseries\songti\fontsize{24.8}{30}\selectfont \notename\par}
+
+		\vspace{3.0cm}
+
+		% ---- 日期 / 版本行 ----
+		{\songti\fontsize{14.4}{18}\selectfont （\notesubtitle）\par}
+
+		\vspace{2.4cm}
+
+		% ---- 封面插图：子昕手绘（可整段删除）----
+		\includegraphics[width=5.0cm]{figures/子昕手绘_封面.png}\\[0.6em]
+		{\fangsong\fontsize{10.5}{12}}
+
+		\vspace{2.6cm}
+
+		% ---- 作者（楷体）----
+		{\kaishu\fontsize{24.8}{30}\selectfont \noteauthor\par}
+
+		\vspace{1.5cm}
+
+		% ---- 单位 / 学院（未定义则不显示）----
+		{\songti\fontsize{20.7}{26}\selectfont \noteextra\par}
+
+		\vspace*{1.4cm}
+	\end{center}
+\end{titlepage}

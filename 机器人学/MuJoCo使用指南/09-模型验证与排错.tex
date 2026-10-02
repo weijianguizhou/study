@@ -1,0 +1,210 @@
+% !TeX root = MuJoCo使用指南.tex
+% ============================================================
+%  第九章　模型验证、调参与排错
+%  内容：可视化检查、量化自检（质量/惯量/能量/警告）、
+%        稳定性调参速查、报错信息索引、性能优化
+%  说明：警告枚举名以安装版本为准（mujoco.mjtWarning）。
+% ============================================================
+
+模型能编译、能动，不等于「动得对」。本章把「怎么判断模型是对的」变成几个可以照做的检查，再给出调参与排错的速查表。
+
+\section{先用眼睛看一遍}
+
+拿到任何新模型，第一件事是用查看器打开，按下面的顺序看：
+
+\begin{enumerate}
+	\item 打开模型看比例：\texttt{simulate.exe model\textbackslash{}scene.xml}，或 Python 查看器 \texttt{python -m mujoco.viewer} 加参数 \texttt{--mjcf=scene.xml}；
+	\item \textbf{看比例}：机器人是不是约等于真人/真实机构的大小？如果大得看不见或小得看不清，几乎一定是单位问题（第七章）；
+	\item \textbf{看姿态}：连杆朝向是否符合预期，有没有整体旋转 $90^\circ$（输出坐标系选错）、有没有零件跑到别的连杆上（拆分错误）；
+	\item \textbf{看接触体}：在右侧渲染面板里把碰撞几何所在的组打开，检查相邻连杆的碰撞体是否互相穿插；
+	\item \textbf{看惯性盒}：打开「等效惯性盒」（equivalent inertia box）显示，检查质量分布是否合理——一个明显偏在一边的惯性盒通常意味着某个零件的密度没设；
+	\item \textbf{看接触力}：拖动施加外力，观察接触点与接触力方向是否正常。
+\end{enumerate}
+
+鼠标操作为：左键拖拽旋转、右键拖拽平移、滚轮缩放、按住 \texttt{Ctrl} 拖动施加外力。查看器支持拖动 MJCF 文件到窗口中打开，\texttt{Ctrl+L} 可以重新加载当前文件——改完 XML 不必重启程序。想直接得到模型全文，可用 \texttt{Ctrl+M} 把模型导出为文本文件，对比「你写的」与「编译器理解的」之间的差异。
+
+\section{量化自检}
+
+\subsection{第一条：质量与惯量}
+
+\begin{lstlisting}[style=code, language=Python]
+import mujoco
+import numpy as np
+
+m = mujoco.MjModel.from_xml_path("scene.xml")
+
+for i in range(m.nbody):
+    name = mujoco.mj_id2name(m, mujoco.mjtObj.mjOBJ_BODY, i) or f"body{i}"
+    print(f"{name:16s} mass = {m.body_mass[i]:8.4f}  "
+          f"inertia(diag) = {m.body_inertia[i]}")
+\end{lstlisting}
+
+要检查的三件事：
+
+\begin{itemize}
+	\item \textbf{数量级}：每个连杆的质量应当与真实零件相符（例如 $0.5$ \textasciitilde{} $3$ kg）；出现 $10^{-9}$ 或 $10^{6}$ 这样的数就是单位或密度问题；
+	\item \textbf{零质量}：移动物体的质量不能为 $0$，引擎会直接报错；
+	\item \textbf{正定}：惯性张量的三个主值都必须为正且满足三角不等式，否则会报警告 \texttt{mjWARN\_INERTIA}（URDF 导入时可用 \texttt{balanceinertia="true"} 让编译器修补）。
+\end{itemize}
+
+\subsection{第二条：警告计数}
+
+引擎不会抛异常，而是把异常情况记在 \texttt{data.warning} 里。\textbf{每次仿真结束后都查一遍}，这是最省事的「体检」：
+
+\begin{lstlisting}[style=code, language=Python]
+import mujoco
+import numpy as np
+
+WARNINGS = [
+    "mjWARN_BADQPOS", "mjWARN_BADQVEL", "mjWARN_BADQACC", "mjWARN_BADCTRL",
+    "mjWARN_INERTIA", "mjWARN_CONTACTFULL", "mjWARN_CNSTRFULL", "mjWARN_VGEOMFULL",
+]
+
+def check(d):
+    ok = True
+    for name in WARNINGS:
+        try:
+            stat = d.warning[getattr(mujoco.mjtWarning, name)]
+        except AttributeError:      # 版本不同，枚举名可能变化
+            continue
+        if stat.number:
+            ok = False
+            print(f"{name}: count={stat.number} lastinfo={stat.lastinfo}")
+    if not np.isfinite(d.qpos).all() or not np.isfinite(d.qvel).all():
+        ok = False
+        print("state contains NaN or Inf")
+    return ok
+\end{lstlisting}
+
+\begin{table}[H]
+	\centering
+	\caption{常见警告的含义}
+	\label{tab:Debug:警告}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{4.2cm}>{\raggedright\arraybackslash}p{10.0cm}}
+		\hline
+		警告 & 含义与处理 \\
+		\hline
+		\texttt{mjWARN\_BADQPOS} / \texttt{BADQVEL} / \texttt{BADQACC} / \texttt{BADCTRL} & 状态量或控制量出现非有限值（NaN/Inf），即\textbf{发散}。先减小时间步长，再检查质量与惯量是否合理、是否有初始穿插 \\
+		\texttt{mjWARN\_INERTIA} & 惯量不满足物理约束。检查密度设置，或对 URDF 使用 \texttt{balanceinertia} \\
+		\texttt{mjWARN\_CONTACTFULL} & 接触点数量超过上限（\texttt{size} 里的 \texttt{nconmax}），超出的接触被丢弃。减少不必要的碰撞对，或调大上限 \\
+		\texttt{mjWARN\_CNSTRFULL} & 约束行数超过上限，同上处理 \\
+		\texttt{mjWARN\_VGEOMFULL} & 可视化几何体数量超过 \texttt{mjvScene} 容量，只影响显示 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\subsection{第三条：静态平衡检查}
+
+把机器人放在地面上、不加控制，跑一小段时间。一个物理上合理的模型应当\textbf{基本静止}：各关节速度保持在小量级，位置漂移缓慢且单调。
+
+\begin{lstlisting}[style=code, language=Python]
+import mujoco
+import numpy as np
+
+m = mujoco.MjModel.from_xml_path("scene.xml")
+d = mujoco.MjData(m)
+mujoco.mj_resetDataKeyframe(m, d, 0)
+
+for _ in range(2000):
+    mujoco.mj_step(m, d)
+
+print("max |qvel| =", np.abs(d.qvel).max())
+print("drift      =", np.abs(d.qpos - d.qpos).max())   # 与初值比较请先另存副本
+print("tool z     =", d.site("tool").xpos[2])
+\end{lstlisting}
+
+若速度持续增长，说明模型里有互相穿透的碰撞体、或有未限位的自由度在重力下加速；若一放手就「弹飞」，多半是初始穿插导致巨大的排斥力（官方文档在「发散」一节里正是把这种情况列为首要原因之一）。
+
+\section{稳定性与调参}
+
+\subsection{参数速查}
+
+\begin{table}[H]
+	\centering
+	\caption{常用的稳定性参数}
+	\label{tab:Debug:参数}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{2.9cm}>{\raggedright\arraybackslash}p{2.4cm}>{\raggedright\arraybackslash}p{8.9cm}}
+		\hline
+		参数 & 典型值 & 作用与调整方向 \\
+		\hline
+		\texttt{option/timestep} & $0.002$ s & 积分步长。\textbf{发散时第一个要减小的参数}；减半通常就能稳住，代价是仿真变慢 \\
+		\texttt{option/integrator} & \texttt{implicitfast} & 积分器。默认 \texttt{Euler} 最省；\texttt{implicitfast} 对阻尼项隐式处理，稳定性更好而开销增加不多；\texttt{RK4} 精度高但慢 \\
+		\texttt{joint/damping} & $0.1$ \textasciitilde{} $1$ & 关节黏性阻尼，抑制高频振荡的有效手段 \\
+		\texttt{joint/armature} & $0.01$ \textasciitilde{} $0.1$ & 关节等效惯量，改善数值条件；轻质连杆尤其需要 \\
+		\texttt{joint/frictionloss} & 视机构而定 & 干摩擦，用来抑制「缓慢滑移」 \\
+		\texttt{geom/friction} & \texttt{1 0.005 0.0001} & 滑动、扭转、滚动摩擦系数。打滑就调大第一项 \\
+		\texttt{geom/solref} & \texttt{0.02 1} & 约束的时间常数与阻尼比。值越大越「软」，接触越不容易抖 \\
+		\texttt{geom/solimp} & \texttt{0.9 0.95 0.001} & 约束阻抗。\textbf{增大前两项可以明显减少缓慢滑移}，但需要更小的时间步配合 \\
+		\texttt{option/impratio} & $1$ \textasciitilde{} $10$ & 法向与切向阻抗之比，配合 \texttt{solimp} 一起调，是减少滑移的主力 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{warnbox}[「滑移」不是摩擦不够]
+	官方文档专门澄清了一个反直觉的现象：MuJoCo 的约束是\textbf{软}的，因此接触点出现缓慢滑移是模型本身的数学性质，而不是摩擦系数设小了。
+	要抑制滑移，正确做法是增大 \texttt{solimp} 的阻抗、提高 \texttt{impratio}、换用 Newton 求解器，而不是盲目加大摩擦系数。而这类调整通常需要更小的时间步来保持稳定。
+\end{warnbox}
+
+\subsection{按症状查方向}
+
+\begin{table}[H]
+	\centering
+	\caption{症状与调整方向}
+	\label{tab:Debug:症状}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{4.4cm}>{\raggedright\arraybackslash}p{9.8cm}}
+		\hline
+		症状 & 处理顺序 \\
+		\hline
+		直接发散（出现 NaN） & 减小 \texttt{timestep} $\rightarrow$ 换 \texttt{implicitfast} $\rightarrow$ 检查质量与惯量 $\rightarrow$ 检查初始是否穿插 \\
+		高频抖动 & 加 \texttt{damping} / \texttt{armature}；放宽 \texttt{solref}；确认碰撞网格没有重复 \\
+		接触处缓慢滑动 & 提高 \texttt{solimp} 与 \texttt{impratio}；必要时启用 \texttt{NoSlip} 后处理求解器（会牺牲凸性，谨慎） \\
+		相邻连杆互相卡住 & 碰撞体过大或凸包填实了凹处；改用更小的碰撞体或拆分 \\
+		物体穿过地面 & \texttt{timestep} 过大导致穿透；减小步长或加厚地面几何体 \\
+		同样的初值每次结果不同 & 检查是否用了多线程/多进程而未固定随机种子；单次仿真本身是确定的 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\section{报错信息索引}
+
+\begin{table}[H]
+	\centering
+	\caption{按报错信息定位问题}
+	\label{tab:Debug:报错索引}
+	\footnotesize
+	\begin{tabular}{>{\raggedright\arraybackslash}p{5.6cm}>{\raggedright\arraybackslash}p{8.6cm}}
+		\hline
+		报错关键词 & 通常原因 \\
+		\hline
+		\texttt{could not open file} & 网格或纹理路径不对；见 8.1.2 节 \\
+		\texttt{Error: repeated name} & 同类元素重名 \\
+		\texttt{Error: unknown element} / \texttt{unknown attribute} & XML 元素或属性拼写错误；URDF 里拼错的属性会被静默忽略 \\
+		\texttt{mass and inertia of moving bodies must be larger than mjMINVAL} & 某个移动物体的质量或惯量为 $0$（常见于只写了 visual 几何体的情况） \\
+		\texttt{inertia must be positive definite} & 惯量非法；URDF 可用 \texttt{balanceinertia} \\
+		\texttt{mesh has ... faces} / 翻转面 & 网格法线方向不一致 \\
+		\texttt{Error: ... qhull ...} & 凸包计算失败，通常是网格退化或顶点共面严重；尝试减面 \\
+		\texttt{Loading model error: ...} & 加载阶段的通用前缀，后面的具体信息才是关键 \\
+		\texttt{DLL load failed} / \texttt{找不到 mujoco.dll} & 运行环境问题，见 2.6 与 4.5 节 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\section{性能优化}
+
+\begin{enumerate}
+	\item \textbf{用 Release 构建}：Debug 版可能慢数倍。多配置生成器下别忘了 \texttt{--config Release}。
+	\item \textbf{减少碰撞对}：用 \texttt{contype}/\texttt{conaffinity} 关掉不可能接触的几何体之间的检测，用 \texttt{<contact><exclude>} 排除结构上永远不接触的物体对。这一步的收益通常最大。
+	\item \textbf{简化碰撞网格}：接触检测的开销与三角形数量相关；用基本体或减面网格做碰撞体。
+	\item \textbf{关掉不需要的传感器与可视化}：传感器每步都要计算，不需要的删掉。
+	\item \textbf{并行采样}：一个模型配多个 \texttt{mjData}，每个线程一个；Python 下可直接用 \texttt{mujoco.rollout}，把「循环 \texttt{mj\_step}」放到 C++ 层并用线程池执行（注意 Python 绑定在调用 C 函数时会释放 GIL，但其余 Python 代码仍受 GIL 限制，因此多\textbf{进程}往往比多线程更划算）。
+	\item \textbf{上 GPU}：需要成千上万条并行轨迹时，改用 MJX（JAX 后端）或 MuJoCo Warp，它们消费同样的 \texttt{mjModel}/\texttt{mjData} 语义，可以无缝对照。
+	\item \textbf{换编译器}：官方指出 Windows 上 Clang 比 MSVC 更快；对性能敏感的项目值得一试（第六章）。
+\end{enumerate}
+
+\begin{tipbox}[本指南到此结束]
+	后续想深入，建议按这个顺序读官方文档：\textit{Modeling}（建模语言与各类元素语义）$\rightarrow$ \textit{Computation}（求解器与数值细节）$\rightarrow$ \textit{XML Reference}（属性字典）$\rightarrow$ \textit{Programming}（C API 与可视化）。
+	遇到具体问题，MuJoCo 的 GitHub Issues 里几乎都能搜到同样的报错。
+\end{tipbox}
