@@ -1,0 +1,50 @@
+# ===== LaTeX 编译中间产物 =====
+*.aux
+*.log
+*.toc
+*.out
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+*.xdv
+*.bcf
+*.blg
+*.run.xml
+*.nav
+*.snm
+*.vrb
+*.bbl
+
+# ===== Typst 编译中间产物 =====
+# 保留导出的 PDF，仅忽略临时文件
+*.typ.tmp
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# ===== 编辑器 / 系统 =====
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+
+# ===== Obsidian =====
+# 工作区布局因人而异，避免频繁冲突
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.trash/
+
+# ===== 工具缓存 / 临时预览 =====
+.tmp-preview/
+.claudian/sessions/
+
+# ===== 备份文件 =====
+*.bak

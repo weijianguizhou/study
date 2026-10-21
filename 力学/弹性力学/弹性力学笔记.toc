@@ -1,5 +1,0 @@
-\contentsline {chapter}{\numberline {第一章}平面问题的基本理论}{3}{chapter.1}%
-\contentsline {section}{\numberline {1.1}平面应力问题与平面应变问题}{3}{section.1.1}%
-\contentsline {subsection}{\numberline {1.1.1}平面应力问题}{3}{subsection.1.1.1}%
-\contentsline {subsection}{\numberline {1.1.2}平面应变问题}{4}{subsection.1.1.2}%
-\contentsfinish 
