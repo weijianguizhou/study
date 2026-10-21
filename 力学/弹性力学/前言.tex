@@ -1,0 +1,101 @@
+% !TeX root = 弹性力学笔记.tex
+% 前言（对应 Typst 版的序页）—— 不编号、不进目录
+% ------------------------------------------------------------
+
+本笔记是南京理工大学尹晓春老师《弹性力学》课程的学习整理。
+
+先聊聊尹老师上课前讲的那些话吧。
+
+尹老师说，他从七八年开始授课，几十年下来，只有一个学生真正学明白了弹性力学。
+
+那我或许能成为第二个？
+
+尹老师把学习的目的分为四层：功利、兴趣、竞争和责任。
+
+尹老师把人才分为两类：优秀人才和尖端人才。
+
+先说功利。功利是最实在的一层。读书为了什么？为了一纸文凭，为了找份好工作，为了多挣几个钱，为了往后的房子车子都安稳些，这些都是功利。尹老师从不避讳谈功利。他说，人总得先活下去，才谈得上别的，饿着肚子谈情怀不现实。所以功利并不可耻，它恰恰是绝大多数人开始学习的第一个理由。
+
+可功利也有毛病：它只问“够不够用”，不问“学没学透”。考试一过、工作一找、职称一评，动力就散了。只靠功利读书的人，学到“够用”就停手，多一步都不肯走。这样的人能合格，却很难出众。
+
+比功利高一层的，是兴趣。兴趣不图什么，只图一个喜欢。真喜欢了，再枯燥的公式也能看出门道来。弹性力学的公式又多又长，若不是觉得它有意思，是很难坐得住的。但兴趣这东西也靠不住，今天有，明天未必还有。光靠兴趣，容易三天打鱼两天晒网，入个门可以，成事却不够。
+
+再往上是竞争。竞争图的是比别人强。它确实能逼人进步，让人不敢松懈：考试的排名、评奖评优，都属这一类。可竞争的坏处，是把读书变成一场赛跑，眼里只剩对手和名次。而做学问真正的对手从来不是别人，是问题本身。
+
+最高一层是责任。尹老师说，一个人读到大学、读到研究生，家里供着，国家养着，总得有人去做那些又苦又难、没人愿意干却必须有人干的事。往大了说，国家的科技要人扛；往小了说，本专业、本行业的传承要人接。功利让人出发，兴趣让人上路，竞争让人跑快，可只有责任，才能让人一直走下去。
+
+说完目的，再说人才。优秀人才是把交代的事做好的人，却仍是可以被替代的人：他是高级的观察者，能轻易看懂尖端人才给出的方案，是一个行业的脊梁。尖端人才则是能开创新局面、做出别人做不出来的东西的人，是真正解决问题、往前再拱一步的人。两类人都要，缺一不可。只是优秀可以培养，尖端往往靠磨炼，因为成材之前，谁也不知道自己究竟是不是那块料。做不了尖端人才，就当优秀人才，当尖端人才的助手。
+
+\subsection*{写在前面：四大方程的一张地图}
+
+题外话说到这里，把眼光收回到课程本身。
+
+整门课翻起来公式成堆，可骨架只有四组方程。它们各自回答一个很朴素的问题：力怎么才能彼此不打架？变形怎么和位移对上账？材料又是怎么回应力的？最后，凭什么是这一道题而不是别的题？四个位置摆清楚了，后面再往里填细节，就不容易迷路。
+
+这里先按三维的一般情形，也就是空间问题，把四组方程摆一遍。平面问题不是另立门户，它只是这一套方程在薄板、长柱体上的退化：公式长得几乎一样，只是少了几项。等看到第二章那些式子，回来对一眼这张地图，就知道它们是从哪儿裁下来的。
+
+\begin{myformula}{平衡微分方程}
+    \begin{equation}
+	\begin{aligned}
+		&\frac{\partial\sigma_x}{\partial x}+\frac{\partial\tau_{yx}}{\partial y}+\frac{\partial\tau_{zx}}{\partial z}+f_x=0,\\[2pt]
+		&\frac{\partial\tau_{xy}}{\partial x}+\frac{\partial\sigma_y}{\partial y}+\frac{\partial\tau_{zy}}{\partial z}+f_y=0,\\[2pt]
+		&\frac{\partial\tau_{xz}}{\partial x}+\frac{\partial\tau_{yz}}{\partial y}+\frac{\partial\sigma_z}{\partial z}+f_z=0.
+	\end{aligned}
+\end{equation}
+\end{myformula}
+
+即 $\nabla\cdot\boldsymbol{\sigma}+\boldsymbol{f}=\boldsymbol{0}$。
+
+\begin{myformula}{几何方程}
+\begin{equation}
+    \begin{aligned}
+		&\varepsilon_x=\frac{\partial u}{\partial x},
+		\qquad
+		\varepsilon_y=\frac{\partial v}{\partial y},
+		\qquad
+		\varepsilon_z=\frac{\partial w}{\partial z},\\[4pt]
+		&\gamma_{xy}=\frac{\partial u}{\partial y}+\frac{\partial v}{\partial x},
+		\qquad
+		\gamma_{yz}=\frac{\partial v}{\partial z}+\frac{\partial w}{\partial y},
+		\qquad
+		\gamma_{zx}=\frac{\partial w}{\partial x}+\frac{\partial u}{\partial z}.
+	\end{aligned}
+\end{equation}
+\end{myformula}
+
+
+\begin{myformula}{物理方程（本构方程）}
+\begin{equation}
+	\begin{aligned}
+		\varepsilon_x&=\frac{1}{E}\left[\sigma_x-\mu\left(\sigma_y+\sigma_z\right)\right],
+		&\quad
+		\gamma_{xy}&=\frac{\tau_{xy}}{G}=\frac{2(1+\mu)}{E}\tau_{xy},\\[4pt]
+		\varepsilon_y&=\frac{1}{E}\left[\sigma_y-\mu\left(\sigma_z+\sigma_x\right)\right],
+		&\quad
+		\gamma_{yz}&=\frac{\tau_{yz}}{G}=\frac{2(1+\mu)}{E}\tau_{yz},\\[4pt]
+		\varepsilon_z&=\frac{1}{E}\left[\sigma_z-\mu\left(\sigma_x+\sigma_y\right)\right],
+		&\quad
+		\gamma_{zx}&=\frac{\tau_{zx}}{G}=\frac{2(1+\mu)}{E}\tau_{zx}.
+	\end{aligned}
+\end{equation}
+\end{myformula}
+
+\begin{myformula}{边界条件}
+\begin{equation}
+	\begin{aligned}
+		l\sigma_x+m\tau_{yx}+n\tau_{zx}&=\bar f_x,\\[2pt]
+		l\tau_{xy}+m\sigma_y+n\tau_{zy}&=\bar f_y,\\[2pt]
+		l\tau_{xz}+m\tau_{yz}+n\sigma_z&=\bar f_z;
+	\end{aligned}
+	\qquad\text{（应力边界）}
+\end{equation}
+边界上给定位移的部分，则要满足位移边界条件：
+\begin{equation}
+    u=\bar u,
+	\qquad
+	v=\bar v,
+	\qquad
+	w=\bar w
+	\qquad\text{（位移边界）}
+\end{equation}
+\end{myformula}

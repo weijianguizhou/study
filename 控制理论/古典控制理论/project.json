@@ -3,12 +3,12 @@
     "mode": "engine_dependencies"
   },
   "color": "",
-  "engine": "latexmk",
+  "engine": "typst",
   "exports": [],
   "forked_from": null,
   "hidden": false,
   "kind": "",
-  "main_doc": "控制工程基础笔记.tex",
+  "main_doc": "Typst笔记/古典控制理论笔记.typ",
   "name": "控制工程基础笔记",
   "tex": {
     "distribution": "other",
@@ -4845,6 +4845,5 @@
       "zztex": "17.7"
     },
     "recorded_at": 1789388074.9132023
-  },
-  "tex_flavor": "xelatex"
+  }
 }

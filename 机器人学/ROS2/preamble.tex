@@ -1,0 +1,34 @@
+% ============================================================
+% 共享导言区 preamble.tex
+% 本文件被 main.tex(整书编译)和各章文件(单独编译)共同引用,
+% 从而保证两种编译方式下的宏包与样式完全一致。
+% 注意: 本文件不含 \documentclass, 只放宏包与样式设置。
+% ============================================================
+\usepackage[a4paper,margin=1.1in]{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,decorations.pathreplacing,calc}
+\usepackage{booktabs}
+
+% 代码环境样式设置
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\ttfamily,
+    commentstyle=\color{gray}\ttfamily,
+    stringstyle=\color{red}\ttfamily,
+    backgroundcolor=\color{gray!8},
+    frame=single,
+    rulecolor=\color{gray!40},
+    breaklines=true,
+    showstringspaces=false,
+    columns=fullflexible,
+    keepspaces=true,
+    % 允许中文注释/内容正常显示
+    extendedchars=true,
+    literate={
+        {·}{{\cdot}}1
+    }
+}

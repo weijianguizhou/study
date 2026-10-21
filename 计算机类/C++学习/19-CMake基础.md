@@ -41,7 +41,8 @@ cmake --build .                 # 构建（调VS或make来实际编译）
 
 ```powershell
 # Windows上用MSVC的话：
-cmake .. -G "Visual Studio 17 2022"   # 指定生成器
+cmake .. -G "Visual Studio 17 2022"   # 指定生成器（VS 2022）
+cmake .. -G "Visual Studio 18 2026"   # 指定生成器（VS 2026，平台工具集 v145）
 cmake --build . --config Release       # Release模式构建
 ```
 

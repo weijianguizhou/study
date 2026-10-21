@@ -1,0 +1,766 @@
+% !TeX root = main.tex
+
+上一章点几下鼠标，磁盘上就多出 \code{.sln}、\code{.vcxproj}、\code{.vcxproj.filters}、\code{.vcxproj.user} 四个文件，而多数人对它们的了解止步于“不要删”。本章把它们拆开，讲清楚\textbf{解决方案 $\supset$ 项目 $\supset$ 文件}这三层关系，再进入真实工程躲不开的部分：多项目拆分、静态库与动态库、配置映射、属性表、版本控制卫生。学完你应该能从零搭出一个三项目解决方案，并知道自己每个操作改了哪个文件的哪一行。
+
+\section{解决方案、项目、文件：三层关系}
+
+\begin{lstlisting}[style=textstyle, breaklines=true]
+MyProduct.slnx              <- 解决方案：一次完整的"打开 / 构建 / 调试"容器
++-- App.vcxproj             <- 项目：一套编译链接设置 + 一份文件清单
+|   +-- main.cpp            <- 文件：编译器真正读的东西
+|   +-- App.vcxproj.filters <- 只给 IDE 看的分组信息
++-- MathLib.vcxproj         <- 项目：产出 MathLib.lib
++-- Plugin.vcxproj          <- 项目：产出 Plugin.dll + Plugin.lib
+\end{lstlisting}
+
+\begin{longtable}{L{2.2cm}L{5.6cm}L{3.4cm}L{2.6cm}}
+\toprule
+\textbf{层次} & \textbf{是什么} & \textbf{谁读它} & \textbf{产出} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{层次} & \textbf{是什么} & \textbf{谁读它} & \textbf{产出} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{文件} & \code{.cpp} / \code{.h} / \code{.rc} / 资源 & 编译器 \code{cl.exe} & \code{.obj} \\
+\textbf{项目} & 一个 MSBuild 项目文件（C++ 是 \code{.vcxproj}） & MSBuild & 一个 \code{.exe} / \code{.lib} / \code{.dll} \\
+\textbf{解决方案} & 项目清单 + 配置映射 + IDE 状态 & IDE 与 MSBuild & \textbf{没有产出} \\
+\end{longtable}
+
+为什么要分三层：编译器和链接器只认文件，但程序还要记住一堆与文件无关的东西——用哪个 C++ 标准、警告几级、定义哪些宏、链接哪些库、产出是 exe 还是 dll，这些存在\textbf{项目}里；一个项目只产出一个东西，而软件由多个东西组成，于是需要\textbf{解决方案}来一次打开全部、按依赖顺序一次构建全部、并描述项目之间的关系。
+
+\begin{warnbox}[注意]
+解决方案\textbf{本身不产出任何二进制}。\code{msbuild MyProduct.slnx} 做的事只是“按依赖顺序把里面每个项目分别构建一遍”，所以“生成解决方案失败”从来不是解决方案的错，而是里面某个项目的错——看报错里的项目名。只想构建一个项目时用 \ui{生成 > 生成 App}。
+\end{warnbox}
+
+\section{项目文件的解剖}
+
+\subsection{四个文件各管什么}
+
+\begin{longtable}{L{4.4cm}L{4.6cm}L{2.8cm}L{2.2cm}}
+\toprule
+\textbf{文件} & \textbf{作用} & \textbf{该不该手改} & \textbf{进 Git 吗} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{文件} & \textbf{作用} & \textbf{该不该手改} & \textbf{进 Git 吗} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\code{.sln} / \code{.slnx} & 解决方案：项目清单 + 配置映射 & 官方不建议手改 \code{.sln} & \textbf{[OK]} \\
+\code{.vcxproj} & MSBuild 项目：编译链接设置 + 文件清单 & 可以，但优先用属性页 & \textbf{[OK]} \\
+\code{.vcxproj.filters} & 解决方案资源管理器里的\textbf{筛选器}（显示分组） & 几乎不用 & \textbf{[OK]} \\
+\code{.vcxproj.user} & 个人设置：调试命令行参数、工作目录、环境变量 & 不手改 & \textbf{[X]} \\
+\code{.suo}（在 \code{.vs} 下） & 用户级状态：断点、窗口布局 & 不手改 & \textbf{[X]} \\
+\end{longtable}
+
+一句话：\textbf{\code{.filters} 只影响 IDE 显示，\code{.user} 和 \code{.suo} 只属于你个人}。
+
+\subsection{\code{.sln}：一份“不打算让你手改”的文本}
+
+官方文档的原话是：\code{.sln} 是一个有自有格式的文本文件，\textbf{不打算让人手工编辑}（真实文件用制表符缩进）：
+
+\begin{lstlisting}[style=textstyle, breaklines=true]
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "App", "src\App\App.vcxproj", "{1C1D2E3F-0001-4A5B-8C7D-000000000001}"
+EndProject
+Global
+    GlobalSection(SolutionConfigurationPlatforms) = preSolution
+        Debug|x64 = Debug|x64
+    EndGlobalSection
+EndGlobal
+\end{lstlisting}
+
+\begin{itemize}
+  \item \textbf{\code{Format Version 12.00} 长期没有变过}，所以它不代表文件新旧；标注 IDE 版本的是第二行注释。
+  \item \code{Project(...)} 行里有两个 GUID：\textbf{第一个是项目类型 GUID}，\code{8BC9CEB8-8B4A-}\allowbreak\code{11D0-8D11-00A0C91BC942} 表示 C++ 项目（解决方案文件夹用 \code{2150E333-8FDC-}\allowbreak\code{42A3-9474-1A3956D46DE8}）；第二个才是该项目自己的 \code{ProjectGuid}，项目引用与配置映射全靠它认人。
+  \item 两个分支同时往里加项目，合并冲突很难看：制表符 + GUID + 无序行。
+\end{itemize}
+
+\subsection{\code{.vcxproj}：一份精简但真实的骨架}
+
+省掉了 \code{ExtensionSettings}、\code{UserMacros} 等本教程暂时用不到的段落，其余一字未改（\code{Release|x64} 与 \code{Debug|x64} 同构，仅取值不同，此处省略）：
+
+\begin{lstlisting}[style=xmlstyle]
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- (1) ProjectConfigurations：本项目支持哪些"配置 + 平台"组合 -->
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <!-- (2) Globals：整个项目只出现一次的全局信息 -->
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>18.0</VCProjectVersion>
+    <ProjectGuid>{1C1D2E3F-0001-4A5B-8C7D-000000000001}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!-- (3) Configuration：每种配置各自的"身份" -->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <!-- (4) 属性表在此导入，顺序即优先级（第 7 节） -->
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="..\Common.props" />
+  </ImportGroup>
+  <!-- (5) ItemDefinitionGroup：编译与链接的具体开关 -->
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <!-- (6) ItemGroup：参与构建的文件清单 -->
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClInclude Include="math_utils.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>
+\end{lstlisting}
+
+\begin{longtable}{L{7.2cm}L{7.4cm}}
+\toprule
+\textbf{段落与关键元素} & \textbf{含义} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{段落与关键元素} & \textbf{含义} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\code{ProjectConfigurations} 中的 \code{ProjectConfiguration}（\code{Include="Debug|x64"}） & 声明本项目\textbf{支持}哪些配置与平台组合。属性页里能选到的配置，源头就在这里；缺少的组合在配置管理器里显示为空 \\
+\code{Globals} 中的 \code{ProjectGuid} & 项目唯一标识，\textbf{项目引用与解决方案都靠它认人}；复制项目目录后必须换新 GUID，否则会出现“两个项目同一个 ID” \\
+\code{Globals} 中的 \code{WindowsTargetPlatformVersion} & 目标 Windows SDK 版本。写 \code{10.0} 表示“用本机已安装的最新一个”，写具体版本号则是锁死 \\
+\code{Globals} 中的 \code{VCProjectVersion} & 记录生成这份文件的 VS 版本（\code{18.0}），重定目标时更新 \\
+\code{Label="Configuration"} 中的 \code{ConfigurationType} & \code{Application} / \code{DynamicLibrary} / \code{StaticLibrary} / \code{Utility}，决定产出什么 \\
+\code{Label="Configuration"} 中的 \code{PlatformToolset} & 平台工具集，VS 2026 是 \code{v145}（VS 2022 是 \code{v143}） \\
+\code{Label="Configuration"} 中的 \code{UseDebugLibraries} & 是否用调试版运行库，就是 \code{/MDd} 与 \code{/MD} 的开关 \\
+\code{ItemDefinitionGroup} 中的 \code{ClCompile} / \code{Link} & 编译与链接开关的集中地，对应属性页里绝大多数选项 \\
+\code{ItemGroup} 中的 \code{ClCompile} / \code{ClInclude} & 源文件与头文件。\textbf{\code{ClInclude} 不参与编译}，只是让头文件出现在解决方案资源管理器里 \\
+\end{longtable}
+
+两个容易踩的细节：\codeP{%(PreprocessorDefinitions)} 这种“继承已有值并追加”的写法\textbf{不能省}——属性表、项目引用、命令行都可能往同一个属性里塞值，少了 \codeP{%(...)} 就会把别人挤掉；\textbf{导入顺序决定优先级}（\code{Microsoft.Cpp.Default.props} $\rightarrow$ \code{Microsoft.Cpp.props} $\rightarrow$ 你的属性表 $\rightarrow$ \code{Microsoft.Cpp.targets}，后导入的覆盖先导入的）。另外，\code{ClCompile} / \code{ClInclude} 里的路径\textbf{相对于项目文件所在目录}，与筛选器无关。
+
+\subsection{\code{.vcxproj.filters}}
+
+\begin{lstlisting}[style=xmlstyle]
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
+\end{lstlisting}
+
+\textbf{\code{.filters} 只影响 IDE 里的显示分组，不参与构建}：删掉它编译照样成功，只是所有文件会堆在项目根节点下。\code{<Filter>} 的值是筛选器的\textbf{名字}（不是路径），与磁盘目录没有任何绑定；\code{<Extensions>} 决定“新建这类文件时默认进哪个筛选器”。
+
+\section{SLNX：基于 XML 的新解决方案格式}
+
+\code{.sln} 的问题不是不能用，而是\textbf{不友好}：自有格式、制表符缩进、行序无意义、全靠 GUID 认人。\code{.slnx} 换成标准 XML，同一个解决方案长这样（\code{<Folder>} 就是解决方案文件夹——只存在于解决方案资源管理器里的虚拟分组，磁盘上不会因此生成目录）：
+
+\begin{lstlisting}[style=xmlstyle]
+<Solution>
+  <Project Path="src\App\App.vcxproj" />
+  <Folder Name="/库/">
+    <Project Path="src\MathLib\MathLib.vcxproj" />
+    <Project Path="src\Plugin\Plugin.vcxproj" />
+  </Folder>
+  <Folder Name="/解决方案项/">
+    <File Path="README.md" />
+  </Folder>
+</Solution>
+\end{lstlisting}
+
+\begin{longtable}{L{2.6cm}L{5.8cm}L{6.0cm}}
+\toprule
+\textbf{维度} & \textbf{\code{.sln}} & \textbf{\code{.slnx}} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{维度} & \textbf{\code{.sln}} & \textbf{\code{.slnx}} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+格式 & 自有文本格式 & 标准 XML \\
+可读性 & 差：GUID + 制表符 & 好：写的就是项目路径 \\
+手工编辑 & 官方不建议 & 可以，也适合脚本生成 \\
+合并冲突 & 难解，常靠人肉数 GUID & 通常是清晰的行级冲突 \\
+项目类型 & 由类型 GUID 区分 & 由文件扩展名推断 \\
+CMake 侧 & 支持 & VS 2026 自带的 \textbf{CMake 4.1.1} 的 \code{Visual Studio 18 2026} 生成器支持 SLNX \\
+\end{longtable}
+
+\subsection{从 \code{.sln} 迁移为 \code{.slnx}}
+
+三条路：\textbf{命令行}最省事，\code{dotnet sln MyProduct.sln migrate} 会从同名 \code{.sln} 生成 \code{.slnx}（同名 \code{.slnx} 已存在时命令直接失败）；\textbf{IDE 内转换}是右键解决方案节点，使用与 SLNX 相关的“转换 / 另存”入口（不同小版本菜单措辞略有差异，找不到就用命令行）；\textbf{手写}则只需照着 \code{.sln} 里的 \code{Project(...)} 行把路径抄进 \code{.slnx}。官方文档的示例都是 .NET 项目，纯 C++ 解决方案建议先在副本上试。
+
+\begin{itemize}
+  \item \textbf{\code{.vcxproj} 完全不动}：换格式只换了项目清单的写法。
+  \item \textbf{迁移可逆}：转换不会删除 \code{.sln}；建议先提交一次，转换后立刻全量构建，确认产物一致再删旧文件。
+  \item \textbf{团队混用要确认版本}：还有人用旧版 Visual Studio 时先确认它认识 \code{.slnx}，不确定就两份清单暂时并存（长期维护两份迟早不同步）。
+\end{itemize}
+
+\begin{keybox}[实战场景]
+CI 上跑的是 \code{msbuild MyProduct.sln}。迁移后 CI 脚本、构建文档、同事的快捷方式全都要跟着改——改完先手工跑一遍 CI 命令，再提交。
+\end{keybox}
+
+\section{多项目解决方案}
+
+\subsection{三种“跨项目用代码”的方式}
+
+\begin{longtable}{L{2.8cm}L{12.0cm}}
+\toprule
+\textbf{方式} & \textbf{怎么做} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{方式} & \textbf{怎么做} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{项目引用} & 右键引用方项目下的 \ui{引用} 节点 > \ui{添加引用}，在 \ui{项目} 页勾选 \\
+\textbf{添加为链接} & \ui{添加 > 现有项}，选中文件后从“添加”按钮的下拉里选 \ui{添加为链接} \\
+\textbf{直接改包含目录} & \ui{项目 > 属性 > C/C++ > 常规 > 附加包含目录}，再手工补 \ui{链接器 > 输入 > 附加依赖项} \\
+\end{longtable}
+
+\begin{longtable}{L{3.4cm}L{3.4cm}L{3.4cm}L{3.4cm}}
+\toprule
+\textbf{方式} & \textbf{头文件路径} & \textbf{链接依赖} & \textbf{构建顺序} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{方式} & \textbf{头文件路径} & \textbf{链接依赖} & \textbf{构建顺序} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{项目引用} & 自动传递 & 自动传递 & 自动排序 \\
+\textbf{添加为链接} & 无 & 无 & 无 \\
+\textbf{直接改包含目录} & 手工 & 手工 & 手工 \\
+\end{longtable}
+
+\begin{longtable}{L{2.8cm}L{12.0cm}}
+\toprule
+\textbf{方式} & \textbf{什么时候用} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{方式} & \textbf{什么时候用} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{项目引用} & 同一解决方案内的自有代码，\textbf{默认就该选它} \\
+\textbf{添加为链接} & 一个几百行的小工具文件被两个项目共享，不值得为它建库 \\
+\textbf{直接改包含目录} & 第三方预编译库（只有头文件和 \code{.lib}，没有项目文件） \\
+\end{longtable}
+
+“添加为链接”的代价：文件不会被复制，项目文件里写的是外部相对路径（可用 \code{<Link>} 元数据控制它在 IDE 里的显示位置），但\textbf{同一份源码会被编译进多个项目}——如果它同时被两个静态库包含、而这两个静态库又被同一个 exe 链接，就会得到 \code{LNK2005} 重复定义。
+
+\subsection{项目引用到底做了什么}
+
+加上项目引用后，MSBuild 会替你完成四件事：\textbf{排构建顺序}（先构建被引用项目）、\textbf{传递链接依赖}（把被引用项目的 \code{.lib} 或 DLL 导入库自动加进引用方的链接器输入）、\textbf{传递头文件搜索路径}（把被引用项目对外公开的包含目录加进编译命令）、\textbf{复制运行期文件}（产出 DLL 时把 DLL 复制到引用方输出目录）。它在项目文件里只是一个 \codeP{<ProjectReference Include="..\textbackslash{}MathLib\textbackslash{}MathLib.vcxproj">}，里面记着被引用项目的 \code{ProjectGuid}。
+
+\begin{lstlisting}[style=textstyle]
+        App.vcxproj --ProjectReference--+
+                                       v
+                                MathLib.vcxproj ----> MathLib.lib
+                                       ^
+     Tests.vcxproj --ProjectReference--+
+
+   MSBuild 自动完成的三件事：
+     1. 先构建 MathLib，再构建引用它的项目
+     2. 把 MathLib.lib 塞进引用方的链接器输入
+     3. 把 MathLib 对外公开的包含目录加进引用方的搜索路径
+\end{lstlisting}
+
+\begin{warnbox}[注意]
+包含路径的传递有前提——头文件要放在被引用项目对外公开的目录里。库项目模板会把项目目录本身作为包含路径，所以头文件放在库项目根目录时通常能直接被引用方 \code{#include}；一旦你把公共头文件挪进子目录（例如 \code{include}），就要把这个目录显式加进\textbf{提供方}的附加包含目录，别指望它自动找到。另外，\ui{项目 > 项目依赖项} 只影响构建顺序，\textbf{不会}传递头文件与库——为了修“构建顺序不对”而加依赖项的人，最后往往发现链接依然不通过。
+\end{warnbox}
+
+\section{库项目：静态库与动态库}
+
+\subsection{两种库的差别}
+
+\begin{longtable}{L{4.4cm}L{5.2cm}L{5.0cm}}
+\toprule
+ & \textbf{静态库} & \textbf{动态库} \\
+\midrule
+\endfirsthead
+\toprule
+ & \textbf{静态库} & \textbf{动态库} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+项目模板 & 静态库（\code{.lib}） & 动态库（\code{.dll}） \\
+\code{ConfigurationType} & \code{StaticLibrary} & \code{DynamicLibrary} \\
+产出 & \code{MathLib.lib}（里面是\textbf{真正的代码}） & \code{Plugin.dll} + 导入库 \code{Plugin.lib}（只有符号表） \\
+链接行为 & 代码在链接时被\textbf{复制进} exe & 链接的是导入库，运行时才加载 DLL \\
+需要导出符号吗 & 不需要 & 需要（除非用 \code{.def} 文件列出导出名） \\
+更新库之后 & 必须重新链接 exe & 接口不变时直接换掉 DLL 即可 \\
+\end{longtable}
+
+创建方式：\ui{文件 > 新建 > 项目} $\rightarrow$ 搜“静态库”或“动态库” $\rightarrow$ 选 C++ 模板。新建库项目默认 C++20；动态库模板会\textbf{自动}在预处理器定义里写入“项目名大写 + \code{_EXPORTS}”形式的一个导出开关。
+
+\subsection{导出宏：一份完整可编译的示例}
+
+静态库不需要任何导出声明——链接器会把 \code{.lib} 里的符号直接搬进最终镜像。动态库相反：DLL 里的符号默认对外不可见，必须显式导出。\code{__declspec(dllexport)} 在编译 DLL 自己时用，告诉链接器“这个符号放进导出表”；\code{__declspec(dllimport)} 在编译调用方时用，让编译器生成走导入表的代码（不用它也能链接成功，但会多一层跳转，访问数据符号时还可能出错）。两者由同一个宏按“谁在编译”切换。
+
+\begin{lstlisting}[style=cppstyle]
+// ---------- mylib.h ----------
+#pragma once
+//   MYLIB_STATIC  -> 静态库或直接编进 exe：什么都不加
+//   MYLIB_EXPORTS -> 正在编译 DLL 自己：导出
+//   都没有        -> 正在编译调用方：导入
+#if defined(MYLIB_STATIC)
+#  define MYLIB_API
+#elif defined(MYLIB_EXPORTS)
+#  define MYLIB_API __declspec(dllexport)
+#else
+#  define MYLIB_API __declspec(dllimport)
+#endif
+// 函数：加 extern "C" 可避免 C++ 名字修饰，方便 GetProcAddress 按名字取
+extern "C" MYLIB_API int mylib_add(int a, int b);
+// 类：导出的是整个类的成员，接口里不要暴露 STL 容器的实现细节
+class MYLIB_API Calculator {
+public:
+    int add(int a, int b) const;
+};
+
+// ---------- mylib.cpp（编译 DLL 时）----------
+#include "mylib.h"
+extern "C" int mylib_add(int a, int b) { return a + b; }
+int Calculator::add(int a, int b) const { return a + b; }
+
+// ---------- main.cpp（调用方：没有定义 MYLIB_EXPORTS）----------
+#include "mylib.h"
+#include <iostream>
+int main() {
+    Calculator calc;
+    std::cout << calc.add(2, 3) << '\n';   // 走导入表
+    std::cout << mylib_add(4, 5) << '\n';
+}
+\end{lstlisting}
+
+用命令行验证一遍，比在 IDE 里点半天更直观（在项目里，这个开关就是预处理器定义里的一行 \code{MYLIB_EXPORTS;}\codeP{%(PreprocessorDefinitions)}）：
+
+\begin{lstlisting}[style=shellstyle]
+cl /nologo /LD /std:c++20 /EHsc /DMYLIB_EXPORTS mylib.cpp   :: 生成 mylib.dll + 导入库 mylib.lib
+cl /nologo /std:c++20 /EHsc main.cpp /I. mylib.lib          :: 编译调用方
+main.exe                                                    :: mylib.dll 需与 main.exe 同目录
+dumpbin /exports mylib.dll                                  :: 核对导出表
+\end{lstlisting}
+
+\begin{warnbox}[注意]
+\code{MYLIB_EXPORTS} 必须\textbf{只}在编译 DLL 本身时定义。调用方也定义它的话，头文件会把函数声明成 \code{dllexport}，编译器于是认为“这个函数就在本模块里”，链接时得到 \code{LNK2019} 无法解析的外部符号。看到这个错误先检查预处理器定义，再怀疑代码。
+\end{warnbox}
+
+\begin{tipbox}[提示]
+宏名要和项目名对上——VS 是按\textbf{建项目时}的项目名写入 \code{<项目名大写>_EXPORTS} 的，项目一改名这个宏不会跟着改，导出会静默失效：DLL 编得出来，调用方却链接不上，这是重命名项目后最常见的“灵异现象”。同一份源码既要能编静态库又要能编 DLL 时，给静态库配置加一条 \code{MYLIB_STATIC} 定义，头文件里的三段分支会自动选对身份。
+\end{tipbox}
+
+\section{解决方案配置与平台}
+
+\subsection{配置与平台是一对}
+
+\begin{longtable}{L{1.8cm}L{4.4cm}L{3.4cm}L{4.6cm}}
+\toprule
+\textbf{配置} & \textbf{平台（项目文件里的名字）} & \textbf{用途} & \textbf{典型开关} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{配置} & \textbf{平台（项目文件里的名字）} & \textbf{用途} & \textbf{典型开关} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\code{Debug} & \code{x64} & 日常开发与调试 & 关优化、带调试信息、调试版运行库（\code{/MDd}） \\
+\code{Release} & \code{x64} & 交付给用户 & 开优化、定义 \code{NDEBUG}、发布版运行库（\code{/MD}）、全程序优化 \\
+\code{Debug} / \code{Release} & \code{Win32}（IDE 显示为 x86） & 32 位目标 & 指针 4 字节；只有 32 位版本的第三方库只能这样链 \\
+\code{Release} & \code{ARM64} & Windows on ARM 设备 & 在 x64 主机上交叉编译 ARM64 目标 \\
+\end{longtable}
+
+\begin{warnbox}[注意]
+32 位平台在项目文件里的名字是 \textbf{\code{Win32}}，IDE 属性页里却显示成 \textbf{x86}。这是历史遗留的不一致，写 MSBuild 条件时别搞错——\code{Condition="'$(Platform)'=='x86'"} 永远不成立。
+\end{warnbox}
+
+\subsection{配置管理器与多项目对齐}
+
+入口是 \ui{生成 > 配置管理器}。它是一张“解决方案配置 × 项目”的表：顶部下拉选当前解决方案配置，每个项目有 \textbf{配置}、\textbf{平台}、\textbf{生成} 三列；\textbf{生成} 复选框决定它是否参与“生成解决方案”（取消勾选只是不主动构建，被别的项目引用时通常仍会被编出来）；\textbf{配置} 列就是\textbf{配置映射}——解决方案的 \code{Debug|x64} 完全可以映射到某个项目的 \code{Debug|Win32}。
+
+\begin{itemize}
+  \item 让\textbf{所有项目拥有同一套配置与平台}（例如 \code{Debug|x64}、\code{Release|x64}），最省事的办法是新建项目时就用同一套；某个项目缺了解决方案里用到的配置时，配置管理器里那一格显示为空，这正是“生成解决方案时这个项目被静默跳过”的最常见原因。
+  \item \textbf{运行库必须一致}：\code{/MD}（Release）与 \code{/MDd}（Debug）混链是经典崩溃来源，症状是堆内存跨模块分配/释放时出错；Debug 与 Release 的 \code{.lib} 同样不能混用。
+  \item \textbf{ARM64}：VS 2026 提供 ARM64 工具集，平台名就是 \code{ARM64}，在 x64 主机上可交叉编译（安装时勾选 ARM64 生成工具）；\textbf{ARM32 工具链已移除}，要 32 位就只剩 x86；\textbf{ARM64EC} 让 ARM64 进程里能混入 x64 代码，适合依赖只有 x64 版的第三方库、又想上 ARM64 的场景。
+\end{itemize}
+
+\begin{tipbox}[提示]
+新增解决方案配置时，VS 会问每个项目“从哪个已有配置复制设置”。\textbf{这一步选错，新配置里会什么编译开关都没有}——典型症状是能编过但跑不起来。另外，每增加一个平台，项目文件里就要多一份 \code{ProjectConfiguration}、属性页里就多一整套设置要维护，平台不是免费的——这正是下一节属性表存在的理由。
+\end{tipbox}
+
+\section{属性表（Property Sheets）}
+
+\subsection{为什么需要它、怎么用}
+
+算一笔账：3 个项目 $\times$ 2 个配置 = 6 份几乎相同的 \code{ItemDefinitionGroup}，改一次警告等级要开 6 次属性页，而且总有人漏改。属性表把“一组设置”抽出来变成独立文件（\code{.props}），项目通过 \code{<Import>} 引用它：\textbf{改一处，所有引用它的项目一起生效}；它也顺带解决了团队规范问题——统一规范做成一个 \code{.props} 纳入版本控制，新人建项目时挂上就合规。做法：\ui{视图 > 其他窗口 > 属性管理器} $\rightarrow$ 展开项目，右键 \textbf{Debug | x64} 这样的配置节点（或右键项目）> \ui{添加新项目属性表} $\rightarrow$ 双击它，出现的属性页与项目属性页\textbf{长得一模一样}，但设置只写进 \code{.props} $\rightarrow$ 别的项目用 \ui{添加现有属性表} 选中同一个文件。
+
+挂在\textbf{具体配置节点}下只对该配置生效，挂在\textbf{项目节点}下对所有配置生效；多种属性表的优先级由顺序决定：\textbf{列表里靠下的覆盖靠上的}，而项目自己的设置又覆盖所有属性表。
+
+\subsection{\code{Directory.Build.props}：连“添加”这一步都省掉}
+
+MSBuild 构建每个项目时会从项目目录开始\textbf{向上查找} \code{Directory.Build.props} 并自动导入。把它放在解决方案根目录，整个目录树下所有项目就都继承了，不需要任何手工添加；同名的 \code{Directory.Build.targets} 效果相同，区别是它在项目末尾才导入。
+
+\begin{lstlisting}[style=xmlstyle]
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <!-- (1) 固定工具集：整棵树用同一个编译器（详见第 1 章） -->
+  <PropertyGroup>
+    <VCToolsVersion>14.50.35717</VCToolsVersion>
+    <!-- VS 2026 18.8+：允许跨 VS 安装实例查找被固定的工具集 -->
+    <EnableVCToolsVersionDiscovery>true</EnableVCToolsVersionDiscovery>
+  </PropertyGroup>
+  <!-- (2) 统一输出位置：所有产出集中到 build\ 下，便于打包与清理 -->
+  <PropertyGroup>
+    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)build\obj\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <!-- (3) 统一编译开关：所有项目、所有配置 -->
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <ConformanceMode>true</ConformanceMode>
+      <WarningLevel>Level4</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <!-- (4) Release 特有：交付物也带 PDB，警告当错误 -->
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
+    <ClCompile>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>
+\end{lstlisting}
+
+\begin{itemize}
+  \item \textbf{\code{$(SolutionDir)} 只在通过解决方案构建时才有定义}。如果你习惯直接对单个项目跑 \code{msbuild App.vcxproj}，得用 \codeP{/p:SolutionDir=D:\textbackslash{}work\textbackslash{}MyProduct} 补进去，否则输出目录会变成一串奇怪的字面量；某个项目的输出没落到 \code{build} 下，多半是它在项目文件里自己定义了 \code{OutDir}。
+  \item \textbf{\code{Level4} + \code{TreatWarningAsError} 威力很大，但别在迁移期打开}：打开当天你会收到几百个“错误”。建议先在 CI 上开，本地保持只报警告。
+\end{itemize}
+
+\begin{warnbox}[注意]
+导入得\textbf{早}就意味着容易被覆盖。\code{Directory.Build.props} 里的值在项目自身内容之前求值，所以项目里显式写过的同名设置会赢。想“强制统一”，要么把这些重复设置从项目里删掉，要么改用 \code{Directory.Build.targets}（后导入者胜）。
+\end{warnbox}
+
+\section{筛选器与文件夹}
+
+名字里带“文件夹”的东西有三个，含义完全不同：
+
+\begin{longtable}{L{3.6cm}L{4.4cm}L{3.6cm}L{2.6cm}}
+\toprule
+\textbf{名字} & \textbf{存在于} & \textbf{影响什么} & \textbf{与磁盘目录的关系} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{名字} & \textbf{存在于} & \textbf{影响什么} & \textbf{与磁盘目录的关系} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{磁盘目录} & 文件系统 & 编译器按路径找文件 & 事实本身 \\
+\textbf{筛选器} & 项目的 IDE 元数据（\code{.vcxproj.filters}） & 只影响解决方案资源管理器里的分组 & \textbf{无}，可以完全不一致 \\
+\textbf{解决方案文件夹} & 解决方案文件（\code{.sln} / \code{.slnx}） & 只影响项目的分组 & \textbf{无}，不能放文件，也不会被编译器看见 \\
+\end{longtable}
+
+\begin{lstlisting}[style=textstyle]
+磁盘（真实）：
+src\App\
++-- main.cpp
++-- app.h
++-- impl\
+|   +-- engine.cpp
++-- engine.h
+
+IDE 筛选器（虚拟）：
+App
++-- 源文件
+|   +-- main.cpp
++-- 头文件
+|   +-- app.h
+|   +-- engine.h
++-- 实现
+    +-- engine.cpp
+
+<- engine.cpp 在磁盘的 impl\ 下，在 IDE 里却和 engine.h 摆在一起
+\end{lstlisting}
+
+\begin{itemize}
+  \item 在 IDE 里新建筛选器\textbf{不会}在磁盘上建目录；反过来，在磁盘上建目录，IDE 也不会自动显示。
+  \item \textbf{显示所有文件}：解决方案资源管理器工具栏上的按钮。打开后，项目目录下\textbf{没有被项目引用}的文件会以虚线图标显示；右键 $\rightarrow$ \textbf{包括在项目中} 即可加入项目清单，用它批量纳管一整个新目录比逐个“添加现有项”快得多。反过来，\textbf{从项目中排除}只是把文件移出清单，磁盘上的文件还在。
+  \item 想让显示位置与物理位置解耦，可以用 \code{<Link>} 元数据：物理上在 \codeP{..\textbackslash{}shared\textbackslash{}util.cpp} 的文件，可以显示成自己项目里的 \codeP{公共\textbackslash{}util.cpp}。
+  \item 两类常见困惑：\textbf{复制项目时漏拷 \code{.filters}}，于是所有文件堆在根节点下（编译一切正常，删掉 \code{.filters} 让 VS 重建即可）；\textbf{合并两个分支的 \code{.filters} 时 GUID 打架}，处理办法是选一边的结果，再让 IDE 重新整理。
+\end{itemize}
+
+\section{共享项目（Shared Items Project，\code{.shproj}）}
+
+用途很明确：\textbf{一份源码要被多个项目共享，而你不想为它单独建库}。文件只存在一份（不像“添加为链接”要在每个项目里各加一遍），加入一次所有引用它的项目都能看到，典型场景是同一套核心代码既编进主程序、又编进测试程序。限制同样明确：
+
+\begin{itemize}
+  \item \textbf{不能单独构建}，没有自己的产出，也没有自己的 \code{ConfigurationType}；\textbf{没有自己的配置与平台}，完全跟随引用它的项目，所以不能在里面放“只给某个项目用”的设置。
+  \item 同一份源码会被每个引用它的项目各编译一遍，项目多了编译时间会明显变长。
+  \item 在 C++ 里它比在 .NET 里更“薄”：\textbf{只用来放文件}，不管引用与包，依赖仍要各项目自己配（或用第 7 节的属性表统一）。
+  \item \code{.shproj} 只是一个很薄的外壳，真正列出文件的是同目录下的共享项目文件；引用方通过一个 \code{<Import ... Label="Shared" />} 把它导进来——VS 生成的 \code{.vcxproj} 里本来就留着一个空的 \code{<ImportGroup Label="Shared" />} 就是给它用的。
+\end{itemize}
+
+\begin{tipbox}[提示]
+在“共享项目”和“静态库”之间犹豫时，选\textbf{静态库}的次数应该更多：它有明确的产出、能单独跑单元测试、能控制导出、也能被 CMake 这类非 MSBuild 的构建系统使用。共享项目是“我就是要源码级复用，且坚决不想多一个二进制产物”时才动用的手段。
+\end{tipbox}
+
+\section{项目重定目标：从 \code{v143} 到 \code{v145}}
+
+\subsection{什么时候需要，怎么改}
+
+\begin{itemize}
+  \item \textbf{不需要}：你只是想在 VS 2026 里打开、编辑、调试 VS 2022 的项目。\textbf{VS 2026 打开 VS 2022 的 \code{.vcxproj} 不需要升级项目文件}，它会照旧按 \code{v143} 编译（前提是装了 v143 工具集，安装时勾选）。
+  \item \textbf{需要}：想用 14.50 / 14.51 的新特性（新的标准库设施、新警告、新优化），或者想在 CI 上只维护一套工具集。
+  \item \textbf{怎么做}：打开老解决方案时如果缺工具集或缺 Windows SDK，VS 2026 会提示使用\textbf{设置助手（Setup Assistant）}，它既能帮你把缺失的工具集装上，也能把项目重定目标到新工具集；手动入口是右键解决方案节点 > \textbf{重定目标解决方案}。只想换编译器、不想动 SDK，就单独改一项：\ui{项目 > 属性 > 配置属性 > 常规 > 平台工具集} 选 \code{v145}。
+\end{itemize}
+
+\subsection{重定目标改写了哪些字段}
+
+各字段所在的位置：
+
+\begin{longtable}{L{7.6cm}L{7.0cm}}
+\toprule
+\textbf{字段} & \textbf{位置} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{字段} & \textbf{位置} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\code{PlatformToolset} & \code{PropertyGroup}，\code{Label="Configuration"} \\
+\code{WindowsTargetPlatformVersion} & \code{PropertyGroup}，\code{Label="Globals"} \\
+\code{VCProjectVersion} & \code{PropertyGroup}，\code{Label="Globals"} \\
+MSVC 工具集版本 & \textbf{不写在项目文件里} \\
+\end{longtable}
+
+各字段在重定目标前后的变化：
+
+\begin{longtable}{L{7.6cm}L{7.0cm}}
+\toprule
+\textbf{字段} & \textbf{变化} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{字段} & \textbf{变化} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\code{PlatformToolset} & \code{v143} $\rightarrow$ \code{v145} \\
+\code{WindowsTargetPlatformVersion} & 老 SDK 版本 $\rightarrow$ 新 SDK 版本（或写成 \code{10.0} 表示“用已安装的最新一个”） \\
+\code{VCProjectVersion} & \code{17.0} $\rightarrow$ \code{18.0} \\
+MSVC 工具集版本 & 由 \code{PlatformToolset} 决定实际选中的工具集（例如 \code{14.50.35717}），除非你用 \code{VCToolsVersion} 固定住 \\
+\end{longtable}
+
+注意最后一行：\textbf{“MSVC 工具集版本变化”是选 \code{v145} 的结果，而不是项目文件里多了一个版本号}；工具集的真实路径在 \codeP{C:\textbackslash{}Program Files\textbackslash{}...\textbackslash{}VC\textbackslash{}Tools\textbackslash{}MSVC\textbackslash{}14.50.35717} 这类位置（第 1 章）。后遗症三条：\textbf{警告和错误会变多}（先做一次“只看警告”的构建评估工作量）；\textbf{二进制兼容性没问题}（14.50 / 14.51 与 VS 2015 及以后编译的代码保持二进制兼容，前提是 CRT 链接方式一致，所以链接第三方老 \code{.lib} 通常可行，但正式发布前应当用固定的工具集版本重新构建一次）；\textbf{重定目标后 VS 2022 就打不开这个项目了}（它不认识 \code{v145}），团队里还有人在用 VS 2022 时，最省事的过渡办法就是先别重定目标——VS 2026 编 \code{v143} 毫无问题。
+
+\section{版本控制卫生}
+
+\subsection{哪些文件该进 Git}
+
+\begin{longtable}{L{5.2cm}L{1.6cm}L{7.8cm}}
+\toprule
+\textbf{文件} & \textbf{进 Git 吗} & \textbf{原因} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{文件} & \textbf{进 Git 吗} & \textbf{原因} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\code{.sln} / \code{.slnx} & \textbf{[OK]} & 项目清单与配置映射，团队必须一致 \\
+\code{.vcxproj} & \textbf{[OK]} & 编译链接设置的唯一来源 \\
+\code{.vcxproj.filters} & \textbf{[OK]} & 只是显示分组，但缺了它每个人的解决方案资源管理器都不一样 \\
+\code{.props} / \code{Directory.Build.props} & \textbf{[OK]} & 团队规范本体 \\
+\code{.vcxproj.user} & \textbf{[X]} & 个人设置：调试命令行参数、工作目录、启动环境变量。你提交了它，同事的调试参数就被你覆盖 \\
+\code{.vs} & \textbf{[X]} & IDE 本地状态与 IntelliSense 数据库，体积大且因机器而异 \\
+\code{.suo} & \textbf{[X]} & 用户级解决方案状态（断点、窗口布局），现在躺在 \code{.vs} 下 \\
+\code{.aps} / \code{.ipch} & \textbf{[X]} & 资源编辑器缓存、IntelliSense 预编译头缓存，都是自动生成的 \\
+\code{x64}、\code{Debug}、\code{Release}、\code{*.pdb}、\code{*.ilk}、\code{*.exp} & \textbf{[X]} & 构建产物（发布时另行归档） \\
+\end{longtable}
+
+\subsection{\code{.gitignore} 片段}
+
+\begin{lstlisting}[style=inistyle]
+# ---------- Visual Studio 本地状态 ----------
+.vs/
+*.suo
+*.user
+*.aps
+*.ipch
+*.sdf
+*.opendb
+*.VC.db
+
+# ---------- 构建产物 ----------
+[Bb]in/
+[Oo]bj/
+x64/
+x86/
+ARM64/
+Debug/
+Release/
+*.obj
+*.exe
+*.dll
+*.lib
+*.exp
+*.pdb
+*.ilk
+*.tlog
+
+# ---------- 例外：团队决定提交的第三方预编译库 ----------
+!third_party/**/*.lib
+\end{lstlisting}
+
+\begin{itemize}
+  \item \code{*.lib} 一刀切会把\textbf{导入库}一起忽略——那是构建产物，忽略是对的；但团队若把第三方预编译库提交进仓库，必须用 \code{!} 例外捞回来，否则同事 clone 下来直接链接失败。
+  \item \code{Debug/}、\code{Release/}、\code{[Bb]in/} 这类目录名规则会\textbf{误伤同名源码目录}：如果你真有一个叫 \code{bin} 的源码目录，把规则改成锚定仓库根的写法（例如 \code{/x64/}），或者只忽略真正的输出目录。输出目录被第 7 节的 \code{Directory.Build.props} 统一到 \code{build} 之后，记得把 \code{build/} 也加进来。
+  \item \code{.vcxproj.user} 一旦被提交过，\code{git rm --cached <文件>} 之后还要提醒同事：VS 每次修改调试设置都会重写这个文件，别“顺手”再加回去。
+\end{itemize}
+
+\section{实战：一个三项目解决方案}
+
+\subsection{目录树与职责划分}
+
+\begin{lstlisting}[style=textstyle]
+D:\work\MyProduct\
++-- MyProduct.slnx              <- 解决方案清单（第 3 节）
++-- Directory.Build.props       <- 全树统一的编译开关（第 7 节）
++-- .gitignore                  <- 第 11 节
++-- src\
+|   +-- App\                    <- 主程序：App.vcxproj、main.cpp
+|   +-- MathLib\                <- 静态库：MathLib.vcxproj、math.cpp
+|   |   +-- include\math_api.h  <- 对外头文件集中放这里
+|   +-- Plugin\                 <- 动态库：Plugin.vcxproj、plugin.cpp
++-- build\                      <- 构建产物（不进 Git）
+\end{lstlisting}
+
+\begin{longtable}{L{1.8cm}L{2.8cm}L{3.0cm}L{2.6cm}L{3.6cm}}
+\toprule
+\textbf{项目} & \textbf{类型} & \textbf{产出} & \textbf{引用谁} & \textbf{职责} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{项目} & \textbf{类型} & \textbf{产出} & \textbf{引用谁} & \textbf{职责} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\code{App} & Application & \code{App.exe} & \code{MathLib}、\code{Plugin} & 命令行解析、调度、把结果打印出来 \\
+\code{MathLib} & StaticLibrary & \code{MathLib.lib} & 无 & 纯计算，不碰 Windows API，方便测试与移植 \\
+\code{Plugin} & DynamicLibrary & \code{Plugin.dll} + \code{Plugin.lib} & \code{MathLib} & 扩展点实现，由 App 在运行期加载 \\
+\end{longtable}
+
+划分原则很简单：\textbf{依赖方向必须是一条线，不能成环}。\code{MathLib} 谁都不认识，\code{Plugin} 只认识 \code{MathLib}，\code{App} 认识上面两个。以后要写单元测试，再加一个 \code{MathLibTests} 项目引用 \code{MathLib} 即可（见 \textbf{第 11 章}）。
+
+\subsection{引用关系}
+
+\begin{lstlisting}[style=textstyle]
+App.exe（唯一的可执行文件）
+  |
+  +-- 项目引用 --> MathLib.lib（纯计算、零外部依赖）
+  |
+  +-- 项目引用 --> Plugin.dll + Plugin.lib（扩展点实现，自己也引用 MathLib）
+
+MathLib <-- Plugin <-- App      这是 MSBuild 的构建顺序
+MSBuild 把 MathLib.lib、Plugin.lib 送进 App 的链接器输入
+\end{lstlisting}
+
+\subsection{一步步搭起来}
+
+\begin{lstlisting}[style=textstyle]
+1. 文件 > 新建 > 项目 > 空白解决方案，命名 MyProduct
+2. 右键解决方案 > 添加 > 新建项目 > 静态库，命名 MathLib，位置 src\MathLib
+3. 右键解决方案 > 添加 > 新建项目 > 动态库，命名 Plugin，位置 src\Plugin
+4. 右键解决方案 > 添加 > 新建项目 > 控制台应用，命名 App，位置 src\App
+5. 在 Plugin 下的"引用"节点右键 > 添加引用 > 项目 > 勾选 MathLib
+6. 在 App 下的"引用"节点右键 > 添加引用 > 项目 > 勾选 MathLib 与 Plugin
+7. 生成 > 配置管理器，把三个项目的平台统一成 x64
+8. 在解决方案根目录放一份 Directory.Build.props（第 7 节那份）
+9. 生成 > 生成解决方案，检查 build\x64\Debug\ 下的产物
+\end{lstlisting}
+
+搭完之后至少验证三件事：\textbf{产物是否齐全}（\code{App.exe}、\code{MathLib.lib}、\code{Plugin.dll} 应出现在同一处——项目引用会把 DLL 复制到 exe 旁边）；\textbf{头文件能不能找到}（在 \code{Plugin} 里写 \code{#include "math_api.h"}，报“无法打开源文件”就把 \codeP{MathLib\textbackslash{}include} 加进 \code{MathLib} 的附加包含目录，或在 \code{Directory.Build.props} 里统一补一条，后者更省事也更容易在换机器时保持一致）；\textbf{别把本地状态提交上去}（第一次 \code{git status} 就核对，\code{.vs}、\code{x64}、\code{*.user} 都不该出现在待提交列表里）。
+
+\section{小结}
+
+\begin{itemize}
+  \item 三层关系：\textbf{解决方案 $\supset$ 项目 $\supset$ 文件}。解决方案只是容器，\textbf{不产出任何二进制}；项目才是承载编译链接设置的地方。
+  \item \code{.vcxproj} 记住四段：\code{ProjectConfigurations}（支持哪些配置）、\code{Globals}（\code{ProjectGuid}、\code{WindowsTargetPlatformVersion}）、\code{Label="Configuration"} 的 \code{PropertyGroup}（\code{ConfigurationType}、\code{PlatformToolset}）、\code{ItemDefinitionGroup} + \code{ItemGroup}（开关与文件清单）；追加值别忘了 \codeP{%(...)}。
+  \item \textbf{\code{.vcxproj.filters} 只影响 IDE 显示，不影响编译}；\code{.vcxproj.user} 与 \code{.suo} 是个人的，绝不提交。
+  \item \textbf{SLNX} 是 VS 2026 支持的 XML 解决方案格式：可读、可手写、冲突好解；可用 \code{dotnet sln <文件>.sln migrate} 生成，迁移不影响 \code{.vcxproj}，而且可逆。
+  \item 跨项目用代码优先用\textbf{项目引用}：它自动传递链接依赖与头文件搜索路径并排好构建顺序；\textbf{项目依赖项}只管顺序，不管传递。
+  \item 静态库直接搬代码进 exe，不需要导出；动态库必须用 \code{__declspec(dllexport)} / \code{dllimport}，靠 \code{<项目名>_EXPORTS} 宏切换，项目改名后记得同步宏名。
+  \item 多项目要\textbf{配置与平台对齐}，运行库链接方式（\code{/MD} 与 \code{/MDd}）绝不能混；32 位平台在项目文件里叫 \code{Win32}，IDE 里显示为 x86。
+  \item 用 \code{.props} 消除重复设置；\code{Directory.Build.props} 放在解决方案根目录就能自动作用于整个目录树，但它导入得早、容易被项目自身设置覆盖。
+  \item VS 2026 打开 VS 2022 项目\textbf{不需要升级项目文件}；只有主动重定目标时才改写工具集与 Windows SDK 字段，从 \code{v143} 到 \code{v145}。
+\end{itemize}
+
+\section{练习题}
+
+\begin{enumerate}
+  \item 新建一个控制台项目，用文本编辑器打开 \code{.vcxproj}，找出 \code{LanguageStandard}、\code{PlatformToolset}、\code{WindowsTargetPlatformVersion} 三个值；再只用属性页各改一次，回到编辑器看是哪几行变了。
+  \item 把 \code{.vcxproj.filters} 删掉，重新打开项目并用 \textbf{显示所有文件} 加回一个源文件，观察解决方案资源管理器的变化，并确认项目仍能编译。
+  \item 用 \code{dotnet sln <你的解决方案>.sln migrate} 生成 \code{.slnx}，对比两个文件描述同一个解决方案的方式，构建一次确认产物没有变化。
+  \item 做一个两项目方案：一个静态库 + 一个控制台应用，用项目引用连起来；然后把同一个头文件移到 \code{include} 子目录，记录项目引用是否还能找到它，以及你需要补哪一步设置。
+  \item 把练习题 4 的静态库改成动态库，写出带 \code{MYLIB_EXPORTS} 切换的导出宏，并用 \code{dumpbin /exports} 确认导出表里确实有你写的符号。
+  \item 在解决方案根目录加一份 \code{Directory.Build.props}，把 \code{WarningLevel} 统一成 \code{Level4} 并打开 \code{TreatWarningAsError}，统计整个解决方案多出多少警告；再把它挪到 \code{Directory.Build.targets}，对比生效范围有什么不同。
+\end{enumerate}
+
+\section{相关笔记}
+
+\begin{itemize}
+  \item \textbf{本教程}：\textbf{Visual Studio 2026 使用教程}
+  \item \textbf{上一章}：\textbf{第一个 C++ 项目}
+  \item \textbf{下一章}：\textbf{项目属性与编译配置}
+  \item \textbf{CMake}：\textbf{CMake 使用指南}
+  \item \textbf{Git 命令}：\textbf{常用 Git 命令}
+\end{itemize}

@@ -1,10 +1,18 @@
-\usepackage[fontset=fandol]{ctex}   % 方正宋体/楷体/黑体，与参照讲义同款
-% 楷体无粗/斜体字重、仿宋无粗体字重：补上声明（粗体借黑体、斜体借楷体），避免缺字重警告
-\setCJKfamilyfont{zhkai}{FandolKai-Regular.otf}[cmap=UniGB-UTF16-H, BoldFont=FandolHei-Regular.otf, ItalicFont=FandolKai-Regular.otf]
-\setCJKfamilyfont{zhfs}{FandolFang-Regular.otf}[cmap=UniGB-UTF16-H, BoldFont=FandolHei-Regular.otf]
+% 中文字体：Windows 自带的宋体 / 黑体 / 楷体 / 仿宋，均为 TrueType 轮廓。
+%
+% 为什么不用 ctex 默认的 fontset=fandol（方正字体）：
+%   Fandol 的 OTF 是 CID-keyed CFF 轮廓，dvipdfmx 会把它嵌成 CIDFontType0C，
+%   且不带 ToUnicode；而基于 pdf.js 的阅读器（Oleafly 内嵌预览、Chrome/Edge 的
+%   PDF 预览等）遇到这类字体必须去加载预设 CMap「Adobe-GB1-UCS2」，
+%   一旦取不到就 translateFont 失败，正文中文会整段不显示（英文数字仍正常）。
+%   换成 TrueType 字体后，嵌入的是 CIDFontType2，不再依赖外部 CMap，
+%   中文在 Oleafly 预览器等所有阅读器中都能正常渲染，且能正常复制/检索。
+% 注：ctex 的 windows 字库配置已自带「粗体借黑体、斜体借楷体」的字重回退，
+%     无需再手动声明 zhkai / zhfs 家族。
+\usepackage[fontset=windows]{ctex}
 
 \usepackage{fontsize}               % 整体放大字号（重算 \small…\Huge，标题随之等比变大）
-\changefontsize{14pt}               % 正文四号（原 12pt 小四）；改回 12pt 即恢复原样
+\changefontsize[17.5pt]{16pt}       % 正文三号；行距基准 17.5pt（约 1.1 倍）。想再调：14pt=四号、15pt=小三、17pt=小二
 \usepackage{geometry,graphicx,xcolor,color,subcaption}
 \geometry{a4paper, margin=2.54cm, headheight=14.5pt}
 

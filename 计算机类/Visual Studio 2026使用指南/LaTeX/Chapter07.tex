@@ -1,0 +1,449 @@
+% !TeX root = main.tex
+
+写 C++ 的时间里，真正在“想算法”的部分可能不到一半，剩下的都花在找符号、对名字、改调用点这些琐事上。Visual Studio 的编辑器就是冲着这些琐事来的：IntelliSense 负责读懂你的代码，导航与重构负责带你在几万个符号之间穿梭，格式化、代码片段与 AI 补全负责让你少敲几百次键盘。这一章把这些能力一次讲清楚，并把 VS 2026 在编辑体验上的新改进点出来。
+
+\section{IntelliSense 是什么，不是什么}
+
+\subsection{它是另一套引擎，不是编译器}
+
+本章最重要的一句话：\textbf{IntelliSense 与 MSVC 编译器是两套完全独立的代码理解引擎}。补全、波浪线、快速信息、导航全部来自 IntelliSense（内部使用 \textbf{EDG 前端}解析），与你按下“生成”时跑的 \code{cl.exe} 不是一回事。
+
+\begin{lstlisting}[style=textstyle]
+你的 .cpp / .h 源码
+   |
+   +-- IntelliSense（EDG 前端，容错解析）
+   |     补全 / 波浪线 / 快速信息 / 导航
+   |     只提示，不生成代码
+   |
+   +-- MSVC 编译器 cl.exe（严格，一次编译到底）
+   |     真报错，真代码生成
+   |
+   +-- 两条路线给出的结论常常不一致：
+         "波浪线报错，但能编译通过"
+         "编译通过，波浪线还在"
+\end{lstlisting}
+\subsection{三个必须接受的现象}
+
+\begin{longtable}{L{4.4cm}L{6.2cm}L{4.0cm}}\toprule
+\textbf{现象} & \textbf{原因} & \textbf{怎么办} \\ \midrule \endfirsthead
+\toprule \textbf{现象} & \textbf{原因} & \textbf{怎么办} \\ \midrule \endhead \bottomrule \endlastfoot
+红波浪线报错，但生成成功 & EDG 在模板、宏、\code{constexpr} 上比 MSVC 保守 & 编译通过就先用着；反复误报见第 13 章 \\
+编译报错，编辑器却一片干净 & IntelliSense 还没跟上编辑，或解析路径与编译器不同 & 先看\textbf{错误列表}，必要时重新扫描解决方案 \\
+刚打开大项目时提示“发虚” & 全代码库语义索引还在建立，符号表不完整 & 等索引跑完，或手动重新扫描（见 9.5） \\
+\end{longtable}
+\begin{warnbox}[注意]
+\textbf{以编译器为准}。IntelliSense 的报错\textbf{不会}阻断“生成”，编译器的报错会。所以“能跑起来”不能反推“代码没问题”，反过来也一样——别把红波浪线当成编译失败的证据。
+\end{warnbox}
+
+\section{补全与提示}
+
+\subsection{五条常用命令}
+
+\begin{longtable}{L{1.7cm}L{4.6cm}L{4.2cm}L{3.7cm}}\toprule
+\textbf{命令} & \textbf{快捷键} & \textbf{菜单路径} & \textbf{作用} \\ \midrule \endfirsthead
+\toprule \textbf{命令} & \textbf{快捷键} & \textbf{菜单路径} & \textbf{作用} \\ \midrule \endhead \bottomrule \endlastfoot
+列出成员 & \key{Ctrl+J} & \ui{编辑 > IntelliSense > 列出成员} & 弹出当前作用域可见的成员与变量 \\
+完成单词 & \key{Ctrl+Space} & \ui{编辑 > IntelliSense > 完成单词} & 补全正在输入的标识符 \\
+参数信息 & \key{Ctrl+Shift+Space} & \ui{编辑 > IntelliSense > 参数信息} & 显示重载列表并高亮当前参数 \\
+快速信息 & \key{Ctrl+K, Ctrl+I} & \ui{编辑 > IntelliSense > 快速信息} & 鼠标悬停提示的键盘版本 \\
+快速操作 & \key{Ctrl+.} & \ui{编辑 > 快速操作和重构} & 打开灯泡 / 螺丝刀建议列表 \\
+\end{longtable}
+\begin{tipbox}[提示]
+\key{Ctrl+K, Ctrl+I} 这类\textbf{组合键}分两段按：先按 \key{Ctrl+K}，全部松开，再按 \key{Ctrl+I}。\key{Ctrl+Space} 是“把正在敲的词补完”，\key{Ctrl+J} 是“把能用的东西都列出来看看”，记不住名字时用后者。
+\end{tipbox}
+
+\subsection{内联提示（Inlay Hints）与悬停信息}
+
+内联提示把\textbf{本来不写在代码里、读代码时却需要知道的信息}直接渲染在标识符旁边，默认开启。按 \key{Alt+F1} 随时切换显示与隐藏；设置位于 \ui{工具 > 选项 > 文本编辑器 > C/C++ > IntelliSense}（想换按键就到 \ui{工具 > 选项 > 环境 > 键盘} 里搜“内联提示”）。它主要显示\textbf{参数名提示}与\textbf{类型提示}（\code{auto}、结构化绑定推导出的真实类型）；这些提示只是“画上去的”，不会写进文件，也不影响编译。
+
+\begin{lstlisting}[style=cppstyle]
+auto count = items.size();            // 内联类型提示：size_t
+for (auto& [key, value] : table) { }  // 内联类型提示：const std::string / int
+draw(1920, 1080, true);               // 内联参数名提示：width / height / antialias
+\end{lstlisting}
+\section{导航}
+
+\subsection{跳转命令总表}
+
+\begin{longtable}{L{3.0cm}L{3.4cm}L{8.2cm}}\toprule
+\textbf{操作} & \textbf{快捷键} & \textbf{说明} \\ \midrule \endfirsthead
+\toprule \textbf{操作} & \textbf{快捷键} & \textbf{说明} \\ \midrule \endhead \bottomrule \endlastfoot
+转到定义 & \key{F12} & 跳到符号的定义处 \\
+转到声明 & \key{Ctrl+F12} & 跳到头文件里的声明处 \\
+速览定义 & \key{Alt+F12} & 就地弹出浮层查看定义，不离开当前文件 \\
+查找所有引用 & \key{Shift+F12} & 列出全解决方案的引用，可筛选读 / 写 \\
+转到所有 & \key{Ctrl+T} 或 \key{Ctrl+,} & 统一的搜索框式跳转入口 \\
+导航后退 / 前进 & \key{Ctrl+-} / \key{Ctrl+Shift+-} & 跳转后回原位，成对使用 \\
+类视图 / 书签窗口 & \key{Ctrl+Shift+C} / \key{Ctrl+K, Ctrl+W} & 按类组织代码（见 9.3）；打开书签列表（见 8.2） \\
+\end{longtable}
+\key{Ctrl+T} / \key{Ctrl+,} 的价值在于“我大概记得有这么个东西”——输入时实时过滤出\textbf{文件、类型、成员、符号}；只想要某一类结果时，\ui{编辑 > 转到} 菜单下有专门的\textbf{转到文件 / 转到类型 / 转到成员 / 转到符号}命令。
+
+\textbf{速览定义与 CodeLens}：\key{Alt+F12} 打开的\textbf{速览定义}是一个\textbf{可以编辑的真编辑器}（只是嵌在浮层里），不是只读预览——读实现细节时就地看、顺手改，按 \key{Esc} 关掉，人还在原处，浮层里继续按 \key{F12} 还能再钻一层。改函数签名前的必做动作是 \key{Shift+F12}（\textbf{查找所有引用}），结果按项目 / 文件分组。\textbf{CodeLens} 则在每个函数、类上方显示\textbf{引用计数}与作者信息，点计数就地展开引用列表；VS 2026 的 C++ CodeLens 引用依赖全代码库语义索引（见 9.5），索引跑完计数才准，想关掉它去 \ui{工具 > 选项 > 文本编辑器 > 所有语言 > CodeLens}。编辑器顶部由三个下拉框组成的\textbf{导航栏}（左选类型 / 命名空间，中选成员，右切重载）适合在长文件里定位成员，开关在 \ui{工具 > 选项 > 文本编辑器 > 所有语言 > 常规 > 导航栏}。
+
+\begin{keybox}[实战场景]
+读陌生函数时用 \key{Alt+F12} 一层层往下“扒”，比反复开文件、跳来跳去再按十几次后退快得多，而且不污染导航历史。
+\end{keybox}
+
+\section{重构}
+\subsection{重命名：\key{Ctrl+R, Ctrl+R}}
+
+\key{Ctrl+R, Ctrl+R}（或 \key{Ctrl+.} 里选重命名）打开重命名面板，输入新名字后回车：
+
+\begin{itemize}
+  \item \textbf{改之前会预览}，可以展开确认每一处改动；
+  \item \textbf{可以带上注释与字符串}里的同名内容一起改；
+  \item \textbf{重命名类型时可以同步改文件名}，把 \code{Foo} 改成 \code{Bar} 时顺手把 \code{Foo.h} / \code{Foo.cpp} 一起改名。
+\end{itemize}
+
+\subsection{创建声明 / 定义、移动定义位置与其它重构}
+
+在头文件里写了声明还没写实现时，把光标放在函数名上按 \key{Ctrl+.} 会出现\textbf{创建定义}；反过来在 \code{.cpp} 里对着实现按 \key{Ctrl+.} 可以\textbf{创建声明}；已有实现想挪进头文件，用\textbf{移动定义位置}。
+
+\begin{tipbox}[提示]
+执行“创建声明 / 定义”后编辑器要不要跳过去是可以配置的——选项里提供\textbf{速览}、\textbf{打开文档}、\textbf{不导航}三种行为（配置入口在 \ui{工具 > 选项 > 文本编辑器 > C/C++} 下）。写代码快的人通常选“速览”，批量补实现时选“不导航”。
+\end{tipbox}
+
+\begin{longtable}{L{3.4cm}L{4.4cm}L{6.8cm}}\toprule
+\textbf{操作} & \textbf{入口} & \textbf{说明} \\ \midrule \endfirsthead
+\toprule \textbf{操作} & \textbf{入口} & \textbf{说明} \\ \midrule \endhead \bottomrule \endlastfoot
+提取函数 & \key{Ctrl+.} > 提取函数 & 选中一段代码抽成新函数，自动处理参数与返回值 \\
+转为原始字符串字面量 & \key{Ctrl+.} > 转为原始字符串 & 把满是 \codeP{\textbackslash{}\textbackslash{}} 的路径变成 \codeP{R"(C:\textbackslash{}data\textbackslash{}out)"} \\
+添加 / 移除 \code{#include} & \key{Ctrl+.} & 补上缺失的直接包含，或清理未使用的包含，见 5.3 \\
+\end{longtable}
+按 \key{Ctrl+.} 弹出的图标有两种含义：\textbf{灯泡}是“快速操作”，会改变代码结构或行为（创建定义、提取函数、添加 \code{#include}）；\textbf{螺丝刀}是“建议”，只影响代码\textbf{风格 / 质量}、不改变语义（成员函数加 \code{const}、全局函数加 \code{static}）。第 5 节讲的就是 C++ 特有的螺丝刀建议。
+
+\section{C++ 专属的智能建议}
+\subsection{建议把不修改状态的成员函数标记为 \code{const}}
+
+\begin{lstlisting}[style=cppstyle]
+class Counter {
+public:
+    int Value() { return value_; }   // 螺丝刀：没改状态，可以加 const
+    void Add(int n) { value_ += n; }
+private:
+    int value_ = 0;
+};
+\end{lstlisting}
+改成 \code{int Value() const} 之后它就能被 \code{const Counter&} 调用了。这不是洁癖：\textbf{漏写 \code{const} 是“能编译但用不了”的典型原因}——某个函数接 \code{const} 引用，你却在里面调了非 \code{const} 成员函数，报错信息还很难看。
+
+\subsection{建议把只在本文件使用的全局函数标记为 \code{static}}
+
+在 \code{.cpp} 里定义、又只被本文件调用的全局函数（例如 \code{static int clamp01(int v) { ... }}），编辑器会建议加 \code{static} 改为内部链接。好处有两个：\textbf{避免符号名冲突}（两个 \code{.cpp} 里各写一个同名函数也不会撞车）与给编译器更多优化空间。同样的建议也适用于只在本翻译单元使用的全局常量与变量，更彻底的做法是放进匿名命名空间。
+
+\subsection{未使用的 \#include 会变灰}
+
+一个 \code{#include} 如果在\textbf{当前翻译单元里没被用到}，它的文字就会变\textbf{灰色}——这是排查“编译时间为什么这么长”的第一现场。
+
+\begin{lstlisting}[style=cppstyle]
+#include <vector>    // 用到了，正常颜色
+#include <string>    // 没用到，显示为灰色
+#include <map>       // 没用到，显示为灰色
+
+void f(const std::vector<int>& v) { (void)v; }
+\end{lstlisting}
+把光标放到灰行上按 \key{Ctrl+.}，可以\textbf{移除这一个}，也可以\textbf{一次移除当前文件中所有未使用的 \code{#include}}。反方向的能力同样有：使用了只被间接包含进来的符号时（例如没直接包含 \code{<algorithm>} 就调用了 \code{std::sort}），编辑器会建议\textbf{添加对应的 \code{#include}}。
+
+\begin{warnbox}[注意]
+别盲目相信“灰掉就没用”。宏、模板特化、\code{static_assert} 里用到的符号可能不被 IntelliSense 统计到；头文件里删 \code{#include} 尤其要谨慎——它可能一直是某个 \code{.cpp} 赖以工作的\textbf{传递依赖}。\textbf{删完立刻生成一次}，让编译器兜底。
+\end{warnbox}
+
+\subsection{大小与对齐预览}
+
+把鼠标悬停在一个类 / 结构体 / 联合体 / 枚举上，快速信息里会给出\textbf{大小与对齐}：
+
+\begin{lstlisting}[style=cppstyle]
+struct Packet {
+    char   tag;      // 偏移 0
+    int    seq;      // 偏移 4（tag 之后有 3 字节填充）
+    double payload;  // 偏移 8
+};                   // 大小 16 字节，对齐 8 字节
+\end{lstlisting}
+它在三种场合非常值钱：给结构体加字段前评估体积变化、按二进制格式收发数据时核对布局、多线程代码里判断两个对象会不会落在同一个缓存行上。要更严格地钉死布局，可配合 \code{#pragma pack} 或 \code{alignas}，再回来悬停复查。
+
+\section{代码片段}
+\subsection{展开与插入}
+
+\begin{longtable}{L{4.0cm}L{4.6cm}L{6.0cm}}\toprule
+\textbf{方式} & \textbf{快捷键 / 操作} & \textbf{说明} \\ \midrule \endfirsthead
+\toprule \textbf{方式} & \textbf{快捷键 / 操作} & \textbf{说明} \\ \midrule \endhead \bottomrule \endlastfoot
+输入片段名 + \code{Tab} & 例如输入 \code{for} 后按 \code{Tab} & 最常用，也可在补全列表里挑带“代码片段”图标的候选 \\
+插入代码片段 & \key{Ctrl+K, Ctrl+X} & 从列表里挑一个片段插入 \\
+外侧代码 & \key{Ctrl+K, Ctrl+S} & 用片段把选中代码包裹起来，如包进 \code{#if} \\
+\end{longtable}
+C++ 内置片段常用的有 \code{#if}（条件编译骨架）、\code{for}、\code{while}、\code{switch}、\code{class}、\code{struct}、\code{enum}、\code{main}。展开后用 \code{Tab} 在可替换字段之间跳，\key{Enter} 或 \key{Esc} 结束编辑。
+
+\subsection{代码片段管理器与自定义片段}
+
+\ui{工具 > 代码片段管理器}是片段的总入口：左侧选语言（选 \textbf{Visual C++}），能看到每个片段的位置路径，右下角有\textbf{导入}按钮。自定义片段有两条路：在管理器里用\textbf{导入}按钮选择 \code{.snippet} 文件，或直接把它拷进用户片段目录（管理器里会显示具体路径，通常是“文档”下的 \codeP{Visual Studio 2026\textbackslash{}Code Snippets\textbackslash{}Visual C++\textbackslash{}My Code Snippets}）。下面这个片段叫 \code{cwout}，展开后打印“变量名 = 值”：
+
+\begin{lstlisting}[style=xmlstyle]
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>cwout</Title>
+      <Shortcut>cwout</Shortcut>
+      <Description>把变量名与值一起输出到 std::cout</Description>
+      <SnippetTypes><SnippetType>Expansion</SnippetType></SnippetTypes>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal><ID>var</ID><ToolTip>要打印的变量</ToolTip><Default>x</Default></Literal>
+      </Declarations>
+      <Code Language="cpp" Delimiter="$"><![CDATA[std::cout << "$var = " << $var << '\n';$end$]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>
+\end{lstlisting}
+几个必须注意的点：扩展名是 \code{.snippet}，用 \textbf{UTF-8} 保存（否则中文描述乱码）；\code{<Shortcut>} 是展开时输入的名字，\code{<Title>} 是列表里显示的名字；\code{$var$} 是可替换字段，\code{$end$} 是展开后光标停留的位置；\code{<Code Language="cpp">} 指明这是 C++ 片段，XML 结构少一层就不会被识别。
+
+\section{格式化与代码风格}
+\subsection{格式化快捷键}
+
+\begin{longtable}{L{3.0cm}L{4.6cm}L{7.0cm}}\toprule
+\textbf{操作} & \textbf{快捷键} & \textbf{说明} \\ \midrule \endfirsthead
+\toprule \textbf{操作} & \textbf{快捷键} & \textbf{说明} \\ \midrule \endhead \bottomrule \endlastfoot
+格式化文档 & \key{Ctrl+K, Ctrl+D} & 按当前风格设置重排整个文件 \\
+格式化选区 & \key{Ctrl+K, Ctrl+F} & 只排选中部分；输入 \code{;}、\codeP{\}} 时编辑器也会自动调整缩进 \\
+\end{longtable}
+\subsection{\code{.editorconfig}：把风格写进仓库}
+
+\code{.editorconfig} 是与编辑器无关的纯文本约定文件，放在仓库里跟着 Git 走。Visual Studio 会读取它并让它\textbf{覆盖个人的 IDE 设置}，团队里每个人的缩进、换行、编码就都一致了，代码评审里也不会再出现“整篇都是改动”的假 diff。规则是\textbf{就近生效}：子目录里的配置覆盖上层，\code{root = true} 表示到此为止不再往上找。
+
+\begin{longtable}{L{5.8cm}L{3.6cm}L{5.2cm}}\toprule
+\textbf{键} & \textbf{取值} & \textbf{作用} \\ \midrule \endfirsthead
+\toprule \textbf{键} & \textbf{取值} & \textbf{作用} \\ \midrule \endhead \bottomrule \endlastfoot
+\code{indent_style} & \code{space} | \code{tab} & 用空格还是制表符缩进 \\
+\code{indent_size} & 整数 & 一级缩进的宽度 \\
+\code{end_of_line} & \code{lf} | \code{crlf} | \code{cr} & 换行符类型，跨平台协作的关键 \\
+\code{charset} & \code{utf-8} | \code{utf-8-bom} | \code{gbk} … & 文件编码，\textbf{解决乱码的第一道防线} \\
+\code{trim_trailing_whitespace} & \code{true} | \code{false} & 保存时删除行尾空白 \\
+\code{insert_final_newline} & \code{true} | \code{false} & 文件末尾补一个空行 \\
+\end{longtable}
+一份实用的 C++ 仓库配置：
+
+\begin{lstlisting}[style=inistyle]
+# 仓库根目录，不再向上级目录查找
+root = true
+
+[*]
+charset = utf-8
+end_of_line = crlf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+[*.{cpp,cc,cxx,h,hpp,inl,ipp}]
+indent_size = 4
+max_line_length = 100
+
+# Markdown 里行尾两个空格是有意义的换行，别删
+[*.md]
+trim_trailing_whitespace = false
+\end{lstlisting}
+\begin{tipbox}[提示]
+\code{charset = utf-8} 只约束\textbf{新建文件与格式化时的编码}，已经在磁盘上存成 GBK 的老文件不会自动转换，还得靠 9.2 的编码控件手工转一次。
+\end{tipbox}
+
+\subsection{clang-format 集成}
+
+团队里已有 \code{.clang-format} 时不必维护两套风格。在 \ui{工具 > 选项 > 文本编辑器 > C/C++ > 格式设置} 里启用 ClangFormat 支持后，只要项目目录中存在 \code{.clang-format}，\key{Ctrl+K, Ctrl+D} 就会按它的规则排版，并不再使用 VS 自己的缩进 / 空格设置。
+
+\begin{lstlisting}[style=inistyle]
+# .clang-format
+BasedOnStyle: LLVM
+Language: Cpp
+Standard: c++20
+IndentWidth: 4
+ColumnLimit: 100
+PointerAlignment: Left
+SortIncludes: true
+\end{lstlisting}
+\begin{warnbox}[注意]
+\code{BasedOnStyle} 决定基线（\code{LLVM} / \code{Google} / \code{Microsoft} 等），\code{ColumnLimit} 决定折行宽度，\code{PointerAlignment} 决定 \code{int* p} 还是 \code{int *p}；\code{SortIncludes} 会重排 \code{#include}，而\textbf{头文件之间的顺序有时是有语义的}，顺序敏感的文件可以用 \code{// clang-format off} / \code{// clang-format on} 圈起来。
+\end{warnbox}
+
+\begin{tipbox}[提示]
+格式化用 clang-format，\textbf{静态检查}用 clang-tidy，两者的配置是分开的：clang-tidy 的开关与检查项在 \ui{项目属性 > 代码分析 > Clang-Tidy} 里配置。
+\end{tipbox}
+
+\section{编辑器效率技巧}
+\subsection{多光标与行操作}
+
+\begin{longtable}{L{2.8cm}L{6.2cm}L{5.6cm}}\toprule
+\textbf{操作} & \textbf{快捷键 / 方式} & \textbf{说明} \\ \midrule \endfirsthead
+\toprule \textbf{操作} & \textbf{快捷键 / 方式} & \textbf{说明} \\ \midrule \endhead \bottomrule \endlastfoot
+加一个光标 & \key{Ctrl+Alt+单击} & 在点击处再插一个插入点，可加多个，\key{Esc} 取消 \\
+框选（列选择） & \key{Alt+拖动} & 按矩形区域选择，改对齐的数据列极快 \\
+复制行 / 移动行 & \key{Ctrl+D} / \key{Alt+}$\uparrow$、\key{Alt+}$\downarrow$ & 复制当前行到下方；上下挪动当前行或选中块 \\
+删除行 / 剪贴板环 & \key{Ctrl+Shift+L} / \key{Ctrl+Shift+V} & 删除当前行；在历史剪贴内容之间循环粘贴 \\
+注释 / 取消注释 / 大小写 & \key{Ctrl+K, Ctrl+C}、\key{Ctrl+K, Ctrl+U} / \key{Ctrl+Shift+U}、\key{Ctrl+U} & 对选中块整块加 \code{//} 或去掉；改宏名、常量名时顺手 \\
+跳到匹配括号 & \key{Ctrl+]} & 光标放在 \codeP{\{}、\code{(} 上跳到配对的另一半，也能在 \code{#if} / \code{#endif} 间跳 \\
+\end{longtable}
+典型用法：把一组 \code{int x1, x2, x3;} 里的 \code{int} 全改成 \code{long long}——用 \key{Alt+拖动} 框住那一列直接输入替换。
+
+\subsection{任务列表、书签、折叠与结构参考线}
+
+在注释里写下约定令牌，它就会出现在 \ui{视图 > 任务列表} 里，默认令牌包括 \code{TODO}、\code{HACK}、\code{UNDONE}、\code{UnresolvedMergeConflict}：
+
+\begin{lstlisting}[style=cppstyle]
+// TODO: 把这里换成 std::string_view，避免一次拷贝
+// HACK: 依赖了未定义行为，等上游修复后删掉
+\end{lstlisting}
+在 \ui{工具 > 选项 > 环境 > 任务列表} 里可以添加自己的令牌（比如 \code{FIXME}）并设置\textbf{优先级}；双击条目直接跳到代码位置。它按令牌解析，比满仓库搜 \code{TODO} 靠谱得多，不会误命中字符串里的普通文本。
+
+\textbf{书签}适合“这几个地方等会儿都要回来改”：\key{Ctrl+K, Ctrl+K} 切换书签，\key{Ctrl+K, Ctrl+N} / \key{Ctrl+K, Ctrl+P} 前后跳，\key{Ctrl+K, Ctrl+W} 打开书签窗口（可改名、分组）。\textbf{折叠}适合收拾长文件：\key{Ctrl+M, Ctrl+O} 折叠到定义（只留函数签名，一屏看完文件结构），\key{Ctrl+M, Ctrl+M} 折叠 / 展开当前块，\key{Ctrl+M, Ctrl+L} 全部展开或折叠，\key{Ctrl+M, Ctrl+P} 停止大纲显示。\textbf{结构参考线}是编辑器左侧那些淡色竖线，用来指示代码块的嵌套层级，开关在 \ui{工具 > 选项 > 文本编辑器 > 常规 > 显示结构参考线}。
+
+\section{VS 2026 的编辑体验改进}
+\subsection{C++ 属性语法高亮与快捷键统一}
+
+\code{[[nodiscard]]}、\code{[[maybe_unused]]}、\code{[[likely]]}、\code{[[deprecated]]} 这类 C++ 属性在 VS 2026 里终于有了独立着色，不再和普通标识符糊在一起，属性密集的现代 C++ 代码可读性提升明显；颜色可在 \ui{工具 > 选项 > 环境 > 字体和颜色} 里单独调整。这一代还统一了一批按键约定，让\textbf{快捷键向其他编辑器看齐}，从 VS Code 迁过来的人会更顺手（多光标、复制行、行移动这几类尤其明显）。如果反而改不回肌肉记忆，\ui{工具 > 选项 > 环境 > 键盘} 里有\textbf{键盘方案}下拉框，可以直接切换到其他编辑器的键位方案。
+
+\subsection{右下角增强控件：查看与修改文件编码}
+
+编辑器\textbf{右下角}的编码指示器现在可以直接点击操作，这是解决中文乱码最顺手的一条路。把一份 GBK 老文件转成 UTF-8 的完整步骤：
+
+\begin{enumerate}
+  \item 打开乱码文件，先看右下角显示的编码（例如 \textbf{GB2312}，或带 BOM 的 \textbf{UTF-8 with BOM}）；
+  \item \textbf{单击}这个编码名，在菜单里选\textbf{使用编码重新打开}，从列表里挑一个候选（中文 Windows 上通常是 GB2312 或 UTF-8），用\textbf{预览}确认注释已能正常显示；
+  \item 显示正确后再次单击编码名，选\textbf{通过编码保存}，把它真正存成 UTF-8；
+  \item 编译期再补一刀：在 \ui{项目属性 > C/C++ > 命令行} 的“其他选项”里加上 \code{/utf-8}（等价于同时指定源码字符集与执行字符集），让 MSVC 明确按 UTF-8 解读源文件。
+\end{enumerate}
+
+\begin{longtable}{L{5.0cm}L{9.6cm}}\toprule
+\textbf{你看到的乱码} & \textbf{常见成因} \\ \midrule \endfirsthead
+\toprule \textbf{你看到的乱码} & \textbf{常见成因} \\ \midrule \endhead \bottomrule \endlastfoot
+\code{锟斤拷} & 文件本是 UTF-8 却被按 GBK 打开（或反之） \\
+\code{????} 或方块 / \code{C2001: 常量中有换行符} & 前者是保存时目标编码无法表示这些字符（信息已丢失）；后者是源文件编码与编译器默认代码页不一致，字符串字面量被截断 \\
+\end{longtable}
+\begin{keybox}[实战场景]
+从同事那里拷来一批 \code{.cpp}，注释全是 \code{锟斤拷}。不要逐个用记事本“另存为”——在 VS 里逐个走“重新打开 $\rightarrow$ 通过编码保存”两步即可，改完把 \code{.editorconfig} 的 \code{charset} 定为 \code{utf-8}，下次就不会再犯。
+\end{keybox}
+
+\subsection{查找排除文件、类视图子串搜索}
+
+Quick Find（\key{Ctrl+F}）与 Find in Files（\key{Ctrl+Shift+F}）都支持\textbf{排除}条件：在查找窗口里把不想搜的路径或通配符填进排除项，例如 \code{third_party/}、\code{build/}、\code{out/}、\code{*.generated.h}。这解决的是大型仓库里很实在的痛点——搜一个 \code{CreateWindow}，结果前两百条全来自第三方库和生成代码。
+
+\ui{视图 > 类视图}（\key{Ctrl+Shift+C}）的搜索框现在支持\textbf{子串匹配}：输入 \code{render} 就能命中 \code{DeferredRenderer}、\code{RendererFactory}，不必从单词开头对齐；配合 VS 2026 对大型项目的性能优化，几万个类型的解决方案里过滤与展开也基本不卡。
+
+\subsection{右键一键生成预处理输出}
+
+在\textbf{解决方案资源管理器}里对着一个 \code{.cpp} 文件右键，选择\textbf{预处理}，IDE 会立刻生成预处理之后的完整输出（默认落在项目的中间目录下，如 \codeP{x64\textbackslash{}Debug}）。它对应编译开关 \code{/P}（保留 \code{#line} 标记，便于对照原始行号；\code{/EP} 则去掉行标记，只留纯代码）。三个最有价值的场景：\textbf{宏套娃看不懂}（展开后 \code{MAX(1+2, 3)} 变成什么一目了然）、\textbf{查某个头文件是谁包含进来的}（在输出里搜 \code{#line} 附近的文件名，一路倒推包含链）、\textbf{模板 / 宏相关的编译错误定位}（编译器报的位置在宏里，输出能还原成实际参与编译的那一行）。输出动辄几万到几十万行，用 \key{Ctrl+F} 查找，别滚动着看。
+
+\begin{lstlisting}[style=cppstyle]
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+int v = MAX(1 + 2, 3);   // 预处理后：((1 + 2) > (3) ? (1 + 2) : (3))
+// 实参被原样替换两次 —— 若实参带副作用（如 i++），就会被执行两遍
+\end{lstlisting}
+\subsection{全代码库语义索引}
+
+VS 2026 为 C++ 引入了\textbf{全代码库语义索引}：把整个解决方案的符号关系建成索引后，导航（\key{F12}、\key{Ctrl+T}、\key{Shift+F12}）与语法着色的性能相比以前\textbf{提升 2 倍以上}，C++ 的 CodeLens 引用计数也依赖它。配置位于 \ui{工具 > 选项 > C/C++ > IntelliSense > 浏览和导航}。
+
+\begin{itemize}
+  \item 首次打开大型解决方案需要一段建立索引的时间，\textbf{此期间补全与跳转质量会下降}——这正是 1.2 里“提示发虚”的常见原因；
+  \item 索引结果缓存在解决方案的隐藏目录（\code{.vs}）里，\textbf{删掉 \code{.vs} 会触发全量重建}，非必要不要删；
+  \item 换了工具集、改了包含路径结构之后，\ui{生成 > 重新扫描解决方案} 比干等更快。
+\end{itemize}
+
+\section{GitHub Copilot 在编辑器里的用法}
+\subsection{行内补全与 Copilot Chat}
+
+\textbf{行内补全}：继续输入时 Copilot 用灰色“幽灵文本”给出整行或整段建议，\code{Tab} 接受，\key{Esc} 拒绝，继续打字则自动忽略；写一堆相似的 getter、逐字段的序列化代码、样板测试时最有用。VS 2026 中 C++ 的补全质量有提升——Copilot 会把相关文件作为上下文，减少凭空编造 API 的情况。
+
+\textbf{Copilot Chat}（\ui{视图 > GitHub Copilot Chat}）有两种模式：
+
+\begin{longtable}{L{2.2cm}L{5.0cm}L{7.0cm}}\toprule
+\textbf{模式} & \textbf{做什么} & \textbf{适合的问题} \\ \midrule \endfirsthead
+\toprule \textbf{模式} & \textbf{做什么} & \textbf{适合的问题} \\ \midrule \endhead \bottomrule \endlastfoot
+\textbf{Ask} & 只回答，不动你的代码 & “这段代码为什么会有数据竞争？”“这个模板报错是什么意思？” \\
+\textbf{Agent} & 直接在解决方案里改代码、建文件、跑命令 & “给 \code{Packet} 加上序列化与反序列化，并补上单元测试” \\
+\end{longtable}
+用 Agent 模式要记住两点：它会\textbf{同时改多个文件}，改完要逐个审阅 diff 再接受；对不熟悉的仓库，先让它“只解释、先别改”。
+
+\subsection{右键 Copilot Actions 与 Next Edit Suggestions}
+
+在编辑器里\textbf{选中一段代码 $\rightarrow$ 右键}，VS 2026 的右键菜单里新增了一组 \textbf{Copilot Actions}：\textbf{解释代码}（读陌生代码最实用）、\textbf{优化}（性能或可读性建议）、\textbf{生成注释}（注意审阅，注释错了比没有更糟）、\textbf{生成单元测试}（生成测试脚手架，断言还得自己补）。\textbf{Next Edit Suggestions} 则会预判你下一处要改的地方：刚改了某个 API 的调用方式，它提示“接下来这里也要改”，按 \code{Tab} 跳过去接受即可，做机械式批量修改（加一个参数并同步所有调用点）时效率很高。开关位于 \ui{工具 > 选项 > GitHub > Copilot}。
+
+\subsection{隐私与关闭方法}
+
+\begin{itemize}
+  \item \textbf{关闭入口}：\ui{工具 > 选项 > GitHub > Copilot}，在这里可以关掉行内建议、关闭 Copilot Chat。关掉之后 IDE 其它功能完全不受影响——IntelliSense、导航、重构都是本地能力，与 Copilot 无关。
+  \item \textbf{临时暂停}：编辑器右下角有 Copilot 状态指示，可以就地暂停建议，不必进选项页。
+  \item \textbf{BYOK / BYOM（自带密钥 / 自带模型）}：可在 Copilot Chat 的模型选择器里接入 Microsoft Foundry、OpenAI、Anthropic、Ollama 等提供程序；\textbf{接入本地 Ollama 是代码完全不出网的一种折中方案}，但能力与云端模型有差距。
+  \item \textbf{内容排除}：仓库级 / 组织级的排除规则由 GitHub 侧配置，需与管理员确认，不要假设“默认不会上传”。
+\end{itemize}
+
+\begin{warnbox}[注意]
+启用 Copilot 意味着\textbf{你正在编辑的代码片段会被发送到服务端}以生成补全请求。合规要求“代码不出内网”时，正确做法是整体关掉它，而不是只关 Chat、留着行内补全。
+\end{warnbox}
+
+\section{常见 IntelliSense 问题与快速处置}
+
+这里只列现象和一句话方向，完整排查步骤见 \textbf{第 13 章}。
+
+\begin{longtable}{L{5.4cm}L{9.2cm}}\toprule
+\textbf{现象} & \textbf{一句话处置} \\ \midrule \endfirsthead
+\toprule \textbf{现象} & \textbf{一句话处置} \\ \midrule \endhead \bottomrule \endlastfoot
+波浪线报错，但生成成功 & 以编译器为准，误报成因与逐项处置见第 13 章 \\
+满屏“无法打开源文件 xxx.h” & 包含路径与项目属性不一致，核对包含目录并重新扫描，详见第 13 章 \\
+补全列表空、\key{F12} 跳错地方 & IntelliSense 数据库与代码不同步，重建浏览数据库，详见第 13 章 \\
+打开后长时间“正在分析”、CPU 占用高 & 全代码库语义索引正在建立，先等它跑完，详见第 13 章 \\
+中文注释导致解析异常、报奇怪的错 & 文件编码不一致，先用 9.2 的编码控件统一为 UTF-8 \\
+\end{longtable}
+\section{编辑效率速查表}
+
+\begin{tipbox}[提示]
+\key{Ctrl+K, Ctrl+D} 这类写法表示\textbf{分两段按}——先按 \key{Ctrl+K}，全部松开，再按 \key{Ctrl+D}；顺序反了不会生效。
+\end{tipbox}
+
+\begin{longtable}{L{1.4cm}L{4.6cm}L{3.8cm}L{4.4cm}}\toprule
+\textbf{类别} & \textbf{快捷键} & \textbf{命令} & \textbf{备注} \\ \midrule \endfirsthead
+\toprule \textbf{类别} & \textbf{快捷键} & \textbf{命令} & \textbf{备注} \\ \midrule \endhead \bottomrule \endlastfoot
+导航 & \key{F12} / \key{Ctrl+F12} / \key{Alt+F12} & 转到定义 / 声明 / 速览定义 & 每天按几百次，加 \key{Ctrl+-} 回原位 \\
+导航 & \key{Shift+F12} & 查找所有引用 & 改签名前的必做动作 \\
+导航 & \key{Ctrl+T} 或 \key{Ctrl+,} & 转到所有 & 文件 / 类型 / 成员 / 符号 \\
+导航 & \key{Ctrl+Shift+C} & 类视图 & 支持子串搜索（VS 2026） \\
+编辑 & \key{Ctrl+J} / \key{Ctrl+Space} / \key{Ctrl+Shift+Space} & 列出成员 / 完成单词 / 参数信息 & 记不住名字时用 \key{Ctrl+J} \\
+编辑 & \key{Ctrl+D} / \key{Alt+}$\uparrow$、\key{Alt+}$\downarrow$ & 复制行 / 移动行 & 不用先选中整行 \\
+编辑 & \key{Ctrl+K, Ctrl+C} / \key{Ctrl+K, Ctrl+U} & 注释 / 取消注释 & 对选中块生效 \\
+编辑 & \key{Ctrl+K, Ctrl+D} / \key{Ctrl+K, Ctrl+F} & 格式化文档 / 选区 & 提交前跑一次 \\
+编辑 & \key{Ctrl+Alt+单击} / \key{Alt+拖动} / \key{Alt+F1} / \key{Ctrl+M, Ctrl+O} & 多光标 / 框选 / 内联提示 / 折叠到定义 & 批量同改、截图前关闭、长文件导航 \\
+重构 & \key{Ctrl+R, Ctrl+R} & 重命名 & 可带注释与字符串，可同步改文件名 \\
+重构 & \key{Ctrl+.} & 快速操作（灯泡 / 螺丝刀） & 一切建议的总入口 \\
+重构 & \key{Ctrl+.} > 创建定义 / 创建声明 & 生成缺失的另一半 & 导航行为可选速览 / 打开文档 / 不导航 \\
+重构 & \key{Ctrl+.} > 移动定义 / 提取函数 / 转原始字符串 / 增删 \code{#include} & 搬移、抽取与依赖增删 & 未使用的 \code{#include} 会变灰 \\
+搜索 & \key{Ctrl+F} / \key{Ctrl+H} / \key{Ctrl+Shift+F} / \key{Ctrl+Shift+H} & 快速查找 / 替换；在文件中查找 / 替换 & 后两者可排除 \code{third_party/}、\code{build/}（VS 2026） \\
+搜索 & \ui{视图 > 任务列表} & \code{TODO} / \code{HACK} 清单 & 令牌在 \ui{工具 > 选项 > 环境 > 任务列表} 配置 \\
+\end{longtable}
+\section{小结}
+
+\begin{itemize}
+  \item \textbf{IntelliSense 与 MSVC 是两套引擎}：波浪线报错不等于编译失败，反过来也一样——\textbf{以编译器为准}。
+  \item 补全与提示的四个核心键：\key{Ctrl+J}（列出成员）、\key{Ctrl+Shift+Space}（参数信息）、\key{Alt+F1}（切换内联提示）、\key{Ctrl+K, Ctrl+I}（快速信息）。
+  \item 导航体系：\key{F12} / \key{Ctrl+F12} / \key{Alt+F12} 三兄弟，加上 \key{Shift+F12} 找引用、\key{Ctrl+T} 找符号、\key{Ctrl+-} 回原位。
+  \item C++ 专属的螺丝刀建议很值钱：\textbf{成员函数加 \code{const}、全局函数加 \code{static}、未使用的 \code{#include} 变灰可一键清理、悬停看大小与对齐}。
+  \item 风格统一靠 \textbf{\code{.editorconfig}}（随仓库走、就近生效）与 \textbf{\code{.clang-format}}（在选项里启用后接管格式化）。
+  \item VS 2026 的编辑新能力记住五个：\textbf{C++ 属性高亮}、\textbf{右下角改编码}、\textbf{查找排除文件}、\textbf{右键生成预处理输出}、\textbf{全代码库语义索引}（导航与着色快 2 倍以上）。
+  \item Copilot 的开关在 \ui{工具 > 选项 > GitHub > Copilot}；合规要求代码不出网时，\textbf{整体关掉}才是正确做法。
+\end{itemize}
+
+\section{练习题}
+
+\begin{enumerate}
+  \item 写一个只读不写状态的成员函数，观察螺丝刀建议并接受它加上 \code{const}；再把这个对象以 \code{const} 引用传给另一个函数，验证加 \code{const} 前编译失败、加之后通过。
+  \item 在一个 \code{.cpp} 里故意包含三个用不到的头文件，用 \key{Ctrl+.} 的“移除所有未使用的 \code{#include}”清掉，然后生成一次，确认没有误删；如果有问题，记录是哪个符号导致的。
+  \item 写一个字段依次为 \code{char}、\code{int}、\code{double} 的 \code{struct}，悬停查看它的大小与对齐；再调整字段顺序把大小降到最小，并解释填充字节是怎么来的。
+  \item 定义一个带参数的宏，分别用不带副作用和带副作用的实参调用它，用\textbf{右键 > 预处理}生成预处理输出，找出副作用被执行多次的证据。
+  \item 在仓库根目录放一份 \code{.editorconfig}（至少包含 \code{indent_style}、\code{indent_size}、\code{end_of_line}、\code{charset}、\code{trim_trailing_whitespace}、\code{insert_final_newline}），新建 \code{.cpp} 验证生效；再在子目录放一份不同配置，验证“就近生效”。最后写一个自定义代码片段（例如打印变量名与值的 \code{cwout}），通过 \ui{工具 > 代码片段管理器} 导入并展开一次；如果没生效，检查 XML 结构、\code{Language} 属性与文件编码。
+\end{enumerate}
+
+\section{相关笔记}
+
+\begin{itemize}
+  \item \textbf{本教程}：\textbf{Visual Studio 2026 使用教程}
+  \item \textbf{上一章}：\textbf{项目属性与编译配置}
+  \item \textbf{下一章}：\textbf{调试技术详解}
+  \item \textbf{常见问题}：\textbf{常见问题与效率技巧}
+  \item \textbf{C++ 教程}：\textbf{C++ 教程}
+\end{itemize}

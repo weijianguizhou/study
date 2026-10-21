@@ -1,0 +1,374 @@
+% !TeX root = main.tex
+
+Visual Studio 的界面元素比 VS Code 多得多，第一次打开容易“信息过载”。但只要抓住一条主线就清楚了：\textbf{左边管项目、中间写代码、下面看反馈、右边看属性}。这一章把窗口体系、布局管理和快捷键一次性讲清楚，让你能把它调教成顺手的形状。
+
+\section{起始窗口}
+
+打开 VS 2026 首先看到的是\textbf{起始窗口}，它做四件事：
+
+\begin{longtable}{L{6.0cm}L{9.0cm}}\toprule
+\textbf{区域} & \textbf{作用} \\ \midrule \endfirsthead
+\toprule \textbf{区域} & \textbf{作用} \\ \midrule \endhead
+\bottomrule \endlastfoot
+\textbf{克隆存储库 / 打开项目或解决方案 / 打开本地文件夹} & 三种入口：Git 仓库、\code{.sln}/\code{.vcxproj}、任意文件夹（CMake 项目走这里） \\
+\textbf{创建新项目} & 打开模板列表 \\
+\textbf{最近使用的项目} & 快速回到上次的工作 \\
+\textbf{继续但无需代码} & 不建项目直接开一个空编辑器 \\
+\end{longtable}
+
+\begin{tipbox}[提示]
+CMake 项目必须用“\textbf{打开本地文件夹}”，不能用“打开项目或解决方案”。这是新手最常见的困惑之一，详见\textbf{第 10 章}。
+\end{tipbox}
+
+起始窗口可以在 \ui{工具 > 选项 > 环境 > 启动} 里改成“打开时显示空环境”，省掉这一步。
+
+\section{主界面布局总览}
+
+\begin{lstlisting}[style=textstyle]
++-------------------------------------------------------------------
+| 菜单栏：文件 编辑 视图 项目 生成 调试 测试 分析 工具 扩展 窗口 帮助
+| 工具栏：[保存] [撤销] [重做] | [Debug v] [x64 v] | [> 启动] [工具集]
++-------------------------------------------------------------------
+| 左：解决方案资源管理器 (Ctrl+Alt+L)
+|   解决方案
+|     > 项目
+|         main.cpp
+|         utils.h
++-------------------------------------------------------------------
+| 中：文档选项卡 [main.cpp] [utils.h]
+|   代码编辑器
+|     1  #include <iostream>
+|     2
+|     3  int main() {
+|     4      std::cout << ...;
+|     5  }
++-------------------------------------------------------------------
+| 右：属性窗口 (F4) / 类视图 (Ctrl+Shift+C) / 对象浏览器
++-------------------------------------------------------------------
+| 下：错误列表 | 输出 | 任务列表 | 终端 | Git 更改   <- 底部停靠区
++-------------------------------------------------------------------
+\end{lstlisting}
+
+\textbf{四块区域的分工}：
+
+\begin{longtable}{L{2.2cm}L{5.2cm}L{7.2cm}}\toprule
+\textbf{区域} & \textbf{主要窗口} & \textbf{你在这里做什么} \\ \midrule \endfirsthead
+\toprule \textbf{区域} & \textbf{主要窗口} & \textbf{你在这里做什么} \\ \midrule \endhead
+\bottomrule \endlastfoot
+左 & 解决方案资源管理器 & 管理文件、项目、引用 \\
+中 & 代码编辑器 & 写代码 \\
+右 & 属性 / 类视图 / 对象浏览器 & 查看与修改属性、浏览类型结构 \\
+下 & 错误列表 / 输出 / 终端 / Git 更改 & 看编译结果、程序输出、提交代码 \\
+\end{longtable}
+
+\section{解决方案资源管理器}
+
+打开方式：\key{Ctrl+Alt+L}，或 \ui{视图 > 解决方案资源管理器}。
+
+它是 VS 的“文件中枢”，能做的事比看起来多：
+
+\begin{longtable}{L{6.4cm}L{8.6cm}}\toprule
+\textbf{操作} & \textbf{入口} \\ \midrule \endfirsthead
+\toprule \textbf{操作} & \textbf{入口} \\ \midrule \endhead
+\bottomrule \endlastfoot
+添加新建/现有项 & 右键项目 > \textbf{添加 > 新建项 / 现有项} \\
+添加类 & 右键项目 > \textbf{添加 > 类} \\
+添加引用（项目引用） & 右键项目 > \textbf{添加 > 引用} \\
+管理 NuGet 包 & 右键项目 > \textbf{管理 NuGet 包} \\
+查看项目属性 & 右键项目 > \textbf{属性} \\
+设为启动项目 & 右键项目 > \textbf{设为启动项目} \\
+在文件资源管理器中打开 & 右键 > \textbf{在文件资源管理器中打开文件夹} \\
+生成/重新生成/清理 & 右键项目或解决方案 > \textbf{生成 / 重新生成 / 清理} \\
+运行 Build Insights & 右键选中文件 > \textbf{对选定文件运行 Build Insights} \\
+生成预处理输出 & 右键 \code{.cpp} 文件 > \textbf{预处理}（详见\textbf{第 7 章}） \\
+\end{longtable}
+
+\textbf{工具栏上的几个开关}（资源管理器顶部）：
+
+\begin{itemize}
+	\item \textbf{同步显示当前文件}：编辑器切到哪个文件，资源管理器自动定位——强烈建议打开。
+	\item \textbf{显示所有文件}：把磁盘上存在但未加入项目的文件也显示出来（显示为虚影图标）。
+	\item \textbf{预览选定项}：单击文件时在右侧预览，不占用文档选项卡。
+\end{itemize}
+
+\begin{warnbox}[注意]
+\code{.vcxproj.filters} 里的“筛选器”只是\textbf{IDE 里的显示分组}，与磁盘目录\textbf{不是一回事}。物理上文件可能都在同一目录，而筛选器里看起来分了多层文件夹。真正决定“哪些文件参与编译”的是 \code{.vcxproj} 里的条目，不是筛选器。详见\textbf{第 5 章}。
+\end{warnbox}
+
+\section{代码编辑器}
+
+编辑器的核心能力（快捷键、IntelliSense、重构、格式化）在\textbf{第 7 章}展开，这里只说界面层面的东西。
+
+\subsection{文档选项卡}
+
+\begin{itemize}
+	\item \textbf{固定选项卡}：右键选项卡 > \textbf{固定}，常用文件不会被新文件挤走。
+	\item \textbf{选项卡分组}：把选项卡拖到编辑器另一侧可形成新的组，便于对照两份代码。
+	\item \textbf{选项卡颜色}：右键选项卡可设置颜色，用于标记“正在改的文件”。
+	\item \textbf{新建垂直选项卡组}：\ui{窗口 > 新建垂直选项卡组}，左右对照。
+\end{itemize}
+
+\subsection{编辑器左下角与右下角}
+
+\begin{itemize}
+	\item \textbf{左下角}显示当前光标位置、是否处于插入/改写模式。
+	\item \textbf{右下角}在 VS 2026 里做了增强：可以\textbf{查看并修改当前文件的编码}。中文乱码排查时这里是第一站。
+\end{itemize}
+
+\subsection{滚动条上的信息}
+
+垂直滚动条不只是滚动条，它还会标注：\textbf{修改过的位置、断点、错误、警告、搜索结果}。大文件里靠它快速定位问题。
+
+\section{工具窗口体系}
+
+VS 的工具窗口很多，不必全记住。下面按使用频率分组。
+
+\subsection{高频窗口}
+
+\begin{longtable}{L{4.4cm}L{4.2cm}L{6.0cm}}\toprule
+\textbf{窗口} & \textbf{打开方式} & \textbf{用途} \\ \midrule \endfirsthead
+\toprule \textbf{窗口} & \textbf{打开方式} & \textbf{用途} \\ \midrule \endhead
+\bottomrule \endlastfoot
+\textbf{解决方案资源管理器} & \key{Ctrl+Alt+L} & 文件与项目管理 \\
+\textbf{错误列表} & \key{Ctrl+\, Ctrl+E} & 编译错误与警告（双击跳转） \\
+\textbf{输出} & \key{Ctrl+Alt+O} & 生成输出、调试输出、\code{OutputDebugString} \\
+\textbf{属性} & \key{F4} & 查看/修改选中对象（项目、文件、控件）的属性 \\
+\textbf{类视图} & \key{Ctrl+Shift+C} & 按类型而非文件浏览代码 \\
+\textbf{对象浏览器} & \ui{视图 > 对象浏览器} & 浏览程序集/库中公开的类型 \\
+\textbf{终端} & \ui{视图 > 终端} & 内置命令行 \\
+\textbf{Git 更改} & \ui{视图 > Git 更改} & 提交、暂存、查看差异 \\
+\textbf{测试资源管理器} & \ui{测试 > 测试资源管理器} & 运行与管理单元测试 \\
+\textbf{任务列表} & \ui{视图 > 任务列表} & 汇总 \code{// TODO:} 之类的注释 \\
+\end{longtable}
+
+\subsection{调试期才出现的窗口}
+
+\textbf{断点}、\textbf{调用堆栈}、\textbf{监视}、\textbf{自动}、\textbf{局部变量}、\textbf{即时}、\textbf{线程}、\textbf{并行堆栈}、\textbf{内存}、\textbf{反汇编}、\textbf{寄存器}、\textbf{诊断工具}——这些在\textbf{第 8 章}详细讲。
+
+\subsection{查找窗口的两种形态}
+
+\begin{itemize}
+	\item \textbf{停靠形态}：默认贴在编辑器右上角，适合小范围查找。
+	\item \textbf{浮动形态}：点查找框上的“浮动”按钮，变成独立对话框，适合需要频繁调整选项时。
+\end{itemize}
+
+\section{窗口布局管理}
+
+\subsection{停靠与浮动}
+
+把工具窗口的标题栏\textbf{拖到屏幕边缘}会出现停靠提示菱形，松手即停靠；拖到屏幕中间则变为\textbf{浮动窗口}。
+
+\begin{longtable}{L{6.2cm}L{8.8cm}}\toprule
+\textbf{操作} & \textbf{效果} \\ \midrule \endfirsthead
+\toprule \textbf{操作} & \textbf{效果} \\ \midrule \endhead
+\bottomrule \endlastfoot
+双击标题栏 & 在“停靠”与“浮动”之间切换 \\
+拖到编辑器中间 & 形成\textbf{选项卡式文档组} \\
+右键标题栏 > \textbf{自动隐藏} & 收起为侧边标签，鼠标经过才展开 \\
+右键标题栏 > \textbf{停靠为选项卡式文档} & 让工具窗口像代码文件一样占一个选项卡 \\
+\end{longtable}
+
+\subsection{多显示器}
+
+把右侧的“属性/类视图”拖到第二块屏幕，主屏就只剩下代码——这是双屏下最实用的布局。
+
+\subsection{保存与切换布局}
+
+调好布局后一定要保存：
+
+\begin{itemize}
+	\item \ui{窗口 > 保存窗口布局}：给当前布局起名保存。
+	\item \ui{窗口 > 应用窗口布局}：随时切回某个布局。
+	\item 典型用法：保存一套“\textbf{编码布局}”（只有编辑器和资源管理器）和一套“\textbf{调试布局}”（堆栈、监视、局部变量全开），按场景一键切换。
+\end{itemize}
+
+\begin{keybox}[实战场景]
+调试时窗口乱成一团是常态。调好一次后存成“调试布局”，下次直接切回来，省掉每次重新拖窗口的几分钟。
+\end{keybox}
+
+\section{主题、字体与视觉体验}
+
+\subsection{主题}
+
+VS 2026 提供\textbf{全新的界面与 11 套内置主题}：\ui{工具 > 选项 > 环境 > 常规 > 颜色主题}。
+
+\subsection{自定义主题颜色}
+
+不想装第三方主题扩展，可以直接改颜色：
+
+\ui{工具 > 选项 > 环境 > 视觉体验 > 主题颜色}
+
+在这里可以修改任意 Fluent 颜色令牌（强调色、悬停状态、外壳框架等），\textbf{改动按主题分别保存}，也可以单独重置某一项。
+
+\subsection{字体与颜色}
+
+\ui{工具 > 选项 > 环境 > 字体和颜色} 是更细粒度的控制：字体、字号、以及\textbf{每一类语法元素}的前景色（关键字、注释、字符串、类型名……）。
+
+\begin{tipbox}[提示]
+C++ 开发者建议把字体换成等宽且区分 \code{0/O}、\code{1/l/I} 的字体（如 Cascadia Code、JetBrains Mono），能省下不少看错标识符的时间。
+\end{tipbox}
+
+\section{快捷键体系与自定义}
+
+\subsection{为什么值得花十分钟学}
+
+VS 的快捷键是\textbf{两段式}的，这是它和 VS Code 最大的差异：
+
+\begin{lstlisting}[style=textstyle]
+Ctrl+K, Ctrl+C     <- 先按 Ctrl+K，松开，再按 Ctrl+C
+Ctrl+K, Ctrl+D     <- 格式化文档
+Ctrl+R, Ctrl+R     <- 重命名
+Ctrl+\, Ctrl+E     <- 错误列表
+\end{lstlisting}
+
+习惯之后效率很高，但刚开始会觉得别扭。
+
+\subsection{必背的一批}
+
+\begin{longtable}{L{4.4cm}L{10.6cm}}\toprule
+\textbf{快捷键} & \textbf{功能} \\ \midrule \endfirsthead
+\toprule \textbf{快捷键} & \textbf{功能} \\ \midrule \endhead
+\bottomrule \endlastfoot
+\key{Ctrl+Shift+N} & 新建项目 \\
+\key{Ctrl+Shift+O} & 打开项目/解决方案 \\
+\key{Ctrl+Shift+S} & 全部保存 \\
+\key{Ctrl+F5} & 生成并运行（不调试） \\
+\key{F5} & 生成并启动调试 \\
+\key{Ctrl+Shift+B} & 生成解决方案 \\
+\key{F7} & 转到代码视图 \\
+\key{Ctrl+K, Ctrl+D} & 格式化文档 \\
+\key{Ctrl+K, Ctrl+C} & 注释选中行 \\
+\key{Ctrl+K, Ctrl+U} & 取消注释 \\
+\key{Ctrl+Q} & 快速启动（搜索命令、设置、文件） \\
+\key{Ctrl+T} & 转到所有（文件/类型/成员/符号） \\
+\key{Ctrl+Alt+L} & 解决方案资源管理器 \\
+\key{Ctrl+\, Ctrl+E} & 错误列表 \\
+\key{Ctrl+Alt+O} & 输出窗口 \\
+\key{F4} & 属性窗口 \\
+\key{Shift+Alt+Enter} & 全屏切换 \\
+\key{Ctrl+M, Ctrl+O} & 折叠到定义 \\
+\key{Ctrl+M, Ctrl+M} & 折叠/展开当前区域 \\
+\end{longtable}
+
+更多编辑与导航类快捷键见\textbf{第 7 章}，调试类见\textbf{第 8 章}，完整速查表见\textbf{第 13 章}。
+
+\subsection{自定义快捷键}
+
+\ui{工具 > 选项 > 环境 > 键盘}：
+
+\begin{enumerate}
+	\item 在搜索框输入命令名（如 \code{Edit.FormatDocument}）；
+	\item 选中命令，把光标放进“按快捷键”框；
+	\item 按下你想要的组合；
+	\item 看“快捷键的当前使用对象”是否冲突，点“\textbf{分配}”。
+\end{enumerate}
+
+\subsection{键盘映射方案}
+
+如果你从别的编辑器过来，可以直接换整套方案：\ui{工具 > 选项 > 环境 > 键盘 > 应用以下其他键盘映射方案}，可选 \textbf{Visual Studio Code}、ReSharper、Visual C++ 6 等。
+
+\begin{tipbox}[提示]
+VS 2026 这一代特意让一批快捷键\textbf{向其他编辑器看齐}，从 VS Code 迁过来的人上手会比过去顺很多。
+\end{tipbox}
+
+\subsection{导出与导入设置}
+
+\ui{工具 > 导入和导出设置} 可以把快捷键、字体颜色、窗口布局、代码片段等打包导出，换机器时一键恢复。
+
+\section{快速启动：\key{Ctrl+Q}}
+
+\textbf{\key{Ctrl+Q}} 是 VS 里最被低估的功能。它一个框搜遍\textbf{命令、设置项、已打开的文件、最近文件、模板}：
+
+\begin{lstlisting}[style=textstyle]
+按下 Ctrl+Q，输入：
+  "字体"        -> 直接跳到字体和颜色设置
+  "clang"       -> 跳到 clang-tidy 相关设置
+  "附加到进程"   -> 直接执行该命令
+  "编码"        -> 跳到文件编码相关选项
+\end{lstlisting}
+
+忘了某个功能藏在哪个菜单里，\key{Ctrl+Q} 比翻菜单快得多。
+
+\section{设置与选项}
+
+\subsection{选项对话框}
+
+\ui{工具 > 选项} 是 VS 的总设置中心，常用页面：
+
+\begin{longtable}{L{6.6cm}L{8.4cm}}\toprule
+\textbf{路径} & \textbf{用途} \\ \midrule \endfirsthead
+\toprule \textbf{路径} & \textbf{用途} \\ \midrule \endhead
+\bottomrule \endlastfoot
+环境 > 常规 & 主题、启动行为 \\
+环境 > 字体和颜色 & 编辑器字体与语法着色 \\
+环境 > 视觉体验 > 主题颜色 & 自定义 Fluent 颜色令牌 \\
+环境 > 键盘 & 快捷键 \\
+环境 > 导入和导出设置 & 设置迁移 \\
+文本编辑器 > C/C++ & C++ 编辑行为（含 IntelliSense） \\
+项目和解决方案 & 生成并运行行为、并行生成数 \\
+调试 & 调试器行为 \\
+源代码管理 > Git & Git 集成行为 \\
+GitHub > Copilot & AI 功能的开关与设置 \\
+\end{longtable}
+
+\subsection{项目级设置 vs 全局设置}
+
+这一点必须分清：
+
+\begin{longtable}{L{2.6cm}L{5.0cm}L{7.0cm}}\toprule
+\textbf{层级} & \textbf{存放位置} & \textbf{影响范围} \\ \midrule \endfirsthead
+\toprule \textbf{层级} & \textbf{存放位置} & \textbf{影响范围} \\ \midrule \endhead
+\bottomrule \endlastfoot
+\textbf{全局} & \ui{工具 > 选项} & 你机器上的所有项目 \\
+\textbf{项目级} & \ui{项目 > 属性} & 只有当前项目的当前配置 \\
+\textbf{团队级} & \code{.editorconfig}、\code{Directory.Build.props} & 提交到仓库，对所有人生效 \\
+\end{longtable}
+
+\begin{warnbox}[注意]
+\textbf{编译相关的配置（语言标准、运行库、优化）在“项目 > 属性”里，不在“工具 > 选项”里}。新手常犯的错误就是在选项里翻半天找不到 \code{/std:c++20} 在哪设。见\textbf{第 6 章}。
+\end{warnbox}
+
+\subsection{设置同步}
+
+登录 Microsoft 账户后，可在 \ui{工具 > 选项 > 环境 > 账户} 里开启设置同步，把主题、快捷键、字体等带到其他机器。
+
+\section{让界面顺手的三条建议}
+
+\begin{enumerate}
+	\item \textbf{关掉不用的窗口}。C++ 开发者很少需要“服务器资源管理器”“数据工具”之类。\textbf{视图} 菜单里取消勾选即可。
+	\item \textbf{保存两套布局}（编码 / 调试），用 \ui{窗口 > 应用窗口布局} 切换。
+	\item \textbf{把 \key{Ctrl+Q} 当搜索引擎用}，而不是去背菜单结构。
+\end{enumerate}
+
+\section{小结}
+
+\begin{itemize}
+	\item 界面主线：\textbf{左边项目、中间代码、下面反馈、右边属性}。
+	\item 起始窗口的三种入口要分清：\textbf{打开项目/解决方案}（\code{.sln}/\code{.vcxproj}）、\textbf{打开本地文件夹}（CMake）、\textbf{克隆存储库}（Git）。
+	\item \textbf{筛选器 $\neq$ 磁盘目录}；真正决定编译内容的是 \code{.vcxproj}。
+	\item \ui{窗口 > 保存窗口布局} 是提升效率最快的一步，建议存“编码”与“调试”两套。
+	\item VS 快捷键是\textbf{两段式}的（\key{Ctrl+K, Ctrl+C}），并可在 \ui{工具 > 选项 > 环境 > 键盘} 里换成 VS Code 方案。
+	\item \textbf{\key{Ctrl+Q} 快速启动}能搜命令、设置和文件，比翻菜单快。
+	\item \textbf{编译配置在“项目 > 属性”里，不在“工具 > 选项”里}。
+\end{itemize}
+
+\section{练习题}
+
+\begin{enumerate}
+	\item 保存一套只留“解决方案资源管理器 + 编辑器 + 错误列表”的编码布局，再保存一套含“调用堆栈 + 监视 + 局部变量”的调试布局，并在两者间切换。
+	\item 用 \key{Ctrl+Q} 分别找到：字体和颜色设置、clang-tidy 设置、“附加到进程”命令。
+	\item 把编辑器字体换成 Cascadia Code，并调整注释与字符串的颜色。
+	\item 在 \ui{工具 > 选项 > 环境 > 视觉体验 > 主题颜色} 里改一个颜色令牌，再单独重置它。
+	\item 把键盘映射方案临时切到 Visual Studio Code，按 \key{Ctrl+Shift+P} 试试，然后切回 Visual C++。
+	\item 用 \ui{工具 > 导入和导出设置} 导出一份设置文件，看看它包含哪些类别。
+\end{enumerate}
+
+\section{相关笔记}
+
+\begin{itemize}
+	\item \textbf{本教程}：Visual Studio 2026 使用教程
+	\item \textbf{上一章}：安装与环境配置
+	\item \textbf{下一章}：第一个 C++ 项目
+	\item \textbf{编辑与 IntelliSense}：代码编辑与 IntelliSense
+	\item \textbf{效率技巧}：常见问题与效率技巧
+\end{itemize}

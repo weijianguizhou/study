@@ -41,7 +41,13 @@ cd D:\mujoco\mujoco-3.14.0\bin
 .\simulate.exe ..\model\humanoid\humanoid.xml
 \end{lstlisting}
 
-若出现一个人形机器人并且可以旋转、缩放、拖动，说明运行库、OpenGL 与模型库都正常。\texttt{simulate} 是官方交互式查看器，它的源码在 \texttt{sample/simulate.cc}，也是自己写可视化程序时最好的参考。
+若出现一个人形机器人并且可以旋转、缩放、拖动，如下图所示，说明运行库、OpenGL 与模型库都正常。\texttt{simulate} 是官方交互式查看器，它的源码在 \texttt{sample/simulate.cc}，也是自己写可视化程序时最好的参考。
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/C++测试mujoco完整性图.png}
+	\caption{官方交互式查看器}
+	\label{fig:Cpp:完整性图}
+\end{figure}
 
 \begin{note}
 	程序运行目录下会自动生成 \texttt{MUJOCO\_LOG.TXT}，里面记录错误与警告信息。程序崩溃或行为异常时，第一件事是打开它看最后几行。

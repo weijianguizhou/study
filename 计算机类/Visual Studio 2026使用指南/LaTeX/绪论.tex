@@ -1,0 +1,100 @@
+% !TeX root = main.tex
+\section{这是一本什么样的书}
+
+这不是一本 C++ 语言教材。语法、STL、面向对象这些内容属于语言本身，与用哪个编辑器无关；本书只讲一件事：\textbf{在 Windows 上用 Visual Studio 2026 把 C++ 代码写出来、调通、测好、发出去}。
+
+如果你符合下面任意一条，本书就是为你写的：
+
+\begin{itemize}
+	\item 已经会写 C++，但一直用命令行或轻量编辑器，想转到完整的 IDE；
+	\item 用过 Visual Studio 2022，现在要迁移到 2026，想知道哪些地方变了；
+	\item 正在被某类问题反复困扰：Release 编不过、断点不生效、依赖 DLL 找不到、中文乱码；
+	\item 需要把个人项目升级成有测试、有依赖管理、有发布流程的工程。
+\end{itemize}
+
+\section{全书结构}
+
+全书分三部分，共十三章，建议按顺序阅读。
+
+\begin{longtable}{L{2.2cm}L{6.0cm}L{6.2cm}}
+\toprule
+\textbf{部分} & \textbf{章节} & \textbf{解决什么问题} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{部分} & \textbf{章节} & \textbf{解决什么问题} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+第一部分 & 第 1--4 章：版本选择、安装配置、界面、第一个项目 & 把环境装对、把第一个程序跑起来 \\
+第二部分 & 第 5--8 章：项目与属性管理、代码编辑、调试 & 日常开发真正高频使用的部分 \\
+第三部分 & 第 9--13 章：性能诊断、CMake 与 vcpkg、单元测试、发布、常见问题 & 从"能跑"到"能交付" \\
+\end{longtable}
+
+各章末尾都有\textbf{小结}与\textbf{练习题}。练习题多为动手验证型（例如"把运行库从 \code{/MD} 改成 \code{/MT}，用 \code{dumpbin /dependents} 对比依赖列表"），做完能形成肌肉记忆。
+
+\section{环境要求}
+
+本书假定你使用下列环境。版本差异较大的地方，正文会单独说明。
+
+\begin{longtable}{L{3.6cm}L{11.0cm}}
+\toprule
+\textbf{项目} & \textbf{要求} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{项目} & \textbf{要求} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+主机操作系统 & \textbf{Windows 11}（含 ARM64 版），或 Windows Server 2025 / 2022 / 2019。Windows 10 不在官方支持列表内 \\
+硬件 & 内存最低 4\,GB、推荐 16\,GB；四核以上 CPU；磁盘典型占用 20--50\,GB \\
+IDE & Visual Studio 2026，内部版本号 18.x \\
+编译器 & MSVC Build Tools 14.50（长期支持）/ 14.51 / 14.52（预览），平台工具集 \code{v145} \\
+C++ 标准 & 新建项目默认 \code{/std:c++20}；可选 C++14 / C++17 / C++20 / C++23 / 最新工作草案 \\
+\end{longtable}
+
+\begin{warnbox}[注意]
+\textbf{"主机要 Windows 11"和"程序要跑在 Windows 10 上"并不矛盾。}前者约束你运行 IDE 的机器，后者约束你编译出来的可执行文件——MSVC 14.50 起，产物最低可运行于 Windows 10 / Windows Server 2016。这两件事经常被混淆，第 1 章会详细说明。
+\end{warnbox}
+
+\section{排版约定}
+
+为便于阅读，全书统一使用下列记号。
+
+\begin{longtable}{L{4.4cm}L{10.2cm}}
+\toprule
+\textbf{记号} & \textbf{含义} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{记号} & \textbf{含义} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\ui{项目 > 属性 > C/C++ > 语言} & 界面菜单路径，\code{>} 表示逐级展开 \\
+\key{Ctrl+K, Ctrl+D} & 键盘快捷键。两段式表示先按前一段、松开再按后一段 \\
+\code{/std:c++20} & 编译器开关，直接写 MSVC 形式 \\
+\code{$(OutDir)} & MSBuild 宏 \\
+\codeP{VC\textbackslash{}Tools\textbackslash{}MSVC} & 磁盘路径 \\
+\code{v145} & 平台工具集名称 \\
+\end{longtable}
+
+\section{关于代码示例}
+
+书中的代码都是可编译的最小示例，默认在 \ui{控制台应用} 模板下创建、使用 \code{/std:c++20}。为节省篇幅，示例省略了部分 \code{#include}，也省略了与当前话题无关的异常处理。
+
+\begin{tipbox}[提示]
+\textbf{性能相关的结论一律以 Release 配置为准。}Debug 配置关闭了优化（\code{/Od}），在它下面测出的耗时可能比 Release 慢十倍以上，据此优化会得出完全错误的结论。详见第 9 章。
+\end{tipbox}
+
+\section{遇到问题怎么办}
+
+\begin{enumerate}
+	\item 先查第 13 章的\textbf{编译与链接错误速查表}——\code{LNK2019}、\code{C4819}、\code{MSB8020} 这类高频错误都有"原因 + 解决方案"两列。
+	\item 界面找不到某个功能时，按 \key{Ctrl+Q} 打开快速启动，直接搜索命令名或设置名，比翻菜单快得多。
+	\item 版本相关的疑问，以官方发行说明为准；本书第 1 章给出了各版本的发布时间与随附工具集。
+\end{enumerate}

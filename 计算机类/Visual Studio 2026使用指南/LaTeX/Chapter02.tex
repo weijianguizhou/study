@@ -1,0 +1,446 @@
+% !TeX root = main.tex
+安装 Visual Studio 是那种"看起来只要下一步下一步"、实际上能埋下一年隐患的事：工作负荷少勾一个，半年后才发现不能用 CMake；装到了系统盘，C 盘爆红；随手选了预览工具集，编译行为和其他同事对不上。这一章把安装这件事一次做对。
+
+\section{装之前：先确认三件事}
+\subsection{主机系统必须是 Windows 11}
+这是 VS 2026 最容易被忽略的门槛：
+
+\begin{longtable}{L{7.4cm}L{7.6cm}}
+\toprule
+\textbf{支持} & \textbf{不支持} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{支持} & \textbf{不支持} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+Windows 11（家庭版、专业版、专业教育版、专业工作站版、企业版、教育版） & \textbf{Windows 10}（任何版本） \\
+Windows 11 \textbf{ARM64} 版 & 32 位 Windows \\
+Windows Server 2025 / 2022 / 2019 & ARM32、Windows 10 ARM64 \\
+ & S 模式、IoT 版本、LTSC 版本 \\
+ & Windows 容器（Build Tools 除外）、非持久化虚拟机、FSLogix 漫游配置文件 \\
+\end{longtable}
+
+\begin{warnbox}[注意]
+如果你现在还在 Windows 10 上，\textbf{装不了 VS 2026}。可选方案有三条：升级到 Windows 11；继续用 Visual Studio 2022（服务到 2032 年 1 月）；或改用 VS Code + 独立 MSVC Build Tools（见 \textbf{VS Code C++ 配置指南}）。
+\end{warnbox}
+
+\begin{tipbox}[提示]
+别把"主机要求"和"目标要求"搞混。IDE 要 Windows 11，但你编出来的 \code{.exe} 最低能跑在 \textbf{Windows 10 / Server 2016} 上——见 \textbf{第 1 章 6.3 节}。
+\end{tipbox}
+
+\subsection{硬件与磁盘}
+\begin{longtable}{L{2.2cm}L{4.0cm}L{8.4cm}}
+\toprule
+\textbf{项目} & \textbf{最低} & \textbf{推荐} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{项目} & \textbf{最低} & \textbf{推荐} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+CPU & 四核 & 16 核以上 \\
+内存 & 4 GB & 16 GB（大型 C++ 项目建议 32 GB） \\
+磁盘 & 官方区间 2.5--210 GB & 典型占用 \textbf{20--50 GB}，建议预留 60 GB \\
+显示器 & 1366$\times$768 & 1920$\times$1080 以上（双屏体验最好） \\
+架构 & x64 或 ARM64 & x64 \\
+\end{longtable}
+
+IDE 自身还需要 \textbf{.NET Framework 4.7.2 以上}（安装阶段）与 \textbf{4.8}（运行阶段），以及 \textbf{WebView2 运行时}。这些通常随系统或安装器自动就位。
+
+\begin{keybox}[实战场景]
+如果你的 C 盘只有 30 GB 空闲，\textbf{先别点安装}。见本章第 4 节，安装位置可以在安装器里改。
+\end{keybox}
+
+\subsection{和 VS 2022 并存}
+两者的安装目录不同，可以共存：
+
+\begin{lstlisting}[style=textstyle]
+C:\Program Files\Microsoft Visual Studio\
++-- 2022\
+|   +-- Community\          <- Visual Studio 2022
++-- 18\
+    +-- Community\          <- Visual Studio 2026
+\end{lstlisting}
+
+\textbf{建议先不卸载 VS 2022}，等 VS 2026 下的项目全部验证通过再清理。VS 2026 打开 VS 2022 的 \code{.vcxproj} \textbf{不需要升级项目文件}。
+
+\section{下载与启动安装器}
+\subsection{三种获取方式}
+\begin{longtable}{L{3.4cm}L{4.0cm}L{7.2cm}}
+\toprule
+\textbf{方式} & \textbf{适用场景} & \textbf{做法} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{方式} & \textbf{适用场景} & \textbf{做法} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{官网下载引导程序} & 个人开发机 & 访问 \href{https://visualstudio.microsoft.com}{visualstudio.microsoft.com} 下载 Community / Professional / Enterprise \\
+\textbf{winget} & 命令行爱好者、脚本化部署 & 见下方命令 \\
+\textbf{直接下载引导程序} & 需要指定通道 & \code{aka.ms} 短链，见下方 \\
+\end{longtable}
+
+\begin{lstlisting}[style=shellstyle]
+# 用 winget 安装 Community（稳定通道）
+winget install Microsoft.VisualStudio.Community
+
+# 其他产品 ID
+# Microsoft.VisualStudio.Professional
+# Microsoft.VisualStudio.Enterprise
+# Microsoft.VisualStudio.BuildTools          <- 只要编译器，不要 IDE
+# Microsoft.VisualStudio.Enterprise.Insiders <- Insiders 通道
+\end{lstlisting}
+
+引导程序短链（可直接下载）：
+
+\begin{lstlisting}[style=textstyle]
+稳定通道：https://aka.ms/vs/stable/vs_community.exe
+          https://aka.ms/vs/stable/vs_professional.exe
+          https://aka.ms/vs/stable/vs_enterprise.exe
+          https://aka.ms/vs/stable/vs_BuildTools.exe     <- CI 构建机用这个
+预览通道：https://aka.ms/vs/insiders/vs_community.exe
+\end{lstlisting}
+
+\begin{warnbox}[注意]
+\textbf{Community 版只能使用稳定（Stable）通道}。想要 Insiders，需要 Professional 或 Enterprise，或使用 Insiders 版的 Build Tools。
+\end{warnbox}
+
+\subsection{命令行安装（适合批量部署）}
+安装器本身支持大量命令行参数，做自动化装机时很有用：
+
+\begin{lstlisting}[style=shellstyle]
+:: 示例：静默安装 Enterprise，指定稳定通道
+vs_enterprise.exe --quiet --wait --norestart ^
+  --channelId VisualStudio.18.Stable ^
+  --productId Microsoft.VisualStudio.Product.Enterprise ^
+  --add Microsoft.VisualStudio.Workload.NativeDesktop ^
+  --includeRecommended
+\end{lstlisting}
+
+关键参数含义：
+
+\begin{longtable}{L{4.6cm}L{10.4cm}}
+\toprule
+\textbf{参数} & \textbf{说明} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{参数} & \textbf{说明} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\code{--channelId} & 通道 ID：\code{VisualStudio.18.Stable} 或 \code{VisualStudio.18.Insiders} \\
+\code{--productId} & 产品 ID，如 \code{Microsoft.VisualStudio.Product.Enterprise} \\
+\texttt{--add <工作负荷或组件 ID>} & 添加工作负荷/组件 \\
+\code{--includeRecommended} & 连同该工作负荷的推荐组件一起装 \\
+\code{--quiet --wait --norestart} & 静默、等待完成、不自动重启 \\
+\code{--installPath} & 自定义安装目录 \\
+\end{longtable}
+
+\section{选择工作负荷：这一步决定你以后能不能干活}
+安装器里最关键的界面是"\textbf{工作负荷}"选项卡。勾错了，后面会遇到"为什么我没有 CMake""为什么我找不到 MFC"这类问题。
+
+\subsection{必选：使用 C++ 的桌面开发}
+\textbf{"使用 C++ 的桌面开发"（Desktop development with C++）} 是写 Windows C++ 的唯一必选项。它会带来：
+
+\begin{itemize}
+  \item MSVC 编译器与链接器（默认工具集）
+  \item Windows SDK
+  \item C++ 标准库与运行库
+  \item CMake（VS 2026 自带 \textbf{CMake 4.1.1}）
+  \item vcpkg 包管理器
+  \item C++ 调试器与性能探查器
+  \item Git（可选组件）
+\end{itemize}
+
+\subsection{可选工作负荷}
+\begin{longtable}{L{5.6cm}L{9.4cm}}
+\toprule
+\textbf{工作负荷} & \textbf{什么时候需要} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{工作负荷} & \textbf{什么时候需要} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{使用 C++ 的桌面开发} & [OK] 必选 \\
+\textbf{使用 C++ 的游戏开发} & 做 Unreal Engine / DirectX 游戏开发 \\
+\textbf{使用 C++ 的 Linux、Mac 和嵌入式开发} & 远程 Linux 开发、WSL、CMake 交叉编译（注意：此工作负荷原名"C++ Linux"，VS 2026 已改名） \\
+\textbf{使用 C++ 的移动开发} & [X] \textbf{已不再受支持}，未来版本将移除，不要选 \\
+\textbf{.NET 桌面开发} & 只有写 C\# 时才需要 \\
+\textbf{使用 C++ 的桌面开发（含 ATL/MFC）} & 维护老式 Windows 桌面程序 \\
+\end{longtable}
+
+\begin{warnbox}[注意]
+\textbf{使用 C++ 的移动开发（iOS/Android）以及嵌入式/IoT 工具（RTOS 查看器、串行监视器、外设查看器）在 VS 2026 中已不再受支持}。如果你的项目依赖它们，请继续使用 VS 2022。
+\end{warnbox}
+
+\subsection{值得单独勾选的"单个组件"}
+切到"\textbf{单个组件}"选项卡，按需补充：
+
+\begin{longtable}{L{6.0cm}L{9.0cm}}
+\toprule
+\textbf{组件} & \textbf{用途} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{组件} & \textbf{用途} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{MSVC v145 生成工具（x64/x86）} & VS 2026 的默认工具集 \\
+\textbf{MSVC v143 生成工具} & 仍要编译 VS 2022 时代的项目 \\
+\textbf{Windows 11 SDK} & Windows 桌面开发的标准选择 \\
+\textbf{适用于 Windows 的 C++ CMake 工具} & CMake 项目支持（通常已随工作负荷安装） \\
+\textbf{vcpkg 包管理器} & 依赖管理 \\
+\textbf{Git for Windows} & 版本控制（也可用系统已装的 Git） \\
+\textbf{C++ AddressSanitizer} & 内存安全检测（详见第 9 章） \\
+\textbf{用于 Windows 的 C++ Clang 工具} & 需要 clang-cl / clang-tidy 时 \\
+\textbf{测试工具（Google Test / Microsoft 原生测试框架）} & 单元测试（详见第 11 章） \\
+\end{longtable}
+
+\begin{tipbox}[提示]
+拿不准就先只勾"使用 C++ 的桌面开发 + 推荐组件"。Visual Studio 的安装器\textbf{随时可以再打开补装组件}，不必一次到位——但补装也要下载几个 GB，能一次勾好更省事。
+\end{tipbox}
+
+\section{安装位置与磁盘规划}
+安装器默认把 IDE 装到系统盘：
+
+\begin{lstlisting}[style=textstyle]
+C:\Program Files\Microsoft Visual Studio\18\<版本>\
+\end{lstlisting}
+
+C 盘紧张的话，可以在安装器的"\textbf{安装位置}"选项卡里改三处。三处的默认位置分别是：
+
+\begin{lstlisting}[style=textstyle]
+Visual Studio IDE：      C:\Program Files\Microsoft Visual Studio\18\...
+下载缓存：               C:\ProgramData\Microsoft\VisualStudio\Packages
+共享组件、工具和 SDK：   C:\Program Files (x86)\Microsoft Visual Studio\Shared
+\end{lstlisting}
+
+\begin{longtable}{L{4.2cm}L{10.4cm}}
+\toprule
+\textbf{项目} & \textbf{说明} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{项目} & \textbf{说明} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{Visual Studio IDE} & 建议保留在系统盘（体积相对可控） \\
+\textbf{下载缓存} & \textbf{最占空间}，可移到其他盘，装完可清理 \\
+\textbf{共享组件、工具和 SDK} & 多个 VS 版本共用 \\
+\end{longtable}
+
+\begin{keybox}[实战场景]
+装完之后如果 C 盘少了几十 GB，去"\textbf{下载缓存}"目录看看。安装器里也有"\textbf{清理}"相关选项可以回收这部分空间。
+\end{keybox}
+
+\section{首次启动}
+\subsection{登录与账户}
+首次启动会要求登录 Microsoft 账户。登录的好处是\textbf{设置同步}（主题、快捷键、字体等跟着账户走）。不想登录可以点"以后再说"，不影响使用，\textbf{也不影响 C++ 编译}。
+
+\subsection{选择开发设置}
+安装器会问"\textbf{选择你的开发设置}"。这里的选项只影响\textbf{快捷键映射与窗口布局预设}，不改变编译器行为：
+
+\begin{longtable}{L{5.0cm}L{10.0cm}}
+\toprule
+\textbf{选项} & \textbf{适合谁} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{选项} & \textbf{适合谁} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{Visual C++} & 本教程读者的默认选择：界面最精简，快捷键贴合 C++ 开发 \\
+\textbf{常规} & 什么语言都写 \\
+\textbf{Visual Studio Code} & 从 VS Code 迁过来，想保留熟悉的按键 \\
+\textbf{Visual Basic / C\#} & 写 .NET 的人 \\
+\end{longtable}
+
+\begin{tipbox}[提示]
+选错了也没关系，之后可在 \ui{工具 > 导入和导出设置} 里重选。
+\end{tipbox}
+
+\subsection{挑一套主题}
+VS 2026 提供了\textbf{全新的界面与 11 套内置主题}。选一套顺眼的即可。更进一步，还可以在 \ui{工具 > 选项 > 环境 > 视觉体验 > 主题颜色} 里直接改界面颜色令牌，不用装任何扩展。
+
+\section{验证安装：确认工具链真的可用}
+装完别急着写代码，先花两分钟验证编译器就位。
+
+\subsection{从"开发者命令提示符"验证}
+在开始菜单搜索 \ui{Developer Command Prompt for VS 2026}（或 \ui{x64 Native Tools Command Prompt for VS 2026}）打开，执行：
+
+\begin{lstlisting}[style=shellstyle]
+cl.exe
+\end{lstlisting}
+
+正常输出应类似：
+
+\begin{lstlisting}[style=textstyle]
+Microsoft (R) C/C++ Optimizing Compiler Version 19.50.xxxxx for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+usage: cl [ option... ] filename... [ /link linkoption... ]
+\end{lstlisting}
+
+看到 \textbf{19.50} 说明用的是 MSVC 14.50（\code{_MSC_VER} 1950）。如果显示 19.51，说明当前默认工具集是 14.51。
+
+\subsection{验证 CMake 与 vcpkg}
+\begin{lstlisting}[style=shellstyle]
+cmake --version
+vcpkg version
+\end{lstlisting}
+
+CMake 版本应为 \textbf{4.1.1} 左右（VS 2026 自带）。vcpkg 若提示找不到命令，说明该组件没勾选，可在安装器里补装。
+
+\subsection{用 IDE 跑一个最小程序}
+按 \key{Ctrl+Shift+N} 新建项目 -> 选 \textbf{控制台应用}（C++）-> 起名 -> 创建 -> \key{Ctrl+F5} 运行。看到黑窗口输出，安装就算彻底成功。详细步骤见 \textbf{第 4 章}。
+
+\section{工具集版本管理}
+\subsection{三种工具集并存}
+VS 2026 的安装器里可以同时提供多个 MSVC 版本：
+
+\begin{longtable}{L{3.4cm}L{7.2cm}L{4.0cm}}
+\toprule
+\textbf{类型} & \textbf{说明} & \textbf{什么时候用} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{类型} & \textbf{说明} & \textbf{什么时候用} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{预览工具集} & 最新的特性与修复，约每周更新（Insiders 更频繁） & 提前验证新特性，\textbf{不要用于生产} \\
+\textbf{默认工具集} & 当前推荐的稳定版本 & 日常开发 \\
+\textbf{较早但仍受支持的工具集} & 例如 14.50（LTS） & 需要可复现构建、与团队对齐 \\
+\end{longtable}
+
+工具集实际落在：
+
+\begin{lstlisting}[style=textstyle]
+C:\Program Files\Microsoft Visual Studio\18\<版本>\VC\Tools\MSVC\
++-- 14.50.35717\     <- MSVC 14.50（长期支持）
++-- 14.51.36231\     <- MSVC 14.51
+\end{lstlisting}
+
+\subsection{安装预览工具集}
+在安装器的"\textbf{单个组件}"选项卡里，找到并勾选 \textbf{MSVC 生成工具（预览）}（英文界面为 \emph{MSVC Build Tools for <arch> (Preview)}）。
+
+\subsection{安装旧工具集 / 在升级后恢复旧工具集}
+同样在"\textbf{单个组件}"里勾选对应版本。典型场景：工具集从 14.50 升级到 14.51 后，你想回到 14.50 —— 从"单个组件"里把它\textbf{加回来}即可。
+
+\subsection{锁定工具集版本}
+团队协作或需要可复现构建时，锁定版本：
+
+\begin{lstlisting}[style=shellstyle]
+:: 命令行构建时指定
+msbuild MyApp.sln /p:Configuration=Release /p:VCToolsVersion=14.50.35717
+
+:: 在开发者命令提示符里切换工具集
+vcvars64.bat -vcvars_ver=14.50
+vcvars64.bat -vcvars_ver=preview
+\end{lstlisting}
+
+或者在项目文件 / \code{Directory.Build.props} 里固定：
+
+\begin{lstlisting}[style=xmlstyle]
+<PropertyGroup>
+  <VCToolsVersion>14.50.35717</VCToolsVersion>
+</PropertyGroup>
+\end{lstlisting}
+
+如果被锁定的工具集装在\textbf{另一个 Visual Studio 安装实例}里，从 \textbf{18.8} 起可以打开跨实例发现：
+
+\begin{lstlisting}[style=xmlstyle]
+<PropertyGroup>
+  <EnableVCToolsVersionDiscovery>true</EnableVCToolsVersionDiscovery>
+  <VCToolsVersion>14.50.35717</VCToolsVersion>
+</PropertyGroup>
+\end{lstlisting}
+
+\begin{warnbox}[注意]
+MSVC 14.50 与 14.51 \textbf{保持与 VS 2015 及以后版本的二进制兼容性}，所以不同工具集编出的库通常能互相链接。但\textbf{优化行为与警告可能有差异}，正式发布前请用固定工具集重新构建一次。
+\end{warnbox}
+
+\section{更新、修复与卸载}
+\subsection{更新}
+\begin{itemize}
+  \item 打开 \textbf{Visual Studio 安装程序}（开始菜单里独立存在），点"\textbf{更新}"。
+  \item VS 2026 的更新是\textbf{就地更新}，不需要卸载重装。
+  \item \textbf{Community 版必须在 180 天内更新}到较新版本，否则会提示并要求更新。
+\end{itemize}
+
+\subsection{修复}
+IDE 行为异常、组件莫名缺失时，在安装程序里点 \ui{更多 > 修复}。这一步会重新校验并补回缺失文件，是解决"玄学问题"的常用手段。
+
+\subsection{修改（补装/卸载组件）}
+点 \ui{修改} 回到工作负荷与组件界面。这是\textbf{最常用}的按钮——装完才发现少勾了组件，走这里。
+
+\subsection{卸载}
+在安装程序里卸载。\textbf{注意}：卸载 VS 2026 不会影响 VS 2022，反之亦然。
+
+\section{常见安装问题}
+\begin{longtable}{L{3.8cm}L{4.6cm}L{6.2cm}}
+\toprule
+\textbf{现象} & \textbf{原因} & \textbf{处置} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{现象} & \textbf{原因} & \textbf{处置} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+安装程序卡在"正在准备"很久 & 下载缓存写盘慢 / 网络问题 & 换网络，或把下载缓存移到 SSD \\
+提示需要重启但重启后仍提示 & 有挂起的文件操作 & 手动重启一次，再点"继续" \\
+装完找不到 \code{cl.exe} & 只装了 IDE 没装 C++ 工作负荷 & 安装程序 > 修改 > 勾"使用 C++ 的桌面开发" \\
+\code{cl.exe} 版本与预期不符 & 默认工具集是别的版本 & 用 \code{vcvars64.bat -vcvars_ver=14.50} 切换，或补装对应工具集 \\
+无法安装 Insiders & Community 版限制 & 换 Professional/Enterprise，或用 Insiders Build Tools \\
+磁盘空间不足 & 下载缓存 + 共享组件占用大 & 移动缓存目录，或用安装程序的清理功能 \\
+\end{longtable}
+
+\section{小结}
+\begin{itemize}
+  \item VS 2026 \textbf{主机必须是 Windows 11}（或 Server 2019/2022/2025）；目标程序最低可跑在 Windows 10 / Server 2016。
+  \item 安装时\textbf{必选"使用 C++ 的桌面开发"}；"使用 C++ 的移动开发"已不受支持，不要选。
+  \item 安装位置三处可改，\textbf{下载缓存最占空间}。
+  \item 验证安装最快的办法：开发者命令提示符里跑 \code{cl.exe}，看版本是否为 \textbf{19.50 / 19.51}。
+  \item 工具集可在安装器里\textbf{并存多个版本}，并用 \code{VCToolsVersion} 锁定以保证可复现构建。
+  \item Community 版\textbf{只能用稳定通道}，且需在 \textbf{180 天内}更新。
+\end{itemize}
+
+\section{练习题}
+\begin{enumerate}
+  \item 用 \code{winget} 或官网引导程序安装 VS 2026 Community，工作负荷只勾"使用 C++ 的桌面开发"。
+  \item 在开发者命令提示符里执行 \code{cl.exe}，记录版本号；再用 \code{vcvars64.bat -vcvars_ver=14.50} 切换后重新执行，对比两次输出。
+  \item 打开 Visual Studio 安装程序，把"下载缓存"位置改到非系统盘，并观察 C 盘空间变化。
+  \item 在安装器"单个组件"里找出\textbf{预览工具集}与\textbf{旧版工具集}的条目，说明它们的区别。
+  \item 写一个程序打印 \code{_MSC_VER}，分别在默认工具集与固定 \code{VCToolsVersion} 下编译，验证版本锁定是否生效。
+  \item 检查你的机器是否满足全部系统要求，列出不满足的项并给出替代方案。
+\end{enumerate}
+
+\section{相关笔记}
+\begin{itemize}
+  \item \textbf{本教程}：\textbf{Visual Studio 2026 使用教程}
+  \item \textbf{上一章}：\textbf{VS 2026 概览与版本选择}
+  \item \textbf{下一章}：\textbf{界面与工作区}
+  \item \textbf{CMake}：\textbf{CMake 使用指南}
+  \item \textbf{VS Code 对照}：\textbf{VS Code C++ 配置指南}
+\end{itemize}

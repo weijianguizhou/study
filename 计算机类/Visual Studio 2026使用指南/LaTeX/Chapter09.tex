@@ -1,0 +1,430 @@
+% !TeX root = main.tex
+
+性能问题不能靠感觉解决，它需要数据：谁慢、慢在哪里、慢了多少。Visual Studio 2026 提供了两条互补的路径——调试期间的\textbf{诊断工具}窗口用于快速定位，独立的\textbf{性能探查器}用于系统性测量；再叠加编译期的 Build Insights、静态分析与运行时检查，就能把性能与内存问题压缩到可控范围。本章按“先测量、再优化、后验证”的顺序走一遍这条工具链。
+
+\section{诊断工具窗口（调试时）}
+\subsection{打开方式与面板构成}
+按 \key{F5} 开始调试时\textbf{诊断工具}窗口默认出现；若被关闭，可在调试期间通过 \ui{调试 > 窗口 > 显示诊断工具} 重新打开。窗口分两部分：上半部分是\textbf{时间线}（叠加 CPU 曲线、内存曲线与事件标记），下半部分是 \textbf{事件}、\textbf{内存使用率}、\textbf{CPU 使用率} 三个标签页。工具栏上的设置按钮可以勾选本次会话启用哪些工具——采集本身有开销，不必全部打开。
+
+\begin{warnbox}[注意]
+诊断工具窗口只在调试会话中存在，调试一停止数据就消失，需要时先导出或记录。
+\end{warnbox}
+
+\subsection{CPU 使用率：调用树与热路径}
+点击“录制 CPU 分析”后得到的是\textbf{采样}数据，有三种查看方式：调用树（按层级展开调用关系）、调用方/被调用方（聚焦某函数的上下游）、函数列表（按自身耗时倒序的平铺列表）。
+
+每个函数有两个关键数字：\textbf{总耗时（含子调用）}与\textbf{自身耗时（不含子调用）}。优化目标是自身耗时高的函数；总耗时高而自身耗时接近 0 的通常只是框架入口，动它没有意义。
+
+\begin{lstlisting}[style=textstyle]
+CPU 使用率（采样）视图示例：总耗时 / 自身耗时
++-- main                                     100.0%    0.2%
+|   +-- LoadData                              92.4%    0.5%   <- 只是上游
+|   |   +-- ParseRow                          88.1%   12.0%
+|   |   |   +-- std::map::find（红黑树查找）   71.0%   71.0%   <- 真正的热路径
+|   |   +-- ReadFile                           4.1%    4.1%
+|   +-- Render                                 7.2%    6.5%
+\end{lstlisting}
+
+排查顺序：先用函数列表按自身耗时倒序看前三名属于哪个子系统；再用调用树确认它们的\textbf{调用次数}——是被百万次调用，还是只调一次但单次极慢？两者优化手段完全不同。窗口顶部的\textbf{仅我的代码}开关则决定系统库与第三方库是否被折叠：关掉它才能看到 STL 内部的真实开销，适合判断“是不是容器的锅”。
+
+\subsection{内存使用率、事件与时间线}
+\textbf{内存使用率}的核心操作是\textbf{拍摄快照}：在关心的时刻拍一次，程序再跑一段后拍第二次，然后点“比较”。比较视图给出对象类型/大小/计数/差异四列、某个类型的\textbf{分配调用栈}，以及对持续增长且不回收的\textbf{泄漏}标记。
+
+\begin{warnbox}[注意]
+快照只统计\textbf{堆}上的分配。栈上数组、静态缓冲区、以及绕过 CRT 直接向系统申请的大块内存都不会出现，排查时要单独考虑。
+\end{warnbox}
+
+\textbf{事件}标签页记录断点命中、异常抛出、输出字符串、模块加载/卸载、线程创建与退出等信息，价值在于把代码行为与资源曲线对齐到同一条时间轴上。看到“每次循环都创建线程”或“异常被反复抛出用于控制流”，基本可以直接定位到设计层面的问题。
+
+\section{性能探查器}
+\subsection{启动与 C++ 可用的工具}
+菜单 \ui{调试 > 性能探查器}（快捷键 \key{Alt+F2}）打开探查器：选择目标（启动项目、可执行文件或附加到进程）-> 勾选工具 -> 开始采集 -> 停止后得到 \code{.diagsession} 报告。
+
+\begin{longtable}{L{3.4cm}L{2.6cm}L{4.4cm}L{3.8cm}}
+\toprule \textbf{工具} & \textbf{采集原理} & \textbf{主要产出} & \textbf{适用场景} \\ \midrule
+\endfirsthead
+\toprule \textbf{工具} & \textbf{采集原理} & \textbf{主要产出} & \textbf{适用场景} \\ \midrule
+\endhead
+\bottomrule \endlastfoot
+CPU 使用率 & 采样 & 调用树、火焰图、函数与模块统计 & 默认首选，先找热点 \\
+检测（Instrumentation） & 插桩 & 精确调用次数、含/不含子调用耗时 & 函数太小采不到、要确认调用次数 \\
+内存使用率 & 堆快照与分配跟踪 & 快照差异、分配调用栈 & 内存增长、泄漏、分配过频 \\
+文件 I/O & ETW 跟踪 & 读写字节数、按文件与进程汇总 & 启动慢、磁盘成为瓶颈 \\
+并发可视化 & ETW 跟踪 & 线程时间线、阻塞原因分类 & 多核跑不满、锁争用 \\
+\end{longtable}
+
+\begin{warnbox}[注意]
+列表中的部分工具（面向 .NET 的计数器、数据库工具）不适用于纯 C++ 目标；并发可视化在部分版本中需要额外安装组件或扩展，找不到时先到 Visual Studio 安装程序中确认。较新版本的 CPU 使用率工具还提供火焰图（Flame Graph）视图，用栈帧宽度表示耗时占比。
+\end{warnbox}
+
+\subsection{采样与插桩的区别}
+\begin{longtable}{L{2.4cm}L{6.1cm}L{6.1cm}}
+\toprule \textbf{维度} & \textbf{采样（CPU 使用率）} & \textbf{插桩（检测）} \\ \midrule
+\endfirsthead
+\toprule \textbf{维度} & \textbf{采样（CPU 使用率）} & \textbf{插桩（检测）} \\ \midrule
+\endhead
+\bottomrule \endlastfoot
+原理 & 以固定时间间隔中断程序并记录调用栈 & 在每个函数入口/出口插入探针 \\
+开销 & 低，通常可以忽略 & 高，调用密集时可能成倍变慢 \\
+数据性质 & 概率分布，短小或调用极少的函数可能被漏掉 & 精确的调用次数与累计耗时 \\
+对内联的影响 & 不大 & 明显，内联会移动探针位置，优化构建下尤其失真 \\
+典型用途 & 找“谁最耗时” & 查“到底调了多少次”“谁调用的” \\
+\end{longtable}
+
+选择原则：\textbf{先用采样找方向，再用插桩做定量确认}。若采样报告里某函数一直没出现，但逻辑上应该被调用成千上万次，就是插桩登场的信号。
+
+\subsection{内存、文件 I/O 与并发}
+内存使用率的标准流程是“两次快照 + 差异”：操作前拍一次，执行可疑操作后拍一次，切到差异视图，看\textbf{计数增长最快}的对象类型并展开它的分配调用栈。
+
+\begin{keybox}[实战场景]
+一个图形程序每次刷新界面内存都涨几百 KB。快照差异显示增长的是 \code{std::vector<Pixel>}，调用栈指向每帧重建的缓存对象——问题不在容器，而在于缓存对象的作用域被写在了循环内部。
+\end{keybox}
+
+\begin{itemize}
+  \item \textbf{文件 I/O}：按进程汇总读写次数与字节数，可按文件排序并展开查看某次读写的调用栈，快速回答“启动慢是算出来的还是读出来的”。
+  \item \textbf{并发可视化}：把每个线程画成一条泳道，区分执行、同步、阻塞、I/O 状态并统计阻塞原因。8 核只跑满 1 核时，它能直接指出瓶颈是锁争用、串行 I/O，还是任务粒度太粗。
+\end{itemize}
+
+\section{Build Insights：编译期性能分析}
+\subsection{它解决什么问题}
+Build Insights 分析的是\textbf{构建过程本身}，回答“为什么编译这么慢”：哪些头文件被反复解析、哪些模板实例化最贵、代码生成与优化各占多少时间、链接是否拖后腿。它基于 MSVC 工具链（\code{cl.exe} / \code{link.exe}）产生的事件，是 \textbf{MSVC 专属的编译分析能力}，对 clang 或 GCC 构建不适用。使用前需在 Visual Studio 安装程序中确认已安装 C++ Build Insights 相关组件。
+
+\subsection{两种使用方式}
+图形界面方式可从生成相关菜单启动一次带跟踪的构建，结束后自动打开分析视图（菜单名称随版本略有差异）。需要脚本化或可对比的结果时，用命令行工具 \code{vcperf.exe}：
+
+\begin{lstlisting}[style=shellstyle]
+:: 在管理员权限的命令提示符中执行（跟踪需要系统级权限）
+
+:: 1) 开始采集
+vcperf /start /out build_session.etl
+
+:: 2) 用 MSBuild 重新构建；必须 Rebuild，结果才有意义
+msbuild MyApp.sln /t:Rebuild /p:Configuration=Release /p:Platform=x64
+
+:: 3) 停止采集；/tracing 保留 ETL 文件，去掉它则直接打开分析视图
+vcperf /stop /tracing build_session.etl
+\end{lstlisting}
+
+采集时可以指定更高的跟踪级别以获得更细的编译器内部阶段信息（如 \code{/level3}，级别越高开销越大）。若项目不使用 MSBuild 构建，需要按文档为编译器与链接器手动打开事件输出开关，否则跟踪里只有链接与文件访问信息。
+
+\subsection{定位编译慢的根因}
+一次构建会被拆成若干阶段：\textbf{编译器前端（解析、语义分析、模板实例化）}、\textbf{代码生成}、\textbf{优化器}、\textbf{链接器}，并按文件、头文件、函数、模板等维度聚合。看报告的顺序：按总耗时排序的文件 -> 被间接包含最多的头文件 -> 实例化次数最多的模板 -> 少数巨型函数的代码生成耗时。
+
+\begin{longtable}{L{5.4cm}L{9.6cm}}
+\toprule \textbf{现象} & \textbf{处方} \\ \midrule
+\endfirsthead
+\toprule \textbf{现象} & \textbf{处方} \\ \midrule
+\endhead
+\bottomrule \endlastfoot
+某头文件被大量间接包含 & 前置声明替代 include、pimpl 惯用法、实现移出头部 \\
+稳定不变的头被重复解析 & 预编译头（PCH），把常用第三方头集中进稳定的头 \\
+模板重复实例化 & 显式实例化并配合 \code{extern template} 抑制隐式实例化 \\
+巨型函数拖慢代码生成 & 拆分函数、削减过度内联、选择性禁止内联 \\
+单线程编译时间过长 & 打开 \code{/MP} 多进程编译，检查是否有单一巨型翻译单元拖尾 \\
+\end{longtable}
+
+日常排查包含关系时，可在 \ui{项目属性 > C/C++ > 高级 > 显示包含文件} 打开 \code{/showIncludes}，在输出窗口直接查看包含链。
+
+\section{静态代码分析}
+\subsection{运行代码分析}
+编译器的警告只看语法层面，\code{/analyze} 则会在编译期做\textbf{基于数据流与控制流的路径分析}，发现缓冲区越界、空指针解引用、资源泄漏、格式化字符串不匹配等跨语句缺陷。
+
+\begin{itemize}
+  \item 图形界面：\ui{分析 > 运行代码分析}（可对当前项目或整个解决方案运行）。
+  \item 命令行：给编译器加 \code{/analyze}，或在 MSBuild 上打开代码分析开关：
+\end{itemize}
+
+\begin{lstlisting}[style=shellstyle]
+msbuild MyApp.sln /t:Rebuild /p:Configuration=Release /p:RunCodeAnalysis=true
+\end{lstlisting}
+
+结果出现在\textbf{错误列表}窗口，规则编号形如 \code{C6xxx}，可按编号筛选、忽略或存档。首次全量分析明显变慢，建议只对自有代码开启，并放进 CI，而不是每次本地增量编译都跑。
+
+\subsection{警告等级与“警告即错误”}
+\begin{longtable}{L{3.2cm}L{4.6cm}L{6.8cm}}
+\toprule \textbf{选项} & \textbf{含义} & \textbf{建议} \\ \midrule
+\endfirsthead
+\toprule \textbf{选项} & \textbf{含义} & \textbf{建议} \\ \midrule
+\endhead
+\bottomrule \endlastfoot
+\code{/W0} $\sim$ \code{/W4} & 警告等级，越高越严格 & 新项目直接用 \code{/W4} \\
+\code{/Wall} & 打开几乎全部警告 & 噪声大，需配合白名单使用 \\
+\code{/WX} & 把警告当错误 & 新项目必开，防止警告被无视 \\
+\code{/wd4996} 等 & 关闭指定编号的警告 & 只在有明确理由时使用 \\
+\code{/external:W0} & 第三方头文件不产生警告 & 与 \code{/W4 /WX} 搭配的关键选项 \\
+\code{/analyze} & 数据流分析 & 与 \code{/W4} 互补，不是替代关系 \\
+\code{/sdl} & 追加安全相关检查 & 发布配置建议开启 \\
+\end{longtable}
+
+在源码里临时屏蔽警告要用成对指令并标注原因：\code{#pragma warning(push)}、\code{#pragma warning(disable : 4996)}（附上理由注释）、\code{#pragma warning(pop)} 三段一组，不要把禁用指令长期留在文件里。
+
+\subsection{C++ Core Guidelines 检查器}
+它建立在 \code{/analyze} 之上，把指南条款变成可执行规则，覆盖：\textbf{资源管理}（RAII、所有权、智能指针）、\textbf{边界安全}（数组退化、越界、\code{gsl::span} 与 \code{gsl::at}）、\textbf{类型安全}（窄化转换、有符号与无符号混用、\code{reinterpret_cast} 滥用）、\textbf{生命周期}（返回局部对象的引用、悬垂指针）、\textbf{性能}（不必要的按值传参、可移动却发生拷贝）。
+
+在 \ui{项目属性 > 代码分析 > 常规 > 规则集} 中选择相应规则集即可启用，较新版本对新建项目会默认启用一部分规则；也可以在项目文件中用 \code{<CodeAnalysisRuleSet>} 属性显式指定规则集路径，便于团队统一。
+
+\subsection{SAL 注解：把契约写进声明}
+SAL（Source Annotation Language）用注解描述参数契约，\code{/analyze} 据此做跨函数检查：\code{_In_} / \code{_Out_} / \code{_Inout_} 表示输入、输出、输入输出；加 \code{_opt_} 后缀（如 \code{_In_opt_}）表示允许空指针；\code{_Outptr_} 表示输出一个指针；\code{_Ret_maybenull_} 表示返回值可能为空；\code{_Null_terminated_} 表示字符串以 \code{\0} 结尾；\code{_Success_(expr)} 限定注解成立的条件；\code{_Check_return_} 表示返回值不应被忽略。
+
+\begin{lstlisting}[style=cppstyle]
+#include <sal.h>
+
+// 契约：buf 至少有 size 字节可写，函数成功时返回写入长度
+_Success_(return > 0)
+int FillBuffer(_Out_writes_(size) char* buf, _In_ size_t size);
+\end{lstlisting}
+
+写好注解的收益是双向的：调用方传错参数会被立刻指出，函数内部也能得到更精确的推理结果。
+
+\section{clang-tidy 集成}
+\subsection{在 Visual Studio 中启用}
+Visual Studio 可以把 clang-tidy 挂到 MSVC 的编译流程上，无需切换到 clang 工具集。步骤：
+
+先在安装程序中确认装了“适用于 Windows 的 C++ Clang 工具”组件，然后打开 \ui{项目属性 > 代码分析 > Clang-Tidy}：把“启用 Clang-Tidy 代码分析”设为\textbf{是}，在“Clang-Tidy 检查项”里填写要启用的检查（留空表示使用默认检查集），在“其他 Clang-Tidy 参数”里补充命令行参数。
+
+对应的 MSBuild 属性可以直接写进项目文件，便于版本管理：
+
+\begin{lstlisting}[style=xmlstyle]
+<PropertyGroup>
+  <EnableClangTidyCodeAnalysis>true</EnableClangTidyCodeAnalysis>
+  <ClangTidyChecks>-*,bugprone-*,performance-*,clang-analyzer-*</ClangTidyChecks>
+</PropertyGroup>
+\end{lstlisting}
+
+\begin{warnbox}[注意]
+clang-tidy 在每次编译时被调用，会显著拉长编译时间。日常开发建议只开 \code{bugprone-*} 与 \code{clang-analyzer-*}；\code{modernize-*}、\code{readability-*} 这类风格检查放到 CI 的单独任务里跑。
+\end{warnbox}
+
+\subsection{\code{.clang-tidy} 配置文件}
+在解决方案根目录放一个 \code{.clang-tidy}，团队即可共享同一套规则：
+
+\begin{lstlisting}[style=textstyle]
+Checks: >
+  bugprone-*,
+  performance-*,
+  modernize-*,
+  cppcoreguidelines-*,
+  clang-analyzer-*,
+  -modernize-use-trailing-return-type,
+  -cppcoreguidelines-avoid-magic-numbers
+WarningsAsErrors: 'bugprone-use-after-move,performance-unnecessary-copy-initialization'
+HeaderFilterRegex: 'src/.*'
+CheckOptions:
+  - key: readability-identifier-naming.ClassCase
+    value: CamelCase
+FormatStyle: file
+\end{lstlisting}
+
+实践建议：\code{Checks} 里 \code{-} 前缀表示关闭，采用“先全开再逐条关闭”比反过来更好维护；\code{HeaderFilterRegex} 决定哪些头文件里的问题被报告，不设置的话第三方头文件的噪声会淹没结果；若项目同时有 \code{.clang-format}，用 \code{FormatStyle: file} 让检查与格式化保持一致。
+
+\subsection{常用检查项}
+\begin{longtable}{L{7.6cm}L{7.4cm}}
+\toprule \textbf{检查项} & \textbf{捕获的问题} \\ \midrule
+\endfirsthead
+\toprule \textbf{检查项} & \textbf{捕获的问题} \\ \midrule
+\endhead
+\bottomrule \endlastfoot
+\code{bugprone-use-after-move} & 对象被 \code{std::move} 之后又被使用 \\
+\code{performance-unnecessary-}\allowbreak\code{value-param} & 本可传引用却按值传参 \\
+\code{performance-for-range-copy} & 范围 for 里发生了拷贝 \\
+\code{modernize-use-nullptr} & 用 \code{0} 或 \code{NULL} 表示空指针 \\
+\code{modernize-use-override} & 虚函数重写未加 \code{override} \\
+\code{modernize-make-unique} & 可以改用 \code{std::make_unique} \\
+\code{readability-container-}\allowbreak\code{size-empty} & 用 \code{size() == 0} 判断空容器 \\
+\code{clang-analyzer-*} & 空指针、内存泄漏、不可达代码等路径问题 \\
+\code{cppcoreguidelines-}\allowbreak\code{owning-memory} & 裸 \code{new} / \code{delete} 的所有权管理 \\
+\end{longtable}
+
+部分检查支持自动修复（命令行 \code{--fix}），但批量修改后必须重新跑一遍测试。
+
+\section{运行时检查}
+\subsection{AddressSanitizer（\code{/fsanitize=address}）}
+ASan 通过编译期插入检查代码并替换内存分配器，在\textbf{运行时}捕获堆、栈、全局缓冲区的越界读写，释放后使用（use-after-free）与重复释放，并可配合 \code{ASAN_OPTIONS=detect_leaks=1} 打开泄漏检测。
+
+启用方式：\ui{项目属性 > C/C++ > 常规 > 启用 AddressSanitizer} 设为“是”（MSBuild 属性 \code{EnableASAN}），命令行等价于给编译与链接同时加 \code{/fsanitize=address}：
+
+\begin{lstlisting}[style=shellstyle]
+cl /nologo /Zi /O1 /EHsc /fsanitize=address demo.cpp /link /fsanitize=address
+set ASAN_OPTIONS=detect_leaks=1:halt_on_error=1
+demo.exe
+\end{lstlisting}
+
+\begin{warnbox}[注意]
+\code{/fsanitize=address} 与 \code{/RTC1} 不能同时使用，而 Debug 配置默认带 \code{/RTC1}，所以启用 ASan 时通常新建一个“Release + \code{/Zi}”的配置。ASan 版本会明显变慢并占用更多内存，只用于验证，不要拿它做性能测量；要得到可读堆栈必须保留调试信息。
+\end{warnbox}
+
+\subsection{\code{/RTC} 运行时检查}
+\begin{longtable}{L{2.4cm}L{12.6cm}}
+\toprule \textbf{开关} & \textbf{检查内容} \\ \midrule
+\endfirsthead
+\toprule \textbf{开关} & \textbf{检查内容} \\ \midrule
+\endhead
+\bottomrule \endlastfoot
+\code{/RTCs} & 栈帧检查，捕获局部数组越界导致的栈破坏 \\
+\code{/RTCu} & 使用未初始化的局部变量 \\
+\code{/RTCc} & 隐式窄化转换（大类型赋给小类型） \\
+\code{/RTC1} & 等于 \code{/RTCs /RTCu}，Debug 配置的默认组合 \\
+\end{longtable}
+
+\code{/RTC} 系列必须与 \code{/Od} 搭配使用，在开启优化的配置中会被忽略；\code{/RTCc} 还会与标准库的部分代码冲突，一般只在排查特定问题时临时打开。
+
+\subsection{CRT 内存泄漏检测}
+调试版 CRT（\code{/MDd} 或 \code{/MTd}，即定义了 \code{_DEBUG}）内置分配跟踪能力。完整示例：
+
+\begin{lstlisting}[style=cppstyle]
+// LeakDemo.cpp —— CRT 内存泄漏检测完整示例（Debug 配置下运行）
+#define _CRTDBG_MAP_ALLOC      // 必须放在最前面，让分配记录带上文件与行号
+#include <cstdlib>
+#include <crtdbg.h>
+#include <iostream>
+
+#ifdef _DEBUG
+// 让 new 表达式也记录文件与行号；它与 placement new 形式冲突，谨慎引入
+#define DBG_NEW new (_NORMAL_BLOCK, __FILE__, __LINE__)
+#define new DBG_NEW
+#endif
+
+struct Node { int value; Node* next; };
+
+void LeakyFunction() {
+    int* buffer = new int[100];                 // 故意泄漏(1)
+    Node* node = (Node*)malloc(sizeof(Node));   // 故意泄漏(2)
+    (void)buffer;
+    (void)node;
+}
+
+int main() {
+    // 打开分配跟踪，并让程序退出时自动做一次泄漏检查
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    // 警告信息送到调试输出（在调试器中运行时显示于“输出”窗口）
+    _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
+
+    LeakyFunction();
+
+    _CrtDumpMemoryLeaks();   // 也可在任意位置手工立即转储
+
+    std::cout << "程序结束" << std::endl;
+    return 0;
+}
+\end{lstlisting}
+
+在调试器中按 \key{F5} 运行，\textbf{输出}窗口会出现 \code{Detected memory leaks!} 报告，每条记录形如：
+
+\begin{lstlisting}[style=textstyle]
+d:\code\leakdemo.cpp(16) : {123} normal block at 0x000001F4A2C0B0A0, 400 bytes long.
+\end{lstlisting}
+
+包含分配位置、分配序号与字节数。
+
+关键技巧：
+
+\begin{itemize}
+  \item 花括号里的数字是\textbf{分配序号}。调用一次 \code{_CrtSetBreakAlloc(123);}，程序会在该次分配时中断，此时看调用栈即可精确定位。
+  \item 若程序不是从调试器启动（例如被脚本直接运行），\code{_CRTDBG_MODE_DEBUG} 的输出无人接收，可改为写标准错误：\code{_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE)} 搭配 \code{_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR)}。
+  \item 想测量“某段代码前后堆增长了多少”，用检查点对比比读泄漏报告更直接：
+\end{itemize}
+
+\begin{lstlisting}[style=cppstyle]
+_CrtMemState before, after, diff;
+_CrtMemCheckpoint(&before);  DoWork();  _CrtMemCheckpoint(&after);
+if (_CrtMemDifference(&diff, &before, &after)) _CrtMemDumpStatistics(&diff);
+\end{lstlisting}
+
+\begin{warnbox}[注意]
+手工调用 \code{_CrtDumpMemoryLeaks()} 时，若还有静态对象或全局容器未析构，它们持有的内存会被误报为泄漏；改用 \code{_CRTDBG_LEAK_CHECK_DF} 让 CRT 在退出阶段统一检查通常更准。
+\end{warnbox}
+
+\section{代码度量}
+菜单 \ui{分析 > 计算代码度量值} 会为每个项目、命名空间、类与成员算出一组数值，可导出 Excel 做趋势跟踪。
+
+\begin{longtable}{L{2.4cm}L{4.6cm}L{3.6cm}L{3.6cm}}
+\toprule \textbf{指标} & \textbf{含义} & \textbf{参考区间} & \textbf{偏高时的手段} \\ \midrule
+\endfirsthead
+\toprule \textbf{指标} & \textbf{含义} & \textbf{参考区间} & \textbf{偏高时的手段} \\ \midrule
+\endhead
+\bottomrule \endlastfoot
+可维护性指数 & 综合圈复杂度、代码行数与 Halstead 体积的 0--100 分 & 越高越好，低于 20 难以维护 & 拆分函数、消除重复、简化分支 \\
+圈复杂度 & 独立执行路径数，每个判定分支 +1 & 1--10 良好，超过 20 考虑重构 & 提前返回、提取策略、表驱动替代分支 \\
+继承深度 & 继承链上的类层数 & 越浅越好 & 用组合替代继承 \\
+类耦合 & 一个类引用的其他类数量 & 越少越好 & 缩小接口、引入抽象层 \\
+源代码行数 & 物理行数 & --- & 结合可维护性指数一起看 \\
+可执行代码行数 & 可执行语句行数 & --- & 关注单函数级别的异常值 \\
+\end{longtable}
+
+\begin{tipbox}[提示]
+代码度量对 C++ 的支持程度随版本与项目类型有所不同，部分指标在个别项目上可能不可用。数值适合观察\textbf{趋势}与定位异常文件，不适合当作个人考核指标。
+\end{tipbox}
+
+\section{实战：一次完整的性能优化}
+\textbf{任务}：读取约 200 MB 的文本文件（每行一个 0--9999999 的整数），统计每个值出现的次数并输出前 10 名。
+
+基线实现 v1：用 \code{std::map<int, int>} 计数，逐行 \code{std::getline} 加 \code{std::stoi} 解析——直观、正确，但每次自增都要做一次红黑树查找，每个新键都要分配一个节点。
+
+先固定测量条件：Release 配置加 \code{/Zi}（保留调试信息以获得符号化调用栈）、关闭实时病毒扫描、重复运行三次取中位数。基线结果约 \textbf{3.8 s}。
+
+按 \key{Alt+F2} 打开性能探查器，选“CPU 使用率”，采集后看函数列表：
+
+\begin{longtable}{L{1.4cm}L{5.4cm}L{3.0cm}L{4.4cm}}
+\toprule \textbf{排名} & \textbf{函数} & \textbf{自身耗时占比} & \textbf{说明} \\ \midrule
+\endfirsthead
+\toprule \textbf{排名} & \textbf{函数} & \textbf{自身耗时占比} & \textbf{说明} \\ \midrule
+\endhead
+\bottomrule \endlastfoot
+1 & \code{std::_Tree} 的查找例程 & 约 42\% & \code{std::map} 的红黑树查找 \\
+2 & 解析相关（\code{std::stoi} 路径） & 约 21\% & 每行一次的字符串解析 \\
+3 & \code{operator new} / 分配例程 & 约 13\% & 每个新键都要分配一个树节点 \\
+4 & \code{std::getline} & 约 8\% & 逐行读取 \\
+\end{longtable}
+
+结论清晰：大部分时间花在容器与逐行 I/O 上，而不是统计逻辑本身。
+
+\textbf{第一轮（数据结构）}：值域是 0--9999999，可以直接用数组做计数桶，把树查找换成一次随机访问：\code{std::vector<uint32_t> counts(10'000'000, 0);}（约 40 MB，一次分配）。重测约 \textbf{1.1 s}，热点转移到字符串解析。
+
+\textbf{第二轮（I/O 与编译选项）}：整块读入文件后手写解析，避免 \code{std::stoi} 的临时字符串与异常框架；编译选项加入 \code{/GL} 并配合链接器 \code{/LTCG}，需要时再加 \code{/arch:AVX2}：
+
+\begin{lstlisting}[style=shellstyle]
+cl /nologo /O2 /GL /Zi /EHsc /std:c++20 /arch:AVX2 v3.cpp /link /LTCG
+\end{lstlisting}
+
+\begin{longtable}{L{1.3cm}L{5.5cm}L{1.6cm}L{2.4cm}L{3.0cm}}
+\toprule \textbf{版本} & \textbf{关键改动} & \textbf{耗时} & \textbf{峰值内存} & \textbf{主要瓶颈} \\ \midrule
+\endfirsthead
+\toprule \textbf{版本} & \textbf{关键改动} & \textbf{耗时} & \textbf{峰值内存} & \textbf{主要瓶颈} \\ \midrule
+\endhead
+\bottomrule \endlastfoot
+v1 & \code{std::map} + \code{std::getline} + \code{std::stoi} & 3.8 s & 约 120 MB & 树查找、节点分配 \\
+v2 & \code{std::vector} 直接索引 & 1.1 s & 约 60 MB & 字符串解析 \\
+v3 & 整块读取 + 手写解析 + \code{/GL /LTCG /arch:AVX2} & 0.4 s & 约 45 MB & 已接近磁盘读取下限 \\
+\end{longtable}
+
+（以上为示意数据，你的机器上会不同。）三点经验：\textbf{算法与数据结构的收益远大于编译开关}；\textbf{每次只改一件事并重新测量}，否则无法判断哪一步有效；\textbf{性能配置要保留 \code{/Zi}}，纯为“更快”而关掉调试信息只会让下一次排查更困难。较新版本支持把两次采集的报告放在一起比较，可以直接看到每个函数的耗时变化。
+
+\section{小结}
+\begin{itemize}
+  \item 调试期间的\textbf{诊断工具}窗口（\ui{调试 > 窗口 > 显示诊断工具}）提供 CPU、内存、事件与时间线，适合快速定位。
+  \item \textbf{性能探查器}（\ui{调试 > 性能探查器}，\key{Alt+F2}）提供采样、插桩、内存、文件 I/O、并发可视化等工具，适合系统性测量。
+  \item 采样开销低但可能漏掉小函数；插桩精确但开销大且受内联影响。先采样找方向，再插桩做定量确认。
+  \item \textbf{Build Insights} 是 MSVC 专属的编译期分析能力，用于查找编译慢的头文件与模板实例化，\code{vcperf} 可脚本化采集。
+  \item 静态分析（\code{/analyze}、C++ Core Guidelines、SAL）在编译期发现问题，clang-tidy 补充风格与现代化建议。
+  \item 运行时检查三件套：\code{/fsanitize=address} 抓越界与释放后使用，\code{/RTC1} 抓栈破坏与未初始化变量，\code{_CrtDumpMemoryLeaks} 与 \code{_CrtSetBreakAlloc} 抓内存泄漏。
+  \item 优化流程固定为：建立基线 -> 测量定位热点 -> 只改一处 -> 重新测量 -> 记录对比。
+\end{itemize}
+
+\section{练习题}
+\begin{enumerate}
+  \item 用调试期间的诊断工具窗口分析自己写的一个程序，找出自身耗时最高的三个函数，并说明各自的调用次数与平均单次耗时。
+  \item 对同一段代码分别用“CPU 使用率”与“检测”两种工具采集，比较函数耗时数据的差异，并解释为什么插桩结果在开启内联后会失真。
+  \item 为一个小型项目生成 Build Insights 跟踪，找出被间接包含次数最多的头文件，用前置声明或 pimpl 降低包含成本，并对比重新构建的时间。
+  \item 在一个故意包含空指针解引用与缓冲区越界的程序上，分别用 \code{/analyze}、\code{/fsanitize=address} 与 \code{/RTC1} 运行，记录各自能捕获哪些问题、漏掉哪些问题。
+  \item 写一个含三处内存泄漏的程序（\code{new[]}、\code{malloc}、容器内指针），用 \code{_CrtSetDbgFlag} 与 \code{_CrtSetBreakAlloc} 定位到具体行号。
+  \item 用 \code{.clang-tidy} 为本项目启用 \code{bugprone-*} 与 \code{performance-*}，统计修复前后错误列表的条目数量，并说明你关闭了哪些检查项及理由。
+\end{enumerate}
+
+\section{相关笔记}
+\begin{itemize}
+  \item \textbf{本教程}：\textbf{Visual Studio 2026 使用教程}
+  \item \textbf{上一章}：\textbf{调试技术详解}
+  \item \textbf{下一章}：\textbf{CMake 与 vcpkg 集成}
+  \item \textbf{C++ 教程}：\textbf{Visual Studio 入门}
+  \item \textbf{Eigen 库}：\textbf{Eigen 库使用指南}
+\end{itemize}

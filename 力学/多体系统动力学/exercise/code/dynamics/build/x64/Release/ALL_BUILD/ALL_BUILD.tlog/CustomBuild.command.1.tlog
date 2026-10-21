@@ -1,0 +1,10 @@
+^D:\STUDYNOTES\力学\多体系统动力学\EXERCISE\CODE\DYNAMICS\CMAKELISTS.TXT
+setlocal
+D:\program\cmake-4.3.2-windows-x86_64\bin\cmake.exe -SD:/studynotes/力学/多体系统动力学/exercise/code/dynamics -BD:/studynotes/力学/多体系统动力学/exercise/code/dynamics/build --check-stamp-file D:/studynotes/力学/多体系统动力学/exercise/code/dynamics/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

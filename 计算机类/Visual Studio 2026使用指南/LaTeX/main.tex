@@ -1,0 +1,128 @@
+% ============================================================
+%  Visual Studio 2026 使用教程（C++ 开发）
+%  LaTeX 版主文件 —— XeLaTeX + 李思风极简学术样式
+%
+%  编译方式（XeLaTeX，需编译 2~3 遍以稳定目录与交叉引用）：
+%      xelatex -interaction=nonstopmode main.tex
+%      xelatex -interaction=nonstopmode main.tex
+%
+%  注意：不要用 -halt-on-error。若中途报错退出会写坏 .aux/.out，
+%        下一遍会报 "File ended while scanning use of \@newl@bel"，
+%        此时删除 .aux .out .toc 后重新编译即可。
+%
+%  目录结构：
+%      main.tex          本文件
+%      preamble.tex      样式（李思风极简学术 + 技术教程扩展）
+%      cover_李思风.tex  封面
+%      前言.tex / 绪论.tex / 附录.tex
+%      Chapter01.tex … Chapter13.tex   各章正文
+%
+%  对应的 Markdown 版见上级目录（README.md 与 01~13 章）。
+% ============================================================
+\documentclass[11pt,a4paper,openany]{book}
+\input{preamble}            % 样式：字体、颜色、盒子环境、代码高亮、章节格式
+
+% ============================================================
+%	教程元信息
+% ============================================================
+\newcommand{\notename}{Visual Studio 2026 使用教程}   % 封面大标题
+\newcommand{\noteauthor}{爱吃烧饼的大熊猫}            % 封面作者
+\newcommand{\notesubtitle}{\today}                    % 封面日期行
+
+% 正文骨架
+\newcommand{\notebody}{
+	% 前言
+	\chapter*{前言}
+	\input{前言}
+
+	% 绪论
+	\chapter{绪论}
+	\input{绪论}
+
+	% ---------------- 第一部分：入门 ----------------
+	\chapter{Visual Studio 2026 概览与版本选择}
+	\input{Chapter01}
+
+	\chapter{安装与环境配置}
+	\input{Chapter02}
+
+	\chapter{界面与工作区}
+	\input{Chapter03}
+
+	\chapter{第一个 C++ 项目}
+	\input{Chapter04}
+
+	% ---------------- 第二部分：C++ 开发核心 ----------------
+	\chapter{项目与解决方案管理}
+	\input{Chapter05}
+
+	\chapter{项目属性与编译配置}
+	\input{Chapter06}
+
+	\chapter{代码编辑与 IntelliSense}
+	\input{Chapter07}
+
+	\chapter{调试技术详解}
+	\input{Chapter08}
+
+	% ---------------- 第三部分：诊断与工程化 ----------------
+	\chapter{性能分析与诊断}
+	\input{Chapter09}
+
+	\chapter{CMake 与 vcpkg 集成}
+	\input{Chapter10}
+
+	\chapter{单元测试与代码质量}
+	\input{Chapter11}
+
+	\chapter{发布与部署}
+	\input{Chapter12}
+
+	\chapter{常见问题与效率技巧}
+	\input{Chapter13}
+
+	% ============================================================
+	% 附录（样式自动切换为「附录 A」格式）
+	% ============================================================
+	\appendix
+	\renewcommand{\thechapter}{附录\Alph{chapter}}
+	\titleformat{\chapter}[block]
+	{\normalfont\centering\bfseries\songti\fontsize{20.7}{26}\selectfont}
+	{\thechapter}{1em}{}
+	\renewcommand{\thesection}{\Alph{chapter}.\arabic{section}}
+	\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+	\renewcommand{\theequation}{\Alph{chapter}.\arabic{equation}}
+	\renewcommand{\thetheorem}{\Alph{chapter}.\arabic{theorem}}
+	\renewcommand{\theexample}{\Alph{chapter}.\arabic{example}}
+
+	\chapter{速查与资源}
+	\input{附录}
+}
+
+\begin{document}
+	% 封面（一次只启用一个；全部可选封面见 模板/课程笔记/封面模板索引.md）
+	\input{cover_李思风}          % 默认：李思风极简学术封面
+
+	\newpage
+
+	% 第 2 页：格言页
+	\thispagestyle{empty}
+	\vspace*{\fill}
+	\begin{center}
+		{\kaishu\fontsize{18}{28}\selectfont 纸上得来终觉浅，绝知此事要躬行。}
+	\end{center}
+	\vfill
+	\newpage
+
+	% 正文页码样式（底部居中）
+	\pagestyle{plain}
+
+	\setcounter{tocdepth}{2}
+
+	\tableofcontents
+
+	\setcounter{page}{0}
+	\thispagestyle{empty}
+	\newpage
+	\notebody
+\end{document}

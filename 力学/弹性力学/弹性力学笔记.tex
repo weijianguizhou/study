@@ -1,0 +1,58 @@
+% ============================================================
+%  弹性力学笔记 —— LaTeX book + 中文课堂笔记排版（李思风）
+%  样式参照《线性代数：原理与应用》（李思，清华大学）讲义：
+%  极简学术排版 —— 方正宋体、细边框圆角定理盒、行内加粗标签
+%
+%  编译方式: XeLaTeX（中文推荐），需编译 2~3 遍生成目录与交叉引用
+%  内容与 Typst 版 弹性力学笔记.typ 同步
+% ============================================================
+\documentclass[11pt,a4paper,openany]{book}
+\input{preamble}            % 样式：字体、颜色、定理/定义/例题环境、章节格式
+
+% ============================================================
+%	笔记元信息
+% ============================================================
+\newcommand{\notename}{弹性力学笔记}          % 封面大标题
+\newcommand{\noteauthor}{爱吃烧饼的大熊猫}    % 封面作者
+\newcommand{\notesubtitle}{10.14}             % 封面日期行（覆盖封面默认的 \today）
+
+% 正文骨架：按需增删 \input{}
+\newcommand{\notebody}{
+	% 前言（对应 Typst 版的序页：不编号、不进目录）
+	\chapter*{前言}
+	\input{前言}
+
+	% 正文各章（每章一个 .tex 文件）
+	\chapter{平面问题的基本理论}
+	\input{平面问题的基本理论}
+
+
+}
+
+\begin{document}
+	% 封面（李思风极简学术封面，文件在项目根目录）
+	\input{cover_李思风}
+
+	\newpage
+
+	% 第 2 页：格言页（居中，可删）
+	\thispagestyle{empty}
+	\vspace*{\fill}
+	\begin{center}
+		{\kaishu\fontsize{18}{28}\selectfont 在这里写入你的格言}
+	\end{center}
+	\vfill
+	\newpage
+
+	% 正文页码样式（底部居中，见 preamble）
+	\pagestyle{plain}
+
+	\setcounter{tocdepth}{2}
+
+	\tableofcontents
+
+	\setcounter{page}{0}
+	\thispagestyle{empty}
+	\newpage
+	\notebody
+\end{document}

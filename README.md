@@ -217,6 +217,7 @@ xelatex main.tex && xelatex main.tex   # 两次编译生成目录
 | **MATLAB 教程 (50篇)** | `MATLAB学习/` 下 01-50 完整教程：基础语法 → 数值计算 → 动力学仿真 → 控制系统(PID/LQR/SMC/H∞) → 机器人学(DH/正逆运动学/雅可比/动力学/轨迹/CTC/阻抗) → Simulink/Simscape → 参数辨识/优化 → C++混合编程 |
 | **Eigen 库 (16篇)** | `Eigen库使用指南/` 下 01-19 完整教程：稠密矩阵 → LU/QR/Cholesky/SVD/特征值 → 几何变换(旋转/仿射) → 实战(PCA/卡尔曼/ICP/RK4) |
 | **构建工具** | `CMake使用指南/`（2篇教程）、`常用Git 命令.md`（407行）、`Linux教程/`（10章完整教程，涵盖 Shell 脚本自动化） |
+| **Visual Studio 2026 (13章)** | `Visual Studio 2026使用指南/` 下 README + 01-13 完整教程：版本选择 → 安装与工具集 → 界面 → 第一个项目 → 项目/属性管理 → IntelliSense → 调试 → 性能诊断 → CMake/vcpkg → 单元测试 → 发布部署 → 常见问题。面向 C++ 开发，覆盖 MSVC 14.5x 与 `v145` 工具集 |
 
 ### 写作与排版（3 个子目录）
 
@@ -265,6 +266,7 @@ xelatex main.tex && xelatex main.tex   # 两次编译生成目录
 | **数据结构** | 10 章 .md 教程（~525 KB），C++/Python 双实现 | `计算机类/数据结构教程/` |
 | **MATLAB (50篇)** | 基础→动力学→控制→机器人→Simulink 完整系列 | `计算机类/MATLAB学习/` |
 | **C++ (21篇)** | C基础→OOP→STL→CMake→VS→学生管理系统 | `计算机类/C++学习/` |
+| **Visual Studio 2026 (13章)** | 安装与工具集→项目属性→IntelliSense→调试→性能诊断→CMake/vcpkg→测试→发布 | `计算机类/Visual Studio 2026使用指南/` |
 | **Eigen 库 (16篇)** | 稠密矩阵→全部分解→几何变换→实战合集 | `计算机类/Eigen库使用指南/` |
 | **深度学习** | 172 页 .tex + 12章 .md | `人工智能/深度学习教程/` |
 | **强化学习** | 102 页 .tex + RL系列 .md | `人工智能/强化学习系统教程/` |

@@ -1,0 +1,123 @@
+% !TeX root = main.tex
+本附录把全书反复用到的版本信息、语言标准档位与官方资源集中列出，便于脱离正文速查。
+
+\section{版本与工具集速查}
+
+\subsection{IDE 与 MSVC 的对应关系}
+
+从 Visual Studio 2026 起，MSVC 编译器的版本号与 IDE 版本号\textbf{解耦}：IDE 每月更新，MSVC 约每六个月发布一个新版本。
+
+\begin{longtable}{L{1.6cm}L{1.8cm}L{1.6cm}L{4.2cm}L{4.4cm}}
+\toprule
+\textbf{MSVC} & \textbf{\code{_MSC_VER}} & \textbf{编译器} & \textbf{首次随附于} & \textbf{支持情况} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{MSVC} & \textbf{\code{_MSC_VER}} & \textbf{编译器} & \textbf{首次随附于} & \textbf{支持情况} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+14.50 & \code{1950} & 19.50 & VS 2026 18.0（2025 年 11 月） & 长期支持，至 2028 年 11 月 \\
+14.51 & \code{1951} & 19.51 & VS 2026 18.6（2026 年 5 月） & 标准支持，至 2027 年 2 月 \\
+14.52 & \code{1952} & 19.52 & 预览通道 & 预览 \\
+\end{longtable}
+
+作为对照，Visual Studio 2022 的最后几个版本是 MSVC 14.43（\code{1943}）与 14.44（\code{1944}）。
+
+\subsection{平台工具集}
+
+\begin{longtable}{L{4.4cm}L{4.4cm}L{5.6cm}}
+\toprule
+\textbf{Visual Studio} & \textbf{平台工具集} & \textbf{说明} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Visual Studio} & \textbf{平台工具集} & \textbf{说明} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+Visual Studio 2015 & \code{v140} & 旧项目可能仍在用 \\
+Visual Studio 2017 & \code{v141} & \\
+Visual Studio 2019 & \code{v142} & \\
+Visual Studio 2022 & \code{v143} & 迁移期可与 \code{v145} 并存 \\
+Visual Studio 2026 & \code{v145} & 本书默认 \\
+\end{longtable}
+
+\subsection{关键版本节点}
+
+\begin{longtable}{L{3.4cm}L{3.2cm}L{8.0cm}}
+\toprule
+\textbf{版本} & \textbf{时间} & \textbf{要点} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{版本} & \textbf{时间} & \textbf{要点} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+Insiders 通道上线 & 2025 年 9 月 9 日 & 取代 VS 2022 时代的 Preview 通道 \\
+18.0（GA） & 2025 年 11 月 11 日 & 正式发布，随附 MSVC 14.50 与 \code{v145} \\
+18.6 & 2026 年 5 月 & 随附 MSVC 14.51，新增 \code{<flat_map>} 与 \code{<flat_set>} \\
+18.10.3 & 2026 年 9 月 29 日 & 本书写作时的最新稳定版 \\
+\end{longtable}
+
+\section{C++ 语言标准档位速查}
+
+\begin{longtable}{L{3.2cm}L{3.4cm}L{7.6cm}}
+\toprule
+\textbf{属性页选项} & \textbf{编译器开关} & \textbf{说明} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{属性页选项} & \textbf{编译器开关} & \textbf{说明} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+ISO C++14 标准 & \code{/std:c++14} & 编译器在未指定 \code{/std} 时的默认值 \\
+ISO C++17 标准 & \code{/std:c++17} & \\
+ISO C++20 标准 & \code{/std:c++20} & 新建 C++ 项目的默认值；隐含 \code{/permissive-} \\
+预览--ISO C++23 标准 & \code{/std:c++23preview} & 只启用 C++23 范围内的特性 \\
+预览--最新工作草案 & \code{/std:c++latest} & 含进行中的实验特性；隐含 \code{/permissive-} \\
+\end{longtable}
+
+\begin{warnbox}[注意]
+\textbf{没有 \code{/std:c++26} 这个开关。}想用前沿特性只能挂 \code{/std:c++latest}。另外，"新建项目默认 C++20"来自项目\textbf{模板}写入的 \code{/std:c++20}，与"编译器默认 C++14"并不矛盾——这是两件事，详见第 1 章。
+\end{warnbox}
+
+\section{官方资源}
+
+\begin{longtable}{L{6.4cm}L{8.2cm}}
+\toprule
+\textbf{资源} & \textbf{地址} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{资源} & \textbf{地址} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+Visual Studio 2026 发行说明 & \url{https://learn.microsoft.com/visualstudio/releases/2026/release-notes} \\
+MSVC Build Tools 新增功能 & \url{https://learn.microsoft.com/cpp/overview/what-s-new-for-msvc} \\
+MSVC 编译器版本对照表 & \url{https://learn.microsoft.com/cpp/overview/compiler-versions} \\
+\code{/std} 语言标准开关 & \url{https://learn.microsoft.com/cpp/build/reference/std-specify-language-standard-version} \\
+C++ 二进制兼容性 & \url{https://learn.microsoft.com/cpp/porting/binary-compat-2015-2017} \\
+Visual Studio 2026 系统要求 & \url{https://learn.microsoft.com/visualstudio/releases/2026/vs-system-requirements} \\
+C++ 团队博客 & \url{https://devblogs.microsoft.com/cppblog/} \\
+C++ Core Guidelines & \url{https://isocpp.github.io/CppCoreGuidelines/} \\
+cppreference & \url{https://en.cppreference.com/} \\
+\end{longtable}
+
+\section{本仓库内的相关笔记}
+
+\begin{itemize}
+	\item \textbf{C++ 教程}（21 篇）——\fpath{C++学习}，语言基础到学生管理系统实战
+	\item \textbf{CMake 使用指南}——\fpath{CMake使用指南}，构建系统本身
+	\item \textbf{Eigen 库使用指南}——\fpath{Eigen库使用指南}，矩阵与几何运算
+	\item \textbf{VS Code C++ 配置指南}——\fpath{VS code 配置指南}，轻量编辑器路线
+	\item \textbf{常用 Git 命令}——\fpath{常用Git 命令.md}，版本管理
+\end{itemize}

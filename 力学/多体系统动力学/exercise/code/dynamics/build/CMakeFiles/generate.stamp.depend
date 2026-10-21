@@ -1,0 +1,27 @@
+# CMake generation dependency list for this directory.
+D:/program/cmake-4.3.2-windows-x86_64/share/cmake-4.3/Modules/CMakeCXXInformation.cmake
+D:/program/cmake-4.3.2-windows-x86_64/share/cmake-4.3/Modules/CMakeCommonLanguageInclude.cmake
+D:/program/cmake-4.3.2-windows-x86_64/share/cmake-4.3/Modules/CMakeGenericSystem.cmake
+D:/program/cmake-4.3.2-windows-x86_64/share/cmake-4.3/Modules/CMakeInitializeConfigs.cmake
+D:/program/cmake-4.3.2-windows-x86_64/share/cmake-4.3/Modules/CMakeLanguageInformation.cmake
+D:/program/cmake-4.3.2-windows-x86_64/share/cmake-4.3/Modules/CMakeRCInformation.cmake
+D:/program/cmake-4.3.2-windows-x86_64/share/cmake-4.3/Modules/CMakeSystemSpecificInformation.cmake
+D:/program/cmake-4.3.2-windows-x86_64/share/cmake-4.3/Modules/CMakeSystemSpecificInitialize.cmake
+D:/program/cmake-4.3.2-windows-x86_64/share/cmake-4.3/Modules/Compiler/CMakeCommonCompilerMacros.cmake
+D:/program/cmake-4.3.2-windows-x86_64/share/cmake-4.3/Modules/Compiler/MSVC-CXX.cmake
+D:/program/cmake-4.3.2-windows-x86_64/share/cmake-4.3/Modules/Compiler/MSVC.cmake
+D:/program/cmake-4.3.2-windows-x86_64/share/cmake-4.3/Modules/Internal/CMakeCXXLinkerInformation.cmake
+D:/program/cmake-4.3.2-windows-x86_64/share/cmake-4.3/Modules/Internal/CMakeCommonLinkerInformation.cmake
+D:/program/cmake-4.3.2-windows-x86_64/share/cmake-4.3/Modules/Linker/MSVC-CXX.cmake
+D:/program/cmake-4.3.2-windows-x86_64/share/cmake-4.3/Modules/Linker/MSVC.cmake
+D:/program/cmake-4.3.2-windows-x86_64/share/cmake-4.3/Modules/Platform/Linker/Windows-MSVC-CXX.cmake
+D:/program/cmake-4.3.2-windows-x86_64/share/cmake-4.3/Modules/Platform/Linker/Windows-MSVC.cmake
+D:/program/cmake-4.3.2-windows-x86_64/share/cmake-4.3/Modules/Platform/Windows-Initialize.cmake
+D:/program/cmake-4.3.2-windows-x86_64/share/cmake-4.3/Modules/Platform/Windows-MSVC-CXX.cmake
+D:/program/cmake-4.3.2-windows-x86_64/share/cmake-4.3/Modules/Platform/Windows-MSVC.cmake
+D:/program/cmake-4.3.2-windows-x86_64/share/cmake-4.3/Modules/Platform/Windows.cmake
+D:/program/cmake-4.3.2-windows-x86_64/share/cmake-4.3/Modules/Platform/WindowsPaths.cmake
+D:/studynotes/力学/多体系统动力学/exercise/code/dynamics/CMakeLists.txt
+D:/studynotes/力学/多体系统动力学/exercise/code/dynamics/build/CMakeFiles/4.3.2/CMakeCXXCompiler.cmake
+D:/studynotes/力学/多体系统动力学/exercise/code/dynamics/build/CMakeFiles/4.3.2/CMakeRCCompiler.cmake
+D:/studynotes/力学/多体系统动力学/exercise/code/dynamics/build/CMakeFiles/4.3.2/CMakeSystem.cmake

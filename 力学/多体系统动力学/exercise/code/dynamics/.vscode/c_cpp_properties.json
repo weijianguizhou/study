@@ -1,0 +1,17 @@
+{
+  "version": 4,
+  "configurations": [
+    {
+      "name": "MSVC x64",
+      "includePath": [
+        "${workspaceFolder}",
+        "D:/libs/eigen-5.0.0"
+      ],
+      "defines": [],
+      "compilerPath": "D:/Program Files/Visual Studio/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe",
+      "cStandard": "c17",
+      "cppStandard": "c++20",
+      "intelliSenseMode": "windows-msvc-x64"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2026.2.15)  2 OCT 2026 22:45
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2026.2.15)  2 OCT 2026 23:28
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1269,6 +1269,22 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 [22
 
 ]
+File: figures/C++测试mujoco完整性图.png Graphic file (type bmp)
+<figures/C++测试mujoco完整性图.png>
+
+Underfull \hbox (badness 2142) in paragraph at lines 44--50
+[]\TU/SimSun(1)/b/n/12 若 出 现 一 个 人 形 机 器 人 并 且 可 以 旋 转、|  缩 放、|  拖 动，|  如 下 图 所 示，|  说 明 运
+ []
+
+
+Underfull \hbox (badness 1521) in paragraph at lines 44--50
+\TU/SimSun(1)/b/n/12 行 库、| \TU/lmr/m/n/12 OpenGL \TU/SimSun(1)/b/n/12 与 模 型 库 都 正 常。| \TU/lmtt/m/n/12 simulate \TU/SimSun(1)/b/n/12 是 官 方 交 互 式 查 看 器，|  它 的 源 码 在
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
 
 [23] (d:/Latex/R/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2024/09/23 1.10c listings language file
@@ -1279,12 +1295,12 @@ File: lstmisc.sty 2024/09/23 1.10c (Carsten Heinz)
 )
 
 [24]
-Underfull \hbox (badness 10000) in paragraph at lines 145--149
+Underfull \hbox (badness 10000) in paragraph at lines 151--155
 []\TU/SimSun(1)/b/n/12 版 本 一 致 性 检 查[] 官 方 建 议 在 程 序 里 断 言 头 文 件 版 本 与 库 版 本 一 致：| \TU/lmtt/m/n/12 if
  []
 
 
-Underfull \hbox (badness 4913) in paragraph at lines 145--149
+Underfull \hbox (badness 4913) in paragraph at lines 151--155
 \TU/lmtt/m/n/12 (mjVERSION_HEADER != mj_version()) complain();\TU/SimSun(1)/b/n/12 。|  头 文 件 与 \TU/lmr/m/n/12 DLL \TU/SimSun(1)/b/n/12 来 自
  []
 
@@ -1296,12 +1312,9 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 [25]
 
 [26]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
 
 [27]
-Underfull \vbox (badness 4060) has occurred while \output is active []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
@@ -1530,10 +1543,10 @@ Package rerunfilecheck Info: File `MuJoCo使用指南.out' has not changed.
 (rerunfilecheck)             Checksum: 5C3B9D89DA9292E08E202B7078B608B5;17387.
  ) 
 Here is how much of TeX's memory you used:
- 38468 strings out of 473832
- 858600 string characters out of 5735453
- 1682242 words of memory out of 5000000
- 60848 multiletter control sequences out of 15000+600000
+ 38478 strings out of 473832
+ 858897 string characters out of 5735453
+ 1685064 words of memory out of 5000000
+ 60857 multiletter control sequences out of 15000+600000
  570501 words of font info for 131 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  107i,12n,111p,1280b,2007s stack positions out of 10000i,1000n,20000p,200000b,200000s

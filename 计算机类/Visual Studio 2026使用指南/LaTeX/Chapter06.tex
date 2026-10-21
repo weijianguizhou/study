@@ -1,0 +1,1047 @@
+% !TeX root = main.tex
+
+前面几章里，\code{/std:c++20}、\code{/MD}、\code{/O2} 这些开关都是一句带过。这一章把它们全部展开——\textbf{项目属性页是 Visual Studio 里信息密度最高的地方}，也是绝大多数“玄学编译错误”的真正源头。读完这一章，你应该能做到：看到一个编译开关就知道它在哪个页面，看到一类报错就知道该去改哪一项。
+
+\section{属性页的入口与结构}
+
+\subsection{三种打开方式}
+
+\begin{longtable}{L{2.4cm}L{9.6cm}L{2.4cm}}
+\toprule
+\textbf{方式} & \textbf{路径} & \textbf{适用} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{方式} & \textbf{路径} & \textbf{适用} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{右键项目} & 解决方案资源管理器 > 右键项目 > \textbf{属性} & 最常用 \\
+\textbf{菜单} & \ui{项目 > 属性} & 键盘流 \\
+\textbf{快捷键} & 选中项目后按 \key{Alt+Enter} & 最快 \\
+\end{longtable}
+
+\begin{warnbox}[注意]
+\textbf{属性页是“项目”级别的，不是“解决方案”级别，也不是全局设置}。解决方案右键没有“属性”这一项。如果你在找 \code{/std:c++20} 却翻到了 \ui{工具 > 选项}，那永远找不到——那里管的是 IDE 自己的行为。
+\end{warnbox}
+
+\subsection{顶部两个下拉框：新手最大的坑}
+
+属性页\textbf{左上角}有两个下拉框：
+
+\begin{lstlisting}[style=textstyle, breaklines=true]
+[ 配置(C):  Debug   v ]      [ 平台(P):  x64   v ]      <- 看这里！
+--------------------------------------------------------------
+  v 配置属性
+    v 常规
+    v C/C++
+    v 链接器
+    v 清单工具
+    v 生成事件
+    v 调试
+--------------------------------------------------------------
+右侧是当前"配置 × 平台"组合下这一项的取值
+\end{lstlisting}
+
+\textbf{你在属性页里改的任何一项，默认只作用于当前选中的“配置 $\times$ 平台”组合。}
+
+举个真实的翻车场景：
+
+\begin{lstlisting}[style=textstyle, breaklines=true]
+1. 打开项目属性，看到配置是 Debug|x64
+2. 把"附加包含目录"改成 D:\libs\include
+3. 编译 Debug -> 通过 [OK]
+4. 切到 Release 编译 -> 报"无法打开源文件 xxx.h" [X]
+原因：Release|x64 那一份配置里，包含目录根本没改
+\end{lstlisting}
+
+\textbf{两种正确做法}：
+
+\begin{longtable}{L{3.0cm}L{8.6cm}L{3.0cm}}
+\toprule
+\textbf{做法} & \textbf{操作} & \textbf{何时用} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{做法} & \textbf{操作} & \textbf{何时用} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+一次改所有配置 & 把“配置”下拉切成 \textbf{所有配置}，“平台”切成 \textbf{所有平台}，再改 & 绝大多数情况 \\
+逐个配置改 & 分别切到 Debug/Release 各改一遍 & 确实需要差异时（如 Debug 用 \code{/Od}） \\
+\end{longtable}
+
+\begin{tipbox}[提示]
+改完之后，用 \textbf{配置} 下拉逐个切过去检查一遍。养成“改完扫一眼其他配置”的习惯，能省掉大量“Release 编不过”的排查时间。
+\end{tipbox}
+
+\subsection{属性页树形结构}
+
+\begin{lstlisting}[style=textstyle, breaklines=true]
+配置属性
++-- 常规                    <- 输出目录、配置类型、工具集、语言标准、字符集
++-- 高级                    <- 极少用（如 C++/CLI 属性）
++-- 调试                    <- 命令行参数、工作目录、环境变量
++-- VC++ 目录               <- 包含/库/可执行文件目录（建议改用 C/C++ 与链接器页）
++-- C/C++                   <- 编译器开关（cl.exe）
+|   +-- 常规                <- /I /Zi /W4 /WX /MP /utf-8
+|   +-- 优化                <- /Od /O1 /O2 /Ox /GL
+|   +-- 预处理器            <- /D /U /X
+|   +-- 代码生成            <- /MD /MT /EHsc /GR /Gy /GS /arch
+|   +-- 语言                <- /std: /permissive- /openmp /Zc
+|   +-- 预编译头            <- /Yc /Yu /Fp
+|   +-- 输出文件            <- /Fa /Fd /Fo
+|   +-- 浏览信息            <- /FR
+|   +-- 高级                <- /FI /TC /TP /showIncludes
+|   +-- 所有选项            <- 纯命令行视角
++-- 链接器                  <- 链接开关（link.exe）
+|   +-- 常规                <- /LIBPATH /INCREMENTAL
+|   +-- 输入                <- 附加依赖项 /DEFAULTLIB /NODEFAULTLIB
+|   +-- 清单文件            <- UAC 清单
+|   +-- 系统                <- /SUBSYSTEM /STACK
+|   +-- 优化                <- /LTCG /OPT:REF /OPT:ICF
+|   +-- 嵌入的 IDL          <- 组件开发
+|   +-- Windows 元数据      <- WinRT
+|   +-- 高级                <- /ENTRY /DYNAMICBASE /NXCOMPAT
+|   +-- 命令行              <- 最终命令行预览
+|   +-- 所有选项            <- 纯命令行视角
++-- 清单工具                <- 清单生成
++-- XML 文档生成器          <- /doc
++-- 浏览信息                <- 代码浏览数据库
++-- 生成事件                <- 生成前/链接前/生成后
++-- 自定义生成步骤          <- 单文件自定义命令
++-- 代码分析                <- /analyze、clang-tidy（见第 9 章）
++-- 调试                    <- 同"配置属性 > 调试"
+\end{lstlisting}
+
+\begin{tipbox}[提示]
+\textbf{每个页面的“命令行”子页（或“所有选项”页）会实时显示当前配置对应的完整命令行}。想确认某个图形选项到底生成了什么开关，去那里看一眼最快——这是学习属性页最好的方法。
+\end{tipbox}
+
+\section{配置属性 > 常规}
+
+各字段对应的开关或变量：
+
+\begin{longtable}{L{3.6cm}L{11.2cm}}
+\toprule
+\textbf{字段} & \textbf{对应开关/变量} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{字段} & \textbf{对应开关/变量} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{输出目录} & \code{$(OutDir)} \\
+\textbf{中间目录} & \code{$(IntDir)} \\
+\textbf{目标名称} & \code{$(TargetName)} \\
+\textbf{目标扩展名} & \code{$(TargetExt)} \\
+\textbf{配置类型} & \code{ConfigurationType} \\
+\textbf{C++ 语言标准} & \code{/std:} \\
+\textbf{Windows SDK 版本} & \code{WindowsTargetPlatformVersion} \\
+\textbf{平台工具集} & \code{PlatformToolset} \\
+\textbf{字符集} & \code{CharacterSet} \\
+\end{longtable}
+
+各字段的说明：
+
+\begin{longtable}{L{3.6cm}L{11.2cm}}
+\toprule
+\textbf{字段} & \textbf{说明} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{字段} & \textbf{说明} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{输出目录} & 默认 \code{$(SolutionDir)$(Platform)\$(Configuration)} \\
+\textbf{中间目录} & \code{.obj}、\code{.pdb} 等中间产物 \\
+\textbf{目标名称} & 默认等于项目名 \\
+\textbf{目标扩展名} & \code{.exe} / \code{.dll} / \code{.lib} \\
+\textbf{配置类型} & \textbf{应用程序 / 动态库 / 静态库 / 生成文件} \\
+\textbf{C++ 语言标准} & 见 2.5 节 \\
+\textbf{Windows SDK 版本} & 通常选“最新的已安装版本” \\
+\textbf{平台工具集} & VS 2026 是 \textbf{\code{v145}} \\
+\textbf{字符集} & 使用 Unicode 字符集 / 使用多字节字符集 \\
+\end{longtable}
+
+\subsection{配置类型：改错了会得到奇怪的产物}
+
+\begin{longtable}{L{3.6cm}L{4.2cm}L{6.6cm}}
+\toprule
+\textbf{配置类型} & \textbf{产物} & \textbf{何时选} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{配置类型} & \textbf{产物} & \textbf{何时选} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{应用程序 (.exe)} & 可执行文件 & 有 \code{main} 的项目 \\
+\textbf{动态库 (.dll)} & \code{.dll} + 导入库 \code{.lib} & 运行时加载、跨语言调用（见 \textbf{第 5 章}） \\
+\textbf{静态库 (.lib)} & \code{.lib} & 编译期链接进调用方 \\
+\textbf{生成文件} & 不调用 MSVC & 交给 NMake 之类的自定义构建 \\
+\end{longtable}
+
+\begin{warnbox}[注意]
+\textbf{“没有 \code{main} 却选了应用程序”会报 \code{LNK1561: 必须定义入口点}}；反过来“有 \code{main} 却选了静态库”则会把 \code{main} 一起打进库里，链接时可能出现重复定义。
+\end{warnbox}
+
+\subsection{输出与中间目录}
+
+默认值依赖两个宏：
+
+\begin{lstlisting}[style=textstyle, breaklines=true]
+$(SolutionDir)          -> .sln 所在目录
+$(Platform)             -> x64 / Win32 / ARM64
+$(Configuration)        -> Debug / Release
+$(ProjectDir)           -> .vcxproj 所在目录
+\end{lstlisting}
+
+想统一把产物收到一个目录：
+
+\begin{lstlisting}[style=textstyle, breaklines=true]
+输出目录：
+  $(SolutionDir)build\$(Platform)\$(Configuration)\
+中间目录：
+  $(SolutionDir)build\intermediate\$(ProjectName)\$(Platform)\$(Configuration)\
+\end{lstlisting}
+
+\begin{keybox}[实战场景]
+中间目录\textbf{必须按项目分开}。如果多个项目共用同一个中间目录，\code{.obj} 与 \code{.pdb} 会互相覆盖，症状是“改了代码没生效”“断点跳到别的文件”，极难排查。
+\end{keybox}
+
+\subsection{字符集：Unicode 还是多字节}
+
+\begin{longtable}{L{3.6cm}L{8.0cm}L{2.8cm}}
+\toprule
+\textbf{选项} & \textbf{效果} & \textbf{建议} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{选项} & \textbf{效果} & \textbf{建议} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{使用 Unicode 字符集} & 定义 \code{_UNICODE} 与 \code{UNICODE}，\code{TCHAR} $\rightarrow$ \code{wchar_t}，\code{MessageBox} $\rightarrow$ \code{MessageBoxW} & \textbf{[OK]} 新项目一律选这个 \\
+\textbf{使用多字节字符集} & 不定义上述宏，走 \code{char} 版本 API & 只在维护极老的代码时用 \\
+\end{longtable}
+
+\begin{warnbox}[注意]
+多字节字符集\textbf{早已被微软标记为弃用}。它和“中文乱码”关系密切，但\textbf{换字符集不是解决乱码的正确手段}——乱码的根因是源码编码与控制台代码页，见 \textbf{第 13 章}。
+\end{warnbox}
+
+\subsection{平台工具集与 Windows SDK}
+
+\begin{itemize}
+  \item \textbf{平台工具集}：\code{v145} 是 VS 2026 的默认值。改成 \code{v143} 就用 VS 2022 的编译器（需要已安装该工具集）。
+  \item \textbf{Windows SDK 版本}：决定能用哪些 Windows API。选“最新的已安装版本”最省事；要兼容老系统时才需要降级。
+\end{itemize}
+
+\subsection{C++ 语言标准：属性页选项 $\leftrightarrow$ 编译器开关}
+
+\begin{longtable}{L{4.6cm}L{3.8cm}L{6.0cm}}
+\toprule
+\textbf{属性页下拉项} & \textbf{编译器开关} & \textbf{说明} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{属性页下拉项} & \textbf{编译器开关} & \textbf{说明} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+ISO C++14 标准 & \code{/std:c++14} & 编译器的历史默认值 \\
+ISO C++17 标准 & \code{/std:c++17} & \\
+ISO C++20 标准 & \code{/std:c++20} & \textbf{VS 2026 新建项目的默认值}；隐含 \code{/permissive-} \\
+预览 - ISO C++23 标准 & \code{/std:c++23preview} & 只启用 C++23 范围内的特性 \\
+预览 - 最新 C++ 工作草案 & \code{/std:c++latest} & 含进行中的实验特性；隐含 \code{/permissive-} \\
+\end{longtable}
+
+在 \code{.vcxproj} 里对应的属性是 \code{<LanguageStandard>}，常用取值：\code{stdcpp14}、\code{stdcpp17}、\code{stdcpp20}、\code{stdcpplatest}。
+
+\begin{lstlisting}[style=xmlstyle]
+<ClCompile>
+  <LanguageStandard>stdcpp20</LanguageStandard>
+  <ConformanceMode>true</ConformanceMode>
+</ClCompile>
+\end{lstlisting}
+
+\begin{warnbox}[注意]
+\textbf{没有 \code{/std:c++26} 这个开关}。想用前沿特性只能挂 \code{/std:c++latest}，并接受“下个版本可能变”的风险。关于 C++23 与 \code{/std:c++23} 的时间线，见 \textbf{第 1 章 4.3 节}。
+\end{warnbox}
+
+\section{C/C++ > 常规}
+
+\begin{longtable}{L{4.6cm}L{3.4cm}L{6.4cm}}
+\toprule
+\textbf{字段} & \textbf{开关} & \textbf{说明} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{字段} & \textbf{开关} & \textbf{说明} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{附加包含目录} & \code{/I} & 头文件搜索路径 \\
+\textbf{调试信息格式} & \code{/Zi} \code{/Z7} \code{/ZI} & 见 3.2 \\
+\textbf{取消显示启动版权标志} & \code{/nologo} & 让输出干净一点 \\
+\textbf{警告等级} & \code{/W0}--\code{/W4}、\code{/Wall} & 见 3.3 \\
+\textbf{将警告视为错误} & \code{/WX} & 见 3.3 \\
+\textbf{多处理器编译} & \code{/MP} & 见 3.4 \\
+\textbf{使用 UTF-8 编码} & \code{/utf-8} & 见 3.5 \\
+\textbf{SDLCheck} & \code{/sdl} & 额外的安全检查警告，建议开 \\
+\end{longtable}
+
+\subsection{附加包含目录}
+
+多个路径用\textbf{分号}分隔：
+
+\begin{lstlisting}[style=textstyle, breaklines=true]
+D:\libs\fmt\include;$(ProjectDir)include;$(SolutionDir)third_party\eigen
+\end{lstlisting}
+
+\begin{tipbox}[提示]
+\code{$(ProjectDir)} 这类宏在属性页里是\textbf{可用的}，用它写相对路径比写死绝对路径更适合团队协作。
+\end{tipbox}
+
+\subsection{调试信息格式}
+
+\begin{longtable}{L{5.4cm}L{2.2cm}L{6.8cm}}
+\toprule
+\textbf{选项} & \textbf{开关} & \textbf{特点} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{选项} & \textbf{开关} & \textbf{特点} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{程序数据库 (/Zi)} & \code{/Zi} & 调试信息写进 \code{.pdb}，\textbf{推荐}；支持“编辑并继续” \\
+\textbf{C7 兼容 (/Z7)} & \code{/Z7} & 调试信息嵌进 \code{.obj}，文件大，但不用管 \code{.pdb} 丢失 \\
+\textbf{用于“编辑并继续”的程序数据库 (/ZI)} & \code{/ZI} & 支持编辑并继续，但会禁用部分优化 \\
+\end{longtable}
+
+\begin{warnbox}[注意]
+VS 2026 中 \textbf{\code{/DEBUG:FASTLINK} 已被移除}，链接器调试信息请用 \textbf{\code{/DEBUG:FULL}}。老项目如果手工指定过 FASTLINK，升级后会直接报错。
+\end{warnbox}
+
+\subsection{警告等级与 \code{/WX}}
+
+\begin{longtable}{L{3.6cm}L{2.6cm}L{8.2cm}}
+\toprule
+\textbf{等级} & \textbf{开关} & \textbf{含义} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{等级} & \textbf{开关} & \textbf{含义} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+关闭所有警告 & \code{/W0} & \textbf{[X]} 不建议 \\
+等级 1 & \code{/W1} & 严重警告 \\
+等级 2 & \code{/W2} & \\
+等级 3 & \code{/W3} & \textbf{MSVC 默认} \\
+等级 4 & \code{/W4} & \textbf{[OK]} 新项目建议 \\
+启用所有警告 & \code{/Wall} & 极其冗长，需要大量 \code{/wd} 屏蔽，谨慎使用 \\
+\end{longtable}
+
+\textbf{将警告视为错误（\code{/WX}）}：把警告升级为错误。这是保证代码质量最有效的一招，但\textbf{迁移老项目时不要一上来就开}——先看 \code{/W4} 会刷出多少条，逐个处理完再开 \code{/WX}。
+
+\begin{lstlisting}[style=cppstyle]
+// 只想在本地屏蔽某一条时，用代码级抑制（比全局 /wd 更精准）
+#pragma warning(push)
+#pragma warning(disable: 4996)
+    std::strcpy(dst, src);   // 明知不安全但暂时保留
+#pragma warning(pop)
+\end{lstlisting}
+
+\subsection{多处理器编译（\code{/MP}）}
+
+\code{/MP} 让编译器\textbf{并行编译同一个项目里的多个 \code{.cpp}}。在 8 核机器上，十几个源文件的项目构建时间通常能减半。
+
+\textbf{限制}：
+
+\begin{itemize}
+  \item 与 \code{/Gm}（已弃用）不兼容；
+  \item 与预编译头配合时需要注意；
+  \item \textbf{只并行同一项目内的文件}——多项目并行由 MSBuild 的 \code{/m} 参数负责（\ui{工具 > 选项 > 项目和解决方案 > 生成并运行 > 最大并行项目生成数}）。
+\end{itemize}
+
+\subsection{使用 UTF-8 编码（\code{/utf-8}）}
+
+\code{/utf-8} 等价于同时指定：
+
+\begin{lstlisting}[style=textstyle, breaklines=true]
+/source-charset:utf-8      源码文件按 UTF-8 解读
+/execution-charset:utf-8   生成的窄字符串字面量用 UTF-8
+\end{lstlisting}
+
+\textbf{这是现代 C++ 项目处理中文最省事的方案}：源码存 UTF-8（不带 BOM 也行），加 \code{/utf-8}，代码里的中文字符串字面量就不会在编译期被按 GBK 误解。控制台输出乱码是另一层问题，见 \textbf{第 13 章}。
+
+\section{C/C++ > 优化}
+
+\begin{longtable}{L{3.2cm}L{2.2cm}L{5.0cm}L{3.8cm}}
+\toprule
+\textbf{属性页选项} & \textbf{开关} & \textbf{含义} & \textbf{何时用} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{属性页选项} & \textbf{开关} & \textbf{含义} & \textbf{何时用} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{已禁用} & \code{/Od} & 不做优化 & Debug \\
+\textbf{最小化大小} & \code{/O1} & 体积优先 & 体积敏感的发布版 \\
+\textbf{最大化速度} & \code{/O2} & 速度优先 & \textbf{[OK]} Release 默认 \\
+\textbf{完全优化} & \code{/Ox} & 折中 & 较少用 \\
+\textbf{自定义} & 逐项设置 & & 精细控制 \\
+\end{longtable}
+
+细项：
+
+\begin{longtable}{L{4.6cm}L{4.2cm}L{5.6cm}}
+\toprule
+\textbf{细项} & \textbf{开关} & \textbf{说明} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{细项} & \textbf{开关} & \textbf{说明} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{内联函数展开} & \code{/Ob0} \code{/Ob1} \code{/Ob2} & \code{/Ob2} 是 \code{/O2} 的默认 \\
+\textbf{启用内部函数} & \code{/Oi} & 用内建指令替换 \code{memcpy} 之类 \\
+\textbf{优选大小或速度} & \code{/Ot} \code{/Os} & 默认 \code{/Ot}（速度） \\
+\textbf{启用纤维安全优化} & \code{/GT} & 使用纤程时开启 \\
+\textbf{整个程序优化} & \code{/GL} & 跨编译单元优化，\textbf{必须配合链接器的 \code{/LTCG}} \\
+\end{longtable}
+
+\begin{warnbox}[注意]
+\textbf{\code{/GL} 与 \code{/LTCG} 必须成对出现}。只开 \code{/GL} 不开 \code{/LTCG}，链接器会给出警告并退化为普通链接，白折腾一场。Release 配置模板通常已经成对开好了。
+\end{warnbox}
+
+\begin{keybox}[实战场景]
+\code{/O2} 会暴露未定义行为。代码在 Debug 下跑得好好的，Release 下崩溃或结果不对——先怀疑\textbf{未初始化变量、越界访问、有符号溢出}，而不是怀疑编译器。用 AddressSanitizer 复查，见 \textbf{第 9 章}。
+\end{keybox}
+
+\section{C/C++ > 预处理器}
+
+\begin{longtable}{L{3.8cm}L{2.0cm}L{8.6cm}}
+\toprule
+\textbf{字段} & \textbf{开关} & \textbf{示例} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{字段} & \textbf{开关} & \textbf{示例} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{预处理器定义} & \code{/D} & \code{WIN32;_DEBUG;_CONSOLE;MYLIB_EXPORTS} \\
+\textbf{取消预处理器定义} & \code{/U} & 取消某个宏 \\
+\textbf{忽略标准包含路径} & \code{/X} & 忽略 \code{INCLUDE} 环境变量 \\
+\textbf{保留注释} & \code{/C} & 保留注释到预处理输出 \\
+\end{longtable}
+
+\textbf{注意保留} \codeP{%(PreprocessorDefinitions)}：
+
+\begin{lstlisting}[style=xmlstyle]
+<PreprocessorDefinitions>MY_FEATURE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+\end{lstlisting}
+
+\codeP{%(...)} 是“继承已有的定义”。\textbf{漏掉它会把 Debug/Release 模板自带的 \code{_DEBUG}、\code{NDEBUG} 等宏全部覆盖掉}，导致 \code{assert} 行为异常——这是手改 \code{.vcxproj} 时最常见的错误。
+
+\section{C/C++ > 代码生成}
+
+\subsection{运行库：\code{/MD} 还是 \code{/MT}}
+
+这是 C++ 在 Windows 上最重要的一条配置。
+
+\begin{longtable}{L{6.2cm}L{2.2cm}L{3.0cm}L{2.8cm}}
+\toprule
+\textbf{属性页选项} & \textbf{开关} & \textbf{CRT 链接方式} & \textbf{部署要求} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{属性页选项} & \textbf{开关} & \textbf{CRT 链接方式} & \textbf{部署要求} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{多线程调试 DLL (/MDd)} & \code{/MDd} & 动态链接调试版 CRT & Debug 用 \\
+\textbf{多线程 DLL (/MD)} & \code{/MD} & \textbf{动态}链接发行版 CRT & 目标机需装 \textbf{VC++ 可再发行程序包} \\
+\textbf{多线程调试 (/MTd)} & \code{/MTd} & 静态链接调试版 CRT & Debug 用 \\
+\textbf{多线程 (/MT)} & \code{/MT} & \textbf{静态}链接发行版 CRT & 免依赖，但体积大 \\
+\end{longtable}
+
+\begin{longtable}{L{3.4cm}L{5.2cm}L{5.6cm}}
+\toprule
+\textbf{维度} & \textbf{\code{/MD}} & \textbf{\code{/MT}} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{维度} & \textbf{\code{/MD}} & \textbf{\code{/MT}} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+体积 & 小 & 大（每个 exe/dll 都带一份 CRT） \\
+部署 & 需要 \code{vc_redist} & 拷过去就能跑 \\
+跨 DLL 传 CRT 对象 & \textbf{[OK]} 可以 & \textbf{[X]} 危险 \\
+多个模块共享堆 & \textbf{[OK]} 同一份堆 & \textbf{[X]} 各自的堆 \\
+与第三方库混用 & 通常没问题 & \textbf{必须完全一致} \\
+\end{longtable}
+
+\begin{warnbox}[注意（铁律）]
+\textbf{同一个程序里的所有编译单元与所有静态库，必须使用同一种运行库选项。}混用 \code{/MT} 与 \code{/MD} 会让同一个进程里出现\textbf{两份 CRT、两个堆}——在 A 模块里 \code{new}、在 B 模块里 \code{delete}，就是\textbf{堆损坏}，症状是随机崩溃且极难定位。
+
+静态库混用通常会在链接期被 \textbf{\code{LNK2038}}（\code{RuntimeLibrary} 不匹配）拦下；但\textbf{通过 DLL 边界混用时链接器发现不了}，只能靠发布前的人工检查。
+\end{warnbox}
+
+\subsection{启用 C++ 异常}
+
+\begin{longtable}{L{5.6cm}L{2.4cm}L{6.4cm}}
+\toprule
+\textbf{选项} & \textbf{开关} & \textbf{说明} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{选项} & \textbf{开关} & \textbf{说明} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{是} & \code{/EHsc} & \textbf{[OK]} 推荐：只捕获 C++ 异常，假定 extern "C" 函数不抛 \\
+\textbf{是，但有 extern "C" 函数} & \code{/EHs} & 假定 extern "C" 可能抛 \\
+\textbf{是，但有 SEH 异常} & \code{/EHa} & 同时捕获结构化异常，会拖慢性能 \\
+\end{longtable}
+
+\begin{warnbox}[注意]
+\code{/EHsc} 不只是“打开异常”，它还告诉编译器\textbf{析构函数需要参与栈展开}。用 \code{/EHs} 或 \code{/EHa} 代替 \code{/EHsc} 可能带来性能损失，而完全不开异常会让 \code{try/catch} 报错。
+\end{warnbox}
+
+\subsection{其他代码生成选项}
+
+\begin{longtable}{L{4.6cm}L{3.6cm}L{6.2cm}}
+\toprule
+\textbf{字段} & \textbf{开关} & \textbf{建议} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{字段} & \textbf{开关} & \textbf{建议} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{启用运行时类型信息} & \code{/GR}（关闭为 \code{/GR-}） & 用 \code{dynamic_cast} / \code{typeid} 就必须开 \\
+\textbf{启用函数级链接} & \code{/Gy} & \textbf{[OK]} 开，配合 \code{/OPT:REF} 能显著减小体积 \\
+\textbf{缓冲区安全检查} & \code{/GS} & \textbf{[OK]} 开（默认开） \\
+\textbf{控制流保护} & \code{/guard:cf} & \textbf{[OK]} 建议开，缓解劫持攻击 \\
+\textbf{启用最小重新生成} & \code{/Gm} & \textbf{[X]} 已弃用，别开 \\
+\textbf{启用增强指令集} & \code{/arch:} & 见下 \\
+\end{longtable}
+
+\textbf{\code{/arch:} 的取值与风险}：
+
+\begin{longtable}{L{4.4cm}L{3.4cm}L{6.6cm}}
+\toprule
+\textbf{选项} & \textbf{含义} & \textbf{风险} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{选项} & \textbf{含义} & \textbf{风险} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\code{/arch:SSE2} & x86 默认 & 安全 \\
+\code{/arch:AVX} & 使用 AVX & 老 CPU 会崩 \\
+\code{/arch:AVX2} & 使用 AVX2 & \textbf{在不支持的机器上直接 \code{0xC000001D}（非法指令）} \\
+\code{/arch:AVX512} & 使用 AVX-512 & 同上，且支持面更窄 \\
+\end{longtable}
+
+\begin{keybox}[实战场景]
+为了那点性能开了 \code{/arch:AVX2}，结果在客户的旧机器上一启动就崩，报 \code{0xC000001D}。\textbf{要么用运行时分发（同一份代码编多个版本 + CPU 特性检测），要么老实留在 \code{/arch:SSE2}。}详见 \textbf{第 12 章}。
+\end{keybox}
+
+\section{C/C++ > 语言}
+
+\begin{longtable}{L{3.8cm}L{3.6cm}L{7.0cm}}
+\toprule
+\textbf{字段} & \textbf{开关} & \textbf{说明} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{字段} & \textbf{开关} & \textbf{说明} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{C++ 语言标准} & \code{/std:} & 见 2.5 节 \\
+\textbf{符合模式} & \code{/permissive-} & 严格标准一致性，拒绝微软扩展 \\
+\textbf{禁用特定警告} & \code{/wd####} & 如 \code{/wd4996} \\
+\textbf{将警告视为错误} & \code{/WX} & \\
+\textbf{C++ 异常} & \code{/EHsc} & 见 6.2 \\
+\textbf{OpenMP 支持} & \code{/openmp} & 使用 \code{#pragma omp} \\
+\textbf{C++ 模块支持} & 见下 & \\
+\end{longtable}
+
+\subsection{符合模式 \code{/permissive-}}
+
+\code{/permissive-} 关闭一堆历史遗留的宽松行为（两阶段名称查找、模板中的 \code{typename} 宽容处理等）。\textbf{\code{/std:c++20} 与 \code{/std:c++latest} 会自动启用它}，所以选了 C++20 之后，老代码可能突然报一堆错——这不是新标准的问题，而是\textbf{编译器终于按标准严格检查了}。
+
+\subsection{关于 \_\_cplusplus}
+
+MSVC 为了兼容老代码，\code{__cplusplus} \textbf{默认永远是 \code{199711L}}。想让它反映真实标准，需要显式开启：
+
+\ui{C/C++ > 命令行 > 其他选项} 里加 \code{/Zc:__cplusplus}。
+
+或者干脆用 \code{_MSVC_LANG} 判断（推荐）：
+
+\begin{lstlisting}[style=cppstyle]
+#if _MSVC_LANG >= 202002L
+    // C++20 及以上
+#endif
+\end{lstlisting}
+
+\subsection{C++ 模块}
+
+C++20 模块在 MSVC 上已可用，但需要显式开启。在属性页里把相关选项打开（或在命令行加 \code{/std:c++20 /experimental:module} 之类），并把模块接口单元（\code{.ixx}）的文件项类型设为“\textbf{C/C++ 编译器}”。模块的构建配置比传统头文件复杂，\textbf{团队项目里建议先用 CMake 统一管理}，见 \textbf{第 10 章}。
+
+\section{C/C++ > 高级}
+
+\begin{longtable}{L{4.8cm}L{3.6cm}L{6.0cm}}
+\toprule
+\textbf{字段} & \textbf{开关} & \textbf{用途} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{字段} & \textbf{开关} & \textbf{用途} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{强制包含文件} & \code{/FI} & 每个源文件隐式包含某头文件 \\
+\textbf{编译为} & \code{/TC} \code{/TP} & 强制按 C 或 C++ 编译 \\
+\textbf{禁用特定警告} & \code{/wd} & \\
+\textbf{显示包含文件} & \code{/showIncludes} & 排查“这个头文件从哪来的” \\
+\textbf{预编译头} & \code{/Yc} \code{/Yu} \code{/Fp} & 见第 12 节 \\
+\textbf{调用约定} & \code{/Gd} \code{/Gr} \code{/Gz} & 一般不改 \\
+\end{longtable}
+
+\subsection{强制包含 \code{/FI}}
+
+\begin{lstlisting}[style=textstyle, breaklines=true]
+/FI"pch.h"
+\end{lstlisting}
+
+等价于在每个 \code{.cpp} 顶部自动写一行 \code{#include "pch.h"}。配合预编译头使用，或者用来统一注入版本宏。
+
+\subsection{显示包含文件 \code{/showIncludes}}
+
+排查头文件依赖的神器。开启后，\textbf{输出窗口}会列出每个源文件实际包含的全部头文件（带层级缩进）：
+
+\begin{lstlisting}[style=textstyle, breaklines=true]
+1>注意: 包含文件:  D:\cpp\App\pch.h
+1>注意: 包含文件:  C:\Program Files\...\include\vector
+1>注意: 包含文件:  D:\cpp\App\config.h
+\end{lstlisting}
+
+配合第 9 章的 Build Insights，可以精确定位“哪个头文件拖慢了编译”。
+
+\section{链接器}
+
+\subsection{常规}
+
+\begin{longtable}{L{3.8cm}L{3.4cm}L{7.2cm}}
+\toprule
+\textbf{字段} & \textbf{开关} & \textbf{说明} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{字段} & \textbf{开关} & \textbf{说明} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{附加库目录} & \code{/LIBPATH} & \code{.lib} 搜索路径 \\
+\textbf{启用增量链接} & \code{/INCREMENTAL} & Debug 默认开；Release 建议关 \\
+\textbf{忽略导入库} & \code{/IGNORE} & \\
+\end{longtable}
+
+\subsection{输入}
+
+\begin{longtable}{L{3.6cm}L{3.8cm}L{7.0cm}}
+\toprule
+\textbf{字段} & \textbf{开关} & \textbf{说明} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{字段} & \textbf{开关} & \textbf{说明} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{附加依赖项} & 直接写 \code{.lib} 名 & 如 \code{fmt.lib;ws2_32.lib} \\
+\textbf{忽略特定默认库} & \code{/NODEFAULTLIB} & 谨慎使用 \\
+\textbf{强制符号引用} & \code{/INCLUDE} & 强制拉入某个符号（常用于静态库注册） \\
+\end{longtable}
+
+\begin{tipbox}[提示]
+\textbf{“附加库目录”负责去哪找，“附加依赖项”负责找什么}——两者要配套设置，只设一个必然报 \code{LNK2019} 或 \code{LNK1104}。
+\end{tipbox}
+
+\subsection{系统}
+
+\begin{longtable}{L{3.8cm}L{5.0cm}L{5.6cm}}
+\toprule
+\textbf{字段} & \textbf{开关} & \textbf{说明} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{字段} & \textbf{开关} & \textbf{说明} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{子系统} & \code{/SUBSYSTEM:CONSOLE} & 控制台程序：有黑窗口，入口 \code{main} \\
+ & \code{/SUBSYSTEM:WINDOWS} & GUI 程序：无黑窗口，入口 \code{WinMain} \\
+\textbf{堆栈保留大小} & \code{/STACK} & 默认 1 MB；递归很深的算法需要加大 \\
+\end{longtable}
+
+\begin{warnbox}[注意]
+\textbf{子系统选错会导致 \code{LNK2019: 无法解析的外部符号 main}（或 \code{WinMain}）}。控制台程序误设成 WINDOWS，就会出现“找不到 \code{main}”这种看似荒谬的报错——因为链接器在找 \code{WinMain}。
+\end{warnbox}
+
+\subsection{优化}
+
+\begin{longtable}{L{4.6cm}L{2.8cm}L{7.0cm}}
+\toprule
+\textbf{字段} & \textbf{开关} & \textbf{说明} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{字段} & \textbf{开关} & \textbf{说明} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{链接时间代码生成} & \code{/LTCG} & \textbf{必须与 \code{/GL} 成对} \\
+\textbf{引用} & \code{/OPT:REF} & 删除未引用代码，Release 默认开 \\
+\textbf{启用 COMDAT 折叠} & \code{/OPT:ICF} & 合并相同函数，Release 默认开 \\
+\end{longtable}
+
+\subsection{高级}
+
+\begin{longtable}{L{3.4cm}L{3.6cm}L{7.4cm}}
+\toprule
+\textbf{字段} & \textbf{开关} & \textbf{建议} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{字段} & \textbf{开关} & \textbf{建议} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{入口点} & \code{/ENTRY} & 一般不用手改 \\
+\textbf{随机基址} & \code{/DYNAMICBASE} & \textbf{[OK]} 保持开启（安全缓解） \\
+\textbf{数据执行保护} & \code{/NXCOMPAT} & \textbf{[OK]} 保持开启 \\
+\textbf{目标计算机} & \code{/MACHINE} & 通常自动 \\
+\end{longtable}
+
+\subsection{调试}
+
+\begin{longtable}{L{4.0cm}L{4.2cm}L{6.2cm}}
+\toprule
+\textbf{字段} & \textbf{开关} & \textbf{说明} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{字段} & \textbf{开关} & \textbf{说明} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{生成调试信息} & \code{/DEBUG} & 配合“生成完整程序数据库”= \code{/DEBUG:FULL} \\
+\textbf{生成程序数据库文件} & \code{/PDB} & PDB 路径与文件名 \\
+\sout{生成快速链接调试信息} & \sout{\texttt{/DEBUG:FASTLINK}} & \textbf{VS 2026 已移除}，老项目需改掉 \\
+\end{longtable}
+
+\section{生成事件}
+
+三个入口，按执行时机排列：
+
+\begin{lstlisting}[style=textstyle, breaklines=true]
+生成前事件  ->  编译  ->  链接前事件  ->  链接  ->  生成后事件
+\end{lstlisting}
+
+常用于：拷贝依赖 DLL 到输出目录、生成版本头文件、调用代码生成器。
+
+\textbf{可用宏}：
+
+\begin{longtable}{L{8.2cm}L{6.4cm}}
+\toprule
+\textbf{宏} & \textbf{含义} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{宏} & \textbf{含义} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\code{$(SolutionDir)} & 解决方案目录（\textbf{含结尾反斜杠}） \\
+\code{$(ProjectDir)} & 项目目录（含结尾反斜杠） \\
+\code{$(ProjectName)} / \code{$(SolutionName)} & 名称 \\
+\code{$(OutDir)} & 输出目录（含结尾反斜杠） \\
+\code{$(IntDir)} & 中间目录 \\
+\code{$(TargetPath)} & 输出文件的完整路径 \\
+\code{$(TargetName)} / \code{$(TargetExt)} & 文件名与扩展名 \\
+\code{$(Configuration)} / \code{$(Platform)} & 当前配置与平台 \\
+\end{longtable}
+
+一个典型的生成后事件（把第三方 DLL 拷到输出目录）：
+
+\begin{lstlisting}[style=shellstyle]
+xcopy /Y /I "$(SolutionDir)third_party\bin\$(Platform)\*.dll" "$(OutDir)"
+\end{lstlisting}
+
+\begin{warnbox}[注意]
+\code{$(SolutionDir)} 只在\textbf{通过解决方案构建}时才有定义。如果直接 \code{msbuild MyProject.vcxproj}（不经过 \code{.sln}），它是空的——生成事件会静默失败。稳妥写法是用 \code{$(ProjectDir)} 加相对路径。
+\end{warnbox}
+
+\section{调试属性页}
+
+\textbf{配置属性 > 调试} 决定了按 \code{F5} 时发生什么：
+
+\begin{longtable}{L{3.6cm}L{11.0cm}}
+\toprule
+\textbf{字段} & \textbf{说明} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{字段} & \textbf{说明} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{命令} & 要启动的可执行文件（默认 \code{$(TargetPath)}） \\
+\textbf{命令参数} & 传给程序的命令行参数 \\
+\textbf{工作目录} & 程序的当前目录（\textbf{读相对路径文件时很关键}） \\
+\textbf{环境} & 临时环境变量，如 \code{PATH=$(OutDir);}\codeP{%PATH%} \\
+\textbf{调试器类型} & 自动 / 仅限本机 / 混合等 \\
+\textbf{合并环境} & 是否继承系统环境变量 \\
+\end{longtable}
+
+\begin{tipbox}[提示]
+\textbf{VS 2026 也可以直接从工具栏设置命令行参数}，不必每次都进属性页。这一能力现在对 \code{.vcxproj}、CMake 与 Unreal 项目都可用，且不再依赖“使用 C++ 的游戏开发”工作负荷。
+\end{tipbox}
+
+\textbf{注意}：这些设置存在 \textbf{\code{.vcxproj.user}} 里，是\textbf{本机}配置，不要提交到 Git。团队共用的参数应写进 \code{.vcxproj}。
+
+\begin{keybox}[实战场景]
+程序在工作目录不对时读不到配置文件。把“工作目录”设成 \code{$(ProjectDir)}，并在代码里用相对路径 \code{"config/settings.ini"}，本地调试就稳定了。
+\end{keybox}
+
+\section{预编译头（PCH）实践}
+
+\textbf{目的}：把那些“又大又几乎不变”的头文件（\code{<vector>}、\code{<string>}、Windows SDK 头）\textbf{只解析一次}，后续编译直接复用，能显著加快构建。
+
+\textbf{配置步骤}：
+
+\begin{enumerate}
+  \item 建 \code{pch.h}，把常用头文件放进去；
+  \item 建 \code{pch.cpp}，内容只有一行 \code{#include "pch.h"}；
+  \item 选中 \code{pch.cpp} $\rightarrow$ \ui{属性 > C/C++ > 预编译头 > 预编译头} 设为 \textbf{创建 (/Yc)}；
+  \item 选中其余所有 \code{.cpp} $\rightarrow$ 同一项设为 \textbf{使用 (/Yu)}；
+  \item 可选：在 \ui{C/C++ > 高级 > 强制包含文件} 里填 \code{pch.h}。
+\end{enumerate}
+
+\textbf{常见报错}：
+
+\begin{longtable}{L{8.2cm}L{3.2cm}L{3.0cm}}
+\toprule
+\textbf{报错} & \textbf{原因} & \textbf{处置} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{报错} & \textbf{原因} & \textbf{处置} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\code{C1010: 查找预编译头时遇到意外的文件结尾} & 某个 \code{.cpp} 没包含 \code{pch.h} & 在文件首行加 \code{#include "pch.h"} \\
+\code{C1853: 预编译头文件来自早期版本的编译器} & 工具集换了但 PCH 没重建 & \textbf{重新生成}解决方案 \\
+\code{C1083: 无法打开预编译头文件} & \code{pch.cpp} 没设为“创建” & 检查第 3 步 \\
+\end{longtable}
+
+\begin{warnbox}[注意]
+\code{/Yc} 只能有\textbf{一个}文件。把它误设到多个 \code{.cpp} 上会报重复定义。
+\end{warnbox}
+
+\section{多核编译与构建速度}
+
+按性价比排序：
+
+\begin{longtable}{L{4.2cm}L{6.6cm}L{3.6cm}}
+\toprule
+\textbf{手段} & \textbf{做法} & \textbf{收益} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{手段} & \textbf{做法} & \textbf{收益} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{\code{/MP}} & \ui{C/C++ > 常规 > 多处理器编译} = 是 & 单项目内并行，收益最大 \\
+\textbf{MSBuild 并行项目} & \ui{工具 > 选项 > 项目和解决方案 > 最大并行项目生成数} & 多项目解决方案 \\
+\textbf{预编译头} & 见第 12 节 & 大型项目显著 \\
+\textbf{\code{/GL} + \code{/LTCG}} & Release & 提升运行性能，但\textbf{会拖慢链接} \\
+\textbf{关闭增量链接} & Release 下 & 避免增量链接的额外开销 \\
+\textbf{减少头文件依赖} & 前置声明、PIMPL & 治本 \\
+\textbf{\code{/showIncludes} 或 Build Insights} & 找出“谁最慢” & 定位问题 \\
+\end{longtable}
+
+\begin{tipbox}[提示]
+MSVC 14.51 起启用了\textbf{调试信息裁剪}来减小 PDB 体积，大型项目的 \code{.pdb} 会明显变小。如果 PDB 曾经大到难以管理，升级工具集本身就有收益。
+\end{tipbox}
+
+\section{配置的三种持久化方式}
+
+\begin{longtable}{L{5.2cm}L{2.6cm}L{6.4cm}}
+\toprule
+\textbf{方式} & \textbf{载体} & \textbf{优点} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{方式} & \textbf{载体} & \textbf{优点} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{图形界面} & \code{.vcxproj} & 直观、即时生效 \\
+\textbf{属性表} & \code{.props} & 一处修改、多项目共享 \\
+\textbf{\code{Directory.Build.props}} & 目录级 XML & \textbf{自动应用}到该目录及子目录所有项目 \\
+\end{longtable}
+
+\begin{longtable}{L{5.2cm}L{5.0cm}L{4.0cm}}
+\toprule
+\textbf{方式} & \textbf{缺点} & \textbf{适用} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{方式} & \textbf{缺点} & \textbf{适用} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\textbf{图形界面} & 逐个项目改，易漏配置 & 单人、少量项目 \\
+\textbf{属性表} & 需要理解导入顺序 & 团队统一规范 \\
+\textbf{\code{Directory.Build.props}} & 隐式生效，新人容易“找不到配置在哪” & 整个仓库统一基线 \\
+\end{longtable}
+
+\code{Directory.Build.props} 示例：
+
+\begin{lstlisting}[style=xmlstyle]
+<Project>
+  <PropertyGroup>
+    <LanguageStandard>stdcpp20</LanguageStandard>
+    <WarningLevel>Level4</WarningLevel>
+    <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+</Project>
+\end{lstlisting}
+
+\begin{warnbox}[注意]
+\code{Directory.Build.props} 是\textbf{从项目目录向上查找}并自动导入的，\textbf{不需要在项目里写 \code{<Import>}}。好处是统一，坏处是“这个 \code{/W4} 到底是哪来的”——排查时记得往上看目录树。属性表的导入顺序见 \textbf{第 5 章}。
+\end{warnbox}
+
+\section{从默认配置到生产配置：改动清单}
+
+\begin{longtable}{L{3.4cm}L{3.0cm}L{3.4cm}L{4.4cm}}
+\toprule
+\textbf{配置项} & \textbf{Debug} & \textbf{Release} & \textbf{理由} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{配置项} & \textbf{Debug} & \textbf{Release} & \textbf{理由} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+优化 & \code{/Od} & \code{/O2} & 调试要准，发布要快 \\
+调试信息 & \code{/Zi} & \code{/Zi}（保留 PDB 并归档） & 线上崩溃要靠它分析 \\
+运行库 & \code{/MDd} & \code{/MD} & 与可再发行包配套 \\
+警告等级 & \code{/W4} & \code{/W4} + \textbf{\code{/WX}} & 发布前零警告 \\
+多处理器编译 & \code{/MP} & \code{/MP} & 都受益 \\
+字符集 & Unicode & Unicode & 保持一致 \\
+C++ 标准 & \code{/std:c++20} & \code{/std:c++20} & \textbf{两套必须一致}，否则行为不同 \\
+\code{/GL} + \code{/LTCG} & 关 & 开 & 跨模块优化 \\
+\code{/arch:} & SSE2 & SSE2（除非确定目标机支持） & 避免非法指令崩溃 \\
+增量链接 & 开 & 关 & 发布构建要干净 \\
+调试属性页参数 & 本地路径 & \textbf{清空} & 不要把本机路径带进发布 \\
+\code{/utf-8} & 开 & 开 & 中文一致 \\
+\end{longtable}
+
+\begin{warnbox}[注意]
+\textbf{Debug 与 Release 的“语言标准”必须一致}。Debug 用 C++20、Release 用 C++17，会导致某些代码只在一种配置下能编译，或产生不同的重载决议——这是非常隐蔽的一类 bug。
+\end{warnbox}
+
+\section{小结}
+
+\begin{itemize}
+  \item \textbf{属性页改的是“当前配置 $\times$ 平台”}，改完记得切到 \textbf{所有配置} 或逐个检查——这是最高频的踩坑点。
+  \item \textbf{C++ 语言标准}：新建项目默认 \code{/std:c++20}；没有 \code{/std:c++26}；\code{/std:c++20} 与 \code{/std:c++latest} 会隐含 \code{/permissive-}。
+  \item \textbf{运行库 \code{/MD} 与 \code{/MT} 必须全局一致}，混用会导致堆损坏；DLL 边界上的混用链接器发现不了。
+  \item \textbf{\code{/GL} 与 \code{/LTCG} 必须成对}；\code{/Gy} 配合 \code{/OPT:REF} 能减小体积。
+  \item \textbf{\code{/utf-8}} 是现代项目处理中文源码的推荐做法。
+  \item \textbf{\code{/arch:AVX2} 在旧 CPU 上会直接崩溃}（\code{0xC000001D}），非必要不要开。
+  \item \textbf{子系统选错}会报“找不到 \code{main}”；\textbf{配置类型选错}会报“必须定义入口点”。
+  \item \textbf{\code{/DEBUG:FASTLINK} 已在 VS 2026 移除}，用 \code{/DEBUG:FULL}。
+  \item 改 \code{.vcxproj} 的 \code{PreprocessorDefinitions} 时，\textbf{别漏掉} \codeP{%(PreprocessorDefinitions)}。
+  \item 团队统一配置优先用 \textbf{\code{Directory.Build.props}} 或\textbf{属性表}，而不是逐个项目点属性页。
+\end{itemize}
+
+\section{练习题}
+
+\begin{enumerate}
+  \item 打开一个控制台项目，把“配置”切成 \textbf{所有配置}，统一把语言标准设为 \code{/std:c++20}、警告等级设为 \code{/W4}；然后逐个配置切过去确认都生效了。
+  \item 分别在 \code{/std:c++14} 与 \code{/std:c++20} 下编译同一段使用了 C++17 结构化绑定的代码，记录两次报错信息，并解释为什么。
+  \item 把项目的运行库从 \code{/MD} 改成 \code{/MT}，用 \code{dumpbin /dependents} 对比改前改后的依赖列表，说明差异。
+  \item 故意把“子系统”从 \code{CONSOLE} 改成 \code{WINDOWS}，观察报错；再改回来。解释链接器在找什么。
+  \item 为一个含 10 个以上 \code{.cpp} 的项目配置预编译头，记录开启前后的构建耗时；再故意让一个文件漏掉 \code{#include "pch.h"}，记录报错码。
+  \item 用 \code{/showIncludes} 找出某个源文件包含的头文件总数，再指出其中最“重”的两个并说明理由。
+  \item 写一份 \code{Directory.Build.props}，为某目录下所有项目统一开启 \code{/W4}、\code{/MP}、\code{/utf-8}，并验证新建的项目自动继承了这些设置。
+  \item 用“命令行”子页（或“所有选项”页）抄下 Debug|x64 与 Release|x64 两份完整命令行，逐项对比差异并解释每一项的作用。
+\end{enumerate}
+
+\section{相关笔记}
+
+\begin{itemize}
+  \item \textbf{本教程}：\textbf{Visual Studio 2026 使用教程}
+  \item \textbf{上一章}：\textbf{项目与解决方案管理}
+  \item \textbf{下一章}：\textbf{代码编辑与 IntelliSense}
+  \item \textbf{发布与部署}：\textbf{发布与部署}
+  \item \textbf{CMake}：\textbf{CMake 使用指南}
+\end{itemize}

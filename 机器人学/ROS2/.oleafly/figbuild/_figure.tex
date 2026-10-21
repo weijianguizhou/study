@@ -1,0 +1,39 @@
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage{tikz}
+\usepackage{lmodern}
+\usepackage{ctex}
+\usetikzlibrary{positioning,arrows.meta,calc}
+\begin{document}
+\definecolor{figred}{HTML}{E74C3C}
+\begin{tikzpicture}[
+  font=\small,
+  proc/.style={draw=figred, line width=1pt, rounded corners=1.5pt, fill=white,
+               minimum height=0.75cm, minimum width=1.5cm, align=center,
+               inner xsep=4pt, inner ysep=3pt},
+  txt/.style={align=center, inner sep=0pt},
+  note/.style={align=left, inner sep=0pt, text width=11.5cm},
+  ar/.style={-{Stealth[length=2.2mm,width=2mm]}, line width=0.8pt, draw=black!80}
+]
+\node[txt, anchor=west] (src) at (0,0) {源文件\\[-1pt]{\footnotesize (.h, .cpp 等)}};
+\node[proc, right=6mm of src] (pre) {预编译};
+\node[proc, right=6.5mm of pre] (comp) {编译};
+\node[proc, right=6.5mm of comp] (asm) {汇编};
+\node[proc, right=6.5mm of asm] (link) {链接};
+\node[txt, right=6mm of link] (exe) {可执行文件};
+
+\node[txt, below=9mm of link] (lib) {.a / .lib\\[-1pt]{\footnotesize .so / .dll}};
+
+\draw[dashed, draw=black!45, line width=0.7pt]
+  ([xshift=-3.2mm,yshift=-3.2mm]link.south west) rectangle
+  ([xshift=3.2mm,yshift=3.2mm]link.north east);
+
+\draw[ar] (src) -- (pre);
+\draw[ar] (pre) -- (comp);
+\draw[ar] (comp) -- (asm);
+\draw[ar] (asm) -- ([xshift=-3.2mm]link.west);
+\draw[ar] (lib.north) -- ([yshift=-3.2mm]link.south);
+\draw[ar] ([xshift=3.2mm]link.east) -- (exe);
+
+\node[note, anchor=north west] at (0,-2.9) {静态库、动态库的区别来自【链接阶段】如何处理库，\\ 链接成可执行程序，分别称为静态链接方式、动态链接方式。};
+\end{tikzpicture}
+\end{document}

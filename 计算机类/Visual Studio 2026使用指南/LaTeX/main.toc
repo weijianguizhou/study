@@ -1,0 +1,485 @@
+\contentsline {chapter}{\numberline {第一章}绪论}{2}{chapter.1}%
+\contentsline {section}{\numberline {1.1}这是一本什么样的书}{2}{section.1.1}%
+\contentsline {section}{\numberline {1.2}全书结构}{2}{section.1.2}%
+\contentsline {section}{\numberline {1.3}环境要求}{2}{section.1.3}%
+\contentsline {section}{\numberline {1.4}排版约定}{3}{section.1.4}%
+\contentsline {section}{\numberline {1.5}关于代码示例}{3}{section.1.5}%
+\contentsline {section}{\numberline {1.6}遇到问题怎么办}{4}{section.1.6}%
+\contentsline {chapter}{\numberline {第二章}Visual Studio 2026 概览与版本选择}{5}{chapter.2}%
+\contentsline {section}{\numberline {2.1}版本谱系：从 17.x 到 18.x}{5}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}版本号怎么读}{5}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}关键时间线}{5}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}与 Visual Studio 2022 的关系}{6}{subsection.2.1.3}%
+\contentsline {section}{\numberline {2.2}选择版本（SKU）}{6}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}四种产品}{6}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}通道：Stable 与 Insiders}{7}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}授权提醒}{7}{subsection.2.2.3}%
+\contentsline {section}{\numberline {2.3}MSVC 工具集：本代最大的架构变化}{7}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}版本解耦}{7}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}平台工具集 \texttt {v145}}{8}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}二进制兼容性}{8}{subsection.2.3.3}%
+\contentsline {subsection}{\numberline {2.3.4}精确锁定工具集版本}{9}{subsection.2.3.4}%
+\contentsline {section}{\numberline {2.4}C++ 语言与标准库现状}{9}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}一个必须澄清的坑：默认标准有两个}{9}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}可用的标准档位}{10}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.3}C++23 与 C++26}{11}{subsection.2.4.3}%
+\contentsline {section}{\numberline {2.5}面向 C++ 的 IDE 新特性速览}{11}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}界面与编辑}{11}{subsection.2.5.1}%
+\contentsline {subsection}{\numberline {2.5.2}项目系统与构建}{11}{subsection.2.5.2}%
+\contentsline {subsection}{\numberline {2.5.3}调试与诊断}{12}{subsection.2.5.3}%
+\contentsline {subsection}{\numberline {2.5.4}AI 辅助}{12}{subsection.2.5.4}%
+\contentsline {section}{\numberline {2.6}破坏性变更与迁移}{12}{section.2.6}%
+\contentsline {subsection}{\numberline {2.6.1}已移除的功能}{12}{subsection.2.6.1}%
+\contentsline {subsection}{\numberline {2.6.2}已弃用的功能}{13}{subsection.2.6.2}%
+\contentsline {subsection}{\numberline {2.6.3}目标平台下限提高}{13}{subsection.2.6.3}%
+\contentsline {subsection}{\numberline {2.6.4}值得留意的新警告与行为变化}{13}{subsection.2.6.4}%
+\contentsline {subsection}{\numberline {2.6.5}升级的推荐路径}{13}{subsection.2.6.5}%
+\contentsline {section}{\numberline {2.7}我该装哪个？决策清单}{14}{section.2.7}%
+\contentsline {section}{\numberline {2.8}小结}{14}{section.2.8}%
+\contentsline {section}{\numberline {2.9}练习题}{14}{section.2.9}%
+\contentsline {section}{\numberline {2.10}相关笔记}{15}{section.2.10}%
+\contentsline {section}{\numberline {2.11}参考链接}{15}{section.2.11}%
+\contentsline {chapter}{\numberline {第三章}安装与环境配置}{16}{chapter.3}%
+\contentsline {section}{\numberline {3.1}装之前：先确认三件事}{16}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}主机系统必须是 Windows 11}{16}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}硬件与磁盘}{16}{subsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.1.3}和 VS 2022 并存}{17}{subsection.3.1.3}%
+\contentsline {section}{\numberline {3.2}下载与启动安装器}{17}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}三种获取方式}{17}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}命令行安装（适合批量部署）}{18}{subsection.3.2.2}%
+\contentsline {section}{\numberline {3.3}选择工作负荷：这一步决定你以后能不能干活}{18}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}必选：使用 C++ 的桌面开发}{19}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}可选工作负荷}{19}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}值得单独勾选的"单个组件"}{19}{subsection.3.3.3}%
+\contentsline {section}{\numberline {3.4}安装位置与磁盘规划}{20}{section.3.4}%
+\contentsline {section}{\numberline {3.5}首次启动}{20}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}登录与账户}{20}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}选择开发设置}{21}{subsection.3.5.2}%
+\contentsline {subsection}{\numberline {3.5.3}挑一套主题}{21}{subsection.3.5.3}%
+\contentsline {section}{\numberline {3.6}验证安装：确认工具链真的可用}{21}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}从"开发者命令提示符"验证}{21}{subsection.3.6.1}%
+\contentsline {subsection}{\numberline {3.6.2}验证 CMake 与 vcpkg}{21}{subsection.3.6.2}%
+\contentsline {subsection}{\numberline {3.6.3}用 IDE 跑一个最小程序}{22}{subsection.3.6.3}%
+\contentsline {section}{\numberline {3.7}工具集版本管理}{22}{section.3.7}%
+\contentsline {subsection}{\numberline {3.7.1}三种工具集并存}{22}{subsection.3.7.1}%
+\contentsline {subsection}{\numberline {3.7.2}安装预览工具集}{22}{subsection.3.7.2}%
+\contentsline {subsection}{\numberline {3.7.3}安装旧工具集 / 在升级后恢复旧工具集}{22}{subsection.3.7.3}%
+\contentsline {subsection}{\numberline {3.7.4}锁定工具集版本}{22}{subsection.3.7.4}%
+\contentsline {section}{\numberline {3.8}更新、修复与卸载}{23}{section.3.8}%
+\contentsline {subsection}{\numberline {3.8.1}更新}{23}{subsection.3.8.1}%
+\contentsline {subsection}{\numberline {3.8.2}修复}{23}{subsection.3.8.2}%
+\contentsline {subsection}{\numberline {3.8.3}修改（补装/卸载组件）}{23}{subsection.3.8.3}%
+\contentsline {subsection}{\numberline {3.8.4}卸载}{23}{subsection.3.8.4}%
+\contentsline {section}{\numberline {3.9}常见安装问题}{23}{section.3.9}%
+\contentsline {section}{\numberline {3.10}小结}{24}{section.3.10}%
+\contentsline {section}{\numberline {3.11}练习题}{24}{section.3.11}%
+\contentsline {section}{\numberline {3.12}相关笔记}{25}{section.3.12}%
+\contentsline {chapter}{\numberline {第四章}界面与工作区}{26}{chapter.4}%
+\contentsline {section}{\numberline {4.1}起始窗口}{26}{section.4.1}%
+\contentsline {section}{\numberline {4.2}主界面布局总览}{26}{section.4.2}%
+\contentsline {section}{\numberline {4.3}解决方案资源管理器}{27}{section.4.3}%
+\contentsline {section}{\numberline {4.4}代码编辑器}{28}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}文档选项卡}{28}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}编辑器左下角与右下角}{28}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.3}滚动条上的信息}{28}{subsection.4.4.3}%
+\contentsline {section}{\numberline {4.5}工具窗口体系}{28}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}高频窗口}{28}{subsection.4.5.1}%
+\contentsline {subsection}{\numberline {4.5.2}调试期才出现的窗口}{29}{subsection.4.5.2}%
+\contentsline {subsection}{\numberline {4.5.3}查找窗口的两种形态}{29}{subsection.4.5.3}%
+\contentsline {section}{\numberline {4.6}窗口布局管理}{29}{section.4.6}%
+\contentsline {subsection}{\numberline {4.6.1}停靠与浮动}{29}{subsection.4.6.1}%
+\contentsline {subsection}{\numberline {4.6.2}多显示器}{29}{subsection.4.6.2}%
+\contentsline {subsection}{\numberline {4.6.3}保存与切换布局}{29}{subsection.4.6.3}%
+\contentsline {section}{\numberline {4.7}主题、字体与视觉体验}{30}{section.4.7}%
+\contentsline {subsection}{\numberline {4.7.1}主题}{30}{subsection.4.7.1}%
+\contentsline {subsection}{\numberline {4.7.2}自定义主题颜色}{30}{subsection.4.7.2}%
+\contentsline {subsection}{\numberline {4.7.3}字体与颜色}{30}{subsection.4.7.3}%
+\contentsline {section}{\numberline {4.8}快捷键体系与自定义}{30}{section.4.8}%
+\contentsline {subsection}{\numberline {4.8.1}为什么值得花十分钟学}{30}{subsection.4.8.1}%
+\contentsline {subsection}{\numberline {4.8.2}必背的一批}{30}{subsection.4.8.2}%
+\contentsline {subsection}{\numberline {4.8.3}自定义快捷键}{31}{subsection.4.8.3}%
+\contentsline {subsection}{\numberline {4.8.4}键盘映射方案}{31}{subsection.4.8.4}%
+\contentsline {subsection}{\numberline {4.8.5}导出与导入设置}{32}{subsection.4.8.5}%
+\contentsline {section}{\numberline {4.9}快速启动：\texttt {Ctrl+Q}}{32}{section.4.9}%
+\contentsline {section}{\numberline {4.10}设置与选项}{32}{section.4.10}%
+\contentsline {subsection}{\numberline {4.10.1}选项对话框}{32}{subsection.4.10.1}%
+\contentsline {subsection}{\numberline {4.10.2}项目级设置 vs 全局设置}{32}{subsection.4.10.2}%
+\contentsline {subsection}{\numberline {4.10.3}设置同步}{33}{subsection.4.10.3}%
+\contentsline {section}{\numberline {4.11}让界面顺手的三条建议}{33}{section.4.11}%
+\contentsline {section}{\numberline {4.12}小结}{33}{section.4.12}%
+\contentsline {section}{\numberline {4.13}练习题}{33}{section.4.13}%
+\contentsline {section}{\numberline {4.14}相关笔记}{34}{section.4.14}%
+\contentsline {chapter}{\numberline {第五章}第一个 C++ 项目}{35}{chapter.5}%
+\contentsline {section}{\numberline {5.1}创建控制台应用}{35}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}走一遍流程}{35}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}模板选哪个}{35}{subsection.5.1.2}%
+\contentsline {section}{\numberline {5.2}项目文件结构解析}{36}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}生成后磁盘上有什么}{36}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}每个文件干什么}{36}{subsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.2.3}在 IDE 里看结构}{37}{subsection.5.2.3}%
+\contentsline {section}{\numberline {5.3}读懂生成的代码}{37}{section.5.3}%
+\contentsline {section}{\numberline {5.4}生成与运行}{38}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}\texttt {Ctrl+F5} 与 \texttt {F5} 的区别}{38}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}生成输出：\texttt {Ctrl+Alt+O}}{38}{subsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4.3}错误去哪看：\texttt {Ctrl+\, Ctrl+E}}{39}{subsection.5.4.3}%
+\contentsline {subsection}{\numberline {5.4.4}输出窗口 vs 程序输出}{39}{subsection.5.4.4}%
+\contentsline {section}{\numberline {5.5}命令行构建}{39}{section.5.5}%
+\contentsline {subsection}{\numberline {5.5.1}用 MSBuild（推荐）}{39}{subsection.5.5.1}%
+\contentsline {subsection}{\numberline {5.5.2}用 devenv（IDE 的命令行外壳）}{40}{subsection.5.5.2}%
+\contentsline {subsection}{\numberline {5.5.3}验证生成结果}{40}{subsection.5.5.3}%
+\contentsline {section}{\numberline {5.6}配置与平台：Debug/x64 是什么意思}{41}{section.5.6}%
+\contentsline {section}{\numberline {5.7}动手改：加一个头文件和一个源文件}{41}{section.5.7}%
+\contentsline {section}{\numberline {5.8}首次运行常见问题}{43}{section.5.8}%
+\contentsline {section}{\numberline {5.9}小结}{43}{section.5.9}%
+\contentsline {section}{\numberline {5.10}练习题}{43}{section.5.10}%
+\contentsline {section}{\numberline {5.11}相关笔记}{44}{section.5.11}%
+\contentsline {chapter}{\numberline {第六章}项目与解决方案管理}{45}{chapter.6}%
+\contentsline {section}{\numberline {6.1}解决方案、项目、文件：三层关系}{45}{section.6.1}%
+\contentsline {section}{\numberline {6.2}项目文件的解剖}{46}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}四个文件各管什么}{46}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}\texttt {.sln}：一份“不打算让你手改”的文本}{46}{subsection.6.2.2}%
+\contentsline {subsection}{\numberline {6.2.3}\texttt {.vcxproj}：一份精简但真实的骨架}{47}{subsection.6.2.3}%
+\contentsline {subsection}{\numberline {6.2.4}\texttt {.vcxproj.filters}}{49}{subsection.6.2.4}%
+\contentsline {section}{\numberline {6.3}SLNX：基于 XML 的新解决方案格式}{49}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}从 \texttt {.sln} 迁移为 \texttt {.slnx}}{50}{subsection.6.3.1}%
+\contentsline {section}{\numberline {6.4}多项目解决方案}{50}{section.6.4}%
+\contentsline {subsection}{\numberline {6.4.1}三种“跨项目用代码”的方式}{50}{subsection.6.4.1}%
+\contentsline {subsection}{\numberline {6.4.2}项目引用到底做了什么}{51}{subsection.6.4.2}%
+\contentsline {section}{\numberline {6.5}库项目：静态库与动态库}{51}{section.6.5}%
+\contentsline {subsection}{\numberline {6.5.1}两种库的差别}{51}{subsection.6.5.1}%
+\contentsline {subsection}{\numberline {6.5.2}导出宏：一份完整可编译的示例}{52}{subsection.6.5.2}%
+\contentsline {section}{\numberline {6.6}解决方案配置与平台}{53}{section.6.6}%
+\contentsline {subsection}{\numberline {6.6.1}配置与平台是一对}{53}{subsection.6.6.1}%
+\contentsline {subsection}{\numberline {6.6.2}配置管理器与多项目对齐}{54}{subsection.6.6.2}%
+\contentsline {section}{\numberline {6.7}属性表（Property Sheets）}{55}{section.6.7}%
+\contentsline {subsection}{\numberline {6.7.1}为什么需要它、怎么用}{55}{subsection.6.7.1}%
+\contentsline {subsection}{\numberline {6.7.2}\texttt {Directory.Build.props}：连“添加”这一步都省掉}{55}{subsection.6.7.2}%
+\contentsline {section}{\numberline {6.8}筛选器与文件夹}{56}{section.6.8}%
+\contentsline {section}{\numberline {6.9}共享项目（Shared Items Project，\texttt {.shproj}）}{57}{section.6.9}%
+\contentsline {section}{\numberline {6.10}项目重定目标：从 \texttt {v143} 到 \texttt {v145}}{58}{section.6.10}%
+\contentsline {subsection}{\numberline {6.10.1}什么时候需要，怎么改}{58}{subsection.6.10.1}%
+\contentsline {subsection}{\numberline {6.10.2}重定目标改写了哪些字段}{58}{subsection.6.10.2}%
+\contentsline {section}{\numberline {6.11}版本控制卫生}{59}{section.6.11}%
+\contentsline {subsection}{\numberline {6.11.1}哪些文件该进 Git}{59}{subsection.6.11.1}%
+\contentsline {subsection}{\numberline {6.11.2}\texttt {.gitignore} 片段}{59}{subsection.6.11.2}%
+\contentsline {section}{\numberline {6.12}实战：一个三项目解决方案}{60}{section.6.12}%
+\contentsline {subsection}{\numberline {6.12.1}目录树与职责划分}{60}{subsection.6.12.1}%
+\contentsline {subsection}{\numberline {6.12.2}引用关系}{61}{subsection.6.12.2}%
+\contentsline {subsection}{\numberline {6.12.3}一步步搭起来}{61}{subsection.6.12.3}%
+\contentsline {section}{\numberline {6.13}小结}{62}{section.6.13}%
+\contentsline {section}{\numberline {6.14}练习题}{62}{section.6.14}%
+\contentsline {section}{\numberline {6.15}相关笔记}{63}{section.6.15}%
+\contentsline {chapter}{\numberline {第七章}项目属性与编译配置}{64}{chapter.7}%
+\contentsline {section}{\numberline {7.1}属性页的入口与结构}{64}{section.7.1}%
+\contentsline {subsection}{\numberline {7.1.1}三种打开方式}{64}{subsection.7.1.1}%
+\contentsline {subsection}{\numberline {7.1.2}顶部两个下拉框：新手最大的坑}{64}{subsection.7.1.2}%
+\contentsline {subsection}{\numberline {7.1.3}属性页树形结构}{65}{subsection.7.1.3}%
+\contentsline {section}{\numberline {7.2}配置属性 > 常规}{66}{section.7.2}%
+\contentsline {subsection}{\numberline {7.2.1}配置类型：改错了会得到奇怪的产物}{67}{subsection.7.2.1}%
+\contentsline {subsection}{\numberline {7.2.2}输出与中间目录}{67}{subsection.7.2.2}%
+\contentsline {subsection}{\numberline {7.2.3}字符集：Unicode 还是多字节}{67}{subsection.7.2.3}%
+\contentsline {subsection}{\numberline {7.2.4}平台工具集与 Windows SDK}{68}{subsection.7.2.4}%
+\contentsline {subsection}{\numberline {7.2.5}C++ 语言标准：属性页选项 $\leftrightarrow $ 编译器开关}{68}{subsection.7.2.5}%
+\contentsline {section}{\numberline {7.3}C/C++ > 常规}{69}{section.7.3}%
+\contentsline {subsection}{\numberline {7.3.1}附加包含目录}{69}{subsection.7.3.1}%
+\contentsline {subsection}{\numberline {7.3.2}调试信息格式}{69}{subsection.7.3.2}%
+\contentsline {subsection}{\numberline {7.3.3}警告等级与 \texttt {/WX}}{69}{subsection.7.3.3}%
+\contentsline {subsection}{\numberline {7.3.4}多处理器编译（\texttt {/MP}）}{70}{subsection.7.3.4}%
+\contentsline {subsection}{\numberline {7.3.5}使用 UTF-8 编码（\texttt {/utf-8}）}{70}{subsection.7.3.5}%
+\contentsline {section}{\numberline {7.4}C/C++ > 优化}{70}{section.7.4}%
+\contentsline {section}{\numberline {7.5}C/C++ > 预处理器}{71}{section.7.5}%
+\contentsline {section}{\numberline {7.6}C/C++ > 代码生成}{72}{section.7.6}%
+\contentsline {subsection}{\numberline {7.6.1}运行库：\texttt {/MD} 还是 \texttt {/MT}}{72}{subsection.7.6.1}%
+\contentsline {subsection}{\numberline {7.6.2}启用 C++ 异常}{72}{subsection.7.6.2}%
+\contentsline {subsection}{\numberline {7.6.3}其他代码生成选项}{73}{subsection.7.6.3}%
+\contentsline {section}{\numberline {7.7}C/C++ > 语言}{73}{section.7.7}%
+\contentsline {subsection}{\numberline {7.7.1}符合模式 \texttt {/permissive-}}{74}{subsection.7.7.1}%
+\contentsline {subsection}{\numberline {7.7.2}关于 \_\_cplusplus}{74}{subsection.7.7.2}%
+\contentsline {subsection}{\numberline {7.7.3}C++ 模块}{74}{subsection.7.7.3}%
+\contentsline {section}{\numberline {7.8}C/C++ > 高级}{74}{section.7.8}%
+\contentsline {subsection}{\numberline {7.8.1}强制包含 \texttt {/FI}}{75}{subsection.7.8.1}%
+\contentsline {subsection}{\numberline {7.8.2}显示包含文件 \texttt {/showIncludes}}{75}{subsection.7.8.2}%
+\contentsline {section}{\numberline {7.9}链接器}{75}{section.7.9}%
+\contentsline {subsection}{\numberline {7.9.1}常规}{75}{subsection.7.9.1}%
+\contentsline {subsection}{\numberline {7.9.2}输入}{75}{subsection.7.9.2}%
+\contentsline {subsection}{\numberline {7.9.3}系统}{75}{subsection.7.9.3}%
+\contentsline {subsection}{\numberline {7.9.4}优化}{76}{subsection.7.9.4}%
+\contentsline {subsection}{\numberline {7.9.5}高级}{76}{subsection.7.9.5}%
+\contentsline {subsection}{\numberline {7.9.6}调试}{76}{subsection.7.9.6}%
+\contentsline {section}{\numberline {7.10}生成事件}{77}{section.7.10}%
+\contentsline {section}{\numberline {7.11}调试属性页}{77}{section.7.11}%
+\contentsline {section}{\numberline {7.12}预编译头（PCH）实践}{78}{section.7.12}%
+\contentsline {section}{\numberline {7.13}多核编译与构建速度}{78}{section.7.13}%
+\contentsline {section}{\numberline {7.14}配置的三种持久化方式}{79}{section.7.14}%
+\contentsline {section}{\numberline {7.15}从默认配置到生产配置：改动清单}{80}{section.7.15}%
+\contentsline {section}{\numberline {7.16}小结}{81}{section.7.16}%
+\contentsline {section}{\numberline {7.17}练习题}{81}{section.7.17}%
+\contentsline {section}{\numberline {7.18}相关笔记}{81}{section.7.18}%
+\contentsline {chapter}{\numberline {第八章}代码编辑与 IntelliSense}{83}{chapter.8}%
+\contentsline {section}{\numberline {8.1}IntelliSense 是什么，不是什么}{83}{section.8.1}%
+\contentsline {subsection}{\numberline {8.1.1}它是另一套引擎，不是编译器}{83}{subsection.8.1.1}%
+\contentsline {subsection}{\numberline {8.1.2}三个必须接受的现象}{83}{subsection.8.1.2}%
+\contentsline {section}{\numberline {8.2}补全与提示}{84}{section.8.2}%
+\contentsline {subsection}{\numberline {8.2.1}五条常用命令}{84}{subsection.8.2.1}%
+\contentsline {subsection}{\numberline {8.2.2}内联提示（Inlay Hints）与悬停信息}{84}{subsection.8.2.2}%
+\contentsline {section}{\numberline {8.3}导航}{85}{section.8.3}%
+\contentsline {subsection}{\numberline {8.3.1}跳转命令总表}{85}{subsection.8.3.1}%
+\contentsline {section}{\numberline {8.4}重构}{85}{section.8.4}%
+\contentsline {subsection}{\numberline {8.4.1}重命名：\texttt {Ctrl+R, Ctrl+R}}{85}{subsection.8.4.1}%
+\contentsline {subsection}{\numberline {8.4.2}创建声明 / 定义、移动定义位置与其它重构}{86}{subsection.8.4.2}%
+\contentsline {section}{\numberline {8.5}C++ 专属的智能建议}{86}{section.8.5}%
+\contentsline {subsection}{\numberline {8.5.1}建议把不修改状态的成员函数标记为 \texttt {const}}{86}{subsection.8.5.1}%
+\contentsline {subsection}{\numberline {8.5.2}建议把只在本文件使用的全局函数标记为 \texttt {static}}{86}{subsection.8.5.2}%
+\contentsline {subsection}{\numberline {8.5.3}未使用的 \#include 会变灰}{87}{subsection.8.5.3}%
+\contentsline {subsection}{\numberline {8.5.4}大小与对齐预览}{87}{subsection.8.5.4}%
+\contentsline {section}{\numberline {8.6}代码片段}{87}{section.8.6}%
+\contentsline {subsection}{\numberline {8.6.1}展开与插入}{87}{subsection.8.6.1}%
+\contentsline {subsection}{\numberline {8.6.2}代码片段管理器与自定义片段}{88}{subsection.8.6.2}%
+\contentsline {section}{\numberline {8.7}格式化与代码风格}{89}{section.8.7}%
+\contentsline {subsection}{\numberline {8.7.1}格式化快捷键}{89}{subsection.8.7.1}%
+\contentsline {subsection}{\numberline {8.7.2}\texttt {.editorconfig}：把风格写进仓库}{89}{subsection.8.7.2}%
+\contentsline {subsection}{\numberline {8.7.3}clang-format 集成}{90}{subsection.8.7.3}%
+\contentsline {section}{\numberline {8.8}编辑器效率技巧}{90}{section.8.8}%
+\contentsline {subsection}{\numberline {8.8.1}多光标与行操作}{90}{subsection.8.8.1}%
+\contentsline {subsection}{\numberline {8.8.2}任务列表、书签、折叠与结构参考线}{91}{subsection.8.8.2}%
+\contentsline {section}{\numberline {8.9}VS 2026 的编辑体验改进}{91}{section.8.9}%
+\contentsline {subsection}{\numberline {8.9.1}C++ 属性语法高亮与快捷键统一}{91}{subsection.8.9.1}%
+\contentsline {subsection}{\numberline {8.9.2}右下角增强控件：查看与修改文件编码}{92}{subsection.8.9.2}%
+\contentsline {subsection}{\numberline {8.9.3}查找排除文件、类视图子串搜索}{92}{subsection.8.9.3}%
+\contentsline {subsection}{\numberline {8.9.4}右键一键生成预处理输出}{92}{subsection.8.9.4}%
+\contentsline {subsection}{\numberline {8.9.5}全代码库语义索引}{93}{subsection.8.9.5}%
+\contentsline {section}{\numberline {8.10}GitHub Copilot 在编辑器里的用法}{93}{section.8.10}%
+\contentsline {subsection}{\numberline {8.10.1}行内补全与 Copilot Chat}{93}{subsection.8.10.1}%
+\contentsline {subsection}{\numberline {8.10.2}右键 Copilot Actions 与 Next Edit Suggestions}{93}{subsection.8.10.2}%
+\contentsline {subsection}{\numberline {8.10.3}隐私与关闭方法}{94}{subsection.8.10.3}%
+\contentsline {section}{\numberline {8.11}常见 IntelliSense 问题与快速处置}{94}{section.8.11}%
+\contentsline {section}{\numberline {8.12}编辑效率速查表}{95}{section.8.12}%
+\contentsline {section}{\numberline {8.13}小结}{96}{section.8.13}%
+\contentsline {section}{\numberline {8.14}练习题}{96}{section.8.14}%
+\contentsline {section}{\numberline {8.15}相关笔记}{96}{section.8.15}%
+\contentsline {chapter}{\numberline {第九章}调试技术详解}{98}{chapter.9}%
+\contentsline {section}{\numberline {9.1}调试的基本流程}{98}{section.9.1}%
+\contentsline {subsection}{\numberline {9.1.1}调试运行与“不调试运行”}{98}{subsection.9.1.1}%
+\contentsline {subsection}{\numberline {9.1.2}调试符号（.pdb）与 Debug 配置}{98}{subsection.9.1.2}%
+\contentsline {subsection}{\numberline {9.1.3}调试器窗口布局与常用快捷键}{99}{subsection.9.1.3}%
+\contentsline {section}{\numberline {9.2}断点体系}{100}{section.9.2}%
+\contentsline {subsection}{\numberline {9.2.1}普通断点与断点图标}{100}{subsection.9.2.1}%
+\contentsline {subsection}{\numberline {9.2.2}条件断点与命中次数}{100}{subsection.9.2.2}%
+\contentsline {subsection}{\numberline {9.2.3}筛选器断点}{101}{subsection.9.2.3}%
+\contentsline {subsection}{\numberline {9.2.4}函数断点}{101}{subsection.9.2.4}%
+\contentsline {subsection}{\numberline {9.2.5}数据断点（监视地址被改写）}{101}{subsection.9.2.5}%
+\contentsline {subsection}{\numberline {9.2.6}临时断点、依赖断点与跟踪点}{102}{subsection.9.2.6}%
+\contentsline {subsection}{\numberline {9.2.7}断点标签、导入导出与断点窗口}{102}{subsection.9.2.7}%
+\contentsline {section}{\numberline {9.3}单步执行}{102}{section.9.3}%
+\contentsline {subsection}{\numberline {9.3.1}单步命令与快捷键}{102}{subsection.9.3.1}%
+\contentsline {subsection}{\numberline {9.3.2}设置下一条语句与“往回走”}{103}{subsection.9.3.2}%
+\contentsline {subsection}{\numberline {9.3.3}“仅我的代码”对单步的影响}{103}{subsection.9.3.3}%
+\contentsline {section}{\numberline {9.4}查看数据}{103}{section.9.4}%
+\contentsline {subsection}{\numberline {9.4.1}数据提示、自动窗口与局部变量}{103}{subsection.9.4.1}%
+\contentsline {subsection}{\numberline {9.4.2}监视窗口与即时窗口}{104}{subsection.9.4.2}%
+\contentsline {subsection}{\numberline {9.4.3}格式说明符与并行监视}{104}{subsection.9.4.3}%
+\contentsline {section}{\numberline {9.5}调用堆栈与线程}{105}{section.9.5}%
+\contentsline {subsection}{\numberline {9.5.1}调用堆栈窗口}{105}{subsection.9.5.1}%
+\contentsline {subsection}{\numberline {9.5.2}并行堆栈与线程窗口}{105}{subsection.9.5.2}%
+\contentsline {subsection}{\numberline {9.5.3}多线程死锁的排查思路}{105}{subsection.9.5.3}%
+\contentsline {section}{\numberline {9.6}内存与底层调试}{106}{section.9.6}%
+\contentsline {subsection}{\numberline {9.6.1}内存窗口}{106}{subsection.9.6.1}%
+\contentsline {subsection}{\numberline {9.6.2}反汇编窗口与寄存器窗口}{106}{subsection.9.6.2}%
+\contentsline {section}{\numberline {9.7}异常处理}{106}{section.9.7}%
+\contentsline {subsection}{\numberline {9.7.1}异常设置窗口与“两类异常”}{106}{subsection.9.7.1}%
+\contentsline {subsection}{\numberline {9.7.2}C++ 异常、SEH 与“在 throw 处中断”}{107}{subsection.9.7.2}%
+\contentsline {section}{\numberline {9.8}编辑并继续 / 热重载}{107}{section.9.8}%
+\contentsline {subsection}{\numberline {9.8.1}前提条件}{107}{subsection.9.8.1}%
+\contentsline {subsection}{\numberline {9.8.2}能改什么，不能改什么}{108}{subsection.9.8.2}%
+\contentsline {subsection}{\numberline {9.8.3}陈旧代码与执行点漂移}{108}{subsection.9.8.3}%
+\contentsline {section}{\numberline {9.9}高级调试手段}{108}{section.9.9}%
+\contentsline {subsection}{\numberline {9.9.1}附加到进程与远程调试}{108}{subsection.9.9.1}%
+\contentsline {subsection}{\numberline {9.9.2}转储文件调试}{109}{subsection.9.9.2}%
+\contentsline {subsection}{\numberline {9.9.3}OutputDebugString、TRACE 与 assert}{109}{subsection.9.9.3}%
+\contentsline {subsection}{\numberline {9.9.4}调试时的环境变量与命令行参数}{110}{subsection.9.9.4}%
+\contentsline {section}{\numberline {9.10}实战示例}{110}{section.9.10}%
+\contentsline {subsection}{\numberline {9.10.1}用数据断点抓数组越界}{111}{subsection.9.10.1}%
+\contentsline {subsection}{\numberline {9.10.2}用断点 + 监视 + 调用堆栈抓空指针}{111}{subsection.9.10.2}%
+\contentsline {section}{\numberline {9.11}小结}{112}{section.9.11}%
+\contentsline {section}{\numberline {9.12}练习题}{112}{section.9.12}%
+\contentsline {section}{\numberline {9.13}相关笔记}{113}{section.9.13}%
+\contentsline {chapter}{\numberline {第十章}性能分析与诊断}{114}{chapter.10}%
+\contentsline {section}{\numberline {10.1}诊断工具窗口（调试时）}{114}{section.10.1}%
+\contentsline {subsection}{\numberline {10.1.1}打开方式与面板构成}{114}{subsection.10.1.1}%
+\contentsline {subsection}{\numberline {10.1.2}CPU 使用率：调用树与热路径}{114}{subsection.10.1.2}%
+\contentsline {subsection}{\numberline {10.1.3}内存使用率、事件与时间线}{115}{subsection.10.1.3}%
+\contentsline {section}{\numberline {10.2}性能探查器}{115}{section.10.2}%
+\contentsline {subsection}{\numberline {10.2.1}启动与 C++ 可用的工具}{115}{subsection.10.2.1}%
+\contentsline {subsection}{\numberline {10.2.2}采样与插桩的区别}{115}{subsection.10.2.2}%
+\contentsline {subsection}{\numberline {10.2.3}内存、文件 I/O 与并发}{116}{subsection.10.2.3}%
+\contentsline {section}{\numberline {10.3}Build Insights：编译期性能分析}{116}{section.10.3}%
+\contentsline {subsection}{\numberline {10.3.1}它解决什么问题}{116}{subsection.10.3.1}%
+\contentsline {subsection}{\numberline {10.3.2}两种使用方式}{116}{subsection.10.3.2}%
+\contentsline {subsection}{\numberline {10.3.3}定位编译慢的根因}{117}{subsection.10.3.3}%
+\contentsline {section}{\numberline {10.4}静态代码分析}{117}{section.10.4}%
+\contentsline {subsection}{\numberline {10.4.1}运行代码分析}{117}{subsection.10.4.1}%
+\contentsline {subsection}{\numberline {10.4.2}警告等级与“警告即错误”}{118}{subsection.10.4.2}%
+\contentsline {subsection}{\numberline {10.4.3}C++ Core Guidelines 检查器}{118}{subsection.10.4.3}%
+\contentsline {subsection}{\numberline {10.4.4}SAL 注解：把契约写进声明}{118}{subsection.10.4.4}%
+\contentsline {section}{\numberline {10.5}clang-tidy 集成}{119}{section.10.5}%
+\contentsline {subsection}{\numberline {10.5.1}在 Visual Studio 中启用}{119}{subsection.10.5.1}%
+\contentsline {subsection}{\numberline {10.5.2}\texttt {.clang-tidy} 配置文件}{119}{subsection.10.5.2}%
+\contentsline {subsection}{\numberline {10.5.3}常用检查项}{119}{subsection.10.5.3}%
+\contentsline {section}{\numberline {10.6}运行时检查}{120}{section.10.6}%
+\contentsline {subsection}{\numberline {10.6.1}AddressSanitizer（\texttt {/fsanitize=address}）}{120}{subsection.10.6.1}%
+\contentsline {subsection}{\numberline {10.6.2}\texttt {/RTC} 运行时检查}{120}{subsection.10.6.2}%
+\contentsline {subsection}{\numberline {10.6.3}CRT 内存泄漏检测}{121}{subsection.10.6.3}%
+\contentsline {section}{\numberline {10.7}代码度量}{122}{section.10.7}%
+\contentsline {section}{\numberline {10.8}实战：一次完整的性能优化}{123}{section.10.8}%
+\contentsline {section}{\numberline {10.9}小结}{124}{section.10.9}%
+\contentsline {section}{\numberline {10.10}练习题}{124}{section.10.10}%
+\contentsline {section}{\numberline {10.11}相关笔记}{124}{section.10.11}%
+\contentsline {chapter}{\numberline {第十一章}CMake 与 vcpkg 集成}{126}{chapter.11}%
+\contentsline {section}{\numberline {11.1}为什么在 VS 里用 CMake}{126}{section.11.1}%
+\contentsline {subsection}{\numberline {11.1.1}\texttt {.vcxproj} 的边界与 CMake 的一等公民地位}{126}{subsection.11.1.1}%
+\contentsline {subsection}{\numberline {11.1.2}两条路的能力对比}{126}{subsection.11.1.2}%
+\contentsline {section}{\numberline {11.2}在 VS 中打开 CMake 项目}{127}{section.11.2}%
+\contentsline {subsection}{\numberline {11.2.1}用“打开文件夹”，不是“打开项目”}{127}{subsection.11.2.1}%
+\contentsline {subsection}{\numberline {11.2.2}文件夹视图与 CMake 目标视图}{127}{subsection.11.2.2}%
+\contentsline {subsection}{\numberline {11.2.3}首次配置与工具包（Kit）选择}{128}{subsection.11.2.3}%
+\contentsline {section}{\numberline {11.3}CMakePresets.json：团队协作的推荐方式}{128}{section.11.3}%
+\contentsline {subsection}{\numberline {11.3.1}为什么它取代了 CMakeSettings.json}{128}{subsection.11.3.1}%
+\contentsline {subsection}{\numberline {11.3.2}一份可用的 CMakePresets.json}{129}{subsection.11.3.2}%
+\contentsline {section}{\numberline {11.4}CMake 设置编辑器}{130}{section.11.4}%
+\contentsline {subsection}{\numberline {11.4.1}界面构成与 Presets 的取舍}{130}{subsection.11.4.1}%
+\contentsline {section}{\numberline {11.5}生成器与工具集}{131}{section.11.5}%
+\contentsline {subsection}{\numberline {11.5.1}\texttt {Visual Studio 18 2026} 生成器、\texttt {-T} 与自带的 CMake}{131}{subsection.11.5.1}%
+\contentsline {subsection}{\numberline {11.5.2}反向：从 CMake 生成并构建 Visual Studio 项目}{131}{subsection.11.5.2}%
+\contentsline {section}{\numberline {11.6}构建与调试 CMake 目标}{132}{section.11.6}%
+\contentsline {subsection}{\numberline {11.6.1}选择启动项、断点与 F5}{132}{subsection.11.6.1}%
+\contentsline {subsection}{\numberline {11.6.2}调试 \texttt {CMakeLists.txt} 脚本本身}{132}{subsection.11.6.2}%
+\contentsline {subsection}{\numberline {11.6.3}CMake 模块的 IntelliSense}{132}{subsection.11.6.3}%
+\contentsline {section}{\numberline {11.7}CMake 项目的多配置}{132}{section.11.7}%
+\contentsline {subsection}{\numberline {11.7.1}单配置与多配置生成器的差别}{132}{subsection.11.7.1}%
+\contentsline {section}{\numberline {11.8}vcpkg 集成}{134}{section.11.8}%
+\contentsline {subsection}{\numberline {11.8.1}清单模式与经典模式}{134}{subsection.11.8.1}%
+\contentsline {subsection}{\numberline {11.8.2}一份 vcpkg.json 示例}{134}{subsection.11.8.2}%
+\contentsline {subsection}{\numberline {11.8.3}vcpkg-configuration.json 与注册表}{135}{subsection.11.8.3}%
+\contentsline {subsection}{\numberline {11.8.4}工具集对齐与 CMAKE\_TOOLCHAIN\_FILE}{135}{subsection.11.8.4}%
+\contentsline {section}{\numberline {11.9}手动管理第三方库的替代方案}{136}{section.11.9}%
+\contentsline {subsection}{\numberline {11.9.1}直接改目录，或者用 NuGet}{136}{subsection.11.9.1}%
+\contentsline {subsection}{\numberline {11.9.2}为什么推荐 vcpkg}{136}{subsection.11.9.2}%
+\contentsline {section}{\numberline {11.10}WSL / 容器 / 远程 Linux 开发}{137}{section.11.10}%
+\contentsline {subsection}{\numberline {11.10.1}WSL}{137}{subsection.11.10.1}%
+\contentsline {subsection}{\numberline {11.10.2}Dev Containers（Docker 与 Podman）}{137}{subsection.11.10.2}%
+\contentsline {subsection}{\numberline {11.10.3}远程 Linux（SSH）与远程单元测试}{138}{subsection.11.10.3}%
+\contentsline {section}{\numberline {11.11}常见坑}{138}{section.11.11}%
+\contentsline {section}{\numberline {11.12}端到端实战：从零到 F5}{139}{section.11.12}%
+\contentsline {subsection}{\numberline {11.12.1}目录结构}{139}{subsection.11.12.1}%
+\contentsline {subsection}{\numberline {11.12.2}三个文件}{139}{subsection.11.12.2}%
+\contentsline {subsection}{\numberline {11.12.3}在 VS 中配置、构建、调试}{140}{subsection.11.12.3}%
+\contentsline {section}{\numberline {11.13}小结}{141}{section.11.13}%
+\contentsline {section}{\numberline {11.14}练习题}{141}{section.11.14}%
+\contentsline {section}{\numberline {11.15}相关笔记}{142}{section.11.15}%
+\contentsline {chapter}{\numberline {第十二章}单元测试与代码质量}{143}{chapter.12}%
+\contentsline {section}{\numberline {12.1}为什么 C++ 项目需要单元测试}{143}{section.12.1}%
+\contentsline {subsection}{\numberline {12.1.1}C++ 的沉默错误成本}{143}{subsection.12.1.1}%
+\contentsline {subsection}{\numberline {12.1.2}测试资源管理器}{143}{subsection.12.1.2}%
+\contentsline {section}{\numberline {12.2}Microsoft 原生单元测试框架（C++）}{144}{section.12.2}%
+\contentsline {subsection}{\numberline {12.2.1}创建本机单元测试项目}{144}{subsection.12.2.1}%
+\contentsline {subsection}{\numberline {12.2.2}核心宏与断言}{144}{subsection.12.2.2}%
+\contentsline {subsection}{\numberline {12.2.3}完整示例：Calculator 与被测代码}{144}{subsection.12.2.3}%
+\contentsline {subsection}{\numberline {12.2.4}引用被测项目与配置要点}{146}{subsection.12.2.4}%
+\contentsline {section}{\numberline {12.3}接入第三方框架}{146}{section.12.3}%
+\contentsline {subsection}{\numberline {12.3.1}Google Test：vcpkg + CMake}{146}{subsection.12.3.1}%
+\contentsline {subsection}{\numberline {12.3.2}Google Test：在 VS / MSBuild 项目中使用}{148}{subsection.12.3.2}%
+\contentsline {subsection}{\numberline {12.3.3}Boost.Test 与 Catch2}{148}{subsection.12.3.3}%
+\contentsline {subsection}{\numberline {12.3.4}框架对比与选型}{148}{subsection.12.3.4}%
+\contentsline {section}{\numberline {12.4}测试适配器、筛选与并行}{149}{section.12.4}%
+\contentsline {subsection}{\numberline {12.4.1}适配器与发现测试}{149}{subsection.12.4.1}%
+\contentsline {subsection}{\numberline {12.4.2}分组与筛选}{149}{subsection.12.4.2}%
+\contentsline {subsection}{\numberline {12.4.3}测试播放列表}{149}{subsection.12.4.3}%
+\contentsline {subsection}{\numberline {12.4.4}并行执行}{150}{subsection.12.4.4}%
+\contentsline {section}{\numberline {12.5}代码覆盖率}{150}{section.12.5}%
+\contentsline {subsection}{\numberline {12.5.1}在 IDE 与命令行中收集}{150}{subsection.12.5.1}%
+\contentsline {subsection}{\numberline {12.5.2}版本能力差异}{150}{subsection.12.5.2}%
+\contentsline {section}{\numberline {12.6}TDD 在 C++ 中的落地}{151}{section.12.6}%
+\contentsline {section}{\numberline {12.7}持续集成}{152}{section.12.7}%
+\contentsline {section}{\numberline {12.8}小结}{152}{section.12.8}%
+\contentsline {section}{\numberline {12.9}练习题}{153}{section.12.9}%
+\contentsline {section}{\numberline {12.10}相关笔记}{153}{section.12.10}%
+\contentsline {chapter}{\numberline {第十三章}发布与部署}{154}{chapter.13}%
+\contentsline {section}{\numberline {13.1}发布前的配置切换}{154}{section.13.1}%
+\contentsline {subsection}{\numberline {13.1.1}Debug 与 Release 的本质差异}{154}{subsection.13.1.1}%
+\contentsline {subsection}{\numberline {13.1.2}常用优化开关的含义与风险}{155}{subsection.13.1.2}%
+\contentsline {subsection}{\numberline {13.1.3}切换到 Release 后先做的三件事}{156}{subsection.13.1.3}%
+\contentsline {section}{\numberline {13.2}运行库选择：\texttt {/MD} 还是 \texttt {/MT}}{156}{section.13.2}%
+\contentsline {subsection}{\numberline {13.2.1}四个取值}{156}{subsection.13.2.1}%
+\contentsline {subsection}{\numberline {13.2.2}取舍表}{157}{subsection.13.2.2}%
+\contentsline {subsection}{\numberline {13.2.3}混用 \texttt {/MT} 与 \texttt {/MD} 的后果}{157}{subsection.13.2.3}%
+\contentsline {section}{\numberline {13.3}静态链接第三方库与动态链接 DLL}{158}{section.13.3}%
+\contentsline {subsection}{\numberline {13.3.1}两种方式的部署代价}{158}{subsection.13.3.1}%
+\contentsline {subsection}{\numberline {13.3.2}用 dumpbin 查依赖}{158}{subsection.13.3.2}%
+\contentsline {subsection}{\numberline {13.3.3}定位缺失 DLL 的排查路径}{158}{subsection.13.3.3}%
+\contentsline {section}{\numberline {13.4}收集运行时依赖}{159}{section.13.4}%
+\contentsline {subsection}{\numberline {13.4.1}Visual C++ 可再发行程序包}{159}{subsection.13.4.1}%
+\contentsline {subsection}{\numberline {13.4.2}随安装包分发与静默安装}{159}{subsection.13.4.2}%
+\contentsline {subsection}{\numberline {13.4.3}app-local 部署的边界}{160}{subsection.13.4.3}%
+\contentsline {section}{\numberline {13.5}生成安装包}{160}{section.13.5}%
+\contentsline {subsection}{\numberline {13.5.1}三种打包方式对比}{160}{subsection.13.5.1}%
+\contentsline {subsection}{\numberline {13.5.2}Installer Projects 最小制作流程}{161}{subsection.13.5.2}%
+\contentsline {subsection}{\numberline {13.5.3}WiX Toolset 简介}{161}{subsection.13.5.3}%
+\contentsline {section}{\numberline {13.6}其他发布形式}{161}{section.13.6}%
+\contentsline {subsection}{\numberline {13.6.1}绿色免安装版}{161}{subsection.13.6.1}%
+\contentsline {subsection}{\numberline {13.6.2}单文件与自包含}{162}{subsection.13.6.2}%
+\contentsline {subsection}{\numberline {13.6.3}分发渠道一句话说明}{162}{subsection.13.6.3}%
+\contentsline {section}{\numberline {13.7}版本信息与资源}{162}{section.13.7}%
+\contentsline {subsection}{\numberline {13.7.1}添加 \texttt {.rc} 资源文件}{162}{subsection.13.7.1}%
+\contentsline {subsection}{\numberline {13.7.2}版本号字段}{162}{subsection.13.7.2}%
+\contentsline {subsection}{\numberline {13.7.3}图标与属性页设置}{164}{subsection.13.7.3}%
+\contentsline {section}{\numberline {13.8}发布检查清单}{164}{section.13.8}%
+\contentsline {section}{\numberline {13.9}发布后常见故障}{165}{section.13.9}%
+\contentsline {subsection}{\numberline {13.9.1}缺少 \texttt {VCRUNTIME140.dll} 一类}{165}{subsection.13.9.1}%
+\contentsline {subsection}{\numberline {13.9.2}应用程序无法正常启动 \texttt {0xc000007b}}{165}{subsection.13.9.2}%
+\contentsline {subsection}{\numberline {13.9.3}DLL 地狱的标准排查步骤}{165}{subsection.13.9.3}%
+\contentsline {section}{\numberline {13.10}小结}{166}{section.13.10}%
+\contentsline {section}{\numberline {13.11}练习题}{166}{section.13.11}%
+\contentsline {section}{\numberline {13.12}相关笔记}{167}{section.13.12}%
+\contentsline {chapter}{\numberline {第十四章}常见问题与效率技巧}{168}{chapter.14}%
+\contentsline {section}{\numberline {14.1}编译与链接错误速查}{168}{section.14.1}%
+\contentsline {subsection}{\numberline {14.1.1}错误号前缀对应哪个阶段}{168}{subsection.14.1.1}%
+\contentsline {subsection}{\numberline {14.1.2}编译器高频错误（\texttt {C} 系列）}{168}{subsection.14.1.2}%
+\contentsline {subsection}{\numberline {14.1.3}链接器高频错误（\texttt {LNK} 系列）}{170}{subsection.14.1.3}%
+\contentsline {subsection}{\numberline {14.1.4}MSBuild 与 IntelliSense 错误}{171}{subsection.14.1.4}%
+\contentsline {subsection}{\numberline {14.1.5}排错的通用流程}{172}{subsection.14.1.5}%
+\contentsline {section}{\numberline {14.2}中文乱码专题}{172}{section.14.2}%
+\contentsline {subsection}{\numberline {14.2.1}四层编码，先分清错在哪一层}{172}{subsection.14.2.1}%
+\contentsline {subsection}{\numberline {14.2.2}推荐做法与各开关的含义}{173}{subsection.14.2.2}%
+\contentsline {subsection}{\numberline {14.2.3}控制台输出中文的三种方案}{173}{subsection.14.2.3}%
+\contentsline {subsection}{\numberline {14.2.4}一个“中文输出正确”的完整示例}{174}{subsection.14.2.4}%
+\contentsline {section}{\numberline {14.3}IntelliSense 与实际编译不一致}{175}{section.14.3}%
+\contentsline {subsection}{\numberline {14.3.1}典型症状与原因}{175}{subsection.14.3.1}%
+\contentsline {subsection}{\numberline {14.3.2}按顺序修复}{175}{subsection.14.3.2}%
+\contentsline {section}{\numberline {14.4}路径与工程习惯}{175}{section.14.4}%
+\contentsline {subsection}{\numberline {14.4.1}中文与空格路径引发的怪问题}{175}{subsection.14.4.1}%
+\contentsline {subsection}{\numberline {14.4.2}建议的目录规范}{176}{subsection.14.4.2}%
+\contentsline {subsection}{\numberline {14.4.3}一份可用的 \texttt {.gitignore}}{176}{subsection.14.4.3}%
+\contentsline {section}{\numberline {14.5}调试符号与断点失效}{177}{section.14.5}%
+\contentsline {section}{\numberline {14.6}效率技巧集}{178}{section.14.6}%
+\contentsline {subsection}{\numberline {14.6.1}编辑与代码}{178}{subsection.14.6.1}%
+\contentsline {subsection}{\numberline {14.6.2}导航}{178}{subsection.14.6.2}%
+\contentsline {subsection}{\numberline {14.6.3}任务列表、代码片段与环境管理}{178}{subsection.14.6.3}%
+\contentsline {section}{\numberline {14.7}常用快捷键总表}{179}{section.14.7}%
+\contentsline {subsection}{\numberline {14.7.1}编辑}{179}{subsection.14.7.1}%
+\contentsline {subsection}{\numberline {14.7.2}导航}{179}{subsection.14.7.2}%
+\contentsline {subsection}{\numberline {14.7.3}调试}{180}{subsection.14.7.3}%
+\contentsline {subsection}{\numberline {14.7.4}构建}{181}{subsection.14.7.4}%
+\contentsline {subsection}{\numberline {14.7.5}窗口}{181}{subsection.14.7.5}%
+\contentsline {section}{\numberline {14.8}学习资源}{181}{section.14.8}%
+\contentsline {section}{\numberline {14.9}小结}{182}{section.14.9}%
+\contentsline {section}{\numberline {14.10}练习题}{182}{section.14.10}%
+\contentsline {section}{\numberline {14.11}相关笔记}{183}{section.14.11}%
+\contentsline {chapter}{\numberline {附录A}速查与资源}{184}{appendix.A}%
+\contentsline {section}{\numberline {A.1}版本与工具集速查}{184}{section.A.1}%
+\contentsline {subsection}{\numberline {A.1.1}IDE 与 MSVC 的对应关系}{184}{subsection.A.1.1}%
+\contentsline {subsection}{\numberline {A.1.2}平台工具集}{184}{subsection.A.1.2}%
+\contentsline {subsection}{\numberline {A.1.3}关键版本节点}{184}{subsection.A.1.3}%
+\contentsline {section}{\numberline {A.2}C++ 语言标准档位速查}{185}{section.A.2}%
+\contentsline {section}{\numberline {A.3}官方资源}{185}{section.A.3}%
+\contentsline {section}{\numberline {A.4}本仓库内的相关笔记}{186}{section.A.4}%
+\contentsfinish 

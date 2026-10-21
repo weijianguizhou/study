@@ -64,36 +64,7 @@
     \item 链轮的齿数$z$
     \item 排距$p_t$·
 \end{itemize}
-\begin{table}[htbp]
-\centering
-\renewcommand{\arraystretch}{1.5} % 增加行高，让公式显示更清晰
-\begin{tabular}{|c|c|>{\centering\arraybackslash}p{6.2cm}|p{4.2cm}|}
-\hline
-名称 & 代号 & \multicolumn{1}{c|}{计算公式} & \multicolumn{1}{c|}{备注} \\
-\hline
-分度圆直径 & \(d\) & \(d = p / \sin(180^\circ / z)\) & \\
-\hline
-齿顶圆直径 & \(d_a\) &
-\(d_{a\max} = d + 1.25p - d_1\) \newline
-\(d_{a\min} = d + \left(1 - \frac{1.6}{z}\right)p - d_1\) \newline
-若为三圆弧一直线齿形，则 \newline
-\(d_a = p \left(0.54 + \text{ctg} \frac{180^\circ}{z}\right)\)
-&
-可在 \(d_{a\max}\)、\(d_{a\min}\) 范围内任意选取，但选用 \(d_{a\max}\) 时，应考虑采用展成法加工有发生顶切的可能性。 \\
-\hline
-分度圆弦齿高 & \(h_a\) &
-\(h_{a\max} = \left(0.625 + \frac{0.8}{z}\right)p - 0.5d_1\) \newline
-\(h_{a\min} = 0.5(p - d_1)\) \newline
-若为三圆弧一直线齿形，则 \(h_a = 0.27p\)
-&
-\(h_a\) 是为简化放大齿形图的绘制而引入的辅助尺寸。\newline
-\(h_{a\max}\) 相应于 \(d_{a\max}\)，\newline
-\(h_{a\min}\) 相应于 \(d_{a\min}\)。 \\
-\hline
-齿根圆直径 & \(d_f\) & \(d_f = d - d_1\) & \\
-\hline
-\end{tabular}
-\end{table}
+
 
 \subsection{链轮齿形}
 三圆弧一直线(凹齿形),如下图\ref{fig:三圆弧一直线}所示。
@@ -117,11 +88,24 @@
     在链条（如滚子链、无声链）中，链节线是一条假想的直线，其核心定义是：当链条处于直线状态时，穿过所有连接销轴（或摇轴）接触点中心的一条线
 \end{definition}
 链条线长度计算公式($\pi D_1=z_1p$和$\pi D_2=z_2p$是链轮的外径)：
-$$L_P=2 a+\frac{\pi}{2}\left(D_{1}+D_{2}\right)+\frac{\left(D_{2}-D_{1}\right)^{2}}{4 a}=2 a+\frac{\left(z_{1}+z_{2}\right) p}{2}+\left(\frac{z_{2}-z_{1}}{2 \pi}\right)^{2} \cdot \frac{p^{2}}{a}$$
+\begin{equation}
+	\begin{aligned}
+		L_P&=2 a+\frac{\pi}{2}\left(D_{1}+D_{2}\right)+\frac{\left(D_{2}-D_{1}\right)^{2}}{4 a}\\
+		&=2 a+\frac{\left(z_{1}+z_{2}\right) p}{2}+\left(\frac{z_{2}-z_{1}}{2 \pi}\right)^{2} \cdot \frac{p^{2}}{a}
+	\end{aligned}
+\end{equation}
 
-链节数$$N_P=\frac{\left(z_{1}+z_{2}\right)}{2}+\frac{2 a}{p}+\left(\frac{z_{2}-z_{1}}{2 \pi}\right)^{2} \cdot \frac{p}{a}$$
+链节数
+\begin{equation}
+	N_P=\frac{\left(z_{1}+z_{2}\right)}{2}+\frac{2 a}{p}+\left(\frac{z_{2}-z_{1}}{2 \pi}\right)^{2} \cdot \frac{p}{a}
+\end{equation}
 中心距:
-$$a=\frac{P}{4}\left[\left(L_{P}-\frac{Z_{1}+Z_{2}}{2}\right)+\sqrt{\left(L_{P}-\frac{Z_{1}+Z_{2}}{2}\right)^{2}-8\left(\frac{Z_{2}-Z_{1}}{2 \pi}\right)^{2}}\right]$$
+\begin{equation}
+	\begin{aligned}
+		a=\frac{p}{4}\Bigg[\,&\left(L_{P}-\frac{z_{1}+z_{2}}{2}\right)\\
+		&+\sqrt{\left(L_{P}-\frac{z_{1}+z_{2}}{2}\right)^{2}-8\left(\frac{z_{2}-z_{1}}{2 \pi}\right)^{2}}\,\Bigg]
+	\end{aligned}
+\end{equation}
 \section{链传动的运动特性}
 在链传动中，链条进入链轮后形成折线，相当于两个正多边形之间的传动，正多边形的边长等于链条的节距 $p$。链节在运动中忽上忽下、忽快忽慢，使链速和瞬时传动比都作有规律的周期性波动。
 
@@ -180,3 +164,6 @@ $$a=\frac{P}{4}\left[\left(L_{P}-\frac{Z_{1}+Z_{2}}{2}\right)+\sqrt{\left(L_{P}-
 \begin{definition}[多边形效应]
     链条绕在链轮上形成正多边形，使瞬时链速与瞬时传动比随相位角 $\beta$、$\gamma$ 周期性波动，这种现象称为\textbf{多边形效应}。
 \end{definition}
+\begin{remark}
+    链轮齿数一般取与链节数互为质数的奇数。
+\end{remark}

@@ -1,0 +1,437 @@
+% !TeX root = main.tex
+
+前面三章都是准备工作。这一章真正开始写代码：建一个控制台项目，看懂 VS 在磁盘上生成了什么，弄明白 \key{F5} 和 \key{Ctrl+F5} 的区别，最后学会脱离 IDE 用命令行构建——这一步在接入 CI 时会用到。
+
+\section{创建控制台应用}
+
+\subsection{走一遍流程}
+
+\begin{enumerate}
+	\item 打开 VS 2026 -> 起始窗口点 \textbf{创建新项目}（或按 \key{Ctrl+Shift+N}）。
+	\item 在模板列表里搜索 \code{控制台}，选择 \textbf{控制台应用}（语言筛选 \textbf{C++}，平台 \textbf{Windows}）。
+	\item 点 \textbf{下一步}，填写：
+\end{enumerate}
+
+\begin{longtable}{L{4.6cm}L{3.0cm}L{7.0cm}}\toprule
+\textbf{字段} & \textbf{建议值} & \textbf{说明} \\ \midrule \endfirsthead
+\toprule \textbf{字段} & \textbf{建议值} & \textbf{说明} \\ \midrule \endhead
+\bottomrule \endlastfoot
+\textbf{项目名称} & \code{HelloVS} & 会同时作为默认命名空间名与 \code{.exe} 名 \\
+\textbf{位置} & \codeP{D:\textbackslash{}cpp} & \textbf{不要放在中文路径或含空格的路径下}（见本章第 8 节） \\
+\textbf{解决方案名称} & \code{HelloVS} & 可以留空，默认与项目同名 \\
+\textbf{将解决方案和项目放在同一目录中} & 建议勾选 & 目录结构更扁平，便于理解 \\
+\end{longtable}
+
+\begin{enumerate}
+	\setcounter{enumi}{3}
+	\item 点 \textbf{创建}。
+\end{enumerate}
+
+\subsection{模板选哪个}
+
+\begin{longtable}{L{4.0cm}L{5.6cm}L{5.0cm}}\toprule
+\textbf{模板} & \textbf{生成什么} & \textbf{适合} \\ \midrule \endfirsthead
+\toprule \textbf{模板} & \textbf{生成什么} & \textbf{适合} \\ \midrule \endhead
+\bottomrule \endlastfoot
+\textbf{控制台应用} & 一个 \code{.cpp}，含 \code{main} 与 \code{#include <iostream>} & [OK] 学习、算法练习、命令行工具 \\
+\textbf{空项目} & 什么都没有，需要自己添加文件 & 想完全从零开始 \\
+\textbf{Windows 桌面应用程序} & Win32 窗口程序骨架 & 图形界面入门 \\
+\textbf{静态库 / 动态库} & 库项目骨架 & 写库给别人用（见\textbf{第 5 章}） \\
+\end{longtable}
+
+\begin{tipbox}[提示]
+VS 2026 的\textbf{新建} C++ 控制台项目默认使用 \textbf{C++20} 标准（项目模板会写入 \code{/std:c++20}）。这和“编译器在没指定 \code{/std} 时默认 C++14”并不矛盾——见\textbf{第 1 章 4.1 节}。
+\end{tipbox}
+
+\section{项目文件结构解析}
+
+\subsection{生成后磁盘上有什么}
+
+假设项目名 \code{HelloVS}，位置 \codeP{D:\textbackslash{}cpp}，勾选了“同一目录”，生成后的目录大致是：
+
+\begin{lstlisting}[style=textstyle]
+D:\cpp\HelloVS\
++-- HelloVS.sln              <- 解决方案文件（文本格式，记录包含哪些项目）
++-- HelloVS.vcxproj          <- MSBuild 项目文件（真正的构建定义，XML）
++-- HelloVS.vcxproj.filters  <- 筛选器：只影响 IDE 里的显示分组
++-- HelloVS.vcxproj.user     <- 你本机的个人设置（不提交到 Git）
++-- HelloVS.cpp              <- 源文件
++-- .vs\                     <- IDE 的隐藏缓存目录（不提交到 Git）
+    +-- ...
+\end{lstlisting}
+
+编译一次之后，还会多出：
+
+\begin{lstlisting}[style=textstyle]
+D:\cpp\HelloVS\
++-- x64\
+    +-- Debug\
+        +-- HelloVS.exe          <- 生成的可执行文件
+        +-- HelloVS.pdb          <- 调试符号
+        +-- HelloVS.obj          <- 编译产生的目标文件
+\end{lstlisting}
+
+\begin{warnbox}[注意]
+\code{.vs} 是\textbf{隐藏目录}，在文件资源管理器里默认看不到。它保存了 IDE 的临时状态；遇到“IntelliSense 发疯”“项目加载异常”时，\textbf{关掉 VS、删掉 \code{.vs}、重新打开}是最常用的急救手段（详见\textbf{第 13 章}）。
+\end{warnbox}
+
+\subsection{每个文件干什么}
+
+\begin{longtable}{L{4.6cm}L{2.6cm}L{7.4cm}}\toprule
+\textbf{文件} & \textbf{是否提交到 Git} & \textbf{作用} \\ \midrule \endfirsthead
+\toprule \textbf{文件} & \textbf{是否提交到 Git} & \textbf{作用} \\ \midrule \endhead
+\bottomrule \endlastfoot
+\code{HelloVS.sln} & [OK] & 解决方案：记录包含哪些项目、启动项目等 \\
+\code{HelloVS.vcxproj} & [OK] & \textbf{核心}：编译器开关、包含目录、链接库、文件清单都在这 \\
+\code{HelloVS.vcxproj.filters} & [OK] & IDE 里的筛选器分组（不影响编译） \\
+\code{HelloVS.vcxproj.user} & [X] & 本机调试设置（如命令行参数、工作目录） \\
+\code{.vs} & [X] & IDE 缓存 \\
+\code{x64}、\code{Debug}、\code{Release} & [X] & 中间产物与输出 \\
+\code{HelloVS.cpp} & [OK] & 你的代码 \\
+\end{longtable}
+
+对应的 \code{.gitignore} 片段：
+
+\begin{lstlisting}[style=inistyle]
+# Visual Studio
+.vs/
+x64/
+Debug/
+Release/
+*.user
+*.aps
+*.ipch
+*.opendb
+*.db
+\end{lstlisting}
+
+\begin{keybox}[实战场景]
+\code{.vcxproj.user} 里存着“调试时用什么命令行参数、工作目录是哪里”。这些是\textbf{本机}设置，同事的机器上路径可能完全不同，所以不该提交。项目级的公共调试参数应该写进 \code{.vcxproj} 的调试属性页。
+\end{keybox}
+
+\subsection{在 IDE 里看结构}
+
+\textbf{解决方案资源管理器}显示的是“逻辑结构”：
+
+\begin{lstlisting}[style=textstyle]
+解决方案 'HelloVS' (1 个项目)
++-- HelloVS
+    +-- 头文件              <- 筛选器（可能是空的）
+    +-- 源文件
+    |   +-- HelloVS.cpp
+    +-- 资源文件            <- 筛选器（可能是空的）
+    +-- 引用                <- 引用的其他项目/库
+\end{lstlisting}
+
+注意\textbf{“头文件”“源文件”“资源文件”是筛选器}，不是磁盘目录。哪怕它们显示为空，磁盘上也没有对应的空文件夹。
+
+\section{读懂生成的代码}
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+
+int main()
+{
+    std::cout << "Hello World!\n";
+    return 0;
+}
+\end{lstlisting}
+
+逐行看：
+
+\begin{longtable}{L{4.8cm}L{10.2cm}}\toprule
+\textbf{代码} & \textbf{含义} \\ \midrule \endfirsthead
+\toprule \textbf{代码} & \textbf{含义} \\ \midrule \endhead
+\bottomrule \endlastfoot
+\code{#include <iostream>} & 引入标准输入输出库，\code{std::cout} 需要它 \\
+\code{int main()} & 程序入口。Windows 控制台程序的入口就是 \code{main}（或宽字符版 \code{wmain}） \\
+\code{std::cout << ...} & 向标准输出写字符串；\code{std::} 是命名空间前缀 \\
+\codeP{"\textbackslash{}n"} & 换行符。比 \code{std::endl} 更轻量（不强制刷新缓冲区） \\
+\code{return 0;} & 返回 0 表示正常结束。\code{main} 里其实可以省略，但写上更清晰 \\
+\end{longtable}
+
+\begin{tipbox}[提示]
+这里的 \code{std::} 前缀别嫌烦。虽然可以写 \code{using namespace std;}，但在头文件里绝对不要这么干，否则会把命名空间污染传给所有包含者。
+\end{tipbox}
+
+\section{生成与运行}
+
+\subsection{\key{Ctrl+F5} 与 \key{F5} 的区别}
+
+这是新手第一个必须搞清的差别：
+
+\begin{longtable}{L{2.8cm}L{7.4cm}L{4.4cm}}\toprule
+\textbf{快捷键} & \textbf{行为} & \textbf{什么时候用} \\ \midrule \endfirsthead
+\toprule \textbf{快捷键} & \textbf{行为} & \textbf{什么时候用} \\ \midrule \endhead
+\bottomrule \endlastfoot
+\textbf{\key{Ctrl+F5}} & \textbf{开始执行（不调试）}：编译并运行，程序结束后\textbf{停在“按任意键继续”} & 只想看运行结果 \\
+\textbf{\key{F5}} & \textbf{开始调试}：编译并附加调试器运行，程序结束窗口\textbf{直接关闭} & 要打断点排查问题 \\
+\textbf{\key{Ctrl+Shift+B}} & 只生成，不运行 & 检查能否编译通过 \\
+\end{longtable}
+
+\begin{warnbox}[注意]
+用 \key{F5} 跑一个“打印完就退出”的程序，黑窗口会一闪而过——因为调试器接管了生命周期，不会自动暂停。想看输出就用 \key{Ctrl+F5}，或者在 \code{main} 的 \code{return} 前打断点。
+\end{warnbox}
+
+\subsection{生成输出：\key{Ctrl+Alt+O}}
+
+\textbf{输出窗口}（\key{Ctrl+Alt+O}）里选“\textbf{生成}”，能看到完整的编译过程：
+
+\begin{lstlisting}[style=textstyle]
+1>------ 已启动生成: 项目: HelloVS, 配置: Debug x64 ------
+1>HelloVS.cpp
+1>HelloVS.vcxproj -> D:\cpp\HelloVS\x64\Debug\HelloVS.exe
+========== 生成: 成功 1 个，失败 0 个，最新 0 个，跳过 0 个 ==========
+\end{lstlisting}
+
+关键信息在最后一行。\code{->} 后面就是\textbf{可执行文件的完整路径}。
+
+\subsection{错误去哪看：\key{Ctrl+\, Ctrl+E}}
+
+编译失败时看\textbf{错误列表}（\key{Ctrl+\, Ctrl+E}）：
+
+\begin{longtable}{L{3.0cm}L{12.0cm}}\toprule
+\textbf{列} & \textbf{含义} \\ \midrule \endfirsthead
+\toprule \textbf{列} & \textbf{含义} \\ \midrule \endhead
+\bottomrule \endlastfoot
+代码 & 如 \code{C2143}、\code{LNK2019}（错误码速查见\textbf{第 13 章}） \\
+说明 & 错误描述 \\
+项目 / 文件 / 行 & \textbf{双击直接跳到出错位置} \\
+\end{longtable}
+
+\begin{tipbox}[提示]
+错误列表支持筛选（只看错误 / 只看警告），也支持按“生成 + IntelliSense”分类。\textbf{以“生成”分类为准}——IntelliSense 的红色波浪线有时是误报。
+\end{tipbox}
+
+\subsection{输出窗口 vs 程序输出}
+
+两者完全不同，别搞混：
+
+\begin{lstlisting}[style=textstyle]
+输出窗口（Ctrl+Alt+O）  ->  编译器/链接器/调试器说的话
+程序的黑窗口            ->  你的 std::cout 输出
+\end{lstlisting}
+
+调试时想让信息出现在\textbf{输出窗口}，可以用：
+
+\begin{lstlisting}[style=cppstyle]
+#include <windows.h>
+
+OutputDebugStringA("这条信息会出现在 VS 的输出窗口\n");
+\end{lstlisting}
+
+这在写没有控制台的 Windows 程序时特别有用。
+
+\section{命令行构建}
+
+脱离 IDE 构建是接入 CI 的第一步。有两种方式。
+
+\subsection{用 MSBuild（推荐）}
+
+先在开始菜单打开 \textbf{Developer Command Prompt for VS 2026}（这个快捷方式会帮你配好环境变量），然后：
+
+\begin{lstlisting}[style=shellstyle]
+:: 在解决方案目录下
+msbuild HelloVS.sln /p:Configuration=Debug /p:Platform=x64
+
+:: 生成 Release 版本
+msbuild HelloVS.sln /p:Configuration=Release /p:Platform=x64
+
+:: 重新生成（先清理再编译）
+msbuild HelloVS.sln /t:Rebuild /p:Configuration=Release /p:Platform=x64
+
+:: 清理
+msbuild HelloVS.sln /t:Clean
+\end{lstlisting}
+
+常用参数：
+
+\begin{longtable}{L{6.2cm}L{8.8cm}}\toprule
+\textbf{参数} & \textbf{作用} \\ \midrule \endfirsthead
+\toprule \textbf{参数} & \textbf{作用} \\ \midrule \endhead
+\bottomrule \endlastfoot
+\code{/p:Configuration=Debug|Release} & 指定配置 \\
+\code{/p:Platform=x64|Win32|ARM64} & 指定平台（注意 32 位在 MSBuild 里叫 \textbf{\code{Win32}}，不是 \code{x86}） \\
+\code{/t:Build|Rebuild|Clean} & 指定目标 \\
+\code{/m} & 多进程并行构建 \\
+\code{/v:minimal|normal|detailed} & 输出详细程度 \\
+\code{/p:VCToolsVersion=14.50.35717} & 锁定工具集版本 \\
+\code{/bl} & 生成 \code{msbuild.binlog}，可用结构化日志查看器分析 \\
+\end{longtable}
+
+\begin{warnbox}[注意]
+\textbf{必须用“开发者命令提示符”}，不能用普通的 \code{cmd}。因为 \code{msbuild} 依赖一堆环境变量（\code{PATH}、\code{INCLUDE}、\code{LIB} 等），普通命令行里没配，会报“找不到 windows.h”之类的错。想自己配的话，先执行 \code{vcvars64.bat}。
+\end{warnbox}
+
+\subsection{用 devenv（IDE 的命令行外壳）}
+
+\begin{lstlisting}[style=shellstyle]
+devenv HelloVS.sln /Build "Release|x64"
+devenv HelloVS.sln /Rebuild "Debug|x64"
+devenv HelloVS.sln /Clean
+\end{lstlisting}
+
+\code{devenv} 会启动 IDE 的构建引擎。适合需要与 IDE 行为完全一致的场景，但\textbf{比 MSBuild 慢}，CI 里一般用 MSBuild。
+
+\subsection{验证生成结果}
+
+\begin{lstlisting}[style=shellstyle]
+:: 确认 exe 存在
+dir x64\Release\HelloVS.exe
+
+:: 直接运行
+x64\Release\HelloVS.exe
+\end{lstlisting}
+
+\section{配置与平台：Debug/x64 是什么意思}
+
+工具栏上那两个下拉框（如 \code{Debug} + \code{x64}）合起来叫一个\textbf{配置}：
+
+\begin{lstlisting}[style=textstyle]
+配置 = 配置(Configuration) x 平台(Platform)
+       +-- Debug   ：不优化、带完整调试信息 -> 开发时用
+       +-- Release ：开优化、面向发布     -> 发布时用
+       +-- 平台
+           +-- x64   ：64 位（现在的默认选择）
+           +-- Win32 ：32 位（对应 x86，MSBuild 里就叫 Win32）
+           +-- ARM64 ：ARM 64 位
+\end{lstlisting}
+
+\begin{longtable}{L{5.0cm}L{10.0cm}}\toprule
+\textbf{组合} & \textbf{输出目录} \\ \midrule \endfirsthead
+\toprule \textbf{组合} & \textbf{输出目录} \\ \midrule \endhead
+\bottomrule \endlastfoot
+Debug + x64 & \codeP{x64\textbackslash{}Debug} \\
+Release + x64 & \codeP{x64\textbackslash{}Release} \\
+Debug + Win32 & \code{Debug}（32 位时通常不带平台前缀） \\
+\end{longtable}
+
+\textbf{Debug 与 Release 的关键差异}：
+
+\begin{longtable}{L{3.2cm}L{4.4cm}L{7.0cm}}\toprule
+\textbf{维度} & \textbf{Debug} & \textbf{Release} \\ \midrule \endfirsthead
+\toprule \textbf{维度} & \textbf{Debug} & \textbf{Release} \\ \midrule \endhead
+\bottomrule \endlastfoot
+优化 & \code{/Od} 关闭 & \code{/O2} 最大化速度 \\
+调试信息 & \code{/Zi} 完整 & 通常仍有 \code{/Zi}（但优化会让单步错位） \\
+运行库 & \code{/MDd}（调试版 CRT） & \code{/MD}（发行版 CRT） \\
+\code{assert} & 生效 & 被 \code{NDEBUG} 屏蔽 \\
+速度 & 慢得多 & 快 \\
+\end{longtable}
+
+\begin{warnbox}[注意]
+\textbf{性能测试必须在 Release 下做}。在 Debug 下测出来的耗时可能比 Release 慢十倍以上，据此优化会得出完全错误的结论。详见\textbf{第 9 章}。
+\end{warnbox}
+
+\begin{keybox}[实战场景]
+Debug 下能跑、Release 下崩溃，是最经典的一类 bug。常见原因是\textbf{未初始化变量}（Debug 下 CRT 会帮忙填 \code{0xCC}，Release 下是真正的垃圾值）或\textbf{优化暴露的越界访问}。这时该上 AddressSanitizer——见\textbf{第 9 章}。
+\end{keybox}
+
+\section{动手改：加一个头文件和一个源文件}
+
+试着把代码拆开，体会多文件项目的工作方式。
+
+\textbf{\code{mathutils.h}}（右键项目 > \textbf{添加 > 新建项 > 头文件}）：
+
+\begin{lstlisting}[style=cppstyle]
+#pragma once
+
+namespace mathutils {
+    int add(int a, int b);
+    int factorial(int n);
+}
+\end{lstlisting}
+
+\textbf{\code{mathutils.cpp}}（右键项目 > \textbf{添加 > 新建项 > C++ 文件}）：
+
+\begin{lstlisting}[style=cppstyle]
+#include "mathutils.h"
+
+namespace mathutils {
+
+int add(int a, int b) {
+    return a + b;
+}
+
+int factorial(int n) {
+    int result = 1;
+    for (int i = 2; i <= n; ++i) {
+        result *= i;
+    }
+    return result;
+}
+
+}  // namespace mathutils
+\end{lstlisting}
+
+\textbf{\code{HelloVS.cpp}}：
+
+\begin{lstlisting}[style=cppstyle]
+#include <iostream>
+#include "mathutils.h"
+
+int main()
+{
+    std::cout << "3 + 4 = " << mathutils::add(3, 4) << '\n';
+    std::cout << "5! = " << mathutils::factorial(5) << '\n';
+    return 0;
+}
+\end{lstlisting}
+
+按 \key{Ctrl+F5}，输出：
+
+\begin{lstlisting}[style=textstyle]
+3 + 4 = 7
+5! = 120
+\end{lstlisting}
+
+\begin{tipbox}[提示]
+新建的文件会\textbf{自动加入项目}（\code{.vcxproj} 里多了一条 \code{<ClCompile>}）。如果手动往目录里拷文件，IDE 不会自动感知——需要右键项目 > \textbf{添加 > 现有项}。
+\end{tipbox}
+
+\section{首次运行常见问题}
+
+\begin{longtable}{L{4.6cm}L{4.6cm}L{5.4cm}}\toprule
+\textbf{现象} & \textbf{原因} & \textbf{处置} \\ \midrule \endfirsthead
+\toprule \textbf{现象} & \textbf{原因} & \textbf{处置} \\ \midrule \endhead
+\bottomrule \endlastfoot
+\key{Ctrl+F5} 后黑窗口一闪而过 & 用的是 \key{F5}，或程序崩溃退出 & 改用 \key{Ctrl+F5}；或在 \code{return} 前打断点 \\
+中文输出乱码 & 源码编码与控制台代码页不一致 & 用 \code{/utf-8} 编译选项，或设置控制台代码页。详见\textbf{第 13 章} \\
+报错“无法打开源文件 iostream” & 没装 C++ 工作负荷，或包含路径被改坏 & 安装器里补装“使用 C++ 的桌面开发” \\
+报错 \code{LNK2019 无法解析的外部符号} & 函数声明了但没实现，或没把 \code{.cpp} 加入项目 & 检查 \code{.cpp} 是否在项目里；见\textbf{第 13 章} \\
+路径含中文/空格导致怪问题 & 工具链对非 ASCII 路径支持不佳 & 把项目移到纯英文、无空格的路径 \\
+提示找不到 \code{msbuild} & 用了普通 \code{cmd} & 改用“开发者命令提示符” \\
+\end{longtable}
+
+\section{小结}
+
+\begin{itemize}
+	\item 创建项目：\key{Ctrl+Shift+N} -> \textbf{控制台应用}（C++）-> \textbf{不要放中文/空格路径}。
+	\item 核心文件是 \textbf{\code{.vcxproj}}；\code{.filters} 只管 IDE 显示，\code{.user} 与 \code{.vs} 不该提交。
+	\item \textbf{\key{Ctrl+F5} 不调试运行（窗口会停住）}，\textbf{\key{F5} 调试运行（窗口直接关）}。
+	\item 看编译过程用\textbf{输出窗口}，看错误用\textbf{错误列表}，两者不同。
+	\item 命令行构建用 \textbf{MSBuild}，且必须在\textbf{开发者命令提示符}里；32 位平台名是 \textbf{\code{Win32}}。
+	\item \textbf{Debug 与 Release 差异巨大}，性能测试必须在 Release 下做。
+	\item 新建文件会自动加入项目；手工拷进来的文件需要“添加 > 现有项”。
+\end{itemize}
+
+\section{练习题}
+
+\begin{enumerate}
+	\item 创建一个名为 \code{HelloVS} 的控制台应用，用 \key{Ctrl+F5} 和 \key{F5} 各运行一次，说明黑窗口行为为什么不同。
+	\item 在磁盘上找到生成的 \code{.exe}，记录它在 Debug x64 与 Release x64 两种配置下的完整路径。
+	\item 用开发者命令提示符分别构建 Debug 与 Release，并用 \code{/v:minimal} 观察输出差异。
+	\item 用 \code{msbuild /p:VCToolsVersion=...} 锁定工具集版本构建一次，在输出里确认编译器版本。
+	\item 按第 7 节拆出 \code{mathutils.h} / \code{mathutils.cpp}，再故意把 \code{mathutils.cpp} 从项目里排除，观察报什么错，并说明原因。
+	\item 在 Release 下写一个未初始化变量的程序，观察它是否“偶发崩溃”，再用 AddressSanitizer 复查一次。
+\end{enumerate}
+
+\section{相关笔记}
+
+\begin{itemize}
+	\item \textbf{本教程}：Visual Studio 2026 使用教程
+	\item \textbf{上一章}：界面与工作区
+	\item \textbf{下一章}：项目与解决方案管理
+	\item \textbf{多文件项目管理}：多文件项目管理
+	\item \textbf{CMake 基础}：CMake 基础
+\end{itemize}

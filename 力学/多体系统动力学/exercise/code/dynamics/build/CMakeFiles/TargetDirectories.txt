@@ -1,0 +1,3 @@
+D:/studynotes/力学/多体系统动力学/exercise/code/dynamics/build/CMakeFiles/lianxi1.dir
+D:/studynotes/力学/多体系统动力学/exercise/code/dynamics/build/CMakeFiles/ALL_BUILD.dir
+D:/studynotes/力学/多体系统动力学/exercise/code/dynamics/build/CMakeFiles/ZERO_CHECK.dir

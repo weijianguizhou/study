@@ -1,0 +1,531 @@
+% !TeX root = main.tex
+
+在 Visual Studio 2026 里写 C++，项目系统有两条路：MSBuild 的 \code{.vcxproj} 与 CMake。前者是 Windows 的原生项目系统，后者是跨平台的构建描述标准。本章不教 CMake 语法——那是\textbf{CMake 使用指南}的活——只讲两件事：\textbf{VS 2026 怎么消费 CMake 项目}，以及\textbf{怎么让 vcpkg 自动把第三方库接进这套流程}。
+
+\section{为什么在 VS 里用 CMake}
+\subsection{\code{.vcxproj} 的边界与 CMake 的一等公民地位}
+MSBuild 项目把源文件清单、编译链接选项、以及 Windows 专属属性（平台工具集、SDK 版本、配置与平台映射）都写死在 XML 里。它在 Windows 上很成熟（见\textbf{第 06 章}），但\textbf{只在 MSBuild 里成立}：一旦需要 Linux/macOS 构建——哪怕只是让 CI 跑一遍 Linux 单测——就得另维护一份 Makefile 或 CMake，两份描述迟早漂移。相比之下，CMake 在 VS 2026 里是\textbf{一等公民}，不是插件：
+\begin{itemize}
+  \item \textbf{不需要任何扩展}：\ui{文件 > 打开 > 文件夹} 就能直接开工。
+  \item \textbf{CMake 目标视图}与解决方案资源管理器同级，目标直接列出，右键即可生成、调试。
+  \item 调试、IntelliSense、测试资源管理器、性能探查器、clang-tidy、AddressSanitizer 对 CMake 项目\textbf{全部可用}。
+  \item \textbf{自带 CMake 4.1.1}，也允许改用你自己安装的版本，并直接读取 \textbf{\code{CMakePresets.json}} 这一跨编辑器标准格式。
+\end{itemize}
+\begin{tipbox}[提示]
+只要项目要在 Windows 之外构建，或团队里有人用 VS Code/CLion，第一天就选 CMake。MSBuild 只适合“确定一辈子只在 Windows 上”的场景。
+\end{tipbox}
+
+\subsection{两条路的能力对比}
+\begin{longtable}{L{2.6cm}L{5.6cm}L{6.4cm}}
+\toprule \textbf{能力维度} & \textbf{MSBuild 项目（\code{.vcxproj}）} & \textbf{CMake 项目} \\ \midrule
+\endfirsthead
+\toprule \textbf{能力维度} & \textbf{MSBuild 项目（\code{.vcxproj}）} & \textbf{CMake 项目} \\ \midrule
+\endhead
+\bottomrule \endlastfoot
+项目文件 & \code{.sln} + \code{.vcxproj} + \code{.filters}，XML & \code{CMakeLists.txt}，纯文本 \\
+跨平台构建 & [X] 只能由 MSBuild 在 Windows 上构建 & [OK] Windows / Linux / macOS 通吃 \\
+VS 中的界面 & 解决方案资源管理器、属性页、属性表 & 文件夹视图 + CMake 目标视图，无属性页 \\
+选项配置入口 & 图形化属性页（字段极多） & \code{target_*} 命令 + \code{CMakePresets.json} \\
+多配置支持 & 原生（Debug/Release 各有一套属性） & 取决于生成器：VS 生成器支持，Ninja 单配置 \\
+依赖管理 & NuGet、手工配置 & \code{find_package}、FetchContent、\textbf{vcpkg} \\
+\end{longtable}
+\begin{warnbox}[注意]
+两条路\textbf{不是互斥的}。CMake 能反向生成 \code{.sln}/\code{.vcxproj}（见第 5.2 节），“CMake 做主干 + 生成项目文件交给只有 MSBuild 的 CI”完全成立。
+\end{warnbox}
+
+\section{在 VS 中打开 CMake 项目}
+\subsection{用“打开文件夹”，不是“打开项目”}
+CMake 项目\textbf{没有 \code{.sln} 可打开}，这是新手第一个卡点。正确入口是 \ui{文件 > 打开 > 文件夹}，选中含根 \code{CMakeLists.txt} 的目录。打开后 VS 会：
+\begin{enumerate}
+  \item 把根 \code{CMakeLists.txt} 当作构建描述入口；
+  \item 找 \textbf{\code{CMakePresets.json}}（首选）或 \textbf{\code{CMakeSettings.json}}（旧格式）生成配置列表；
+  \item 找 \textbf{\code{vcpkg.json}}，若存在就准备激活 vcpkg 环境（见第 8 节）；
+  \item 读取 \code{.editorconfig}、\code{.gitignore} 与 \code{.vs/} 里的状态。
+\end{enumerate}
+\begin{tipbox}[提示]
+一个工作区只应有一个构建入口。多个互不相关的项目塞进同一文件夹会让配置下拉变乱，多项目请用 \code{add_subdirectory()} 组织。
+\end{tipbox}
+
+\subsection{文件夹视图与 CMake 目标视图}
+解决方案资源管理器左上角有\textbf{视图切换下拉}，在两套视角之间切换：
+
+\begin{lstlisting}[style=textstyle]
+解决方案资源管理器（CMake 项目的两种视角）
+
+[文件夹视图] 编辑源码、增删文件的视角
+MyApp/
++-- src/main.cpp
++-- include/math.h
++-- CMakeLists.txt
++-- CMakePresets.json
++-- vcpkg.json
+
+[CMake 目标视图] 构建、调试、选启动项的视角
+CMake Targets
++-- MyApp
+|   +-- myapp.exe   <- 启动项
++-- libs
+    +-- geometry_lib (STATIC)
+\end{lstlisting}
+
+两套视角\textbf{可以不一致}：磁盘上有文件但没被任何目标引用，就只在文件夹视图里出现；目标生成的中间产物则只在目标视图里有意义。
+
+\subsection{首次配置与工具包（Kit）选择}
+工具栏的\textbf{配置下拉}列出可用配置；第一次配置时 VS 会给出模板供选择（本机 MSVC、本机 Clang、WSL、远程 Linux 等），选定后自动跑一次 \textbf{configure}，输出在 \ui{输出 > 显示输出自 > CMake}，成功的标志是构建目录里出现 \code{CMakeCache.txt}。
+
+\begin{longtable}{L{3.6cm}L{4.4cm}L{6.6cm}}
+\toprule \textbf{菜单命令} & \textbf{等价命令} & \textbf{用途} \\ \midrule
+\endfirsthead
+\toprule \textbf{菜单命令} & \textbf{等价命令} & \textbf{用途} \\ \midrule
+\endhead
+\bottomrule \endlastfoot
+\ui{项目 > 配置缓存} & \code{cmake -S . -B <dir>} & 重新 configure，改 \code{CMakeLists.txt} 会自动触发 \\
+\ui{项目 > 生成} / \ui{全部生成} & \code{cmake --build <dir>} & 增量构建启动目标 / 构建所有目标 \\
+\ui{项目 > 删除缓存并重新配置} & 删 \code{CMakeCache.txt} 后重配 & 换生成器、工具链、工具集后必做 \\
+\end{longtable}
+\begin{warnbox}[注意]
+\code{CMakeCache.txt} 存的是\textbf{第一次 configure 时确定的值}（生成器、编译器路径、工具链文件、各种 \code{-D} 变量）。只点“配置”不会刷新它们——这是第 11 节头号坑的来源，也是下一节推荐 Presets 的原因。
+\end{warnbox}
+
+\section{CMakePresets.json：团队协作的推荐方式}
+\subsection{为什么它取代了 CMakeSettings.json}
+\code{CMakeSettings.json} 是 \textbf{VS 私有}格式；\code{CMakePresets.json} 是 \textbf{CMake 官方标准}，\code{cmake --preset <名字>}、VS Code、CLion、CI 都认。
+
+\begin{longtable}{L{2.6cm}L{5.4cm}L{6.6cm}}
+\toprule \textbf{维度} & \textbf{\code{CMakeSettings.json}（旧）} & \textbf{\code{CMakePresets.json}（推荐）} \\ \midrule
+\endfirsthead
+\toprule \textbf{维度} & \textbf{\code{CMakeSettings.json}（旧）} & \textbf{\code{CMakePresets.json}（推荐）} \\ \midrule
+\endhead
+\bottomrule \endlastfoot
+归属 & Visual Studio 私有 & CMake 官方标准格式 \\
+命令行 / 其它编辑器 & [X] 都不可用 & [OK] \code{cmake --preset x64-debug}，VS Code、CLion 通用 \\
+继承与 CI & 复用能力有限，CI 得另写命令 & [OK] \code{inherits} 多层继承，CI 复用同一个 preset \\
+\end{longtable}
+\begin{warnbox}[注意]
+\textbf{两者同时存在时 VS 以 \code{CMakePresets.json} 为准}，\code{CMakeSettings.json} 被忽略。迁移时先把旧文件删掉或改名，免得改了不生效还找不到原因。
+\end{warnbox}
+
+\subsection{一份可用的 CMakePresets.json}
+放在工作区根目录，与 \code{CMakeLists.txt} 同级：
+
+\begin{lstlisting}[style=jsonstyle]
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "windows-base",
+      "hidden": true,
+      "generator": "Visual Studio 18 2026",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_GENERATOR_PLATFORM": "x64",
+        "CMAKE_GENERATOR_TOOLSET": "version=14.5x",
+        "VCPKG_PLATFORM_TOOLSET_VERSION": "14.5x",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+      }
+    },
+    { "name": "x64-debug", "displayName": "x64 Debug（VS 2026）",
+      "inherits": "windows-base", "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" } },
+    { "name": "x64-release", "inherits": "windows-base",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "RelWithDebInfo" } }
+  ],
+  "buildPresets": [
+    { "name": "x64-debug", "configurePreset": "x64-debug", "configuration": "Debug" },
+    { "name": "x64-release", "configurePreset": "x64-release", "configuration": "RelWithDebInfo" }
+  ]
+}
+\end{lstlisting}
+
+\begin{longtable}{L{4.4cm}C{1.2cm}L{9.0cm}}
+\toprule \textbf{字段} & \textbf{必需} & \textbf{作用} \\ \midrule
+\endfirsthead
+\toprule \textbf{字段} & \textbf{必需} & \textbf{作用} \\ \midrule
+\endhead
+\bottomrule \endlastfoot
+\code{version} & [OK] & \textbf{预设 schema 的版本}，不是文档版本。数值越大解锁字段越多，对 CMake 最低版本要求也越高——团队里取“所有人都能满足的最低值” \\
+\code{configurePresets} & [OK] & 配置预设数组，每项描述“怎么跑一次 configure” \\
+\code{name} / \code{hidden} & [OK] / [X] & 预设的唯一标识（供 \code{inherits} 与 \code{cmake --preset} 引用）；\code{hidden} 为 \code{true} 时不出现在下拉里，只作基类 \\
+\code{generator} / \code{binaryDir} & [X] & 生成器名；构建目录，支持 \code{${sourceDir}}、\code{${presetName}} 宏 \\
+\code{cacheVariables} / \code{inherits} & [X] & 以 \code{-D} 传给 CMake 的缓存变量；继承另一预设，子项覆盖父项 \\
+\code{buildPresets} / \code{testPresets} & [X] & 构建预设（用 \code{configurePreset} 回指，\code{configuration} 选配置）、测试预设（见\textbf{第 11 章}） \\
+\end{longtable}
+\begin{tipbox}[提示]
+\code{CMAKE_GENERATOR_PLATFORM} 与 \code{CMAKE_GENERATOR_TOOLSET} 分别对应命令行的 \code{-A x64} 与 \code{-T}，比用某些 schema 版本才有的图形字段更稳；\code{displayName} 是下拉里给人看的名字，VS 优先显示它。
+\end{tipbox}
+
+保存 Presets 后，VS 会立刻在工具栏\textbf{配置下拉}里列出所有非隐藏预设，同时 \ui{项目 > 配置 <项目名>} 也列出同一批；文件被监视，一保存就自动重新 configure。整条链路上，\textbf{Presets 是配置的唯一真源}，VS 只负责把它翻译成一次 configure 调用。
+
+\section{CMake 设置编辑器}
+\subsection{界面构成与 Presets 的取舍}
+\ui{项目 > CMake 设置} 打开 \textbf{CMake 设置编辑器}——一个为 \code{CMakeSettings.json} 设计的图形界面：左栏是配置列表（可增删）；中栏是选中配置的字段（名称、生成器、平台、工具集、构建根目录、CMake 与构建命令参数）；下栏是\textbf{缓存变量表}，逐行填“名字 / 类型 / 值”（\code{BOOL}/\code{STRING}/\code{PATH}/\code{FILEPATH}），与 \code{cacheVariables} 一一对应。它的价值在于\textbf{不用背 JSON 字段名}，但\textbf{只覆盖一部分字段}：存在 \code{CMakePresets.json} 时，\code{inherits}、\code{hidden}、\code{buildPresets}、条件表达式这类结构性内容无法在图形界面里表达，只能直接编 JSON。
+
+\begin{longtable}{L{5.6cm}L{9.4cm}}
+\toprule \textbf{你的处境} & \textbf{建议} \\ \midrule
+\endfirsthead
+\toprule \textbf{你的处境} & \textbf{建议} \\ \midrule
+\endhead
+\bottomrule \endlastfoot
+新建项目、团队协作、要接 CI & 直接用 \code{CMakePresets.json}，编辑器只当“看一眼缓存变量”的工具 \\
+已有 \code{CMakeSettings.json} 且在跑 & 先别动；等要接 CI 或 VS Code 时一次性迁移到 Presets \\
+\end{longtable}
+\begin{tipbox}[提示]
+只要是\textbf{缓存变量}，改完都要重新配置。VS 一般会提示“CMake 缓存已过期，是否重新配置”——选是，别选忽略。
+\end{tipbox}
+
+\section{生成器与工具集}
+\subsection{\code{Visual Studio 18 2026} 生成器、\code{-T} 与自带的 CMake}
+CMake 为 VS 2026 提供的生成器名是 \textbf{\code{Visual Studio 18 2026}}（与 VS 2022 的 \code{Visual Studio 17 2022} 同一命名规律）。在 VS 里通常不必敲命令行，把 \code{generator} 写进 Presets 即可，效果一致：
+
+\begin{lstlisting}[style=shellstyle]
+:: 用 VS 2026 生成器配置；-A 指定平台，-T 指定工具集版本
+cmake -S . -B out\build\vs -G "Visual Studio 18 2026" -A x64 -T "version=14.5x"
+cmake --build out\build\vs --config Release      :: 多配置生成器必须带 --config
+\end{lstlisting}
+\begin{itemize}
+  \item \code{-T "version=14.5x"} 里的 \code{14.5x} 代表 \textbf{14.50 / 14.51 这一档}；想精确锁死就写完整版本号（如 \code{version=14.50.35717}），构建才可复现。\textbf{指定的工具集必须已安装}，否则配置阶段直接失败——用 VS 安装程序补装“MSVC v145 生成工具”；在 VS 的 CMake 项目里它对应缓存变量 \textbf{\code{CMAKE_GENERATOR_TOOLSET}}，最终同样变成 \code{-T}。
+  \item 别把两件事搞混：\textbf{\code{v145} 是平台工具集家族}，\code{14.50}/\code{14.51} 是家族内的具体版本（见\textbf{第 1 章}）。
+\end{itemize}
+VS 2026 还在安装目录的 \codeP{Common7\textbackslash{}IDE\textbackslash{}CommonExtensions\textbackslash{}Microsoft\textbackslash{}CMake} 子树里自带一份 \textbf{CMake 4.1.1}，所以\textbf{不装 CMake 也能直接开工}；想改用自己安装的版本，在 VS 的选项里搜索 \code{CMake} 指定可执行文件路径。
+
+\begin{warnbox}[注意]
+CMake 4.x 移除了对 \code{cmake_minimum_required(VERSION < 3.5)} 的兼容。老项目里写着 \code{cmake_minimum_required(VERSION 3.0)} 的，用自带的 CMake 配置会直接报错——把版本号提到 3.5 以上即可。这是升级到 VS 2026 后 CMake 项目最常见的第一个报错。
+\end{warnbox}
+
+\subsection{反向：从 CMake 生成并构建 Visual Studio 项目}
+链路是双向的。用 VS 生成器 configure 之后，构建目录里就是货真价实的 \code{.sln} + \code{.vcxproj}，可以用 MSBuild 构建，也可以直接双击打开；VS 2026 支持新的 \textbf{SLNX} 解决方案格式，这套“CMake 生成 VS 解决方案 -> 在 VS 里构建”的流程在这一代更顺畅。需要它的场合：CI 上只有 MSBuild、想用 MSBuild 侧的完整项目系统工具、要给不用 CMake 的同事交付。
+
+\begin{warnbox}[注意]
+生成出来的 \code{.sln} / \code{.vcxproj} 是\textbf{产物而非源码}，手工改了下次 configure 就被覆盖。要长期生效的修改一律写回 \code{CMakeLists.txt}。
+\end{warnbox}
+
+\section{构建与调试 CMake 目标}
+\subsection{选择启动项、断点与 F5}
+VS 需要知道 \key{F5} 启动哪个 exe：打开 \textbf{CMake 目标视图}，对目标右键 \textbf{设为启动项}（工具栏绿色三角旁的下拉也能切换），启动配置会写进 \code{.vs} 目录下的 \code{launch.vs.json}——\textbf{这是本机状态，应加入 \code{.gitignore}}。之后调试体验与 \code{.vcxproj} 项目完全一致：\key{F9} 断点、\key{F5} 启动、\key{F10}/\key{F11} 单步，\textbf{监视}/\textbf{调用堆栈}/\textbf{即时窗口}全部可用，工具栏还能直接填\textbf{命令行参数与工作目录}。唯一区别是“调试器怎么找到 exe”：VS 从 CMake 目标信息推断输出路径，而不是读 \code{.vcxproj} 的 \code{OutDir}——你在 \code{CMakeLists.txt} 里设了 \code{RUNTIME_OUTPUT_DIRECTORY}，调试器也会跟着走。
+
+\subsection{调试 \code{CMakeLists.txt} 脚本本身}
+CMake 脚本可以被调试，很多人不知道：在 \code{CMakeLists.txt}（或任何被 \code{include()} 的 \code{.cmake} 文件）里按 \key{F9} 设断点，然后执行 \ui{项目 > 使用 CMake 调试配置缓存}。VS 会以“调试脚本”的方式跑 configure，停在断点时可查看 \code{${}} 变量的实际值、单步走 \code{if()} 分支。
+
+\begin{longtable}{L{5.0cm}L{10.0cm}}
+\toprule \textbf{症状} & \textbf{在断点处看什么} \\ \midrule
+\endfirsthead
+\toprule \textbf{症状} & \textbf{在断点处看什么} \\ \midrule
+\endhead
+\bottomrule \endlastfoot
+\code{find_package} 找不到包 & \code{XXX_FOUND}、\code{XXX_DIR} 到底是什么 \\
+条件分支走错 / 路径拼接错误 & 参与 \code{if()} 判断的变量；\code{${CMAKE_CURRENT_SOURCE_DIR}}、\code{${CMAKE_BINARY_DIR}} \\
+\end{longtable}
+\begin{warnbox}[注意]
+脚本调试只覆盖 configure 阶段；构建阶段的问题（编译、链接报错）仍按\textbf{第 08 章}排查。按 \key{F10} 会让根 \code{CMakeLists.txt} 每一行都停一下，长脚本优先用条件断点。
+\end{warnbox}
+
+\subsection{CMake 模块的 IntelliSense}
+VS 对 CMake 语言本身提供编辑器支持：\code{include(...)} 引入的 \textbf{CMake 模块有补全}，鼠标悬停在命令、模块、变量上有\textbf{快速信息}（签名与说明），\code{${}} 变量引用有补全与跳转。能做到这些，是因为 VS 在后台持续通过 CMake 的文件 API 解析项目结构。
+
+\begin{keybox}[实战场景]
+一个项目在 Windows 上 \code{find_package(Qt6)} 正常、配到 WSL 就失败。与其反复加 \code{message()} 重配，不如在 \code{find_package} 后面打个断点，用 \ui{项目 > 使用 CMake 调试配置缓存} 跑一次——两分钟就能看清是 \code{Qt6_DIR} 为空，还是 Linux 侧的 \code{CMAKE_PREFIX_PATH} 没设。
+\end{keybox}
+
+\section{CMake 项目的多配置}
+\subsection{单配置与多配置生成器的差别}
+\begin{longtable}{L{4.4cm}L{2.2cm}L{8.0cm}}
+\toprule \textbf{生成器} & \textbf{类型} & \textbf{说明} \\ \midrule
+\endfirsthead
+\toprule \textbf{生成器} & \textbf{类型} & \textbf{说明} \\ \midrule
+\endhead
+\bottomrule \endlastfoot
+\code{Ninja} / \code{Unix Makefiles} & \textbf{单配置} & 一个构建目录只对应一个配置，编译快，WSL/远程 Linux 的默认选择 \\
+\code{Visual Studio 18 2026} & \textbf{多配置} & 一个构建目录装下 Debug/Release/RelWithDebInfo，由 MSBuild 管理 \\
+\code{Ninja Multi-}\allowbreak\code{Config} & \textbf{多配置} & Ninja 的多配置版本，跨平台，兼顾速度与多配置 \\
+\end{longtable}
+\begin{lstlisting}[style=textstyle]
+单配置（Ninja）：每个配置一个构建目录，各有一份 CMAKE_BUILD_TYPE
+out/build/
++-- x64-debug/
+|   +-- CMakeCache.txt
+|   +-- myapp.exe        <- Debug
++-- x64-release/
+    +-- CMakeCache.txt
+    +-- myapp.exe        <- Release
+
+多配置（Visual Studio 18 2026）：一个构建目录装下全部配置
+out/build/
++-- vs-x64/
+    +-- CMakeCache.txt
+    +-- MyApp.sln
+    +-- Debug/myapp.exe
+    +-- RelWithDebInfo/myapp.exe
+\end{lstlisting}
+
+\begin{longtable}{L{3.4cm}L{5.8cm}L{5.4cm}}
+\toprule \textbf{动作} & \textbf{单配置（Ninja）} & \textbf{多配置（Visual Studio 生成器）} \\ \midrule
+\endfirsthead
+\toprule \textbf{动作} & \textbf{单配置（Ninja）} & \textbf{多配置（Visual Studio 生成器）} \\ \midrule
+\endhead
+\bottomrule \endlastfoot
+选配置的时机 & \textbf{configure 时}定死 & \textbf{build 时}决定 \\
+用什么指定 & \code{-DCMAKE_BUILD_TYPE=}\allowbreak\code{Release} & \code{--config Release} \\
+\code{CMAKE_BUILD_TYPE} 是否有效 & [OK] & [X] \textbf{被忽略}，不报错也不生效 \\
+同时要 Debug 与 Release & 开两个构建目录 & 同一目录切配置（VS 里就是工具栏配置下拉） \\
+\end{longtable}
+\begin{warnbox}[注意]
+\textbf{“多配置生成器里写 \code{CMAKE_BUILD_TYPE} 不生效”是最常见的沉默失败}——不报错，只是被忽略。用多配置生成器时，配置一律通过 \code{buildPresets} 的 \code{configuration} 字段或 \code{--config} 指定。生成器表达式 \code{$<CONFIG:...>} 在两种生成器下都可用。
+\end{warnbox}
+
+\section{vcpkg 集成}
+\subsection{清单模式与经典模式}
+\begin{longtable}{L{2.6cm}L{5.4cm}L{6.6cm}}
+\toprule \textbf{维度} & \textbf{经典模式（Classic）} & \textbf{清单模式（Manifest，推荐）} \\ \midrule
+\endfirsthead
+\toprule \textbf{维度} & \textbf{经典模式（Classic）} & \textbf{清单模式（Manifest，推荐）} \\ \midrule
+\endhead
+\bottomrule \endlastfoot
+依赖声明位置 & 无，靠命令行 \code{vcpkg install} & 项目根目录的 \textbf{\code{vcpkg.json}} \\
+库安装到哪 & vcpkg 安装目录的 \code{installed/} & \textbf{项目构建目录}下的 \code{vcpkg_installed/} \\
+版本可复现 & [X] 换个时间装可能拿到别的版本 & [OK] 由 \code{builtin-baseline} 锁定 \\
+机器间一致性 & 靠文档与口头约定 & 依赖清单\textbf{提交进版本库}即可 \\
+多项目共存 & 全局安装的库互相干扰 & 各项目独立，互不影响 \\
+VS 中的体验 & 需手工配工具链 & \textbf{检测到 \code{vcpkg.json} 后自动生效} \\
+\end{longtable}
+也就是说，只要工作区根目录有 \code{vcpkg.json}，VS 就会自动把它自带的 vcpkg 接进 CMake 配置——\textbf{不需要你手写 \code{CMAKE_TOOLCHAIN_FILE}}，输出窗口的 CMake 面板里能看到 vcpkg 正在解析清单、安装依赖。想改用你自己克隆的 vcpkg（团队统一版本时常用），设置环境变量 \textbf{\code{VCPKG_ROOT}} 指向那份克隆即可。
+
+\begin{warnbox}[注意]
+\textbf{vcpkg 首次配置可能极慢}。依赖没有预编译二进制时 vcpkg 会从源码编译，带 GUI/网络依赖的库编译半小时以上很常见，而且\textbf{每个配置各编一份}。第一次配完就去做别的事，别中途反复取消重配，那只会更慢。
+\end{warnbox}
+
+\subsection{一份 vcpkg.json 示例}
+\begin{lstlisting}[style=jsonstyle]
+{
+  "name": "myapp",
+  "version": "1.0.0",
+  "dependencies": [
+    "fmt",
+    { "name": "curl", "default-features": false, "features": [ "ssl" ] }
+  ],
+  "builtin-baseline": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0",
+  "overrides": [ { "name": "fmt", "version": "10.2.1" } ],
+  "features": {
+    "tests": { "description": "构建单元测试", "dependencies": [ "gtest" ] }
+  }
+}
+\end{lstlisting}
+
+\begin{longtable}{L{3.8cm}L{11.2cm}}
+\toprule \textbf{字段} & \textbf{作用} \\ \midrule
+\endfirsthead
+\toprule \textbf{字段} & \textbf{作用} \\ \midrule
+\endhead
+\bottomrule \endlastfoot
+\code{name} / \code{version} & 项目自身标识，清单模式要求 \\
+\code{dependencies} & 依赖列表。可只写包名，也可写成对象以精确控制特性；\code{default-features} 设 \code{false} 可避免拖进用不到的东西 \\
+\code{builtin-}\allowbreak\code{baseline} & \textbf{锁定基线}：vcpkg 仓库的某个提交号，决定所有依赖解析到的版本。\textbf{必须换成你自己 vcpkg 仓库的真实提交号}（\code{git -C <vcpkg目录> rev-parse HEAD}） \\
+\code{overrides} & 强制某依赖用指定版本，优先级高于基线，用于临时绕开有问题的版本 \\
+\code{features} & 顶层 \code{features} 是\textbf{本项目对外暴露的特性}（消费方可用 \code{"myapp[core,tests]"} 引入）；依赖对象里的 \code{features} 则是只启用该依赖的指定特性 \\
+\end{longtable}
+\begin{tipbox}[提示]
+特性名（如示例里的 \code{ssl}）以你所用的基线为准——\code{vcpkg search <包名>}，或直接查看官方 ports 目录里该包的 \code{vcpkg.json} 最可靠。
+\end{tipbox}
+
+\subsection{vcpkg-configuration.json 与注册表}
+\code{vcpkg.json} 管“要什么”，\code{vcpkg-configuration.json} 管“从哪儿拿”：
+
+\begin{lstlisting}[style=jsonstyle]
+{
+  "default-registry": { "kind": "builtin", "baseline": "a1b2c3…" },
+  "registries": [
+    { "kind": "git", "repository": "https://example.com/your-org/vcpkg-registry.git",
+      "baseline": "f0e1d2c3b4a5968778695a4b3c2d1e0f1a2b3c4d",
+      "packages": [ "your-company-lib" ] }
+  ]
+}
+\end{lstlisting}
+
+概念上分三类：\textbf{内置注册表（builtin）} 指 vcpkg 自带的官方 ports 集合；\textbf{git 注册表} 指你自己或公司维护的 ports 仓库，用来分发私有库与打过补丁的第三方库；\textbf{\code{baseline}} 是注册表的基线提交号，与清单里的 \code{builtin-baseline} 同一套机制——\textbf{没有基线，版本就不可复现}。\code{packages} 声明该注册表负责哪些包，其余仍走默认注册表；同一个包只能由一个注册表提供，重叠声明会报错，私有包记得加组织前缀避免与官方包重名。
+
+\subsection{工具集对齐与 CMAKE\_TOOLCHAIN\_FILE}
+vcpkg 编译依赖时用的编译器必须与主项目一致，否则会出现“依赖用 v143 编、主程序用 v145 链”的诡异错误。\textbf{\code{VCPKG_PLATFORM_TOOLSET_VERSION}} 就是给 vcpkg 指定 MSVC 平台工具集版本的缓存变量，取值与 \code{-T} 的 \code{version=} 同一套版本号；把它与 \code{CMAKE_GENERATOR_TOOLSET} 写成同一个数并提交进 Presets 最省事：
+
+\begin{lstlisting}[style=jsonstyle]
+"cacheVariables": {
+  "VCPKG_PLATFORM_TOOLSET_VERSION": "14.50",
+  "CMAKE_GENERATOR_TOOLSET": "version=14.50",
+  "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+  "VCPKG_TARGET_TRIPLET": "x64-windows"
+}
+\end{lstlisting}
+
+在 VS 里用清单模式通常不必写工具链文件，但\textbf{命令行构建、CI、以及不用 VS 内置 vcpkg 的场景}必须自己指定：
+
+\begin{lstlisting}[style=shellstyle]
+cmake -S . -B out\build\vs -G "Visual Studio 18 2026" -A x64 ^
+      -DCMAKE_TOOLCHAIN_FILE=%VCPKG_ROOT%/scripts/buildsystems/vcpkg.cmake ^
+      -DVCPKG_TARGET_TRIPLET=x64-windows
+\end{lstlisting}
+\begin{itemize}
+  \item \textbf{\code{CMAKE_TOOLCHAIN_FILE}} 指向 vcpkg 的工具链脚本，它让 \code{find_package} 自动找到 vcpkg 装的库；\code{$env{VCPKG_ROOT}} 是预设里的环境变量宏，路径分隔符统一用 \code{/}。
+  \item \textbf{\code{VCPKG_TARGET_TRIPLET}} 指定三元组（平台 + 运行时 + 链接方式）：\code{x64-windows} 是动态链接，静态链接用 \code{x64-windows-static}。\textbf{三元组必须与项目的运行库设置一致}，否则链接期会爆重复符号或找不到符号（见\textbf{第 12 章}）。
+  \item 工具链文件是\textbf{缓存变量，只在第一次 configure 时生效}，改了它必须 \ui{项目 > 删除缓存并重新配置}。
+\end{itemize}
+\section{手动管理第三方库的替代方案}
+\subsection{直接改目录，或者用 NuGet}
+最原始的办法是把路径手工填进构建系统：MSBuild 项目在 \ui{项目 > 属性 > C/C++ > 常规 > 附加包含目录} 填头文件目录、\ui{链接器 > 常规 > 附加库目录} 填 \code{.lib} 目录、\ui{链接器 > 输入 > 附加依赖项} 写库名（字段详情见\textbf{第 06 章}）；CMake 项目本质相同，只是换成 \code{target_include_directories()} 与 \code{target_link_libraries()}。它的问题随规模放大：\textbf{路径写死}（换机器就要重配）、\textbf{Debug/Release 各配一遍}（\code{fmtd.lib} 与 \code{fmt.lib} 容易错配）、\textbf{传递依赖要手工补}、\textbf{版本信息不在仓库里}（新人不知道装哪个版本）。NuGet 则是另一条路，但用在 C++ 上限制明显：包必须提供 \code{.props}/\code{.targets} 才能自动接线，C++ 包数量远少于 vcpkg 且大量 Windows-only，\textbf{对 CMake 项目的支持也弱}（原生集成主要面向 MSBuild 项目）。
+
+\subsection{为什么推荐 vcpkg}
+\begin{longtable}{L{3.4cm}C{1.5cm}C{1.4cm}C{1.5cm}C{1.9cm}L{3.7cm}}
+\toprule \textbf{方案} & \textbf{版本可复现} & \textbf{跨平台} & \textbf{传递依赖} & \textbf{与 CMake 配合} & \textbf{适合场景} \\ \midrule
+\endfirsthead
+\toprule \textbf{方案} & \textbf{版本可复现} & \textbf{跨平台} & \textbf{传递依赖} & \textbf{与 CMake 配合} & \textbf{适合场景} \\ \midrule
+\endhead
+\bottomrule \endlastfoot
+手工改包含/库目录 & [X] & [X] & [X] & 一般 & 一次性小工具、单个头文件库 \\
+NuGet & [OK] & [X] & [OK] & 弱 & MSBuild 项目 + Windows 专属包 \\
+FetchContent 拉源码 & [OK]（锁 tag） & [OK] & [OK] & [OK] & 依赖少、愿意每次编译依赖 \\
+\textbf{vcpkg 清单模式} & [OK] & [OK] & [OK] & [OK] & \textbf{正式项目的默认选择} \\
+\end{longtable}
+\begin{tipbox}[提示]
+vcpkg 生态里找不到的库比想象中少，但确实存在（许可证受限、内部私有库）。私有库用第 8.3 节的\textbf{自定义 git 注册表}解决，比退回手工配路径划算得多。
+\end{tipbox}
+
+\section{WSL / 容器 / 远程 Linux 开发}
+\subsection{WSL}
+（1）在 VS 安装程序里勾选工作负荷 \textbf{“使用 C++ 的 Linux、Mac 和嵌入式开发”}（旧名 “C++ Linux”，本代改了名，按新名字搜）；（2）在 WSL 发行版里装工具链 \code{sudo apt install build-essential gdb cmake ninja-build}；（3）\ui{文件 > 打开 > 文件夹} 打开项目，在\textbf{配置下拉}里选面向 WSL 的配置（或在 Presets 里加一个使用 WSL 工具包的配置）；（4）构建并 \key{F5}，调试由 WSL 里的 \code{gdb} 承担，断点、单步、调用堆栈与本地一致。关键是 \textbf{IntelliSense 也在 Linux 侧运行}，Linux 特有的头文件路径与宏才准确，否则会看到一堆“找不到 \code{<unistd.h>}”的假报错。
+
+\begin{tipbox}[提示]
+项目放 WSL 的\textbf{原生文件系统}（\code{/home/<用户>/...}）而不是 \code{/mnt/c/...}。跨文件系统访问的 I/O 开销很大，大型项目的构建与 IntelliSense 速度差距非常明显。
+\end{tipbox}
+
+\subsection{Dev Containers（Docker 与 Podman）}
+容器路线把“开发环境”本身纳入版本控制：仓库里放一个 \code{.devcontainer/}\allowbreak\code{devcontainer.json} 描述基础镜像、工具链与挂载；打开该文件夹后 VS 提供\textbf{在容器中打开}的入口，之后的编辑、构建、调试都在容器内进行。\textbf{Docker 与 Podman 都支持}，不是只有 Docker 一条路；VS 2026 的\textbf{附加到进程}从 18.10 起支持 \textbf{Podman} 容器，并且\textbf{可以调试容器内的 C++ 与 .NET 进程}。
+
+\begin{warnbox}[注意]
+容器里必须装有调试工具链（\code{gdb}、编译器等），否则只能构建不能调试；容器内外的\textbf{路径映射}也要对上，\code{devcontainer.json} 的挂载写错，断点就会变成空心的。
+\end{warnbox}
+
+\subsection{远程 Linux（SSH）与远程单元测试}
+连一台真正的 Linux 机器（物理机、虚拟机或服务器）：在 \ui{工具 > 选项 > 跨平台 > 连接管理器} 里添加 SSH 连接（菜单名在不同版本间略有差异，找不到就在选项里搜“跨平台”）；在配置下拉里选该远程连接对应的配置，或自己写一个指定远程编译器与 Ninja 生成器的预设；configure 与 build 在远端执行，调试通过远端 \code{gdbserver} 完成。\textbf{测试资源管理器还能发现并运行远端机器上的单元测试}（远程单元测试），配合测试预设更好用（见\textbf{第 11 章}）。三条路线怎么选：\textbf{WSL} 适合个人在 Windows 与 Linux 间来回切，最省事；\textbf{Dev Containers} 适合团队要求“环境一致、开箱即用”；\textbf{远程 Linux（SSH）} 适合目标就是真实服务器、发行版或交叉编译的场景。
+
+\begin{keybox}[实战场景]
+一个只在 Windows 上维护的项目要接 Linux CI。与其在 CI 里重写构建脚本，不如先在 VS 里连一台 Linux 跑通 configure——\textbf{同一份 \code{CMakeLists.txt} 与 \code{CMakePresets.json}，Windows 侧用 VS 生成器，Linux 侧加一个 Ninja 预设}，CI 里直接 \code{cmake --preset linux-release} 即可。这正是第 3 节推荐 Presets 的根本原因。
+\end{keybox}
+
+\section{常见坑}
+\begin{longtable}{L{4.2cm}L{4.6cm}L{5.8cm}}
+\toprule \textbf{现象} & \textbf{原因} & \textbf{处置} \\ \midrule
+\endfirsthead
+\toprule \textbf{现象} & \textbf{原因} & \textbf{处置} \\ \midrule
+\endhead
+\bottomrule \endlastfoot
+找不到编译器，或配置过了但构建命令跑不起来 & \textbf{生成器与 Kit 不匹配}：Ninja 配了 MSVC 工具集，或 VS 生成器却指定 Linux 的 gcc & 生成器与编译器必须成对：VS 生成器 <-> MSVC，Ninja <-> 显式指定 \code{CMAKE_CXX_COMPILER} \\
+改了工具链、工具集或某个 \code{-D} 变量却完全不生效 & \textbf{\code{CMakeCache.txt} 脏了}：缓存变量只写一次 & \ui{项目 > 删除缓存并重新配置}，或删掉构建目录里的 \code{CMakeCache.txt} \\
+路径报错、找不到文件、输出乱码 & \textbf{路径含中文或空格}：脚本与工具的引号处理不一致 & 项目路径只用 ASCII 字母、数字、下划线与短横线，避开 \codeP{C:\textbackslash{}Program Files} 这类目录 \\
+报“找不到指定版本的 MSVC 工具集” & \textbf{工具集版本对不上}：\code{-T version=14.5x} 指定的版本没装 & 用安装程序补装，或改成已安装的版本；同时核对 \code{VCPKG_PLATFORM_}\allowbreak\code{TOOLSET_VERSION} \\
+首次配置卡几十分钟，像死了一样 & \textbf{vcpkg 首次构建极慢}：依赖要源码编译，且每个配置一份 & 耐心等完第一次，别中途取消；减少 \code{dependencies}、关掉用不到的 \code{features} \\
+Debug 里混进 Release 产物，或产物路径到处散落 & \textbf{多配置目录混乱}：多配置生成器里写了 \code{CMAKE_BUILD_TYPE}，或 \code{binaryDir} 没带 \code{${presetName}} & 多配置一律用 \code{--config}／配置下拉；\code{binaryDir} 统一写 \code{${sourceDir}/out/build/}\allowbreak\code{${presetName}} \\
+\end{longtable}
+\section{端到端实战：从零到 F5}
+\subsection{目录结构}
+做一个用 \code{fmt} 打印格式化输出的控制台程序：Windows 上用 VS 2026 构建，依赖交给 vcpkg，配置由 Presets 描述。
+
+\begin{lstlisting}[style=textstyle]
+MyApp/                          <- 用 VS 打开的就是这个文件夹
++-- CMakeLists.txt              <- 构建描述
++-- CMakePresets.json           <- 配置描述（提交）
++-- vcpkg.json                  <- 依赖清单（提交）
++-- src/main.cpp
++-- out/build/x64-debug/        <- 全部产物，不进版本库
+    +-- vcpkg_installed/x64-windows/{include,lib}   <- vcpkg 在这里装依赖
+    +-- Debug/myapp.exe                             <- F5 启动的就是它
+\end{lstlisting}
+
+\begin{tipbox}[提示]
+\code{.gitignore} 里写 \code{/out/}、\code{/.vs/}、\code{/vcpkg_installed/} 三行就够。构建目录与 vcpkg 安装目录都是\textbf{可再生}的，提交它们只会制造冲突。
+\end{tipbox}
+
+\subsection{三个文件}
+\code{CMakeLists.txt}——注意这里只有标准 CMake 写法，\textbf{没有任何 vcpkg 专属命令}：
+
+\begin{lstlisting}[style=cmakestyle]
+cmake_minimum_required(VERSION 3.20)
+project(MyApp VERSION 1.0.0 LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 20)          # 对应属性页里的 /std:c++20
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+add_executable(myapp src/main.cpp)
+find_package(fmt CONFIG REQUIRED)   # vcpkg 装上 fmt 后就能直接找到
+target_link_libraries(myapp PRIVATE fmt::fmt)
+\end{lstlisting}
+
+\code{CMakePresets.json}——实战先留一个最小配置（完整字段与解释见第 3.2 节），因为根目录有 \code{vcpkg.json}，VS 会自动注入 vcpkg 工具链：
+
+\begin{lstlisting}[style=jsonstyle]
+{
+  "version": 3,
+  "configurePresets": [
+    { "name": "x64-debug", "generator": "Visual Studio 18 2026",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "cacheVariables": { "CMAKE_GENERATOR_PLATFORM": "x64" } }
+  ],
+  "buildPresets": [
+    { "name": "x64-debug", "configurePreset": "x64-debug", "configuration": "Debug" }
+  ]
+}
+\end{lstlisting}
+
+\code{vcpkg.json}——把 \code{builtin-baseline} 换成你自己 vcpkg 仓库的真实提交号（\codeP{git -C %VCPKG\_ROOT% rev-parse HEAD}）：
+
+\begin{lstlisting}[style=jsonstyle]
+{ "name": "myapp", "version": "1.0.0", "dependencies": [ "fmt" ],
+  "builtin-baseline": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0" }
+\end{lstlisting}
+
+\begin{lstlisting}[style=cppstyle]
+#include <fmt/core.h>
+#include <string>
+
+int main() {
+    std::string name = "VS 2026";
+    fmt::print("Hello, {}!\n", name);
+}
+\end{lstlisting}
+
+\subsection{在 VS 中配置、构建、调试}
+\begin{enumerate}
+  \item \textbf{打开项目}：\ui{文件 > 打开 > 文件夹}，选中 \code{MyApp} 目录。
+  \item \textbf{选择配置}：工具栏配置下拉里选 \code{x64-debug}，VS 自动跑第一次 configure。这一步会\textbf{下载并编译 \code{fmt}}，可能要等几分钟，进度在 \ui{输出 > 显示输出自 > CMake}。
+  \item \textbf{确认配置成功}：构建目录里出现 \code{CMakeCache.txt} 与 \code{vcpkg_installed/}\allowbreak\code{x64-windows/}\allowbreak\code{include/fmt/}。
+  \item \textbf{设启动项并调试}：解决方案资源管理器切到 \textbf{CMake 目标视图}，右键 \code{myapp} -> \textbf{设为启动项}；在 \code{src/main.cpp} 的 \code{fmt::print} 行按 \key{F9}，按 \key{F5}，停在断点后在\textbf{监视}里看一眼 \code{name}，\key{F10} 单步，\key{F5} 继续。
+  \item \textbf{验证命令行一致}：在开发者命令提示符里跑 \code{cmake --preset x64-debug} 与 \code{cmake --build --preset x64-debug}，确认同一份 Presets 在 IDE 之外也能跑通。
+\end{enumerate}
+\begin{keybox}[实战场景]
+走到第 5 步时你已经具备接入 CI 的全部条件——\textbf{依赖声明在 \code{vcpkg.json}，配置在 \code{CMakePresets.json}，命令是 \code{cmake --preset ... && cmake --build --preset ...}}。构建机上只要装 VS Build Tools、设好 \code{VCPKG_ROOT}，就能得到与本地一致的结果，不需要任何人肉步骤。
+\end{keybox}
+
+\section{小结}
+\begin{itemize}
+  \item \textbf{CMake 在 VS 2026 里是一等公民}：无需扩展，\ui{文件 > 打开 > 文件夹} 即可获得目标视图、调试、IntelliSense 与测试支持；跨平台或多人协作优先选它，\code{.vcxproj} 留给纯 Windows 场景。
+  \item 解决方案资源管理器可在\textbf{文件夹视图}（编辑）与 \textbf{CMake 目标视图}（构建、调试、选启动项）之间切换。
+  \item \textbf{\code{CMakePresets.json} 是推荐的配置方式}：标准格式、支持 \code{inherits}、命令行与 CI 都能复用；存在时 VS 以它为准并忽略旧的 \code{CMakeSettings.json}，图形化的 \textbf{CMake 设置编辑器}只适合临时改缓存变量。
+  \item VS 2026 \textbf{自带 CMake 4.1.1}，生成器是 \textbf{\code{Visual Studio 18 2026}}；用 \textbf{\code{-T "version=14.5x"}}（或缓存变量 \code{CMAKE_GENERATOR_TOOLSET}）选工具集版本，vcpkg 侧对应 \code{VCPKG_PLATFORM_TOOLSET_VERSION}。注意 CMake 4.x 不再兼容 \code{cmake_minimum_required(VERSION < 3.5)}。
+  \item 在 CMakeLists.txt 里设断点 + \ui{项目 > 使用 CMake 调试配置缓存} 可以调试 CMake 脚本本身，是排查 \code{find_package} 失败的利器；CMake 模块（\code{include(...)}）还有补全与快速信息。
+  \item \textbf{多配置生成器（Visual Studio）用 \code{--config} 选配置，\code{CMAKE_BUILD_TYPE} 会被静默忽略}；单配置生成器（Ninja）则必须在 configure 时用 \code{CMAKE_BUILD_TYPE} 定死。
+  \item \textbf{vcpkg 清单模式优于经典模式}：依赖装进项目的 \code{vcpkg_installed/}，版本由 \code{builtin-baseline} 锁定，\code{vcpkg-configuration.json} 可接私有 git 注册表；VS 检测到 \code{vcpkg.json} 会自动激活环境，无需手写工具链文件。
+  \item \textbf{WSL、Dev Containers（Docker 与 Podman）、远程 Linux（SSH）} 三条路线都能在 Windows 上开发 Linux 目标；工作负荷已改名为 \textbf{“使用 C++ 的 Linux、Mac 和嵌入式开发”}，且附加到进程已支持 Podman 容器、可调试 C++ 容器进程。
+\end{itemize}
+\section{练习题}
+\begin{enumerate}
+  \item 用 \ui{文件 > 打开 > 文件夹} 打开一个含 \code{CMakeLists.txt} 的目录，在\textbf{文件夹视图}与 \textbf{CMake 目标视图}间来回切换，记录两边“多出来”和“少掉”的条目并解释原因。
+  \item 手写一份含 \code{inherits} 的 \code{CMakePresets.json}：一个 \code{hidden} 基类预设加两个继承它的子预设，确认 VS 的配置下拉里只出现两个子预设。
+  \item 用 \code{Ninja} 与 \code{Visual Studio 18 2026} 把同一项目配到两个构建目录并各构建一次；在单配置那份里改 \code{CMAKE_BUILD_TYPE} 观察生效，在多配置那份里做同样的事并观察\textbf{不生效}。
+  \item 在 \code{CMakeLists.txt} 的 \code{find_package} 处设断点，用 \ui{项目 > 使用 CMake 调试配置缓存} 启动，查看包目录变量在断点处的实际值，并说明它由谁设置。
+  \item 给项目加上 \code{vcpkg.json} 引入一个依赖，把 \code{builtin-baseline} 改成你本机 vcpkg 的真实提交号；记录首次配置耗时，删掉 \code{vcpkg_installed/} 再配一次，比较两次差异。
+  \item 用 \code{-T "version=14.50"} 与不指定 \code{-T} 各配置一次，在 \code{CMakeCache.txt} 或诊断输出里确认实际使用的工具集版本，写出结论。
+  \item 给含单元测试的项目补上 \code{testPresets}，并给 Linux 侧加一个 Ninja 预设；在 Windows 与 Linux（WSL 或 SSH 均可）各跑一次测试，确认同一份 Presets 两边都能工作。
+\end{enumerate}
+\section{相关笔记}
+\begin{itemize}
+  \item \textbf{本教程}：\textbf{Visual Studio 2026 使用教程}
+  \item \textbf{上一章}：\textbf{性能分析与诊断}
+  \item \textbf{下一章}：\textbf{单元测试与代码质量}
+  \item \textbf{CMake 使用指南}：\textbf{CMake 使用指南}
+  \item \textbf{VS Code 中 CMake}：\textbf{VS Code 中 CMake 使用指南}
+\end{itemize}

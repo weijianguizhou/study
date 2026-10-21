@@ -1,0 +1,49 @@
+% ============================================================
+% 从源文件到可执行程序的编译链接流程（由 Mermaid 流程图转写为 TikZ）
+% 依赖：preamble.tex 中已加载的 tikz 宏包与 positioning、arrows.meta 库
+% 用法：\input{figures/编译链接流程.tikz}（放在 figure 环境内，无需再写 \centering）
+% 修改建议：改文字时请保持 text width 不变，否则底部说明可能自动换行错位
+% ============================================================
+\definecolor{cFlowRed}{HTML}{E74C3C}
+\begin{tikzpicture}[
+  font=\small,
+  % 流程节点：红色边框、白底、圆角
+  proc/.style={draw=cFlowRed, line width=1pt, rounded corners=1.5pt, fill=white,
+               minimum height=0.75cm, minimum width=1.5cm, align=center,
+               inner xsep=4pt, inner ysep=3pt},
+  % 无边框文字（源文件、库文件、可执行文件、说明文字）
+  txt/.style={align=center, inner sep=0pt},
+  note/.style={align=left, inner sep=0pt, text width=11.5cm},
+  % 流程箭头
+  ar/.style={-{Stealth[length=2.2mm,width=2mm]}, line width=0.8pt, draw=black!80}
+]
+
+% ---------- 主干流程 ----------
+\node[txt, anchor=west] (src) at (0,0) {源文件\\[-1pt]{\footnotesize (.h, .cpp 等)}};
+\node[proc, right=6mm of src]  (pre)  {预编译};
+\node[proc, right=6.5mm of pre] (comp) {编译};
+\node[proc, right=6.5mm of comp] (asm)  {汇编};
+\node[proc, right=6.5mm of asm]  (link) {链接};
+\node[txt, right=6mm of link]   (exe)  {可执行文件};
+
+% ---------- 链接阶段的外部输入：库文件 ----------
+\node[txt, below=9mm of link] (lib) {.a / .lib\\[-1pt]{\footnotesize .so / .dll}};
+
+% ---------- 用灰色虚线框标出“链接阶段” ----------
+\draw[dashed, draw=black!45, line width=0.7pt]
+  ([xshift=-3.2mm,yshift=-3.2mm]link.south west) rectangle
+  ([xshift=3.2mm,yshift=3.2mm]link.north east);
+
+% ---------- 连线 ----------
+\draw[ar] (src) -- (pre);
+\draw[ar] (pre) -- (comp);
+\draw[ar] (comp) -- (asm);
+\draw[ar] (asm) -- ([xshift=-3.2mm]link.west);
+\draw[ar] (lib.north) -- ([yshift=-3.2mm]link.south);
+\draw[ar] ([xshift=3.2mm]link.east) -- (exe);
+
+% ---------- 底部说明文字 ----------
+\node[note, anchor=north west] at (0,-2.9)
+  {静态库、动态库的区别来自【链接阶段】如何处理库，\\
+   链接成可执行程序，分别称为静态链接方式、动态链接方式。};
+\end{tikzpicture}

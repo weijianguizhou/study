@@ -1,0 +1,9 @@
+{
+  "compile_time_ms": 10420,
+  "completed_at": 1789387664.5006468,
+  "distribution": "TeX tools in D:\\Latex\\R\\bin\\windows",
+  "engine": "latexmk",
+  "lockfile_hash": "sha256:826840bded50d023897524b553034dbf51c75b1f3d38b83feb553c6e7d0edd8b",
+  "output_id": "pdf-v1:202756:bf93df7b19a4f317",
+  "revision": 47
+}

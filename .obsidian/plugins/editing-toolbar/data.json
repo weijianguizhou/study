@@ -1,7 +1,7 @@
 {
   "lastVersion": "4.1.1",
-  "aestheticStyle": "custom",
-  "positionStyle": "top",
+  "aestheticStyle": "default",
+  "positionStyle": "fixed",
   "menuCommands": [
     {
       "id": "editing-toolbar:ai-tools",
@@ -425,7 +425,7 @@
   "enableMultipleConfig": true,
   "enableTopToolbar": true,
   "enableFollowingToolbar": true,
-  "enableFixedToolbar": false,
+  "enableFixedToolbar": true,
   "appendMethod": "workspace",
   "shouldShowMenuOnSelect": false,
   "cMenuVisibility": false,
@@ -446,7 +446,7 @@
   "custom_fc3": "#245BDB",
   "custom_fc4": "#6425D0",
   "custom_fc5": "#646A73",
-  "isLoadOnMobile": false,
+  "isLoadOnMobile": true,
   "horizontalPosition": 0,
   "verticalPosition": 0,
   "formatBrushes": {},
@@ -480,7 +480,7 @@
   },
   "toolbarBackgroundColor": "rgba(var(--background-secondary-rgb), 0.7)",
   "toolbarIconColor": "var(--text-normal)",
-  "toolbarIconSize": 20,
+  "toolbarIconSize": 18,
   "useCurrentLineForRegex": false,
   "ai": {
     "enabled": true,

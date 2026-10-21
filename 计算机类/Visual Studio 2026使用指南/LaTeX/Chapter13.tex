@@ -1,0 +1,446 @@
+% !TeX root = main.tex
+前面各章把 Visual Studio 的功能按模块讲了一遍，这一章换成问题导向：先把实际开发中最常撞上的报错做成速查表，再集中处理中文乱码、IntelliSense 与实际编译不一致、断点失效这类“配置型疑难”，最后收一整套效率技巧与快捷键总表。本章偏工具书性质，遇到问题直接翻到对应小节即可，不必从头读。
+\section{编译与链接错误速查}
+\subsection{错误号前缀对应哪个阶段}
+\begin{lstlisting}[style=textstyle]
+        源码与项目文件
+             |
+             v
+  [1] MSBuild (MSBxxxx)      解析 .vcxproj、工具集与 SDK、执行生成事件
+             |
+             v
+  [2] 编译器 cl.exe (Cxxxx)  预处理 -> 语法 -> 语义 -> 代码生成 -> .obj
+             |
+             v
+  [3] 链接器 link.exe (LNKxxxx)  合并 .obj 与 .lib -> .exe / .dll
+             |
+             v
+        可执行文件
+
+  旁路：IntelliSense (Exxxx) 只在编辑器里做实时分析，不参与真实生成
+\end{lstlisting}
+\begin{longtable}{L{1.8cm}L{2.6cm}L{10.2cm}}
+\toprule
+\textbf{前缀} & \textbf{来源} & \textbf{判断要点} \\
+\midrule
+\code{MSB} & MSBuild & 项目配置、工具集、SDK、生成事件的问题，还没轮到编译器 \\
+\code{C} & 编译器 \code{cl.exe} & 语法、语义、头文件、预处理、代码生成 \\
+\code{LNK} & 链接器 \code{link.exe} & 符号找不到或重复、库、入口点、位数冲突 \\
+\code{E} & IntelliSense & 只影响编辑器的波浪线，\textbf{不一定}影响编译 \\
+\bottomrule
+\end{longtable}
+\subsection{编译器高频错误（\code{C} 系列）}
+\begin{longtable}{L{1.6cm}L{3.4cm}L{3.6cm}L{5.6cm}}
+\toprule
+\textbf{错误号} & \textbf{提示信息要点} & \textbf{常见原因} & \textbf{解决方案} \\ \midrule
+\endhead \bottomrule \endlastfoot
+\code{C2065} & 未声明的标识符 & 拼写错误、忘了 \code{#include}、少了 \code{std::} 限定、语言标准不够新 & 按提示里的标识符核对拼写与头文件；检查 \ui{项目 > 属性 > C/C++ > 语言 > C++ 语言标准} \\
+\code{C3861} & 找不到标识符 & 函数没声明、模板依赖名称少了 \code{this->} 或 \code{typename} & 补头文件或前置声明；模板中显式写 \code{this->member} \\
+\code{C2143} & 语法错误：缺少 \code{;} & 上一行少分号、类定义后漏分号、宏展开后语法破损 & 看\textbf{上一行}；用 \ui{C/C++ > 预处理器 > 预处理到文件} 观察宏展开结果 \\
+\code{C1083} & 无法打开源文件 / 包含文件 & 头文件路径没配、大小写不符、文件不在磁盘上、SDK 未安装 & 在 \ui{C/C++ > 常规 > 附加包含目录} 补齐路径，并确认配在“所有配置、所有平台” \\
+\code{C1010} & 在查找预编译头时遇到意外的文件结尾 & 新增的 \code{.cpp} 忘了首行 \code{#include "pch.h"} & 补上包含，或对该文件设置 \ui{C/C++ > 预编译头 > 预编译头 = 不使用预编译头} \\
+\code{C4819} & 该文件包含不能在当前代码页（936）中表示的字符 & 源码为 UTF-8 无 BOM，编译器按系统 ANSI 代码页解析 & 另存为 UTF-8 with BOM，或加 \code{/utf-8}（见第 2 节） \\
+\code{C4996} & 该函数或变量可能不安全，请考虑改用 \code{xxx_s} & 使用了被标记弃用的 CRT 函数（\code{strcpy}、\code{sprintf}、\code{localtime} 等） & 换用安全版本，或在 \ui{C/C++ > 预处理器 > 预处理器定义} 加 \code{_CRT_SECURE_NO_WARNINGS} \\
+\code{C2440} & 无法从 \code{X} 转换为 \code{Y} & 指针与整数混用、丢失 \code{const}、少了显式转换 & 补 \code{static_cast} 等显式转换，并回头检查类型设计 \\
+\code{C2664} & 无法将参数 N 从 \code{X} 转换为 \code{Y} & 实参类型不匹配、\code{char*} 与 \code{wchar_t*} 混用、字符集设置不对 & 检查 \ui{项目 > 属性 > 高级 > 字符集} 是否与代码一致 \\
+\code{C2039} & \code{xxx} 不是 \code{yyy} 的成员 & 头文件版本不匹配、命名空间或类名写错 & 用 \code{F12} 转到定义核对真实成员列表 \\
+\code{C2084} & 函数已有主体 & 同一函数被定义两次，通常是头文件里直接写了定义 & 改为 \code{inline}，或把定义移到 \code{.cpp} \\
+\code{C2220} & 警告被视为错误——没有生成对象文件 & 项目开了 \code{/WX}，某些警告被升级为错误 & 先修触发它的警告（常见搭档是 \code{C4819}） \\
+\end{longtable}
+\subsection{链接器高频错误（\code{LNK} 系列）}
+\begin{longtable}{L{1.9cm}L{4.0cm}L{4.3cm}L{4.0cm}}
+\toprule
+\textbf{错误号} & \textbf{提示信息要点} & \textbf{常见原因} & \textbf{解决方案} \\ \midrule
+\endhead \bottomrule \endlastfoot
+\code{LNK2019} & 无法解析的外部符号 \code{xxx}，该符号在函数 \code{yyy} 中被引用 & 只声明未定义、\code{.cpp} 未加入项目、\code{.lib} 未加进附加依赖项、C/C++ 混用少了 \code{extern "C"}、模板实现放在了 \code{.cpp} & 按符号名反查定义；把 \code{.lib} 加到 \ui{链接器 > 输入 > 附加依赖项}；确认库的位数与 CRT 设置一致 \\
+\code{LNK2001} & 无法解析的外部符号（同族提示） & 同上，多见于静态成员变量未定义、虚函数表缺失 & 为静态成员补类外定义 \\
+\code{LNK1120} & N 个无法解析的外部命令 & 只是上面两类错误的统计行 & 忽略它，去修具体的 \code{LNK2019} / \code{LNK2001} \\
+\code{LNK2005} & \code{xxx} 已经在 \code{yyy.obj} 中定义 & 头文件里定义了非 \code{inline} 的全局函数或变量、用 \code{#include} 引入了 \code{.cpp}、两个库提供了同一符号 & 加 \code{inline} 或 \code{static}、把定义移到 \code{.cpp}、去掉重复包含；不到万不得已不要用 \code{/FORCE:MULTIPLE} \\
+\code{LNK1169} & 找到一个或多个多重定义的符号 & 与 \code{LNK2005} 成对出现 & 处理掉 \code{LNK2005} 即可 \\
+\code{LNK1104} & 无法打开文件 \code{xxx} & 库路径不对或库名拼错；\textbf{上一次的程序还在运行，exe 被占用}；文件被安全软件锁住 & 先结束残留进程再重新生成；核对 \ui{链接器 > 输入 > 附加依赖项} 与库目录 \\
+\code{LNK1561} & 必须定义入口点 & 没有 \code{main}/\code{wmain}/\code{WinMain}，或子系统类型与控制台/窗口程序不符 & 补入口函数，或改 \ui{链接器 > 系统 > 子系统} \\
+\code{LNK1112} & 模块计算机类型 \code{x64} 与目标计算机类型 \code{x86} 冲突 & 混入了位数不对的 \code{.lib} 或 \code{.obj} & 统一平台为 x64 或 x86，检查第三方库位数 \\
+\code{LNK2038} & 检测到 \code{RuntimeLibrary} 的不匹配项：值 \code{MT_StaticRelease} 不匹配值 \code{MD_DynamicRelease} & 同一程序内混用 \code{/MT} 与 \code{/MD}，或 Debug 与 Release 混用 & 全工程与所有第三方库统一运行库设置（见第 12 章） \\
+\code{LNK4098} & defaultlib \code{MSVCRT} 与其他库的使用冲突 & 显式链接了不同版本的 CRT 库 & 先统一运行库设置；仍冲突时再用 \ui{链接器 > 输入 > 忽略特定默认库} \\
+\end{longtable}
+\subsection{MSBuild 与 IntelliSense 错误}
+\begin{longtable}{L{1.9cm}L{3.6cm}L{4.5cm}L{4.2cm}}
+\toprule
+\textbf{错误号} & \textbf{提示信息要点} & \textbf{常见原因} & \textbf{解决方案} \\ \midrule
+\endhead \bottomrule \endlastfoot
+\code{MSB8020} & 找不到 \code{vXXX} 的生成工具（平台工具集 = \code{vXXX}） & 项目指定的平台工具集本机没装（打开的是别人机器上的工程，或安装时没勾 MSVC 生成工具） & 用 \ui{项目 > 重定解决方案目标} 切到已安装的工具集，或在 Visual Studio 安装程序里补装 \\
+\code{MSB8036} & 找不到 Windows SDK 版本 \code{10.0.xxxxx.0} & 项目指定的 SDK 本机没有 & 在 \ui{项目 > 属性 > 常规 > Windows SDK 版本} 改成本机已装的版本，或补装该 SDK \\
+\code{MSB4019} & 找不到导入的项目 \code{xxx.props} / \code{xxx.targets} & 属性表被移动或删除、扩展未安装 & 检查 \code{.vcxproj} 里的 \code{<Import>} 路径，移除失效引用 \\
+\code{MSB3073} & 命令 \code{xxx} 已退出，代码为 N & \textbf{生成前/后事件} 里的命令失败 & 看输出窗口里该命令自身的报错；路径含空格要加引号，用 \code{$(ProjectDir)} 等宏替代相对路径 \\
+\code{MSB6006} & \code{xxx.exe} 已退出，代码为 N & 自定义生成步骤或工具进程返回非零 & 单独在命令行里跑一遍该命令，看真实输出 \\
+\code{E0020} & 标识符 \code{xxx} 未定义 & IntelliSense 没看到声明：路径没配到当前配置、宏或语言标准不一致 & 见第 3 节的处理顺序 \\
+\code{E1696} & 无法打开源文件 \code{xxx} & 包含路径只配在某个配置或平台，其他配置下 IntelliSense 找不到 & 改到“所有配置、所有平台”，再 \ui{重新扫描解决方案} \\
+\code{E0135} & 命名空间 \code{std} 没有成员 \code{xxx} & IntelliSense 使用的语言标准低于代码所需 & 统一 \ui{C/C++ > 语言 > C++ 语言标准}，并重新扫描 \\
+\end{longtable}
+\subsection{排错的通用流程}
+\begin{enumerate}
+  \item \textbf{永远从第一条错误开始修}，之后的报错大多是它的连锁反应。
+  \item 分清两个窗口：\ui{视图 > 错误列表}（\key{Ctrl+\, Ctrl+E}）只给摘要；完整命令行与上下文在 \textbf{输出} 窗口的“生成”页里。
+  \item 需要更多细节时，把 \ui{工具 > 选项 > 项目和解决方案 > 生成并运行 > MSBuild 项目生成输出详细程度} 调成 \textbf{详细} 或 \textbf{诊断}，再重新生成。
+  \item 打开 \ui{项目 > 属性 > C/C++ > 命令行} 与 \ui{链接器 > 命令行}，把 IDE 里的配置与真实命令行对照，“我明明配了”的问题多半出在这里。
+  \item 改完配置仍报同样的错，执行 \ui{生成 > 重新生成解决方案}；再不行就关掉 VS，删掉 \code{bin}、\code{obj} 与 \code{.vs} 后重来。
+\end{enumerate}
+\begin{tipbox}[提示]
+\code{LNK2019} 给出的“出错位置”往往是\textbf{引用处}而不是\textbf{定义缺失处}。真正要找的是提示里的符号名，用 \key{Ctrl+T} 全局搜索这个符号最快。
+\end{tipbox}
+\section{中文乱码专题}
+\subsection{四层编码，先分清错在哪一层}
+\begin{lstlisting}[style=textstyle]
+  源码文件（磁盘字节）
+      [1] 文件编码：UTF-8 / UTF-8 with BOM / GBK
+          |
+          v
+  编译器读取
+      [2] 源字符集：由 BOM 或 /source-charset 决定
+          |
+          v
+  字符串字面量（.obj 字节）
+      [3] 执行字符集：由 /execution-charset 或 /utf-8 决定
+          |
+          v
+  运行时输出到控制台
+      [4] 控制台按"当前输出代码页"解释这些字节
+          |
+          v
+  屏幕上的汉字
+\end{lstlisting}
+四层里任何一层不一致都会看到乱码。最常见的组合是：源码为 UTF-8 无 BOM（第 1 层），编译器按系统 ANSI 代码页 936 解析（第 2 层），字符串里的 UTF-8 字节又被送到 936 的控制台（第 4 层），两层皆错。
+\subsection{推荐做法与各开关的含义}
+\begin{longtable}{L{5.4cm}L{4.6cm}L{4.6cm}}
+\toprule
+\textbf{做法} & \textbf{效果} & \textbf{适用场景} \\
+\midrule
+源码保存为 \textbf{UTF-8 with BOM} & MSVC 依据 BOM 自动识别为 UTF-8，不依赖开关 & 想少配选项、以 Windows 为主的项目 \\
+源码 UTF-8 无 BOM + \code{/utf-8} & 源字符集与执行字符集都按 UTF-8 处理 & 团队协作、跨平台、Git 友好，\textbf{推荐} \\
+\code{/source-charset:utf-8} & 只指定源字符集 & 源码是 UTF-8，但希望执行字符集保持 GBK \\
+\code{/execution-charset:gbk} & 让窄字符串按 GBK 编码 & 需要与只认 GBK 的老代码或老接口对接 \\
+源码 GBK（936）+ 不加开关 & 靠系统 ANSI 代码页“碰巧能用” & 仅老项目临时兼容，新项目不要这么做 \\
+\bottomrule
+\end{longtable}
+必须记住的四点：
+\begin{itemize}
+  \item \textbf{BOM 优先于 \code{/source-charset}}：文件带 BOM 时编译器按 BOM 判断编码，该开关对它不起作用。
+  \item \textbf{\code{/utf-8} 是组合开关}：等价于同时指定 \code{/source-charset:}\allowbreak\code{utf-8} 与 \code{/execution-charset:}\allowbreak\code{utf-8}。
+  \item 代码页写法上，\code{/source-charset:.936} 以点号开头的数字表示代码页，\code{utf-8} 这类名字直接书写。
+  \item \code{/execution-charset} 只影响\textbf{窄字符串与字符字面量}；\code{u8"..."} 在 C++17 是 \code{const char[]}，C++20 起是 \code{const char8_t[]}。想只改单个文件的执行字符集，可在文件开头写 \code{#pragma execution_character_set("utf-8")}，但它修不了第 1 层的文件编码问题。
+\end{itemize}
+\subsection{控制台输出中文的三种方案}
+\textbf{方案 A：全程 UTF-8（推荐）}。编译时加 \code{/utf-8}，程序启动时把控制台代码页切成 UTF-8：\code{SetConsoleOutputCP(CP_UTF8)} 管输出，\code{SetConsoleCP(CP_UTF8)} 管输入。批处理里先执行 \code{chcp 65001} 效果类似，但那是用户侧动作，程序自己设置才可靠。
+
+\textbf{方案 B：保持 GBK（936）}。源码按 GBK 保存，或用 \code{/source-charset:utf-8 /execution-charset:gbk}，窄字符串里就是 GBK 字节，而中文 Windows 控制台默认输出代码页正是 936，不写任何代码即可正常显示。缺点是跨平台差、换区域设置就可能翻车。
+
+\textbf{方案 C：宽字符 + 区域设置}。输出宽字符前调用 \code{setlocale(LC_ALL, "")}（跟随系统区域）或 \code{setlocale(LC_ALL, "zh-CN")}，再用 \code{std::wcout}。两个坑：其一，\code{setlocale} 不会改变控制台代码页，若同时又调了 \code{SetConsoleOutputCP(CP_UTF8)}，宽字符流仍按区域设置转换，可能出现双重转换的乱码；其二，不要让 \code{std::cout} 与 \code{std::wcout} 交替混用，窄宽流方向混用会导致输出错序甚至丢失。要在 UTF-8 控制台输出宽字符串，最稳的做法是先用 \code{WideCharToMultiByte(CP_UTF8, ...)} 转成 UTF-8 的 \code{std::string}，再交给 \code{std::cout}。
+
+\begin{warnbox}[注意]
+UCRT 也支持 UTF-8 形式的区域名，但它依赖较新的 Windows 系统组件。目标机版本偏老时不要依赖这一条，直接用方案 A。
+\end{warnbox}
+\subsection{一个“中文输出正确”的完整示例}
+\begin{lstlisting}[style=cppstyle]
+// main.cpp —— 保存为 UTF-8 with BOM，或使用 /utf-8 编译
+#include <windows.h>
+#include <iostream>
+
+int main() {
+    // (1) 让控制台按 UTF-8 解释输出字节与输入字节
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
+
+    // (2) 执行字符集为 UTF-8 时，窄字符串里存的就是 UTF-8 字节
+    std::cout << "你好，世界！\n";
+    std::cout << "中文注释与中文输出都不会乱码。\n";
+
+    // (3) 打印当前输出代码页，正常应为 65001
+    std::cout << "当前输出代码页：" << GetConsoleOutputCP() << "\n";
+    return 0;
+}
+\end{lstlisting}
+\begin{lstlisting}[style=shellstyle]
+:: 手动编译时的等价命令行
+cl /utf-8 /EHsc /W4 /MD main.cpp /link /SUBSYSTEM:CONSOLE
+\end{lstlisting}
+工程级的做法是在 \code{.vcxproj} 或属性表里给 \ui{C/C++ > 命令行 > 其他选项} 统一加上 \code{/utf-8}，再在仓库根放一个 \code{.editorconfig} 并把 \code{charset} 设为 \code{utf-8-bom}，编辑器与 IDE 保存新文件时就会带上 BOM，从源头少踩一次编码的坑。
+\section{IntelliSense 与实际编译不一致}
+\subsection{典型症状与原因}
+\begin{longtable}{L{6.2cm}L{8.6cm}}
+\toprule
+\textbf{症状} & \textbf{可能原因} \\
+\midrule
+满屏红色波浪线，但生成成功 & IntelliSense 数据库过期，或它的语言标准、宏定义与真实编译不一致 \\
+编辑器不报错，一生成就 \code{C1083}/\code{C2065} & 包含路径或宏只配在某一个配置下，IntelliSense 恰好用的是能通过的那个 \\
+头文件上有绿色波浪线并报 \code{E1696} & \code{附加包含目录} 里的目录不存在，或没配到“所有配置、所有平台” \\
+成员列表缺项、\code{std::} 补全不全 & IntelliSense 的头文件搜索路径不完整，或语言标准偏低 \\
+明明存在的文件搜不到 & 文件只在磁盘上，没被加入项目，而 IntelliSense 按项目文件扫描 \\
+\bottomrule
+\end{longtable}
+\subsection{按顺序修复}
+\begin{enumerate}
+  \item \textbf{先确认真实编译结果}：按 \key{Ctrl+Shift+B} 生成一次，看 \textbf{输出} 窗口。编译器的 \code{C} 系列错误才是唯一真相，\code{E} 系列仅供参考。
+  \item \textbf{把包含路径配到“所有配置、所有平台”}：在 \ui{项目 > 属性 > C/C++ > 常规 > 附加包含目录} 中，把左上角配置下拉切到 \textbf{所有配置}、平台切到 \textbf{所有平台}，再编辑。
+  \item \textbf{重新扫描}：在解决方案资源管理器中右键项目，选择 \ui{重新扫描解决方案}。
+  \item \textbf{清掉缓存}：关闭 Visual Studio，删除解决方案目录下的隐藏文件夹 \code{.vs}，必要时一并删除 \code{ipch}、\code{*.VC.db} 等浏览数据库，再重新打开。
+  \item \textbf{对齐语言标准、宏与文件归属}：确认 \ui{C/C++ > 语言 > C++ 语言标准} 与 \ui{C/C++ > 预处理器 > 预处理器定义} 和命令行一致，并确认相关文件确实挂在项目节点下（从别的目录拖进来的文件常常只存在于磁盘）。
+  \item \textbf{CMake 工程}：用 \ui{项目 > 删除缓存并重新配置}，必要时删掉 \codeP{out\textbackslash{}build} 后重新打开。
+\end{enumerate}
+\begin{keybox}[实战场景]
+同事把 \code{附加包含目录} 只加在了 Debug|x64 下，Release 一生成就 \code{C1083}，而他在编辑器里怎么看都正常——因为 IntelliSense 用的正是 Debug 配置。把下拉切成“所有配置、所有平台”重新添加后问题消失。
+\end{keybox}
+\section{路径与工程习惯}
+\subsection{中文与空格路径引发的怪问题}
+\begin{itemize}
+  \item \textbf{空格}：生成事件、自定义生成步骤、外部工具的命令行若未给路径加引号，会被拆成多个参数，报出 \code{MSB3073} 这类看不出原因的错误。
+  \item \textbf{中文}：部分老工具与第三方脚本按 ANSI 代码页处理路径，遇到中文目录会找不到文件，或打出乱码路径让人误判。
+  \item \textbf{长路径}：路径总长超过 260 字符时部分工具会失败。缩短目录层级，或在系统上启用长路径支持（Windows 10 1607 起有对应的组策略与 \code{LongPathsEnabled} 注册表项）。
+  \item \textbf{中文用户名}：\codeP{%USERPROFILE%} 含中文时，某些工具生成的临时路径同样会出问题，属同一类故障。
+\end{itemize}
+\subsection{建议的目录规范}
+\begin{lstlisting}[style=textstyle]
+D:\dev\                        <- 盘符浅、全英文、无空格
++-- MyApp\                     <- 仓库根目录
+|   +-- MyApp.sln
+|   +-- src\                   <- 源码
+|   +-- include\               <- 对外头文件
+|   +-- third_party\           <- 第三方库（头文件 + lib + dll）
+|   +-- resources\             <- 图标、图片、配置模板
+|   +-- build\                 <- 生成目录（x64\Debug、x64\Release 都在这里）
+\end{lstlisting}
+\begin{itemize}
+  \item 在 \ui{项目 > 属性 > 常规} 里把 \textbf{输出目录} 与 \textbf{中间目录} 集中到 \code{build\$(Platform)}\allowbreak\code{\$(Configuration)}，源码目录保持干净。
+  \item 把共享设置（包含目录、警告等级、\code{/utf-8} 等）做成 \code{.props} 属性表，通过 \ui{视图 > 属性管理器} 添加，避免逐个项目手工配置。
+  \item \code{.vcxproj.user} 属于个人设置，不要提交。
+\end{itemize}
+\subsection{一份可用的 \code{.gitignore}}
+\begin{lstlisting}[style=textstyle]
+# Visual Studio 的隐藏目录与个人设置
+.vs/
+*.suo
+*.user
+*.aps
+*.VC.db
+
+# 生成输出与中间文件
+[Bb]in/
+[Oo]bj/
+x64/
+x86/
+ARM64/
+Debug/
+Release/
+*.ilk
+*.exp
+*.exe
+
+# 若仓库需要提交第三方 .lib / .dll，注释掉下面两行，或用 !third_party/** 豁免
+*.lib
+*.dll
+\end{lstlisting}
+\begin{tipbox}[提示]
+\code{.vs} 里存着 IntelliSense 数据库、打开过的文档、断点与窗口布局，体积可能上百 MB 且随时可重建。把它加进 \code{.gitignore}，是第 3 节“删掉 \code{.vs} 重新扫描”这招能放心使用的前提。
+\end{tipbox}
+\section{调试符号与断点失效}
+\begin{longtable}{L{6.4cm}L{8.4cm}}
+\toprule
+\textbf{现象} & \textbf{原因} \\
+\midrule
+断点是\textbf{空心圆圈}，悬停提示“当前不会命中断点。尚未为该文档加载任何符号” & PDB 未加载，或 PDB 与二进制不是同一次生成的结果 \\
+提示“没有可执行代码与此行关联” & 该行被优化掉、被内联，或本身就是声明、注释、空行 \\
+断点能命中，但行号对不上、变量显示“已优化掉” & \code{/O2}、\code{/Oy} 等优化导致代码与源码行号错位 \\
+进不了系统库或第三方库源码 & “仅我的代码”跳过了非用户代码 \\
+附加到进程后断点全部失效，或换台机器打开就失效 & 附加的进程不是当前生成的 exe（旧进程仍在运行）；或源码路径与 PDB 中记录的不一致 \\
+\bottomrule
+\end{longtable}
+按顺序修复：
+\begin{enumerate}
+  \item 确认当前是 Debug 配置；若必须在 Release 下调，至少加 \code{/Zi}，并在 \ui{链接器 > 调试 > 生成调试信息} 选择 \textbf{是 (/DEBUG)}。
+  \item 执行 \ui{生成 > 重新生成解决方案}，保证 PDB 与 exe 同源——手工拷贝过 exe 却没带 PDB 是最常见的原因。
+  \item 打开 \ui{调试 > 窗口 > 模块}（\key{Ctrl+Alt+U}）查看目标模块的符号状态，显示“未加载”时右键加载符号，并检查 \ui{工具 > 选项 > 调试 > 符号} 的符号位置。
+  \item 取消 \ui{工具 > 选项 > 调试 > 常规 > 启用“仅我的代码”}，即可单步进入系统或库代码；同时确认 \ui{项目 > 属性 > 调试 > 调试器类型} 是 \textbf{自动} 或 \textbf{仅限本机}。
+  \item 优化引起的跳变无法消除时，在该行临时插入 \code{__debugbreak()} 强制中断；需要观察被优化掉的变量时，把 \ui{C/C++ > 优化 > 优化} 临时设为 \textbf{已禁用 (/Od)} 复现问题。
+\end{enumerate}
+\begin{warnbox}[注意]
+Debug 配置里 \ui{C/C++ > 代码生成 > 基本运行时检查} 默认是 \textbf{两者 (/RTC1)}，它要求关闭优化，二者配套。不要在同一配置里既开 \code{/O2} 又指望 \code{/RTC1} 生效。
+\end{warnbox}
+\section{效率技巧集}
+\subsection{编辑与代码}
+\begin{itemize}
+  \item \textbf{多光标与框选}：按住 \key{Ctrl+Alt} 点击可在多处插入光标，批量改名、批量加前缀特别顺手；按住 \key{Alt} 拖动鼠标则是框选（列选择），也可用 \key{Shift+Alt} 配方向键。
+  \item \textbf{复制与移动行}：\key{Ctrl+E, V} 复制当前行（官方文档绑定；\key{Ctrl+D} 在不同上下文里可能被“查找”组合框占用）；\key{Alt+}$\uparrow$ / \key{Alt+}$\downarrow$ 上下移动行；\key{Ctrl+L} 剪切整行。
+  \item \textbf{格式化与注释}：\key{Ctrl+K, Ctrl+D} 格式化文档，\key{Ctrl+K, Ctrl+F} 格式化选区；\key{Ctrl+K, Ctrl+C} 注释、\key{Ctrl+K, Ctrl+U} 取消注释，较新版本中 \key{Ctrl+/} 也能切换行注释。
+  \item \textbf{剪贴板环}：\key{Ctrl+Shift+V} 循环粘贴前几次复制的内容，误覆盖的内容还能捞回来。
+  \item \textbf{快速操作与结构化选择}：\key{Ctrl+.} 打开灯泡菜单，补头文件、加 \code{override}、生成定义都在这里；\key{Shift+Alt+=} 与 \key{Shift+Alt+-} 可按语法结构扩展与收缩选择。
+\end{itemize}
+\subsection{导航}
+\begin{itemize}
+  \item \textbf{\key{Ctrl+T} / \key{Ctrl+,}}：转到全部 / 导航到，模糊搜索文件、类型、成员、符号，是最高频的导航方式。
+  \item \textbf{\key{F12} / \key{Alt+F12}}：转到定义 / 速览定义（不离开当前文件，按 \key{Shift+Esc} 切回编辑器）。
+  \item \textbf{\key{Ctrl+K, Ctrl+O}}：在头文件与实现文件之间来回切换，C++ 开发必备；\key{Ctrl+Alt+}$\uparrow$ 可跳到当前代码块的外层。
+  \item \textbf{\key{Ctrl+-} / \key{Ctrl+Shift+-}}：在浏览历史中后退与前进。
+  \item \textbf{书签}：\key{Ctrl+K, Ctrl+K} 打书签，\key{Ctrl+K, Ctrl+N} 跳到下一个，\key{Ctrl+K, Ctrl+W} 打开书签窗口看全貌。
+  \item \textbf{\key{Ctrl+;}}：把焦点送到解决方案资源管理器的搜索框，找文件不用鼠标。
+\end{itemize}
+\subsection{任务列表、代码片段与环境管理}
+TODO 注释会自动汇总进任务列表，不容易漏：
+\begin{lstlisting}[style=cppstyle]
+// TODO: 补充参数校验
+// HACK: 绕开上游库的越界问题，等对方修复
+\end{lstlisting}
+用 \ui{视图 > 任务列表}（\key{Ctrl+\, Ctrl+T}）查看，双击跳到对应代码行；标记关键字可在 \ui{工具 > 选项 > 环境 > 任务列表} 里增删。代码片段用 \key{Ctrl+K, Ctrl+X} 插入，常用的有 \code{#if}、\code{for}、\code{switch}、\code{class}、\code{ctor}、\code{try} 等；自定义片段用 \ui{工具 > 代码片段管理器}（\key{Ctrl+K, Ctrl+B}）管理，“我的代码片段”目录下的 \code{.snippet} 就是普通 XML，改起来很容易。
+
+环境层面的三件事值得花十分钟做一次：
+\begin{itemize}
+  \item \textbf{自定义快捷键}：\ui{工具 > 选项 > 环境 > 键盘} 里按命令名搜索（如 \code{Edit.FormatDocument}）后指派组合键。
+  \item \textbf{导出与导入设置}：\ui{工具 > 导入和导出设置向导} 可只导出“键盘”“字体和颜色”“窗口布局”等某一类设置，换机器几分钟恢复环境。
+  \item \textbf{保存窗口布局}：把工具窗口摆顺手后用 \ui{窗口 > 保存窗口布局} 存下来，编码布局与调试布局分别保存，需要时一键切换。
+\end{itemize}
+\section{常用快捷键总表}
+\begin{note}[说明]
+下表为 Visual Studio 默认“常规”键盘方案。若某个组合键在本机不生效，用 \ui{工具 > 选项 > 环境 > 键盘} 搜索对应命令确认当前绑定——键盘方案、语言设置与已装扩展都可能覆盖默认值。
+\end{note}
+\subsection{编辑}
+\begin{longtable}{L{3.6cm}L{11.2cm}}
+\toprule
+\textbf{快捷键} & \textbf{功能} \\ \midrule
+\endhead \bottomrule \endlastfoot
+\key{Ctrl+E, V} & 复制当前行（官方文档给出的 Duplicate line 绑定） \\
+\key{Ctrl+D} & 绑定随上下文变化：官方文档将其列为工具栏“查找”组合框；若在你的环境里表现为复制行，以 \ui{工具 > 选项 > 环境 > 键盘} 的实际绑定为准 \\
+\key{Ctrl+L} & 剪切整行（\code{Edit.LineCut}，文本编辑器上下文） \\
+\key{Alt+}$\uparrow$ / \key{Alt+}$\downarrow$ & 上移 / 下移当前行或选区 \\
+\key{Ctrl+Alt+点击} & 添加插入符（多光标编辑） \\
+\key{Alt+拖动鼠标} 或 \key{Shift+Alt+方向键} & 框选（块 / 列选择） \\
+\key{Ctrl+Shift+V} & 循环剪贴板（粘贴此前的复制内容） \\
+\key{Ctrl+K, Ctrl+D} & 设置文档格式 \\
+\key{Ctrl+K, Ctrl+F} & 设置选定内容的格式 \\
+\key{Ctrl+K, Ctrl+C} & 注释选定内容 \\
+\key{Ctrl+K, Ctrl+U} & 取消注释选定内容 \\
+\key{Ctrl+K, Ctrl+X} & 插入代码片段 \\
+\key{Ctrl+J} & 强制显示 IntelliSense 成员列表 \\
+\key{Ctrl+.} & 快速操作（灯泡菜单） \\
+\key{Ctrl+M, Ctrl+O} & 折叠到定义 \\
+\key{Ctrl+M, Ctrl+M} & 折叠 / 展开当前区域 \\
+\end{longtable}
+\subsection{导航}
+\begin{longtable}{L{4.2cm}L{10.6cm}}
+\toprule
+\textbf{快捷键} & \textbf{功能} \\ \midrule
+\endhead \bottomrule \endlastfoot
+\key{F12} & 转到定义 \\
+\key{Ctrl+F12} & 转到声明 \\
+\key{Alt+F12} & 速览定义（不离开当前文件） \\
+\key{Shift+F12} & 查找所有引用 \\
+\key{Ctrl+T} & 转到全部（文件、类型、成员、符号） \\
+\key{Ctrl+,} & 导航到（Navigate To，行为接近“转到全部”） \\
+\key{Ctrl+G} & 转到行 \\
+\key{Ctrl+K, Ctrl+O} & 在头文件与代码文件间切换 \\
+\key{Ctrl+K, Ctrl+T} 或 \key{Ctrl+Alt+K} & 调用层次结构 \\
+\key{Ctrl+-} / \key{Ctrl+Shift+-} & 向后 / 向前导航 \\
+\key{F8} / \key{Shift+F8} & 下一个 / 上一个位置（错误列表或输出窗口） \\
+\key{Alt+PgDn} / \key{Alt+PgUp} & 下一个 / 上一个问题 \\
+\key{Ctrl+K, Ctrl+K} & 切换书签 \\
+\key{Ctrl+K, Ctrl+N} / \key{Ctrl+K, Ctrl+P} & 下一个 / 上一个书签 \\
+\key{Ctrl+K, Ctrl+W} & 书签窗口 \\
+\key{Ctrl+F} / \key{Ctrl+Shift+F} & 快速查找 / 在文件中查找 \\
+\key{Ctrl+Q} & 搜索 Visual Studio（快速启动） \\
+\end{longtable}
+\subsection{调试}
+\begin{longtable}{L{4.6cm}L{10.2cm}}
+\toprule
+\textbf{快捷键} & \textbf{功能} \\ \midrule
+\endhead \bottomrule \endlastfoot
+\key{F5} / \key{Ctrl+F5} & 开始调试 / 开始执行（不调试） \\
+\key{Shift+F5} & 停止调试 \\
+\key{Ctrl+Shift+F5} & 重启调试 \\
+\key{F9} & 在当前行切换断点 \\
+\key{Ctrl+Shift+F9} & 删除所有断点 \\
+\key{Ctrl+Alt+B} & 断点窗口 \\
+\key{F10} & 逐过程 \\
+\key{F11} & 逐语句 \\
+\key{Shift+F11} & 跳出 \\
+\key{Ctrl+F10} & 运行到光标处 \\
+\key{Ctrl+Shift+F10} & 设置下一语句 \\
+\key{Ctrl+Alt+P} & 附加到进程 \\
+\key{Shift+F9} 或 \key{Ctrl+Alt+Q} & 快速监视 \\
+\key{Ctrl+Alt+C} & 调用堆栈窗口 \\
+\key{Ctrl+Alt+U} & 模块窗口 \\
+\key{Ctrl+Alt+V, L} & 局部变量窗口 \\
+\key{Ctrl+Alt+W, 1} & 监视 1 窗口 \\
+\key{Ctrl+Alt+I} & 即时窗口 \\
+\end{longtable}
+\subsection{构建}
+\begin{longtable}{L{4.6cm}L{10.2cm}}
+\toprule
+\textbf{快捷键} & \textbf{功能} \\ \midrule
+\endhead \bottomrule \endlastfoot
+\key{Ctrl+Shift+B} & 生成解决方案 \\
+\key{Ctrl+F7} & 编译当前文件 \\
+\key{Ctrl+Break} & 取消生成 \\
+\key{Alt+F11} & 对解决方案运行代码分析 \\
+\key{Shift+F4} & 属性页（配置相关设置的入口） \\
+\ui{生成 > 配置管理器} & 无默认快捷键，切换配置与平台 \\
+\ui{生成 > 批生成} & 无默认快捷键，一次生成多个配置 \\
+\ui{项目 > 重定解决方案目标} & 无默认快捷键，解决 \code{MSB8020}、\code{MSB8036} 时使用 \\
+\end{longtable}
+\subsection{窗口}
+\begin{longtable}{L{4.6cm}L{10.2cm}}
+\toprule
+\textbf{快捷键} & \textbf{功能} \\ \midrule
+\endhead \bottomrule \endlastfoot
+\key{Ctrl+Alt+L} & 解决方案资源管理器 \\
+\key{F4} & 属性窗口 \\
+\key{Ctrl+Alt+X} & 工具箱 \\
+\key{Ctrl+Shift+E} & 资源视图 \\
+\key{Ctrl+Alt+A} & 命令窗口 \\
+\key{Ctrl+\, Ctrl+E} & 错误列表 \\
+\key{Ctrl+\, Ctrl+T} & 任务列表 \\
+\key{Ctrl+K, Ctrl+B} & 代码片段管理器 \\
+\key{Ctrl+Tab} / \key{Ctrl+Shift+Tab} & 下一个 / 上一个文档窗口导航 \\
+\key{Ctrl+F4} 或 \key{Ctrl+W} & 关闭当前文档窗口 \\
+\key{Shift+Esc} & 关闭工具窗口 \\
+\key{Alt+F7} / \key{Shift+Alt+F7} & 下一个 / 上一个工具窗口导航 \\
+\key{Shift+Alt+Enter} & 全屏 \\
+\ui{窗口 > 保存窗口布局} & 无默认快捷键，保存当前布局 \\
+\end{longtable}
+\section{学习资源}
+官方与权威资料：
+\begin{itemize}
+  \item \href{https://learn.microsoft.com/visualstudio/windows/}{Visual Studio 文档}：IDE 功能、调试、测试与部署的官方入口。
+  \item \href{https://learn.microsoft.com/cpp/}{Microsoft C++ 文档}：语言、库与生成工具链，其中包含 \href{https://learn.microsoft.com/cpp/build/reference/compiler-options}{MSVC 编译器选项} 与 \href{https://learn.microsoft.com/cpp/build/reference/linker-options}{链接器选项} 的完整参考。
+  \item \href{https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines}{C++ Core Guidelines}：写出少踩坑的现代 C++ 的权威指南。
+  \item \href{https://zh.cppreference.com/}{cppreference（中文）}：标准库与语言特性速查，遇到编译错误时对照最可靠。
+\end{itemize}
+本仓库内的相关笔记：
+\begin{itemize}
+  \item \textbf{Visual Studio 入门}：第一次装好 VS 跑通项目。
+  \item \textbf{CMake 使用指南}：用 CMake 管理工程时的替代工作流。
+  \item \textbf{VS Code C++ 配置指南}：轻量编辑器的另一种选择。
+\end{itemize}
+\section{小结}
+\begin{itemize}
+  \item 先看错误号前缀：\code{MSB} 是项目与工具集、\code{C} 是编译器、\code{LNK} 是链接器、\code{E} 只是 IntelliSense；永远从第一条错误开始修。
+  \item \code{LNK2019} 找定义与库，\code{LNK2005} 查头文件里的非 \code{inline} 定义与重复包含，\code{LNK1104} 先想到“程序还在运行导致 exe 被占用”。
+  \item 中文乱码要分清源码编码、源字符集、执行字符集、控制台代码页四层，推荐“UTF-8 with BOM 或 \code{/utf-8}”配合 \code{SetConsoleOutputCP(CP_UTF8)}。
+  \item IntelliSense 与编译不一致时依次做：确认真实编译结果、把包含路径配到“所有配置、所有平台”、重新扫描解决方案、删除 \code{.vs}。
+  \item 工程路径坚持全英文、无空格、层级浅；\code{.vs}、\code{bin}、\code{obj} 一律进 \code{.gitignore}。
+  \item 断点空心先查 PDB 与配置，其次查“仅我的代码”与调试器类型，最后才怀疑优化。
+  \item 效率提升集中在四个动作：\key{Ctrl+T} 导航、\key{Ctrl+Alt+点击} 多光标、\key{Ctrl+K, Ctrl+D} 格式化、用书签与任务列表管住待办。
+\end{itemize}
+\section{练习题}
+\begin{enumerate}
+  \item 故意制造一次 \code{LNK2019}（声明了函数却不实现），用错误列表与 \key{Ctrl+T} 定位并修复，记录提示信息里的关键字段。
+  \item 在头文件里定义一个非 \code{inline} 的全局函数，被两个 \code{.cpp} 包含，复现 \code{LNK2005} 与 \code{LNK1169}，然后给出两种不同的修复方式。
+  \item 把一个含中文注释的 GBK 源码在不加 \code{/utf-8} 的情况下编译，观察 \code{C4819}，再分别用“另存为 UTF-8 with BOM”和 \code{/utf-8} 修好，比较两种做法在代码页处理上的差异。
+  \item 写一个输出中文的控制台程序，分别在 \code{chcp 936} 与 \code{chcp 65001} 下运行，解释结果不同的原因，再改用 \code{SetConsoleOutputCP(CP_UTF8)} 让程序自己保证正确。
+  \item 把 \code{附加包含目录} 只配在 Debug 配置下，制造 IntelliSense 与实际编译不一致，然后按“所有配置 + 重新扫描 + 删除 \code{.vs}”的顺序修好。
+  \item 用 \ui{工具 > 选项 > 环境 > 键盘} 给“设置文档格式”指派一个自定义组合键，再用 \ui{工具 > 导入和导出设置向导} 把键盘设置导出为 \code{.vssettings} 文件。
+\end{enumerate}
+\section{相关笔记}
+\begin{itemize}
+  \item \textbf{本教程}：\textbf{Visual Studio 2026 使用教程}
+  \item \textbf{上一章}：\textbf{发布与部署}
+  \item \textbf{C++ 教程}：\textbf{Visual Studio 入门}
+  \item \textbf{VS Code 配置}：\textbf{VS Code C++ 配置指南}
+  \item \textbf{CMake}：\textbf{CMake 使用指南}
+\end{itemize}

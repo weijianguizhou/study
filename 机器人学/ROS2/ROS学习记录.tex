@@ -1,0 +1,63 @@
+% ============================================================
+% 主文档 main.tex —— 编译整本书时使用本文件
+% ============================================================
+% 魔术注释(供编辑器识别编译方式):
+% !TEX program = xelatex
+% !TEX encoding = UTF-8
+% ============================================================
+% 中文书籍模板(ctexbook)
+% 编译方式: 使用 XeLaTeX 或 LuaLaTeX 编译(推荐 XeLaTeX)。
+% 该模板默认自动选用系统可用的中文字体,如需指定可加选项,如:
+%   \documentclass[11pt,a4paper,fontset=fandol]{ctexbook}
+% ============================================================
+% 文件结构说明:
+%   main.tex             本文件: 全书骨架(封面/目录/前言/分篇/引入各章)
+%   preamble.tex         共享导言区: 宏包与样式, 整书和各章共用
+%   ch01-ubuntu-ros.tex       第 1 章 Ubuntu 与 ROS 简介
+%   ch02-ubuntu-commands.tex  第 2 章 Ubuntu 常用指令
+% ============================================================
+% 新增章节方法:
+%   1. 复制 ch01 的文件头格式, 新建 chNN-xxx.tex, 章标题写在文件内;
+%   2. 在下方对应的 \part 之后加一行 \input{chNN-xxx};
+%   3. 每个章节文件都可单独编译, 也可随 main.tex 编译整书。
+% ============================================================
+\documentclass[12pt,a4paper]{ctexbook}
+\input{preamble}
+
+% 整书编译开关: 各章文件靠它判断自己是否"被主文档引用",
+% 从而决定是否需要补上 \documentclass 和 \begin{document}。
+\def\wholebook{}
+
+\title{ROS2系统学习记录}
+\author{爱吃烧饼的大熊猫}
+\date{\today}
+
+\begin{document}
+
+\frontmatter
+\maketitle
+
+\tableofcontents
+
+\chapter*{前言}
+\addcontentsline{toc}{chapter}{前言}
+第一次接触或者说听说ROS是在2025年12月，那时候还在兵器学科楼340，坐在办公室最东侧的一个小桌子上。刘方鑫师兄还没毕业，帮着师兄审核毕业论文，一起聊天，好不快乐。那时候师兄给我讲讲MPC和WBC，一起去找张老师聊动力学控制，真的觉得这样的日子要是能一直持续下去就好了。
+
+眨眼来到师兄毕业去湖南株洲工作前夕，师兄把他电脑上的代码全部移到了我的电脑上，那是我第一次接触Unbuntu，第一次接触ROS。
+
+第二次接触ROS就是这次了，这次得从头开始学了。第一次接触是师兄弟间的闲聊，这一次就是朋友间的承诺了。希望这次可以利用好闲散的时间，好好把ROS2学好，学通。
+
+\mainmatter
+
+\part{基础篇}
+
+\input{ch01-ubuntu-ros}
+\input{ch02-ubuntu-commands}
+\input{ch03-ubuntu-program}
+\input{ch04-ros2-fundation}
+
+% 以后新增的章节文件, 请 \input 到对应分篇之下, 例如:
+% \part{进阶篇}
+% \input{ch03-ros2-install}
+
+\end{document}

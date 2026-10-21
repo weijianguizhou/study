@@ -4,7 +4,7 @@ import subprocess, shutil, pathlib, re, sys, os
 
 TPL = pathlib.Path(r"D:\studynotes\模板\课程笔记")
 TEST = pathlib.Path(r"D:\studynotes\.workbuddy\_covertest")
-PREV = TPL / "封面预览"
+PREV = TPL / "封面" / "封面预览"
 BIN = pathlib.Path(r"D:\Latex\R\bin\windows")
 
 MAIN = r"""\documentclass[12pt,a4paper]{book}
@@ -21,7 +21,7 @@ TEST.mkdir(parents=True, exist_ok=True)
 PREV.mkdir(parents=True, exist_ok=True)
 shutil.copy(TPL / "preamble.tex", TEST / "preamble.tex")
 
-covers = sorted(TPL.glob("cover*.tex"))
+covers = sorted((TPL / "封面").glob("cover*.tex"))
 env = os.environ.copy()
 env["PATH"] = str(BIN) + os.pathsep + env.get("PATH", "")
 

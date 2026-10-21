@@ -202,11 +202,12 @@
 \label{thm:复合静应力强度}
 \begin{equation}
 	\begin{cases}
-		\sigma_{\mathrm{ca}} = \sqrt{\sigma^2 + 4\tau^2} \le [\sigma] = \dfrac{\sigma_{\mathrm{s}}}{[S]} & \text{第三强度理论，近似取}\ \dfrac{\sigma_{\mathrm{s}}}{\tau_{\mathrm{s}}}=2 \\[2ex]
-		\sigma_{\mathrm{ca}} = \sqrt{\sigma^2 + 3\tau^2} \le [\sigma] = \dfrac{\sigma_{\mathrm{s}}}{[S]} & \text{第四强度理论，近似取}\ \dfrac{\sigma_{\mathrm{s}}}{\tau_{\mathrm{s}}}=\sqrt{3}
+		\sigma_{\mathrm{ca}} = \sqrt{\sigma^2 + 4\tau^2} \le [\sigma] = \dfrac{\sigma_{\mathrm{s}}}{[S]} & \text{（第三强度理论）} \\[2ex]
+		\sigma_{\mathrm{ca}} = \sqrt{\sigma^2 + 3\tau^2} \le [\sigma] = \dfrac{\sigma_{\mathrm{s}}}{[S]} & \text{（第四强度理论）}
 	\end{cases}
 	\label{eq:强度:复合静应力强度}
 \end{equation}
+其中第三强度理论近似取 $\sigma_{\mathrm{s}}/\tau_{\mathrm{s}}=2$，第四强度理论近似取 $\sigma_{\mathrm{s}}/\tau_{\mathrm{s}}=\sqrt{3}$。
 则复合应力计算时的安全系数为
 \begin{equation}
 	S_{ca}=\frac{\sigma_{\mathrm{s}}}{\sqrt{\sigma^2+\left(\dfrac{\sigma_{\mathrm{s}}}{\tau_{\mathrm{s}}}\right)^2\tau^2}}\geq[S]
@@ -594,7 +595,10 @@
 \end{equation}
 强度条件为：
 \begin{equation}
-	S_{ca}=\frac{\sigma_{\mathrm{lime}}}{\sigma_{\max}}=\frac{2\sigma_{-1}+(K_\sigma-\psi_\sigma)\sigma_{\min}}{(K_\sigma+\psi_\sigma)(\sigma_m+\sigma_a)}=\frac{2\sigma_{-1}+(K_\sigma-\psi_\sigma)\sigma_{\min}}{(K_\sigma+\psi_\sigma)(2\sigma_a+\sigma_{\min})}\ge[S]
+	\begin{aligned}
+		S_{ca}&=\frac{\sigma_{\mathrm{lime}}}{\sigma_{\max}}=\frac{2\sigma_{-1}+(K_\sigma-\psi_\sigma)\sigma_{\min}}{(K_\sigma+\psi_\sigma)(\sigma_m+\sigma_a)}\\
+		&=\frac{2\sigma_{-1}+(K_\sigma-\psi_\sigma)\sigma_{\min}}{(K_\sigma+\psi_\sigma)(2\sigma_a+\sigma_{\min})}\ge[S]
+	\end{aligned}
 	\label{eq:强度:sigmaMin疲劳}
 \end{equation}
 
@@ -610,7 +614,9 @@
 \begin{note}
 \begin{enumerate}
 	\item 若零件所受应力变化规律不能肯定，一般采用 $\gamma=C$ 的情况计算；
-	\item 上述计算均按\textbf{无限寿命}设计。若按\textbf{有限寿命}要求设计（$10^3(10^4)<N<N_0$），公式中的极限应力应为有限寿命的疲劳极限 $\sigma_{\gamma N}=\sqrt[m]{\dfrac{N_0}{N}}\,\sigma_\gamma$，即以 $\sigma_{-1N}$ 代 $\sigma_{-1}$、以 $\sigma_{0N}$ 代 $\sigma_0$；
+	\item 上述计算均按\textbf{无限寿命}设计。若按\textbf{有限寿命}要求设计（$10^3(10^4)<\allowbreak N<N_0$），公式中的极限应力应为有限寿命的疲劳极限 
+\[ \sigma_{\gamma N}=\sqrt[m]{\frac{N_0}{N}}\,\sigma_\gamma, \]
+即以 $\sigma_{-1N}$ 代 $\sigma_{-1}$、以 $\sigma_{0N}$ 代 $\sigma_0$；
 	\item 当未知工作应力点所在区域时，应同时考虑可能出现的两种情况；
 	\item 对切应力上述公式同样适用，只需将 $\sigma$ 改为 $\tau$ 即可。
 \end{enumerate}
@@ -649,7 +655,10 @@
 	\label{eq:强度:例1psi}
 \end{equation}
 \begin{equation}
-	S_{ca}=\frac{\sigma_{-1}}{K_\sigma\sigma_a+\psi_\sigma\sigma_m}=\frac{450}{1.9\times160+0.286\times100}=\frac{450}{332.6}\approx1.35<1.4
+	\begin{aligned}
+		S_{ca}&=\frac{\sigma_{-1}}{K_\sigma\sigma_a+\psi_\sigma\sigma_m}=\frac{450}{1.9\times160+0.286\times100}\\
+		&=\frac{450}{332.6}\approx1.35<1.4
+	\end{aligned}
 	\label{eq:强度:例1无限寿命}
 \end{equation}
 故按无限寿命校核\textbf{不安全}。

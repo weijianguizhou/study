@@ -1,0 +1,20 @@
+\definecolor{c000000}{HTML}{000000}
+\definecolor{c6B7280}{HTML}{6B7280}
+\definecolor{cFFFFFF}{HTML}{FFFFFF}
+\begin{tikzpicture}[>={Triangle[length=0.313cm,width=0.313cm]}]
+  \node (n313_51110) at (4.5,-3.125) [draw=c6B7280, line width=0.025cm, fill=cFFFFFF, text=c000000, font=\rmfamily\fontsize{11}{13.2}\selectfont, inner sep=0pt, outer sep=0pt, minimum width=3.5cm, minimum height=1.75cm] {预编译};
+  \node (n314_af094) at (0.875,-3.15) [text=c000000, font=\rmfamily\fontsize{11}{13.2}\selectfont, inner sep=0pt, outer sep=0pt, minimum width=2.25cm, minimum height=1.3cm] {源文件（.h,.cpp等）};
+  \node (n320_a2fd4) at (8.5,-3.125) [draw=c6B7280, line width=0.025cm, fill=cFFFFFF, rounded corners=0.15cm, text=c000000, font=\rmfamily\fontsize{11}{13.2}\selectfont, inner sep=0pt, outer sep=0pt, minimum width=2.5cm, minimum height=1.75cm] {编译};
+  \node (n322_6abc3) at (12.125,-3.125) [draw=c6B7280, line width=0.025cm, fill=cFFFFFF, rounded corners=0.15cm, text=c000000, font=\rmfamily\fontsize{11}{13.2}\selectfont, inner sep=0pt, outer sep=0pt, minimum width=2.75cm, minimum height=1.75cm] {汇编};
+  \node (n324_94575) at (15.5,-3.125) [draw=c6B7280, line width=0.025cm, fill=cFFFFFF, rounded corners=0.15cm, text=c000000, font=\rmfamily\fontsize{11}{13.2}\selectfont, inner sep=0pt, outer sep=0pt, minimum width=2.5cm, minimum height=1.75cm] {链接};
+  \node (n325_bd541) at (11.25,-6) [text=c000000, font=\rmfamily\fontsize{11}{13.2}\selectfont, inner sep=0pt, outer sep=0pt, minimum width=1.5cm, minimum height=1.5cm] {.a/.lib  .so/.dll};
+  \node (n328_dd782) at (18,-1) [text=c000000, font=\rmfamily\fontsize{11}{13.2}\selectfont, inner sep=0pt, outer sep=0pt, minimum width=2.5cm, minimum height=1cm] {可执行文件};
+  \begin{scope}[on background layer]
+    \draw[->, line width=0.05cm] (n314_af094.east) -- (n313_51110.west);
+    \draw[->, line width=0.05cm] (n313_51110.east) -- (n320_a2fd4.west);
+    \draw[->, line width=0.05cm] (n320_a2fd4.east) -- (n322_6abc3.west);
+    \draw[->, dash pattern=on 0.15cm off 0.1cm, line width=0.05cm] (n325_bd541.east) to[out=0, in=-90] (n324_94575.south);
+    \draw[->, line width=0.05cm] (n322_6abc3.east) -- (n324_94575.west);
+    \draw[->, line width=0.05cm] (n324_94575.east) to[out=0, in=-90] (n328_dd782.south);
+  \end{scope}
+\end{tikzpicture}

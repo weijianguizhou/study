@@ -1,0 +1,440 @@
+% !TeX root = main.tex
+
+C++ 没有托管语言的运行时保护，一个越界写、一次漏掉的拷贝、一个忘记置空的指针，可能要到用户现场才暴露。单元测试是唯一能让你在几分钟内知道“刚才的改动有没有破坏别的东西”的手段，而 Visual Studio 2026 把测试发现、执行、覆盖率与代码质量检查都收进了同一个界面。本章从最省事的内置框架讲到第三方框架接入、覆盖率与 CI，目标是让你在真实项目里能立刻把测试跑起来。
+
+\section{为什么 C++ 项目需要单元测试}
+
+\subsection{C++ 的沉默错误成本}
+
+C++ 的错误往往不在出错的那一行暴露：越界写会破坏相邻对象，悬垂引用会在几千行之外崩溃，未初始化的成员会让结果偶尔不同。这类问题的定位成本与“发现得有多晚”成正比。单元测试把发现时机提前到编译之后几秒内，并且\textbf{把每个 bug 都变成一条再也不会复发的用例}。此外，测试还是重构的安全网：没有测试的重构只能叫改写。
+
+\subsection{测试资源管理器}
+
+\ui{测试 > 测试资源管理器} 是测试工作的主界面：左侧是测试树，右侧是详情与结果，顶部工具栏提供全部运行、运行失败项、按结果/类/特征分组、搜索框与播放列表入口。它不关心你用的是哪套框架——只要项目里有框架的适配器，用例就会被发现并显示在同一棵树上。
+
+\begin{lstlisting}[style=textstyle]
+测试资源管理器（示意）
++- 解决方案 MyApp
+|  +- 未运行的测试 (12)
+|  +- 已通过的测试 (35)
+|  |  +- CalcTests
+|  |     +- Add_TwoPositiveNumbers_ReturnsSum      通过  0.4 ms
+|  |     +- Average_NormalInput_ReturnsMean        通过  0.6 ms
+|  +- 失败的测试 (1)
+|     +- Divide_ByZero_Throws
+|          消息: Expected exception not thrown
+|          堆栈: CalculatorTests.cpp 第 27 行
++- 摘要: 总计 48 | 通过 47 | 失败 1 | 跳过 0
+\end{lstlisting}
+
+\begin{tipbox}[提示]
+测试资源管理器是“生成后更新”的。改完代码先按 \key{F6} 生成解决方案，再运行测试，否则跑的还是上一次的二进制。
+\end{tipbox}
+
+\section{Microsoft 原生单元测试框架（C++）}
+
+\subsection{创建本机单元测试项目}
+
+在 \ui{文件 > 新建 > 项目} 中搜索“本机单元测试项目”（Native Unit Test Project）即可创建。该模板属于 C++ 桌面开发工作负载，不需要安装任何第三方库，生成的项目会：
+
+\begin{itemize}
+  \item 使用 \code{CppUnitTest.h} 提供的 Microsoft Unit Testing Framework for C++；
+  \item 把配置类型设为动态库，产物是一个包含测试代码的 DLL，由 VS 的测试适配器加载执行；
+  \item 自带一个示例测试类，可直接替换。
+\end{itemize}
+
+\subsection{核心宏与断言}
+
+\begin{longtable}{L{7.6cm}L{7.4cm}}
+\toprule \textbf{宏 / API} & \textbf{作用} \\ \midrule
+\endfirsthead
+\toprule \textbf{宏 / API} & \textbf{作用} \\ \midrule
+\endhead
+\bottomrule \endlastfoot
+\code{TEST_CLASS(名称)} & 定义一个测试类，类内的 \code{TEST_METHOD} 才会被发现 \\
+\code{TEST_METHOD(名称)} & 定义一个测试方法，方法名即用例名 \\
+\code{TEST_METHOD_INITIALIZE} / \code{TEST_METHOD_CLEANUP} & 每个测试方法前后执行的初始化与清理 \\
+\code{TEST_CLASS_INITIALIZE} / \code{TEST_CLASS_CLEANUP} & 整个测试类前后各执行一次 \\
+\code{Assert::AreEqual(期望, 实际)} & 相等断言，类型需可比较与可打印 \\
+\code{Assert::AreNotEqual} / \code{Assert::IsTrue} / \code{Assert::IsFalse} / \code{Assert::IsNull} / \code{Assert::IsNotNull} & 常用的其余断言 \\
+\code{Assert::ExpectException<T>}\allowbreak\code{(lambda)} & 断言 lambda 抛出类型为 \code{T} 的异常 \\
+\code{Assert::Fail(消息)} & 直接判定失败 \\
+\end{longtable}
+
+\subsection{完整示例：Calculator 与被测代码}
+
+被测代码放在一个静态库项目 \code{CalcLib} 中，测试项目引用它。
+
+\begin{lstlisting}[style=cppstyle]
+// CalcLib/include/Calculator.h —— 被测代码
+#pragma once
+#include <stdexcept>
+#include <vector>
+
+class Calculator {
+public:
+    int Add(int a, int b) const { return a + b; }
+
+    int Divide(int a, int b) const {
+        if (b == 0)
+            throw std::invalid_argument("division by zero");
+        return a / b;
+    }
+
+    // 平均值：空输入视为调用方错误
+    double Average(const std::vector<int>& values) const {
+        if (values.empty())
+            throw std::invalid_argument("empty input");
+        long long sum = 0;
+        for (int v : values)
+            sum += v;
+        return static_cast<double>(sum) / static_cast<double>(values.size());
+    }
+};
+\end{lstlisting}
+
+\begin{lstlisting}[style=cppstyle]
+// CalculatorTests.cpp —— 本机单元测试项目中的测试文件
+#include "CppUnitTest.h"
+#include "Calculator.h"
+
+using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+
+namespace CalcTests {
+
+TEST_CLASS(CalculatorTests) {
+public:
+    // 每个测试方法执行前都会调用，避免用例之间共享状态
+    TEST_METHOD_INITIALIZE(SetUp) { m_calc = Calculator(); }
+
+    TEST_METHOD(Add_TwoPositiveNumbers_ReturnsSum) {
+        Assert::AreEqual(5, m_calc.Add(2, 3));
+    }
+
+    TEST_METHOD(Add_NegativeNumbers_ReturnsSum) {
+        Assert::AreEqual(-5, m_calc.Add(-2, -3));
+    }
+
+    TEST_METHOD(Divide_ByZero_Throws) {
+        Assert::ExpectException<std::invalid_argument>(
+            [this] { m_calc.Divide(1, 0); });
+    }
+
+    TEST_METHOD(Average_EmptyVector_Throws) {
+        Assert::ExpectException<std::invalid_argument>(
+            [this] { m_calc.Average({}); });
+    }
+
+    TEST_METHOD(Average_NormalInput_ReturnsMean) {
+        // 浮点比较用带容差的重载；若所用版本不提供，可改用 Assert::IsTrue(std::abs(...) < 1e-9)
+        Assert::AreEqual(2.0, m_calc.Average({ 1, 2, 3 }), 1e-9);
+    }
+
+    TEST_METHOD(Average_LargeInput_NoOverflow) {
+        std::vector<int> v(1000, 2000000000);
+        Assert::IsTrue(m_calc.Average(v) > 1999999999.0);
+    }
+
+private:
+    Calculator m_calc;
+};
+
+} // namespace CalcTests
+\end{lstlisting}
+
+\subsection{引用被测项目与配置要点}
+
+\begin{enumerate}
+  \item 把被测代码放进一个\textbf{静态库}项目（示例中的 \code{CalcLib}），头文件放在 \code{include} 目录。
+  \item 在测试项目上右键 \textbf{添加 > 引用}，勾选 \code{CalcLib}；再在 \ui{项目属性 > C/C++ > 常规 > 附加包含目录} 中加入被测项目的头文件目录。
+  \item 测试项目与被测项目应使用\textbf{一致的运行库设置}（例如都选 \code{/MDd}），否则会出现 CRT 相关的链接冲突。
+  \item 按 \key{F6} 生成，在测试资源管理器中点“全部运行”。
+\end{enumerate}
+
+\begin{warnbox}[注意]
+本机单元测试框架要求测试代码与框架库的编译选项匹配；把 Debug 配置的测试 DLL 与 Release 配置的被测静态库混用时，链接错误通常比运行错误更容易发现，但 ABI 不一致导致的诡异崩溃很难查，务必让两者的配置保持一致。
+\end{warnbox}
+
+\section{接入第三方框架}
+
+\subsection{Google Test：vcpkg + CMake}
+
+这是目前最主流的组合，跨平台且 CI 友好。
+
+\begin{lstlisting}[style=shellstyle]
+# 安装 Google Test（x64-windows 三元组）并让 VS 自动识别 vcpkg
+vcpkg install gtest:x64-windows
+vcpkg integrate install
+\end{lstlisting}
+
+\begin{lstlisting}[style=cmakestyle]
+cmake_minimum_required(VERSION 3.20)
+project(Calc CXX)
+
+set(CMAKE_CXX_STANDARD 20)
+enable_testing()
+
+find_package(GTest CONFIG REQUIRED)
+
+add_library(calc STATIC src/Calculator.cpp)
+target_include_directories(calc PUBLIC include)
+
+add_executable(calc_tests tests/CalculatorTests.cpp)
+target_link_libraries(calc_tests PRIVATE calc GTest::gtest_main)
+
+# 让 CTest 与测试资源管理器都能发现每个 gtest 用例
+include(GoogleTest)
+gtest_discover_tests(calc_tests)
+\end{lstlisting}
+
+\begin{lstlisting}[style=cppstyle]
+// tests/CalculatorTests.cpp
+#include <gtest/gtest.h>
+#include "Calculator.h"
+
+TEST(CalculatorTest, AddReturnsSum) {
+    Calculator c;
+    EXPECT_EQ(5, c.Add(2, 3));            // 失败也继续执行本用例
+    ASSERT_EQ(-5, c.Add(-2, -3));          // 失败立即返回本用例
+}
+
+TEST(CalculatorTest, DivideByZeroThrows) {
+    Calculator c;
+    EXPECT_THROW(c.Divide(1, 0), std::invalid_argument);
+}
+
+TEST(CalculatorTest, AverageHandlesEmptyInput) {
+    Calculator c;
+    EXPECT_THROW(c.Average({}), std::invalid_argument);
+    EXPECT_DOUBLE_EQ(2.0, c.Average({ 1, 2, 3 }));
+}
+\end{lstlisting}
+
+\code{EXPECT_*} 与 \code{ASSERT_*} 的区别值得记住：前者记录失败后继续执行该用例，后者失败即返回——需要先确认前置条件（例如指针非空）时用 \code{ASSERT_*}，纯结果校验用 \code{EXPECT_*} 能得到更多信息。
+
+\subsection{Google Test：在 VS / MSBuild 项目中使用}
+
+不想引入 CMake 时，有两条路：
+
+\begin{itemize}
+  \item \textbf{NuGet 包}：在测试项目上右键 \textbf{管理 NuGet 程序包}，搜索 Google Test 包并安装，它会配置好包含目录与库；再手动把测试用例写进项目。
+  \item \textbf{测试适配器}：Visual Studio 提供 Google Test 适配器（在安装程序的单个组件中可找到相关条目，名称随版本略有差异）。装了适配器后，测试资源管理器能够发现 CMake 项目或 MSBuild 项目里的 gtest 用例，并支持按用例筛选与单独调试。
+\end{itemize}
+
+\begin{keybox}[实战场景]
+一个既有 MSBuild 解决方案不想改构建系统，就在专门的 \code{MyApp.Tests} 项目里用 NuGet 引入 Google Test，把测试项目加进解决方案并让它在 CI 中被 \code{vstest.console.exe} 调用——既保留了 \code{gtest} 的断言生态，也不用动主工程的工程文件。
+\end{keybox}
+
+\subsection{Boost.Test 与 Catch2}
+
+\textbf{Boost.Test} 适合已经在用 Boost 的项目，支持单头文件模式（无需额外链接）：
+
+\begin{lstlisting}[style=cppstyle]
+#define BOOST_TEST_MODULE CalcTests
+#include <boost/test/included/unit_test.hpp>
+#include "Calculator.h"
+
+BOOST_AUTO_TEST_CASE(add_returns_sum) {
+    Calculator c;
+    BOOST_CHECK_EQUAL(c.Add(2, 3), 5);
+    BOOST_REQUIRE_THROW(c.Divide(1, 0), std::invalid_argument);
+}
+\end{lstlisting}
+
+\textbf{Catch2} 以表达式断言的可读性著称（\code{REQUIRE(c.Average({ 1, 2, 3 }) == 2.0)}，可用 \code{SECTION} 组织共享前置条件的多个分支），v3 起不再是纯单头文件，需要链接库，适合轻量项目与看重断言可读性的团队。
+
+\subsection{框架对比与选型}
+
+\begin{longtable}{L{2.4cm}L{3.8cm}L{4.1cm}L{1.6cm}L{1.9cm}}
+\toprule \textbf{框架} & \textbf{引入方式} & \textbf{断言风格} & \textbf{VS 集成} & \textbf{适用场景} \\ \midrule
+\endfirsthead
+\toprule \textbf{框架} & \textbf{引入方式} & \textbf{断言风格} & \textbf{VS 集成} & \textbf{适用场景} \\ \midrule
+\endhead
+\bottomrule \endlastfoot
+Microsoft 原生 & 内置模板，零第三方依赖 & \code{Assert::}\allowbreak\code{AreEqual} 等 & 内置适配器 & 纯 Windows/MSVC 项目、要求零依赖 \\
+Google Test & vcpkg + CMake，或 NuGet & \code{EXPECT_*} / \code{ASSERT_*} & 官方适配器 & 跨平台、生态最大、CI 友好 \\
+Boost.Test & Boost 发行包或单头文件模式 & \code{BOOST_CHECK_*} & 通过适配器或 CTest & 已经在用 Boost 的项目 \\
+Catch2 & 单头文件（v2）或链接库（v3） & \code{REQUIRE} / \code{CHECK} & 通过适配器或 CTest & 轻量项目、看重断言可读性 \\
+\end{longtable}
+
+\begin{tipbox}[提示]
+框架本身不决定成败，\textbf{用例的边界覆盖}才决定成败。选型时优先考虑“团队能否在 CI 上一条命令跑完”，其次才是断言写起来好不好看。
+\end{tipbox}
+
+\section{测试适配器、筛选与并行}
+
+\subsection{适配器与发现测试}
+
+测试适配器是 IDE 与测试框架之间的桥：它负责枚举测试、执行测试并把结果映射回测试资源管理器的树形结构。表现为“测试资源管理器里看不到任何用例”时，排查顺序是：项目是否生成成功 -> 适配器是否安装 -> 测试框架是否被正确引用（示例中 gtest 是否真的链接进了可执行文件）。
+
+\subsection{分组与筛选}
+
+测试资源管理器顶部的“分组依据”下拉支持按\textbf{项目、命名空间、类、特征（Trait）、结果}分组。搜索框支持类似下面的过滤语法：
+
+\begin{longtable}{L{6.8cm}L{8.2cm}}
+\toprule \textbf{输入} & \textbf{含义} \\ \midrule
+\endfirsthead
+\toprule \textbf{输入} & \textbf{含义} \\ \midrule
+\endhead
+\bottomrule \endlastfoot
+\code{FullyQualifiedName~}\allowbreak\code{Calculator} & 名称包含 Calculator 的用例 \\
+\code{FullyQualifiedName!~Slow} & 排除名称含 Slow 的用例 \\
+\code{Outcome:Failed} & 只显示失败的用例 \\
+\code{Trait:Category=Unit} & 按特征筛选（特征由框架提供） \\
+\end{longtable}
+
+\subsection{测试播放列表}
+
+播放列表（\code{.playlist}，本质是记录用例 ID 的 XML 文件）用来把“每次提交前必须跑的冒烟集”和“每天夜里跑的完整集”分开：
+
+\begin{enumerate}
+  \item 在测试资源管理器中选中若干用例。
+  \item 右键 \textbf{添加到播放列表 > 新建播放列表}，保存为 \code{smoke.playlist} 并加入版本库。
+  \item 之后任何人只需选择该播放列表并点“运行”，就能得到一致的测试子集。
+\end{enumerate}
+
+\begin{warnbox}[注意]
+播放列表记录的是用例标识，重命名测试类或方法后这些条目会失效。把播放列表纳入版本管理后，重命名测试时记得同步刷新它。
+\end{warnbox}
+
+\subsection{并行执行}
+
+并行化的收益取决于测试本身的性质：
+
+\begin{itemize}
+  \item \textbf{纯逻辑测试}（无共享文件、无固定端口、无全局单例）可以放心并行，优先按测试项目或测试可执行文件拆分，交给构建系统（如 \code{msbuild /m}）或多个 \code{vstest.console.exe} 进程并行调度；反之，依赖同一临时文件、数据库或端口的测试并行后会互相干扰，应先为每个用例准备独立的工作目录，或者干脆串行执行。
+  \item 命令行运行的并行度支持与所用适配器有关，可在 CI 上先用保守配置跑通，再逐步提高并行度并观察失败率。
+\end{itemize}
+
+\section{代码覆盖率}
+
+\subsection{在 IDE 与命令行中收集}
+
+在测试资源管理器中运行测试后，通过 \ui{测试 > 分析代码覆盖率} 可以看到被测试代码的行覆盖率：绿色表示已执行，红色表示未执行，橙色表示部分分支未覆盖。命令行方式适合放进 CI：
+
+\begin{lstlisting}[style=shellstyle]
+:: 1) 生成测试项目（Release x64）
+msbuild MyApp.sln /t:Rebuild /p:Configuration=Release /p:Platform=x64
+
+:: 2) 运行测试并收集覆盖率，同时输出 TRX 报告
+vstest.console.exe x64\Release\CalcTests.dll ^
+    /Platform:x64 ^
+    --collect:"Code Coverage" ^
+    /Logger:trx /ResultsDirectory:TestResults
+\end{lstlisting}
+
+只想跑某一类用例时，用 \code{/TestCaseFilter:"FullyQualifiedName~Calculator"} 过滤即可。
+
+\begin{warnbox}[注意]
+对 C++ 本机测试，覆盖率插桩需要测试二进制导出覆盖率符号，通常在链接器选项中加上 \code{/EXPORT:__coverage}；缺少它时收集到的覆盖率可能为空。不同工具链与项目类型的具体要求请以当前版本的文档为准。
+\end{warnbox}
+
+\subsection{版本能力差异}
+
+\begin{longtable}{L{7.0cm}L{8.0cm}}
+\toprule \textbf{能力} & \textbf{说明} \\ \midrule
+\endfirsthead
+\toprule \textbf{能力} & \textbf{说明} \\ \midrule
+\endhead
+\bottomrule \endlastfoot
+运行与调试单元测试、测试资源管理器、播放列表 & 各版本均提供 \\
+Microsoft 原生单元测试框架与本机单元测试项目模板 & 各版本均提供 \\
+Google Test / CTest 等适配器 & 各版本均可安装使用 \\
+代码覆盖率（IDE 内可视化） & \textbf{部分功能需要更高版本}（Community 版通常不包含，需 Professional 或 Enterprise） \\
+测试影响分析等高级分析能力 & \textbf{部分功能需要更高版本}（通常属于 Enterprise 能力） \\
+命令行覆盖率收集（\code{vstest.console.exe --collect}） & 可用性同样受版本与许可限制 \\
+\end{longtable}
+
+\begin{tipbox}[提示]
+拿不准时不要猜，直接查当前版本的版本对比说明；同一台机器上不同版本的能力差异主要体现在覆盖率与高级分析上，而“写测试、跑测试、看结果”这条主链路在任何版本上都是通的。
+\end{tipbox}
+
+\section{TDD 在 C++ 中的落地}
+
+TDD 的循环只有三步，但每一步都有明确的产出：
+
+\begin{lstlisting}[style=textstyle]
+  写一个失败的测试  ->  用最少的代码让它通过  ->  在测试保护下重构
+        ^                                              |
+        +----------------------------------------------+
+  (1) 红：只写接口签名与断言期望，编译不过也算红
+  (2) 绿：不求优雅只求正确，不写测试没要求的功能
+  (3) 重构：提取函数、消除重复、修正命名，每轮循环控制在几分钟内
+\end{lstlisting}
+
+在 C++ 中落地的几个现实约束：
+
+\begin{enumerate}
+  \item \textbf{编译速度就是循环速度}。把被测逻辑拆成小而独立的静态库，测试项目只链接它；尽量用前置声明与 pimpl 减少重编译范围。一次循环超过五分钟，TDD 就很难坚持。
+  \item \textbf{先设计接口，再写实现}。测试写不下去通常意味着接口设计有问题（依赖太深、职责太杂），这本身就是 TDD 的收益。
+  \item \textbf{外部依赖要能被替换}。文件、网络、时间、随机数都应通过接口注入；测试中使用伪实现或固定种子，避免结果不可复现。
+  \item \textbf{不要为了覆盖率写测试}。断言为空的“调用一遍”用例只增加维护成本，不增加信心。
+\end{enumerate}
+
+\begin{keybox}[实战场景]
+给一个解析器写新功能时，先写下 \code{TEST_METHOD(}\allowbreak\code{Parse_EmptyInput_}\allowbreak\code{ReturnsNull)} 与 \code{TEST_METHOD(}\allowbreak\code{Parse_ValidInput_}\allowbreak\code{FillsFields)} 两条用例，此时编译不过；补上最小实现让它们通过；再补边界用例（超长输入、非法字符），最后在绿色的状态下重命名与拆分函数。
+\end{keybox}
+
+\section{持续集成}
+
+CI 上的目标是“一条命令构建、一条命令跑测试、失败时能拿到可读报告”。
+
+\begin{lstlisting}[style=shellstyle]
+:: ci-build-and-test.bat —— 构建 + 测试 + TRX 报告
+setlocal
+set CONFIG=Release
+set PLATFORM=x64
+
+:: 1) 构建（/m 允许并行编译）
+msbuild MyApp.sln /t:Rebuild /m ^
+    /p:Configuration=%CONFIG% /p:Platform=%PLATFORM% || exit /b 1
+
+:: 2) 运行测试，失败即返回非零退出码，让 CI 判定失败
+vstest.console.exe %PLATFORM%\%CONFIG%\CalcTests.dll ^
+    /Platform:%PLATFORM% ^
+    /Logger:trx /ResultsDirectory:TestResults || exit /b 1
+
+endlocal
+\end{lstlisting}
+
+几个实践要点：
+
+\begin{itemize}
+  \item \textbf{退出码就是结论}。\code{vstest.console.exe} 在有用例失败时返回非零，CI 脚本必须把它透传出去（上面的 \code{|| exit /b 1}），否则流水线会“绿着失败”。
+  \item \textbf{TRX 报告一定要上传为构建产物}。失败时能直接看到用例名、消息与堆栈，比翻控制台日志快得多。
+  \item \textbf{区分冒烟集与完整集}。提交触发的流水线跑播放列表里的冒烟集并启用并行；夜间流水线跑全部用例，再加上 \code{/analyze}、clang-tidy 与覆盖率收集。同时用 \code{/W4 /WX} 把编译警告当失败处理，让代码质量问题在合并前就被拦住。
+\end{itemize}
+
+\section{小结}
+
+\begin{itemize}
+  \item \ui{测试 > 测试资源管理器} 是统一的测试入口，支持发现、运行、调试、分组、筛选与播放列表。
+  \item 本机单元测试项目基于 \code{CppUnitTest.h}，用 \code{TEST_CLASS} / \code{TEST_METHOD} 组织用例，用 \code{Assert::AreEqual}、\code{Assert::ExpectException} 等断言；被测代码建议放进静态库并被测试项目引用。
+  \item Google Test 适合跨平台与 CI（vcpkg + CMake 是首选组合），Boost.Test 适合已用 Boost 的项目，Catch2 适合轻量项目；选型的关键是 CI 上能否一条命令跑完。
+  \item 出现“看不到用例”时按“生成是否成功 -> 适配器是否安装 -> 框架是否被链接”的顺序排查。
+  \item 播放列表用于分离冒烟集与完整集；依赖共享资源的测试不要盲目并行。
+  \item 代码覆盖率可在 IDE 或命令行收集，C++ 项目可能需要 \code{/EXPORT:__coverage}；覆盖率与高级测试分析\textbf{部分功能需要更高版本}。
+  \item TDD 的循环是红 -> 绿 -> 重构，在 C++ 中它的速度上限由编译速度决定。
+  \item CI 中让 \code{vstest.console.exe} 的退出码决定流水线成败，并把 TRX 报告留作构建产物。
+\end{itemize}
+
+\section{练习题}
+
+\begin{enumerate}
+  \item 创建一个本机单元测试项目，为 \code{Calculator} 补上 \code{Subtract} 与 \code{Multiply}，写出覆盖正数、负数与零的用例，并让它们全部通过。
+  \item 用 vcpkg 安装 Google Test，通过 CMake 把上一题的测试改写成 gtest 版本，并让测试资源管理器同时发现两套用例。
+  \item 为一段会修改文件的自有代码写测试，要求每个用例使用独立的临时目录，并说明为什么这样的测试才能安全并行。
+  \item 创建一个播放列表，只包含名称中含 \code{Fast} 的用例，并说明在 CI 上如何把冒烟集与完整集分成两条流水线。
+  \item 用 \code{/EXPORT:__coverage} 收集一次代码覆盖率，找出项目中覆盖率最低的一个源文件，并解释它是“缺少测试”还是“不可测设计”。
+  \item 按 TDD 流程实现一个小功能（例如把字符串按分隔符切分并去掉空项），记录每一步的用时，并分析哪一步最慢、为什么。
+\end{enumerate}
+
+\section{相关笔记}
+
+\begin{itemize}
+  \item \textbf{本教程}：\textbf{Visual Studio 2026 使用教程}
+  \item \textbf{上一章}：\textbf{CMake 与 vcpkg 集成}
+  \item \textbf{下一章}：\textbf{发布与部署}
+  \item \textbf{C++ 教程}：\textbf{Visual Studio 入门}
+  \item \textbf{CMake}：\textbf{CMake 使用指南}
+\end{itemize}

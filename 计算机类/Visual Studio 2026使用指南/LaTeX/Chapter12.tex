@@ -1,0 +1,447 @@
+% !TeX root = main.tex
+代码能在自己的机器上按 F5 跑起来，和它能被装到另一台机器上跑起来，是两件完全不同的事。发布阶段的事故几乎都不发生在源码里，而是藏在配置切换、运行库选择、依赖收集和安装包这几个环节。这一章按“从 Release 配置到交付安装包”的顺序把这些环节逐个拆开，重点放在每一步为什么会导致崩溃、以及怎么提前验证。
+\section{发布前的配置切换}
+\subsection{Debug 与 Release 的本质差异}
+切换配置不是换个名字，而是同时改掉了一整组编译器和链接器选项。默认两个配置的差异大致如下：
+
+\begin{longtable}{L{2.8cm}L{5.8cm}L{5.9cm}}
+\toprule
+\textbf{维度} & \textbf{Debug 配置} & \textbf{Release 配置} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+优化级别 & \code{/Od} 关闭优化，并叠加 \code{/RTC1} 基本运行时检查 & \code{/O2} 最大化速度 \\
+预处理宏 & 定义 \code{_DEBUG}，不定义 \code{NDEBUG} & 定义 \code{NDEBUG}，不定义 \code{_DEBUG} \\
+\code{assert} & 生效 & 被 \code{NDEBUG} 整体去掉 \\
+运行库 & \code{/MDd} 或 \code{/MTd} & \code{/MD} 或 \code{/MT} \\
+迭代器调试级别 & \code{_ITERATOR_DEBUG_LEVEL=2} & \code{_ITERATOR_DEBUG_LEVEL=0} \\
+调试信息 & \code{/Zi}，链接器默认生成 PDB & 默认不生成 PDB \\
+增量链接 & 打开（\code{/INCREMENTAL}） & 关闭，并启用 \code{/OPT:REF}、\code{/OPT:ICF} \\
+全程序优化 & 关闭 & 项目模板常在 Release 下打开（\code{/GL} + \code{/LTCG}） \\
+未初始化内存 & 调试堆会填充特征字节，容易暴露 & 内容随机，可能出现“在我机器上是好的” \\
+速度与体积 & 慢、大 & 快、小 \\
+\end{longtable}
+
+\begin{warnbox}[注意]
+\code{assert} 在 Release 下是\textbf{完全不执行}的，所以不要把带副作用的表达式写进 \code{assert}（例如 \code{assert(p = CreateBuffer())}）。Debug 下它正常工作，Release 下 \code{p} 会永远是空指针，而且不会有任何提示。
+\end{warnbox}
+
+\begin{tipbox}[提示]
+想保留 Release 的性能又想能调试，可以克隆一个中间配置：\code{/O2} + \code{/Zi}，并在 \ui{项目 > 属性 > 链接器 > 调试 > 生成调试信息} 选择 \textbf{是 (/DEBUG)}。如果问题只在优化后出现，就单独建一个把 \ui{项目 > 属性 > C/C++ > 优化 > 优化} 改成 \textbf{已禁用 (/Od)} 的配置，用二分法缩小范围。
+\end{tipbox}
+\subsection{常用优化开关的含义与风险}
+\begin{longtable}{L{2.6cm}L{5.4cm}L{6.6cm}}
+\toprule
+\textbf{开关} & \textbf{含义} & \textbf{需要注意的风险} \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\code{/O2} & 最大化速度，等于打开一揽子子优化 & 行号会错位、局部变量可能被优化掉，单步调试体验骤降 \\
+\code{/Od} & 关闭所有优化 & 性能损失明显，只用于排查阶段 \\
+\code{/O1} & 最小体积，与 \code{/O2} 互斥 & 体积优先时速度可能反而下降 \\
+\code{/Ob2} & 内联展开（\code{/Ob0} 禁止、\code{/Ob1} 仅 \code{inline}、\code{/Ob2} 全部） & 断点可能进不去被内联的函数 \\
+\code{/Oi} & 生成内建函数（intrinsic） & 部分 CRT 调用不再可断点 \\
+\code{/Oy} & 省略帧指针 & 调用栈回溯可能不完整，是“看不到局部变量”的主因 \\
+\code{/GF} & 字符串字面量池化 & 相同字面量共享同一地址，用地址比较字符串会出错 \\
+\code{/Gy} & 函数级链接 & 配合 \code{/OPT:REF} 剔除未引用函数，是减体积的关键 \\
+\code{/GL} & 全程序优化，编译期只产出中间表示 & 链接明显变慢、内存占用高，必须由 \code{/LTCG} 完成最终代码生成 \\
+\code{/LTCG} & 链接时代码生成 & 与增量链接冲突，链接器会提示忽略 \code{/INCREMENTAL}（\code{LNK4075}） \\
+\code{/arch:AVX2} & 允许编译器生成 AVX2（256 位）指令 & 在不支持 AVX2 的 CPU 上会触发非法指令异常（\code{0xC000001D}） \\
+\code{/arch:AVX512} & 允许生成 AVX-512 指令 & 支持该指令集的消费级 CPU 更少，风险比 \code{/arch:AVX2} 更大 \\
+\code{/fp:fast} & 浮点快速模式，允许重排与近似 & 结果与调试版不一致，可能出现 \code{a + b != b + a}，故障无法复现 \\
+\code{/GS} & 缓冲区安全检查，默认开启 & 关掉会放大栈溢出风险，不要关 \\
+\code{/guard:cf} & 控制流保护 & 与某些加壳、注入类工具冲突 \\
+\code{/W4}、\code{/permissive-} & 打开第 4 级警告、关闭宽松模式以贴近标准 & 会让老代码冒出一批新警告，建议在发布前逐个处理 \\
+\end{longtable}
+
+\textbf{关于 \code{/arch} 的正确用法}：混用不同 \code{/arch} 编译的静态库不会链接失败，但最终程序会要求运行机器支持其中最高的那套指令集。如果必须兼顾老机器，做法是用 \code{/arch:SSE2} 或 \code{/arch:AVX2} 出通用版本，再在运行时用 \code{__cpuid} / \code{__cpuidex} 读取 CPUID 特性位做派发。
+
+\begin{keybox}[实战场景]
+开发机是最新一代 CPU，用 \code{/arch:AVX2} 编译后自测一切正常。程序发到一台老笔记本上双击就退出，事件查看器里是异常代码 \code{0xC000001D}（STATUS\_ILLEGAL\_INSTRUCTION）。这就是把编译期指令集当成运行期保证的后果。
+\end{keybox}
+\subsection{切换到 Release 后先做的三件事}
+\begin{enumerate}
+  \item 打开 \ui{生成 > 配置管理器}，确认“活动解决方案配置”是 Release，并且列表里\textbf{每一个项目}都是 Release——依赖库项目漏切一个，整个发布就是 Debug 版 CRT 混进 Release 二进制。
+  \item 打开 \ui{项目 > 属性 > C/C++ > 命令行}（右上角可以切换配置与平台），肉眼扫一遍真实命令行，确认没有从 Debug 继承下来的 \code{/Od}、\code{/RTC1}、\code{/MDd}。
+  \item 执行 \ui{生成 > 重新生成解决方案}，而不是“生成”。增量生成会把 Debug 的 \code{.obj} 留在中间目录里，改配置后必须全量重来。
+\end{enumerate}
+\section{运行库选择：\code{/MD} 还是 \code{/MT}}
+\subsection{四个取值}
+位置在 \ui{项目 > 属性 > C/C++ > 代码生成 > 运行库}：
+
+\begin{longtable}{L{3.6cm}L{2.4cm}L{8.6cm}}
+\toprule
+\textbf{选项} & \textbf{开关} & \textbf{说明} \\
+\midrule
+多线程调试 DLL & \code{/MDd} & Debug 版动态 CRT，带调试堆 \\
+多线程调试 & \code{/MTd} & Debug 版静态 CRT \\
+多线程 DLL & \code{/MD} & Release 版动态 CRT，依赖可再发行程序包 \\
+多线程 & \code{/MT} & Release 版静态 CRT，不依赖外部 DLL \\
+\bottomrule
+\end{longtable}
+
+选 \code{/MD} 时，程序在运行期需要下列文件：
+
+\begin{longtable}{L{4.6cm}L{4.4cm}L{5.6cm}}
+\toprule
+\textbf{文件} & \textbf{作用} & \textbf{备注} \\
+\midrule
+\code{MSVCP140.dll} & C++ 标准库实现 & 由可再发行程序包安装 \\
+\code{VCRUNTIME140.dll} & 编译器支持例程（异常、RTTI 等） & 同上 \\
+\code{VCRUNTIME140_1.dll} & 较新工具集补充的异常处理支持 & 只装过旧的运行库就会缺这个文件 \\
+\code{ucrtbase.dll}、\code{api-ms-win-crt-*.dll} & 通用 C 运行时（UCRT） & Windows 10 起属于系统组件，一般无需分发 \\
+\code{concrt140.dll} & 并发运行时 & 只在用到并发容器等设施时才会加载 \\
+\bottomrule
+\end{longtable}
+\subsection{取舍表}
+\begin{longtable}{L{2.6cm}L{6.0cm}L{6.0cm}}
+\toprule
+\textbf{维度} & \textbf{\code{/MD}（动态 CRT）} & \textbf{\code{/MT}（静态 CRT）} \\
+\midrule
+产物体积 & exe 小，逻辑集中在系统与运行库目录 & exe 明显变大，通常增加数百 KB \\
+部署成本 & 必须确保目标机装有对应位数的可再发行程序包 & 免依赖，拷贝即用 \\
+跨模块传 C++ 对象 & 全进程共用一份 CRT，跨 DLL 传递 \code{std::string} 等相对安全 & 每个模块各有一份 CRT 状态，跨边界释放内存极易堆损坏 \\
+安全更新 & 随运行库更新一起被修补 & 必须自己重新编译并重新发布 \\
+第三方库匹配 & 绝大多数官方预编译包默认是 \code{/MD} & 需要第三方库也提供 \code{/MT} 版本 \\
+典型场景 & 常规桌面程序、插件式架构、多模块工程 & 绿色单文件工具、无管理员权限的受限环境 \\
+\bottomrule
+\end{longtable}
+\subsection{混用 \code{/MT} 与 \code{/MD} 的后果}
+同一个进程里同时出现静态 CRT 和动态 CRT，等于有两套完全独立的运行时状态：两个堆、两份 \code{errno}、两份 \code{std::string} 的实现、两份异常处理机制。在 A 模块里 \code{new}、在 B 模块里 \code{delete}（或 \code{malloc} / \code{free} 交叉），就会踩坏堆。
+\begin{itemize}
+  \item 静态库混用时，链接器通常能用 \code{LNK2038} 拦住你，提示“检测到 RuntimeLibrary 的不匹配项：值 MT\_StaticRelease 不匹配值 MD\_DynamicRelease”。
+  \item \code{_ITERATOR_DEBUG_LEVEL} 不一致（Debug 2 与 Release 0）也会报 \code{LNK2038}。
+  \item \textbf{但如果配置不一致的是一份 DLL，链接期根本发现不了}，只能在运行期炸成堆损坏（\code{0xC0000374}）或随机崩溃。
+\end{itemize}
+
+\begin{warnbox}[注意]
+第三方库的 CRT 必须与本项目一致。拿到一份 \code{.lib} 或 \code{.dll} 时，第一件事是确认它是 \code{/MD} 还是 \code{/MT}、是 Debug 还是 Release、是 x86 还是 x64。四个维度都对上，才能避免两套运行时的灾难。
+\end{warnbox}
+
+统一的工程约定：
+\begin{enumerate}
+  \item 一个解决方案内的所有项目统一使用同一种运行库，写进项目模板或 \code{.props} 属性表。
+  \item 先看第三方库给的是什么：Qt、OpenCV、Boost 的官方二进制包基本都是 \code{/MD}，那就全工程 \code{/MD}。
+  \item 如果第三方只提供 \code{/MT} 版本，要么全工程改 \code{/MT}，要么自己用 \code{/MD} 重新编译那个库。
+  \item 用 \code{/MT} 时不要跨 DLL 边界传递 STL 容器与字符串，改用 C 风格接口或纯虚接口。
+  \item 需要同时支持多模块时，优先 \code{/MD}，把“体积小、可被系统更新”的优势留给运行库。
+\end{enumerate}
+\section{静态链接第三方库与动态链接 DLL}
+\subsection{两种方式的部署代价}
+\begin{longtable}{L{2.6cm}L{6.0cm}L{6.0cm}}
+\toprule
+\textbf{对比项} & \textbf{静态库（\code{.lib}，静态链接）} & \textbf{动态库（\code{.lib} 导入库 + \code{.dll}）} \\
+\midrule
+需要拿到 & \code{.lib} 与头文件 & 导入库 \code{.lib}、头文件、以及 \code{.dll} \\
+部署时要带什么 & 什么都不用带，代码已经进 exe & 必须把 \code{.dll} 一起发布 \\
+体积 & exe 变大，多个程序各自持有一份 & 多个程序共享一份 \code{.dll} \\
+更新 & 改库就要重新编译发布主程序 & 替换 \code{.dll} 即可（ABI 不变的前提下） \\
+排查难度 & 符号直接进 exe，问题相对好定位 & 多一层加载过程，缺文件、位数不符都会在启动时失败 \\
+许可 & GPL 类库静态链接可能带来传染性义务 & 通常只要求随程序分发 \code{.dll} \\
+\bottomrule
+\end{longtable}
+\subsection{用 dumpbin 查依赖}
+\code{dumpbin} 不在普通命令行里，需要用 \ui{工具 > 命令行 > 开发者命令提示符} 打开，或从开始菜单启动 Developer Command Prompt。
+
+\begin{lstlisting}[style=shellstyle]
+:: 列出直接依赖的 DLL（不递归）
+dumpbin /dependents MyApp.exe
+
+:: 查看 PE 头，确认位数：x64 显示 8664 machine (x64)，x86 显示 14C machine (x86)
+dumpbin /headers MyApp.exe | findstr machine
+
+:: 查看导入表，能看到每个 DLL 被用到的具体函数
+dumpbin /imports MyApp.exe
+
+:: 检查某个第三方 DLL 的位数
+dumpbin /headers helper.dll | findstr machine
+\end{lstlisting}
+
+\begin{tipbox}[提示]
+\code{/dependents} 只列\textbf{直接}依赖，不会展开到第二层。要递归看整棵依赖树，用开源的 Dependencies 工具（Dependency Walker 的现代替代品），或者干脆在每个目录上手工跑一遍 \code{dumpbin}。
+\end{tipbox}
+\subsection{定位缺失 DLL 的排查路径}
+\begin{enumerate}
+  \item 先记下报错对话框里的 DLL 文件名，这是最直接的线索。
+  \item \code{dumpbin /dependents} 列出直接依赖，逐个确认它们在目标机器上的位置。
+  \item 用 Dependencies 递归展开，缺失的那一级会被标出来；它的 API Set 解析比老工具准确得多。
+  \item 用 Process Monitor 过滤 \code{Process Name is MyApp.exe} 与 \code{Result is NAME NOT FOUND}，可以精确看到加载器依次找过哪些目录。
+  \item 在 Visual Studio 里用 \ui{调试 > 窗口 > 模块} 查看实际加载到的模块全路径；\ui{工具 > 选项 > 调试 > 输出窗口} 里打开模块加载消息，也能在输出窗口看到加载过程。
+  \item 注意最常见的陷阱：应用目录里同时存在 32 位与 64 位的同名 DLL，加载器挑中了错的那个，于是报 \code{0xc000007b}。
+\end{enumerate}
+\section{收集运行时依赖}
+\subsection{Visual C++ 可再发行程序包}
+可再发行程序包（Redistributable）就是把 CRT 装进系统目录的官方安装器，文件名按位数区分：
+\begin{itemize}
+  \item \code{vc_redist.x64.exe}——64 位程序用。
+  \item \code{vc_redist.x86.exe}——32 位程序用（即使跑在 64 位 Windows 上也是它）。
+  \item \code{vc_redist.arm64.exe}——ARM64 程序用。
+\end{itemize}
+
+要点：
+\begin{itemize}
+  \item \textbf{位数必须与你的程序一致}。64 位程序装 x86 版运行库没有任何作用，报错依旧。
+  \item 安装包本体位于 VS 安装目录下的 \codeP{VC\textbackslash{}Redist\textbackslash{}MSVC\textbackslash{}<工具集版本>}，同级的 \codeP{x64\textbackslash{}Microsoft.VC<编号>.CRT} 目录里放的是供 app-local 部署的 CRT DLL 文件。
+  \item 自 Visual Studio 2015 起，各代运行库保持二进制兼容并可以共存，装一个新的通常就能满足老程序；但老程序若需要 \code{VCRUNTIME140_1.dll}，就必须装较新的运行库。
+  \item 通用 CRT（UCRT）从 Windows 10 起由系统提供；更早的系统需要额外安装系统更新（例如 KB2999226 一类），这也是“在 Win10 上好好的，到老系统就缺 \code{ucrtbase.dll}”的原因。
+\end{itemize}
+\subsection{随安装包分发与静默安装}
+\begin{lstlisting}[style=shellstyle]
+:: 静默安装运行库：/install 安装、/quiet 无界面、/norestart 不自动重启
+vc_redist.x64.exe /install /quiet /norestart
+
+:: 取返回值判断结果
+echo %ERRORLEVEL%
+\end{lstlisting}
+
+常见返回值：
+
+\begin{longtable}{L{2.2cm}L{4.2cm}L{8.2cm}}
+\toprule
+\textbf{返回值} & \textbf{含义} & \textbf{处理方式} \\
+\midrule
+0 & 安装成功 & 继续安装主程序 \\
+1638 & 已存在其他版本，未安装本次版本 & 视为成功，继续 \\
+3010 & 安装成功但需要重启 & 提示用户重启后生效 \\
+1603 & 安装失败 & 检查权限、是否有更高版本阻止降级、日志中的具体错误 \\
+\bottomrule
+\end{longtable}
+
+其他可用参数：\code{/passive} 显示进度条但不需要交互、\code{/repair} 修复、\code{/uninstall} 卸载、\code{/log <文件>} 输出日志。在安装包项目里，把这个 exe 作为普通文件一起打进去，再在安装流程末尾用批处理或自定义操作静默执行，是最省事的做法。
+\subsection{app-local 部署的边界}
+“把 CRT 的 DLL 直接拷到 exe 同目录”叫 app-local 部署，它能免掉安装步骤，但有几个前提：
+\begin{itemize}
+  \item 只有官方《可再发行代码》清单里列出的文件才允许随程序分发，不同 Visual Studio 版本与不同版本（Community、Professional、Enterprise）的授权范围并不相同，务必以随 VS 安装的 \code{Redist.txt} 和 Microsoft Learn 上的“可再发行代码”页面为准。
+  \item app-local 的 CRT 不会随 Windows Update 被修补，安全更新要自己重新发布一次。
+  \item 系统目录里若已有另一份 CRT 被其他进程加载，问题会更难排查。
+\end{itemize}
+
+结论：\textbf{对外正式发布优先用 \code{vc_redist} 安装器；绿色小工具或内网工具可以用 app-local。}
+\section{生成安装包}
+\subsection{三种打包方式对比}
+\begin{longtable}{L{3.4cm}L{2.6cm}L{4.1cm}L{4.1cm}}
+\toprule
+\textbf{方案} & \textbf{产物} & \textbf{优点} & \textbf{局限} \\
+\midrule
+Visual Studio Installer Projects 扩展 & \code{.msi} 与 \code{setup.exe} & 直接集成在 VS 里，图形化添加快捷方式、注册表、文件类型关联 & 需要单独安装扩展；自定义能力有限；多语言与复杂升级场景支持一般 \\
+MSIX 打包项目 & \code{.msix} & 安装卸载干净、支持增量更新与回滚、可上 Microsoft Store & 安装到受保护目录；文件与注册表被虚拟化；不能装服务与驱动；必须代码签名 \\
+WiX Toolset & \code{.msi}（由 XML 描述） & 完全可脚本化，适合放进 CI，能表达复杂安装逻辑 & 学习曲线陡，要手写 XML \\
+\bottomrule
+\end{longtable}
+\subsection{Installer Projects 最小制作流程}
+\begin{enumerate}
+  \item 打开 \ui{扩展 > 管理扩展}，搜索并安装 \code{Microsoft Visual Studio Installer Projects}，安装完成后重启 VS。
+  \item \ui{文件 > 新建 > 项目}，搜索 "Setup Project"，选择安装项目模板。
+  \item 视图切换到 \ui{文件系统 (File System)}，右键 \ui{应用程序文件夹} 节点，选择 \ui{添加 > 项目输出}，选中主项目；第三方 DLL 用 \ui{添加 > 文件} 补进去。
+  \item 选中安装项目，在属性窗口里把 \textbf{TargetPlatform} 设为 \code{x64}，必须与 exe 的位数一致，否则会装进 \code{Program Files (x86)}。
+  \item 右键 \ui{应用程序文件夹} 里的主输出，选择 \ui{创建主输出的快捷方式}，把生成的快捷方式拖到 \ui{用户桌面} 和 \ui{用户的“程序”菜单}。
+  \item 在安装项目的属性里设置 \textbf{Manufacturer}、\textbf{Version}、\textbf{ProductName}；升级安装时要保持 \textbf{UpgradeCode} 不变，提升 \textbf{Version} 并把 \textbf{RemovePreviousVersions} 设为 \code{True}，否则会出现“已安装另一个版本”而无法覆盖。
+  \item 执行 \ui{生成 > 生成解决方案}，在安装项目的 Release 输出目录里得到 \code{.msi} 与 \code{setup.exe}。
+  \item 在\textbf{一台干净的虚拟机}上完整走一遍安装、运行、卸载。这是唯一真正有效的验证方式。
+\end{enumerate}
+\subsection{WiX Toolset 简介}
+WiX 用 XML 描述安装内容：产品信息、目录树、组件与 GUID、快捷方式、注册表项、服务、自定义操作，然后由命令行工具编译成 MSI。它不做图形化设计器，换来的是可版本管理、可在 CI 里一条命令出包。
+
+适合用 WiX 的信号：安装逻辑复杂（多组件可选安装、按条件写注册表）、需要无人值守构建、需要被内部部署系统调用。如果只是“把 exe 和几个 DLL 装进 Program Files 并建快捷方式”，Installer Projects 更快。
+\section{其他发布形式}
+\subsection{绿色免安装版}
+做法很简单：用 \code{/MT} 加静态第三方库，或者把所需 DLL 与 exe 放进同一层目录，然后压缩成 zip。之所以“放同目录”最稳，是因为 Windows 加载器的搜索顺序是固定的（默认开启安全搜索模式）：
+
+\begin{lstlisting}[style=textstyle]
+DLL 搜索顺序（安全搜索模式，默认开启）
+  1. 加载它的那个 exe/dll 所在目录  <- 唯一完全由你掌控的位置
+  2. System32（32 位进程在 64 位系统上是 SysWOW64）
+  3. Windows 目录
+  4. 当前工作目录  <- 双击启动和命令行启动可能不同，别依赖
+  5. PATH 环境变量中的各目录
+\end{lstlisting}
+
+进一步收紧可以用 \code{SetDefaultDllDirectories} 配合 \code{AddDllDirectory} / \code{LoadLibraryEx} 的搜索标志，只信任自己的目录，避免被同名 DLL 劫持。
+\subsection{单文件与自包含}
+“单文件发布”是 .NET 的概念（\code{PublishSingleFile}、\code{SelfContained}），C++ 没有对应的官方开关。C++ 里等价的做法是：静态 CRT + 静态第三方库 + 不依赖外部数据文件，产物天然就是一个 exe。
+
+需要清楚的两点：\code{/MT} 只能消掉 CRT 依赖，消不掉对系统 DLL 的依赖；图标、字体、数据库之类的资源仍需外置，或者塞进资源段（在 \code{.rc} 里用 \code{RCDATA} 声明，运行时用 \code{FindResource} / \code{LoadResource} 读出来）。
+\subsection{分发渠道一句话说明}
+\begin{itemize}
+  \item \textbf{Steam}：把 exe 与 \code{steam_api64.dll} 一起提交到 depot，并可用 Steamworks 的安装脚本（\code{installscript.vdf}）声明在首次运行前执行 VC++ 运行库安装程序。
+  \item \textbf{内网服务器}：直接放 zip 加校验和，用 \code{certutil -hashfile MyApp.exe SHA256} 生成 SHA-256 供同事核对；也可以接内部的包管理源。
+  \item \textbf{企业批量部署}：优先出 MSI，交给域策略或软件分发系统；绿色版作为兜底。
+\end{itemize}
+\section{版本信息与资源}
+\subsection{添加 \code{.rc} 资源文件}
+\begin{enumerate}
+  \item 打开 \ui{项目 > 添加 > 资源}，选择 \textbf{Version}，新建后 VS 会生成 \code{<项目名>.rc} 与 \code{resource.h}。
+  \item 再次打开 \ui{项目 > 添加 > 资源}，选择 \textbf{Icon}，导入 \code{.ico}（建议一个文件里包含 16、32、48、256 多档尺寸）。
+  \item \code{.rc} 由资源编译器编译成 \code{.res}，再由链接器并入 exe，不需要你手动调用任何工具。
+\end{enumerate}
+\subsection{版本号字段}
+以下是一个最小可用的版本资源写法：
+
+\begin{lstlisting}[style=cppstyle]
+#include "resource.h"
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION    1,2,3,0
+ PRODUCTVERSION 1,2,3,0
+ FILEFLAGSMASK  0x3fL
+ FILEFLAGS      0x0L
+ FILEOS         0x40004L
+ FILETYPE       0x1L
+ FILESUBTYPE    0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "080404b0"
+        BEGIN
+            VALUE "CompanyName",      "示例公司\0"
+            VALUE "FileDescription",  "示例工具\0"
+            VALUE "FileVersion",      "1.2.3.0\0"
+            VALUE "InternalName",     "MyApp\0"
+            VALUE "LegalCopyright",   "Copyright (C) 2026\0"
+            VALUE "OriginalFilename", "MyApp.exe\0"
+            VALUE "ProductName",      "MyApp\0"
+            VALUE "ProductVersion",   "1.2.3.0\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x804, 1200
+    END
+END
+\end{lstlisting}
+
+\begin{longtable}{L{6.0cm}L{8.8cm}}
+\toprule
+\textbf{字段} & \textbf{显示位置与作用} \\
+\midrule
+\code{FILEVERSION} / \code{PRODUCTVERSION} & 二进制形式，四个 16 位整数，用逗号分隔；供程序读取比较 \\
+\code{FileVersion} / \code{ProductVersion} & 字符串形式，资源管理器“详细信息”里看到的就是它 \\
+\code{CompanyName} & 公司名，安装包与“详细信息”页都会读 \\
+\code{FileDescription} & 文件说明，任务管理器的进程描述列取这里 \\
+\code{LegalCopyright} & 版权声明 \\
+\code{OriginalFilename} & 原始文件名，改名后仍能追溯 \\
+\code{080404b0} & 语言块：\code{0804} 为简体中文，\code{04b0} 为 Unicode 代码页 1200 \\
+\bottomrule
+\end{longtable}
+
+\begin{warnbox}[注意]
+\code{StringFileInfo} 的语言代码块必须与 \code{VarFileInfo} 里的 \code{Translation} 一致（上面是 \code{0x804, 1200}），否则部分工具读不到字符串。\code{FILEVERSION} 与 \code{FileVersion} 也要手工保持一致——它们不会互相推导。
+\end{warnbox}
+\subsection{图标与属性页设置}
+\begin{itemize}
+  \item exe 在资源管理器里显示的图标，取资源中 \textbf{ID 最小} 的那个图标，所以通常用 \code{IDI_ICON1}。
+  \item 选中 \code{.rc} 文件后打开属性页，根节点就是 \textbf{资源}：\ui{资源 > 常规 > 区域性} 可以设置资源语言（中文简体为 \code{0x0804}）。不改的话默认是英文，多语言资源会显得混乱。
+  \item 想让版本号跟随构建号自动递增，可以在 \ui{项目 > 属性 > 生成事件 > 生成前事件} 里调用脚本改写 \code{.rc}；也可以在 \ui{资源 > 常规 > 预处理器定义} 里注入宏，让 \code{.rc} 用 \code{#ifdef} 选择版本字符串。
+\end{itemize}
+\section{发布检查清单}
+\textbf{配置与平台}
+\begin{itemize}
+  \item[$\square$] \ui{生成 > 配置管理器} 里所有项目都是 Release，平台都是 x64（或与目标一致）。
+  \item[$\square$] \ui{项目 > 属性 > C/C++ > 命令行} 中不再出现 \code{/Od}、\code{/RTC1}、\code{/MDd}、\code{/MTd}。
+  \item[$\square$] 全解决方案执行过 \ui{重新生成解决方案}，没有沿用 Debug 的中间文件。
+  \item[$\square$] \ui{项目 > 属性 > 常规 > 平台工具集} 与 \ui{Windows SDK 版本} 在开发机与构建机上一致。
+\end{itemize}
+
+\textbf{依赖}
+\begin{itemize}
+  \item[$\square$] \code{dumpbin /dependents MyApp.exe} 的输出里\textbf{没有} \code{MSVCP140D.dll}、\code{VCRUNTIME140D.dll}、\code{ucrtbased.dll} 之类的调试版运行库。
+  \item[$\square$] 所有第三方 DLL 都是 Release 版、位数正确、CRT 设置与本项目一致。
+  \item[$\square$] 明确记录：目标机器需要装哪个可再发行程序包（x86 还是 x64）。
+  \item[$\square$] 若有数据文件、字体、配置模板，也一并纳入安装包或目录结构。
+\end{itemize}
+
+\textbf{测试}
+\begin{itemize}
+  \item[$\square$] 在干净虚拟机上完成安装、首次运行、卸载全流程。
+  \item[$\square$] 在\textbf{没有装过开发工具}的机器上验证一遍，重点看启动阶段是否缺 DLL。
+  \item[$\square$] 中文路径、含空格用户名、非管理员账户下各跑一次。
+  \item[$\square$] 若是数值计算类程序，比较 Release 与 Debug 的关键输出是否一致（防止 \code{/fp:fast} 引入偏差）。
+\end{itemize}
+
+\textbf{版本与资源}
+\begin{itemize}
+  \item[$\square$] exe 的“详细信息”页里能看到正确的版本号、公司名、版权。
+  \item[$\square$] 图标在资源管理器、任务栏、任务管理器中显示正常。
+  \item[$\square$] 版本号与安装包的 \textbf{Version} 属性一致。
+\end{itemize}
+
+\textbf{签名与体积}
+\begin{itemize}
+  \item[$\square$] 用 \code{signtool sign /fd SHA256 /tr <时间戳服务器> /td SHA256 MyApp.exe} 完成签名，并用 \code{signtool verify /pa /v MyApp.exe} 验证。
+  \item[$\square$] 签名带时间戳，这样证书到期后旧版本的签名依然有效。
+  \item[$\square$] 体积已用 \code{/Gy} + \code{/OPT:REF} + \code{/OPT:ICF} 优化，且链接进来的库确实都被用到。
+  \item[$\square$] 压缩包与安装包文件名里带版本号，便于回滚。
+\end{itemize}
+\section{发布后常见故障}
+\subsection{缺少 \code{VCRUNTIME140.dll} 一类}
+\textbf{表现}：弹窗“由于找不到 VCRUNTIME140.dll，无法继续执行代码。重新安装程序可能会解决此问题。”，常见变体还有 \code{MSVCP140.dll}、\code{VCRUNTIME140_1.dll}、\code{ucrtbase.dll}。
+
+\textbf{原因}：程序用 \code{/MD} 编译，但目标机器没装对应位数的可再发行程序包；或者装的是 x86 版而程序是 x64；或者运行库太旧，缺 \code{VCRUNTIME140_1.dll}。
+
+\textbf{处理}：
+\begin{enumerate}
+  \item 立即解决：在目标机运行 \code{vc_redist.x64.exe /install /quiet /norestart}。
+  \item 根治：把运行库作为安装包的先决条件自动安装。
+  \item 另一种根治：改用 \code{/MT} 重新发布，代价是体积变大、安全更新要自己跟。
+\end{enumerate}
+\subsection{应用程序无法正常启动 \code{0xc000007b}}
+\code{0xC000007B} 是 \code{STATUS_INVALID_IMAGE_FORMAT}，意思是“这个映像文件的格式不对”。最常见的原因是\textbf{位数不匹配}——64 位进程加载了 32 位 DLL，或反过来；其次是 DLL 文件被截断或损坏、同名文件被不同位数的版本互相覆盖。
+
+\begin{lstlisting}[style=textstyle]
+x64 的 MyApp.exe --> 加载 helper.dll
+                     |
+                     +-- helper.dll 是 32 位    --> 0xC000007B（映像格式无效）
+                     +-- helper.dll 不存在      --> 0xC0000135（找不到 DLL）
+                     +-- helper.dll 初始化失败  --> 0xC0000142（DLL 初始化失败）
+\end{lstlisting}
+
+排查方法：
+
+\begin{lstlisting}[style=shellstyle]
+:: 先确认主程序位数，再逐个确认可疑 DLL 的位数
+dumpbin /headers MyApp.exe  | findstr machine
+dumpbin /headers helper.dll | findstr machine
+\end{lstlisting}
+
+两者的 \code{machine} 值必须一致：x64 显示 \code{8664 machine (x64)}，x86 显示 \code{14C machine (x86)}。顺带记住另两个高频代码：\code{0xC0000135} 是找不到 DLL，\code{0xC0000142} 是 DLL 初始化失败（常见于被杀软拦截或它的依赖没满足）。
+\subsection{DLL 地狱的标准排查步骤}
+\begin{enumerate}
+  \item 抄下完整报错文案，记录故障机器的 Windows 版本与位数。
+  \item \code{dumpbin /dependents MyApp.exe} 列出直接依赖，逐个确认在目标机器上的存在性与位数。
+  \item 用 Dependencies 递归展开依赖树，找出断链的那一级。
+  \item 用 Process Monitor 过滤进程名与 \code{NAME NOT FOUND}，看加载器实际搜索过哪些路径。
+  \item 检查 PATH、当前工作目录，以及 System32 里是否存在同名 DLL。
+  \item 在“能跑起来”的机器上用 \ui{调试 > 窗口 > 模块} 导出已加载模块清单，与故障机逐条对比。
+  \item 确认三件事：位数一致、CRT 配置一致（同为 \code{/MD} 或同为 \code{/MT}）、没有 Debug 版 CRT 混入。
+  \item 修完后在干净虚拟机上复测一遍，不要只在开发机上确认。
+\end{enumerate}
+\section{小结}
+\begin{itemize}
+  \item Debug 与 Release 的差异是一整组开关的差异：优化、宏、运行库、调试信息、增量链接，切换时必须全解决方案一致。
+  \item \code{/O2}、\code{/GL} + \code{/LTCG}、\code{/arch:AVX2} 能显著提速，但分别带来调试困难、构建变慢、以及在不支持该指令集的 CPU 上崩溃的风险。
+  \item \code{/MD} 依赖可再发行程序包但体积小、跨模块安全；\code{/MT} 免依赖但体积大且跨模块传 STL 危险；同一程序内混用会导致堆损坏，DLL 层面的不一致链接期发现不了。
+  \item 静态库无部署成本但更新要重编；动态库必须随程序带上 \code{.dll}，用 \code{dumpbin /dependents} 与 Dependencies 工具确认依赖完整。
+  \item 运行库按位数分发，\code{vc_redist.x64.exe /install /quiet /norestart} 可静默安装，返回值 0、1638、3010、1603 要分别处理。
+  \item 安装包三条路线：Installer Projects 最快、MSIX 最干净但限制多、WiX 最适合 CI。
+  \item 版本信息写进 \code{.rc}，exe 图标取资源中 ID 最小的图标，属性页里的 \ui{资源 > 常规 > 区域性} 决定资源语言。
+  \item 发布后两类高频故障是缺运行库和 \code{0xc000007b}（位数不匹配），排查顺序都是先确认位数、再确认依赖树。
+\end{itemize}
+\section{练习题}
+\begin{enumerate}
+  \item 把一个控制台项目从 \code{/MD} 改成 \code{/MT}，用 \code{dumpbin /dependents} 对比改动前后的依赖列表，并解释每一行的来源。
+  \item 用 \code{/arch:AVX2} 编译一个程序，分别在支持与不支持 AVX2 的机器（或限制 CPU 特性的虚拟机）上运行，记录现象与事件查看器中的异常代码。
+  \item 给一个项目添加版本资源，使 exe 的“详细信息”页显示公司名与版本号 \code{1.0.0.0}，然后通过代码读取并打印 \code{FILEVERSION} 与 \code{FileVersion}，说明二者的区别。
+  \item 制作一个最小 MSI：包含主程序 exe 与一个第三方 DLL，安装后在开始菜单创建快捷方式，并在干净虚拟机上完成安装与卸载测试。
+  \item 故意把 32 位的 DLL 放进 64 位程序的目录，复现 \code{0xc000007b}，写出从报错到定位的完整排查过程。
+  \item 写一个批处理，在安装主程序前静默安装 \code{vc_redist.x64.exe}，并正确处理返回值 0、1638、3010、1603。
+\end{enumerate}
+\section{相关笔记}
+\begin{itemize}
+  \item \textbf{本教程}：\textbf{Visual Studio 2026 使用教程}
+  \item \textbf{上一章}：\textbf{单元测试与代码质量}
+  \item \textbf{下一章}：\textbf{常见问题与效率技巧}
+  \item \textbf{CMake}：\textbf{CMake 使用指南}
+  \item \textbf{Git 命令}：\textbf{常用 Git 命令}
+\end{itemize}

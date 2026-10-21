@@ -48,16 +48,16 @@
 \contentsline {subsection}{\numberline {4.1.2}先跑通官方程序}{22}{subsection.4.1.2}%
 \contentsline {section}{\numberline {4.2}编译工具链}{23}{section.4.2}%
 \contentsline {subsection}{\numberline {4.2.1}Visual Studio 2022}{23}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}让命令行认识 cl}{23}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.2}让命令行认识 cl}{24}{subsection.4.2.2}%
 \contentsline {section}{\numberline {4.3}第一个程序：无界面的仿真}{24}{section.4.3}%
 \contentsline {subsection}{\numberline {4.3.1}代码}{24}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}用命令行编译}{25}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.2}用命令行编译}{26}{subsection.4.3.2}%
 \contentsline {section}{\numberline {4.4}可视化程序}{26}{section.4.4}%
 \contentsline {subsection}{\numberline {4.4.1}可视化管线的两段式结构}{26}{subsection.4.4.1}%
 \contentsline {subsection}{\numberline {4.4.2}GLFW 从哪里来}{26}{subsection.4.4.2}%
-\contentsline {subsection}{\numberline {4.4.3}最小可视化程序}{26}{subsection.4.4.3}%
+\contentsline {subsection}{\numberline {4.4.3}最小可视化程序}{27}{subsection.4.4.3}%
 \contentsline {subsection}{\numberline {4.4.4}常用交互控制}{29}{subsection.4.4.4}%
-\contentsline {section}{\numberline {4.5}DLL 部署}{29}{section.4.5}%
+\contentsline {section}{\numberline {4.5}DLL 部署}{30}{section.4.5}%
 \contentsline {chapter}{\numberline {第五章\hspace {.3em}}CMake 工程配置}{31}{chapter.5}%
 \contentsline {section}{\numberline {5.1}安装 CMake}{31}{section.5.1}%
 \contentsline {subsection}{\numberline {5.1.1}三种来源}{31}{subsection.5.1.1}%

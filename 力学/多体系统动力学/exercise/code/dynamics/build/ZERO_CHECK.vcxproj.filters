@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="18.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\studynotes\力学\多体系统动力学\exercise\code\dynamics\build\CMakeFiles\e6e10e128ae8e0eb87d62df7ff07b86c\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{684D5FD8-5C75-30D0-8F75-CE808500C588}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
